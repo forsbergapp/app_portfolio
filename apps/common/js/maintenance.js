@@ -1,8 +1,8 @@
 const common = await import('/common/js/common.js');
-function app_exception(){
+const app_exception = () => {
     null;
 }
-function init(parameters){
+const init = (parameters) => {
     document.title = common.ICONS['app_maintenance'];
     document.getElementById('common_broadcast_close').innerHTML = common.ICONS['app_broadcast_close'];
     document.getElementById('common_maintenance_footer').innerHTML= common.APP_SPINNER;

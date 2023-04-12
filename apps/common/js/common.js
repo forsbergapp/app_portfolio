@@ -110,9 +110,8 @@ const COMMON_GLOBAL = {
     "service_report":"",
     "service_worldcities":""
 };
-let icon_string = (hexvalue) => 
-    `<div class='common_icon'>${String.fromCharCode(parseInt(hexvalue, 16))}</div>`;
-let ICONS = {
+const icon_string = (hexvalue) => `<div class='common_icon'>${String.fromCharCode(parseInt(hexvalue, 16))}</div>`;
+const ICONS = {
     "app_system_admin":         icon_string('f4fe'),
     "app_apps":                 `<svg viewBox='0 0 24 24' enable-background='new 0 0 24 24'>
                                     <path d='M10,2H3C2.4,2,2,2.4,2,3v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C11,2.4,10.6,2,10,2z M10,13H3c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C11,13.4,10.6,13,10,13z M21,2h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1V3C22,2.4,21.6,2,21,2z M21,13h-7c-0.6,0-1,0.4-1,1v7c0,0.6,0.4,1,1,1h7c0.6,0,1-0.4,1-1v-7C22,13.4,21.6,13,21,13z'/>
@@ -284,7 +283,7 @@ let ICONS = {
     "message_email":            icon_string('f0e0'),
     "message_record":           icon_string('f1c0')
 };
-let APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
+const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
                                     <div></div>
                                     <div></div>
                                     <div></div>
@@ -301,7 +300,7 @@ let APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
-let checkconnected = async () => {
+const checkconnected = async () => {
     try {
       const testconnection = await fetch("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap", {method: "head", mode : 'no-cors'});
       return true;
@@ -312,13 +311,13 @@ let checkconnected = async () => {
 let timer = 0;
 //delay API calls when typing to avoid too many calls 
 // ES6 spread operator, arrow function without function keyword
-let typewatch = (callBack, ...parameter) =>{
+const typewatch = (callBack, ...parameter) =>{
     clearTimeout(timer);
-    timer = setTimeout(function (){
+    timer = setTimeout(() => {
         callBack(...parameter);
     }, 500);
 };
-async function common_fetch_basic(token_type, json_data,  username, password, callBack) {
+const common_fetch_basic = async (token_type, json_data,  username, password, callBack) => {
     let url;
     let status;
     if (token_type==0){
@@ -337,11 +336,11 @@ async function common_fetch_basic(token_type, json_data,  username, password, ca
                           },
                  body: json_data
     })
-    .then(function(response) {
+    .then((response) => {
         status = response.status;
         return response.text();
     })
-    .then(function(result) {
+    .then((result) => {
         switch (status){
             case 200:{
                 //OK
@@ -382,7 +381,7 @@ async function common_fetch_basic(token_type, json_data,  username, password, ca
         }
     })
 }
-async function common_fetch(url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) {
+const common_fetch = async (url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) => {
     let status;
     let headers;
 
@@ -440,11 +439,11 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
         url = url + '&user_account_logon_user_account_id=' + COMMON_GLOBAL['user_account_id'];
     await fetch(url, 
                 fetch_parameters)
-    .then(function(response) {
+    .then((response) => {
         status = response.status;
         return response.text();
     })
-    .then(function(result) {
+    .then((result) => {
         switch (status){
             case 200:{
                 //OK
@@ -465,7 +464,7 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
             }
             case 401:{
                 //Unauthorized, token expired
-                eval(`(function (){${COMMON_GLOBAL['exception_app_function']}(app_id, result)}());`);
+                eval(`(() => {${COMMON_GLOBAL['exception_app_function']}(app_id, result)}());`);
                 break;
             }
             case 403:{
@@ -483,13 +482,13 @@ async function common_fetch(url_parameters, method, token_type, json_data, app_i
         }
     })
 }
-function toBase64(str) {
+const toBase64 = (str) => {
     return window.btoa(unescape(encodeURIComponent(str)));
 }	
-function fromBase64(str) {
+const fromBase64 = (str) => {
     return decodeURIComponent(escape(window.atob(str)));
 }
-async function common_translate_ui(lang_code, object = null, callBack){
+const common_translate_ui = async (lang_code, object = null, callBack) => {
     let json;
     let object_parameter;
     let url='';
@@ -640,13 +639,13 @@ async function common_translate_ui(lang_code, object = null, callBack){
 
     })                            
 }
-function get_null_or_value(value) {
+const get_null_or_value = (value) => {
     if (value == null)
         return '';
     else
         return value;
 }
-function format_json_date(db_date, short) {
+const format_json_date = (db_date, short) => {
     if (db_date == null)
         return null;
     else {
@@ -686,11 +685,11 @@ function format_json_date(db_date, short) {
     }
 }
 
-function mobile(){
+const mobile = () =>{
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
    }
    
-function parseJwt(token) {
+const parseJwt = (token) => {
     try {
       return JSON.parse(window.atob(token.split('.')[1]));
     } catch (e) {
@@ -698,33 +697,33 @@ function parseJwt(token) {
     }
   };
 
-function checkbox_value(checkbox) {
+const checkbox_value = (checkbox) => {
     if (checkbox.checked)
         return 'YES';
     else
         return 'NO';
 }
-function checkbox_checked(checkbox) {
+const checkbox_checked = (checkbox) => {
     if (checkbox == 1)
         return 'YES';
     else
         return 'NO';
 }
 
-function image_format(image) {
+const image_format = (image) => {
     if (image == '' || image == null )
         return '';
     else
         return image;
             
 }
-function list_image_format_src(image){
+const list_image_format_src = (image) => {
     if (image == '' || image == null)
         return '';
     else
         return `src='${image_format(image)}'`;
 }
-function recreate_img(img_item) {
+const recreate_img = (img_item) => {
     //cant set img src to null, it will containt url or show corrupt image
     //recreating the img is the workaround
     let parentnode = img_item.parentNode;
@@ -738,9 +737,9 @@ function recreate_img(img_item) {
     parentnode.appendChild(img);
     return null;
 }
-async function convert_image(image_url, image_width, image_height){
+const convert_image = async (image_url, image_width, image_height) => {
     //function to convert images to specified size and mime type according to parameters
-    return new Promise(function (resolve){
+    return new Promise((resolve) => {
         if (image_url=='')
             resolve('');
         else{
@@ -749,7 +748,7 @@ async function convert_image(image_url, image_width, image_height){
             //update Content Security Policy with allowed domain
             //to allow any image url source, uncomment:
             //img.crossOrigin = 'Anonymous';
-            img.onload = function(el) {
+            img.onload = (el) => {
                 let elem = document.createElement('canvas');
                 elem.width = image_width;
                 elem.height = image_height;
@@ -760,33 +759,33 @@ async function convert_image(image_url, image_width, image_height){
         }
     })
 }
-function set_avatar(avatar, item){
+const set_avatar = (avatar, item) => {
     if (avatar == null || avatar == '')
         recreate_img(item);
     else
         item.src = image_format(avatar);
 }
-function boolean_to_number(boolean_value) {
+const boolean_to_number = (boolean_value) => {
     if (boolean_value == true)
         return 1;
     else
         return 0;
 }
-function number_to_boolean(number_value) {
+const number_to_boolean = (number_value) => {
     if (number_value == 1)
         return true;
     else
         return false;
 }
 /* check if run inside an iframe*/
-function inIframe() {
+const inIframe = () => {
     try {
         return window.self !== window.top;
     } catch (e) {
         return true;
     }
 }
-function show_image(item_img, item_input, image_width, image_height) {
+const show_image = (item_img, item_input, image_width, image_height) => {
     let file = document.getElementById(item_input).files[0];
     let reader = new FileReader();
 
@@ -808,8 +807,8 @@ function show_image(item_img, item_input, image_width, image_height) {
             show_message('ERROR', 20308, null, null, COMMON_GLOBAL['common_app_id']);
         }
         else {
-            reader.onloadend = function(event) {
-                convert_image(event.target.result, image_width, image_height).then(function(srcEncoded){
+            reader.onloadend = (event) => {
+                convert_image(event.target.result, image_width, image_height).then((srcEncoded)=>{
                     item_img.src = srcEncoded;
                 });
             }
@@ -820,10 +819,10 @@ function show_image(item_img, item_input, image_width, image_height) {
         item_show.src = '';
     return null;
 }
-function getHostname(){
+const getHostname = () =>{
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
 }
-function check_input(text, text_length=100, nodb_message=false){
+const check_input = (text, text_length=100, nodb_message=false) => {
     if (text==null || text=='')
         return true;
     else{
@@ -862,7 +861,7 @@ function check_input(text, text_length=100, nodb_message=false){
         return true;
     }
 }
-function get_uservariables(){
+const get_uservariables = () => {
     return `"user_language": "${navigator.language}",
             "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
             "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
@@ -871,7 +870,7 @@ function get_uservariables(){
             "client_longitude": "${COMMON_GLOBAL['client_longitude']}",
             "client_place": "${COMMON_GLOBAL['client_place']}"`;
 }
-function SearchAndSetSelectedIndex(search, select_item, colcheck) {
+const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     //colcheck=0 search id
     //colcheck=1 search value
     for (let i = 0; i < select_item.options.length; i++) {
@@ -886,8 +885,8 @@ function SearchAndSetSelectedIndex(search, select_item, colcheck) {
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
-async function dialogue_close(dialogue){
-    return new Promise(function (resolve, reject){
+const dialogue_close = async (dialogue) => {
+    return new Promise((resolve, reject)=>{
         let animationDuration = 400;
         /*
         //add sound effect if needed
@@ -895,9 +894,9 @@ async function dialogue_close(dialogue){
         meepmeep.src = '/common/audio/meepmeep.ogg';
         meepmeep.play();
         */
-        //setTimeout(function(){
+        //setTimeout(()=>{
             document.getElementById(dialogue).classList.add('common_dialogue_close');
-            setTimeout(function(){
+            setTimeout(()=>{
                 document.getElementById(dialogue).style.visibility = 'hidden';
                 document.getElementById(dialogue).classList.remove('common_dialogue_close');
                 resolve();
@@ -905,7 +904,7 @@ async function dialogue_close(dialogue){
         //}, animationDuration);
     })
 }
-function show_common_dialogue(dialogue, user_verification_type, title=null, icon=null, click_cancel_event) {
+const show_common_dialogue = (dialogue, user_verification_type, title=null, icon=null, click_cancel_event) => {
     switch (dialogue) {
         case 'PROFILE':
             {    
@@ -981,13 +980,13 @@ function show_common_dialogue(dialogue, user_verification_type, title=null, icon
     return null;   
 }
 
-function show_message(message_type, code, function_event, message_text='', data_app_id=null){
+const show_message = (message_type, code, function_event, message_text='', data_app_id=null) => {
     let confirm_question = document.getElementById('common_confirm_question');
     let message_title = document.getElementById('common_message_title');
     let dialogue = document.getElementById('common_dialogue_message');
     let old_close = document.getElementById('common_message_close');
     let button_cancel = document.getElementById('common_message_cancel');
-    let function_close = function() { document.getElementById('common_dialogue_message').style.visibility = 'hidden'};
+    let function_close = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'};
     let show = 'inline-block';
     let hide = 'none';
     //this removes old eventlistener
@@ -1067,7 +1066,7 @@ function show_message(message_type, code, function_event, message_text='', data_
         }
     }
 }
-function dialogue_verify_clear(){
+const dialogue_verify_clear = () => {
     document.getElementById('common_dialogue_user_verify').style.visibility = 'hidden';
     //this removes old eventlistener
     let old_cancel = document.getElementById('common_user_verify_cancel');
@@ -1083,7 +1082,7 @@ function dialogue_verify_clear(){
     document.getElementById('common_user_verify_verification_char5').value = '';
     document.getElementById('common_user_verify_verification_char6').value = '';
 }
-function dialogue_new_password_clear(){
+const dialogue_new_password_clear = () => {
     document.getElementById("common_dialogue_user_new_password").style.visibility = "hidden";
     document.getElementById("common_user_new_password_auth").innerHTML='';
     document.getElementById("common_user_new_password").value='';
@@ -1091,7 +1090,7 @@ function dialogue_new_password_clear(){
     COMMON_GLOBAL['user_account_id'] = '';
     COMMON_GLOBAL['rest_at'] = '';
 }
-function dialogue_user_edit_clear(){
+const dialogue_user_edit_clear = () => {
     document.getElementById('common_dialogue_user_edit').style.visibility = "hidden";
     document.getElementById('common_user_edit_avatar').style.display = 'none';
                 
@@ -1118,12 +1117,12 @@ function dialogue_user_edit_clear(){
     document.getElementById('common_user_edit_label_data_account_created').innerHTML = '';
     document.getElementById('common_user_edit_label_data_account_modified').innerHTML = '';
 }
-function dialogue_login_clear(){
+const dialogue_login_clear = () => {
     document.getElementById('common_dialogue_login').style.visibility = 'hidden';
     document.getElementById('common_login_username').value = '';
     document.getElementById('common_login_password').value = '';
 }
-function dialogue_signup_clear(){
+const dialogue_signup_clear = () => {
     document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
     document.getElementById('common_signup_username').value = '';
     document.getElementById('common_signup_email').value = '';
@@ -1131,10 +1130,10 @@ function dialogue_signup_clear(){
     document.getElementById('common_signup_password_confirm').value = '';
     document.getElementById('common_signup_password_reminder').value = '';
 }
-function dialogue_forgot_clear(){
+const dialogue_forgot_clear = () => {
     document.getElementById('common_forgot_email').value = '';
 }
-function dialogue_profile_clear(){
+const dialogue_profile_clear = () => {
     document.getElementById('common_profile_info').style.display = 'none';
     document.getElementById('common_profile_top').style.display = 'none';
     document.getElementById('common_profile_detail').style.display = 'none';
@@ -1159,7 +1158,7 @@ function dialogue_profile_clear(){
     document.getElementById('common_profile_detail_list').innerHTML = '';
     document.getElementById('common_profile_top_list').innerHTML = '';
 }
-function dialogue_user_edit_remove_error(){
+const dialogue_user_edit_remove_error = () => {
     document.getElementById('common_user_edit_input_username').classList.remove('common_input_error');
 
     document.getElementById('common_user_edit_input_bio').classList.remove('common_input_error');
@@ -1172,7 +1171,7 @@ function dialogue_user_edit_remove_error(){
 
     document.getElementById('common_user_edit_input_password_reminder').classList.remove('common_input_error');
 }
-function lov_close(){
+const lov_close = () => {
     //remove all event listeners
     document.querySelectorAll('.common_list_lov_row').forEach(e => 
         e.replaceWith(e.cloneNode(true))
@@ -1183,7 +1182,7 @@ function lov_close(){
     document.getElementById('common_lov_list').innerHTML='';
     
 }
-function lov_show(lov, function_event){
+const lov_show = (lov, function_event) => {
     
     document.getElementById('common_dialogue_lov').style.visibility = 'visible';
     document.getElementById('common_lov_list').innerHTML = APP_SPINNER;
@@ -1244,7 +1243,7 @@ function lov_show(lov, function_event){
         }
     })
 }
-function lov_keys(event){
+const lov_keys = (event) => {
     switch (event.code){
         case 'ArrowLeft':
         case 'ArrowRight':{
@@ -1312,7 +1311,7 @@ function lov_keys(event){
         }    
     }
 }
-function lov_filter(text_filter){
+const lov_filter = (text_filter) => {
     let x = document.querySelectorAll('.common_list_lov_row');
     for (let i = 0; i <= x.length -1; i++) {
         x[i].classList.remove ('common_list_lov_row_hide');
@@ -1333,7 +1332,7 @@ function lov_filter(text_filter){
 /*----------------------- */
 /* WINDOW INFO            */
 /*----------------------- */
-function zoom_info(zoomvalue = '') {
+const zoom_info = (zoomvalue = '') => {
     let old;
     let old_scale;
     let div = document.getElementById('common_window_info_info');
@@ -1348,7 +1347,7 @@ function zoom_info(zoomvalue = '') {
     }
     return null;
 }
-function move_info(move1, move2) {
+const move_info = (move1, move2) => {
     let old;
     let div = document.getElementById('common_window_info_info');
     if (move1==null && move2==null) {
@@ -1361,7 +1360,7 @@ function move_info(move1, move2) {
     }
     return null;
 }
-function show_window_info(info, show_toolbar, url, content_type, iframe_content){
+const show_window_info = (info, show_toolbar, url, content_type, iframe_content) => {
     /*
     common_window_info_info     use to display image                    case 0
     common_window_info_info     use to display spinner                  case null
@@ -1387,7 +1386,7 @@ function show_window_info(info, show_toolbar, url, content_type, iframe_content)
     move_info(null,null);
 
 
-    function show_url(url){
+    const show_url = (url) => {
         document.getElementById('common_window_info_content').src=url;
         document.getElementById('common_window_info').style.overflowY = 'hidden'
         document.getElementById('common_window_info').style.visibility = 'visible';
@@ -1432,13 +1431,13 @@ function show_window_info(info, show_toolbar, url, content_type, iframe_content)
                                 }
                             }
                     )
-                    .then(function(response) {
+                    .then((response) => {
                         return response.blob();
                     })
-                    .then(function(pdf) {      
+                    .then((pdf) => {
                         let reader = new FileReader();
                         reader.readAsDataURL(pdf); 
-                        reader.onloadend = function() {
+                        reader.onloadend = () => {
                             let base64PDF = reader.result;
                             document.getElementById('common_window_info_info').innerHTML = '';
                             document.getElementById('common_window_info_info').style.display = 'none';
@@ -1452,7 +1451,7 @@ function show_window_info(info, show_toolbar, url, content_type, iframe_content)
 /*----------------------- */
 /* PROFILE                */
 /*----------------------- */
-async function profile_follow_like(function_name){
+const profile_follow_like = async (function_name) => {
     await user_function(function_name, (err, result) => {
         if (err==null){
             profile_update_stat((err, result) =>{
@@ -1461,8 +1460,8 @@ async function profile_follow_like(function_name){
         }
     })
 }
-function show_profile_click_events(item, click_function){
-    document.querySelectorAll(item).forEach(e => e.addEventListener('click', function(event) {
+const show_profile_click_events = (item, click_function) => {
+    document.querySelectorAll(item).forEach(e => e.addEventListener('click', (event) => {
         //execute function from inparameter or use default when not specified
         let profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
         if (click_function ==null){
@@ -1477,7 +1476,7 @@ function show_profile_click_events(item, click_function){
         }
     }));
 }
-function profile_top(statschoice, app_rest_url = null, click_function=null) {
+const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
     let url;
     document.getElementById('common_dialogue_profile').style.visibility = 'visible';
     document.getElementById('common_profile_info').style.display = 'none';
@@ -1529,7 +1528,7 @@ function profile_top(statschoice, app_rest_url = null, click_function=null) {
         }
     })
 }
-function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, click_function) {
+const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, click_function) => {
     let url;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
@@ -1682,16 +1681,16 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
                     }
                     profile_detail_list.innerHTML = html;
                     if (detailchoice==5){
-                        document.querySelectorAll('.common_profile_detail_list_app_name').forEach(e => e.addEventListener('click', function(event) {
+                        document.querySelectorAll('.common_profile_detail_list_app_name').forEach(e => e.addEventListener('click', (event) => {
                             event.preventDefault();
                             window.open(event.target.parentNode.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
                         }))
                         if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id']){
-                            document.querySelectorAll('.common_profile_detail_list_app_delete').forEach(e => e.addEventListener('click', function(event) {
+                            document.querySelectorAll('.common_profile_detail_list_app_delete').forEach(e => e.addEventListener('click', (event) => {
                                 user_account_app_delete(null, 
                                                         document.getElementById('common_profile_id').innerHTML,
                                                         event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
-                                                        function() { 
+                                                        () => { 
                                                             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                                                             user_account_app_delete(1, 
                                                                                     document.getElementById('common_profile_id').innerHTML, 
@@ -1709,7 +1708,7 @@ function profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, cl
     } else
         show_common_dialogue('LOGIN');
 }
-function search_profile(click_function) {
+const search_profile = (click_function) => {
     document.getElementById('common_profile_search_input').classList.remove('common_input_error');
     let profile_search_list = document.getElementById('common_profile_search_list');
     profile_search_list.innerHTML = '';
@@ -1787,7 +1786,7 @@ profile_show(userid, null) 	 from choosing profile in profile_detail
 profile_show(userid, null) 	 from choosing profile in search_profile
 profile_show(null, username) from init startup when user enters url
 */
-async function profile_show(user_account_id_other = null, username = null, callBack) {
+const profile_show = async (user_account_id_other = null, username = null, callBack) => {
     let json;
     let user_account_id_search;
     let url;
@@ -1866,7 +1865,7 @@ async function profile_show(user_account_id_other = null, username = null, callB
                     document.getElementById('common_profile_info_liked_count').innerHTML = json.count_liked;
                 }    
                 if (COMMON_GLOBAL['user_account_id'] =='')
-                    setTimeout(function(){show_common_dialogue('LOGIN')}, 2000);
+                    setTimeout(()=> {show_common_dialogue('LOGIN')}, 2000);
                 else
                     checkOnline('common_profile_avatar_online_status', json.id);
                 return callBack(null,{profile_id: json.id,
@@ -1875,11 +1874,11 @@ async function profile_show(user_account_id_other = null, username = null, callB
         })
     }
 }
-function profile_close(){
+const profile_close = () => {
     document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
 }
-async function profile_update_stat(callBack){
+const profile_update_stat = async (callBack) => {
     let profile_id = document.getElementById('common_profile_id');
     let json_data =
     `{
@@ -1904,7 +1903,7 @@ async function profile_update_stat(callBack){
         }
     })
 }
-function search_input(event, event_function){
+const search_input = (event, event_function) => {
     switch (event.code){
         case 'ArrowLeft':
         case 'ArrowRight':{
@@ -1970,8 +1969,6 @@ function search_input(event, event_function){
                         }
                         else{
                             event_function(x[i].children[0].children[0].innerHTML);
-                            //eval(`(function (){${event_function}(${x[i].children[0].children[0].innerHTML},
-                            //   ${null})}());`);
                         }
                             
                         x[i].classList.remove ('common_profile_search_list_selected');
@@ -1982,7 +1979,7 @@ function search_input(event, event_function){
             break
         }
         default:{
-            typewatch(search_profile, `${event_function==null?'':'"' + event_function +'"'}`); 
+            typewatch(search_profile, event_function==null?null:event_function); 
             break;
         }            
     }
@@ -1990,7 +1987,7 @@ function search_input(event, event_function){
 /*----------------------- */
 /* USER                   */
 /*----------------------- */
-async function user_login(username, password, callBack) {
+const user_login = async (username, password, callBack) => {
     
     let json;
     let json_data;
@@ -2030,7 +2027,7 @@ async function user_login(username, password, callBack) {
             updateOnlineStatus();
             user_preference_get((err, results) =>{
                 if (json.items[0].active==0){
-                    let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);};
+                    let function_cancel_event = () => { dialogue_verify_clear();eval(`( ()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
                     show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, ICONS['app_logoff'], function_cancel_event);
                     return callBack('ERROR', null);
                 }
@@ -2047,7 +2044,7 @@ async function user_login(username, password, callBack) {
         }
     })    
 }
-async function user_logoff(){
+const user_logoff = async () => {
     //remove access token
     COMMON_GLOBAL['rest_at'] ='';
     COMMON_GLOBAL['user_account_id'] = '';
@@ -2080,7 +2077,7 @@ async function user_logoff(){
         user_preferences_update_select();
     })
 }
-async function user_edit() {
+const user_edit = async () => {
     let json;
     //get user from REST API
     common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account'] + COMMON_GLOBAL['user_account_id'] + '?', 
@@ -2135,7 +2132,7 @@ async function user_edit() {
         }
     })
 }
-async function user_update() {
+const user_update = async () => {
     let username = document.getElementById('common_user_edit_input_username').value;
     let bio = document.getElementById('common_user_edit_input_bio').value;
     let avatar = document.getElementById('common_user_edit_avatar_img').src;
@@ -2228,7 +2225,7 @@ async function user_update() {
             set_avatar(avatar, document.getElementById('common_user_menu_avatar_img'));
             document.getElementById('common_user_menu_username').innerHTML = username;
             if (json.sent_change_email == 1){
-                let function_cancel_event = function() { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
+                let function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS['app_cancel'], function_cancel_event);
             }
             else
@@ -2237,7 +2234,7 @@ async function user_update() {
         }
     })
 }
-function user_signup() {
+const user_signup = () => {
     let username = document.getElementById('common_signup_username').value;
     let email = document.getElementById('common_signup_email').value;
     let password = document.getElementById('common_signup_password').value;
@@ -2287,12 +2284,12 @@ function user_signup() {
             let json = JSON.parse(result);
             COMMON_GLOBAL['rest_at'] = json.accessToken;
             COMMON_GLOBAL['user_account_id'] = json.id;
-            let function_cancel_event = function() { dialogue_verify_clear();eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);};
+            let function_cancel_event = () => { dialogue_verify_clear();eval(`(()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
             show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS['app_logoff'], function_cancel_event);
         }
     })
 }
-async function user_verify_check_input(item, nextField, callBack) {
+const user_verify_check_input = async (item, nextField, callBack) => {
 
     let json;
     let json_data;
@@ -2395,7 +2392,7 @@ async function user_verify_check_input(item, nextField, callBack) {
         return callBack(null, null);
     }
 }
-async function user_delete(choice=null, user_local, function_delete_event, callBack ) {
+const user_delete = async (choice=null, user_local, function_delete_event, callBack ) => {
     let password = document.getElementById('common_user_edit_input_password').value;
     switch (choice){
         case null:{
@@ -2433,7 +2430,7 @@ async function user_delete(choice=null, user_local, function_delete_event, callB
             break;
     }
 }
-function user_function(user_function, callBack) {
+const user_function = (user_function, callBack) => {
     let user_id_profile = document.getElementById('common_profile_id').innerHTML;
     let json_data;
     let method;
@@ -2505,7 +2502,7 @@ function user_function(user_function, callBack) {
         })
     }
 }
-function user_account_app_delete(choice=null, user_account_id, app_id, function_delete_event){    
+const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event) => {
     switch (choice){
         case null:{
             show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL['app_id']);
@@ -2528,7 +2525,7 @@ function user_account_app_delete(choice=null, user_account_id, app_id, function_
             break;
     }
 }
-async function user_forgot(){
+const user_forgot = async () => {
     let email = document.getElementById('common_forgot_email').value;
     let json_data = `{
                         "email": "${email}",
@@ -2548,14 +2545,14 @@ async function user_forgot(){
                 let json = JSON.parse(result);
                 if (json.sent == 1){
                     COMMON_GLOBAL['user_account_id'] = json.id;
-                    let function_cancel_event = function() { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
+                    let function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
                     show_common_dialogue('VERIFY', 'FORGOT', email, ICONS['app_cancel'], function_cancel_event);
                 }
             }
         })
     }
 }
-function updatePassword(){
+const updatePassword = () => {
     let new_password = document.getElementById('common_user_new_password').value;
     let new_password_confirm = document.getElementById('common_user_new_password_confirm').value;
     let user_new_password_auth = document.getElementById('common_user_new_password_auth').innerHTML;
@@ -2594,7 +2591,7 @@ function updatePassword(){
         })
     }
 }
-async function user_preference_save(){
+const user_preference_save = async () => {
     if (COMMON_GLOBAL['user_preference_save']==true && COMMON_GLOBAL['user_account_id'] != ''){
         let json_data =
         `{
@@ -2615,7 +2612,7 @@ async function user_preference_save(){
     }
     
 }
-async function user_preference_get(callBack){
+const user_preference_get = async (callBack) => {
     await common_fetch(COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_app'] + COMMON_GLOBAL['user_account_id'] + '?', 
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
@@ -2648,7 +2645,7 @@ async function user_preference_get(callBack){
         }
     })
 }
-function user_preferences_set_default_globals(preference){
+const user_preferences_set_default_globals = (preference) => {
     switch (preference){
         case 'LOCALE':{
             COMMON_GLOBAL['user_locale']         = navigator.language.toLowerCase();
@@ -2673,7 +2670,7 @@ function user_preferences_set_default_globals(preference){
         }
     }
 }
-function user_preferences_update_select(){
+const user_preferences_update_select = () => {
     SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
     SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
     SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
@@ -2691,7 +2688,7 @@ function user_preferences_update_select(){
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
-async function Providers_init(function_event){
+const Providers_init = async (function_event) => {
     let div = document.getElementById('identity_provider_login');
     let json;
     div.innerHTML = APP_SPINNER;
@@ -2717,10 +2714,10 @@ async function Providers_init(function_event){
         }
     })
 }
-async function ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) {    
+const ProviderUser_update = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) => {
     convert_image(profile_image_url, 
                   COMMON_GLOBAL['image_avatar_width'],
-                  COMMON_GLOBAL['image_avatar_height']).then(function(profile_image){
+                  COMMON_GLOBAL['image_avatar_height']).then((profile_image)=>{
         let json;
         let json_data =
         `{
@@ -2760,7 +2757,7 @@ async function ProviderUser_update(identity_provider_id, profile_id, profile_fir
         })
     })
 }
-async function ProviderSignIn(provider_button, callBack) {
+const ProviderSignIn = async (provider_button, callBack) => {
     //add REST API to get user provider data
     return callBack(null, { identity_provider_id: provider_button.children[0].innerHTML,
                             profile_id: provider_button.children[0].innerHTML,
@@ -2773,8 +2770,8 @@ async function ProviderSignIn(provider_button, callBack) {
 /*----------------------- */
 /* MODULE EASY.QRCODE     */
 /*----------------------- */
-function create_qr(div, url) {
-    import(COMMON_GLOBAL['module_easy.qrcode_path']).then(function({QRCode}){
+const create_qr = (div, url) => {
+    import(COMMON_GLOBAL['module_easy.qrcode_path']).then(({QRCode})=>{
         let qrcode = new QRCode(document.getElementById(div), {
             text: url,
             width: COMMON_GLOBAL['module_easy.qrcode_width'],
@@ -2794,15 +2791,15 @@ function create_qr(div, url) {
 /*----------------------- */
 /* MODULE LEAFLET         */
 /*----------------------- */
-async function map_init(containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) {
-    return await new Promise(function (resolve){
+const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) => {
+    return await new Promise((resolve)=>{
         if (checkconnected()) {
-            import(COMMON_GLOBAL['module_leaflet_path']).then(function({L}){
+            import(COMMON_GLOBAL['module_leaflet_path']).then(({L})=>{
                 //save library in variable for optimization
                 COMMON_GLOBAL['module_leaflet_library'] = L;
                 COMMON_GLOBAL['module_leaflet_session_map'] = '';
                 COMMON_GLOBAL['module_leaflet_session_map'] = COMMON_GLOBAL['module_leaflet_library'].map(containervalue).setView([latitude, longitude], zoomvalue);
-                map_setstyle(stylevalue).then(function(){
+                map_setstyle(stylevalue).then(()=>{
                     //disable doubleclick in event dblclick since e.preventdefault() does not work
                     COMMON_GLOBAL['module_leaflet_session_map'].doubleClickZoom.disable(); 
         
@@ -2816,24 +2813,24 @@ async function map_init(containervalue, stylevalue, longitude, latitude, map_mar
                     }
                     //add events to the buttons
                     document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
-                                            function() { 
-                                                        if (document.fullscreenElement)
-                                                            document.exitFullscreen();
-                                                        else
-                                                            document.getElementById(containervalue).requestFullscreen();
-                                                        }, 
+                                            () => { 
+                                                    if (document.fullscreenElement)
+                                                        document.exitFullscreen();
+                                                    else
+                                                        document.getElementById(containervalue).requestFullscreen();
+                                                    }, 
                                             false);
                     if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
                         document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
-                                                function() { 
-                                                            map_update(COMMON_GLOBAL['client_longitude'],
-                                                                    COMMON_GLOBAL['client_latitude'],
-                                                                    zoomvalue,
-                                                                    COMMON_GLOBAL['client_place'],
-                                                                    null,
-                                                                    map_marker_div_gps,
-                                                                    COMMON_GLOBAL['module_leaflet_jumpto']);
-                                                            }, 
+                                                () => { 
+                                                        map_update(COMMON_GLOBAL['client_longitude'],
+                                                                COMMON_GLOBAL['client_latitude'],
+                                                                zoomvalue,
+                                                                COMMON_GLOBAL['client_place'],
+                                                                null,
+                                                                map_marker_div_gps,
+                                                                COMMON_GLOBAL['module_leaflet_jumpto']);
+                                                        }, 
                                                 false);
                     resolve();
                 })
@@ -2844,19 +2841,19 @@ async function map_init(containervalue, stylevalue, longitude, latitude, map_mar
     })
     
 }
-async function map_resize() {
+const map_resize = async () => {
     if (checkconnected()) {
         //fixes not rendering correct showing map div
         COMMON_GLOBAL['module_leaflet_session_map'].invalidateSize();
     }
 }
-function map_line_removeall(){
+const map_line_removeall = () => {
     if(COMMON_GLOBAL['module_leaflet_session_map_layer'])
         for (let i=0;i<COMMON_GLOBAL['module_leaflet_session_map_layer'].length;i++)
             COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_layer'][i]);
             COMMON_GLOBAL['module_leaflet_session_map_layer']=[];
 }
-function map_line_create(id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity){
+const map_line_create = (id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity) => {
     if (checkconnected()) {
         let geojsonFeature = {
             "id": `"${id}"`,
@@ -2882,15 +2879,15 @@ function map_line_create(id, title, text_size, from_longitude, from_latitude, to
             COMMON_GLOBAL['module_leaflet_session_map_layer'].push(layer);
     }
 }
-function map_setevent(event, function_event){
+const map_setevent = (event, function_event) => {
     if (checkconnected()) {
         //also creates event:
         //COMMON_GLOBAL['module_leaflet_library'].DomEvent.addListener(COMMON_GLOBAL['module_leaflet_session_map'], 'dblclick', function_event);
         COMMON_GLOBAL['module_leaflet_session_map'].on(event, function_event);
     }
 }
-async function map_setstyle(mapstyle){
-    return await new Promise (function(resolve, reject) {
+const map_setstyle = async (mapstyle) => {
+    return await new Promise ((resolve, reject) => {
         if (checkconnected()) {
             if(COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik'])
                 COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik']);
@@ -2919,13 +2916,13 @@ async function map_setstyle(mapstyle){
             resolve();
     })
 }
-function map_update_popup(title) {
+const map_update_popup = (title) => {
     document.getElementById('common_module_leaflet_popup_title').innerHTML = title;
 }
-async function map_update(longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) {
-    return new Promise(function (resolve){
+const map_update = async (longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) => {
+    return new Promise((resolve)=> {
         if (checkconnected()) {
-            function map_update_gps(to_method, zoomvalue, longitude, latitude){
+            const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
                 switch (to_method){
                     case 0:{
                         if (zoomvalue == '')
@@ -2941,7 +2938,7 @@ async function map_update(longitude, latitude, zoom, text_place, timezone_text =
                     //also have COMMON_GLOBAL['module_leaflet_session_map'].panTo(new COMMON_GLOBAL['module_leaflet_library'].LatLng({lng: longitude, lat: latitude}));
                 }
             }
-            function map_update_text(timezone_text){
+            const map_update_text = (timezone_text) => {
                 let popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
                                  <div id="common_module_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
                                  <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
@@ -2956,7 +2953,7 @@ async function map_update(longitude, latitude, zoom, text_place, timezone_text =
             }
             map_update_gps(to_method, zoom, longitude, latitude);
             if (timezone_text == null)
-                tzlookup(latitude, longitude).then(function(tzlookup_text){
+                tzlookup(latitude, longitude).then((tzlookup_text)=>{
                     map_update_text(tzlookup_text);
                 })
             else{
@@ -2968,7 +2965,7 @@ async function map_update(longitude, latitude, zoom, text_place, timezone_text =
 /*----------------------- */
 /* SERVICE BROADCAST      */
 /*----------------------- */
-function broadcast_init(close_eventsource){
+const broadcast_init = (close_eventsource) => {
     //broadcast
     document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
     document.getElementById('common_broadcast_info_title').innerHTML = ICONS['app_alert'];
@@ -2980,19 +2977,19 @@ function broadcast_init(close_eventsource){
         connectOnline();
     }
 }
-function maintenance_countdown(remaining) {
+const maintenance_countdown = (remaining) => {
     if(remaining <= 0)
         location.reload(true);
     document.getElementById('common_maintenance_countdown').innerHTML = remaining;
-    setTimeout(function(){ maintenance_countdown(remaining - 1); }, 1000);
+    setTimeout(()=>{ maintenance_countdown(remaining - 1); }, 1000);
 };
-function show_broadcast(broadcast_message){
+const show_broadcast = (broadcast_message) => {
     broadcast_message = window.atob(broadcast_message);
     let broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     let message = JSON.parse(broadcast_message).broadcast_message;
     if (broadcast_type=='MAINTENANCE'){
         if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
-            eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);
+            eval(`(()=>{${COMMON_GLOBAL['exception_app_function']}()}());`);
         document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
         show_maintenance(message);
     }
@@ -3001,17 +2998,17 @@ function show_broadcast(broadcast_message){
             show_broadcast_info(message);
         }
 }
-function show_broadcast_info(message){
-    let hide_function = function() { document.getElementById('common_broadcast_info').style.visibility='hidden';
-                                     document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
-                                     document.getElementById('common_broadcast_info_message_item').innerHTML='';
-                                     document.getElementById('common_broadcast_info_message').style.animationName='unset';};
+const show_broadcast_info = (message) => {
+    let hide_function = () => { document.getElementById('common_broadcast_info').style.visibility='hidden';
+                                document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
+                                document.getElementById('common_broadcast_info_message_item').innerHTML='';
+                                document.getElementById('common_broadcast_info_message').style.animationName='unset';};
     document.getElementById('common_broadcast_info_message').style.animationName='common_ticker';
     document.getElementById('common_broadcast_close').addEventListener('click', hide_function);
     document.getElementById('common_broadcast_info_message_item').innerHTML = message;
     document.getElementById('common_broadcast_info').style.visibility='visible';
 }
-function show_maintenance(message, init){
+const show_maintenance = (message, init) => {
     let countdown_timer = 60;
 
     if (init==1){
@@ -3040,10 +3037,10 @@ function show_maintenance(message, init){
             if (message!='')
                 document.getElementById('common_maintenance_footer').innerHTML = message;
 }
-function reconnect(){
+const reconnect = () => {
     setTimeout(connectOnline, 5000);
 }
-function updateOnlineStatus(){
+const updateOnlineStatus = () => {
     let token_type='';
     let url='';
     if (COMMON_GLOBAL['system_admin']==1){
@@ -3066,23 +3063,23 @@ function updateOnlineStatus(){
         null;
     })
 }
-function connectOnline(updateOnline=false){
+const connectOnline = (updateOnline=false) => {
     COMMON_GLOBAL['service_broadcast_client_ID'] = Date.now();
     COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`/service/broadcast/connect/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
                                                 `?app_id=${COMMON_GLOBAL['app_id']}` +
                                                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` +
                                                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
                                                 `&system_admin=${COMMON_GLOBAL['system_admin']}`);
-    COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = function (event) {
+    COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
         
             show_broadcast(event.data);
     }
-    COMMON_GLOBAL['service_broadcast_eventsource'].onerror = function (err) {
+    COMMON_GLOBAL['service_broadcast_eventsource'].onerror = (err) => {
         COMMON_GLOBAL['service_broadcast_eventsource'].close();
         reconnect();
     }
 }
-function checkOnline(div_icon_online, user_account_id){
+const checkOnline = (div_icon_online, user_account_id) => {
     common_fetch(`/service/broadcast/checkconnected/${user_account_id}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (JSON.parse(result).online == 1)
@@ -3094,8 +3091,8 @@ function checkOnline(div_icon_online, user_account_id){
 /*----------------------- */
 /* SERVICE GEOLOCATION    */
 /*----------------------- */
-async function get_place_from_gps(longitude, latitude) {
-    return await new Promise(function (resolve){
+const get_place_from_gps = async (longitude, latitude) => {
+    return await new Promise((resolve)=>{
         let url;
         let tokentype;
         if (COMMON_GLOBAL['system_admin']==1){
@@ -3133,7 +3130,7 @@ async function get_place_from_gps(longitude, latitude) {
         })
     })
 }
-async function get_gps_from_ip() {
+const get_gps_from_ip = async () => {
 
     let url;
     let tokentype;
@@ -3169,8 +3166,8 @@ async function get_gps_from_ip() {
         }
     })
 }
-async function tzlookup(latitude, longitude){
-    return new Promise(function (resolve, reject){
+const tzlookup = async (latitude, longitude) => {
+    return new Promise((resolve, reject)=>{
         let url;
         let tokentype;
         if (COMMON_GLOBAL['system_admin']==1){
@@ -3197,7 +3194,7 @@ async function tzlookup(latitude, longitude){
 /*----------------------- */
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
-async function get_cities(countrycode, callBack){
+const get_cities = async (countrycode, callBack) => {
     await common_fetch(COMMON_GLOBAL['service_worldcities'] + '/' + countrycode +
                        '?app_user_id=' + COMMON_GLOBAL['user_account_id'], 
                        'GET', 0, null, null, null, (err, result) =>{
@@ -3205,7 +3202,7 @@ async function get_cities(countrycode, callBack){
             callBack(err, null);
         else{
             let json = JSON.parse(result);
-            json.sort(function(a, b) {
+            json.sort((a, b) => {
                 let x = a.admin_name.toLowerCase() + a.city.toLowerCase();
                 let y = b.admin_name.toLowerCase() + b.city.toLowerCase();
                 if (x < y) {
@@ -3250,16 +3247,16 @@ async function get_cities(countrycode, callBack){
 /*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
-function exception(status, message){
+const exception = (status, message) => {
     if (status == 401)
-        eval(`(function (){${COMMON_GLOBAL['exception_app_function']}()}());`);
+        eval(`(()=>{${COMMON_GLOBAL['exception_app_function']}()}());`);
     else
         show_message('EXCEPTION',  null, null, message, COMMON_GLOBAL['app_id']);
 }
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-function set_globals(parameters){
+const set_globals = (parameters) => {
     //app info
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
@@ -3306,7 +3303,7 @@ function set_globals(parameters){
         COMMON_GLOBAL['user_arabic_script']  = '';
     }   
 }
-function assign_icons(){
+const assign_icons = () => {
     //dialogue user verify
     document.getElementById('common_user_verify_email_icon').innerHTML = ICONS['app_email'];
     //dialogue login
@@ -3413,46 +3410,46 @@ function assign_icons(){
     document.getElementById('common_user_preference_direction').innerHTML = ICONS['regional_direction'];        
     document.getElementById('common_user_preference_arabic_script').innerHTML = ICONS['regional_script'];
 }
-function set_events(){
+const set_events = () => {
     //login/signup/forgot
-    document.getElementById('common_login_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-    document.getElementById('common_login_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
-    document.getElementById('common_login_close').addEventListener('click', function() { document.getElementById('common_dialogue_login').style.visibility = 'hidden' }, false);
-    document.getElementById('common_signup_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-    document.getElementById('common_signup_tab3').addEventListener('click', function() { show_common_dialogue('FORGOT') }, false);
-    document.getElementById('common_signup_close').addEventListener('click', function() { document.getElementById('common_dialogue_signup').style.visibility = 'hidden' }, false);
-    document.getElementById('common_forgot_tab1').addEventListener('click', function() { show_common_dialogue('LOGIN') }, false);
-    document.getElementById('common_forgot_tab2').addEventListener('click', function() { show_common_dialogue('SIGNUP') }, false);
-    document.getElementById('common_forgot_email').addEventListener('keyup', function(event) {
+    document.getElementById('common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP') }, false);
+    document.getElementById('common_login_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT') }, false);
+    document.getElementById('common_login_close').addEventListener('click', () => { document.getElementById('common_dialogue_login').style.visibility = 'hidden' }, false);
+    document.getElementById('common_signup_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN') }, false);
+    document.getElementById('common_signup_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT') }, false);
+    document.getElementById('common_signup_close').addEventListener('click', () => { document.getElementById('common_dialogue_signup').style.visibility = 'hidden' }, false);
+    document.getElementById('common_forgot_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN') }, false);
+    document.getElementById('common_forgot_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP') }, false);
+    document.getElementById('common_forgot_email').addEventListener('keyup', (event) =>{
         if (event.code === 'Enter') {
             event.preventDefault();
-            user_forgot().then(function(){
+            user_forgot().then(()=>{
                 //unfocus
                 document.getElementById('common_forgot_email').blur();
             });
         }
     });
-    document.getElementById('common_forgot_button').addEventListener('click', function() { user_forgot()}, false);
-    document.getElementById('common_forgot_close').addEventListener('click', function() { document.getElementById('common_dialogue_forgot').style.visibility = 'hidden' }, false);
+    document.getElementById('common_forgot_button').addEventListener('click', () => { user_forgot()}, false);
+    document.getElementById('common_forgot_close').addEventListener('click', () => { document.getElementById('common_dialogue_forgot').style.visibility = 'hidden' }, false);
     //set app info
     document.getElementById('common_login_app_name').innerHTML = COMMON_GLOBAL['app_name'];
     document.getElementById('common_signup_app_name').innerHTML = COMMON_GLOBAL['app_name'];
     document.getElementById('common_forgot_app_name').innerHTML = COMMON_GLOBAL['app_name'];
 
     //dialogue message
-    document.getElementById('common_message_cancel').addEventListener('click', function() { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
+    document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
     //dialogue new password
-    document.getElementById('common_user_new_password_cancel').addEventListener('click', function() { dialogue_new_password_clear(); }, false);
-    document.getElementById('common_user_new_password_ok').addEventListener('click', function() { updatePassword(); }, false);
+    document.getElementById('common_user_new_password_cancel').addEventListener('click', () => { dialogue_new_password_clear(); }, false);
+    document.getElementById('common_user_new_password_ok').addEventListener('click', () => { updatePassword(); }, false);
     //dialogue lov
-    document.getElementById('common_lov_search_input').addEventListener('keyup', function(event) {lov_keys(event)});
-    document.getElementById('common_lov_search_icon').addEventListener('click', function() {lov_filter(document.getElementById('common_lov_search_input').value);});
-    document.getElementById('common_lov_close').addEventListener('click', function() { lov_close()}, false); 
+    document.getElementById('common_lov_search_input').addEventListener('keyup', (event) => {lov_keys(event)});
+    document.getElementById('common_lov_search_icon').addEventListener('click', () => {lov_filter(document.getElementById('common_lov_search_input').value);});
+    document.getElementById('common_lov_close').addEventListener('click', () => { lov_close()}, false); 
     //profile search
     if (document.getElementById('common_profile_input_row'))
-        document.getElementById('common_profile_search_icon').addEventListener('click', function() { document.getElementById('common_profile_search_input').focus();document.getElementById('common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+        document.getElementById('common_profile_search_icon').addEventListener('click', () => { document.getElementById('common_profile_search_input').focus();document.getElementById('common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     //window info
-    document.getElementById('common_window_info_toolbar').addEventListener('click', function(event){
+    document.getElementById('common_window_info_toolbar').addEventListener('click', (event)=>{
         let event_target_id;
         if  (event.target.parentNode.id == 'common_window_info_toolbar'){
             //button
@@ -3460,7 +3457,7 @@ function set_events(){
         }
         else
             if  (event.target.parentNode.parentNode.id == 'common_window_info_toolbar'){
-                //svg or i
+                //svg or icon
                 event_target_id = event.target.parentNode.id;
             }
             else{
@@ -3511,13 +3508,13 @@ function set_events(){
         }
     }, false);
     //user menu
-    document.getElementById('common_user_menu').addEventListener('click', function() { let menu = document.getElementById('common_user_menu_dropdown');
+    document.getElementById('common_user_menu').addEventListener('click', () => { let menu = document.getElementById('common_user_menu_dropdown');
                                                                                 if (menu.style.visibility == 'visible') 
                                                                                         menu.style.visibility = 'hidden'; 
                                                                                 else 
                                                                                         menu.style.visibility = 'visible' }, false);
     
-    document.addEventListener('keydown', function(event) { 
+    document.addEventListener('keydown', (event) =>{ 
 
         if (event.key === 'Escape') {
             event.preventDefault();
@@ -3532,22 +3529,22 @@ function set_events(){
             } 
         }
     }, false);
-    document.getElementById('common_user_menu_dropdown_log_in').addEventListener('click', function() { show_common_dialogue('LOGIN'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';}, false);
-    document.getElementById('common_user_menu_dropdown_edit').addEventListener('click', function() { user_edit();document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
-    document.getElementById('common_user_menu_dropdown_signup').addEventListener('click', function() { show_common_dialogue('SIGNUP'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    document.getElementById('common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';}, false);
+    document.getElementById('common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    document.getElementById('common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
     //user preferences
     //define globals and save settings here, in apps define what should happen when changing
     if (document.getElementById('common_user_locale_select'))
-        document.getElementById('common_user_locale_select').addEventListener('change', function() { 
-                                                                                    COMMON_GLOBAL['user_locale'] = this.value;
+        document.getElementById('common_user_locale_select').addEventListener('change', (event) => { 
+                                                                                    COMMON_GLOBAL['user_locale'] = event.target.value;
                                                                                     //change navigator.language, however when logging out default navigator.language will be set
                                                                                     //commented at the moment
                                                                                     //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL['user_locale'], writable: true}});
                                                                                     user_preference_save();
                                                                                 }, false);
     if (document.getElementById('common_user_timezone_select'))
-        document.getElementById('common_user_timezone_select').addEventListener('change', function() { COMMON_GLOBAL['user_timezone'] = this.value;
-                                                                                                user_preference_save().then(function(){
+        document.getElementById('common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL['user_timezone'] = event.target.value;
+                                                                                                user_preference_save().then(()=>{
                                                                                                     if (document.getElementById('common_dialogue_user_edit').style.visibility == 'visible') {
                                                                                                         dialogue_user_edit_clear();
                                                                                                         user_edit();
@@ -3556,12 +3553,12 @@ function set_events(){
                                                                                                 }, false);
     //define also in app if needed to adjust ui
     if (document.getElementById('common_user_direction_select'))
-        document.getElementById('common_user_direction_select').addEventListener('change', function() { document.body.style.direction = this.value;
-                                                                                                COMMON_GLOBAL['user_direction'] = this.value;  
+        document.getElementById('common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
+                                                                                                COMMON_GLOBAL['user_direction'] = event.target.value;  
                                                                                                 user_preference_save();
                                                                                                 }, false);
     if (document.getElementById('common_user_arabic_script_select'))
-        document.getElementById('common_user_arabic_script_select').addEventListener('change', function() { COMMON_GLOBAL['user_arabic_script'] = this.value;
+        document.getElementById('common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL['user_arabic_script'] = event.target.value;
                                                                                                     user_preference_save();
                                                                                                     }, false);
     SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
@@ -3569,12 +3566,12 @@ function set_events(){
     SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
     SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
     //dialogue user edit
-    document.getElementById('common_user_edit_close').addEventListener('click', function() { dialogue_user_edit_clear() }, false);
-    document.getElementById('common_user_edit_btn_avatar_img').addEventListener('click', function() { document.getElementById('common_user_edit_input_avatar_img').click() }, false);
-    document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', function() { show_image(document.getElementById('common_user_edit_avatar_img'), this.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']) }, false);
-    document.getElementById('common_user_edit_btn_user_update').addEventListener('click', function() { user_update(); }, false);
+    document.getElementById('common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear() }, false);
+    document.getElementById('common_user_edit_btn_avatar_img').addEventListener('click', () => { document.getElementById('common_user_edit_input_avatar_img').click() }, false);
+    document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']) }, false);
+    document.getElementById('common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
 }
-function set_common_parameters(app_id, parameter_name, parameter_value){
+const set_common_parameters = (app_id, parameter_name, parameter_value) => {
     if (app_id == COMMON_GLOBAL['common_app_id']){
         switch (parameter_name){
             case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL['image_file_allowed_type1'] = parameter_value;break;}
@@ -3627,8 +3624,8 @@ function set_common_parameters(app_id, parameter_name, parameter_value){
         }
     }
 }
-async function normal_start(ui){
-    return new Promise(function (resolve){
+const normal_start = async (ui) => {
+    return new Promise((resolve)=>{
         document.title = COMMON_GLOBAL['app_name'];
         let url= '';
         if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
@@ -3667,7 +3664,7 @@ async function normal_start(ui){
         })
     })    
 }
-async function init_common(parameters, callBack){
+const init_common = async (parameters, callBack) => {
     /*
     parameters:
     {app_id: 
@@ -3702,13 +3699,13 @@ async function init_common(parameters, callBack){
             callBack(null, null);
         }
         else
-            normal_start(parameters.ui).then(function(global_app_parameters){
+            normal_start(parameters.ui).then((global_app_parameters)=>{
                 callBack(null, global_app_parameters);
             })
     }
     else{
         broadcast_init(parameters.close_eventsource);
-        normal_start(parameters.ui).then(function(global_app_parameters){
+        normal_start(parameters.ui).then((global_app_parameters)=>{
             callBack(null, global_app_parameters);
         })
     }
