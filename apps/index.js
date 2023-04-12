@@ -265,9 +265,9 @@ const get_module_with_init = async (app_id,
         })
     }
 }
-const get_email_verification = async (data, email, baseUrl, lang_code, callBack) => {
+const get_email_verification = async (app_id, data, email, baseUrl, lang_code, callBack) => {
     email = email.replace('<Logo/>', 
-                        `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${data.app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
+                        `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
     email = email.replace('<Verification_code/>', 
                         `${data.verificationCode}`);
     email = email.replace('<Footer/>', 
@@ -389,7 +389,7 @@ const getMail = (app_id, data, baseUrl) => {
                 reject(err);
             else{
                 //email type 1-4 are emails with verification code
-                get_email_verification(data, email, baseUrl, data.lang_code, (err,email_verification)=>{
+                get_email_verification(app_id, data, email, baseUrl, data.lang_code, (err,email_verification)=>{
                     if (err)
                         reject(err);
                     else
