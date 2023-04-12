@@ -1,6 +1,6 @@
 const service = await import('./server.service.js')
 
-function ConfigMaintenanceGet(req, res){
+const ConfigMaintenanceGet = (req, res) => {
     service.ConfigMaintenanceGet((err, result)=>{
         if (err){
             return res.status(500).send(
@@ -13,7 +13,7 @@ function ConfigMaintenanceGet(req, res){
             );
     })
 }
-function ConfigMaintenanceSet(req, res) {
+const ConfigMaintenanceSet = (req, res) => {
     service.ConfigMaintenanceSet(req.body.value, (err, result)=>{
         if (err){
             return res.status(500).send(
@@ -26,7 +26,7 @@ function ConfigMaintenanceSet(req, res) {
             );
     })
 }
-function ConfigGetSaved(req, res){
+const ConfigGetSaved = (req, res) => {
     service.ConfigGetSaved(req.query.config_type_no, (err, result)=>{
         if (err){
             return res.status(500).send(
@@ -41,7 +41,7 @@ function ConfigGetSaved(req, res){
             );
     })
 }
-function ConfigSave (req,res){
+const ConfigSave = (req,res) => {
     service.ConfigSave(req.body.config_no, req.body.config_json, false, (err, result)=>{
         if (err){
             return res.status(500).send(
@@ -54,7 +54,7 @@ function ConfigSave (req,res){
             );
     })
 }
-function ConfigGet(req,res){
+const ConfigGet = (req,res) => {
     service.ConfigGetCallBack(req.query.config_type_no, req.query.config_group, req.query.parameter, (err, result)=>{
         if (err){
             return res.status(500).send(
@@ -69,7 +69,7 @@ function ConfigGet(req,res){
             );
     })
 }
-function ConfigInfo(req,res){
+const ConfigInfo = (req,res) => {
     service.ConfigInfo((err, result)=>{
         if (err){
             return res.status(500).send(
@@ -84,7 +84,7 @@ function ConfigInfo(req,res){
             );
     })
 }
-function Info(req,res){
+const Info = (req,res) => {
     service.Info((err, result)=>{
         if (err){
             return res.status(500).send(

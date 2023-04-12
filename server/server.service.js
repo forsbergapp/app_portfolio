@@ -16,7 +16,7 @@ else
 //initial config with file paths and maintenance parameter
 let SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 
-function config_files(){
+const config_files = () => {
     return [
             [0, SERVER_CONFIG_INIT_PATH],
             [1, JSON.parse(CONFIG_INIT)['FILE_CONFIG_SERVER']],
@@ -27,7 +27,7 @@ function config_files(){
             [6, JSON.parse(CONFIG_INIT)['FILE_CONFIG_AUTH_USER']]
            ];
 }
-function ConfigGet(config_no, config_group = null, parameter = null){
+const ConfigGet = (config_no, config_group = null, parameter = null) => {
     switch (parseInt(config_no)){
         case 0:{
             //CONFIG INIT
@@ -71,11 +71,11 @@ function ConfigGet(config_no, config_group = null, parameter = null){
         } 
     }
 }
-async function ConfigExists(){
-    return await new Promise(function(resolve){
+const ConfigExists = async () => {
+    return await new Promise((resolve) => {
         //load  initial config_init.json file if exists
         //if exists return
-        import('node:fs').then(function(fs){
+        import('node:fs').then((fs) => {
             fs.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, (err, result) => {
                 if (err)
                     resolve(false);
@@ -88,12 +88,12 @@ async function ConfigExists(){
 
     })
 }
-async function DefaultConfig(){
-    return new Promise(function(resolve, reject){
-        async function create_config_dir(){
-            return new Promise(function(resolve, reject){
+const DefaultConfig = async () => {
+    return new Promise((resolve, reject) => {
+        const create_config_dir = async () => {
+            return new Promise((resolve, reject) => {
                 //create /config directory first time if needed
-                import('node:fs').then(function(fs){
+                import('node:fs').then((fs) => {
                     fs.access(process.cwd() + '/config', (err) => {
                         if (err)
                             fs.mkdir(process.cwd() + '/config', (err) => {
@@ -109,7 +109,7 @@ async function DefaultConfig(){
             })
         }
         create_config_dir()
-        .then(function(){
+        .then(() => {
             let i = 0;
             //read all default files
             let default_files = [
@@ -121,11 +121,11 @@ async function DefaultConfig(){
                                 ];
             let config_json = [];
             //ES2020 import() with ES6 promises, object destructuring
-            import('node:fs').then(function({promises: {readFile}}){
+            import('node:fs').then(({promises: {readFile}}) => {
                 Promise.all(default_files.map(file => {
                     return readFile(process.cwd() + '/server/' + file[1], 'utf8');
-                })).then(function(config_json){
-                    import('node:crypto').then(function({ createHash }){
+                })).then((config_json) => {
+                    import('node:crypto').then(({ createHash }) => {
                         //update default file for config 1 server
                         config_json[0] = JSON.parse(config_json[0]);
                         //update path
@@ -171,7 +171,7 @@ async function DefaultConfig(){
                                             };
                         config_init = JSON.stringify(config_init, undefined, 2);
                         //save initial config files with metadata including path to config files
-                        import('node:fs').then(function(fs){
+                        import('node:fs').then((fs) => {
                             fs.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, config_init,  'utf8', (err) => {
                                 if (err)
                                     reject(err);
@@ -200,21 +200,21 @@ async function DefaultConfig(){
                 })  
             })
         })
-        .catch(function(err) {
+        .catch((err) => {
             reject(err);
          });  
     })
 }
-async function InitConfig(){
-    return await new Promise(function(resolve, reject){
-        async function setVariables(){
-            return await new Promise(function(resolve, reject){
+const InitConfig = async () => {
+    return await new Promise((resolve, reject) => {
+        const setVariables = async () => {
+            return await new Promise((resolve, reject) => {
                 let files = config_files();
                 let i=0;                
                 for (const file of files){
                     //skip log path
                     if (file[0]!=5){
-                        import('node:fs').then(function(fs){
+                        import('node:fs').then((fs) => {
                             fs.readFile(process.cwd() + file[1], 'utf8', (err, fileBuffer) => {
                                 if (err)
                                     reject(err);
@@ -256,14 +256,14 @@ async function InitConfig(){
                 }
             })
         }
-        ConfigExists().then(function(result){
+        ConfigExists().then((result) => {
             if (result==true)
-                setVariables().then(function(){
+                setVariables().then(() => {
                     resolve();
                 })
             else{
-                DefaultConfig().then(function(){
-                    setVariables().then(function(){
+                DefaultConfig().then(() => {
+                    setVariables().then(() => {
                         resolve();
                     })
                 })
@@ -272,11 +272,11 @@ async function InitConfig(){
     })
 }
 
-function ConfigGetCallBack (config_no, config_group, parameter, callBack) {
+const ConfigGetCallBack = (config_no, config_group, parameter, callBack) => {
         callBack(null, ConfigGet(config_no, config_group, parameter));
     }
-function ConfigMaintenanceSet(value, callBack){
-    import('node:fs').then(function(fs){
+const ConfigMaintenanceSet = (value, callBack) => {
+    import('node:fs').then((fs) => {
         fs.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
             if (err)
                 callBack(err, null);
@@ -298,8 +298,8 @@ function ConfigMaintenanceSet(value, callBack){
         })
     })
 }
-function ConfigMaintenanceGet(callBack){
-    import('node:fs').then(function(fs){
+const ConfigMaintenanceGet = (callBack) => {
+    import('node:fs').then((fs) => {
         fs.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
             if (err)
                 callBack(err, null);
@@ -309,7 +309,7 @@ function ConfigMaintenanceGet(callBack){
     })
 }
     
-function ConfigGetSaved(config_type_no, callBack){
+const ConfigGetSaved = (config_type_no, callBack) => {
     /*
     config_type_no
     0 = config_init     path + file
@@ -321,10 +321,10 @@ function ConfigGetSaved(config_type_no, callBack){
     6 = auth user       path + file
     */
     
-    let config_file = config_files().filter(function(file) {
+    let config_file = config_files().filter((file) => {
         return (parseInt(file[0]) == config_type_no);
     })[0][1];
-    import('node:fs').then(function(fs){
+    import('node:fs').then((fs) => {
         fs.readFile(process.cwd() + config_file, 'utf8', (err, fileBuffer) => {
             if (err)
                 callBack(err, null);
@@ -333,11 +333,11 @@ function ConfigGetSaved(config_type_no, callBack){
         })
     })
 }
-async function ConfigSave(config_no, config_json, first_time, callBack){
+const ConfigSave = async (config_no, config_json, first_time, callBack) => {
     try {
-        async function write_config(config_no, config_file, config_json){
-            return new Promise(function(resolve, reject){
-                import('node:fs').then(function(fs){
+        const write_config = async (config_no, config_file, config_json) => {
+            return new Promise((resolve, reject) => {
+                import('node:fs').then((fs) => {
                     //write new config
                     fs.writeFile(process.cwd() + config_file, config_json,  'utf8', (err) => {
                         if (err)
@@ -374,7 +374,7 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
         }
         let config_file;
         if (config_no){
-            config_file = config_files().filter(function(file) {
+            config_file = config_files().filter((file) => {
                 return (parseInt(file[0]) == parseInt(config_no));
             })[0][1];
             if (first_time){
@@ -387,7 +387,7 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
                     config_json['modified'] = '';
                     config_json = JSON.stringify(config_json, undefined, 2);
                 }                
-                write_config(config_no, config_file, config_json).then(function(){
+                write_config(config_no, config_file, config_json).then(() => {
                     callBack(null, null);
                 });
             }
@@ -397,7 +397,7 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
                     callBack(null, null);
                 }
                 else{
-                    import('node:fs').then(function(fs){
+                    import('node:fs').then((fs) => {
                         //get old config file
                         fs.readFile(process.cwd() + config_file,  'utf8', (err, result_read) => {
                             if (err)
@@ -418,7 +418,7 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
                                             config_json['modified'] = new Date().toISOString();
                                             config_json = JSON.stringify(config_json, undefined, 2);
                                         }  
-                                        write_config(config_no, config_file, config_json).then(function(){
+                                        write_config(config_no, config_file, config_json).then(() => {
                                             callBack(null, null);
                                         });
                                     }
@@ -431,28 +431,28 @@ async function ConfigSave(config_no, config_json, first_time, callBack){
         }
     } catch (error) {
         let stack = new Error().stack;
-        import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
-                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(function(){
+        import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                     callBack(err, null);
                 })
             });
         })
     }
 }
-function CheckFirstTime(){
+const CheckFirstTime = () => {
     if (JSON.parse(CONFIG_USER)['username']=='')
         return true;
     else
         return false;
 }
-function CreateSystemAdmin(admin_name, admin_password, callBack){
+const CreateSystemAdmin = (admin_name, admin_password, callBack) => {
     let json = JSON.parse(CONFIG_USER);
     json['username'] = admin_name;
     json['password'] = admin_password;
     json['modified'] = new Date().toISOString();
     json = JSON.stringify(json, undefined, 2);
-    import('node:fs').then(function(fs){
+    import('node:fs').then((fs) => {
         fs.writeFile(process.cwd() + config_files()[6][1], json,  'utf8', (err) => {
             if (err)
                 callBack(err, null);
@@ -463,10 +463,10 @@ function CreateSystemAdmin(admin_name, admin_password, callBack){
         })
     })
 }
-function ConfigInfo(callBack){
+const ConfigInfo = (callBack) => {
     callBack(null, null);
 }
-async function Info(callBack){
+const Info = async (callBack) => {
     let os = await import('os');
     let os_json = {
                     "hostname": os.hostname(),
