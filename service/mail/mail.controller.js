@@ -28,7 +28,7 @@ const getLogo = (req, res) => {
         }
         else {
             req.query.callback = 1;
-            import(`file://${process.cwd()}/service/geolocation/geolocation.controller`).then(({getIp}) => {
+            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIp}) => {
                 getIp(req, res, (err, result)=>{
                     import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
                         createLog(req.query.app_id,
@@ -79,7 +79,7 @@ const sendEmail = (req, data, callBack) => {
     const baseUrl = import.meta.url.substring(from_app_root);
     
     import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(({getParameters_server}) => {
-        getParameters_server(req.query.app_id, data.app_id, (err, result)=>{
+        getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), (err, result)=>{
             if (err) {                
                 let stack = new Error().stack;
                 import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
@@ -132,7 +132,7 @@ const sendEmail = (req, data, callBack) => {
                     }
                 }
                 import(`file://${process.cwd()}/apps/index.js`).then(({getMail}) => {
-                    let mail = getMail(data.app_id, data, baseUrl)
+                    let mail = getMail(req.query.app_id, data, baseUrl)
                     .then((mail_result) => {
                         emailData =  {
                             email_host:         db_SERVICE_MAIL_HOST,
@@ -151,7 +151,7 @@ const sendEmail = (req, data, callBack) => {
                             else
                                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
                                     createLog(req.query.app_id,
-                                                { app_id : data.app_id,
+                                                {   app_id : req.query.app_id,
                                                     app_module : 'MAIL',
                                                     app_module_type : 'SEND',
                                                     app_module_request : `mailhost: ${emailData.email_host}, type: ${data.emailType}, from: ${emailData.from} (${emailData.email_auth_user}), to: ${data.toEmail}, subject: ${emailData.subject}`,

@@ -129,7 +129,6 @@ const userSignup = (req, res) => {
                         //send email for local users only
                         const emailData = {
                             lang_code : req.query.lang_code,
-                            app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                             app_user_id : results.insertId,
                             emailType : parameter_value,
                             toEmail : req.body.email,
@@ -305,7 +304,6 @@ const passwordResetUser = (req, res) => {
                                                 getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                     const emailData = {
                                                         lang_code : req.query.lang_code,
-                                                        app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                                         app_user_id : results.id,
                                                         emailType : parameter_value,
                                                         toEmail : email,
@@ -580,7 +578,6 @@ const updateUserLocal = (req, res) => {
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                 const emailData = {
                                                     lang_code : req.query.lang_code,
-                                                    app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                                     app_user_id : req.params.id,
                                                     emailType : parameter_value,
                                                     toEmail : req.body.new_email,
@@ -973,7 +970,6 @@ const userLogin = (req, res) => {
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
                                                 const emailData = {
                                                     lang_code : req.query.lang_code,
-                                                    app_id : ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                                                     app_user_id : results.id,
                                                     emailType : parameter_value,
                                                     toEmail : results.email,
