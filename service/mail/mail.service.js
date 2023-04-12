@@ -1,6 +1,6 @@
 const nodemailer = await import('nodemailer');
 
-function sendEmailService(data, callBack){
+const sendEmailService = (data, callBack) => {
     let transporter = nodemailer.createTransport({
         host: data.email_host,
         port: data.email_port,
@@ -22,7 +22,7 @@ function sendEmailService(data, callBack){
         textEncoding: 'quoted-printable'
     };
 
-    transporter.sendMail(message, function(err, result) {
+    transporter.sendMail(message, (err, result) => {
         if (err) {
             return callBack(err, null);
         } else {

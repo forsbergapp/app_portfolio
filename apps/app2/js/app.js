@@ -1667,7 +1667,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
 const user_settings_delete = (choice=null) => {
     let select_user_setting = document.getElementById('setting_select_user_setting');
     let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    let function_delete_user_setting = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden';user_settings_delete(1) };
+    const function_delete_user_setting = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden';user_settings_delete(1) };
     
     switch (choice){
         case null:{

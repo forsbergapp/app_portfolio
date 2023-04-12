@@ -1,6 +1,6 @@
 const service = await import("./identity_provider.service.js");
 
-function getIdentityProviders(req, res){
+const getIdentityProviders = (req, res) => {
 	service.getIdentityProviders(req.query.app_id, (err,results) => {
 		if (err) {
 			return res.status(500).send(

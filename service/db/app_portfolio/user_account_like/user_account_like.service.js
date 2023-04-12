@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function likeUser(app_id, id, id_like, callBack){
+const likeUser = (app_id, id, id_like, callBack) => {
 		let sql;
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.user_account_like(
@@ -11,7 +11,7 @@ function likeUser(app_id, id, id_like, callBack){
 						user_account_id_like: id_like
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -21,7 +21,7 @@ function likeUser(app_id, id, id_like, callBack){
 			});
 		})
 	}
-function unlikeUser(app_id, id, id_unlike, callBack){
+const unlikeUser = (app_id, id, id_unlike, callBack) => {
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.user_account_like
@@ -32,7 +32,7 @@ function unlikeUser(app_id, id, id_unlike, callBack){
 						user_account_id_like: id_unlike
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

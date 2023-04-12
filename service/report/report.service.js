@@ -2,8 +2,8 @@ const puppeteer = await import('puppeteer');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 let BROWSER;
-async function initReportService(){
-    //if ConfigGet(1, 'SERVICE_REPORT', 'EXECUTABLE_PATH') is empty then default is used
+const initReportService = async () => {
+    //if ConfigGet(1, 'SERVICE_REPORT', 'EXECUTABLE_PATH') is empty then default browser is used
     BROWSER = await puppeteer.launch({
         pipe:true,
         headless: true,
@@ -55,15 +55,15 @@ async function initReportService(){
     
 };
 
-async function getReportService(url, ps, hf){
+const getReportService = async (url, ps, hf) => {
     if (!BROWSER)
         await initReportService();
-    return await new Promise(function (resolve){
-        BROWSER.newPage().then(function(webPage){
+    return await new Promise((resolve) => {
+        BROWSER.newPage().then((webPage) => {
             webPage.goto(url, {
                 waitUntil: "networkidle2",
                 timeout: parseInt(ConfigGet(1, 'SERVICE_REPORT', 'PDF_TIMEOUT')),
-            }).then(function(){
+            }).then(() => {
                 let width_viewport;
                 let height_viewport;
                 if (ps=='A4'){
@@ -81,9 +81,9 @@ async function getReportService(url, ps, hf){
                 webPage.setViewport({width: width_viewport,
                                     height: height_viewport,
                                     deviceScaleFactor: 1,
-                                    }).then(function(){
+                                    }).then(() => {
                 let wait_count=0;
-                function waitpdf(){
+                const waitpdf = () => {
                     setTimeout(() => {
                         wait_count++;
                         webPage.pdf({   printBackground: true,
@@ -94,7 +94,7 @@ async function getReportService(url, ps, hf){
                                 bottom: "0px",
                                 left: "0px",
                                 right: "0px"
-                            }}).then(function(pdf){
+                            }}).then((pdf) => {
                                     /*  empty string size 883 bytes from Pupeteer and chrome.exe:
                                         %PDF-1.4
                                         %����
@@ -159,7 +159,7 @@ async function getReportService(url, ps, hf){
                                             waitpdf();
                                         }
                                     else
-                                        webPage.close().then(function(){
+                                        webPage.close().then(() => {
                                             //if closing browser and not only page:
                                             //BROWSER.close();
                                             resolve(pdf);

@@ -1238,7 +1238,7 @@ const list_events = (list_item, item_row, item_edit) => {
     if (list_item == 'list_apps')
         document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                let function_event = (event_lov) => {
+                const function_event = (event_lov) => {
                     //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
@@ -1252,7 +1252,7 @@ const list_events = (list_item, item_row, item_edit) => {
     if (list_item == 'list_app_parameter')
         document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                let function_event = (event_lov) => {
+                const function_event = (event_lov) => {
                     //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
@@ -1266,7 +1266,7 @@ const list_events = (list_item, item_row, item_edit) => {
     if (list_item == 'list_user_account')
         document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                let function_event = (event_lov) => {
+                const function_event = (event_lov) => {
                     //setting values from LOV
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
@@ -2247,7 +2247,7 @@ const show_server_logs = (sort=1, order_by='desc') => {
 }
 const show_existing_logfiles = () => {
     if (admin_token_has_value()){
-        let function_event = (event) => {                    
+        const function_event = (event) => {                    
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
                                 //logscope and loglevel
                                 let filename = event.target.children[1].children[0].innerHTML;

@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function followUser(app_id, id, id_follow, callBack){
+const followUser = (app_id, id, id_follow, callBack) => {
 		let sql;
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.user_account_follow(
@@ -11,7 +11,7 @@ function followUser(app_id, id, id_follow, callBack){
 						user_account_id_follow: id_follow
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -21,7 +21,7 @@ function followUser(app_id, id, id_follow, callBack){
 			});
 		})
 	}
-function unfollowUser(app_id, id, id_unfollow, callBack){
+const unfollowUser = (app_id, id, id_unfollow, callBack) => {
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.user_account_follow
@@ -32,7 +32,7 @@ function unfollowUser(app_id, id, id_unfollow, callBack){
 						user_account_id_follow: id_unfollow
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

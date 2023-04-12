@@ -1,6 +1,6 @@
 const service = await import("./app_object.service.js");
 
-function getObjects(req, res){
+const getObjects = (req, res) => {
 	if (typeof req.query.object =='undefined')
 		req.query.object=null;
 	if (typeof req.query.object_name =='undefined')

@@ -1,6 +1,6 @@
 const service = await import("./user_account_like.service.js");
 
-function likeUser(req, res){
+const likeUser = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	const id_like = parseInt(req.body.user_account_id);
 	service.likeUser(req.query.app_id, req.params.id,id_like, (err,results) => {
@@ -15,7 +15,7 @@ function likeUser(req, res){
 		});
 	});
 }
-function unlikeUser(req, res){
+const unlikeUser = (req, res) => {
 	req.params.id   = parseInt(req.params.id);
 	const id_unlike = parseInt(req.body.user_account_id);
 	service.unlikeUser(req.query.app_id, req.params.id,id_unlike, (err,results) => {

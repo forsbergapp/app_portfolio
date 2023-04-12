@@ -2,7 +2,7 @@ const service = await import('./broadcast.service.js');
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-function BroadcastConnect(req, res){
+const BroadcastConnect = (req, res) => {
     req.params.clientId = parseInt(req.params.clientId);
     service.ClientConnect(res);
     req.query.app_user_id ='';
@@ -10,7 +10,7 @@ function BroadcastConnect(req, res){
     req.query.callback=1;
     let stack = new Error().stack;
     if (req.query.system_admin=='1'){
-        import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(function({getIpSystemAdmin}){
+        import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIpSystemAdmin}) => {
             getIpSystemAdmin(req, res, (err, geodata) =>{
                 const newClient = {
                     id: req.params.clientId,
@@ -26,13 +26,13 @@ function BroadcastConnect(req, res){
                     response: res
                 };
                 service.ClientAdd(newClient);
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                    import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+                import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'SYSTEM ADMIN Broadcast connect',
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                       res.statusCode, 
-                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                             service.ClientClose(res, req.params.clientId);
                         })
                     });
@@ -42,7 +42,7 @@ function BroadcastConnect(req, res){
     }
     else
         if (req.query.app_id ==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(function({getIpAdmin}){
+            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
                 getIpAdmin(req, res_not_used, (err, geodata) =>{
                     const newClient = {
                         id: req.params.clientId,
@@ -58,7 +58,7 @@ function BroadcastConnect(req, res){
                         response: res
                     };
                     service.ClientAdd(newClient);
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLogAdmin}){
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
                         createLogAdmin(req.query.app_id,
                             { app_id : req.query.app_id,
                                 app_module : 'BROADCAST',
@@ -84,7 +84,7 @@ function BroadcastConnect(req, res){
             })
         }
         else{
-            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(function({getIp}){
+            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIp}) => {
                 getIp(req, res_not_used, (err, geodata) =>{
                     const newClient = {
                         id: req.params.clientId,
@@ -100,7 +100,7 @@ function BroadcastConnect(req, res){
                         response: res
                     };
                     service.ClientAdd(newClient);
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(function({createLog}){
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
                         createLog(req.query.app_id,
                                 { app_id : req.query.app_id,
                                     app_module : 'BROADCAST',
@@ -126,7 +126,7 @@ function BroadcastConnect(req, res){
             })
         }
 }
-function BroadcastSendSystemAdmin(req, res){
+const BroadcastSendSystemAdmin = (req, res) => {
     if (req.body.app_id)
         req.body.app_id = parseInt(req.body.app_id);
     if (req.body.client_id)
@@ -139,7 +139,7 @@ function BroadcastSendSystemAdmin(req, res){
         );
     });
 }
-function BroadcastSendAdmin(req, res){
+const BroadcastSendAdmin = (req, res) => {
     if (req.body.app_id)
         req.body.app_id = parseInt(req.body.app_id);
     if (req.body.client_id)        
@@ -152,7 +152,7 @@ function BroadcastSendAdmin(req, res){
         );
     });
 }
-function ConnectedList(req, res){
+const ConnectedList = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                             req.query.order_by, req.query.sort,  (err, result) => {
         if (err) {
@@ -166,14 +166,14 @@ function ConnectedList(req, res){
                     data: result
                 });
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(function({record_not_found}){
+                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
         }
     })
 }
-function ConnectedListSystemAdmin(req, res){
+const ConnectedListSystemAdmin = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                             req.query.order_by, req.query.sort,  (err, result) => {
         if (err) {
@@ -194,21 +194,21 @@ function ConnectedListSystemAdmin(req, res){
         }
     })
 }
-function ConnectedCount(req, res){
+const ConnectedCount = (req, res) => {
     service.ConnectedCount(req.query.identity_provider_id, req.query.count_logged_in, (err, count_connected) => {
         return res.status(200).json({
             data: count_connected
         });
     })
 }
-function ConnectedUpdate(req, res){
+const ConnectedUpdate = (req, res) => {
     service.ConnectedUpdate(req.query.client_id, req.query.user_account_id, req.query.system_admin, req.query.identity_provider_id, (err, result) =>{
         return res.status(200).json(
             err ?? result
         );
     })
 }
-function ConnectedCheck(req, res){
+const ConnectedCheck = (req, res) => {
     req.params.user_account_id = parseInt(req.params.user_account_id);
     service.ConnectedCheck(req.params.user_account_id, (err, result_connected)=>{
         return res.status(200).json({

@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function createUserAccountApp(app_id, user_account_id, callBack){
+const createUserAccountApp = (app_id, user_account_id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `INSERT INTO ${get_schema_name()}.user_account_app(
@@ -17,7 +17,7 @@ function createUserAccountApp(app_id, user_account_id, callBack){
 						user_account_id: user_account_id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -27,7 +27,7 @@ function createUserAccountApp(app_id, user_account_id, callBack){
 			});
 		})
 	}
-function getUserAccountApps(app_id, user_account_id, callBack){
+const getUserAccountApps = (app_id, user_account_id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT uap.app_id "app_id",
@@ -44,7 +44,7 @@ function getUserAccountApps(app_id, user_account_id, callBack){
 						user_account_id: user_account_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -54,7 +54,7 @@ function getUserAccountApps(app_id, user_account_id, callBack){
 			});
 		})
 	}
-function getUserAccountApp(app_id, user_account_id, callBack){
+const getUserAccountApp = (app_id, user_account_id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT preference_locale "preference_locale",
@@ -70,7 +70,7 @@ function getUserAccountApp(app_id, user_account_id, callBack){
 						app_id: app_id
 					 };
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -80,7 +80,7 @@ function getUserAccountApp(app_id, user_account_id, callBack){
 			});
 		})
 	}
-function updateUserAccountApp(app_id, user_account_id, data, callBack){
+const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
 		let sql;
 		let parameters;
 		if (data.setting_preference_direction_id=='')
@@ -104,7 +104,7 @@ function updateUserAccountApp(app_id, user_account_id, data, callBack){
 						app_id: app_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -114,7 +114,7 @@ function updateUserAccountApp(app_id, user_account_id, data, callBack){
 			});
 		})
 	}
-function deleteUserAccountApps(app_id, user_account_id, data_app_id, callBack){
+const deleteUserAccountApps = (app_id, user_account_id, data_app_id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.user_account_app
@@ -125,7 +125,7 @@ function deleteUserAccountApps(app_id, user_account_id, data_app_id, callBack){
 						app_id: data_app_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

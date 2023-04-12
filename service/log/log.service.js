@@ -1,9 +1,9 @@
-function pm2log(log){
+const pm2log = (log) => {
     console.log(log);
 }
     
-async function remote_log(ConfigGet, config_destination, log){
-    return await new Promise(function (resolve){ 
+const remote_log = async (ConfigGet, config_destination, log) => {
+    return await new Promise((resolve) => {
         if (config_destination=='1' || config_destination=='2'){
             //url destination
             const headers = { 
@@ -31,8 +31,8 @@ async function remote_log(ConfigGet, config_destination, log){
             url_log.logtext = url_old.logtext;
     
             url_log = JSON.stringify(url_log);
-            import('axios').then(function({default: axios}){
-                axios.post(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION'), url_log).then(function(){
+            import('axios').then(({default: axios}) => {
+                axios.post(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION'), url_log).then(() => {
                     resolve();
                 })
             });
@@ -41,8 +41,8 @@ async function remote_log(ConfigGet, config_destination, log){
             resolve();
     })
 }
-async function sendLog(ConfigGet, logscope, loglevel, log){
-    return await new Promise(function (resolve){ 
+const sendLog = async (ConfigGet, logscope, loglevel, log) => {
+    return await new Promise((resolve) => {
         let filename;
         let logdate = new Date();
         //make log nice and compact
@@ -66,7 +66,7 @@ async function sendLog(ConfigGet, logscope, loglevel, log){
         let config_destination = ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')
         if (config_destination=='0' || config_destination=='2'){
             //file destination
-            import('node:fs').then(function(fs){
+            import('node:fs').then((fs) =>{
                 fs.appendFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
                     if (err) {
                         //if error here ignore and continue, where else should log file be saved?
@@ -82,7 +82,7 @@ async function sendLog(ConfigGet, logscope, loglevel, log){
             resolve(remote_log(ConfigGet, config_destination, log));
     })
 }
-function logdate(date_format){
+const logdate = (date_format) => {
     let logdate = new Date();
     if (date_format!='' && typeof date_format!='undefined'){
         //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
@@ -92,11 +92,11 @@ function logdate(date_format){
         logdate = logdate.toISOString();
     return logdate;
 }
-async function createLogServerE (ip, host, protocol, originalUrl, method, statusCode, 
-                                 user_agent, accept_language, referer, err){
-    return await new Promise(function (resolve){ 
+const createLogServerE = async (ip, host, protocol, originalUrl, method, statusCode, 
+                                user_agent, accept_language, referer, err) => {
+    return await new Promise((resolve) => {
         let log_json_server;
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+        import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
             log_json_server = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
                                 "ip":"${ip}",
                                 "host": "${host}",
@@ -117,15 +117,15 @@ async function createLogServerE (ip, host, protocol, originalUrl, method, status
         })
     })
 }
-async function createLogServerI (info=null,req=null,
-                                 ip, host, protocol, originalUrl, method, 
-                                 statusCode, statusMessage,
-                                 user_agent, accept_language, referer){
-    return await new Promise(function (resolve){ 
+const createLogServerI = async (info=null,req=null,
+                                ip, host, protocol, originalUrl, method, 
+                                statusCode, statusMessage,
+                                user_agent, accept_language, referer) => {
+    return await new Promise((resolve) => {
         let log_level;
         let log_json_server;  
         let logtext;
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+        import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
             if(ConfigGet(1, 'SERVICE_LOG', 'ENABLE_SERVER_VERBOSE')=='1'){
                 log_level = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_VERBOSE');
                 if (info ==null){
@@ -242,11 +242,11 @@ async function createLogServerI (info=null,req=null,
         })
     })
 }
-async function createLogDB (app_id, logtext) {
-    return await new Promise(function (resolve){ 
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+const createLogDB = async (app_id, logtext) => {
+    return await new Promise((resolve) => {
+        import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
             if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
-                import('node:os').then(function({hostname}){
+                import('node:os').then(({hostname}) => {
                     let log_json_db = `{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
                                         "ip":"",
                                         "host": "${hostname()}",
@@ -271,10 +271,10 @@ async function createLogDB (app_id, logtext) {
         })
     })
 }
-async function createLogAppS (level_info, app_id, app_filename, app_function_name, app_line, logtext){
-    return await new Promise(function (resolve){ 
-        import('node:os').then(function({hostname}){
-            import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+const createLogAppS = async (level_info, app_id, app_filename, app_function_name, app_line, logtext) => {
+    return await new Promise((resolve) => { 
+        import('node:os').then(({hostname}) => {
+            import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
                 let log_json =`{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
                                 "ip":"",
                                 "host": "${hostname()}",
@@ -296,11 +296,11 @@ async function createLogAppS (level_info, app_id, app_filename, app_function_nam
         })
     })
 }
-async function createLogAppC (app_id, level_info, app_filename, app_function_name, app_line, logtext,
-                              ip, host, protocol, originalUrl, method, statusCode, 
-                              user_agent, accept_language, referer){
-    return await new Promise(function (resolve){ 
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+const createLogAppC = async (app_id, level_info, app_filename, app_function_name, app_line, logtext,
+                             ip, host, protocol, originalUrl, method, statusCode, 
+                             user_agent, accept_language, referer) => {
+    return await new Promise((resolve) => {
+        import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
             let log_json =`{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
                             "ip":"${ip}",
                             "host": "${host}",
@@ -321,16 +321,16 @@ async function createLogAppC (app_id, level_info, app_filename, app_function_nam
         })
     })
 }
-async function createLogAppRI (app_id, app_filename, app_function_name, app_line, logtext,
-                    ip, host, protocol, originalUrl, method, statusCode, 
-                user_agent, accept_language, referer){
-    return await new Promise(function (resolve){  
+const createLogAppRI = async (app_id, app_filename, app_function_name, app_line, logtext,
+                              ip, host, protocol, originalUrl, method, statusCode, 
+                              user_agent, accept_language, referer) => {
+    return await new Promise((resolve) => {
         //remove sensitive data without modifying original log
         //ES6 Object.assign clone 
         let router_logtext = Object.assign({}, logtext);
         if (router_logtext.password)
             router_logtext.password = null;
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+        import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
             if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_ROUTER')=='1'){
                 let log_json =`{"logdate": "${logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT'))}",
                                 "ip":"${ip}",
@@ -355,9 +355,9 @@ async function createLogAppRI (app_id, app_filename, app_function_name, app_line
         })
     })
 }
-function getParameters(app_id, callBack) {
+const getParameters = (app_id, callBack) => {
     let results = {};
-    import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+    import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
         results.SERVICE_LOG_SCOPE_SERVER = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER');
         results.SERVICE_LOG_SCOPE_SERVICE = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE');
         results.SERVICE_LOG_SCOPE_DB = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB');
@@ -377,9 +377,9 @@ function getParameters(app_id, callBack) {
         return callBack(null, results);
     })
 }
-function getLogs(app_id, data, callBack){
+const getLogs = (app_id, data, callBack) => {
     let filename;
-    import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+    import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
         if (parseInt(data.month) <10)
             data.month = '0' + data.month;
         if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
@@ -396,13 +396,13 @@ function getLogs(app_id, data, callBack){
         let loggerror = 0;
         try {
             loggerror = 1;
-            import('node:fs').then(function(fs){
+            import('node:fs').then((fs) =>{
                 fs.readFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, 'utf8', (error, fileBuffer) => {
                     loggerror = 2;
                     if (error)
                         return callBack(null, fixed_log);
                     else{
-                        fileBuffer.toString().split('\r\n').forEach(function (record) {
+                        fileBuffer.toString().split('\r\n').forEach((record) => {
                             if (record.length>0){
                                 if (data.select_app_id=='')
                                     fixed_log.push(JSON.parse(record));
@@ -415,8 +415,8 @@ function getLogs(app_id, data, callBack){
                             }
                         })
                     }
-                    function sortByProperty(property, order_by){
-                        return function(a,b){  
+                    const sortByProperty = (property, order_by) => {
+                        return (a,b) => {
                             if(a[property] > b[property])  
                                 return 1 * order_by;
                             else if(a[property] < b[property])  
@@ -506,10 +506,10 @@ function getLogs(app_id, data, callBack){
         }
     })
 }
-function getFiles (app_id, callBack) {
+const getFiles = (app_id, callBack) => {
     let logfiles =[];
-    import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-        import('node:fs').then(function(fs){
+    import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+        import('node:fs').then((fs) =>{
             fs.readdir(process.cwd() + ConfigGet(0, null, 'PATH_LOG'), (err, files) => {
                 if (err) {
                     return callBack(err, null);
@@ -531,13 +531,13 @@ function getFiles (app_id, callBack) {
         })
     })
 }
-function getPM2Logs (app_id, callBack) {
+const getPM2Logs = (app_id, callBack) => {
     try {
         let fixed_log = [];
-        import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-            import('node:fs').then(function(fs){
+        import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+            import('node:fs').then((fs) =>{
                 fs.readFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE'), 'utf8', (error, fileBuffer) => {
-                    fileBuffer.split('\n').forEach(function (record) {
+                    fileBuffer.split('\n').forEach((record) => {
                         if (record.length>0)
                             fixed_log.push(JSON.parse(record));
                     })

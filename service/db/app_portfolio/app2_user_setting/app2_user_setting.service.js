@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function createUserSetting(app_id, initial, data, callBack){
+const createUserSetting = (app_id, initial, data, callBack) => {
 		let sql;
 		let parameters;
 		//insert user settings if first time and no user settings exists already
@@ -120,7 +120,7 @@ function createUserSetting(app_id, initial, data, callBack){
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									  AND aus2.user_account_app_app_id = :app_id
 									  AND :initial_setting = 1)`;
-		import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
+		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
 				sql = sql + ' RETURNING id';
 			parameters = {
@@ -179,7 +179,7 @@ function createUserSetting(app_id, initial, data, callBack){
 							initial_setting: initial
 						};
 			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 				execute_db_sql(app_id, sql, parameters, 
 							   COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
@@ -209,7 +209,7 @@ function createUserSetting(app_id, initial, data, callBack){
 													lastRowid: lastRowid
 												};
 									let stack = new Error().stack;
-									import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+									import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 										execute_db_sql(app_id, sql, parameters, 
 													COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
 											if (err)
@@ -237,7 +237,7 @@ function createUserSetting(app_id, initial, data, callBack){
 			})
 		})
 	}
-function getUserSetting(app_id, id, callBack){
+const getUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT	id "id",
@@ -301,7 +301,7 @@ function getUserSetting(app_id, id, callBack){
 						id: id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -311,7 +311,7 @@ function getUserSetting(app_id, id, callBack){
 			});
 		})
 	}
-function getUserSettingsByUserId(app_id, id, callBack){
+const getUserSettingsByUserId = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT	id "id",
@@ -377,7 +377,7 @@ function getUserSettingsByUserId(app_id, id, callBack){
 						app_id: app_id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -387,7 +387,7 @@ function getUserSettingsByUserId(app_id, id, callBack){
 			});
 		})
 	}
-function getProfileUserSetting(app_id, id, callBack){
+const getProfileUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
@@ -409,7 +409,7 @@ function getProfileUserSetting(app_id, id, callBack){
 						app_id: app_id
 					}; 
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -419,7 +419,7 @@ function getProfileUserSetting(app_id, id, callBack){
 			});
 		})
     }
-function getProfileUserSettings(app_id, id, id_current_user, callBack){
+const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT us.id "id",
@@ -445,7 +445,7 @@ function getProfileUserSettings(app_id, id, id_current_user, callBack){
 						app_id: app_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -455,7 +455,7 @@ function getProfileUserSettings(app_id, id, id_current_user, callBack){
 			});
 		})
 	}
-function getProfileUserSettingDetail(app_id, id, detailchoice, callBack){
+const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT detail "detail", 
@@ -512,7 +512,7 @@ function getProfileUserSettingDetail(app_id, id, detailchoice, callBack){
 						detailchoice: detailchoice
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -522,7 +522,7 @@ function getProfileUserSettingDetail(app_id, id, detailchoice, callBack){
 			});
 		})
     }
-function getProfileTop(app_id, statchoice, callBack){
+const getProfileTop = (app_id, statchoice, callBack) => {
 		let sql;
 		let parameters;
     
@@ -582,7 +582,7 @@ function getProfileTop(app_id, statchoice, callBack){
 						statchoice: statchoice,
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -592,7 +592,7 @@ function getProfileTop(app_id, statchoice, callBack){
 			});
 		})
     }
-function updateUserSetting(app_id, data, id, callBack){
+const updateUserSetting = (app_id, data, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `UPDATE ${get_schema_name()}.app2_user_setting
@@ -706,7 +706,7 @@ function updateUserSetting(app_id, data, id, callBack){
 						id: id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){				
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {				
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -716,7 +716,7 @@ function updateUserSetting(app_id, data, id, callBack){
 			});
 		})
 	}
-function deleteUserSetting(app_id, id, callBack){
+const deleteUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `DELETE FROM ${get_schema_name()}.app2_user_setting
@@ -725,7 +725,7 @@ function deleteUserSetting(app_id, id, callBack){
 						id: id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

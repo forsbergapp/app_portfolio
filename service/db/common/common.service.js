@@ -3,9 +3,9 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 function log_db_sql(app_id, sql, parameters){
 	let parsed_sql = sql;
 	//ES7 Object.entries
-	Object.entries(parameters).forEach(function(parameter){
+	Object.entries(parameters).forEach((parameter) => {
 		//replace bind parameters with values in log
-		parsed_sql = parsed_sql.replace(/\:(\w+)/g, function (txt, key) {
+		parsed_sql = parsed_sql.replace(/\:(\w+)/g, (txt, key) => {
 			if (key == parameter[0])
 				if (parameter[1] == null)
 					return parameter[1];
@@ -15,7 +15,7 @@ function log_db_sql(app_id, sql, parameters){
 				return txt;
 		})
 	});
-	import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogDB}){
+	import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogDB}) => {
 		createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
 	})
 }
@@ -32,34 +32,34 @@ async function execute_db_sql(app_id, sql, parameters,
 				//change json parameters to [] syntax with bind variable names
 				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
 				//mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
-				conn.config.queryFormat = function (query, values) {
+				conn.config.queryFormat = (query, values) => {
 					if (!values) return query;
-					return query.replace(/\:(\w+)/g, function (txt, key) {
+					return query.replace(/\:(\w+)/g, (txt, key) => {
 						if (values.hasOwnProperty(key)) {
-						return this.escape(values[key]);
+						return conn.escape(values[key]);
 						}
 						return txt;
-					}.bind(this));
+					});
 				};
 			}
 			//Both MySQL and MariaDB use MySQL npm module
-			get_pool(app_id).getConnection(function (err, conn){
+			get_pool(app_id).getConnection((err, conn) => {
 				if (err){
-					import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+					import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
 						//Both MariaDB and MySQL use err.sqlMessage
-						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(function(){
+						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(() => {
 							return callBack(database_error, null);
 						})
 					});
 				}
 				else
 					config_connection(conn, sql, parameters);
-					conn.query(sql, parameters, function (err, result, fields){
+					conn.query(sql, parameters, (err, result, fields) => {
 						conn.release();
 						if (err)
-							import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+							import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
 								//Both MariaDB and MySQL use err.sqlMessage
-								createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(function(){
+								createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
 									return callBack(database_error, null);
 								})
 							});
@@ -88,10 +88,10 @@ async function execute_db_sql(app_id, sql, parameters,
 				pool2 = await ORACLEDB.getConnection(get_pool(app_id));
 				const result = await pool2.execute(sql, parameters, (err,result) => {
 														if (err) {
-															import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+															import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
 																//Oracle uses err.message
 																createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line,
-																			  'DB 2 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(function(){
+																			  'DB 2 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(() => {
 																	return callBack(database_error, null);
 																})
 															});
@@ -104,8 +104,8 @@ async function execute_db_sql(app_id, sql, parameters,
 														}
 													});
 			}catch (err) {
-				import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
-					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 catch:' + err.message).then(function(){
+				import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 catch:' + err.message).then(() => {
 						return callBack(database_error);
 					})
 				});
@@ -114,8 +114,8 @@ async function execute_db_sql(app_id, sql, parameters,
 					try {
 						await pool2.close(); 
 					} catch (err) {
-						import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
-							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 finally:' + err.message).then(function(){
+						import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 finally:' + err.message).then(() => {
 								return callBack(database_error);
 							})
 						});
@@ -133,7 +133,7 @@ async function execute_db_sql(app_id, sql, parameters,
 				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
 				//postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
 			    const [text, values] = Object.entries(params).reduce(
-			        ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, function (txt, key) {
+			        ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, (txt, key) => {
 																						if (params.hasOwnProperty(key)){
 																							return `$${Object.keys(params).indexOf(key) + 1}`;
 																						}
@@ -167,9 +167,9 @@ async function execute_db_sql(app_id, sql, parameters,
 				  })
 				  .catch((err) => {
 					pool3.release();
-					import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+					import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
 						//PostgreSQL use err.message
-						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(function(){
+						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(() => {
 							return callBack(database_error, null);
 						})
 					});
@@ -258,8 +258,8 @@ function limit_sql(sql, limit_type = null){
 			return sql;
 }
 function record_not_found(res, app_id, lang_code){
-	import(`file://${process.cwd()}/server/server.service.js`).then(function({ConfigGet}){
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(function({ getMessage }){
+	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(({ getMessage }) => {
 			getMessage( app_id, 
 						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
 						20400, 
