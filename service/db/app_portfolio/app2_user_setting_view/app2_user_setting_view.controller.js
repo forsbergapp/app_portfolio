@@ -1,6 +1,6 @@
 const service = await import("./app2_user_setting_view.service.js");
 
-function insertUserSettingView(req, res){
+const insertUserSettingView = (req, res) => {
     req.body.client_ip = req.ip;
     req.body.client_user_agent = req.headers["user-agent"];
     service.insertUserSettingView(req.query.app_id, req.body, (err,results) => {

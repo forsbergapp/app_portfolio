@@ -1,6 +1,6 @@
 const service = await import("./setting.service.js");
 
-function getSettings(req, res){
+const getSettings = (req, res) => {
 	service.getSettings(req.query.app_id, req.query.lang_code, req.query.setting_type, (err, results) =>{
 		if (err) {
 			return res.status(500).send({

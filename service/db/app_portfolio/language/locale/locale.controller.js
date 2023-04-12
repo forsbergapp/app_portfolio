@@ -1,6 +1,6 @@
 const service = await import("./locale.service.js");
 
-function getLocales(req, res){
+const getLocales = (req, res) => {
 	let lang_code;
 	if (typeof req.params.lang_code == 'undefined')
 		lang_code ='en';

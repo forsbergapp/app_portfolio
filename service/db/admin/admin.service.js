@@ -9,7 +9,7 @@ let POOL_DB1_APP = [];
 let POOL_DB2_APP = [];
 let POOL_DB3_APP = [];
 
-function DBInit(){
+const DBInit = () => {
    if (ConfigGet(1, 'SERVICE_DB', 'USE')=='2'){
       ORACLEDB.autoCommit = true;
       ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
@@ -18,9 +18,7 @@ function DBInit(){
       ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
    }
 }
-
-
-async function DBInfo(app_id, callBack){
+const DBInfo = async (app_id, callBack) => {
    const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
    let sql;
    let parameters;
@@ -89,7 +87,7 @@ async function DBInfo(app_id, callBack){
                   Xdatabase_schema: get_schema_name()
                   };
    let stack = new Error().stack;
-   import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+   import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters,
                      COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
          if (err)
@@ -107,7 +105,7 @@ async function DBInfo(app_id, callBack){
       });
    })
 }
-async function DBInfoSpace(app_id, callBack){
+const DBInfoSpace = async (app_id, callBack) => {
    const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
    let sql;
    let parameters;
@@ -159,7 +157,7 @@ async function DBInfoSpace(app_id, callBack){
    }
    parameters = {db_schema: get_schema_name()};
    let stack = new Error().stack;
-   import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+   import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters,
                      COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
          if (err)
@@ -169,7 +167,7 @@ async function DBInfoSpace(app_id, callBack){
       });
    })
 }
-async function DBInfoSpaceSum(app_id, callBack){
+const DBInfoSpaceSum = async (app_id, callBack) => {
    const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
    let sql;
    let parameters;
@@ -213,7 +211,7 @@ async function DBInfoSpaceSum(app_id, callBack){
    }
    parameters = {db_schema: get_schema_name()};
    let stack = new Error().stack;
-   import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+   import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters,
                      COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
          if (err)
@@ -223,13 +221,13 @@ async function DBInfoSpaceSum(app_id, callBack){
       });
    })
 }
-async function DBStart(){
-   return await new Promise(function (resolve, reject){
+const DBStart = async () => {
+   return await new Promise((resolve, reject) => {
       let stack = new Error().stack;
       if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
          DBInit();
-         async function startDBpool(app_id, db_user, db_password) {
-            return await new Promise(function (resolve, reject){
+         const startDBpool = async (app_id, db_user, db_password) => {
+            return await new Promise((resolve, reject) => {
                switch(ConfigGet(1, 'SERVICE_DB', 'USE')){
                   case '1':{
                      POOL_DB1_APP.push([app_id,
@@ -244,10 +242,10 @@ async function DBStart(){
                                           })
                                        ]);
                      // log with common app id at startup for all apps
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `mysql createPool ${app_id} user: ` + db_user).then(function(){
+                                         `mysql createPool ${app_id} user: ` + db_user).then(() => {
                               resolve();
                            })
                         });
@@ -269,20 +267,20 @@ async function DBStart(){
                      }, (err,result) => {
                         // log with common app id at startup for all apps
                         if (err){
-                           import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                              import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                           import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                              import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                                  createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                               `ORACLEDB.createPool ${app_id} user: ` + db_user + `, err:${err}`).then(function(){
+                                               `ORACLEDB.createPool ${app_id} user: ` + db_user + `, err:${err}`).then(() => {
                                     reject(err);
                                  })
                               });
                            })
                         }
                         else{
-                           import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                              import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                           import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                              import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                                  createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                               `ORACLEDB.createPool ${app_id} ok user: ` + db_user).then(function(){
+                                               `ORACLEDB.createPool ${app_id} ok user: ` + db_user).then(() => {
                                     resolve();
                                  })
                               });
@@ -304,10 +302,10 @@ async function DBStart(){
                                                    max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
                                                 ]);
                      // log with common app id at startup for all apps
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `PG createPool ${app_id} user: ` + db_user).then(function(){
+                                         `PG createPool ${app_id} user: ` + db_user).then(() => {
                               resolve();
                            })
                         });
@@ -317,16 +315,16 @@ async function DBStart(){
                }
             })
          }
-         function startDBApps(){
+         const startDBApps = () => {
             let json;
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(function({ getAppDBParametersAdmin }){
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
                //app_id inparameter for log, all apps will be returned
                getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, results) =>{
                   if (err) {
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `getAppDBParameters, err:${err}`).then(function(){
+                                         `getAppDBParameters, err:${err}`).then(() => {
                               reject(err);
                            })
                         });
@@ -337,13 +335,13 @@ async function DBStart(){
                      let dbcounter =1;
                      for (let i = 1; i < json.length; i++) {
                         let startDBpool_result = startDBpool(json[i].id, json[i].db_user, json[i].db_password)
-                        .then(function(){
+                        .then(() => {
                            dbcounter++;
                            //return when all db pools started, can be in random order
                            if (dbcounter==json.length)
                               resolve();
                         })
-                        .catch(function(err) {
+                        .catch((err) => {
                            reject(err);
                         });
                      }
@@ -364,10 +362,10 @@ async function DBStart(){
                                           connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')})
                                           ]);
                // log with common app id at startup for all apps
-               import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                  import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+               import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                  import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                      createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                   `mysql createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER')}`).then(function(){
+                                   `mysql createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER')}`).then(() => {
                         startDBApps()
                      })
                   });
@@ -407,20 +405,20 @@ async function DBStart(){
                                              poolAlias: `POOL_DB2_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`}, (err,result) => {
                   // log with common app id at startup for all apps
                   if (err){
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `ORACLEDB.createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}, err:${err}`).then(function(){
+                                         `ORACLEDB.createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}, err:${err}`).then(() => {
                               reject(err);
                            })
                         });
                      })
                   }
                   else{
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `ORACLEDB.createPool ADMIN ok user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}`).then(function(){
+                                         `ORACLEDB.createPool ADMIN ok user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}`).then(() => {
                               startDBApps()
                            })
                         });
@@ -442,10 +440,10 @@ async function DBStart(){
                                        max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
                                  ]);
                // log with common app id at startup for all apps
-               import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-                  import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+               import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                  import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                      createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                   `PG createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER')}`).then(function(){
+                                   `PG createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER')}`).then(() => {
                         startDBApps()
                      })
                   });
@@ -458,7 +456,7 @@ async function DBStart(){
          resolve();
    })
 }
-async function DBStop(app_id, callBack){
+const DBStop = async (app_id, callBack) => {
    //relase db pools from memory, not shutting down db
    POOL_DB1_APP = [];
    POOL_DB2_APP = [];
@@ -470,25 +468,25 @@ async function DBStop(app_id, callBack){
    PG = null;
    PG = await import('pg');
 }
-function get_pool(app_id){
+const get_pool = (app_id) => {
    let pool = null;
    let stack = new Error().stack;
    try{
       switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
          case '1':{
-            pool = POOL_DB1_APP.filter(function(dbpool) {
+            pool = POOL_DB1_APP.filter((dbpool) => {
                      return (parseInt(dbpool[0]) == parseInt(app_id));
                      })[0][1];
             break;
          }
          case '2':{
-            pool = POOL_DB2_APP.filter(function(dbpool) {
+            pool = POOL_DB2_APP.filter((dbpool) => {
                      return (parseInt(dbpool[0]) == parseInt(app_id));
                      })[0][1];
             break;
          }
          case '3':{
-            pool = POOL_DB3_APP.filter(function(dbpool) {
+            pool = POOL_DB3_APP.filter((dbpool) => {
                      return (parseInt(dbpool[0]) == parseInt(app_id));
                      })[0][1];
             break;
@@ -496,10 +494,10 @@ function get_pool(app_id){
       }
    }catch (err) {
       //unknown app id requested
-      import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-         import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppS}){
+      import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+         import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                          'get_pool error app_id: ' + app_id).then(function(){
+                          'get_pool error app_id: ' + app_id).then(() => {
                return null;
             })
          });

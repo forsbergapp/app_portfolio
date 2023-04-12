@@ -3,7 +3,7 @@ const service = await import('./geolocation.service.js')
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { createLogAdmin, createLog} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`);
 const { check_internet } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
-function get_ip_url(req_ip, query_ip){
+const get_ip_url = (req_ip, query_ip) => {
 	let url;
 	if (typeof query_ip == 'undefined')
 		if (req_ip == '::1' || req_ip == '::ffff:127.0.0.1')
@@ -14,7 +14,7 @@ function get_ip_url(req_ip, query_ip){
 		url = ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_IP') + '?ip=' + query_ip;
 	return url;
 }
-function geodata_empty(geotype){
+const geodata_empty = (geotype) => {
 	let geodata='';
 	switch (geotype){
 		case 'ip':{
@@ -68,7 +68,7 @@ function geodata_empty(geotype){
 	}
 }
 
-async function getPlace(req, res){
+const getPlace = async (req, res) => {
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		let geodata;
 		if (typeof req.query.latitude=='undefined' ||
@@ -76,7 +76,7 @@ async function getPlace(req, res){
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
 				//Missing latitude or longitude
-				import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(function({getMessage}){
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(({getMessage}) => {
 					getMessage(req.query.app_id,
 						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
 						20500, 
@@ -121,14 +121,14 @@ async function getPlace(req, res){
 			geodata_empty('place')
 		)
 }
-async function getPlaceAdmin(req, res){
+const getPlaceAdmin = async (req, res) => {
 	let geodata;
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		if (typeof req.query.latitude=='undefined' ||
 			typeof req.query.longitude=='undefined' ||
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
-				import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(function({getMessage_admin}){
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(({getMessage_admin}) => {
 					//Missing latitude or longitude
 					getMessage_admin(req.query.app_id,
 						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
@@ -173,7 +173,7 @@ async function getPlaceAdmin(req, res){
 			geodata_empty('place')
 		)
 }
-async function getPlaceSystemAdmin(req, res){
+const getPlaceSystemAdmin = async (req, res) => {
 	let geodata;
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		if (typeof req.query.latitude=='undefined' ||
@@ -189,13 +189,13 @@ async function getPlaceSystemAdmin(req, res){
 			const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 			geodata = await service.getService(url);
 			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-				import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+				import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
 					createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
 								  'SYSTEM ADMIN getPlaceSystemAdmin',
 								  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 								  res.statusCode, 
-								  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+								  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
 						return res.status(200).json(
 							geodata
 						)
@@ -209,7 +209,7 @@ async function getPlaceSystemAdmin(req, res){
 			geodata_empty('place')
 		)
 }
-async function getIp(req, res, callBack){
+const getIp = async (req, res, callBack) => {
 	let geodata;
 	let url = get_ip_url(req.ip, req.query.ip);
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
@@ -248,7 +248,7 @@ async function getIp(req, res, callBack){
 				geodata_empty('ip')
 			)
 }
-async function getIpAdmin(req, res, callBack){
+const getIpAdmin = async (req, res, callBack) => {
 	let geodata;
 	let url = get_ip_url(req.ip, req.query.ip);
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
@@ -287,19 +287,19 @@ async function getIpAdmin(req, res, callBack){
 				geodata_empty('ip')
 			)
 }
-async function getIpSystemAdmin(req, res, callBack){
+const getIpSystemAdmin = async (req, res, callBack) => {
 	let geodata;
 	let url = get_ip_url(req.ip, req.query.ip);
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		geodata = await service.getService(url);
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
-			import(`file://${process.cwd()}/service/log/log.service.js`).then(function({createLogAppC}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+			import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
 				createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
 							  'SYSTEM ADMIN getIpSystemAdmin',
 							  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 							  res.statusCode, 
-							  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(function(){
+							  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
 					if (req.query.callback==1)
 						return callBack(null, geodata);
 					else
@@ -318,21 +318,21 @@ async function getIpSystemAdmin(req, res, callBack){
 				geodata_empty('ip')
 			)
 }
-function getTimezone(req, res){
+const getTimezone = (req, res) => {
 	service.getTimezone(req.query.latitude, req.query.longitude, (err, result)=>{
 		return res.status(200).send(
 			result
 		)
 	})
 }
-function getTimezoneAdmin(req, res){
+const getTimezoneAdmin = (req, res) => {
 	service.getTimezone(req.query.latitude, req.query.longitude, (err, result)=>{
 		return res.status(200).send(
 			result
 		)
 	})
 }
-function getTimezoneSystemAdmin(req, res){
+const getTimezoneSystemAdmin = (req, res) => {
 	service.getTimezone(req.query.latitude, req.query.longitude, (err, result)=>{
 		return res.status(200).send(
 			result

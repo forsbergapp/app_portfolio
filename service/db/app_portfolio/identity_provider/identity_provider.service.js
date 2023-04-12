@@ -1,6 +1,6 @@
 const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
 
-function getIdentityProviders(app_id, callBack){
+const getIdentityProviders = (app_id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT id "id",
@@ -14,7 +14,7 @@ function getIdentityProviders(app_id, callBack){
 				ORDER BY identity_provider_order ASC`;
 		parameters = {};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(function({COMMON}){
+		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

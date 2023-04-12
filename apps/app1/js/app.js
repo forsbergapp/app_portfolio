@@ -251,7 +251,7 @@ const user_delete_app = async () => {
         user_local = true;
     else
         user_local = false;
-    let function_delete_user_account = () => { 
+    const function_delete_user_account = () => { 
                                             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                                             common.user_delete(1, user_local, null, (err, result)=>{
                                                 if (err==null){
