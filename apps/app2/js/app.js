@@ -1185,12 +1185,10 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
             document.getElementById('profile_user_settings_row').style.display = 'block';
         }
         else{
-            //Following
-            //Followed
-            //Like user
-            //Liked user
-            //Like user setting
-            //Liked user setting
+            //common 1 -4
+            //app
+            //7 Like user setting
+            //8 Liked user setting
             document.getElementById('profile_user_settings_row').style.display = 'none';
         }
         common.profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, click_function);
@@ -2217,13 +2215,13 @@ const setEvents = () => {
     
     //profile
     document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], false) }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(5, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], true, 
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
                   common.ICONS['user_follows']}</div>`, show_profile_function) }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(6, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], true, 
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +

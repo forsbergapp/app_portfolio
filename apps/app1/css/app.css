@@ -80,7 +80,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 .app_url{
 	display:none;
 }
-
 /*DIALOGUE INFO*/
 #dialogue_info_content{
 	visibility:visible;
@@ -859,7 +858,15 @@ border-left: 12px solid var(--app_theme_sun_color);
 .app_theme_moon .moon{
 	display:inline-block;	
 }
+
 /*THEME COMMON*/
+.common_link{
+	color:var(--app_theme_a_color);
+}
+.common_link:hover,
+.common_link:active{
+	color:var(--app_theme_hover_color);
+}
 .common_dialogue_button{
 	color: var(--app_theme_dialogue_button_color) !important;
 }
@@ -937,7 +944,6 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_profile_avatar_online_status.offline{
 	color:var(--app_theme_online_status_offline_color);
 }
-
 .common_login_tab_button, 
 .common_signup_tab_button,
 .common_forgot_tab_button{
