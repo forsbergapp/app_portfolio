@@ -37,29 +37,34 @@ const getStatCountAdmin = (req, res) => {
         }
     });
 }
+const checked_error = (app_id, lang_code, err, res) =>{
+    import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({ get_app_code }) => {
+        let app_code = get_app_code(err.errorNum, 
+            err.message, 
+            err.code, 
+            err.errno, 
+            err.sqlMessage);
+        if (app_code != null){
+            getMessage(app_id,
+                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                app_code, 
+                lang_code, (err,results_message)  => {
+                            return res.status(400).send(
+                                err ?? results_message.text
+                            );
+                });
+            }
+        else
+            return res.status(500).send(
+                err
+            );
+    })
+}
 const updateUserSuperAdmin = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
         if (err) {
-            let app_code = service.get_app_code(err.errorNum, 
-                err.message, 
-                err.code, 
-                err.errno, 
-                err.sqlMessage);
-            if (app_code != null){
-                getMessage(req.query.app_id,
-                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                    app_code, 
-                    req.query.lang_code, (err,results_message)  => {
-                                return res.status(400).send(
-                                    err ?? results_message.text
-                                );
-                    });
-                }
-            else
-                return res.status(500).send(
-                    err
-                );
+            return checked_error(req.query.app_id, req.query.lang_code, err, res);
         }
         else{
             if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
@@ -104,25 +109,7 @@ const userSignup = (req, res) => {
             req.body.password = hashSync(req.body.password, salt);
         service.create(req.query.app_id, req.body, (err, results) => {
             if (err) {
-                let app_code = service.get_app_code(err.errorNum, 
-                                            err.message, 
-                                            err.code, 
-                                            err.errno, 
-                                            err.sqlMessage);
-                if (app_code != null){
-                    getMessage(req.query.app_id,
-                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                app_code, 
-                                req.query.lang_code, (err,results_message)  => {
-                                        return res.status(400).send(
-                                            err ?? results_message.text
-                                        );
-                                });
-                }
-                else
-                    return res.status(500).send(
-                        err
-                    );
+                return checked_error(req.query.app_id, req.query.lang_code, err, res);
             }
             else{
                 if (req.body.provider_id == null ) {
@@ -176,25 +163,7 @@ const activateUser = (req, res) => {
     }
     service.activateUser(req.query.app_id, req.params.id, req.body.verification_type, verification_code_to_check, auth_new_password, (err, results) => {
         if (err) {
-            let app_code = service.get_app_code(err.errorNum, 
-                err.message, 
-                err.code, 
-                err.errno, 
-                err.sqlMessage);
-            if (app_code != null){
-                getMessage(req.query.app_id,
-                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                    app_code, 
-                    req.query.lang_code, (err,results_message)  => {
-                                return res.status(400).send(
-                                    err ?? results_message.text
-                                );
-                    });
-            }
-            else
-                return res.status(500).send(
-                    err
-                );
+            return checked_error(req.query.app_id, req.query.lang_code, err, res);
         }
         else
             if (auth_new_password == null){
@@ -554,24 +523,7 @@ const updateUserLocal = (req, res) => {
                         const updateLocal = (send_email) => {
                             service.updateUserLocal(req.query.app_id, req.body, req.params.id, (err, results_update) => {
                                 if (err) {
-                                    let app_code = service.get_app_code(err.errorNum, 
-                                                                err.message, 
-                                                                err.code, 
-                                                                err.errno, 
-                                                                err.sqlMessage);
-                                    if (app_code != null)
-                                        getMessage( req.query.app_id,
-                                                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                                    app_code, 
-                                                    req.query.lang_code, (err,results_message)  => {
-                                                        return res.status(400).send(
-                                                            err ?? results_message.text
-                                                        );
-                                                    });
-                                    else
-                                        return res.status(500).send(
-                                            err
-                                        );
+                                    return checked_error(req.query.app_id, req.query.lang_code, err, res);
                                 }
                                 else{
                                     if (results_update){
@@ -709,25 +661,7 @@ const updatePassword = (req, res) => {
         req.body.new_password = hashSync(req.body.new_password, salt);
         service.updatePassword(req.query.app_id, req.params.id, req.body, (err, results) => {
             if (err) {
-                let app_code = service.get_app_code(err.errorNum, 
-                                            err.message, 
-                                            err.code, 
-                                            err.errno, 
-                                            err.sqlMessage);
-                if (app_code != null){
-                    getMessage(req.query.app_id,
-                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                app_code, 
-                                req.query.lang_code, (err,results_message)  => {
-                                    return res.status(500).send(
-                                        err ?? results_message.text
-                                    );
-                                });
-                }
-                else
-                    return res.status(500).send(
-                        err
-                    );
+                return checked_error(req.query.app_id, req.query.lang_code, err, res);
             }
             else {
                 if (results) {
@@ -771,25 +705,7 @@ const updateUserCommon = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
         if (err) {
-            let app_code = service.get_app_code(err.errorNum, 
-                err.message, 
-                err.code, 
-                err.errno, 
-                err.sqlMessage);
-            if (app_code != null){
-                getMessage(req.query.app_id,
-                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                    app_code, 
-                    req.query.lang_code, (err,results_message)  => {
-                                return res.status(400).send(
-                                    err ?? results_message.text
-                                );
-                    });
-            }
-            else
-                return res.status(500).send(
-                    err
-                );
+            return checked_error(req.query.app_id, req.query.lang_code, err, res);
         }
         else {
             if (results) {
@@ -1151,25 +1067,7 @@ const providerSignIn = (req, res) => {
             if (results.length > 0) {
                 service.updateSigninProvider(req.query.app_id, results[0].id, req.body, (err, results_update) => {
                     if (err) {
-                        let app_code = service.get_app_code(err.errorNum, 
-                            err.message, 
-                            err.code, 
-                            err.errno, 
-                            err.sqlMessage);
-                        if (app_code != null){
-                            getMessage(req.query.app_id,
-                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
-                                app_code, 
-                                req.query.lang_code, (err,results_message)  => {
-                                            return res.status(400).send(
-                                                err ?? results_message.text
-                                            );
-                                });
-                        }
-                        else
-                            return res.status(500).send(
-                                err
-                            );
+                        return checked_error(req.query.app_id, req.query.lang_code, err, res);
                     }
                     else{
                         req.body.user_account_id = results[0].id;
