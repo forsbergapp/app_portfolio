@@ -484,7 +484,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 										 AND us.user_account_app_app_id = :app_id
 										 AND us.id = u_like.app2_user_setting_id)
 						 AND    u.active = 1
-						 AND    5 = :detailchoice
+						 AND    6 = :detailchoice
 						UNION ALL
 						SELECT 'LIKED_SETTING' detail,
 								u.id,
@@ -503,7 +503,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 											AND us.user_account_app_app_id = :app_id
 											AND us.id = u_like.app2_user_setting_id)
 						   AND  u.active = 1
-						   AND  6 = :detailchoice) t
+						   AND  7 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
 		sql = limit_sql(sql,1);
 		parameters = {

@@ -1646,7 +1646,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                         //id for username list, app_id for app list
                         if (detailchoice==5 && typeof json.items[i].id =='undefined'){
                             if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id'])
-                                delete_div = `<div class='common_profile_detail_list_app_delete'>${global_icon_app_delete}</div>`;
+                                delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS['app_delete']}</div>`;
                                 
                             //App list in app 0
                             html += 
@@ -1658,8 +1658,8 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                     <img class='common_profile_detail_list_app_logo' src='${json.items[i].logo}'>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_name'>
-                                        <a href='${json.items[i].url}'>${json.items[i].app_name}</a>
+                                    <div class='common_profile_detail_list_app_name common_link'>
+                                        ${json.items[i].app_name}
                                     </div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
@@ -1694,24 +1694,24 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                     }
                     profile_detail_list.innerHTML = html;
                     if (detailchoice==5){
-                        document.querySelectorAll('.common_profile_detail_list_app_name').forEach(e => e.addEventListener('click', (event) => {
-                            event.preventDefault();
-                            window.open(event.target.parentNode.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
-                        }))
-                        if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id']){
-                            document.querySelectorAll('.common_profile_detail_list_app_delete').forEach(e => e.addEventListener('click', (event) => {
-                                user_account_app_delete(null, 
-                                                        document.getElementById('common_profile_id').innerHTML,
-                                                        event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
-                                                        () => { 
-                                                            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-                                                            user_account_app_delete(1, 
-                                                                                    document.getElementById('common_profile_id').innerHTML, 
-                                                                                    event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML, 
-                                                                                    null);
-                                                        });
-                            }))
-                        }
+                        document.querySelector('#common_profile_detail_list').addEventListener('click', (event)=>{
+                            if (event.target.classList.contains('common_profile_detail_list_app_name'))
+                                window.open(event.target.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
+                            else
+                                if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id']){
+                                    if (event.target.parentNode.classList.contains('common_profile_detail_list_app_delete'))
+                                        user_account_app_delete(null, 
+                                                                document.getElementById('common_profile_id').innerHTML,
+                                                                event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
+                                                                () => { 
+                                                                    document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+                                                                    user_account_app_delete(1, 
+                                                                                            document.getElementById('common_profile_id').innerHTML, 
+                                                                                            event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML, 
+                                                                                            null);
+                                                                });
+                            }
+                        }, false)
                     }
                     else
                         show_profile_click_events('.common_profile_detail_list_username', click_function);
