@@ -2818,10 +2818,10 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
         
                     //add fullscreen button and my location button with eventlisteners
                     let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
-                    mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button" aria-label="Full Screen"></a>`;
+                    mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button"></a>`;
                     document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
                     if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                        mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button" aria-label="My location"></a>`;
+                        mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button"></a>`;
                         document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
                     }
                     //add events to the buttons
