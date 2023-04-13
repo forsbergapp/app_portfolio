@@ -946,7 +946,7 @@ const displayMonth = async (prayTimes, settings, item_id) => {
 						}	
 					month = app_common.APP_GLOBAL['session_CurrentHijriDate'][0];
 					year  = app_common.APP_GLOBAL['session_CurrentHijriDate'][1];
-					getGregorian(new Array(year,month,1), 0).then((title_date) => {
+					regional.getGregorian(new Array(year,month,1), 0).then((title_date) => {
 						title4 = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_calendar'] + settings.calendar_hijri_type + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
 						callBack(null, title4);
 					})
@@ -985,9 +985,9 @@ const displayMonth = async (prayTimes, settings, item_id) => {
 							endDate_hijri = new Array((year + 1), 1,1);
 						else
 							endDate_hijri = new Array(year,(month + 1),1);
-						getGregorian(date_hijri, settings.hijri_adj).then((date) => {
+						regional.getGregorian(date_hijri, settings.hijri_adj).then((date) => {
 							date    = new Date(date[0], date[1]-1, date[2]);
-							getGregorian(endDate_hijri, settings.hijri_adj).then((endDate) => {
+							regional.getGregorian(endDate_hijri, settings.hijri_adj).then((endDate) => {
 								endDate = new Date(endDate[0], endDate[1]-1, endDate[2]);
 								callBack(null, date, endDate);
 							})
@@ -1079,7 +1079,7 @@ const displayMonth = async (prayTimes, settings, item_id) => {
 							}
 						} 
 						if (settings.calendartype=='HIJRI')
-							getGregorian(new Array(year,month,times['day']), settings.hijri_adj).then((date) => {
+							regional.getGregorian(new Array(year,month,times['day']), settings.hijri_adj).then((date) => {
 								i_hijri_days++;
 								month_async_html[times['day']] = `<div class='${'timetable_month_data_row ' + row_class}'>
 																		${makeTableRow(times, items, 1, year, month, settings, date)}
