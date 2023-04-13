@@ -1,6 +1,6 @@
 const getGregorian = async (arabicDate, adjustment) => {
     //http://www.islamicity.org
-    MHK = false;
+    let MHK = false;
 
     //http://www.islamicity.org/PrayerTimes/assets/js/config.js
     var delta = 0;
