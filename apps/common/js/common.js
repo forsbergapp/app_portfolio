@@ -300,6 +300,19 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+const getGregorian = (HijriDate, adjustment) =>{
+    let DAY = 86400000;
+    let UNIX_EPOCH_JULIAN_DATE = 2440587.5;
+
+    let year = parseInt(HijriDate[0]);
+    let month = parseInt(HijriDate[1]);
+    let day = parseInt(HijriDate[2]);
+    let julian_day = Math.floor((11*year+3)/30+354*year+30*month-(month-1)/2+day+1948440-385);
+    julian_day = julian_day + parseInt(adjustment);
+    return [new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getFullYear(),
+            new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getMonth() + 1,
+            new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getDate()];
+}
 const checkconnected = async () => {
     try {
       const testconnection = await fetch("https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap", {method: "head", mode : 'no-cors'});
@@ -3713,7 +3726,7 @@ const init_common = async (parameters, callBack) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       checkconnected, typewatch, common_fetch_basic, common_fetch, toBase64, fromBase64, common_translate_ui,
+       getGregorian, checkconnected, typewatch, common_fetch_basic, common_fetch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, format_json_date, mobile, parseJwt, checkbox_value, checkbox_checked,image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar, boolean_to_number, number_to_boolean,
        inIframe, show_image, getHostname, check_input, get_uservariables, SearchAndSetSelectedIndex,
