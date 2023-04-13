@@ -135,6 +135,7 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
 }
 const read_app_files = async (app_id, files, callBack) => {
     let i = 0;
+    let stack = new Error().stack;
     //ES2020 import() with ES6 promises, object destructuring
     import('node:fs').then(({promises: {readFile}}) => {
         Promise.all(files.map(file => {
@@ -153,7 +154,6 @@ const read_app_files = async (app_id, files, callBack) => {
             callBack(null, app);
         })
         .catch(err => {
-            let stack = new Error().stack;
             import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
                 import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
