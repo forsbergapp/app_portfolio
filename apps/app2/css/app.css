@@ -901,6 +901,13 @@ a:active,
 	background-color:var(--report_theme_footer_background_color);
 }
 /* THEME COMMON */
+.common_link{
+	color:var(--app_theme_links);
+}
+.common_link:hover,
+.common_link:active{
+	color:var(--app_theme_hover);
+}
 .common_input_error{
 	border:1px solid var(--app_theme_input_error_border_color) !important;
 }
@@ -950,6 +957,7 @@ a:active,
 #common_profile_qr {
 	background-color:var(--app_theme_qr_code_background);
 }
+
 #common_profile_follow:hover,
 #common_profile_follow:active,
 #common_profile_like:hover,
