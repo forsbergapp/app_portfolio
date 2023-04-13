@@ -21,7 +21,10 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
-
+.common_link:hover,
+.common_link:active{
+	cursor:pointer;
+}
 .common_input_lov{
 	width: calc(100% - 15px) !important;
 }
