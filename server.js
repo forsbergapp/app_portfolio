@@ -21,6 +21,7 @@
 //1. VARIABLES
 //ES2020 import() and ES2022 top level await
 const express = await import('express');
+const {default: compression} = await import('compression');
 const {default: helmet} = await import('helmet');
 const {CheckFirstTime, InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -28,6 +29,8 @@ const {CheckFirstTime, InitConfig, ConfigGet} = await import(`file://${process.c
 InitConfig().then(() => {
   //Create express application
   const app = express.default();
+  //use compression for better performance
+  app.use(compression());
   const load_routers = async () => {
     //mount routers to endpoints
     const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
