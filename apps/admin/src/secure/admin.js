@@ -2250,7 +2250,7 @@ const show_existing_logfiles = () => {
         const function_event = (event) => {                    
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
                                 //logscope and loglevel
-                                let filename = event.target.children[1].children[0].innerHTML;
+                                let filename = event.target.parentNode.parentNode.children[1].children[0].innerHTML;
                                 let logscope = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
                                 let loglevel = filename.substring(0,filename.indexOf('_'));
