@@ -30,7 +30,14 @@ InitConfig().then(() => {
   //Create express application
   const app = express.default();
   //use compression for better performance
-  app.use(compression());
+  const shouldCompress = (req, res) => {
+    //exclude broadcast messages
+    if (req.baseUrl == '/service/broadcast')
+      return false;
+    else
+      return true;
+  }
+  app.use(compression({ filter: shouldCompress }))
   
   const load_routers = async () => {
     return new Promise ((resolve)=>{
