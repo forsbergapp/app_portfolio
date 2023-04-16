@@ -521,6 +521,10 @@ const count_users = async () => {
 /*----------------------- */
 const show_users = (sort=8, order_by='ASC', focus=true) => {
     let json;
+
+    if (common.check_input(document.getElementById("list_user_account_search_input").value, 100, false) == false)
+        return null;
+
     document.getElementById('list_user_account').innerHTML = common.APP_SPINNER;
     
     let search_user='*';

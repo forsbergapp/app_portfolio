@@ -230,7 +230,7 @@ const user_login_app = async () => {
         
     })
 }
-const app_exception = () => {
+const app_exception = (error) => {
     common.user_logoff();
 }
 const user_verify_check_input_app = async (item, nextField) => {

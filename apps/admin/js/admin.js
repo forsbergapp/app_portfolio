@@ -267,7 +267,7 @@ const delete_globals = () => {
     common.COMMON_GLOBAL['service_log'] = null;
 }
 
-const admin_logoff_app = (app_id, error) => {
+const admin_logoff_app = (error) => {
     common.COMMON_GLOBAL['rest_admin_at'] = '';
     document.getElementById('system_admin_avatar').innerHTML = '';
     const clear_common = () => {
@@ -291,8 +291,8 @@ const admin_logoff_app = (app_id, error) => {
         })
 }
 
-const admin_exception_before = (app_id, error) => {
-    common.show_message('EXCEPTION', null,null, error, app_id);
+const admin_exception_before = (error) => {
+    common.show_message('EXCEPTION', null,null, error);
 }
 const init_app = (system_admin_only) => {
     setEvents(system_admin_only);
