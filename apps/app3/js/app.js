@@ -1,5 +1,5 @@
 const common = await import('/common/js/common.js');
-const app_exception = () => {
+const app_exception = (error) => {
     null;
 }
 const show_doc = (item) => {

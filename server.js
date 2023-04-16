@@ -118,11 +118,12 @@ InitConfig().then(() => {
           import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({check_request}) => {
             check_request(req, (err, result) =>{
               if (err){
-                res.statusCode = 500;
+                res.statusCode = 400;
                 import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
                   createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
                                   req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
-                    res.redirect(req.headers.host);
+                    res.send('⛔');
+                    res.end;
                   });
                 })
               }

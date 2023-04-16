@@ -2439,7 +2439,7 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
 /*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
-const app_exception = () => {
+const app_exception = (error) => {
     user_logoff_app();
 }
 /*----------------------- */
