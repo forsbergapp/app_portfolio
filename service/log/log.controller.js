@@ -1,7 +1,7 @@
 const service = await import('./log.service.js')
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const getParameters = (req, res) => {
-	service.getParameters(req.query_app_id, (err, results) =>{
+const getLogParameters = (req, res) => {
+	service.getLogParameters(req.query_app_id, (err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
@@ -73,4 +73,4 @@ const getPM2Logs = (req, res) => {
 		}
 	});
 }
-export {getParameters,getLogs, getFiles,getPM2Logs};
+export {getLogParameters,getLogs, getFiles,getPM2Logs};

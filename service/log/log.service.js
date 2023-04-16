@@ -355,7 +355,7 @@ const createLogAppRI = async (app_id, app_filename, app_function_name, app_line,
         })
     })
 }
-const getParameters = (app_id, callBack) => {
+const getLogParameters = (app_id, callBack) => {
     let results = {};
     import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
         results.SERVICE_LOG_SCOPE_SERVER = ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVER');
@@ -549,4 +549,4 @@ const getPM2Logs = (app_id, callBack) => {
         return callBack(error.message);
     }
 }
-export {createLogServerE, createLogServerI, createLogDB, createLogAppS, createLogAppC, createLogAppRI, getParameters, getLogs, getFiles, getPM2Logs}
+export {createLogServerE, createLogServerI, createLogDB, createLogAppS, createLogAppC, createLogAppRI, getLogParameters, getLogs, getFiles, getPM2Logs}

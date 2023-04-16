@@ -3,7 +3,7 @@ const { read_app_files, get_module_with_init, countries } = await import(`file:/
 
 const themes = async (app_id) =>{
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_theme/app2_theme.service.js`).then(({getThemes}) => {
+        import(`file://${process.cwd()}/apps/app2/service/db/app2_theme/app2_theme.service.js`).then(({getThemes}) => {
             getThemes(app_id, (err, results)  => {
                 let html_themes='';
                 if (err){
@@ -45,7 +45,7 @@ const themes = async (app_id) =>{
 }
 const places = async (app_id) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app2_place/app2_place.service.js`).then(({getPlace}) => {
+        import(`file://${process.cwd()}/apps/app2/service/db/app2_place/app2_place.service.js`).then(({getPlace}) => {
             getPlace(app_id, (err, results)  => {
                 let select_places;
                 if (err){
