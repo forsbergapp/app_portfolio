@@ -385,5 +385,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 }
 #common_broadcast_close {
 	cursor:pointer;
-	transform: translate(-5px, -65px);
+	transform: translateY(-65px);
+    margin: 5px;
 }
