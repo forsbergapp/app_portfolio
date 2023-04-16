@@ -94,7 +94,7 @@ const getAdmin = (app_id, gps_lat, gps_long, gps_place) => {
                     get_module_with_init(app_id,
                                         1,  //system admin, no db available
                                         null,  
-                                        'admin_exception_before',
+                                        'app.admin_exception_before',
                                         null, //do not close eventsource before
                                         true, //ui
                                         gps_lat,

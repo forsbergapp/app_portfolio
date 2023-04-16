@@ -3265,7 +3265,14 @@ const get_cities = async (countrycode, callBack) => {
 /* EXCEPTION              */
 /*----------------------- */
 const exception = (app_exception_function, error) => {
-	app_exception_function(error);
+    //app_exception_function should be with namespace for example like 
+    //"app.app_exception" or "report.report_exception"
+    let fnparams = [error];
+    let namespace = app_exception_function.substring(0,app_exception_function.indexOf('.'));
+    let function_name = app_exception_function.substring(app_exception_function.indexOf('.') + 1);
+    let fn = window[namespace][function_name];
+    if (typeof fn === "function") 
+        fn.apply(null, fnparams);
 }
 /*----------------------- */
 /* INIT                   */
