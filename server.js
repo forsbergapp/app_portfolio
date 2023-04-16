@@ -31,49 +31,18 @@ InitConfig().then(() => {
   const app = express.default();
   //use compression for better performance
   app.use(compression());
+  
   const load_routers = async () => {
-    //mount routers to endpoints
-    const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
-    //array of  [endpoint, router file]:
-    const files = [
-      ['/server',                             '/server/server.router.js'],
-      ['/service/auth',                       '/service/auth/auth.router.js'],
-      ['/service/auth/admin',                 '/service/auth/admin/admin.router.js'],
-      ['/service/broadcast',                  '/service/broadcast/broadcast.router.js'],
-      ['/service/db/admin',                   '/service/db/admin/admin.router.js'],
-      [rest_api_path + '/app',                rest_api_path + '/app/app.router.js'],
-      [rest_api_path + '/app_category',       rest_api_path + '/app_category/app_category.router.js'],
-      [rest_api_path + '/app_log',            rest_api_path + '/app_log/app_log.router.js'],
-      [rest_api_path + '/app_object',         rest_api_path + '/app_object/app_object.router.js'],
-      [rest_api_path + '/app_parameter',      rest_api_path + '/app_parameter/app_parameter.router.js'],
-      [rest_api_path + '/app_role',           rest_api_path + '/app_role/app_role.router.js'],
-      [rest_api_path + '/country',            rest_api_path + '/country/country.router.js'],
-      [rest_api_path + '/identity_provider',  rest_api_path + '/identity_provider/identity_provider.router.js'],
-      [rest_api_path + '/language/locale',    rest_api_path + '/language/locale/locale.router.js'],
-      [rest_api_path + '/message_translation',rest_api_path + '/message_translation/message_translation.router.js'],
-      [rest_api_path + '/parameter_type',     rest_api_path + '/parameter_type/parameter_type.router.js'],
-      [rest_api_path + '/setting',            rest_api_path + '/setting/setting.router.js'],
-      [rest_api_path + '/user_account',       rest_api_path + '/user_account/user_account.router.js'],
-      [rest_api_path + '/user_account_app',   rest_api_path + '/user_account_app/user_account_app.router.js'],
-      [rest_api_path + '/user_account_like',  rest_api_path + '/user_account_like/user_account_like.router.js'],
-      [rest_api_path + '/user_account_logon', rest_api_path + '/user_account_logon/user_account_logon.router.js'],
-      [rest_api_path + '/user_account_follow',rest_api_path + '/user_account_follow/user_account_follow.router.js'],
-      ['/service/forms',                      '/service/forms/forms.router.js'],
-      ['/service/geolocation',                '/service/geolocation/geolocation.router.js'],
-      ['/service/log',                        '/service/log/log.router.js'],
-      ['/service/mail',                       '/service/mail/mail.router.js'],
-      ['/service/report',                     '/service/report/report.router.js'],
-      ['/service/worldcities',                '/service/worldcities/worldcities.router.js']
-      ];  
-    //ES6 for of loop
-    for (const file of files){
-      //ES2020 import with ES6 template literals
-      await import(`file://${process.cwd()}${file[1]}`).then(({router}) => {
-        // MIDDLEWARE
-        // endpoint, router file
-        app.use(file[0], router);
+    return new Promise ((resolve)=>{
+      const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
+      //ES2020 import with ES6 template literals and object destructuring
+      import(`file://${process.cwd()}/router.js`).then(({setRouters}) => {
+        setRouters(app, rest_api_path).then(() =>{
+            resolve();
+        })
       })
-    }
+    })
+    
   }
   //ES6 IIFE arrow function
   (async () =>{
