@@ -88,15 +88,6 @@ InitConfig().then(() => {
         });
         // set JSON maximum size
         app.use(express.json({ limit: ConfigGet(1, 'SERVER', 'JSON_LIMIT') }));
-        //logging
-        app.use((err,req,res,next) => {
-          import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
-            createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
-                              next();
-            });
-          })
-        })
         //access control with log of stopped requests
         //logs only if error
         app.use((req,res,next) => {
@@ -135,6 +126,7 @@ InitConfig().then(() => {
           })
         });
         //convert query id parameters from string to integer
+        //and logs after response is finished
         app.use((req, res, next) => { 
           //req.params can be modified in controller
           if (req.query.app_id)
@@ -217,6 +209,15 @@ InitConfig().then(() => {
                 })
               })
             })  
+          })
+          //error logging
+          app.use((err,req,res,next) => {
+            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
+              createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+                              req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
+                                next();
+              });
+            })
           })
           //9. START HTTP SERVER
           app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
