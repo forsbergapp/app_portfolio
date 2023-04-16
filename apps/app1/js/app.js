@@ -140,7 +140,7 @@ const app_theme_switch = () => {
         document.body.className = 'app_theme_' + 'sun ' + document.getElementById('common_user_arabic_script_select').value;
     }
     else{
-        document.body.className = 'app_theme_' + 'moon' + document.getElementById('common_user_arabic_script_select').value;
+        document.body.className = 'app_theme_' + 'moon ' + document.getElementById('common_user_arabic_script_select').value;
     }
     return null;
 }
