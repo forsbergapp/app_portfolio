@@ -477,7 +477,7 @@ const common_fetch = async (url_parameters, method, token_type, json_data, app_i
             }
             case 401:{
                 //Unauthorized, token expired
-                eval(`(() => {${COMMON_GLOBAL['exception_app_function']}(app_id, result)}());`);
+                exception(COMMON_GLOBAL['exception_app_function'], result);
                 break;
             }
             case 403:{
@@ -1246,7 +1246,7 @@ const lov_show = (lov, function_event) => {
                         <div>${json.data[i].id}</div>
                     </div>
                     <div class='common_list_lov_col'>
-                        <div>${eval('json.data[i].' + lov_column_value)}</div>
+                        <div>${json.data[i][lov_column_value]}</div>
                     </div>
                 </div>`;
             }
@@ -2040,7 +2040,9 @@ const user_login = async (username, password, callBack) => {
             updateOnlineStatus();
             user_preference_get((err, results) =>{
                 if (json.items[0].active==0){
-                    const function_cancel_event = () => { dialogue_verify_clear();eval(`( ()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
+                    const function_cancel_event = () => { dialogue_verify_clear();
+                                                          exception(COMMON_GLOBAL['exception_app_function'], null);
+                                                        };
                     show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, ICONS['app_logoff'], function_cancel_event);
                     return callBack('ERROR', null);
                 }
@@ -2297,7 +2299,9 @@ const user_signup = () => {
             let json = JSON.parse(result);
             COMMON_GLOBAL['rest_at'] = json.accessToken;
             COMMON_GLOBAL['user_account_id'] = json.id;
-            const function_cancel_event = () => { dialogue_verify_clear();eval(`(()=> {${COMMON_GLOBAL['exception_app_function']}()}());`);};
+            const function_cancel_event = () => { dialogue_verify_clear();
+                                                  exception(COMMON_GLOBAL['exception_app_function'], null);
+                                                };
             show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS['app_logoff'], function_cancel_event);
         }
     })
@@ -3002,7 +3006,7 @@ const show_broadcast = (broadcast_message) => {
     let message = JSON.parse(broadcast_message).broadcast_message;
     if (broadcast_type=='MAINTENANCE'){
         if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
-            eval(`(()=>{${COMMON_GLOBAL['exception_app_function']}()}());`);
+            exception(COMMON_GLOBAL['exception_app_function'], null);
         document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
         show_maintenance(message);
     }
@@ -3260,11 +3264,8 @@ const get_cities = async (countrycode, callBack) => {
 /*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
-const exception = (status, message) => {
-    if (status == 401)
-        eval(`(()=>{${COMMON_GLOBAL['exception_app_function']}()}());`);
-    else
-        show_message('EXCEPTION',  null, null, message, COMMON_GLOBAL['app_id']);
+const exception = (app_exception_function, error) => {
+	app_exception_function(error);
 }
 /*----------------------- */
 /* INIT                   */
