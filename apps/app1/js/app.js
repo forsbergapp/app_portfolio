@@ -312,18 +312,31 @@ const init_app = async () => {
     //links
     document.getElementById('start_links').addEventListener('click', (event) => { 
         //social links ends with an integer and is part of app global
-        if (event.target.id.startsWith('social_link'))
-            if (eval(`APP_GLOBAL['info_${event.target.id}_url']`))
-                window.open(eval(`APP_GLOBAL['info_${event.target.id}_url']`),'_blank','');
-        //info_link ends with an integer
-        if (event.target.id == 'info_link1')
-            common.show_window_info(1, null, APP_GLOBAL['info_link_policy_url']);
-        if (event.target.id == 'info_link2')
-            common.show_window_info(2, null, APP_GLOBAL['info_link_disclaimer_url']);
-        if (event.target.id == 'info_link3')
-            common.show_window_info(3, null, APP_GLOBAL['info_link_terms_url']);
-        if (event.target.id == 'info_link4')
-            common.show_window_info(4, null, APP_GLOBAL['info_link_about_url']);
+        if (event.target.id.startsWith('social_link')){
+            if (APP_GLOBAL[`info_${event.target.id}_url`])
+                window.open(APP_GLOBAL[`info_${event.target.id}_url`],'_blank','');
+        }
+        else{
+            //info_link ends with an integer
+            switch (event.target.id){
+                case 'info_link1':{
+                    common.show_window_info(1, null, APP_GLOBAL['info_link_policy_url']);
+                    break;
+                }
+                case 'info_link2':{
+                    common.show_window_info(2, null, APP_GLOBAL['info_link_disclaimer_url']);
+                    break;
+                }
+                case 'info_link3':{
+                    common.show_window_info(3, null, APP_GLOBAL['info_link_terms_url']);
+                    break;
+                }case 'info_link4':{
+                    common.show_window_info(4, null, APP_GLOBAL['info_link_about_url']);
+                    break;
+                }
+            }
+        }
+        
     }, false);
     
     if (APP_GLOBAL['info_social_link1_url']==null)
