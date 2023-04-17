@@ -10,7 +10,7 @@ const { sendEmail } = await import(`file://${process.cwd()}/service/mail/mail.co
 const { accessToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
 
 const getUsersAdmin = (req, res) => {
-    service.getUsersAdmin(req.query.app_id, req.params.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
+    service.getUsersAdmin(req.query.app_id, req.query.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -343,10 +343,10 @@ const getProfileUser = (req, res) => {
         req.body.user_account_id_view = null;
     }
     else
-        if (typeof req.params.username == 'undefined' ||req.params.username=='' ||req.params.username==null){
+        if (typeof req.query.search == 'undefined' ||req.query.search=='' ||req.query.search==null){
             //searching for user id, ignore username search
             //user logged in
-            req.params.username = null;
+            req.query.search = null;
             if (typeof req.query.id=='undefined' ||req.query.id == '' ||req.query.id == null){
                 //user not logged in searching for profile id
                 req.query.id = null;
@@ -363,7 +363,7 @@ const getProfileUser = (req, res) => {
     req.body.client_longitude = req.body.client_longitude;
     req.body.client_latitude = req.body.client_latitude;
 
-    service.getProfileUser(req.query.app_id, req.params.id, req.params.username, req.query.id, (err, results) => {
+    service.getProfileUser(req.query.app_id, req.params.id, req.query.search, req.query.id, (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -407,7 +407,7 @@ const getProfileUser = (req, res) => {
     });
 }
 const searchProfileUser = (req, res) => {
-    const username = req.params.username;
+    const username = req.query.search;
     service.searchProfileUser(req.query.app_id, username, (err, results) => {
         if (err) {
             return res.status(500).send(
