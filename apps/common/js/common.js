@@ -1738,7 +1738,9 @@ const search_profile = (click_function) => {
             return;
         if (COMMON_GLOBAL['user_account_id']!=''){
             //search using access token with logged in user_account_id
-            url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_profile_searchA'];
+            url = COMMON_GLOBAL['rest_api_db_path'] + 
+                  COMMON_GLOBAL['rest_user_account_profile_searchA'] +
+                  '?search=' + searched_username;
             token = 1;
             json_data = `{
                         "user_account_id":${COMMON_GLOBAL['user_account_id']},
@@ -1748,15 +1750,16 @@ const search_profile = (click_function) => {
         }
         else{
             //search using data token without logged in user_account_id
-            url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_profile_searchD'];
+            url = COMMON_GLOBAL['rest_api_db_path'] + 
+                  COMMON_GLOBAL['rest_user_account_profile_searchD'] +
+                  '?search=' + searched_username;
             token = 0;
             json_data = `{
                         "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
                         "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
                         }`;
         }
-        common_fetch(url + searched_username + '?', 
-                     'POST', token, json_data, null, null, (err, result) =>{
+        common_fetch(url, 'POST', token, json_data, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -1810,14 +1813,20 @@ const profile_show = async (user_account_id_other = null, username = null, callB
     } else {
         if (user_account_id_other !== null) {
             user_account_id_search = user_account_id_other;
-            url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_profile_userid'] + user_account_id_search;
+            url = COMMON_GLOBAL['rest_api_db_path'] + 
+                  COMMON_GLOBAL['rest_user_account_profile_userid'] + 
+                  user_account_id_search + '?id=' + COMMON_GLOBAL['user_account_id'];;
         } else
         if (username !== null) {
             user_account_id_search = '';
-            url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_profile_username'] + username;
+            url = COMMON_GLOBAL['rest_api_db_path'] + 
+                  COMMON_GLOBAL['rest_user_account_profile_username'] 
+                  + '?search=' +  username + '&id=' + COMMON_GLOBAL['user_account_id'];
         } else {
             user_account_id_search = COMMON_GLOBAL['user_account_id'];
-            url = COMMON_GLOBAL['rest_api_db_path'] + COMMON_GLOBAL['rest_user_account_profile_userid'] + user_account_id_search;
+            url = COMMON_GLOBAL['rest_api_db_path'] + 
+                  COMMON_GLOBAL['rest_user_account_profile_userid'] + 
+                  user_account_id_search + '?id=' + COMMON_GLOBAL['user_account_id'];
         }
         //PROFILE MAIN
         let json_data =
@@ -1826,8 +1835,7 @@ const profile_show = async (user_account_id_other = null, username = null, callB
             "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
             }`;
 
-        common_fetch(url + '?id=' + COMMON_GLOBAL['user_account_id'], 
-                     'POST', 0, json_data, null, null, (err, result) =>{
+        common_fetch(url, 'POST', 0, json_data, null, null, (err, result) =>{
             if (err)
                 return callBack(err,null);
             else{

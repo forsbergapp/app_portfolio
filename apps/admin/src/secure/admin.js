@@ -531,7 +531,7 @@ const show_users = (sort=8, order_by='ASC', focus=true) => {
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account'] + `admin/${search_user}?sort=${sort}&order_by=${order_by}`,
+    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account'] + `admin?search=${search_user}&sort=${sort}&order_by=${order_by}`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
