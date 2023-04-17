@@ -210,7 +210,7 @@ const setRouters = async (app, rest_api_path) =>{
         //admin, count user stat
     router[17].get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
         //admin, all users with option to search
-    router[17].get("/admin/:search", checkAccessTokenAdmin, getUsersAdmin);
+    router[17].get("/admin", checkAccessTokenAdmin, getUsersAdmin);
         //admin update user, only for superadmin
     router[17].put("/admin/:id", checkAccessTokenSuperAdmin, updateUserSuperAdmin);
     router[17].put("/login", checkDataTokenLogin, userLogin);
@@ -230,9 +230,9 @@ const setRouters = async (app, rest_api_path) =>{
     router[17].get("/profile/detail/:id", checkAccessToken, getProfileDetail);
     router[17].get("/profile/top/:statchoice", checkDataToken, getProfileTop);
     router[17].post("/profile/id/:id", checkDataToken, getProfileUser);
-    router[17].post("/profile/username/:username", checkDataToken, getProfileUser);
-    router[17].post("/profile/username/searchD/:username", checkDataToken, searchProfileUser);
-    router[17].post("/profile/username/searchA/:username", checkAccessToken, searchProfileUser);
+    router[17].post("/profile/username", checkDataToken, getProfileUser);
+    router[17].post("/profile/username/searchD", checkDataToken, searchProfileUser);
+    router[17].post("/profile/username/searchA", checkAccessToken, searchProfileUser);
     app.use(`${rest_api_path}/user_account`, router[17]);
     //service db app_portfolio user account app
     router.push(Router());
