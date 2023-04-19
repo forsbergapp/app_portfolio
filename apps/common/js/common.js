@@ -301,13 +301,20 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
 /* MISC                   */
 /*----------------------- */
 const getGregorian = (HijriDate, adjustment) =>{
-    let DAY = 86400000;
-    let UNIX_EPOCH_JULIAN_DATE = 2440587.5;
+    let DAY = 86400000; // a day in milliseconds
+    let UNIX_EPOCH_JULIAN_DATE = 2440587.5; // January 1, 1970 GMT
 
-    let year = parseInt(HijriDate[0]);
+    //The epoch of Hijri calendar for 1 Muharram, AH 1
+    //The civil and the Friday epoch will be used here
+    //const hijri_epoch_julian_astronomical 	= 1948439;	//Gregorian: Thursday 15 July 622
+	const hijri_epoch_julian_civil 		    = 1948440;	//Gregorian: Friday 16 July 622	
+
+    let year =  parseInt(HijriDate[0]);
     let month = parseInt(HijriDate[1]);
-    let day = parseInt(HijriDate[2]);
-    let julian_day = Math.floor((11*year+3)/30+354*year+30*month-(month-1)/2+day+1948440-385);
+    let day =   parseInt(HijriDate[2]);
+    //calculate julian date
+    let julian_day = Math.floor(((11*year+3)/30)+(354*year)+(30*month)-((month-1)/2)+day+hijri_epoch_julian_civil-385);
+    //adjust day with +- given number of days
     julian_day = julian_day + parseInt(adjustment);
     return [new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getFullYear(),
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getMonth() + 1,
