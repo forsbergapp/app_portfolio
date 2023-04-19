@@ -2004,8 +2004,8 @@ INSERT INTO app_portfolio.device_type (id, device_type_name) VALUES( 5, 'TV');
 --
 -- device
 --
-INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_type_id) VALUES( 1, 'App Portfolio Mobile', '1080', '2400', 1);
-INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_type_id) VALUES( 2, 'App Portfolio Laptop', '1920', '1080', 4);
+INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_type_id) VALUES( 1, 'Mobile', '1080', '2400', 1);
+INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_type_id) VALUES( 2, 'Laptop', '1920', '1080', 4);
 --
 -- identity_provider
 --

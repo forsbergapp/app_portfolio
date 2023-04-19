@@ -16,6 +16,7 @@ else
 //initial config with file paths and maintenance parameter
 let SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 
+const app_portfolio_title = 'App Portfolio';
 const config_files = () => {
     return [
             [0, SERVER_CONFIG_INIT_PATH],
@@ -158,7 +159,7 @@ const DefaultConfig = async () => {
                         config_json[4] = JSON.stringify(config_json[4], undefined, 2);
                         //default server metadata
                         let config_init = {
-                                            "CONFIGURATION": "App Portfolio",
+                                            "CONFIGURATION": app_portfolio_title,
                                             "CREATED": `${new Date().toISOString()}`,
                                             "MODIFIED": "",
                                             "MAINTENANCE": "0",
@@ -381,7 +382,7 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                 if (config_no == 1){
                     //add metadata to server config
                     config_json = JSON.parse(config_json);
-                    config_json['configuration'] = 'App Portfolio';
+                    config_json['configuration'] = app_portfolio_title;
                     config_json['comment'] = '';
                     config_json['created'] = new Date().toISOString();
                     config_json['modified'] = '';
@@ -412,7 +413,7 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                                         if (config_no == 1){
                                             //add metadata to server config
                                             config_json = JSON.parse(config_json);
-                                            config_json['configuration'] = 'App Portfolio';
+                                            config_json['configuration'] = app_portfolio_title;
                                             config_json['comment'] = '';
                                             config_json['created'] = JSON.parse(old_config)['created'];
                                             config_json['modified'] = new Date().toISOString();
