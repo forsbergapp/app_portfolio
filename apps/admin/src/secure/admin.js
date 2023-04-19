@@ -1085,7 +1085,7 @@ const update_record = async (table,
                 break;
             }
             case 'app':{
-                if (id==common.COMMON_GLOBAL['common_app_id']){
+                if (parameters.id==common.COMMON_GLOBAL['common_app_id']){
                     if (row_element.children[4].children[0].checked == false){
                         //app common.COMMON_GLOBAL['common_app_id'] should always be enabled
                         row_element.children[4].children[0].checked = true;
