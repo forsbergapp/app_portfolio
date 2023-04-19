@@ -2782,17 +2782,17 @@ const init = (parameters) => {
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
                     app2_report.REPORT_GLOBAL['regional_def_calendar_number_system'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_DIRECTION')
-                    app_common.APP_GLOBAL['regional_default_direction'] = parseInt(global_app_parameters[i].parameter_value);
+                    app_common.APP_GLOBAL['regional_default_direction'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
                     app_common.APP_GLOBAL['regional_default_locale_second'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_COLTITLE')
                     app_common.APP_GLOBAL['regional_default_coltitle'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
-                    app_common.APP_GLOBAL['regional_default_arabic_script'] = parseInt(global_app_parameters[i].parameter_value);
+                    app_common.APP_GLOBAL['regional_default_arabic_script'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
-                    app_common.APP_GLOBAL['regional_default_calendartype'] = parseInt(global_app_parameters[i].parameter_value);
+                    app_common.APP_GLOBAL['regional_default_calendartype'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
-                    app_common.APP_GLOBAL['regional_default_calendar_hijri_type'] = parseInt(global_app_parameters[i].parameter_value);
+                    app_common.APP_GLOBAL['regional_default_calendar_hijri_type'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_COUNTRY')
                     app_common.APP_GLOBAL['gps_default_country'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='GPS_DEFAULT_CITY')
@@ -2848,7 +2848,7 @@ const init = (parameters) => {
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
                     app_common.APP_GLOBAL['design_default_theme_year'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
-                    app_common.APP_GLOBAL['design_default_papersize'] = parseInt(global_app_parameters[i].parameter_value);
+                    app_common.APP_GLOBAL['design_default_papersize'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
                     app_common.APP_GLOBAL['design_default_highlight_row'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
