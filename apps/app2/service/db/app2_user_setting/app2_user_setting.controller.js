@@ -28,7 +28,7 @@ const getUserSettingsByUserId = (req, res) => {
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
@@ -48,7 +48,7 @@ const getProfileUserSetting = (req, res) => {
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
@@ -71,7 +71,7 @@ const getProfileUserSettings = (req, res) => {
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 	});
@@ -95,7 +95,7 @@ const getProfileUserSettingDetail = (req, res) => {
 					items: results
 				});
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
@@ -117,7 +117,7 @@ const getProfileTop = (req, res) => {
 					items: results
 				}); 
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
@@ -153,7 +153,7 @@ const updateUserSetting = (req, res) => {
 					results
 				);
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}
@@ -173,7 +173,7 @@ const deleteUserSetting = (req, res) => {
 					results
 				);
 			else
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 		}

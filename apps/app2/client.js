@@ -123,7 +123,7 @@ const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                 return new Promise((resolve, reject) => {
                     try {
                         let default_lang = 'en';
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/language/locale/locale.service.js`).then(({getLocales}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/language/locale/locale.service.js`).then(({getLocales}) => {
                             getLocales(app_id, default_lang, (err, locales) => {
                                 if (err)
                                     resolve(err)
@@ -169,7 +169,7 @@ const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                 let APP_IQAMAT='';
                 let APP_FAST_START_END='';
                 let APP_MAP_TYPE='';
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`).then(({getSettings}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
                     getSettings(app_id, 'en', null, (err, settings) => {
                         let option;
                         for (let i = 0; i < settings.length; i++) {
@@ -363,7 +363,7 @@ const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
             });
         }
         if (username!=null){
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`).then(({getProfileUser}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

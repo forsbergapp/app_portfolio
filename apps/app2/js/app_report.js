@@ -95,7 +95,7 @@ const REPORT_GLOBAL = {
 /*----------------------- */
 const timetable_user_setting_get = async (user_setting_id, callBack) => {
     let json;
-	await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting'] + user_setting_id + '?',
+	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/${user_setting_id}?`,
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err){
 			report_exception(err);
@@ -186,7 +186,7 @@ const timetable_translate_settings = async (locale, locale_second) => {
     let json;
 	const fetch_translation = async (locale, first) => {
 		//show translation using first or second language
-		await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app_object'] + locale + '?object=APP_OBJECT_ITEM&object_name=REPORT',
+		await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`,
 					       'GET', 0, null, null, null, (err, result) =>{
 			if (err){
 				report_exception(err);
@@ -239,7 +239,7 @@ const updateReportViewStat = (user_setting_id, user_account_id) => {
                     "client_longitude": "${common.COMMON_GLOBAL['client_longitude']}",
                     "client_latitude": "${common.COMMON_GLOBAL['client_latitude']}"
                     }`;
-	common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_view'] + '?',
+	common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting_view?`,
 				 'POST', 0, json_data, null, null, (err, result) =>{
 		null;
 	})
@@ -483,7 +483,7 @@ const set_prayer_method = async(ui) => {
 		}
 		else{
 			//called from report
-			common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_setting'] + '?setting_type=METHOD' , 
+			common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/setting?setting_type=METHOD`,
 						'GET', 0, null, null, null, (err, result) =>{
 				if (err)
 					reject(err);
@@ -1235,7 +1235,7 @@ const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 	let json;
 	let user_settings = [];
 
-	await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_user_account_id'] + user_account_id + '?',
+	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/user_account_id/${user_account_id}?`,
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err)
 			callBack(err, null);
@@ -1462,12 +1462,6 @@ const init = async (parameters) => {
 				for (let i = 0; i < global_app_parameters.length; i++) {
 					if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
 						app_common.APP_GLOBAL['app_copyright'] = global_app_parameters[i].parameter_value;
-					if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING')
-						app_common.APP_GLOBAL['rest_app2_user_setting'] = global_app_parameters[i].parameter_value;
-					if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
-						app_common.APP_GLOBAL['rest_app2_user_setting_user_account_id'] = global_app_parameters[i].parameter_value;
-					if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
-						app_common.APP_GLOBAL['rest_app2_user_setting_view'] = global_app_parameters[i].parameter_value;
 					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
 						REPORT_GLOBAL['regional_def_calendar_lang'] = global_app_parameters[i].parameter_value;
 					if (global_app_parameters[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')

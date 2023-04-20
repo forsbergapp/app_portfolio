@@ -50,7 +50,7 @@ app.get("/app2/manifest.json", (req, res, next) => {
   import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
     if (check_app_subdomain(APP2_ID, req.headers.host)){
       import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`).then(({ getParameters }) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`).then(({ getParameters }) => {
           getParameters(APP2_ID, APP2_ID, (err, results) =>{
             if (err) {
               return res.send(err);
@@ -147,7 +147,7 @@ app.get('/:user', (req, res,next) => {
       req.params.user!=='images' &&
       req.params.user!=='info' &&
       req.params.user!=='js') {
-      import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm}) => {
+      import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm}) => {
         getForm(req, res, APP2_ID, req.params.user, (err, app_result)=>{
           //if app_result=0 means here redirect to /
           if (app_result==0)
@@ -164,7 +164,7 @@ app.get('/:user', (req, res,next) => {
 app.get('/', (req, res, next) => {
   import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
     if (check_app_subdomain(APP2_ID, req.headers.host)){
-      import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm}) => {
+      import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm}) => {
         getForm(req, res, APP2_ID, null,(err, app_result)=>{
             return res.send(app_result);
         })
@@ -178,9 +178,10 @@ app.get('/', (req, res, next) => {
 //ES6 IIFE arrow function
 (async () => {
   const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-  const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
+  const rest_api_path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}`;
+  
 
-  const { checkAccessToken, checkDataToken} = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+  const { checkAccessToken, checkDataToken} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
   const { getPlace } = await import(`file://${process.cwd()}/apps/app2/service/db/app2_place/app2_place.controller.js`);
   const { getThemes } = await import(`file://${process.cwd()}/apps/app2/service/db/app2_theme/app2_theme.controller.js`);
   const { createUserSetting, 

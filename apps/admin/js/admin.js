@@ -102,7 +102,7 @@ const admin_login = async () => {
         }
         let status;
         let json;
-        fetch('/service/auth/admin',
+        fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/auth/admin`,
         {method: 'POST',
             headers: {
             'Authorization': 'Basic ' + window.btoa(document.getElementById("system_admin_login_username_input").value + ':' + document.getElementById("system_admin_login_password_input").value)
@@ -119,7 +119,7 @@ const admin_login = async () => {
                     common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
                     common.COMMON_GLOBAL['system_admin'] = 1;
                     common.updateOnlineStatus();
-                    fetch('/service/forms/admin/secure',
+                    fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/forms/admin/secure`,
                     {method: 'POST',
                         headers: {
                             'Authorization': 'Bearer ' + common.COMMON_GLOBAL['rest_admin_at'],
@@ -254,17 +254,9 @@ const delete_globals = () => {
     common.COMMON_GLOBAL['client_latitude'] = null;
     common.COMMON_GLOBAL['client_longitude'] = null;
     common.COMMON_GLOBAL['client_place'] = null;
-    common.COMMON_GLOBAL['rest_app'] = null;
-    common.COMMON_GLOBAL['rest_parameter_type'] = null;
-    common.COMMON_GLOBAL['rest_user_account'] = null;
     common.COMMON_GLOBAL['module_leaflet_style'] = null;
     common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
     common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
-    common.COMMON_GLOBAL['service_geolocation'] = null;
-    common.COMMON_GLOBAL['service_geolocation_gps_ip'] = null;
-    common.COMMON_GLOBAL['service_geolocation_gps_place'] = null;
-    common.COMMON_GLOBAL['service_geolocation_gps_timezone'] = null;
-    common.COMMON_GLOBAL['service_log'] = null;
 }
 
 const admin_logoff_app = (error) => {

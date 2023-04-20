@@ -5,7 +5,7 @@ const getForm = (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
-    import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIp}) => {
+    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIp}) => {
         getIp(req, res, (err, result)=>{
             let gps_place = result.geoplugin_city + ', ' +
                             result.geoplugin_regionName + ', ' +
@@ -30,7 +30,7 @@ const getForm = (req, res, app_id, params, callBack) => {
                         result.geoplugin_longitude, 
                         gps_place)
                     .then((app_result) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
                             createLog(req.query.app_id,
                                         { app_id : app_id,
                                         app_module : 'FORMS',
@@ -64,7 +64,7 @@ const getFormAdmin = (req, res, app_id, callBack) => {
     req.query.app_user_id = null;
     req.query.callback=1;
     if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
-        import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
             getIpAdmin(req, res, (err, result)=>{
                 let gps_place = result.geoplugin_city + ', ' +
                                 result.geoplugin_regionName + ', ' +
@@ -74,7 +74,7 @@ const getFormAdmin = (req, res, app_id, callBack) => {
                                          result.geoplugin_latitude,
                                          result.geoplugin_longitude, 
                                          gps_place).then((app_result) => {
-                                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
+                                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
                                                 createLogAdmin(req.query.app_id,
                                                                 { app_id : app_id,
                                                                     app_module : 'FORMS',
@@ -102,7 +102,7 @@ const getFormAdmin = (req, res, app_id, callBack) => {
         })
     }
     else{
-        import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIpSystemAdmin}) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpSystemAdmin}) => {
             getIpSystemAdmin(req, res, (err, result)=>{
                 let gps_place = result.geoplugin_city + ', ' +
                                 result.geoplugin_regionName + ', ' +
@@ -113,8 +113,8 @@ const getFormAdmin = (req, res, app_id, callBack) => {
                                          result.geoplugin_longitude, 
                                          gps_place).then((app_result) => {
                                             let stack = new Error().stack;
-                                            import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                                                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                                                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                                   'SYSTEM ADMIN Forms Admin',
                                                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -142,8 +142,8 @@ const getFormAdminSecure = (req, res) => {
                 null, 
                 null)
             .then((app_result) => {
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'SYSTEM ADMIN Forms admin secure',
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 

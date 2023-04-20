@@ -168,7 +168,8 @@ const get_apps = async () => {
         document.getElementById('select_app_broadcast').innerHTML = html;
     }
     else{
-        common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + '/admin?', 'GET', 1, null, null, null, (err, result) =>{
+        
+        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app/admin?`, 'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -220,11 +221,11 @@ const sendBroadcast = () => {
     let url='';
     let token_type;
     if (common.COMMON_GLOBAL['system_admin']==1){
-        url = '/service/broadcast/message/SystemAdmin?';
+        url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/message/SystemAdmin?`;
         token_type = 2;
     }
     else{
-        url = '/service/broadcast/message/Admin?';
+        url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/message/Admin?`;
         token_type = 1;
     }
         
@@ -355,7 +356,7 @@ const show_chart = async (chart) => {
             app_id = '';
         else
             app_id =document.getElementById('select_app_menu1').value;
-        await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err){
                 document.getElementById(`box${chart}_chart`).innerHTML = '';
@@ -444,7 +445,7 @@ const show_chart = async (chart) => {
 const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
     if (admin_token_has_value()){
         let json;
-        await common.common_fetch(`/service/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
@@ -460,7 +461,7 @@ const count_users = async () => {
         let old_html = document.getElementById('list_user_stat').innerHTML;
         document.getElementById('list_user_stat').innerHTML = common.APP_SPINNER;
 
-        await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account'] + '/admin/count?',
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/admin/count?`,
                            'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 document.getElementById('list_user_stat').innerHTML = old_html;
@@ -531,7 +532,7 @@ const show_users = (sort=8, order_by='ASC', focus=true) => {
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account'] + `admin?search=${search_user}&sort=${sort}&order_by=${order_by}`,
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
@@ -741,7 +742,7 @@ const show_user_account_logon = async (user_account_id) => {
     let json;
     document.getElementById('list_user_account_logon').innerHTML = common.APP_SPINNER;
 
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_user_account_logon'] + `admin/${parseInt(user_account_id)}/''?`,
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_logon/admin/${parseInt(user_account_id)}/''?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_user_account_logon').innerHTML = '';
@@ -819,7 +820,7 @@ const show_apps = async () => {
     let json;
     document.getElementById('list_apps').innerHTML = common.APP_SPINNER;
 
-    await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + '/admin?',
+    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app/admin?`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_apps').innerHTML = '';
@@ -891,7 +892,7 @@ const show_app_parameter = (app_id) => {
     let json;
     document.getElementById('list_app_parameter').innerHTML = common.APP_SPINNER;
 
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app_parameter'] + `admin/all/${parseInt(app_id)}?`,
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_parameter/admin/all/${parseInt(app_id)}?`,
                  'GET', 1, null, null, null, (err, result) =>{
         if (err)
             document.getElementById('list_app_parameter').innerHTML = '';
@@ -1081,7 +1082,7 @@ const update_record = async (table,
                               "password":"${parameters.password}",
                               "password_reminder":"${parameters.password_reminder}",
                               "verification_code":"${parameters.verification_code}"}`;
-                rest_url = `${common.COMMON_GLOBAL['rest_user_account']}admin/${parameters.id}?`;
+                rest_url = `/user_account/admin/${parameters.id}?`;
                 break;
             }
             case 'app':{
@@ -1096,7 +1097,7 @@ const update_record = async (table,
                               "url": "${parameters.url}",
                               "logo": "${parameters.logo}",
                               "enabled": "${parameters.enabled==true?1:0}"}`;
-                rest_url = `${common.COMMON_GLOBAL['rest_app']}/admin/${parameters.id}?`;
+                rest_url = `/app/admin/${parameters.id}?`;
                 break;
             }
             case 'app_parameter':{
@@ -1105,11 +1106,11 @@ const update_record = async (table,
                               "parameter_type_id":"${parameters.parameter_type_id}",
                               "parameter_value":"${parameters.parameter_value}",
                               "parameter_comment":"${parameters.parameter_comment}"}`;
-                rest_url = `${common.COMMON_GLOBAL['rest_app_parameter']}admin?`;
+                rest_url = `/app_parameter/admin?`;
                 break;
             }
         }
-        await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + rest_url,
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}${rest_url}`,
                      'PUT', 1, json_data, null, null,(err, result) =>{
             document.getElementById(button).innerHTML = old_button;
             if (err)
@@ -1159,7 +1160,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_app_category']}admin?id=${event.target.value}`,
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_category/admin?id=${event.target.value}`,
                                 'GET', 1, null, null, null, (err, result) =>{
                         row_action(err, result, event.target, event, 6, '');
                     });
@@ -1169,7 +1170,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.value = event.target.defaultValue;
                 else{
-                    common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_parameter_type']}admin?id=${event.target.value}`,
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/parameter_type/admin?id=${event.target.value}`,
                                 'GET', 1, null, null, null, (err, result) =>{
                         row_action(err, result, event.target, event, 2);
                     });
@@ -1183,7 +1184,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     app_role_id_lookup=2;
                 else
                     app_role_id_lookup=event.target.value;
-                common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_app_role']}admin?id=${app_role_id_lookup}`,
+                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_role/admin?id=${app_role_id_lookup}`,
                             'GET', 1, null, null, null, (err, result) =>{
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
@@ -1404,30 +1405,30 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL['system_admin']==1){
-                    url = `/service/broadcast/connection/SystemAdmin?${url_parameters}`;
+                    url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/SystemAdmin?${url_parameters}`;
                     token_type = 2;
                 }
                 else{
-                    url = `/service/broadcast/connection/Admin?${url_parameters}`;
+                    url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/Admin?${url_parameters}`;
                     token_type = 1;
                 }
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_app_log':{
-                url = common.COMMON_GLOBAL['rest_api_db_path'] + `/app_log/admin?${url_parameters}`;
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_log/admin?${url_parameters}`;
                 token_type = 1;
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_server_log':{
-                url = common.COMMON_GLOBAL['service_log'] + `/logs?${url_parameters}`;
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/log/logs?${url_parameters}`;
                 token_type = 2;
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_pm2_log':{
-                url = common.COMMON_GLOBAL['service_log'] + `/pm2logs?`;
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/log/pm2logs?`;
                 token_type = 2;
                 document.getElementById(list_div + '_out').innerHTML = common.APP_SPINNER;
                 document.getElementById(list_div + '_err').innerHTML = common.APP_SPINNER;
@@ -2078,13 +2079,11 @@ const list_item_click = (item) => {
             //if localhost show default position
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `&ip=${item.children[0].innerHTML}`;
-            if (common.COMMON_GLOBAL['system_admin']==1){
-                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_ip'] + 
-                      `/systemadmin?app_user_id=${ip_filter}`;
+            if (common.COMMON_GLOBAL['system_admin']==1){                
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/ip/systemadmin?app_user_id=${ip_filter}`;
             }
             else
-                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_ip'] + 
-                      `/admin?app_user_id=${ip_filter}`;
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/ip/admin?app_user_id=${ip_filter}`;
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
@@ -2115,16 +2114,10 @@ const list_item_click = (item) => {
                 }       
             }
             if (common.COMMON_GLOBAL['system_admin']==1){
-                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_place'] + 
-                      '/systemadmin?app_user_id=' +
-                      '&latitude=' + lat +
-                      '&longitude=' + long;
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`;
             }
             else
-                url = common.COMMON_GLOBAL['service_geolocation'] + common.COMMON_GLOBAL['service_geolocation_gps_place'] + 
-                        '/admin?app_user_id=' +
-                        '&latitude=' + lat +
-                        '&longitude=' + long;
+                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`;
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
@@ -2151,7 +2144,7 @@ const list_item_click = (item) => {
 }
 const get_server_log_parameters = async () => {
     let json;
-    await common.common_fetch(common.COMMON_GLOBAL['service_log'] + '/parameters?',
+    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/log/parameters?`,
                        'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2385,7 +2378,7 @@ const show_config = async (config_nav=1) => {
 const show_db_info = async () => {
     if (admin_token_has_value()){
         let json;
-        await common.common_fetch('/service/db/admin/DBInfo?',
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfo?`,
                            'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
                 null;
@@ -2411,7 +2404,7 @@ const show_db_info_space = async () => {
             return Math.round(num * x) / x;
           }
         document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-        await common.common_fetch('/service/db/admin/DBInfoSpace?', 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfoSpace?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
                 null;
             else{
@@ -2454,7 +2447,7 @@ const show_db_info_space = async () => {
                     </div>`;
                 }
                 document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                common.common_fetch('/service/db/admin/DBInfoSpaceSum?', 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfoSpaceSum?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
                     if (err)
                         null;
                     else{
@@ -2591,16 +2584,10 @@ const init_admin_secure = () => {
     APP_GLOBAL['service_log_file_path_server']= '';
     APP_GLOBAL['service_log_date_format']= '';
 
-    common.COMMON_GLOBAL['service_log'] = '/service/log';
-
     if (common.COMMON_GLOBAL['system_admin']==1){
         common.COMMON_GLOBAL['module_leaflet_style']			    ='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL['module_leaflet_jumpto']		        ='0';
         common.COMMON_GLOBAL['module_leaflet_popup_offset']		    ='-25';
-        common.COMMON_GLOBAL['service_geolocation']		            ='/service/geolocation';
-        common.COMMON_GLOBAL['service_geolocation_gps_ip']          ='/ip';
-        common.COMMON_GLOBAL['service_geolocation_gps_place']	    ='/place';
-        common.COMMON_GLOBAL['service_geolocation_gps_timezone']	='/timezone';
     }
     //session variables
     common.COMMON_GLOBAL['client_latitude'] = '';
