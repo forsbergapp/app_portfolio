@@ -189,7 +189,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
     })
 }
 const get_report_url = (id, sid, papersize, item, format) => {
-    let server_url = common.getHostname() + `${common.COMMON_GLOBAL['service_report']}`;
+    let server_url = common.getHostname() + `${common.COMMON_GLOBAL['rest_resource_service']}/report`;
     let app_parameters = `app_id=${common.COMMON_GLOBAL['app_id']}`;
     let report_module = `&module=${app_common.APP_GLOBAL['app_report_timetable']}`;
     let module_parameters = `&id=${id}&sid=${sid}`
