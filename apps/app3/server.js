@@ -10,7 +10,7 @@ app.get('/:doc', (req, res,next) => {
       if (req.params.doc =='1' ||
           req.params.doc =='2' ||
           req.params.doc =='3' ) {
-          import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm}) => {
+          import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm}) => {
             getForm(req, res, APP3_ID, null,(err, app_result)=>{
               return res.send(app_result);
             })
@@ -26,7 +26,7 @@ app.get('/:doc', (req, res,next) => {
 app.get('/',(req, res, next) => {
   import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
     if (check_app_subdomain(APP3_ID, req.headers.host)){
-      import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm}) => {
+      import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm}) => {
         getForm(req, res, APP3_ID, null,(err, app_result)=>{
             return res.send(app_result);
         })

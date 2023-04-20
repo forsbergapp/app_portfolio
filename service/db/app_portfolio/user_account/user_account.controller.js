@@ -1,13 +1,13 @@
 const service = await import("./user_account.service.js");
 const { default: {genSaltSync, hashSync, compareSync} } = await import("bcryptjs");
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { getMessage } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`);
-const { createUserAccountApp } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_app/user_account_app.service.js`);
-const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_event/user_account_event.service.js`);
-const { insertUserAccountLogon } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_logon/user_account_logon.service.js`);
-const { getParameter } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
-const { sendEmail } = await import(`file://${process.cwd()}/service/mail/mail.controller.js`);
-const { accessToken } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { getMessage } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/message_translation/message_translation.service.js`);
+const { createUserAccountApp } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_app/user_account_app.service.js`);
+const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_event/user_account_event.service.js`);
+const { insertUserAccountLogon } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`);
+const { getParameter } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
+const { sendEmail } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
+const { accessToken } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
 
 const getUsersAdmin = (req, res) => {
     service.getUsersAdmin(req.query.app_id, req.query.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
@@ -38,7 +38,7 @@ const getStatCountAdmin = (req, res) => {
     });
 }
 const checked_error = (app_id, lang_code, err, res) =>{
-    import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({ get_app_code }) => {
+    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({ get_app_code }) => {
         let app_code = get_app_code(err.errorNum, 
             err.message, 
             err.code, 
@@ -69,7 +69,7 @@ const updateUserSuperAdmin = (req, res) => {
         else{
             if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
                 //delete admin app from user if user is not an admin anymore
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
                     deleteUserAccountApps(req.query.app_id, req.params.id, req.query.app_id, (err, result_delete_user_acccount_app) =>{
                         if (err)
                             return res.status(500).send(
@@ -327,7 +327,7 @@ const getUserByUserId = (req, res) => {
                 );
             }
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
@@ -381,7 +381,7 @@ const getProfileUser = (req, res) => {
                     //set user id when username is searched
                     if (req.body.user_account_id_view==null)
                         req.body.user_account_id_view = results.id;
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
                         insertUserAccountView(req.query.app_id, req.body, (err, results_insert) => {
                             if (err) {
                                 return res.status(500).send(
@@ -399,7 +399,7 @@ const getProfileUser = (req, res) => {
                 }
             }
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
@@ -420,7 +420,7 @@ const searchProfileUser = (req, res) => {
             req.body.client_user_agent = req.headers["user-agent"];
             req.body.client_longitude = req.body.client_longitude;
             req.body.client_latitude = req.body.client_latitude;
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
                 insertProfileSearch(req.query.app_id, req.body, (err, results_insert) => {
                     if (err) {
                         return res.status(500).send(
@@ -434,7 +434,7 @@ const searchProfileUser = (req, res) => {
                                 items: results
                             });
                         else {
-                            import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                                 return record_not_found(res, req.query.app_id, req.query.lang_code);
                             })
                         }
@@ -556,7 +556,7 @@ const updateUserLocal = (req, res) => {
                                             });
                                     } 
                                     else{
-                                        import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                                             return record_not_found(res, req.query.app_id, req.query.lang_code);
                                         })
                                     }
@@ -610,8 +610,8 @@ const updateUserLocal = (req, res) => {
                     }
                 } else {
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                           'invalid password attempt for user id:' + req.params.id,
                                           req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -693,7 +693,7 @@ const updatePassword = (req, res) => {
                     })
                 }
                 else{
-                    import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                         return record_not_found(res, req.query.app_id, req.query.lang_code);
                     })
                 }
@@ -714,7 +714,7 @@ const updateUserCommon = (req, res) => {
                 );
             }
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
@@ -745,7 +745,7 @@ const deleteUser = (req, res) => {
                                 );
                             }
                             else{
-                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                                 })
                             }
@@ -776,7 +776,7 @@ const deleteUser = (req, res) => {
                                                 );
                                             }
                                             else{
-                                                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                                                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                                                 })
                                             }
@@ -785,8 +785,8 @@ const deleteUser = (req, res) => {
                                 }
                                 else{
                                     let stack = new Error().stack;
-                                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                         'invalid password attempt for user id:' + req.params.id,
                                                         req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -981,8 +981,8 @@ const userLogin = (req, res) => {
                     }
                     else{
                         //unauthorized, only admin allowed to log in to admin
-                        import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                 'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
                                                 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -1005,8 +1005,8 @@ const userLogin = (req, res) => {
                         }
                         else{
                             //Username or password not found
-                            import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                   'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
                                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -1028,8 +1028,8 @@ const userLogin = (req, res) => {
                 }
             } else{
                 //User not found
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'user not found:' + req.body.username,
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 

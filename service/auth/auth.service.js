@@ -52,8 +52,8 @@ const safe_user_agents = async (user_agent, callBack) => {
             fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (err, fileBuffer) => {
                 if (err){
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                 return callBack(err, null);
                             })
@@ -103,8 +103,8 @@ const policy_directives = (callBack) => {
             fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_POLICY'), 'utf8', (err, fileBuffer) => {
                 if (err){
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                 return callBack(err, null);
                             })
