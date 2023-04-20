@@ -1,20 +1,22 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-let MYSQL = await import("mysql");
+//mysql module used for both MariaDB and MySQL
+let MYSQL               = await import("mysql");
+let {default: PG}       = await import('pg');
 let {default: ORACLEDB} = await import('oracledb');
 
-let {default: PG} = await import('pg');
 
 let POOL_DB1_APP = [];
 let POOL_DB2_APP = [];
 let POOL_DB3_APP = [];
+let POOL_DB4_APP = [];
 
 const DBInit = () => {
-   if (ConfigGet(1, 'SERVICE_DB', 'USE')=='2'){
+   if (ConfigGet(1, 'SERVICE_DB', 'USE')=='4'){
       ORACLEDB.autoCommit = true;
       ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
-      ORACLEDB.initOracleClient({ libDir: ConfigGet(1, 'SERVICE_DB', 'DB2_LIBDIR'),
-                                  configDir:ConfigGet(1, 'SERVICE_DB', 'DB2_CONFIGDIR')});
+      ORACLEDB.initOracleClient({ libDir: ConfigGet(1, 'SERVICE_DB', 'DB4_LIBDIR'),
+                                  configDir:ConfigGet(1, 'SERVICE_DB', 'DB4_CONFIGDIR')});
       ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
    }
 }
@@ -22,18 +24,19 @@ const DBInfo = async (app_id, callBack) => {
    const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
    let sql;
    let parameters;
-   switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-      case '1':{
+   const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+   switch (db_use){
+      case '1':
+      case '2':{
          let table_global_variables;
-         if (ConfigGet(1, 'SERVICE_DB', 'DB1_VARIANT')=='1'){
-            //MySQL
-            table_global_variables = 'performance_schema';
-         }
-         else{
+         if (db_use == 1){
             //MariaDB
             table_global_variables = 'information_schema';
          }
-            
+         else{
+            //MySQL
+            table_global_variables = 'performance_schema';
+         }
          sql = `SELECT :database database_use,
                        (SELECT variable_value
                           FROM ${table_global_variables}.global_variables
@@ -54,7 +57,19 @@ const DBInfo = async (app_id, callBack) => {
                FROM DUAL`;
          break;
       }
-      case '2':{
+      case '3':{
+         sql = `SELECT :database "database_use",
+                        version() "database_name",
+                        current_setting('server_version') "version",
+                        :Xdatabase_schema "database_schema",
+                        inet_server_addr() "hostname", 
+                        (SELECT count(*) 
+                           FROM pg_stat_activity 
+                          WHERE datname IS NOT NULL) "connections",
+                        pg_postmaster_start_time() "started"`;
+         break;
+      }
+      case '4':{
          sql = `SELECT :database "database_use",
                         (SELECT product
                            FROM product_component_version) "database_name", 
@@ -69,21 +84,9 @@ const DBInfo = async (app_id, callBack) => {
                   FROM V$INSTANCE v`;
          break;
       }
-      case '3':{
-         sql = `SELECT :database "database_use",
-                        version() "database_name",
-                        current_setting('server_version') "version",
-                        :Xdatabase_schema "database_schema",
-                        inet_server_addr() "hostname", 
-                        (SELECT count(*) 
-                           FROM pg_stat_activity 
-                          WHERE datname IS NOT NULL) "connections",
-                        pg_postmaster_start_time() "started"`;
-         break;
-      }
    }
    parameters = {	
-                  database: ConfigGet(1, 'SERVICE_DB', 'USE'),
+                  database: db_use,
                   Xdatabase_schema: get_schema_name()
                   };
    let stack = new Error().stack;
@@ -93,7 +96,7 @@ const DBInfo = async (app_id, callBack) => {
          if (err)
             return callBack(err, null);
          else{
-               if (ConfigGet(1, 'SERVICE_DB', 'USE')=='2'){
+               if (db_use == 4){
                   let hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
                                  ' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
                   result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
@@ -110,7 +113,8 @@ const DBInfoSpace = async (app_id, callBack) => {
    let sql;
    let parameters;
    switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-      case '1':{
+      case '1':
+      case '2':{
          sql = `SELECT t.table_name table_name,
                        IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
                        IFNULL(ROUND(((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/1024/1024,2),0.00) data_used,
@@ -122,21 +126,6 @@ const DBInfoSpace = async (app_id, callBack) => {
                    AND s.schema_name = :db_schema
                  GROUP BY table_name
                  ORDER BY IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) DESC`;
-         break;
-      }
-      case '2':{
-         sql = `SELECT dt.table_name "table_name",
-                       SUM(ds.bytes)/1024/1024 "total_size",
-                       dt.num_rows*dt.avg_row_len/1024/1024 "data_used",
-                       (SUM(ds.bytes)/1024/1024) - (dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
-                       (dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
-                  FROM DBA_TABLES dt,
-                       DBA_SEGMENTS ds
-                 WHERE dt.owner = UPPER(:db_schema)
-                   AND ds.segment_name = dt.table_name
-                   AND ds.segment_type = 'TABLE'
-                 GROUP BY dt.table_name, dt.num_rows,dt.avg_row_len
-                 ORDER BY 2 DESC`;
          break;
       }
       case '3':{
@@ -151,6 +140,21 @@ const DBInfoSpace = async (app_id, callBack) => {
                   FROM pg_tables t
                  WHERE t.tableowner = LOWER(:db_schema)
                  GROUP BY t.schemaname, t.tablename
+                 ORDER BY 2 DESC`;
+         break;
+      }
+      case '4':{
+         sql = `SELECT dt.table_name "table_name",
+                       SUM(ds.bytes)/1024/1024 "total_size",
+                       dt.num_rows*dt.avg_row_len/1024/1024 "data_used",
+                       (SUM(ds.bytes)/1024/1024) - (dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
+                       (dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
+                  FROM DBA_TABLES dt,
+                       DBA_SEGMENTS ds
+                 WHERE dt.owner = UPPER(:db_schema)
+                   AND ds.segment_name = dt.table_name
+                   AND ds.segment_type = 'TABLE'
+                 GROUP BY dt.table_name, dt.num_rows,dt.avg_row_len
                  ORDER BY 2 DESC`;
          break;
       }
@@ -172,7 +176,8 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
    let sql;
    let parameters;
    switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-      case '1':{
+      case '1':
+      case '2':{
          sql = `SELECT IFNULL(ROUND((SUM(t.data_length)+SUM(t.index_length))/1024/1024,2),0.00) total_size,
                        IFNULL(ROUND(((SUM(t.data_length)+SUM(t.index_length))-SUM(t.data_free))/1024/1024,2),0.00) data_used,
                        IFNULL(ROUND(SUM(data_free)/1024/1024,2),0.00) data_free,
@@ -181,18 +186,6 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
                        INFORMATION_SCHEMA.TABLES t
                  WHERE s.schema_name = t.table_schema
                    AND s.schema_name = :db_schema`;
-         break;
-      }
-      case '2':{
-         sql = `SELECT SUM(ds.bytes)/1024/1024 "total_size",
-                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_used",
-                       (SUM(ds.bytes)/1024/1024) - SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
-                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
-                  FROM DBA_TABLES dt,
-                       DBA_SEGMENTS ds
-                 WHERE dt.owner = UPPER(:db_schema)
-                   AND ds.segment_name = dt.table_name
-                   AND ds.segment_type = 'TABLE'`
          break;
       }
       case '3':{
@@ -206,6 +199,18 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
                   FROM pg_tables t
                  WHERE t.tableowner = LOWER(:db_schema)
                  ORDER BY 2 DESC`;
+         break;
+      }
+      case '4':{
+         sql = `SELECT SUM(ds.bytes)/1024/1024 "total_size",
+                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_used",
+                       (SUM(ds.bytes)/1024/1024) - SUM(dt.num_rows*dt.avg_row_len/1024/1024) "data_free",
+                       SUM(dt.num_rows*dt.avg_row_len/1024/1024) / (SUM(ds.bytes)/1024/1024)*100 "pct_used"
+                  FROM DBA_TABLES dt,
+                       DBA_SEGMENTS ds
+                 WHERE dt.owner = UPPER(:db_schema)
+                   AND ds.segment_name = dt.table_name
+                   AND ds.segment_type = 'TABLE'`
          break;
       }
    }
@@ -228,65 +233,59 @@ const DBStart = async () => {
          DBInit();
          const startDBpool = async (app_id, db_user, db_password) => {
             return await new Promise((resolve, reject) => {
-               switch(ConfigGet(1, 'SERVICE_DB', 'USE')){
-                  case '1':{
-                     POOL_DB1_APP.push([app_id,
-                                          MYSQL.createPool({
-                                             port: ConfigGet(1, 'SERVICE_DB', 'DB1_PORT'),
-                                             host: ConfigGet(1, 'SERVICE_DB', 'DB1_HOST'),
-                                             user: db_user,
-                                             password: db_password,
-                                             database: ConfigGet(1, 'SERVICE_DB', 'DB1_NAME'),
-                                             charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
-                                             connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')
-                                          })
-                                       ]);
-                     // log with common app id at startup for all apps
+               const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+               const pool_log = (err) =>{
+                  if (err){
                      import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                           createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `mysql createPool ${app_id} user: ` + db_user).then(() => {
-                              resolve();
-                           })
-                        });
-                     })
-                     break;
-                  }
-                  case '2':{
-                     POOL_DB2_APP.push([app_id, 
-                                        `POOL_DB2_APP_${app_id}`
-                                       ]);
-                     ORACLEDB.createPool({	
-                        user:  db_user,
-                        password: db_password,
-                        connectString: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTSTRING'),
-                        poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MIN')),
-                        poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MAX')),
-                        poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_INCREMENT')),
-                        poolAlias: `POOL_DB2_APP_${app_id}`
-                     }, (err,result) => {
-                        // log with common app id at startup for all apps
-                        if (err){
-                           import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
                               import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
                                  createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                               `ORACLEDB.createPool ${app_id} user: ` + db_user + `, err:${err}`).then(() => {
+                                               `DB ${db_use} startDBpool ${app_id} user: ` + db_user + `, err:${err}`).then(() => {
                                     reject(err);
                                  })
                               });
                            })
-                        }
-                        else{
-                           import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                              import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                                 createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                               `ORACLEDB.createPool ${app_id} ok user: ` + db_user).then(() => {
-                                    resolve();
-                                 })
-                              });
+                  }
+                  else{
+                     // log with common app id at startup for all apps
+                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                           createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                          `DB ${db_use} startDBpool ${app_id} user: ` + db_user).then(() => {
+                              resolve();
                            })
-                        }
-                     });
+                        });
+                     })
+                  }
+               }
+               switch(db_use){
+                  case '1':{
+                     POOL_DB1_APP.push([app_id,
+                                       MYSQL.createPool({
+                                          port: ConfigGet(1, 'SERVICE_DB', 'DB1_PORT'),
+                                          host: ConfigGet(1, 'SERVICE_DB', 'DB1_HOST'),
+                                          user: db_user,
+                                          password: db_password,
+                                          database: ConfigGet(1, 'SERVICE_DB', 'DB1_NAME'),
+                                          charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
+                                          connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')
+                                       })
+                                       ]);
+                     pool_log();
+                     break;
+                  }
+                  case '2':{
+                     POOL_DB2_APP.push([app_id,
+                                       MYSQL.createPool({
+                                          port: ConfigGet(1, 'SERVICE_DB', 'DB2_PORT'),
+                                          host: ConfigGet(1, 'SERVICE_DB', 'DB2_HOST'),
+                                          user: db_user,
+                                          password: db_password,
+                                          database: ConfigGet(1, 'SERVICE_DB', 'DB2_NAME'),
+                                          charset: ConfigGet(1, 'SERVICE_DB', 'DB2_CHARACTERSET'),
+                                          connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTION_LIMIT')
+                                       })
+                                       ]);
+                     pool_log();
                      break;
                   }
                   case '3':{
@@ -301,19 +300,31 @@ const DBStart = async () => {
                                                    idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
                                                    max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
                                                 ]);
-                     // log with common app id at startup for all apps
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                           createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `PG createPool ${app_id} user: ` + db_user).then(() => {
-                              resolve();
-                           })
-                        });
-                     })
+                     pool_log();
+                     break;
+                  }
+                  case '4':{
+                     POOL_DB4_APP.push([app_id, 
+                                        `POOL_DB4_APP_${app_id}`
+                                       ]);
+                     ORACLEDB.createPool({	
+                        user:  db_user,
+                        password: db_password,
+                        connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
+                        poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
+                        poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
+                        poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
+                        poolAlias: `POOL_DB4_APP_${app_id}`
+                     }, (err,result) => {
+                        if (err)
+                           pool_log(err);
+                        else
+                           pool_log();
+                     });
                      break;
                   }
                }
-            })
+         })
          }
          const startDBApps = () => {
             let json;
@@ -349,6 +360,29 @@ const DBStart = async () => {
                }); 
             })
          }
+         const admin_pool_log_startDBApps = (db_use, admin_user, err) => {
+            if (err){
+               import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                  import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                    `${db_use} admin_pool_log ADMIN user: ${admin_user}, err:${err}`).then(() => {
+                        reject(err);
+                     })
+                  });
+               })
+            }
+            else{
+               // log with common app id at startup for all apps
+               import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+                  import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                 `${db_use} admin_pool_log ADMIN user: ${admin_user}`).then(() => {
+                        startDBApps()
+                     })
+                  });
+               })
+            }
+         }
          switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
             case '1':{
                POOL_DB1_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
@@ -361,18 +395,39 @@ const DBStart = async () => {
                                           charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
                                           connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')})
                                           ]);
-               // log with common app id at startup for all apps
-               import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                  import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                   `mysql createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER')}`).then(() => {
-                        startDBApps()
-                     })
-                  });
-               })
+               return admin_pool_log_startDBApps(1, ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER'));
                break;
             }
             case '2':{
+               POOL_DB2_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                          MYSQL.createPool({
+                                          port: ConfigGet(1, 'SERVICE_DB', 'DB2_PORT'),
+                                          host: ConfigGet(1, 'SERVICE_DB', 'DB2_HOST'),
+                                          user: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER'),
+                                          password: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_PASS'),
+                                          database: ConfigGet(1, 'SERVICE_DB', 'DB2_NAME'),
+                                          charset: ConfigGet(1, 'SERVICE_DB', 'DB2_CHARACTERSET'),
+                                          connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTION_LIMIT')})
+                                          ]);
+               return admin_pool_log_startDBApps(2, ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER'));
+               break;
+            }
+            case '3':{
+               POOL_DB3_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                    new PG.Pool({
+                                       user: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'),
+                                       password: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_PASS'),
+                                       host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                       database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
+                                       port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                       connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                       idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                       max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
+                                 ]);
+               return admin_pool_log_startDBApps(3, ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'));
+               break;
+            }
+            case '4':{
                /* 
                other params and default values
                // edition: 'ORA$BASE', // used for Edition Based Redefintion
@@ -393,61 +448,24 @@ const DBStart = async () => {
                // enableStatistics: false // record pool usage for ORACLEDB.getPool().getStatistics() and logStatistics()
                */
                // start first with admin app id = common app id 
-               POOL_DB2_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                                          `POOL_DB2_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`
+               POOL_DB4_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                            `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`
                                           ]);
-               ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER'),
-                                             password: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_PASS'),
-                                             connectString: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTSTRING'),
-                                             poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MIN')),
-                                             poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_MAX')),
-                                             poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB2_POOL_INCREMENT')),
-                                             poolAlias: `POOL_DB2_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`}, (err,result) => {
+               ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'),
+                                             password: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_PASS'),
+                                             connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
+                                             poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
+                                             poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
+                                             poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
+                                             poolAlias: `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}`}, (err,result) => {
                   // log with common app id at startup for all apps
                   if (err){
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                           createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `ORACLEDB.createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}, err:${err}`).then(() => {
-                              reject(err);
-                           })
-                        });
-                     })
+                     return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'), err);
                   }
                   else{
-                     import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                           createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                         `ORACLEDB.createPool ADMIN ok user: ${ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')}`).then(() => {
-                              startDBApps()
-                           })
-                        });
-                     })
+                     return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'));
                   }							
                });
-               break;
-            }
-            case '3':{
-               POOL_DB3_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                                    new PG.Pool({
-                                       user: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'),
-                                       password: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_PASS'),
-                                       host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
-                                       database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
-                                       port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
-                                       connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
-                                       idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
-                                       max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')})
-                                 ]);
-               // log with common app id at startup for all apps
-               import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                  import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                   `PG createPool ADMIN user: ${ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER')}`).then(() => {
-                        startDBApps()
-                     })
-                  });
-               })
                break;
             }
          }
@@ -461,34 +479,34 @@ const DBStop = async (app_id, callBack) => {
    POOL_DB1_APP = [];
    POOL_DB2_APP = [];
    POOL_DB3_APP = [];
+   POOL_DB4_APP = [];
    MYSQL = null;
    MYSQL = await import('mysql');
-   ORACLEDB = null;
-   ORACLEDB = await import('oracledb');
    PG = null;
    PG = await import('pg');
+   ORACLEDB = null;
+   ORACLEDB = await import('oracledb');
 }
 const get_pool = (app_id) => {
    let pool = null;
    let stack = new Error().stack;
+   const pool_filter = (dbpool) => (parseInt(dbpool[0]) == parseInt(app_id));
    try{
       switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
          case '1':{
-            pool = POOL_DB1_APP.filter((dbpool) => {
-                     return (parseInt(dbpool[0]) == parseInt(app_id));
-                     })[0][1];
+            pool = POOL_DB1_APP.filter(pool_filter)[0][1];
             break;
          }
          case '2':{
-            pool = POOL_DB2_APP.filter((dbpool) => {
-                     return (parseInt(dbpool[0]) == parseInt(app_id));
-                     })[0][1];
+            pool = POOL_DB2_APP.filter(pool_filter)[0][1];
             break;
          }
          case '3':{
-            pool = POOL_DB3_APP.filter((dbpool) => {
-                     return (parseInt(dbpool[0]) == parseInt(app_id));
-                     })[0][1];
+            pool = POOL_DB3_APP.filter(pool_filter)[0][1];
+            break;
+         }
+         case '4':{
+            pool = POOL_DB4_APP.filter(pool_filter)[0][1];
             break;
          }
       }

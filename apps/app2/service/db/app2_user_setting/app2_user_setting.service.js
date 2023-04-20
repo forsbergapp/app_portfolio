@@ -3,6 +3,7 @@ const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${proc
 const createUserSetting = (app_id, initial, data, callBack) => {
 		let sql;
 		let parameters;
+		let stack = new Error().stack;
 		//insert user settings if first time and no user settings exists already
 		sql = `INSERT INTO ${get_schema_name()}.app2_user_setting(
 					description,
@@ -178,7 +179,6 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 							app_id: app_id,
 							initial_setting: initial
 						};
-			let stack = new Error().stack;
 			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
 				execute_db_sql(app_id, sql, parameters, 
 							   COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
@@ -186,11 +186,23 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 						return callBack(err, null);
 					else
 						switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-							case '1':{
+							case '1':
+							case '2':{
 								return callBack(null, result);
 								break;
 							}
-							case '2':{
+							case '3':{
+								if (initial==1){
+									//user logged in and if user setting is created or not
+									//not used here
+									return callBack(null, result);
+								}									
+								else{
+									return callBack(null, {insertId: result[0].id});
+								}
+								break;
+							}
+							case '4':{
 								if (initial==1){
 									//user logged in and if user setting is created or not
 									//not used here
@@ -218,17 +230,6 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 												return callBack(null, result_id2[0]);
 										});
 									})
-								}
-								break;
-							}
-							case '3':{
-								if (initial==1){
-									//user logged in and if user setting is created or not
-									//not used here
-									return callBack(null, result);
-								}									
-								else{
-									return callBack(null, {insertId: result[0].id});
 								}
 								break;
 							}
