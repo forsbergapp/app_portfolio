@@ -20,7 +20,7 @@ const getReport = async (req, res) => {
 	req.query.hf = query_parameters.hf;
 	//called if format=html or not PDF or puppeteer creating PDF
 	req.query.callback=1;
-	import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIp}) => {
+	import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIp}) => {
 		getIp(req, res, (err, result)=>{
 			let gps_place = result.geoplugin_city + ', ' +
 							result.geoplugin_regionName + ', ' +
@@ -57,7 +57,7 @@ const getReport = async (req, res) => {
 											result.geoplugin_longitude, 
 											gps_place)
 						.then((report_result) => {
-							import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
+							import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
 								createLog(req.query.app_id,
 											{ app_id : req.query.app_id,
 											app_module : 'REPORT',

@@ -12,7 +12,7 @@ const getCities = (req, res) => {
 			cities = JSON.parse(cities).filter((item) => {
 				return (item.iso2 == req.params.country);
 			});	
-			import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
+			import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
 				createLog(req.query.app_id,
 							{ app_id : req.query.app_id, 
 							app_module : 'WORLDCITIES',

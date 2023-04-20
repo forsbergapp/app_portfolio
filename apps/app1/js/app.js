@@ -79,7 +79,7 @@ const setEvents = () => {
     document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null) }, false);
     document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null) }, false);
     document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, common.COMMON_GLOBAL['rest_user_account_app'] + 'apps/', true, common.ICONS['sky_cloud'], null) }, false);
+    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps/', true, common.ICONS['sky_cloud'], null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById('common_login_username');
     input_username_login.addEventListener('keyup', (event) => {
@@ -148,8 +148,7 @@ const app_theme_switch = () => {
 const get_apps = () => {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
-
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_app'] + `?id=${common.COMMON_GLOBAL['common_app_id']}`, 
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app?id=${common.COMMON_GLOBAL['common_app_id']}`, 
                     'GET', 0, null, null,null, (err, result) =>{
         if (err)
             document.getElementById('apps').innerHTML = old_button;
