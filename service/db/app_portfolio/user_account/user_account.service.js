@@ -339,11 +339,16 @@ const create = (app_id, data, callBack) => {
 						return callBack(err, null);
 					else
 						switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-							case '1':{
+							case '1':
+							case '2':{
 								return callBack(null, result);
 								break;
 							}
-							case '2':{
+							case '3':{
+								return callBack(null, {insertId: result[0].id});
+								break;
+							}
+							case '4':{
 								//Fetch id from rowid returned from Oracle
 								//sample output:
 								//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
@@ -365,10 +370,6 @@ const create = (app_id, data, callBack) => {
 											return callBack(null, result_id2[0]);
 									})
 								})
-								break;
-							}
-							case '3':{
-								return callBack(null, {insertId: result[0].id});
 								break;
 							}
 						}
@@ -418,17 +419,9 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 					return callBack(err, null);
 				else{
 					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-						case '1':{
-							return callBack(null, result);
-							break;
-						}
+						case '1':
 						case '2':{
-							let oracle_json = {
-								"count": result.rowsAffected,
-								"affectedRows": result.rowsAffected
-							};
-							//use affectedRows as mysql in app
-							return callBack(null, oracle_json);
+							return callBack(null, result);
 							break;
 						}
 						case '3':{
@@ -438,6 +431,15 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 							};
 							//use affectedRows as mysql in app
 							return callBack(null, pg_json);
+							break;
+						}
+						case '4':{
+							let oracle_json = {
+								"count": result.rowsAffected,
+								"affectedRows": result.rowsAffected
+							};
+							//use affectedRows as mysql in app
+							return callBack(null, oracle_json);
 							break;
 						}
 					}
