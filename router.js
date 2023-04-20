@@ -115,15 +115,17 @@ const setRouters = async (app, rest_api_path) =>{
     //broadcast
     router.push(Router());
     router[3].use(log_router);
-    router[3].get("/SystemAdmin/connected", checkAdmin, ConnectedListSystemAdmin);
-    router[3].patch("/SystemAdmin/update_connected", checkAdmin, ConnectedUpdate);
-    router[3].post("/SystemAdmin/Send",checkAdmin, BroadcastSendSystemAdmin);
-    router[3].post("/Admin/Send",checkAccessTokenAdmin, BroadcastSendAdmin);
-    router[3].get("/Admin/connected", checkAccessTokenAdmin, ConnectedList);
-    router[3].get("/Admin/connected/count", checkAccessTokenAdmin, ConnectedCount);
-    router[3].get("/connect/:clientId",BroadcastConnect);
-    router[3].patch("/update_connected", checkDataToken, ConnectedUpdate);
-    router[3].get("/checkconnected/:user_account_id", checkDataToken, ConnectedCheck);
+    //message:
+    router[3].post("/message/SystemAdmin",checkAdmin, BroadcastSendSystemAdmin);
+    router[3].post("/message/Admin",checkAccessTokenAdmin, BroadcastSendAdmin);
+    //connection:
+    router[3].get("/connection/SystemAdmin", checkAdmin, ConnectedListSystemAdmin);
+    router[3].patch("/connection/SystemAdmin", checkAdmin, ConnectedUpdate);
+    router[3].get("/connection/Admin", checkAccessTokenAdmin, ConnectedList);
+    router[3].get("/connection/Admin/count", checkAccessTokenAdmin, ConnectedCount);
+    router[3].get("/connection/:clientId",BroadcastConnect);
+    router[3].patch("/connection", checkDataToken, ConnectedUpdate);
+    router[3].get("/connection/check/:user_account_id", checkDataToken, ConnectedCheck);
     app.use('/service/broadcast', router[3]);
     //service db admin
     router.push(Router());
