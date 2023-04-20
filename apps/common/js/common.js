@@ -1470,14 +1470,14 @@ const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
                 
     if (statschoice ==1 || statschoice ==2 || statschoice ==3){
         /*statschoice 1,2,3: user_account*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/top?`;
+        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/top`;
     }
     else{
         /*other statschoice, apps can use >3 and return same columns*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${app_rest_url}?`;
+        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${app_rest_url}`;
     }
     //TOP
-    common_fetch(url + statschoice + '?', 
+    common_fetch(url + '/' + statschoice + '?', 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -2428,14 +2428,14 @@ const user_function = (user_function, callBack) => {
     switch (user_function) {
         case 'FOLLOW':
             {
-                rest_path = '/user_account/follow';
+                rest_path = '/user_account_follow';
                 json_data = '{"user_account_id":' + user_id_profile + '}';
                 check_div = document.getElementById('common_profile_follow');
                 break;
             }
         case 'LIKE':
             {
-                rest_path = '/user_account/like';
+                rest_path = '/user_account_like';
                 json_data = '{"user_account_id":' + user_id_profile + '}';
                 check_div = document.getElementById('common_profile_like');
                 break;
