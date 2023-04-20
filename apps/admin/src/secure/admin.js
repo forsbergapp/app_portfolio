@@ -220,11 +220,11 @@ const sendBroadcast = () => {
     let url='';
     let token_type;
     if (common.COMMON_GLOBAL['system_admin']==1){
-        url = '/service/broadcast/SystemAdmin/Send?';
+        url = '/service/broadcast/message/SystemAdmin?';
         token_type = 2;
     }
     else{
-        url = '/service/broadcast/Admin/Send?';
+        url = '/service/broadcast/message/Admin?';
         token_type = 1;
     }
         
@@ -444,7 +444,7 @@ const show_chart = async (chart) => {
 const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
     if (admin_token_has_value()){
         let json;
-        await common.common_fetch(`/service/broadcast/Admin/connected/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
+        await common.common_fetch(`/service/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
@@ -1404,11 +1404,11 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL['system_admin']==1){
-                    url = `/service/broadcast/SystemAdmin/connected?${url_parameters}`;
+                    url = `/service/broadcast/connection/SystemAdmin?${url_parameters}`;
                     token_type = 2;
                 }
                 else{
-                    url = `/service/broadcast/Admin/connected?${url_parameters}`;
+                    url = `/service/broadcast/connection/Admin?${url_parameters}`;
                     token_type = 1;
                 }
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
