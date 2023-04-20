@@ -3076,7 +3076,7 @@ const updateOnlineStatus = () => {
     let token_type='';
     let url='';
     if (COMMON_GLOBAL['system_admin']==1){
-        url =   `/service/broadcast/SystemAdmin/update_connected`+ 
+        url =   `/service/broadcast/connection/SystemAdmin`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3084,7 +3084,7 @@ const updateOnlineStatus = () => {
         token_type=2;
     }
     else{
-        url =   `/service/broadcast/update_connected`+ 
+        url =   `/service/broadcast/connection`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3097,7 +3097,7 @@ const updateOnlineStatus = () => {
 }
 const connectOnline = (updateOnline=false) => {
     COMMON_GLOBAL['service_broadcast_client_ID'] = Date.now();
-    COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`/service/broadcast/connect/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
+    COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`/service/broadcast/connection/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
                                                 `?app_id=${COMMON_GLOBAL['app_id']}` +
                                                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` +
                                                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3112,7 +3112,7 @@ const connectOnline = (updateOnline=false) => {
     }
 }
 const checkOnline = (div_icon_online, user_account_id) => {
-    common_fetch(`/service/broadcast/checkconnected/${user_account_id}?`, 
+    common_fetch(`/service/broadcast/connection/check/${user_account_id}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (JSON.parse(result).online == 1)
             document.getElementById(div_icon_online).className = 'online';
