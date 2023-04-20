@@ -1,156 +1,153 @@
-const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const createLog = (app_id, data, callBack) => {
 	let stack = new Error().stack;
-	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
-			let sql;
-			let parameters;
-			//max 4000 characters can be saved
-			if (data.app_module_result!=null)
-				data.app_module_result = data.app_module_result.substr(0,3999);
-			sql = `INSERT INTO ${get_schema_name()}.app_log(
-						app_id,
-						app_module,
-						app_module_type,
-						app_module_request,
-						app_module_result,
-						app_user_id,
-						user_language,
-						user_timezone,
-						user_number_system,
-						user_platform,
-						client_latitude,
-						client_longitude,
-						server_remote_addr,
-						server_user_agent,
-						server_http_host,
-						server_http_accept_language,
-						date_created)
-					VALUES(:app_id,
-						:app_module,
-						:app_Xmodule_type,
-						:app_Xmodule_request,
-						:app_Xmodule_result,
-						:app_user_id,
-						:user_language,
-						:user_timezone,
-						:user_number_system,
-						:user_platform,
-						:client_latitude,
-						:client_longitude,
-						:server_remote_addr,
-						:server_user_agent,
-						:server_http_host,
-						:server_http_accept_language,
-						CURRENT_TIMESTAMP)`;
-			parameters = {
-							app_id: data.app_id,
-							app_module: data.app_module,
-							app_Xmodule_type: data.app_module_type,
-							app_Xmodule_request: data.app_module_request,
-							app_Xmodule_result: data.app_module_result,
-							app_user_id: data.app_user_id,
-							user_language: data.user_language,
-							user_timezone: data.user_timezone,
-							user_number_system: data.user_number_system,
-							user_platform: data.user_platform,
-							client_latitude: data.client_latitude,
-							client_longitude: data.client_longitude,
-							server_remote_addr: data.server_remote_addr,
-							server_user_agent: data.server_user_agent,
-							server_http_host: data.server_http_host,
-							server_http_accept_language: data.server_http_accept_language
-						};
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
-					if (err)
-						return callBack(err, null);
-					else
-						return callBack(null, result);
-				});
-			})
-		}
-		else
-			return callBack(null, null);
-	});	
+	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
+		let sql;
+		let parameters;
+		//max 4000 characters can be saved
+		if (data.app_module_result!=null)
+			data.app_module_result = data.app_module_result.substr(0,3999);
+		sql = `INSERT INTO ${get_schema_name()}.app_log(
+					app_id,
+					app_module,
+					app_module_type,
+					app_module_request,
+					app_module_result,
+					app_user_id,
+					user_language,
+					user_timezone,
+					user_number_system,
+					user_platform,
+					client_latitude,
+					client_longitude,
+					server_remote_addr,
+					server_user_agent,
+					server_http_host,
+					server_http_accept_language,
+					date_created)
+				VALUES(:app_id,
+					:app_module,
+					:app_Xmodule_type,
+					:app_Xmodule_request,
+					:app_Xmodule_result,
+					:app_user_id,
+					:user_language,
+					:user_timezone,
+					:user_number_system,
+					:user_platform,
+					:client_latitude,
+					:client_longitude,
+					:server_remote_addr,
+					:server_user_agent,
+					:server_http_host,
+					:server_http_accept_language,
+					CURRENT_TIMESTAMP)`;
+		parameters = {
+						app_id: data.app_id,
+						app_module: data.app_module,
+						app_Xmodule_type: data.app_module_type,
+						app_Xmodule_request: data.app_module_request,
+						app_Xmodule_result: data.app_module_result,
+						app_user_id: data.app_user_id,
+						user_language: data.user_language,
+						user_timezone: data.user_timezone,
+						user_number_system: data.user_number_system,
+						user_platform: data.user_platform,
+						client_latitude: data.client_latitude,
+						client_longitude: data.client_longitude,
+						server_remote_addr: data.server_remote_addr,
+						server_user_agent: data.server_user_agent,
+						server_http_host: data.server_http_host,
+						server_http_accept_language: data.server_http_accept_language
+					};
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
+	}
+	else
+		return callBack(null, null);
 }
 const createLogAdmin = (app_id, data, callBack) => {
-	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-		if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
-			let sql;
-			let parameters;
-			//max 4000 characters can be saved
-			if (data.app_module_result!=null)
-				data.app_module_result = data.app_module_result.substr(0,3999);
-			sql = `INSERT INTO ${get_schema_name()}.app_log(
-						app_id,
-						app_module,
-						app_module_type,
-						app_module_request,
-						app_module_result,
-						app_user_id,
-						user_language,
-						user_timezone,
-						user_number_system,
-						user_platform,
-						client_latitude,
-						client_longitude,
-						server_remote_addr,
-						server_user_agent,
-						server_http_host,
-						server_http_accept_language,
-						date_created)
-					VALUES(:app_id,
-						:app_module,
-						:app_Xmoduletype,
-						:app_Xmodulerequest,
-						:app_Xmoduleresult,
-						:app_user_id,
-						:user_language,
-						:user_timezone,
-						:user_number_system,
-						:user_platform,
-						:client_latitude,
-						:client_longitude,
-						:server_remote_addr,
-						:server_user_agent,
-						:server_http_host,
-						:server_http_accept_language,
-						CURRENT_TIMESTAMP)`;
-			parameters = {
-							app_id: data.app_id,
-							app_module: data.app_module,
-							app_Xmoduletype: data.app_module_type,
-							app_Xmodulerequest: data.app_module_request,
-							app_Xmoduleresult: data.app_module_result,
-							app_user_id: data.app_user_id,
-							user_language: data.user_language,
-							user_timezone: data.user_timezone,
-							user_number_system: data.user_number_system,
-							user_platform: data.user_platform,
-							client_latitude: data.client_latitude,
-							client_longitude: data.client_longitude,
-							server_remote_addr: data.server_remote_addr,
-							server_user_agent: data.server_user_agent,
-							server_http_host: data.server_http_host,
-							server_http_accept_language: data.server_http_accept_language
-						};
-			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters,
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
-					if (err)
-						return callBack(err, null);
-					else
-						return callBack(null, result);
-				});
-			})
-		}
-		else
-			return callBack(null, null);
-	})
+	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
+		let sql;
+		let parameters;
+		//max 4000 characters can be saved
+		if (data.app_module_result!=null)
+			data.app_module_result = data.app_module_result.substr(0,3999);
+		sql = `INSERT INTO ${get_schema_name()}.app_log(
+					app_id,
+					app_module,
+					app_module_type,
+					app_module_request,
+					app_module_result,
+					app_user_id,
+					user_language,
+					user_timezone,
+					user_number_system,
+					user_platform,
+					client_latitude,
+					client_longitude,
+					server_remote_addr,
+					server_user_agent,
+					server_http_host,
+					server_http_accept_language,
+					date_created)
+				VALUES(:app_id,
+					:app_module,
+					:app_Xmoduletype,
+					:app_Xmodulerequest,
+					:app_Xmoduleresult,
+					:app_user_id,
+					:user_language,
+					:user_timezone,
+					:user_number_system,
+					:user_platform,
+					:client_latitude,
+					:client_longitude,
+					:server_remote_addr,
+					:server_user_agent,
+					:server_http_host,
+					:server_http_accept_language,
+					CURRENT_TIMESTAMP)`;
+		parameters = {
+						app_id: data.app_id,
+						app_module: data.app_module,
+						app_Xmoduletype: data.app_module_type,
+						app_Xmodulerequest: data.app_module_request,
+						app_Xmoduleresult: data.app_module_result,
+						app_user_id: data.app_user_id,
+						user_language: data.user_language,
+						user_timezone: data.user_timezone,
+						user_number_system: data.user_number_system,
+						user_platform: data.user_platform,
+						client_latitude: data.client_latitude,
+						client_longitude: data.client_longitude,
+						server_remote_addr: data.server_remote_addr,
+						server_user_agent: data.server_user_agent,
+						server_http_host: data.server_http_host,
+						server_http_accept_language: data.server_http_accept_language
+					};
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
+		})
+	}
+	else
+		return callBack(null, null);
 }
 const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
 		/* 	sort in UI:
@@ -216,7 +213,7 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 						offset:offset,
 						limit:limit};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {						
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {						
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -266,7 +263,7 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, statchoice, year, month,
 						year_log: year,
 						month_log: month};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

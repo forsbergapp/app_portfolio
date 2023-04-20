@@ -1,8 +1,8 @@
 const service = await import('./geolocation.service.js')
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { createLogAdmin, createLog} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`);
-const { check_internet } = await import(`file://${process.cwd()}/service/auth/auth.controller.js`);
+const { createLogAdmin, createLog} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`);
+const { check_internet } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
 const get_ip_url = (req_ip, query_ip) => {
 	let url;
 	if (typeof query_ip == 'undefined')
@@ -76,7 +76,7 @@ const getPlace = async (req, res) => {
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
 				//Missing latitude or longitude
-				import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(({getMessage}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/message_translation/message_translation.service.js`).then(({getMessage}) => {
 					getMessage(req.query.app_id,
 						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
 						20500, 
@@ -128,7 +128,7 @@ const getPlaceAdmin = async (req, res) => {
 			typeof req.query.longitude=='undefined' ||
 			req.query.latitude=='undefined' ||
 			req.query.longitude=='undefined'){
-				import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(({getMessage_admin}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/message_translation/message_translation.service.js`).then(({getMessage_admin}) => {
 					//Missing latitude or longitude
 					getMessage_admin(req.query.app_id,
 						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
@@ -189,8 +189,8 @@ const getPlaceSystemAdmin = async (req, res) => {
 			const url = `${ConfigGet(1, 'SERVICE_GEOLOCATION', 'URL_GPS_PLACE')}?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
 			geodata = await service.getService(url);
 			let stack = new Error().stack;
-			import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-				import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+			import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
 					createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
 								  'SYSTEM ADMIN getPlaceSystemAdmin',
 								  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -293,8 +293,8 @@ const getIpSystemAdmin = async (req, res, callBack) => {
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && await check_internet(req)==1){
 		geodata = await service.getService(url);
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-			import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+			import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
 				createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
 							  'SYSTEM ADMIN getIpSystemAdmin',
 							  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 

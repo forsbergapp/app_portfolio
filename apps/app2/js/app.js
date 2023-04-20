@@ -359,7 +359,7 @@ const common_translate_ui_app = async (lang_code, callBack) => {
             select_second_locale.value = current_second_locale;   
             
             //country
-            common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + common.COMMON_GLOBAL['rest_country'] + lang_code + '?', 
+            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/country/${lang_code}?`, 
                          'GET', 0, null, null, null, (err, result) =>{
                 if (err)
                     callBack(err,null);
@@ -408,7 +408,7 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_api_db_path']}${common.COMMON_GLOBAL['rest_app_object']}${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 
                            'GET', 0, null, null, null, (err, result) =>{
             if (err)
                 null;
@@ -1201,7 +1201,7 @@ const user_settings_get = async (user_setting_id = '') => {
     let select = document.getElementById("setting_select_user_setting");
     let json;
     
-    await common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_user_account_id'] + common.COMMON_GLOBAL['user_account_id'] + '?', 
+    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 
                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -1603,8 +1603,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
                 spinner_item.innerHTML = common.APP_SPINNER;    
             }
             method = 'POST';
-            url = common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting'] + 
-                  `?initial=${initial_user_setting==true?1:0}`;
+            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting?initial=${initial_user_setting==true?1:0}`;
             break;
         }
         case 'SAVE':{
@@ -1614,7 +1613,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            url = common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting'] + user_setting_id + '?';
+            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/${user_setting_id}?`;
             break;
         }
         default:{
@@ -1672,7 +1671,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting'] + user_setting_id + '?', 
+                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/${user_setting_id}?`, 
                                     'DELETE', 1, null, null, null, (err, result) =>{
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
@@ -1876,7 +1875,7 @@ const set_settings_select = () => {
 
 const profile_user_setting_stat = (id) => {
     let json;
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_profile'] + id + '?', 
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/profile/${id}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -1926,9 +1925,9 @@ const profile_show_user_setting = () => {
     let json;
     document.getElementById('profile_user_settings_row').style.display = 'block';
 
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_profile_all'] + document.getElementById('common_profile_id').innerHTML + 
-                 '?id=' + common.COMMON_GLOBAL['user_account_id'],
-                 'GET', 0, null, null, null, (err, result) =>{
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
+                        '?id=' + common.COMMON_GLOBAL['user_account_id'],
+                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1957,9 +1956,9 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     let profile_id = document.getElementById('common_profile_id').innerHTML;
     let json;
-    common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_profile_all'] + profile_id +
-                 '?id=' + common.COMMON_GLOBAL['user_account_id'],
-                 'GET', 0, null, null, null, (err, result) =>{
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/profile/all/${profile_id}` +
+                        '?id=' + common.COMMON_GLOBAL['user_account_id'],
+                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
@@ -1997,7 +1996,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.common_fetch(common.COMMON_GLOBAL['rest_api_db_path'] + app_common.APP_GLOBAL['rest_app2_user_setting_like'] + common.COMMON_GLOBAL['user_account_id'] + '?',
+        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`,
                      method, 1, json_data, null, null, (err, result) =>{
             if (err)
                 null;

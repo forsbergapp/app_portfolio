@@ -41,10 +41,9 @@ InitConfig().then(() => {
   
   const load_routers = async () => {
     return new Promise ((resolve)=>{
-      const rest_api_path = ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH');
       //ES2020 import with ES6 template literals and object destructuring
       import(`file://${process.cwd()}/router.js`).then(({setRouters}) => {
-        setRouters(app, rest_api_path).then(() =>{
+        setRouters(app).then(() =>{
             resolve();
         })
       })
@@ -55,10 +54,10 @@ InitConfig().then(() => {
   (async () =>{
     return await new Promise((resolve) => {
       //configuration of Content Security Policies
-      import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({ policy_directives}) => {
+      import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`).then(({ policy_directives}) => {
         policy_directives((err, result_directives)=>{
           if (err){
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerI}) => {
               createLogServerI('Content Security Policies error :' + err).then(() => {
                 resolve();
               })
@@ -98,7 +97,7 @@ InitConfig().then(() => {
         //access control with log of stopped requests
         //logs only if error
         app.use((req,res,next) => {
-          import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({ access_control}) => {
+          import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`).then(({ access_control}) => {
             access_control(req, res, (err, result)=>{
               if(err){
                 null;
@@ -115,11 +114,11 @@ InitConfig().then(() => {
         //check request
         //logs only if error
         app.use((req, res, next) => {
-          import(`file://${process.cwd()}/service/auth/auth.controller.js`).then(({check_request}) => {
+          import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`).then(({check_request}) => {
             check_request(req, (err, result) =>{
               if (err){
                 res.statusCode = 400;
-                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerE}) => {
                   createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
                                   req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
                     res.send('⛔');
@@ -151,7 +150,7 @@ InitConfig().then(() => {
             req.query.client_id = parseInt(req.query.client_id);
           res.on('finish',()=>{
             //logs the result after REST API has modified req and res
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerI}) => {
               createLogServerI(null,
                 req,
                 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -220,7 +219,7 @@ InitConfig().then(() => {
           })
           //error logging
           app.use((err,req,res,next) => {
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerE}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerE}) => {
               createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
                               req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
                                 next();
@@ -229,7 +228,7 @@ InitConfig().then(() => {
           })
           //9. START HTTP SERVER
           app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerI}) => {
                 createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(() => {
                   null;
                 });
@@ -250,7 +249,7 @@ InitConfig().then(() => {
                   };
                   import('node:https').then((https) => {
                     https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
-                      import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogServerI}) => {
+                      import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerI}) => {
                         createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
                           null;
                         });

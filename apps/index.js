@@ -1,8 +1,8 @@
 const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
-const {getApp} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app/app.service.js`);
+const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
+const {getApp} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`);
 
-const {getCountries} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/country/country.service.js`);
+const {getCountries} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/country/country.service.js`);
 
 const getInfo = async (app_id, info, lang_code, callBack) => {
     const get_parameters = async (callBack) => {
@@ -18,8 +18,8 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                 let db_info_link_about_url;            
                 if (err) {
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                 callBack(err, null);
                             })
@@ -154,8 +154,8 @@ const read_app_files = async (app_id, files, callBack) => {
             callBack(null, app);
         })
         .catch(err => {
-            import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                         callBack(err, null);
                     })
@@ -202,10 +202,9 @@ const get_module_with_init = async (app_id,
             app_role_id: '',
             app_rest_client_id: '',
             app_rest_client_secret: '',
-            service_auth: '/service/auth',
-            rest_api_db_path: ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH'),
-            rest_app_parameter: '/service/app_parameter',
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+            rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
+		    rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
             first_time: first_time
         };
         module = module.replace(
@@ -214,8 +213,8 @@ const get_module_with_init = async (app_id,
         callBack(null, module);
     }
     else{
-        const { getAppStartParameters } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_parameter/app_parameter.service.js`);
-        const { getAppRole } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/user_account/user_account.service.js`);
+        const { getAppStartParameters } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
+        const { getAppRole } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`);
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
@@ -235,11 +234,10 @@ const get_module_with_init = async (app_id,
                     system_admin_only: 0,
                     app_role_id: '',
                     app_rest_client_id: result[0].app_rest_client_id,
-                    service_auth: result[0].service_auth,
                     app_rest_client_secret: result[0].app_rest_client_secret,
-                    rest_api_db_path: ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH'),
-                    rest_app_parameter: result[0].rest_app_parameter,
                     common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                    rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
+		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
                     first_time: null
                 };
                 if (system_admin==1){  
@@ -303,12 +301,12 @@ const AppsStart = async (express, app) => {
         load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')).then(() => {
             //load apps if database started
             if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app/app.service.js`).then(({ getAppsAdmin }) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`).then(({ getAppsAdmin }) => {
                     getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {
                             let stack = new Error().stack;
-                            import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                                import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
                                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `getAppsAdmin, err:${err}`).then(() => {
                                         resolve();
                                     })
@@ -360,7 +358,9 @@ const getMaintenance = (app_id, gps_lat, gps_long, gps_place) => {
             else{
                 //maintenance can be used from all app_id
                 let parameters = {   
-                    app_id: app_id
+                    app_id: app_id,
+                    rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
+		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')
                 };
                 app = app.replace('<ITEM_COMMON_PARAMETERS/>',
                                     JSON.stringify(parameters));
@@ -430,7 +430,7 @@ const check_app_subdomain = (app_id, host) => {
 }
 const getUserPreferences = (app_id) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/setting/setting.service.js`).then(({getSettings}) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
             let default_lang = 'en';
             //do not fetch locales at startup, locales will be translated and fetched when app starts
             let user_locales =`<option value='en'>English</option>`;

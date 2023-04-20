@@ -1,5 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getParameters_server = (app_id, data_app_id, callBack) => {
 		//returns parameters for app_id=0 and given app_id
@@ -21,7 +21,7 @@ const getParameters_server = (app_id, data_app_id, callBack) => {
 				ORDER BY 1, 3`;
 		parameters = {app_id: data_app_id};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -63,7 +63,7 @@ const getParametersAllAdmin = (app_id, data_app_id, lang_code, callBack) => {
 					  lang_code3: get_locale(lang_code, 3),
 					  app_id: data_app_id};
 		let stack = new Error().stack;
-import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -85,7 +85,7 @@ const getParameter = (app_id, data_app_id, parameter_name, callBack) => {
 		parameters = {app_id: data_app_id,
 					  parameter_name:parameter_name};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -110,7 +110,7 @@ const setParameter_admin = (app_id, body, callBack) => {
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -131,7 +131,7 @@ const setParameterValue_admin = (app_id, body, callBack) => {
 					  app_id: body.app_id,
 					  parameter_name: body.parameter_name};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -161,7 +161,7 @@ const getAppDBParametersAdmin = (app_id, callBack) => {
 		parameters = {db_user: db_user,
 					  db_password: db_password};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -206,7 +206,7 @@ const getAppStartParameters = (app_id, callBack) => {
 						app_rest_client_secret: app_rest_client_secret,
 						rest_app_parameter: rest_app_parameter}
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -234,7 +234,7 @@ const getParameters = (app_id, data_app_id, callBack) => {
 				ORDER BY 1`;
 		parameters = {app_id: data_app_id};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
