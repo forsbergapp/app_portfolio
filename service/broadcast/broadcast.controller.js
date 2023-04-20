@@ -10,7 +10,7 @@ const BroadcastConnect = (req, res) => {
     req.query.callback=1;
     let stack = new Error().stack;
     if (req.query.system_admin=='1'){
-        import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIpSystemAdmin}) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpSystemAdmin}) => {
             getIpSystemAdmin(req, res, (err, geodata) =>{
                 const newClient = {
                     id: req.params.clientId,
@@ -26,8 +26,8 @@ const BroadcastConnect = (req, res) => {
                     response: res
                 };
                 service.ClientAdd(newClient);
-                import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppC}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'SYSTEM ADMIN Broadcast connect',
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -42,7 +42,7 @@ const BroadcastConnect = (req, res) => {
     }
     else
         if (req.query.app_id ==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
                 getIpAdmin(req, res_not_used, (err, geodata) =>{
                     const newClient = {
                         id: req.params.clientId,
@@ -58,7 +58,7 @@ const BroadcastConnect = (req, res) => {
                         response: res
                     };
                     service.ClientAdd(newClient);
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
                         createLogAdmin(req.query.app_id,
                             { app_id : req.query.app_id,
                                 app_module : 'BROADCAST',
@@ -84,7 +84,7 @@ const BroadcastConnect = (req, res) => {
             })
         }
         else{
-            import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`).then(({getIp}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIp}) => {
                 getIp(req, res_not_used, (err, geodata) =>{
                     const newClient = {
                         id: req.params.clientId,
@@ -100,7 +100,7 @@ const BroadcastConnect = (req, res) => {
                         response: res
                     };
                     service.ClientAdd(newClient);
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/app_log/app_log.service.js`).then(({createLog}) => {
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
                         createLog(req.query.app_id,
                                 { app_id : req.query.app_id,
                                     app_module : 'BROADCAST',
@@ -166,7 +166,7 @@ const ConnectedList = (req, res) => {
                     data: result
                 });
             else{
-                import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }

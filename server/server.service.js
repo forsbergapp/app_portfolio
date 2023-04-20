@@ -432,8 +432,8 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
         }
     } catch (error) {
         let stack = new Error().stack;
-        import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
-            import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
                 createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                     callBack(err, null);
                 })

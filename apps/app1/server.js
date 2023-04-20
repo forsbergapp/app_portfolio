@@ -42,7 +42,7 @@ app.get('/:user',(req, res, next) => {
         req.params.user!=='images' &&
         req.params.user!=='info' &&
         req.params.user!=='js'){
-        import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm }) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm }) => {
           getForm(req, res, APP1_ID, req.params.user,(err, app_result)=>{
               //if app_result=0 means here redirect to /
               if (app_result==0)
@@ -61,7 +61,7 @@ app.get('/',(req, res, next) => {
   import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
     if (check_app_subdomain(APP1_ID, req.headers.host) ||
         req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-        import(`file://${process.cwd()}/service/forms/forms.controller.js`).then(({ getForm }) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm }) => {
           getForm(req, res, APP1_ID, null,(err, app_result)=>{
               return res.send(app_result);
           })

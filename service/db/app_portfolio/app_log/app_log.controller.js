@@ -20,7 +20,7 @@ const getLogsAdmin = (req, res) => {
 					data: results
 				});
 			else{
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 			}
@@ -47,7 +47,7 @@ const getStatUniqueVisitorAdmin = (req, res) => {
 					data: results
 				});
 			else{
-				import(`file://${process.cwd()}/service/db/common/common.service.js`).then(({record_not_found}) => {
+				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
 				})
 			}

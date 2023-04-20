@@ -1,4 +1,5 @@
-const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}/service/db/common/common.service.js`);
+const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const createUserAccountApp = (app_id, user_account_id, callBack) => {
 		let sql;
@@ -17,7 +18,7 @@ const createUserAccountApp = (app_id, user_account_id, callBack) => {
 						user_account_id: user_account_id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -44,7 +45,7 @@ const getUserAccountApps = (app_id, user_account_id, callBack) => {
 						user_account_id: user_account_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -70,7 +71,7 @@ const getUserAccountApp = (app_id, user_account_id, callBack) => {
 						app_id: app_id
 					 };
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -104,7 +105,7 @@ const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
 						app_id: app_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -125,7 +126,7 @@ const deleteUserAccountApps = (app_id, user_account_id, data_app_id, callBack) =
 						app_id: data_app_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}/service/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
