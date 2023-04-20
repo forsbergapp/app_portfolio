@@ -27,18 +27,18 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
     } 
     else{
 		//if known SQL error, example:
-		//MySQL sqlMessage
-		//'Duplicate entry '[value]' for key 'user_account.user_account_username_un''
 		//MariaDB sqlMessage
 		//'Duplicate entry '[value]' for key 'user_account_username_un''
-		//Oracle message:
-		//'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
+		//MySQL sqlMessage
+		//'Duplicate entry '[value]' for key 'user_account.user_account_username_un''
 		//PostgreSQL message:
 		//'duplicate key value violates unique constraint "user_account_username_un"'
-
-		if ((ConfigGet(1, 'SERVICE_DB', 'USE')=='1' && code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
-		    (ConfigGet(1, 'SERVICE_DB', 'USE')=='2' && errorNum ==1) ||  		  //Oracle
-			(ConfigGet(1, 'SERVICE_DB', 'USE')=='3' && code=='23505')){ 		  //PostgreSQL
+		//Oracle message:
+		//'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
+		const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+		if ((db_use =='1' && code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
+		    (db_use =='2' && errorNum ==1) ||  		  //Oracle
+			(db_use =='3' && code=='23505')){ 		  //PostgreSQL
 			let text_check;
 			if (sqlMessage)
 				text_check = JSON.stringify(sqlMessage);	//MariaDB/MySQL
@@ -70,7 +70,9 @@ async function execute_db_sql(app_id, sql, parameters,
 		log_db_sql(app_id, sql, parameters);
 	}
 	switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-		case '1':{
+		case '1':
+		case '2':{
+			//Both MySQL and MariaDB use MySQL npm module
 			function config_connection(conn, query, values){
 				//change json parameters to [] syntax with bind variable names
 				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
@@ -85,7 +87,6 @@ async function execute_db_sql(app_id, sql, parameters,
 					});
 				};
 			}
-			//Both MySQL and MariaDB use MySQL npm module
 			get_pool(app_id).getConnection((err, conn) => {
 				if (err){
 					import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
@@ -132,56 +133,6 @@ async function execute_db_sql(app_id, sql, parameters,
 						}
 					})
 			});
-			break;
-		}
-		case '2':{
-			let pool2;
-			try{
-				pool2 = await ORACLEDB.getConnection(get_pool(app_id));
-				const result = await pool2.execute(sql, parameters, (err,result) => {
-														if (err) {
-															let app_code = get_app_code(err.errorNum, 
-																err.message, 
-																err.code, 
-																err.errno, 
-																err.sqlMessage);
-															if (app_code != null)
-																return callBack(err, null);
-															else
-																import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-																	//Oracle uses err.message
-																	createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line,
-																				'DB 2 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(() => {
-																		return callBack(database_error, null);
-																	})
-																});
-														}
-														else{
-															if (!result.rows && result)
-																return callBack(null, result);
-															else
-																return callBack(null, result.rows);
-														}
-													});
-			}catch (err) {
-				import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 catch:' + err.message).then(() => {
-						return callBack(database_error);
-					})
-				});
-			} finally {
-				if (pool2) {
-					try {
-						await pool2.close(); 
-					} catch (err) {
-						import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
-							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 2 finally:' + err.message).then(() => {
-								return callBack(database_error);
-							})
-						});
-					}
-				}
-			}
 			break;
 		}
 		case '3':{
@@ -245,25 +196,61 @@ async function execute_db_sql(app_id, sql, parameters,
 			  })
 			break;
 		}
+		case '4':{
+			let pool4;
+			try{
+				pool4 = await ORACLEDB.getConnection(get_pool(app_id));
+				const result = await pool4.execute(sql, parameters, (err,result) => {
+														if (err) {
+															let app_code = get_app_code(err.errorNum, 
+																err.message, 
+																err.code, 
+																err.errno, 
+																err.sqlMessage);
+															if (app_code != null)
+																return callBack(err, null);
+															else
+																import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+																	//Oracle uses err.message
+																	createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line,
+																				'DB 4 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(() => {
+																		return callBack(database_error, null);
+																	})
+																});
+														}
+														else{
+															if (!result.rows && result)
+																return callBack(null, result);
+															else
+																return callBack(null, result.rows);
+														}
+													});
+			}catch (err) {
+				import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 catch:' + err.message).then(() => {
+						return callBack(database_error);
+					})
+				});
+			} finally {
+				if (pool4) {
+					try {
+						await pool4.close(); 
+					} catch (err) {
+						import(`file://${process.cwd()}/service/log/log.service.js`).then(({createLogAppS}) => {
+							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 finally:' + err.message).then(() => {
+								return callBack(database_error);
+							})
+						});
+					}
+				}
+			}
+			break;
+		}
 	}
 }
-function get_schema_name(){
-	switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-		case '1':{
-			return ConfigGet(1, 'SERVICE_DB', 'DB1_NAME');
-			break;
-		}
-		case '2':{
-			return ConfigGet(1, 'SERVICE_DB', 'DB2_NAME');
-			break;
-		}
-		case '3':{
-			return ConfigGet(1, 'SERVICE_DB', 'DB3_NAME');
-			break;
-		}
-	}
-}
-function get_locale(lang_code, part){
+const get_schema_name = () => ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_NAME`);
+
+const get_locale = (lang_code, part) => {
 	if (lang_code==null)
 		return null;
 	else
@@ -290,8 +277,9 @@ function get_locale(lang_code, part){
 			}
 		}
 }
-function limit_sql(sql, limit_type = null){
-	if (ConfigGet(1, 'SERVICE_DB', 'USE') == '1' || ConfigGet(1, 'SERVICE_DB', 'USE') == '3')
+const limit_sql = (sql, limit_type = null) => {
+	const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+	if (db_use == '1' || db_use == '2' || db_use == '3')
 		switch (limit_type){
 			case 1:{
 				//use env limit
@@ -307,7 +295,7 @@ function limit_sql(sql, limit_type = null){
 			}
 		}
 	else 
-		if (ConfigGet(1, 'SERVICE_DB', 'USE') == '2')
+		if (db_use == '4')
 			switch (limit_type){
 				case 1:{
 					//use env limit
@@ -325,7 +313,7 @@ function limit_sql(sql, limit_type = null){
 		else
 			return sql;
 }
-function record_not_found(res, app_id, lang_code){
+const record_not_found = (res, app_id, lang_code) => {
 	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 		import(`file://${process.cwd()}${ConfigGet(1, 'SERVICE_DB', 'REST_API_PATH')}/message_translation/message_translation.service.js`).then(({ getMessage }) => {
 			getMessage( app_id, 
