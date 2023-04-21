@@ -2209,21 +2209,21 @@ const setEvents = () => {
     }, false);
     
     //profile
-    document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], false) }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], true, 
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/app2_user_setting/profile/detail', false) }, false);
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/app2_user_setting/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
                   common.ICONS['user_follows']}</div>`, show_profile_function) }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'], true, 
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/app2_user_setting/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
                   common.ICONS['user_followed']}</div>`, show_profile_function) }, false);
-    document.getElementById('profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, app_common.APP_GLOBAL['rest_app2_user_setting_profile_top'], show_profile_function) }, false);
-    document.getElementById('profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, app_common.APP_GLOBAL['rest_app2_user_setting_profile_top'], show_profile_function) }, false);
+    document.getElementById('profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/app2_user_setting/profile/top', show_profile_function) }, false);
+    document.getElementById('profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/app2_user_setting/profile/top', show_profile_function) }, false);
     document.getElementById('profile_user_settings_day').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
     document.getElementById('profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
     document.getElementById('profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
@@ -2710,22 +2710,6 @@ const init = (parameters) => {
                     app_common.APP_GLOBAL['app_copyright'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='APP_DEFAULT_STARTUP_PAGE')
                     app_common.APP_GLOBAL['app_default_startup_page'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING')
-                    app_common.APP_GLOBAL['rest_app2_user_setting'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_USER_ACCOUNT_ID')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_user_account_id'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_profile'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_ALL')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_profile_all'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_DETAIL')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_profile_detail'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_PROFILE_TOP')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_profile_top'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_LIKE')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_like'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='REST_APP2_USER_SETTING_VIEW')
-                    app_common.APP_GLOBAL['rest_app2_user_setting_view'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='APP_REPORT_TIMETABLE')
                     app_common.APP_GLOBAL['app_report_timetable'] = global_app_parameters[i].parameter_value; 
                 if (global_app_parameters[i].parameter_name=='PWA_SCOPE')
