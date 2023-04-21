@@ -989,3 +989,11 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_like_unlike {
     color: var(--app_red) !important;
 }
+#common_window_info_toolbar{
+	background: var(--app_theme_dialogue_background_color);
+	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
+}
+#common_window_info{
+	background: var(--app_theme_dialogue_background_color);
+
+}
