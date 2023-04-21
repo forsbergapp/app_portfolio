@@ -48,8 +48,8 @@ const setEvents = () => {
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, true, APP_GLOBAL['img_diagram_img'])}, false);
-    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, true, APP_GLOBAL['img_datamodel_img'])}, false);
+    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_diagram_img'])}, false);
+    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_datamodel_img'])}, false);
     
     document.getElementById( 'info_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
@@ -319,18 +319,18 @@ const init_app = async () => {
             //info_link ends with an integer
             switch (event.target.id){
                 case 'info_link1':{
-                    common.show_window_info(1, null, APP_GLOBAL['info_link_policy_url']);
+                    common.show_window_info(1, APP_GLOBAL['info_link_policy_url']);
                     break;
                 }
                 case 'info_link2':{
-                    common.show_window_info(2, null, APP_GLOBAL['info_link_disclaimer_url']);
+                    common.show_window_info(1, APP_GLOBAL['info_link_disclaimer_url']);
                     break;
                 }
                 case 'info_link3':{
-                    common.show_window_info(3, null, APP_GLOBAL['info_link_terms_url']);
+                    common.show_window_info(1, APP_GLOBAL['info_link_terms_url']);
                     break;
                 }case 'info_link4':{
-                    common.show_window_info(4, null, APP_GLOBAL['info_link_about_url']);
+                    common.show_window_info(1, APP_GLOBAL['info_link_about_url']);
                     break;
                 }
             }
