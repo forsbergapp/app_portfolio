@@ -165,6 +165,7 @@ const ICONS = {
     "app_internet":             icon_string('f0ac'),
     "app_shield":               icon_string('f132'),
     "app_browser":              icon_string('f2d2'),
+    "app_fullscreen":           '⛶',
     "init":                     '⭐',
     //user
     "user":                     icon_string('f007'),
@@ -199,7 +200,6 @@ const ICONS = {
     "gps_position":             icon_string('f276'),
     "gps_high_latitude":        icon_string('f0ac') + icon_string('f2dc'),
     "map_my_location":          icon_string('f601'),
-    "map_fullscreen":           '⛶',
     //regional
     "regional":                 icon_string('f0ac'),
     "regional_day":             icon_string('f185'),
@@ -235,10 +235,6 @@ const ICONS = {
     "misc_prayer":              icon_string('f683'),
     "misc_calling":             '🗣',
     "misc_ban":                 icon_string('f05e'),
-    "presentation":             `<svg height="28.5px" width="28.5px">
-                                    <path d=\"M2 4h8a1 1 0 0 1 1-1h1a1 1 0 0 1 1 1h8v1h-1v11h-5.732l1.608 6H14.84l-1.607-6H9.767L8.16 22H7.124l1.608-6H3V5H2V4Zm17 11V5H4v10h15Zm-9-8h1l3 3l-3 3h-1V7Zm1 1.414v3.172L12.586 10L11 8.414Z\"
-                                    stroke="black" stroke-width="2" stroke-linejoin="round"/>,
-                                </svg>`,
     "infinite":                 '∞',
     //message
     "message_user":             icon_string('f2bd'),
@@ -1349,67 +1345,45 @@ const move_info = (move1, move2) => {
     }
     return null;
 }
-const show_window_info = (info, show_toolbar, url, content_type, iframe_content) => {
-    /*
-    common_window_info_info     use to display image                    case 0
-    common_window_info_info     use to display spinner                  case null
-    common_window_info_content  url in iframe, HTML or PDF              case null
-    common_window_info_content  url in iframe, use overflowY=hidden     case 1-4
-    */
-    let display_toolbar;
-    if (show_toolbar)
-        display_toolbar = 'inline-block';
-    else
-        display_toolbar = 'none';
-    document.getElementById('common_window_info_toolbar_btn_zoomout').style.display = display_toolbar;
-    document.getElementById('common_window_info_toolbar_btn_zoomin').style.display = display_toolbar;
-    document.getElementById('common_window_info_toolbar_btn_left').style.display = display_toolbar;
-    document.getElementById('common_window_info_toolbar_btn_right').style.display = display_toolbar;
-    document.getElementById('common_window_info_toolbar_btn_up').style.display = display_toolbar;
-    document.getElementById('common_window_info_toolbar_btn_down').style.display = display_toolbar;
-    document.getElementById('common_window_info').style.overflowY = 'auto'
-    document.getElementById('common_window_info_info').innerHTML = '';
-    document.getElementById('common_window_info_info').style.display = 'none';
-    document.getElementById('common_window_info_content').src='';
+const show_window_info = (info, url, content_type, iframe_content) => {
+    //reset zoom and move
     zoom_info('');
     move_info(null,null);
-
-
-    const show_url = (url) => {
-        document.getElementById('common_window_info_content').src=url;
-        document.getElementById('common_window_info').style.overflowY = 'hidden'
-        document.getElementById('common_window_info').style.visibility = 'visible';
-    }
     switch(info){
         case 0:{
-            document.getElementById('common_window_info_info').style.display = 'inline-block';
-            document.getElementById('common_window_info_info').innerHTML = `<img src='${url}'/>`;
-            document.getElementById('common_window_info').style.visibility = 'visible';
+            //show image
+            document.querySelector('#common_window_info_content').src='';
+            document.querySelector('#common_window_info_toolbar').style.display = 'flex';
+            document.querySelector('#common_window_info_content').style.display = 'none';
+            document.querySelector('#common_window_info').style.overflowY = 'auto';
+            document.querySelector('#common_window_info').style.visibility = 'visible';
+            document.querySelector('#common_window_info_info').innerHTML = `<img src='${url}'/>`;
+            document.querySelector('#common_window_info_info').style.display = 'inline-block';
             break;
         }
         case 1:{
-            show_url(url);
+            //show url in iframe, use overflowY=hidden
+            document.querySelector('#common_window_info_content').src=url;
+            document.querySelector('#common_window_info_toolbar').style.display = 'none';
+            document.querySelector('#common_window_info_content').style.display = 'block';
+            document.querySelector('#common_window_info').style.overflowY = 'hidden';
+            document.querySelector('#common_window_info').style.visibility = 'visible';
+            document.querySelector('#common_window_info_info').innerHTML = '';
+            document.querySelector('#common_window_info_info').style.display = 'none';
             break;
         }    
         case 2:{
-            show_url(url); 
-            break;
-        }    
-        case 3:{
-            show_url(url);
-            break;
-        }    
-        case 4:{
-            show_url(url); 
-            break;
-        }
-        case null:{
-            document.getElementById('common_window_info').style.visibility = 'visible';
-            document.getElementById('common_window_info_info').innerHTML = APP_SPINNER;
-            document.getElementById('common_window_info_info').style.display = 'inline-block';
+            //show spinner first and then url in iframe, HTML or PDF
+            document.querySelector('#common_window_info_content').src='';
+            document.querySelector('#common_window_info_toolbar').style.display = 'none';
+            document.querySelector('#common_window_info_content').style.display = 'block';
+            document.querySelector('#common_window_info').style.overflowY = 'auto';
+            document.querySelector('#common_window_info').style.visibility = 'visible';
+            document.querySelector('#common_window_info_info').innerHTML = APP_SPINNER;
+            document.querySelector('#common_window_info_info').style.display = 'inline-block';
             if (content_type == 'HTML'){
-                document.getElementById('common_window_info_info').innerHTML = ''
-                document.getElementById('common_window_info_content').src=iframe_content;
+                document.querySelector('#common_window_info_info').innerHTML = ''
+                document.querySelector('#common_window_info_content').src=iframe_content;
             }
             else
                 if (content_type=='PDF'){
@@ -1428,9 +1402,9 @@ const show_window_info = (info, show_toolbar, url, content_type, iframe_content)
                         reader.readAsDataURL(pdf); 
                         reader.onloadend = () => {
                             let base64PDF = reader.result;
-                            document.getElementById('common_window_info_info').innerHTML = '';
-                            document.getElementById('common_window_info_info').style.display = 'none';
-                            document.getElementById('common_window_info_content').src = base64PDF;
+                            document.querySelector('#common_window_info_info').innerHTML = '';
+                            document.querySelector('#common_window_info_info').style.display = 'none';
+                            document.querySelector('#common_window_info_content').src = base64PDF;
                         }
                     })
                 }
@@ -2797,7 +2771,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                     //add fullscreen button and my location button with eventlisteners
                     let mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`)
                     mapcontrol[0].innerHTML += `<a id='common_leaflet_fullscreen_id' href="#" title="Full Screen" role="button"></a>`;
-                    document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['map_fullscreen'];
+                    document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['app_fullscreen'];
                     if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
                         mapcontrol[0].innerHTML += `<a id='common_leaflet_my_location_id' href="#" title="My location" role="button"></a>`;
                         document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
@@ -3371,14 +3345,14 @@ const assign_icons = () => {
         document.getElementById('common_profile_btn_top').innerHTML = ICONS['user_profile_top'];
 
     //window info
-    document.getElementById('common_window_info_toolbar_btn_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_window_info_btn_close').innerHTML = ICONS['app_close'];
     document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = ICONS['app_zoomout'];
     document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = ICONS['app_zoomin'];
     document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  ICONS['app_left'];
     document.getElementById('common_window_info_toolbar_btn_right').innerHTML = ICONS['app_right'];
     document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  ICONS['app_up'];
     document.getElementById('common_window_info_toolbar_btn_down').innerHTML = ICONS['app_down'];
-    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS['presentation'];
+    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS['app_fullscreen'];
     
     //user menu
     //document.getElementById('common_user_menu_dropdown_profile').innerHTML = ICONS['button_default_icon_profile'];
@@ -3429,9 +3403,19 @@ const set_events = () => {
     document.getElementById('common_lov_close').addEventListener('click', () => { lov_close()}, false); 
     //profile search
     if (document.getElementById('common_profile_input_row'))
-        document.getElementById('common_profile_search_icon').addEventListener('click', () => { document.getElementById('common_profile_search_input').focus();document.getElementById('common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+        document.getElementById('common_profile_search_icon').addEventListener('click', () => { 
+            document.getElementById('common_profile_search_input').focus();
+            document.getElementById('common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+        }, false);
     //window info
-    document.getElementById('common_window_info_toolbar').addEventListener('click', (event)=>{
+    document.querySelector('#common_window_info_btn_close').addEventListener('click', () =>{
+            document.getElementById('common_window_info').style.visibility = 'hidden'; 
+            document.getElementById('common_window_info_info').innerHTML='';
+            document.getElementById('common_window_info_content').src='';
+            document.getElementById('common_window_info_content').classList='';
+            document.getElementById('common_window_info_toolbar').classList='';
+    });
+    document.querySelector('#common_window_info_toolbar').addEventListener('click', (event)=>{
         let event_target_id;
         if  (event.target.parentNode.id == 'common_window_info_toolbar'){
             //button
@@ -3448,14 +3432,6 @@ const set_events = () => {
             }
                 
         switch (event_target_id){
-            case 'common_window_info_toolbar_btn_close':{
-                document.getElementById('common_window_info').style.visibility = 'hidden'; 
-                document.getElementById('common_window_info_info').innerHTML='';
-                document.getElementById('common_window_info_content').src='';
-                document.getElementById('common_window_info_content').classList='';
-                document.getElementById('common_window_info_toolbar').classList='';
-                break;
-            }
             case 'common_window_info_toolbar_btn_zoomout':{
                 zoom_info(-1);
                 break;

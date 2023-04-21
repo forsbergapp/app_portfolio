@@ -2,15 +2,8 @@ const common = await import('/common/js/common.js');
 const app_exception = (error) => {
     null;
 }
-const show_doc = (item) => {
-    if (item.classList.contains('doc_list_item_image')){
-        document.getElementById('dialogue_documents').style.visibility = 'hidden';
-        document.getElementById('common_window_info').style.visibility = 'visible';
-        document.getElementById('common_window_info_info').innerHTML = `<img src="${item.parentNode.getAttribute('full_size')}"/>`;
-    }
-}
 const getdocs = (docid = null) => {
-    document.getElementById('doc_list').innerHTML = common.APP_SPINNER;
+    document.querySelector('#doc_list').innerHTML = common.APP_SPINNER;
     let result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
                             "doc_url":"/app1/images/app_portfolio.webp",
@@ -29,55 +22,35 @@ const getdocs = (docid = null) => {
     for (let i = 0; i < json.data.length; i++) {
         if (docid== json.data[i].id || docid==null)
             html += `<div id='doc_list_item'>
-                        <div id='${json.data[i].id}' full_size='${json.data[i].doc_url}' class='doc_list_item_image_div'>
+                        <div id='doc_${json.data[i].id}' full_size='${json.data[i].doc_url}' class='doc_list_item_image_div'>
                             <img class='doc_list_item_image' src='${json.data[i].doc_url_small}'>
                         </div>
                         <div class='doc_list_item_title'>${json.data[i].doc_title}</div>
                     </div>`;
     }
     document.querySelector('#doc_list').innerHTML = html;
-    document.querySelector('#doc_list').addEventListener('click',(event) => {show_doc(event.target)});
+    document.querySelector('#doc_list').addEventListener('click',(event) => {
+        if (event.target.parentNode.getAttribute('full_size'))
+            common.show_window_info(0, event.target.parentNode.getAttribute('full_size'));
+    });
 }
 const init_app = async () => {
-    document.getElementById('app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
-    common.zoom_info('');
-    common.move_info(null,null);
-    let docid = window.location.pathname.substring(1);
-    if (docid!=''){
-        document.getElementById('dialogue_documents').style.visibility = 'hidden';
-        switch (docid){
-            case '1':{
-                getdocs(1);
-                show_doc(1);
-                break;
-            }
-            case '2':{
-                getdocs(2);
-                show_doc(2);
-                break;
-            }
-            case '3':{
-                getdocs(3);
-                show_doc(3);
-                break;
-            }
-        }
-    }
-    else{
+    document.querySelector('#app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
+    await common.common_fetch_basic(0, null,  null, null, (err, result)=>{
         getdocs();
         //event show start documents when closing document
-        document.querySelector('#common_window_info_toolbar_btn_close').addEventListener('click',(event) => {
-            document.getElementById('dialogue_documents').style.visibility = 'visible';
+        document.querySelector('#common_window_info_btn_close').addEventListener('click',(event) => {
+            document.querySelector('#dialogue_documents').style.visibility = 'visible';
         });
-
-        document.getElementById('dialogue_documents').style.visibility = 'visible';
-        document.getElementById('common_window_info').style.visibility = 'hidden';
-    }
-    
-    await common.common_fetch_basic(0, null,  null, null, (err, result)=>{
-        null;
+        let docid = window.location.pathname.substring(1);
+        if (docid!=''){
+            document.querySelector('#dialogue_documents').style.visibility = 'hidden';
+            common.show_window_info(0, document.querySelector(`#doc_${docid}`).getAttribute('full_size'));
+        }
+        else{
+            document.querySelector('#dialogue_documents').style.visibility = 'visible';
+        }
     })
-
 }
 const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
@@ -86,4 +59,4 @@ const init = (parameters) => {
         })
     })
 }
-export{app_exception, show_doc, getdocs, init_app, init}
+export{app_exception, init}
