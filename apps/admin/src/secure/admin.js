@@ -81,11 +81,11 @@ const show_menu = (menu) => {
             let url;
             let token_type = '';
             if (common.COMMON_GLOBAL['system_admin']==1){
-                url  = `/server/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
                 token_type = 2;
             }
             else{
-                url  = `/server/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
                 token_type = 1;
             }
             common.common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
@@ -334,7 +334,7 @@ const set_maintenance = () => {
         let json_data = `{
                             "value": ${check_value}
                          }`;
-        common.common_fetch(`/server/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
+        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
             null;
         })
     }
@@ -1052,7 +1052,7 @@ const button_save = async (item) => {
                     json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
                     let old_button = document.getElementById(item).innerHTML;
                     document.getElementById(item).innerHTML = common.APP_SPINNER;
-                    common.common_fetch('/server/config/systemadmin?',
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin?`,
                         'PUT', 2, json_data, null, null,(err, result) =>{
                         document.getElementById(item).innerHTML = old_button;
                     })
@@ -1700,7 +1700,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                 <div>${app_role_icon}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].user_account_id}</div>
+                                                <div>${common.get_null_or_value(json.data[i].user_account_id)}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].system_admin}</div>
@@ -1715,7 +1715,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                 <div>${json.data[i].gps_longitude}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${show_user_agent(json.data[i].user_agent)}</div>
+                                                <div>${common.get_null_or_value(show_user_agent(json.data[i].user_agent))}</div>
                                             </div>
                                             <div class='list_connected_col list_chat_click chat_click'>
                                                 <div>${common.ICONS['app_chat']}</div>
@@ -2300,7 +2300,7 @@ const show_pm2_logs = () => {
 const show_config = async (config_nav=1) => {
     let url;
     document.getElementById(`list_config`).innerHTML = common.APP_SPINNER;
-    url  = `/server/config/systemadmin/saved?config_type_no=${config_nav}`;
+    url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin/saved?config_type_no=${config_nav}`;
     await common.common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
         if (err)
             document.getElementById(`list_config`).innerHTML = '';
@@ -2487,7 +2487,7 @@ const show_server_info = async () => {
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        await common.common_fetch('/server/info?', 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/info?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
                 null;
             else{         
