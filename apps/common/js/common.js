@@ -1518,12 +1518,13 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
     let url;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/detail?`;
+        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/detail/`;
     }
     else{
         /* detailchoice 5, apps, returns same columns*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${rest_url_app}?`;
+        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${rest_url_app}/`;
     }
+    url += `${document.getElementById('common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
     if (parseInt(COMMON_GLOBAL['user_account_id']) || 0 !== 0) {
@@ -1602,9 +1603,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                 }
         }
         if (fetch_detail){
-            common_fetch(url + document.getElementById('common_profile_id').innerHTML +
-                        '?detailchoice=' + detailchoice, 
-                         'GET', 1, null, null, null, (err, result) =>{
+            common_fetch(url,  'GET', 1, null, null, null, (err, result) =>{
                 if (err)
                     null;
                 else{
