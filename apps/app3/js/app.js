@@ -65,6 +65,11 @@ const init_app = async () => {
     }
     else{
         getdocs();
+        //event show start documents when closing document
+        document.querySelector('#common_window_info_toolbar_btn_close').addEventListener('click',(event) => {
+            document.getElementById('dialogue_documents').style.visibility = 'visible';
+        });
+
         document.getElementById('dialogue_documents').style.visibility = 'visible';
         document.getElementById('common_window_info').style.visibility = 'hidden';
     }
