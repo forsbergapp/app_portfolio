@@ -203,6 +203,7 @@ const get_module_with_init = async (app_id,
             app_rest_client_id: '',
             app_rest_client_secret: '',
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+            rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
             rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
 		    rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
             first_time: first_time
@@ -236,6 +237,7 @@ const get_module_with_init = async (app_id,
                     app_rest_client_id: result[0].app_rest_client_id,
                     app_rest_client_secret: result[0].app_rest_client_secret,
                     common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                    rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
                     rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
 		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
                     first_time: null
@@ -359,6 +361,7 @@ const getMaintenance = (app_id, gps_lat, gps_long, gps_place) => {
                 //maintenance can be used from all app_id
                 let parameters = {   
                     app_id: app_id,
+                    rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
                     rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
 		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')
                 };

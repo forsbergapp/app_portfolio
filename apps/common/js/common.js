@@ -39,6 +39,9 @@ const COMMON_GLOBAL = {
     "rest_at":"",
     "rest_dt":"",
     "rest_admin_at":"",
+    "rest_resource_server":"",
+    "rest_resource_service":"",
+    "rest_resource_service_db_schema":"",
     "image_file_allowed_type1":"",
     "image_file_allowed_type2":"",
     "image_file_allowed_type3":"",
@@ -3248,6 +3251,7 @@ const set_globals = (parameters) => {
     COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
 
     //rest 
+    COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;
     COMMON_GLOBAL['rest_resource_service'] = parameters.rest_resource_service;
     COMMON_GLOBAL['rest_resource_service_db_schema'] = parameters.rest_resource_service_db_schema;
 
@@ -3626,6 +3630,7 @@ const init_common = async (parameters, callBack) => {
      app_role_id:
      global_rest_client_id: 
      global_rest_client_secret:
+     rest_resource_server:
      rest_resource_service:
 	 rest_resource_service_db:
     }
