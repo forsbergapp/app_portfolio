@@ -1286,7 +1286,7 @@ const user_setting_link = (item) => {
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'HTML');
-            common.show_window_info(null, false, null, 'HTML', url);
+            common.show_window_info(2, null, 'HTML', url);
             break;
         }
         case 'user_day_html_copy':
@@ -1310,7 +1310,7 @@ const user_setting_link = (item) => {
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'PDF');
-            common.show_window_info(null, false, null, 'PDF', url);
+            common.show_window_info(2, null, 'PDF', url);
             break;
         }
         case 'user_day_pdf_copy':
@@ -1904,7 +1904,7 @@ const profile_user_setting_link = (item) => {
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
                                      'HTML');
-            common.show_window_info(null, false, null, 'HTML', url);
+            common.show_window_info(2, null, 'HTML', url);
             break;
         }
         case 'profile_user_settings_like':{
@@ -2234,10 +2234,10 @@ const setEvents = () => {
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_views')) }, false);
     //dialogue info
-    document.getElementById('info_link1').addEventListener('click', () => { common.show_window_info(1, null, app_common.APP_GLOBAL['info_link_policy_url']);}, false);
-    document.getElementById('info_link2').addEventListener('click', () => { common.show_window_info(2, null, app_common.APP_GLOBAL['info_link_disclaimer_url']);}, false);
-    document.getElementById('info_link3').addEventListener('click', () => { common.show_window_info(3, null, app_common.APP_GLOBAL['info_link_terms_url']);}, false);
-    document.getElementById('info_link4').addEventListener('click', () => { common.show_window_info(4, null, app_common.APP_GLOBAL['info_link_about_url']);}, false);
+    document.getElementById('info_link1').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_policy_url']);}, false);
+    document.getElementById('info_link2').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_disclaimer_url']);}, false);
+    document.getElementById('info_link3').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_terms_url']);}, false);
+    document.getElementById('info_link4').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_about_url']);}, false);
     document.getElementById('info_close').addEventListener('click', () => { document.getElementById('dialogue_info').style.visibility = 'hidden'}, false);
     
     //dialogue scan mobile

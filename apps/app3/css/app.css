@@ -37,7 +37,7 @@
 	display: none;
 }
 #common_window_info{
-	visibility:visible;
+	visibility:hidden;
 	z-index: 0 !important;
 	display:grid;
 }
@@ -46,9 +46,6 @@
 	margin:20px;
 	z-index:-1;
 	margin-top:-70px;
-}
-#common_window_info_toolbar_btn_fullscreen{
-	display: inline-block !important; 
 }
 /*APP THEME*/
 body {
@@ -74,13 +71,6 @@ body {
 .common_toolbar_button:active{
 	color:var(--app_green) !important;
 }
-#common_window_info_toolbar_btn_fullscreen svg path{
-	stroke: var(--app_black);
-}
-#common_window_info_toolbar_btn_fullscreen svg:hover path,
-#common_window_info_toolbar_btn_fullscreen svg:active path{
-	stroke:var(--app_green);
-}
 .common_dialogue_content:hover, 
 .common_dialogue_content:active{
 	box-shadow: 0 0 35px 4px var(--app_white_transparent);
@@ -99,4 +89,8 @@ body {
 }
 #common_window_info{
 	background: var(--app_white);
+}
+#common_window_info_btn_close .common_icon{
+	background: var(--app_white);
+    box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
 }
