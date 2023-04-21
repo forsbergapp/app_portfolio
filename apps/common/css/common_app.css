@@ -901,29 +901,25 @@ a:active {
 	width : 8.5in;
 	height : 11in;
 }
-
 #common_window_info_toolbar{
-    display: block;
+    display: flex;
+	position: fixed;
+	bottom: 10px;
     border-radius: 30px;
-	height: 50px;
-	margin-left: calc((100% - 450px)/2);
-    margin-right: calc((100% - 450px)/2);
-	max-width: 90%;
+	height: 60px;
+	max-width: calc(100% - 20px);
+    margin: 10px;
 }
-#common_window_info_toolbar .common_toolbar_button{
-	font-size: 25px;
-	width: 50px;
-	height: 50px;
+#common_window_info_btn_close{	
+	width: 100%;
+}
+#common_window_info_btn_close .common_icon{
+	font-size: 0.9em;
+	border-radius: 30px;
 }
 #common_window_info_toolbar_btn_fullscreen{
-	display: none;
+	line-height: 1;
 }
-#common_window_info_toolbar_btn_fullscreen svg{
-	vertical-align: middle;
-	transform: scale(1.4);
-	margin-bottom: 1px;
-}
-
 .common_dialogue_content a:hover, a:active {
 	cursor: pointer;
 }
@@ -958,17 +954,10 @@ a:active {
 		width:500px;
 	}
 	.common_profile_detail_list{
-		height:5.6em;
-	
+		height:5.6em;	
 	}
 	#common_window_info_toolbar{
-		height: 60px;
-		margin-left: calc((100% - 540px)/2);
-    	margin-right: calc((100% - 540px)/2);
-	}
-	#common_window_info_toolbar .common_toolbar_button{
-		font-size: 30px;
-		width: 60px;
-		height: 60px;
-	}
+		margin-left: calc((100% - 420px)/2);
+		margin-right: calc((100% - 420px)/2);
+	}	
 }

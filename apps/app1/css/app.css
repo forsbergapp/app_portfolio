@@ -997,3 +997,6 @@ border-left: 12px solid var(--app_theme_sun_color);
 	background: var(--app_theme_dialogue_background_color);
 
 }
+#common_window_info_btn_close .common_icon{
+	background: var(--app_theme_dialogue_background_color);
+}
