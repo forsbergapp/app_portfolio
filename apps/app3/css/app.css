@@ -47,9 +47,6 @@
 	z-index:-1;
 	margin-top:-70px;
 }
-#common_window_info_toolbar_btn_close{
-	display: none;
-}
 #common_window_info_toolbar_btn_fullscreen{
 	display: inline-block !important; 
 }
@@ -95,4 +92,11 @@ body {
 }
 #common_user_menu_dropdown{
 	background-color: var(--app_white);
+}
+#common_window_info_toolbar{
+	background: var(--app_white);
+	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
+}
+#common_window_info{
+	background: var(--app_white);
 }

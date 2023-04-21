@@ -901,6 +901,20 @@ a:active {
 	width : 8.5in;
 	height : 11in;
 }
+
+#common_window_info_toolbar{
+    display: block;
+    border-radius: 30px;
+	height: 50px;
+	margin-left: calc((100% - 450px)/2);
+    margin-right: calc((100% - 450px)/2);
+	max-width: 90%;
+}
+#common_window_info_toolbar .common_toolbar_button{
+	font-size: 25px;
+	width: 50px;
+	height: 50px;
+}
 #common_window_info_toolbar_btn_fullscreen{
 	display: none;
 }
@@ -910,6 +924,23 @@ a:active {
 	margin-bottom: 1px;
 }
 
+.common_dialogue_content a:hover, a:active {
+	cursor: pointer;
+}
+#common_profile_detail_header_liked div,
+#common_profile_detail_header_app div{
+	display: inline-block;
+}
+/*Module leaflet, dynamically created popup*/
+#common_module_leaflet_popup_title,
+#common_module_leaflet_popup_sub_title,
+#common_module_leaflet_popup_sub_title_timezone {
+	font-weight: bold;
+	text-align: center;
+}
+.leaflet-popup-content{
+	width:200px !important;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
@@ -928,22 +959,16 @@ a:active {
 	}
 	.common_profile_detail_list{
 		height:5.6em;
+	
 	}
-}
-.common_dialogue_content a:hover, a:active {
-	cursor: pointer;
-}
-#common_profile_detail_header_liked div,
-#common_profile_detail_header_app div{
-	display: inline-block;
-}
-/*Module leaflet, dynamically created popup*/
-#common_module_leaflet_popup_title,
-#common_module_leaflet_popup_sub_title,
-#common_module_leaflet_popup_sub_title_timezone {
-	font-weight: bold;
-	text-align: center;
-}
-.leaflet-popup-content{
-	width:200px !important;
+	#common_window_info_toolbar{
+		height: 60px;
+		margin-left: calc((100% - 540px)/2);
+    	margin-right: calc((100% - 540px)/2);
+	}
+	#common_window_info_toolbar .common_toolbar_button{
+		font-size: 30px;
+		width: 60px;
+		height: 60px;
+	}
 }
