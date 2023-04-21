@@ -79,7 +79,7 @@ const setEvents = () => {
     document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null) }, false);
     document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null) }, false);
     document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps/', true, common.ICONS['sky_cloud'], null) }, false);
+    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps', true, common.ICONS['sky_cloud'], null) }, false);
     //dialogue login/signup/forgot
     let input_username_login = document.getElementById('common_login_username');
     input_username_login.addEventListener('keyup', (event) => {
