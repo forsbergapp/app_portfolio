@@ -63,6 +63,7 @@ const getFormAdmin = (req, res, app_id, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
+    let stack = new Error().stack;
     if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
             getIpAdmin(req, res, (err, result)=>{
@@ -112,7 +113,6 @@ const getFormAdmin = (req, res, app_id, callBack) => {
                                          result.geoplugin_latitude,
                                          result.geoplugin_longitude, 
                                          gps_place).then((app_result) => {
-                                            let stack = new Error().stack;
                                             import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
                                                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
                                                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
