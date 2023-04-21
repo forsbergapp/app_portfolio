@@ -169,7 +169,7 @@ const sendEmail = (req, data, callBack) => {
                                                 return callBack(err_email, result_email);
                                             else{
                                                 //email is sent ignore any error here
-                                                return callBack(null, result_log);
+                                                return callBack(null, results_log);
                                             }
                                     });
                             })
