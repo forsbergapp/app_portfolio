@@ -45,3 +45,12 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 -- app_device
 --
 INSERT INTO app_portfolio.app_device(app_id, device_id) VALUES(1, 1);
+--
+-- setting_type
+--
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (100, 'APP_THEME', 1);
+--
+-- setting
+--
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Sun','sun',NULL,NULL,NULL,NULL,100);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Moon','moon',NULL,NULL,NULL,NULL,100);
