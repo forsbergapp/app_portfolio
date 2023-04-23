@@ -27,7 +27,6 @@ INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_
 
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_ACCESS_EXPIRE','1h',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_DATA_EXPIRE','2d',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_DB_ENABLE_AUDIT','1',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_SIGNUP','1',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_UNVERIFIED','2',NULL);
