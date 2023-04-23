@@ -39,3 +39,38 @@ INSERT INTO app_portfolio.app_object_item_translation (app_object_item_app_objec
 -- app_object_translation
 --
 INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (2,'APP_DESCRIPTION',527,'முற்போக்கான வலை பயன்பாடு (PWA) ஒற்றை பக்க பயன்பாடு (SPA)');
+--
+-- setting_translation
+--
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 208 and data='0'),527,'ஒலிபெயர்ப்பு');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 208 and data='1'),527,'ஒலிபெயர்ப்பு, மொழிபெயர்ப்பு');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 208 and data='2'),527,'மொழிபெயர்ப்பு, ஒலிபெயர்ப்பு');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 208 and data='3'),527,'மொழிபெயர்ப்பு');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 209 and data='0'),527,'இல்லை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 209 and data='1'),527,'வெள்ளி');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 209 and data='2'),527,'சனிக்கிழமை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 209 and data='3'),527,'ஞாயிற்றுக்கிழமை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 209 and data='4'),527,'10 நாட்கள் குழுக்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 211 and data='Standard'),527,'தரநிலை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 211 and data='Hanafi'),527,'ஹனாஃபி');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 212 and data='NightMiddle'),527,'நள்ளிரவு');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 212 and data='AngleBased'),527,'இரவின் 60வது கோணம் (பரிந்துரைக்கப்படுகிறது)');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 212 and data='OneSeventh'),527,'இரவு 1/7');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 212 and data='None'),527,'சரிசெய்தல் இல்லை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 213 and data='12hNS'),527,'பின்னொட்டு இல்லாமல் 12-மணிநேரம்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 213 and data='24h'),527,'24-மணிநேரம்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 213 and data='12h'),527,'பின்னொட்டுடன் 12-மணிநேரம்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='0'),527,'இல்லை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='1'),527,'10 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='2'),527,'15 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='3'),527,'20 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='4'),527,'25 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='5'),527,'30 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='6'),527,'அடுத்த மணிநேரம்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='7'),527,'அடுத்த மணிநேரம் + 15 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 215 and data='8'),527,'அடுத்த மணிநேரம் + 30 நிமிடங்கள்');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 216 and data='0'),527,'இல்லை');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 216 and data='1'),527,'Fajr & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 216 and data='2'),527,'Imsak & Mahgrib');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 216 and data='3'),527,'Fajr & Isha');
+INSERT INTO app_portfolio.setting_translation (setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.setting WHERE setting_type_id = 216 and data='4'),527,'Imsak & Isha');
