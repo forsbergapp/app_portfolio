@@ -824,6 +824,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.setting_translation TO role_app_dba;
 CREATE TABLE app_portfolio.setting_type (
     id                          SERIAL NOT NULL,
     setting_type_name           VARCHAR(100) NOT NULL,
+    app_id                      INTEGER NOT NULL,
     CONSTRAINT setting_type_pk PRIMARY KEY ( id )
 );
 
@@ -1222,6 +1223,10 @@ ALTER TABLE app_portfolio.profile_search
 ALTER TABLE app_portfolio.setting
     ADD CONSTRAINT setting_setting_type_fk FOREIGN KEY ( setting_type_id )
         REFERENCES app_portfolio.setting_type ( id );
+
+ALTER TABLE app_portfolio.setting_type
+    ADD CONSTRAINT setting_type_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.setting_translation
     ADD CONSTRAINT setting_translation_language_fk FOREIGN KEY ( language_id )
