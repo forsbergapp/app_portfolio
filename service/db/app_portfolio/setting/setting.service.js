@@ -30,7 +30,7 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                                                   )
                          )  str
                     ON str.setting_id = s.id
-            WHERE st.setting_type_name = COALESCE(:setting_type_name, st.setting_type_name)
+            WHERE st.setting_type_name LIKE COALESCE(:setting_type_name, st.setting_type_name)
               AND s.setting_type_id = st.id  
           ORDER BY 1, 2`;
      parameters = {
