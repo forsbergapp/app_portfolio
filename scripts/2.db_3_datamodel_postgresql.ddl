@@ -380,53 +380,6 @@ GRANT SELECT ON app_portfolio.app2_place TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app2_place TO role_app_dba;
 
-
-CREATE TABLE app_portfolio.app2_theme (
-    id                    INTEGER NOT NULL,
-    title                 VARCHAR(100) NOT NULL,
-    author                VARCHAR(100) NOT NULL,
-    author_url            VARCHAR(100),
-    premium               DECIMAL(1,0),
-    image_preview         TEXT,
-    image_preview_url     VARCHAR(100),
-    image_header          TEXT,
-    image_header_url      VARCHAR(100),
-    image_footer          TEXT,
-    image_footer_url      VARCHAR(100),
-    image_background      TEXT,
-    image_background_url  VARCHAR(100),
-    app2_theme_type_id         INTEGER NOT NULL,
-    app2_theme_category_id     INTEGER NOT NULL,
-	CONSTRAINT app2_theme_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_theme TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app2_theme TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_theme TO role_app_dba;
-
-CREATE TABLE app_portfolio.app2_theme_category (
-    id     SERIAL NOT NULL,
-    title  VARCHAR(100) NOT NULL,
-	CONSTRAINT app2_theme_category_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_theme_category TO role_app_admin;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_theme_category TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app2_theme_category TO role_app2;
-
-CREATE TABLE app_portfolio.app2_theme_type (
-    id     SERIAL NOT NULL,
-    title  VARCHAR(10) NOT NULL,
-	CONSTRAINT theme_type_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_theme_type TO role_app_admin;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_theme_type TO role_app_dba;
-
-GRANT SELECT ON app_portfolio.app2_theme_type TO role_app2;
-
 CREATE TABLE app_portfolio.app2_user_setting (
     id                                         SERIAL NOT NULL,
     description                                VARCHAR(100),
@@ -1098,30 +1051,10 @@ ALTER TABLE app_portfolio.app2_place
     ADD CONSTRAINT app2_place_country2_fk FOREIGN KEY ( country2_id )
         REFERENCES app_portfolio.country ( id );
 
-ALTER TABLE app_portfolio.app2_theme
-    ADD CONSTRAINT app2_theme_theme_category_fk FOREIGN KEY ( app2_theme_category_id )
-        REFERENCES app_portfolio.app2_theme_category ( id );
-
-ALTER TABLE app_portfolio.app2_theme
-    ADD CONSTRAINT app2_theme_theme_type_fk FOREIGN KEY ( app2_theme_type_id )
-        REFERENCES app_portfolio.app2_theme_type ( id );
-
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_app2_place_fk FOREIGN KEY ( gps_popular_place_id )
         REFERENCES app_portfolio.app2_place ( id );
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_app2_theme_day_fk FOREIGN KEY ( design_theme_day_id )
-        REFERENCES app_portfolio.app2_theme ( id );
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_app2_theme_month_fk FOREIGN KEY ( design_theme_month_id )
-        REFERENCES app_portfolio.app2_theme ( id );
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_app2_theme_year_fk FOREIGN KEY ( design_theme_year_id )
-        REFERENCES app_portfolio.app2_theme ( id );
-
+        
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_country_fk FOREIGN KEY ( gps_country_id )
         REFERENCES app_portfolio.country ( id );
