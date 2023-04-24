@@ -345,40 +345,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_screenshot TO role_app_dba;
 
-CREATE TABLE app_portfolio.app2_group_place (
-    id          INT NOT NULL AUTO_INCREMENT,
-    group_name  VARCHAR(100) NOT NULL,
-    icon_emoji  VARCHAR(10) NOT NULL,
-    icon_url    VARCHAR(100),
-	CONSTRAINT group_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_group_place TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app2_group_place TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_group_place TO role_app_dba;
-
-ALTER TABLE app_portfolio.app2_group_place ADD CONSTRAINT app2_group_place_group_name_un UNIQUE ( group_name );
-
-CREATE TABLE app_portfolio.app2_place (
-    id               INTEGER NOT NULL,
-    title            VARCHAR(100) NOT NULL,
-    latitude         VARCHAR(100),
-    longitude        VARCHAR(100),
-    timezone         VARCHAR(100),
-    country1_id      INTEGER NOT NULL,
-    country2_id      INTEGER,
-    group_place1_id  INTEGER NOT NULL,
-    group_place2_id  INTEGER NOT NULL,
-	CONSTRAINT app2_place_pk PRIMARY KEY ( id )
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_place TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app2_place TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_place TO role_app_dba;
-
 CREATE TABLE app_portfolio.app2_user_setting (
     id                                         INT NOT NULL AUTO_INCREMENT,
     description                                VARCHAR(100),
@@ -443,14 +409,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting TO role_
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app2_user_setting TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting TO role_app_dba;
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT arc_1 CHECK ( ( ( gps_country_id IS NOT NULL )
-                                   AND ( gps_popular_place_id IS NULL ) )
-                                 OR ( ( gps_popular_place_id IS NOT NULL )
-                                      AND ( gps_country_id IS NULL ) )
-                                 OR ( ( gps_country_id IS NULL )
-                                      AND ( gps_popular_place_id IS NULL ) ) );
 
 CREATE TABLE app_portfolio.app2_user_setting_like (
     id               INT NOT NULL AUTO_INCREMENT,
@@ -1029,26 +987,6 @@ ALTER TABLE app_portfolio.app_screenshot
                                                               app_device_device_id )
         REFERENCES app_portfolio.app_device ( app_id,
                                               device_id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_group_place_fk FOREIGN KEY ( group_place1_id )
-        REFERENCES app_portfolio.app2_group_place ( id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_group_place2_fk FOREIGN KEY ( group_place2_id )
-        REFERENCES app_portfolio.app2_group_place ( id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_country1_fk FOREIGN KEY ( country1_id )
-        REFERENCES app_portfolio.country ( id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_country2_fk FOREIGN KEY ( country2_id )
-        REFERENCES app_portfolio.country ( id );
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_app2_place_fk FOREIGN KEY ( gps_popular_place_id )
-        REFERENCES app_portfolio.app2_place ( id );
 
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_country_fk FOREIGN KEY ( gps_country_id )
