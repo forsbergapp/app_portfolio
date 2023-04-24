@@ -69,16 +69,16 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 							   ${get_schema_name()}.app_object_subitem_translation aost,
 							   ${get_schema_name()}.language l
 						 WHERE l.id = aost.language_id
-						   AND aost.app_object_item_subitem_app_object_item_app_id = aois.app_object_item_app_object_app_id
-						   AND aost.app_object_item_subitem_app_object_item_object_name = aois.app_object_item_app_object_object_name
+						   AND aost.app_object_item_subitem_app_object_item_app_object_app_id = aois.app_object_item_app_object_app_id
+						   AND aost.app_object_item_subitem_app_object_item_app_object_object_name = aois.app_object_item_app_object_object_name
 						   AND aost.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
 						   AND aost.app_object_item_subitem_subitem_name = aois.subitem_name
 						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${get_schema_name()}.language l1,
 													 ${get_schema_name()}.app_object_subitem_translation aost1
 											   WHERE aost1.language_id = l1.id
-												 AND aost1.app_object_item_subitem_app_object_item_app_id = aois.app_object_item_app_object_app_id
-												 AND aost1.app_object_item_subitem_app_object_item_object_name = aois.app_object_item_app_object_object_name
+												 AND aost1.app_object_item_subitem_app_object_item_app_object_app_id = aois.app_object_item_app_object_app_id
+												 AND aost1.app_object_item_subitem_app_object_item_app_object_object_name = aois.app_object_item_app_object_object_name
 												 AND aost1.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
 												 AND aost1.app_object_item_subitem_subitem_name = aois.subitem_name
 												 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)

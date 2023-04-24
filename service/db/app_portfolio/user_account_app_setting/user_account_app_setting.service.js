@@ -6,7 +6,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 		let parameters;
 		let stack = new Error().stack;
 		//insert user settings if first time and no user settings exists already
-		sql = `INSERT INTO ${get_schema_name()}.app2_user_setting(
+		sql = `INSERT INTO ${get_schema_name()}.user_account_app_setting(
 					description,
 					regional_language_locale,
 					regional_timezone,
@@ -118,7 +118,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 				  FROM ${get_schema_name()}.user_account ua
 				 WHERE ua.id = :user_account_id
 				   AND NOT EXISTS (SELECT null
-									 FROM ${get_schema_name()}.app2_user_setting aus2
+									 FROM ${get_schema_name()}.user_account_app_setting aus2
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									  AND aus2.user_account_app_app_id = :app_id
 									  AND :initial_setting = 1)`;
@@ -216,7 +216,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 									//remove "" before and after
 									let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
 									sql = `SELECT id "insertId"
-											FROM ${get_schema_name()}.app2_user_setting
+											FROM ${get_schema_name()}.user_account_app_setting
 											WHERE rowid = :lastRowid`;
 									parameters = {
 													lastRowid: lastRowid
@@ -297,7 +297,7 @@ const getUserSetting = (app_id, id, callBack) => {
 						date_modified "date_modified",
 						user_account_app_user_account_id "user_account_app_user_account_id",
 						user_account_app_app_id "user_account_app_app_id"
-					FROM ${get_schema_name()}.app2_user_setting 
+					FROM ${get_schema_name()}.user_account_app_setting 
 					WHERE id = :id `;
 		parameters = {
 						id: id
@@ -371,7 +371,7 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 						date_modified "date_modified",
 						user_account_app_user_account_id "user_account_app_user_account_id",
 						user_account_app_app_id "app_id"
-				 FROM ${get_schema_name()}.app2_user_setting
+				 FROM ${get_schema_name()}.user_account_app_setting
 				WHERE user_account_app_user_account_id = :user_account_id 
 				  AND user_account_app_app_id = :app_id`;
 		parameters = {
@@ -393,17 +393,19 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
-						 FROM ${get_schema_name()}.app2_user_setting_like u_like,
-						   	  ${get_schema_name()}.app2_user_setting us
-						WHERE u_like.user_account_id = u.id
-						  AND us.id = u_like.app2_user_setting_id
-						  AND us.user_account_app_app_id = :app_id)		"count_user_setting_likes",
-					  (SELECT COUNT(DISTINCT u_like.user_account_id)
-					     FROM ${get_schema_name()}.app2_user_setting_like u_like,
-							  ${get_schema_name()}.app2_user_setting us
+						 FROM ${get_schema_name()}.user_account_app_setting_like u_like,
+						   	  ${get_schema_name()}.user_account_app_setting us
+						WHERE u_like.user_account_app_user_account_id = u.id
+						  AND u_like.user_account_app_app_id = :app_id
+						  AND us.id = u_like.user_account_app_setting_id
+						  AND us.user_account_app_app_id = u_like.user_account_app_app_id)		"count_user_setting_likes",
+					  (SELECT COUNT(DISTINCT u_like.user_account_app_user_account_id)
+					     FROM ${get_schema_name()}.user_account_app_setting_like u_like,
+							  ${get_schema_name()}.user_account_app_setting us
 						WHERE us.user_account_app_user_account_id = u.id
 						  AND us.user_account_app_app_id = :app_id
-						  AND u_like.app2_user_setting_id = us.id)		"count_user_setting_liked"
+						  AND u_like.user_account_app_setting_id = us.id
+						  AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_setting_liked"
 				 FROM ${get_schema_name()}.user_account u
 				WHERE u.id = :id`;
 		parameters ={
@@ -428,17 +430,20 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 					  us.description "description",
 					  us.user_account_app_user_account_id "user_account_app_user_account_id",
 					  (SELECT COUNT(u_like.id)
-						 FROM ${get_schema_name()}.app2_user_setting_like u_like
-						WHERE u_like.app2_user_setting_id = us.id)					"count_likes",
-					  (SELECT COUNT(u_view.app2_user_setting_id)
-						 FROM ${get_schema_name()}.app2_user_setting_view u_view
-						WHERE u_view.app2_user_setting_id = us.id)					"count_views",
+						 FROM ${get_schema_name()}.user_account_app_setting_like u_like
+						WHERE u_like.user_account_app_setting_id = us.id
+						 AND  u_like.user_account_app_app_id = us.user_account_app_app_id)					"count_likes",
+					  (SELECT COUNT(u_view.user_account_app_setting_id)
+						 FROM ${get_schema_name()}.user_account_app_setting_view u_view
+						WHERE u_view.user_account_app_setting_id = us.id
+						 AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
 					  (SELECT COUNT(u_liked_current_user.id)
-						 FROM ${get_schema_name()}.app2_user_setting_like u_liked_current_user
-						WHERE u_liked_current_user.user_account_id = :Xuser_Xaccount_id_current
-						  AND u_liked_current_user.app2_user_setting_id = us.id) 	"liked",
+						 FROM ${get_schema_name()}.user_account_app_setting_like u_liked_current_user
+						WHERE u_liked_current_user.user_account_app_user_account_id = :Xuser_Xaccount_id_current
+						  AND u_liked_current_user.user_account_app_setting_id = us.id
+						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked",
 					  us.design_paper_size "design_paper_size"
-				 FROM ${get_schema_name()}.app2_user_setting us
+				 FROM ${get_schema_name()}.user_account_app_setting us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
 		parameters = {
@@ -480,11 +485,12 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 							 u.provider_first_name
 						FROM ${get_schema_name()}.user_account u
 					   WHERE u.id IN (SELECT us.user_account_app_user_account_id
-										FROM ${get_schema_name()}.app2_user_setting_like u_like,
-											 ${get_schema_name()}.app2_user_setting us
-									   WHERE u_like.user_account_id = :user_account_id
-										 AND us.user_account_app_app_id = :app_id
-										 AND us.id = u_like.app2_user_setting_id)
+										FROM ${get_schema_name()}.user_account_app_setting_like u_like,
+											 ${get_schema_name()}.user_account_app_user_setting us
+									   WHERE u_like.user_account_app_user_account_id = :user_account_id
+									     AND u_like.user_account_app_app_id = :app_id
+										 AND us.user_account_app_app_id = u_like.user_account_app_app_id
+										 AND us.id = u_like.user_account_app_setting_id)
 						 AND    u.active = 1
 						 AND    6 = :detailchoice
 						UNION ALL
@@ -498,12 +504,13 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 								u.username,
 								u.provider_first_name
 						  FROM  ${get_schema_name()}.user_account u
-						 WHERE  u.id IN (SELECT u_like.user_account_id
-										   FROM ${get_schema_name()}.app2_user_setting us,
-												${get_schema_name()}.app2_user_setting_like u_like
+						 WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
+										   FROM ${get_schema_name()}.user_account_app_setting us,
+												${get_schema_name()}.user_account_app_setting_like u_like
 										  WHERE us.user_account_app_user_account_id = :user_account_id
 											AND us.user_account_app_app_id = :app_id
-											AND us.id = u_like.app2_user_setting_id)
+											AND us.id = u_like.user_account_app_setting_id
+											AND u_like.user_account_app_app_id = us.user_account_app_app_id)
 						   AND  u.active = 1
 						   AND  7 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
@@ -524,7 +531,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 			});
 		})
     }
-const getProfileTop = (app_id, statchoice, callBack) => {
+const getProfileTopSetting = (app_id, statchoice, callBack) => {
 		let sql;
 		let parameters;
     
@@ -548,11 +555,12 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 								u.username,
 								u.provider_first_name,
 								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM ${get_schema_name()}.app2_user_setting_like u_like,
-										${get_schema_name()}.app2_user_setting us
+								   FROM ${get_schema_name()}.user_account_app_setting_like u_like,
+										${get_schema_name()}.user_account_app_setting us
 								  WHERE us.user_account_app_user_account_id = u.id
 									AND us.user_account_app_app_id = :app_id
-									AND u_like.app2_user_setting_id = us.id) count
+									AND u_like.user_account_app_setting_id = us.id
+									AND u_like.user_account_app_app_id = us.user_account_app_app_id) count
 						  FROM  ${get_schema_name()}.user_account u
 						 WHERE  u.active = 1
 						   AND  u.private <> 1
@@ -568,11 +576,12 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 								u.username,
 								u.provider_first_name,
 								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM ${get_schema_name()}.app2_user_setting_view u_view,
-										${get_schema_name()}.app2_user_setting us
+								   FROM ${get_schema_name()}.user_account_app_setting_view u_view,
+										${get_schema_name()}.user_account_app_setting us
 								  WHERE us.user_account_app_user_account_id = u.id
 									AND us.user_account_app_app_id = :app_id
-									AND u_view.app2_user_setting_id = us.id) count
+									AND u_view.user_account_app_setting_id = us.id
+									AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
 						  FROM  ${get_schema_name()}.user_account u
 						 WHERE  u.active = 1
 						   AND  u.private <> 1
@@ -597,7 +606,7 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 const updateUserSetting = (app_id, data, id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `UPDATE ${get_schema_name()}.app2_user_setting
+		sql = `UPDATE ${get_schema_name()}.user_account_app_setting
 				SET description = :description,
 					regional_language_locale = :regional_language_locale,
 					regional_timezone = :regional_timezone,
@@ -721,7 +730,7 @@ const updateUserSetting = (app_id, data, id, callBack) => {
 const deleteUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `DELETE FROM ${get_schema_name()}.app2_user_setting
+		sql = `DELETE FROM ${get_schema_name()}.user_account_app_setting
 				WHERE id = :id `;
 		parameters = {
 						id: id
@@ -738,4 +747,4 @@ const deleteUserSetting = (app_id, id, callBack) => {
 		})
 	}
 export{createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
-	   getProfileUserSettingDetail, getProfileTop, updateUserSetting, deleteUserSetting};
+	   getProfileUserSettingDetail, getProfileTopSetting, updateUserSetting, deleteUserSetting};
