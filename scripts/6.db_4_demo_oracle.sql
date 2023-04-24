@@ -1,28 +1,3 @@
-alter trigger APP2_USER_SETTING_AFTER_DELETE disable;
-alter trigger APP2_USER_SETTING_AFTER_INSERT disable;
-alter trigger APP2_USER_SETTING_AFTER_UPDATE disable;
-alter trigger APP2_USER_SETTING_LIKE_AFTER_DELETE disable;
-alter trigger APP2_USER_SETTING_LIKE_AFTER_INSERT disable;
-alter trigger APP2_USER_SETTING_LIKE_AFTER_UPDATE disable;
-alter trigger APP2_USER_SETTING_VIEW_AFTER_DELETE disable;
-alter trigger APP2_USER_SETTING_VIEW_AFTER_INSERT disable;
-alter trigger APP2_USER_SETTING_VIEW_AFTER_UPDATE disable;
-alter trigger USER_ACCOUNT_AFTER_UPDATE disable;
-alter trigger USER_ACCOUNT_AFTER_DELETE disable;
-alter trigger USER_ACCOUNT_AFTER_INSERT disable;
-alter trigger USER_ACCOUNT_APP_AFTER_DELETE disable;
-alter trigger USER_ACCOUNT_APP_AFTER_UPDATE disable;
-alter trigger USER_ACCOUNT_APP_AFTER_INSERT disable;
-alter trigger USER_ACCOUNT_FOLLOW_AFTER_DELETE disable;
-alter trigger USER_ACCOUNT_FOLLOW_AFTER_INSERT disable;
-alter trigger USER_ACCOUNT_FOLLOW_AFTER_UPDATE disable;
-alter trigger USER_ACCOUNT_LIKE_AFTER_DELETE disable;
-alter trigger USER_ACCOUNT_LIKE_AFTER_INSERT disable;
-alter trigger USER_ACCOUNT_LIKE_AFTER_UPDATE disable;
-alter trigger USER_ACCOUNT_VIEW_AFTER_DELETE disable;
-alter trigger USER_ACCOUNT_VIEW_AFTER_INSERT disable;
-alter trigger USER_ACCOUNT_VIEW_AFTER_UPDATE disable;
-
 /* delete all demo records with a simple sql that contains cascade delete constraints*/
 DELETE FROM app_portfolio.user_account WHERE username like 'Demo%';
 
@@ -300,28 +275,3 @@ FROM   app_portfolio.user_account ua1,
 WHERE ua1.username like 'Demo%'
 AND us.user_account_app_user_account_id = ua2.id
 AND ua2.username like 'Demo%';
-
-alter trigger APP2_USER_SETTING_AFTER_DELETE enable;
-alter trigger APP2_USER_SETTING_AFTER_INSERT enable;
-alter trigger APP2_USER_SETTING_AFTER_UPDATE enable;
-alter trigger APP2_USER_SETTING_LIKE_AFTER_DELETE enable;
-alter trigger APP2_USER_SETTING_LIKE_AFTER_INSERT enable;
-alter trigger APP2_USER_SETTING_LIKE_AFTER_UPDATE enable;
-alter trigger APP2_USER_SETTING_VIEW_AFTER_DELETE enable;
-alter trigger APP2_USER_SETTING_VIEW_AFTER_INSERT enable;
-alter trigger APP2_USER_SETTING_VIEW_AFTER_UPDATE enable;
-alter trigger USER_ACCOUNT_AFTER_UPDATE enable;
-alter trigger USER_ACCOUNT_AFTER_DELETE enable;
-alter trigger USER_ACCOUNT_AFTER_INSERT enable;
-alter trigger USER_ACCOUNT_APP_AFTER_DELETE enable;
-alter trigger USER_ACCOUNT_APP_AFTER_UPDATE enable;
-alter trigger USER_ACCOUNT_APP_AFTER_INSERT enable;
-alter trigger USER_ACCOUNT_FOLLOW_AFTER_DELETE enable;
-alter trigger USER_ACCOUNT_FOLLOW_AFTER_INSERT enable;
-alter trigger USER_ACCOUNT_FOLLOW_AFTER_UPDATE enable;
-alter trigger USER_ACCOUNT_LIKE_AFTER_DELETE enable;
-alter trigger USER_ACCOUNT_LIKE_AFTER_INSERT enable;
-alter trigger USER_ACCOUNT_LIKE_AFTER_UPDATE enable;
-alter trigger USER_ACCOUNT_VIEW_AFTER_DELETE enable;
-alter trigger USER_ACCOUNT_VIEW_AFTER_INSERT enable;
-alter trigger USER_ACCOUNT_VIEW_AFTER_UPDATE enable;
