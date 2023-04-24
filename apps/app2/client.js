@@ -71,8 +71,8 @@ const themes = async (app_id) =>{
 }
 const places = async (app_id) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}/apps/app2/service/db/app2_place/app2_place.service.js`).then(({getPlace}) => {
-            getPlace(app_id, (err, results)  => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
+            getSettings(app_id, 'en', 'PLACE', (err, settings) => {
                 let select_places;
                 if (err){
                     resolve (
@@ -83,24 +83,21 @@ const places = async (app_id) => {
                 else{
                     select_places  =`<select id='setting_select_popular_place'>
                                     <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
-                    results.map( (places_map,i) => {
-                        if (places_map.country2_flag==null)
-                            select_places +=
-                            `<option  value='${i}' 
-                                        id='${places_map.id}' 
-                                        latitude='${places_map.latitude}' 
-                                        longitude='${places_map.longitude}' 
-                                        timezone='${places_map.timezone}'>${places_map.group1_icon} ${places_map.group2_icon} ${places_map.country_flag} ${places_map.title}
-                                </option>`;
-                        else
-                            select_places +=
-                            `<option  value='${i}' 
-                                        id='${places_map.id}' 
-                                        latitude='${places_map.latitude}' 
-                                        longitude='${places_map.longitude}' 
-                                        timezone='${places_map.timezone}'>${places_map.group1_icon} ${places_map.group2_icon} ${places_map.country_flag} ${places_map.country2_flag} ${places_map.title}
-                                </option>`;
-                    })
+                    let i = 0;
+                    for (let place of settings){
+                        //data 2 = latitude
+                        //data 3 = longitude
+                        //data 4 = timezone
+                        //data 5 = icon
+                        i++;
+                        select_places +=
+                        `<option  value='${i}' 
+                                    id='${place.data}' 
+                                    latitude='${place.data2}' 
+                                    longitude='${place.data3}' 
+                                    timezone='${place.data4}'>${place.data5} ${place.text}
+                            </option>`;
+                    }
                     select_places += '</select>';
                     resolve (select_places);
                 }
