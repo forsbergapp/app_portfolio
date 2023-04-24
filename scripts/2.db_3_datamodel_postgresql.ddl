@@ -268,15 +268,15 @@ GRANT ALL PRIVILEGES ON app_portfolio.app_object_item_translation TO role_app_db
 
 
 CREATE TABLE app_portfolio.app_object_subitem_translation (
-    app_object_item_subitem_app_object_item_app_id           INTEGER NOT NULL,
-    app_object_item_subitem_app_object_item_object_name      VARCHAR(100) NOT NULL,
-    app_object_item_subitem_app_object_item_object_item_name VARCHAR(100) NOT NULL,
-    app_object_item_subitem_subitem_name                     VARCHAR(100) NOT NULL,
-    language_id                                              INTEGER NOT NULL,
-    text                                                     VARCHAR(2000) NOT NULL,
+    app_object_item_subitem_app_object_item_app_object_app_id           INTEGER NOT NULL,
+    app_object_item_subitem_app_object_item_app_object_object_name      VARCHAR(100) NOT NULL,
+    app_object_item_subitem_app_object_item_object_item_name            VARCHAR(100) NOT NULL,
+    app_object_item_subitem_subitem_name                                VARCHAR(100) NOT NULL,
+    language_id                                                         INTEGER NOT NULL,
+    text                                                                VARCHAR(2000) NOT NULL,
 	CONSTRAINT app_object_subitem_translation_pk PRIMARY KEY ( language_id,
-                                                                app_object_item_subitem_app_object_item_app_id,
-                                                                app_object_item_subitem_app_object_item_object_name,
+                                                                app_object_item_subitem_app_object_item_app_object_app_id,
+                                                                app_object_item_subitem_app_object_item_app_object_object_name,
                                                                 app_object_item_subitem_app_object_item_object_item_name,
                                                                 app_object_item_subitem_subitem_name
                                                                 )
@@ -346,101 +346,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_screenshot TO role_app_dba;
 
-CREATE TABLE app_portfolio.app2_user_setting (
-    id                                         SERIAL NOT NULL,
-    description                                VARCHAR(100),
-    regional_language_locale	               VARCHAR(100),
-    regional_timezone                          VARCHAR(100),
-    regional_number_system                     VARCHAR(100),
-    regional_layout_direction                  VARCHAR(100),
-    regional_second_language_locale		       VARCHAR(100),
-    regional_column_title                      VARCHAR(100),
-    regional_arabic_script                     VARCHAR(100),
-    regional_calendar_type                     VARCHAR(100),
-    regional_calendar_hijri_type               VARCHAR(100),
-    gps_map_type                               VARCHAR(100),
-    gps_country_id                             INTEGER,
-    gps_city_id                                INTEGER,
-    gps_popular_place_id                       INTEGER,
-    gps_lat_text                               VARCHAR(100),
-    gps_long_text                              VARCHAR(100),
-    design_theme_day_id                        INTEGER,
-    design_theme_month_id                      INTEGER,
-    design_theme_year_id                       INTEGER,
-    design_paper_size                          VARCHAR(100),
-    design_row_highlight                       VARCHAR(100),
-    design_column_weekday_checked              DECIMAL(1,0),
-    design_column_calendartype_checked         DECIMAL(1,0),
-    design_column_notes_checked                DECIMAL(1,0),
-    design_column_gps_checked                  DECIMAL(1,0),
-    design_column_timezone_checked             DECIMAL(1,0),
-    image_header_image_img                     TEXT,
-    image_footer_image_img                     TEXT,
-    text_header_1_text                         VARCHAR(100),
-    text_header_2_text                         VARCHAR(100),
-    text_header_3_text                         VARCHAR(100),
-    text_header_align                          VARCHAR(10),
-    text_footer_1_text                         VARCHAR(100),
-    text_footer_2_text                         VARCHAR(100),
-    text_footer_3_text                         VARCHAR(100),
-    text_footer_align                          VARCHAR(10),
-    prayer_method                              VARCHAR(100),
-    prayer_asr_method                          VARCHAR(100),
-    prayer_high_latitude_adjustment            VARCHAR(100),
-    prayer_time_format                         VARCHAR(100),
-    prayer_hijri_date_adjustment               VARCHAR(100),
-    prayer_fajr_iqamat                         VARCHAR(100),
-    prayer_dhuhr_iqamat                        VARCHAR(100),
-    prayer_asr_iqamat                          VARCHAR(100),
-    prayer_maghrib_iqamat                      VARCHAR(100),
-    prayer_isha_iqamat                         VARCHAR(100),
-    prayer_column_imsak_checked                DECIMAL(1,0),
-    prayer_column_sunset_checked               DECIMAL(1,0),
-    prayer_column_midnight_checked             DECIMAL(1,0),
-    prayer_column_fast_start_end               VARCHAR(100),
-    date_created                               TIMESTAMP,
-    date_modified                              TIMESTAMP,
-    user_account_app_user_account_id           INT NOT NULL,
-    user_account_app_app_id                    INT NOT NULL,
-	CONSTRAINT app2_user_setting_pk PRIMARY KEY ( id )
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting TO role_app_admin;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app2_user_setting TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting TO role_app_dba;
-
-CREATE TABLE app_portfolio.app2_user_setting_like (
-    id               SERIAL NOT NULL,
-    user_account_id  INTEGER NOT NULL,
-    app2_user_setting_id  INTEGER NOT NULL,
-	date_created     TIMESTAMP,	
-	CONSTRAINT app2_user_setting_like_pk PRIMARY KEY ( user_account_id, app2_user_setting_id ),
-    CONSTRAINT app2_user_setting_like_id_un UNIQUE (id)
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_like TO role_app_admin;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app2_user_setting_like TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting_like TO role_app_dba;
-
-ALTER TABLE app_portfolio.app2_user_setting_like ADD CONSTRAINT app2_user_setting_like_un UNIQUE ( id );
-
-CREATE TABLE app_portfolio.app2_user_setting_view (
-    user_account_id    INTEGER,
-    app2_user_setting_id    INTEGER NOT NULL,
-    client_ip          VARCHAR(1000),
-    client_user_agent  VARCHAR(1000),
-    client_longitude   VARCHAR(100),
-    client_latitude    VARCHAR(100),
-    date_created       TIMESTAMP NOT NULL
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting_view TO role_app_admin;
-
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app2_user_setting_view TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting_view TO role_app_dba;
 
 CREATE TABLE app_portfolio.country (
     id            SERIAL NOT NULL,
@@ -800,6 +705,104 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO role_a
 
 GRANT ALL PRIVILEGES ON app_portfolio.user_account_app TO role_app_dba;
 
+CREATE TABLE app_portfolio.user_account_app_setting (
+    id                                         SERIAL NOT NULL,
+    description                                VARCHAR(100),
+    regional_language_locale	               VARCHAR(100),
+    regional_timezone                          VARCHAR(100),
+    regional_number_system                     VARCHAR(100),
+    regional_layout_direction                  VARCHAR(100),
+    regional_second_language_locale		       VARCHAR(100),
+    regional_column_title                      VARCHAR(100),
+    regional_arabic_script                     VARCHAR(100),
+    regional_calendar_type                     VARCHAR(100),
+    regional_calendar_hijri_type               VARCHAR(100),
+    gps_map_type                               VARCHAR(100),
+    gps_country_id                             INTEGER,
+    gps_city_id                                INTEGER,
+    gps_popular_place_id                       INTEGER,
+    gps_lat_text                               VARCHAR(100),
+    gps_long_text                              VARCHAR(100),
+    design_theme_day_id                        INTEGER,
+    design_theme_month_id                      INTEGER,
+    design_theme_year_id                       INTEGER,
+    design_paper_size                          VARCHAR(100),
+    design_row_highlight                       VARCHAR(100),
+    design_column_weekday_checked              DECIMAL(1,0),
+    design_column_calendartype_checked         DECIMAL(1,0),
+    design_column_notes_checked                DECIMAL(1,0),
+    design_column_gps_checked                  DECIMAL(1,0),
+    design_column_timezone_checked             DECIMAL(1,0),
+    image_header_image_img                     TEXT,
+    image_footer_image_img                     TEXT,
+    text_header_1_text                         VARCHAR(100),
+    text_header_2_text                         VARCHAR(100),
+    text_header_3_text                         VARCHAR(100),
+    text_header_align                          VARCHAR(10),
+    text_footer_1_text                         VARCHAR(100),
+    text_footer_2_text                         VARCHAR(100),
+    text_footer_3_text                         VARCHAR(100),
+    text_footer_align                          VARCHAR(10),
+    prayer_method                              VARCHAR(100),
+    prayer_asr_method                          VARCHAR(100),
+    prayer_high_latitude_adjustment            VARCHAR(100),
+    prayer_time_format                         VARCHAR(100),
+    prayer_hijri_date_adjustment               VARCHAR(100),
+    prayer_fajr_iqamat                         VARCHAR(100),
+    prayer_dhuhr_iqamat                        VARCHAR(100),
+    prayer_asr_iqamat                          VARCHAR(100),
+    prayer_maghrib_iqamat                      VARCHAR(100),
+    prayer_isha_iqamat                         VARCHAR(100),
+    prayer_column_imsak_checked                DECIMAL(1,0),
+    prayer_column_sunset_checked               DECIMAL(1,0),
+    prayer_column_midnight_checked             DECIMAL(1,0),
+    prayer_column_fast_start_end               VARCHAR(100),
+    date_created                               TIMESTAMP,
+    date_modified                              TIMESTAMP,
+    user_account_app_user_account_id           INT NOT NULL,
+    user_account_app_app_id                    INT NOT NULL,
+	CONSTRAINT user_account_app_setting_pk PRIMARY KEY ( id )
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting TO role_app_admin;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting TO role_app_common;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_setting TO role_app_dba;
+
+CREATE TABLE app_portfolio.user_account_app_setting_like (
+    id                                  SERIAL NOT NULL,
+    date_created                        TIMESTAMP,	
+    user_account_app_setting_id         INTEGER NOT NULL,
+    user_account_app_user_account_id    INTEGER NOT NULL,
+    user_account_app_app_id             INTEGER NOT NULL,
+	CONSTRAINT user_account_app_setting_like_pk PRIMARY KEY ( user_account_app_user_account_id, user_account_app_setting_id ),
+    CONSTRAINT user_account_app_setting_like_id_un UNIQUE (id)
+);
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting_like TO role_app_admin;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting_like TO role_app_common;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_setting_like TO role_app_dba;
+
+ALTER TABLE app_portfolio.user_account_app_setting_like ADD CONSTRAINT user_account_app_setting_like_un UNIQUE ( id );
+
+CREATE TABLE app_portfolio.user_account_app_setting_view (
+    client_ip                           VARCHAR(1000),
+    client_user_agent                   VARCHAR(1000),
+    client_longitude                    VARCHAR(100),
+    client_latitude                     VARCHAR(100),
+    date_created                        TIMESTAMP NOT NULL,
+    user_account_app_setting_id         INTEGER NOT NULL,
+    user_account_app_user_account_id    INTEGER,
+    user_account_app_app_id             INTEGER
+);
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting_view TO role_app_admin;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting_view TO role_app_common;
+
+GRANT ALL PRIVILEGES ON app_portfolio.user_account_app_setting_view TO role_app_dba;
+
 CREATE TABLE app_portfolio.user_account_event (
     user_account_id             INTEGER NOT NULL,
     event_id                    INTEGER NOT NULL,
@@ -957,8 +960,8 @@ ALTER TABLE app_portfolio.app_object_item_translation
 
 ALTER TABLE app_portfolio.app_object_subitem_translation
     ADD CONSTRAINT app_object_subitem_translation_app_object_item_subitem_fk FOREIGN KEY ( app_object_item_subitem_subitem_name,
-                                                                                           app_object_item_subitem_app_object_item_app_id,
-                                                                                           app_object_item_subitem_app_object_item_object_name,
+                                                                                           app_object_item_subitem_app_object_item_app_object_app_id,
+                                                                                           app_object_item_subitem_app_object_item_app_object_object_name,
                                                                                            app_object_item_subitem_app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item_subitem ( subitem_name,
                                                            app_object_item_app_object_app_id,
@@ -993,39 +996,6 @@ ALTER TABLE app_portfolio.app_screenshot
         REFERENCES app_portfolio.app_device ( app_id,
                                               device_id );
         
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_country_fk FOREIGN KEY ( gps_country_id )
-        REFERENCES app_portfolio.country ( id );
-
-ALTER TABLE app_portfolio.app2_user_setting_like
-    ADD CONSTRAINT app2_user_setting_like_app2_user_setting_fk FOREIGN KEY ( app2_user_setting_id )
-        REFERENCES app_portfolio.app2_user_setting ( id )
-		ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.app2_user_setting_like
-    ADD CONSTRAINT app2_user_setting_like_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
-		ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
-                                                                       user_account_app_app_id
-                                                                        )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
-                                      app_id
-                                       )
-            ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.app2_user_setting_view
-    ADD CONSTRAINT app2_user_setting_view_app2_user_setting_fk FOREIGN KEY ( app2_user_setting_id )
-        REFERENCES app_portfolio.app2_user_setting ( id )
-        ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.app2_user_setting_view
-    ADD CONSTRAINT app2_user_setting_view_user_account_fk FOREIGN KEY ( user_account_id )
-        REFERENCES app_portfolio.user_account ( id )
-        ON DELETE CASCADE;
-
 ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
         REFERENCES app_portfolio.country_group ( id );
@@ -1116,17 +1086,54 @@ ALTER TABLE app_portfolio.user_account
     ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
         REFERENCES app_portfolio.app_role ( id );
 
+ALTER TABLE app_portfolio.user_account_app_setting
+    ADD CONSTRAINT user_account_app_setting_country_fk FOREIGN KEY ( gps_country_id )
+        REFERENCES app_portfolio.country ( id );
+
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_setting_arabic_script_fk FOREIGN KEY ( setting_preference_arabic_script_id )
         REFERENCES app_portfolio.setting ( id );
+
+ALTER TABLE app_portfolio.user_account_app_setting
+    ADD CONSTRAINT user_account_app_setting_country_fk FOREIGN KEY ( gps_country_id )
+        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_setting_direction_fk FOREIGN KEY ( setting_preference_direction_id )
         REFERENCES app_portfolio.setting ( id );
 
+ALTER TABLE app_portfolio.user_account_app_setting_like
+    ADD CONSTRAINT user_account_app_setting_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                                   user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id );
+
+ALTER TABLE app_portfolio.user_account_app_setting_like
+    ADD CONSTRAINT user_account_app_setting_like_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
+        REFERENCES app_portfolio.user_account_app_setting ( id )
+            ON DELETE CASCADE;
+
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_setting_timezone_fk FOREIGN KEY ( setting_preference_timezone_id )
         REFERENCES app_portfolio.setting ( id );
+
+ALTER TABLE app_portfolio.user_account_app_setting
+    ADD CONSTRAINT user_account_app_setting_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                              user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id )
+            ON DELETE CASCADE;
+
+ALTER TABLE app_portfolio.user_account_app_setting_view
+    ADD CONSTRAINT user_account_app_setting_view_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                                   user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id );
+
+ALTER TABLE app_portfolio.user_account_app_setting_view
+    ADD CONSTRAINT user_account_app_setting_view_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
+        REFERENCES app_portfolio.user_account_app_setting ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
@@ -1207,8 +1214,8 @@ ALTER TABLE app_portfolio.app_parameter OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.device_type OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.event OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_screenshot OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_user_setting_like OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_user_setting_view OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_setting_like OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_setting_view OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.device OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.country OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.country_group OWNER TO app_portfolio;
@@ -1229,7 +1236,7 @@ ALTER TABLE app_portfolio.setting_type OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.setting OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.setting_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_event OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_user_setting OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_setting OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_app OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_follow OWNER TO app_portfolio;
@@ -1257,9 +1264,9 @@ ALTER SEQUENCE app_portfolio.app_category_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_status_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.app_screenshot_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.app2_user_setting_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_app_setting_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.user_account_like_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.app2_user_setting_like_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_app_setting_like_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.country_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.country_group_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.device_type_id_seq OWNER TO app_portfolio;
