@@ -1,4 +1,4 @@
-const service = await import("./app2_user_setting.service.js");
+const service = await import("./user_account_app_setting.service.js");
 
 const createUserSetting = (req, res) => {
 	const body = req.body;
@@ -101,10 +101,10 @@ const getProfileUserSettingDetail = (req, res) => {
 		}
 	});
 }
-const getProfileTop = (req, res) => {
+const getProfileTopSetting = (req, res) => {
 	if (typeof req.params.statchoice !== 'undefined')
 		req.params.statchoice = parseInt(req.params.statchoice)
-	service.getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
+	service.getProfileTopSetting(req.query.app_id, req.params.statchoice, (err, results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -180,4 +180,4 @@ const deleteUserSetting = (req, res) => {
 	});
 }
 export{createUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileUserSettingDetail,
-	   getProfileTop, getUserSetting, updateUserSetting, deleteUserSetting};
+	   getProfileTopSetting, getUserSetting, updateUserSetting, deleteUserSetting};

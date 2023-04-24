@@ -58,6 +58,21 @@ const {
     searchProfileUser} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account/user_account.controller.js`);
 //service db app_portfolio user account app
 const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app/user_account_app.controller.js`);
+
+const { createUserSetting, 
+    getUserSettingsByUserId, 
+    getProfileUserSetting,
+    getProfileUserSettings,
+    getProfileUserSettingDetail,
+    getProfileTopSetting,
+    getUserSetting,
+    updateUserSetting, 
+    deleteUserSetting} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting/user_account_app_setting.controller.js`);
+  const { likeUserSetting, unlikeUserSetting} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_like/user_account_app_setting_like.controller.js`);
+  const { insertUserSettingView} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_view/user_account_app_setting_view.controller.js`);
+
+
+
 //service db app_portfolio user account follow
 const { followUser, unfollowUser} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_follow/user_account_follow.controller.js`);
 //service db app_portfolio user account like
@@ -249,64 +264,87 @@ const setRouters = async (app) =>{
     router[18].patch("/:user_account_id", checkAccessToken, updateUserAccountApp);
     router[18].delete("/:user_account_id/:app_id", checkAccessToken, deleteUserAccountApps);
     app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app`, router[18]);
-    //service db app_portfolio user account follow
+    //service db app_portfolio user account app setting
     router.push(Router());
-    router[19].use(log_router);
-    router[19].post("/:id", checkAccessToken, followUser);
-    router[19].delete("/:id", checkAccessToken, unfollowUser);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_follow`, router[19]);
-    //service db app_portfolio user account like
+    router[19].get("/:id", checkDataToken, getUserSetting);
+    router[19].get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
+    router[19].get("/profile/:id", checkDataToken, getProfileUserSetting);
+    router[19].get("/profile/all/:id", checkDataToken, getProfileUserSettings);
+    router[19].get("/profile/detail/:id", checkAccessToken, getProfileUserSettingDetail);
+    router[19].get("/profile/top/:statchoice", checkDataToken, getProfileTopSetting);
+    router[19].post("/", checkAccessToken, createUserSetting);
+    router[19].put("/:id", checkAccessToken, updateUserSetting);
+    router[19].delete("/:id", checkAccessToken, deleteUserSetting);  
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting`, router[19]);
+    //service db app_portfolio user account app setting like
     router.push(Router());
     router[20].use(log_router);
-    router[20].post("/:id", checkAccessToken, likeUser);
-    router[20].delete("/:id", checkAccessToken, unlikeUser);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_like`, router[20]);
-    //service db app_portfolio user account logon
+    router[20].post("/:id", checkAccessToken, likeUserSetting);
+    router[20].delete("/:id", checkAccessToken, unlikeUserSetting);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_like`, router[20]);
+    //service db app_portfolio user account app setting view
     router.push(Router());
     router[21].use(log_router);
-    router[21].get("/admin/:user_account_id/:app_id",  checkAccessTokenAdmin, getUserAccountLogonAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon`, router[21]);
-    //service forms
+    router[21].post("/", checkDataToken, insertUserSettingView);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_view`, router[21]);
+    //service db app_portfolio user account follow
     router.push(Router());
     router[22].use(log_router);
-    router[22].post("/admin/secure", checkAdmin, getFormAdminSecure);
-    app.use(`${rest_resource_service}/forms`, router[22]);
-    //service geolocation
+    router[22].post("/:id", checkAccessToken, followUser);
+    router[22].delete("/:id", checkAccessToken, unfollowUser);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_follow`, router[22]);
+    //service db app_portfolio user account like
     router.push(Router());
     router[23].use(log_router);
-    router[23].get("/place", checkDataToken, getPlace);
-    router[23].get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
-    router[23].get("/place/systemadmin", checkAdmin, getPlaceSystemAdmin);
-    router[23].get("/ip", checkDataToken, getIp);
-    router[23].get("/ip/admin", checkAccessTokenAdmin, getIpAdmin);
-    router[23].get("/ip/systemadmin", checkAdmin, getIpSystemAdmin);
-    router[23].get("/timezone", checkDataToken, getTimezone);
-    router[23].get("/timezone/admin", checkAccessTokenAdmin, getTimezoneAdmin);
-    router[23].get("/timezone/systemadmin", checkAdmin, getTimezoneSystemAdmin);    
-    app.use(`${rest_resource_service}/geolocation`, router[23]);
-    //service log
+    router[23].post("/:id", checkAccessToken, likeUser);
+    router[23].delete("/:id", checkAccessToken, unlikeUser);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_like`, router[23]);
+    //service db app_portfolio user account logon
     router.push(Router());
     router[24].use(log_router);
-    router[24].get("/parameters", checkAdmin, getLogParameters);
-    router[24].get("/logs", checkAdmin, getLogs);
-    router[24].get("/files", checkAdmin, getFiles);
-    router[24].get("/pm2logs", checkAdmin, getPM2Logs);
-    app.use(`${rest_resource_service}/log`, router[24]);
-    //service mail
+    router[24].get("/admin/:user_account_id/:app_id",  checkAccessTokenAdmin, getUserAccountLogonAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon`, router[24]);
+    //service forms
     router.push(Router());
     router[25].use(log_router);
-    router[25].get("/logo", getLogo);
-    app.use(`${rest_resource_service}/mail`, router[25]);
-    //service report
+    router[25].post("/admin/secure", checkAdmin, getFormAdminSecure);
+    app.use(`${rest_resource_service}/forms`, router[25]);
+    //service geolocation
     router.push(Router());
     router[26].use(log_router);
-    router[26].get("/", getReport);
-    app.use(`${rest_resource_service}/report`, router[26]);
-    //service worldcities
+    router[26].get("/place", checkDataToken, getPlace);
+    router[26].get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
+    router[26].get("/place/systemadmin", checkAdmin, getPlaceSystemAdmin);
+    router[26].get("/ip", checkDataToken, getIp);
+    router[26].get("/ip/admin", checkAccessTokenAdmin, getIpAdmin);
+    router[26].get("/ip/systemadmin", checkAdmin, getIpSystemAdmin);
+    router[26].get("/timezone", checkDataToken, getTimezone);
+    router[26].get("/timezone/admin", checkAccessTokenAdmin, getTimezoneAdmin);
+    router[26].get("/timezone/systemadmin", checkAdmin, getTimezoneSystemAdmin);    
+    app.use(`${rest_resource_service}/geolocation`, router[26]);
+    //service log
     router.push(Router());
     router[27].use(log_router);
-    router[27].get("/:country", checkDataToken, getCities);
-    app.use(`${rest_resource_service}/worldcities`, router[27]);
+    router[27].get("/parameters", checkAdmin, getLogParameters);
+    router[27].get("/logs", checkAdmin, getLogs);
+    router[27].get("/files", checkAdmin, getFiles);
+    router[27].get("/pm2logs", checkAdmin, getPM2Logs);
+    app.use(`${rest_resource_service}/log`, router[27]);
+    //service mail
+    router.push(Router());
+    router[28].use(log_router);
+    router[28].get("/logo", getLogo);
+    app.use(`${rest_resource_service}/mail`, router[28]);
+    //service report
+    router.push(Router());
+    router[29].use(log_router);
+    router[29].get("/", getReport);
+    app.use(`${rest_resource_service}/report`, router[29]);
+    //service worldcities
+    router.push(Router());
+    router[30].use(log_router);
+    router[30].get("/:country", checkDataToken, getCities);
+    app.use(`${rest_resource_service}/worldcities`, router[30]);
 }
 
 export {log_router, setRouters};

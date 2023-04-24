@@ -4,12 +4,13 @@ const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}$
 const likeUserSetting = (app_id, id, id_like, callBack) => {
 		let sql;
 		let parameters;
-		sql = `INSERT INTO ${get_schema_name()}.app2_user_setting_like(
-							user_account_id, app2_user_setting_id, date_created)
-				VALUES(:user_account_id,:app2_user_setting_id, CURRENT_TIMESTAMP) `;
+		sql = `INSERT INTO ${get_schema_name()}.user_account_app_setting_like(
+					user_account_app_user_account_id, user_account_app_setting_id, user_account_app_app_id, date_created)
+				VALUES(:user_account_id,:user_setting_id, :app_id, CURRENT_TIMESTAMP) `;
 		parameters = {
 						user_account_id: id,
-						app2_user_setting_id: id_like
+						user_setting_id: id_like,
+						app_id: app_id
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
@@ -25,12 +26,14 @@ const likeUserSetting = (app_id, id, id_like, callBack) => {
 const unlikeUserSetting = (app_id, id, id_unlike, callBack) => {
 		let sql;
 		let parameters;
-		sql = `DELETE FROM ${get_schema_name()}.app2_user_setting_like
-				WHERE user_account_id = :user_account_id
-				AND app2_user_setting_id = :app2_user_setting_id `;
+		sql = `DELETE FROM ${get_schema_name()}.user_account_app_setting_like
+				WHERE user_account_app_user_account_id = :user_account_id
+				AND user_account_app_setting_id = :user_setting_id 
+				AND user_account_app_app_id = :app_id`;
 		parameters = {
 						user_account_id: id,
-						app2_user_setting_id: id_unlike
+						user_setting_id: id_unlike,
+						app_id: app_id
 						};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {						
