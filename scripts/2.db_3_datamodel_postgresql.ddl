@@ -346,40 +346,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app
 
 GRANT ALL PRIVILEGES ON app_portfolio.app_screenshot TO role_app_dba;
 
-CREATE TABLE app_portfolio.app2_group_place (
-    id          SERIAL NOT NULL,
-    group_name  VARCHAR(100) NOT NULL,
-    icon_emoji  VARCHAR(10) NOT NULL,
-    icon_url    VARCHAR(100),
-	CONSTRAINT group_pk PRIMARY KEY ( id )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_group_place TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app2_group_place TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_group_place TO role_app_dba;
-
-ALTER TABLE app_portfolio.app2_group_place ADD CONSTRAINT app2_group_place_group_name_un UNIQUE ( group_name );
-
-CREATE TABLE app_portfolio.app2_place (
-    id               INTEGER NOT NULL,
-    title            VARCHAR(100) NOT NULL,
-    latitude         VARCHAR(100),
-    longitude        VARCHAR(100),
-    timezone         VARCHAR(100),
-    country1_id      INTEGER NOT NULL,
-    country2_id      INTEGER,
-    group_place1_id  INTEGER NOT NULL,
-    group_place2_id  INTEGER NOT NULL,
-	CONSTRAINT app2_place_pk PRIMARY KEY ( id )
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_place TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app2_place TO role_app2;
-
-GRANT ALL PRIVILEGES ON app_portfolio.app2_place TO role_app_dba;
-
 CREATE TABLE app_portfolio.app2_user_setting (
     id                                         SERIAL NOT NULL,
     description                                VARCHAR(100),
@@ -444,14 +410,6 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app2_user_setting TO role_
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.app2_user_setting TO role_app2;
 
 GRANT ALL PRIVILEGES ON app_portfolio.app2_user_setting TO role_app_dba;
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT arc_1 CHECK ( ( ( gps_country_id IS NOT NULL )
-                                   AND ( gps_popular_place_id IS NULL ) )
-                                 OR ( ( gps_popular_place_id IS NOT NULL )
-                                      AND ( gps_country_id IS NULL ) )
-                                 OR ( ( gps_country_id IS NULL )
-                                      AND ( gps_popular_place_id IS NULL ) ) );
 
 CREATE TABLE app_portfolio.app2_user_setting_like (
     id               SERIAL NOT NULL,
@@ -1034,26 +992,6 @@ ALTER TABLE app_portfolio.app_screenshot
                                                               app_device_device_id )
         REFERENCES app_portfolio.app_device ( app_id,
                                               device_id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_group_place_fk FOREIGN KEY ( group_place1_id )
-        REFERENCES app_portfolio.app2_group_place ( id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_group_place2_fk FOREIGN KEY ( group_place2_id )
-        REFERENCES app_portfolio.app2_group_place ( id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_country1_fk FOREIGN KEY ( country1_id )
-        REFERENCES app_portfolio.country ( id );
-
-ALTER TABLE app_portfolio.app2_place
-    ADD CONSTRAINT app2_place_country2_fk FOREIGN KEY ( country2_id )
-        REFERENCES app_portfolio.country ( id );
-
-ALTER TABLE app_portfolio.app2_user_setting
-    ADD CONSTRAINT app2_user_setting_app2_place_fk FOREIGN KEY ( gps_popular_place_id )
-        REFERENCES app_portfolio.app2_place ( id );
         
 ALTER TABLE app_portfolio.app2_user_setting
     ADD CONSTRAINT app2_user_setting_country_fk FOREIGN KEY ( gps_country_id )
@@ -1268,10 +1206,6 @@ ALTER TABLE app_portfolio.app_object_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_parameter OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.device_type OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.event OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_place OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_group_place OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_theme_category OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_theme OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_screenshot OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app2_user_setting_like OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app2_user_setting_view OWNER TO app_portfolio;
@@ -1307,7 +1241,6 @@ ALTER TABLE app_portfolio.app_object_item OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_item_subitem OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_item_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_subitem_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app2_theme_type OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_logon OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_view OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_log OWNER TO app_portfolio;
@@ -1324,10 +1257,7 @@ ALTER SEQUENCE app_portfolio.app_category_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_status_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.app_screenshot_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.app2_group_place_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.app2_user_setting_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.app2_theme_category_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.app2_theme_type_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.user_account_like_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.app2_user_setting_like_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.country_id_seq OWNER TO app_portfolio;
