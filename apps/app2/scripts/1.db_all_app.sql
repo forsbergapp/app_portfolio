@@ -326,25 +326,3 @@ INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Imsak & Mahgrib','2',NULL,NULL,NULL,NULL,216);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Fajr & Isha','3',NULL,NULL,NULL,NULL,216);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Imsak & Isha','4',NULL,NULL,NULL,NULL,216);
---
--- app2_group_place
---
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (1,'Africa','🌍',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (2,'America','🌎',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (3,'Antarctic','🇦🇶',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (4,'Asia','🌏',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (5,'Australia/Oceania','🌏',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (6,'Churches','⛪️',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (7,'Europe','🌍',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (8,'Mandir','🛕',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (9,'Mosques','🕌',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (10,'Mystery places','👽',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (11,'Popular places','🤩',NULL);
-INSERT INTO app_portfolio.app2_group_place (id, group_name, icon_emoji, icon_url) VALUES (12,'Synagogue','🕍',NULL);
-
---
--- app2_place
---
-INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40002,'Kaaba, Masjid al-Haram, Makkah','+21.4225','+39.8262','Asia/Riyadh',438,NULL,9,4);
-INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40003,'Al-Masjid an-Nabawi, Medina','+24.469','+39.611','Asia/Riyadh',438,NULL,9,4);
-INSERT INTO app_portfolio.app2_place (id, title, latitude, longitude, timezone, country1_id, country2_id, group_place1_id, group_place2_id) VALUES (40004,'Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Jerusalem',420,360,9,4);
