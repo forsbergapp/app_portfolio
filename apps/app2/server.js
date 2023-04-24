@@ -179,11 +179,8 @@ app.get('/', (req, res, next) => {
 (async () => {
   const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
   const rest_api_path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}`;
-  
-
   const { checkAccessToken, checkDataToken} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
   const { getPlace } = await import(`file://${process.cwd()}/apps/app2/service/db/app2_place/app2_place.controller.js`);
-  const { getThemes } = await import(`file://${process.cwd()}/apps/app2/service/db/app2_theme/app2_theme.controller.js`);
   const { createUserSetting, 
     getUserSettingsByUserId, 
     getProfileUserSetting,
@@ -205,34 +202,29 @@ app.get('/', (req, res, next) => {
   router[0].use(log_router);
   router[0].get("/",  checkDataToken, getPlace);
   app.use(`${rest_api_path}/app2_place`, router[0]);
-
+  
   router.push(Router());
   router[1].use(log_router);
-  router[1].get("/",  checkDataToken, getThemes);
-  app.use(`${rest_api_path}/app2_theme`, router[1]);
+  router[1].get("/:id", checkDataToken, getUserSetting);
+  router[1].get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
+  router[1].get("/profile/:id", checkDataToken, getProfileUserSetting);
+  router[1].get("/profile/all/:id", checkDataToken, getProfileUserSettings);
+  router[1].get("/profile/detail/:id", checkAccessToken, getProfileUserSettingDetail);
+  router[1].get("/profile/top/:statchoice", checkDataToken, getProfileTop);
+  router[1].post("/", checkAccessToken, createUserSetting);
+  router[1].put("/:id", checkAccessToken, updateUserSetting);
+  router[1].delete("/:id", checkAccessToken, deleteUserSetting);  
+  app.use(`${rest_api_path}/app2_user_setting`, router[1]);
   
   router.push(Router());
   router[2].use(log_router);
-  router[2].get("/:id", checkDataToken, getUserSetting);
-  router[2].get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
-  router[2].get("/profile/:id", checkDataToken, getProfileUserSetting);
-  router[2].get("/profile/all/:id", checkDataToken, getProfileUserSettings);
-  router[2].get("/profile/detail/:id", checkAccessToken, getProfileUserSettingDetail);
-  router[2].get("/profile/top/:statchoice", checkDataToken, getProfileTop);
-  router[2].post("/", checkAccessToken, createUserSetting);
-  router[2].put("/:id", checkAccessToken, updateUserSetting);
-  router[2].delete("/:id", checkAccessToken, deleteUserSetting);  
-  app.use(`${rest_api_path}/app2_user_setting`, router[2]);
+  router[2].post("/:id", checkAccessToken, likeUserSetting);
+  router[2].delete("/:id", checkAccessToken, unlikeUserSetting);
+  app.use(`${rest_api_path}/app2_user_setting_like`, router[2]);
   
   router.push(Router());
   router[3].use(log_router);
-  router[3].post("/:id", checkAccessToken, likeUserSetting);
-  router[3].delete("/:id", checkAccessToken, unlikeUserSetting);
-  app.use(`${rest_api_path}/app2_user_setting_like`, router[3]);
-  
-  router.push(Router());
-  router[4].use(log_router);
-  router[4].post("/", checkDataToken, insertUserSettingView);
-  app.use(`${rest_api_path}/app2_user_setting_view`, router[4]);
+  router[3].post("/", checkDataToken, insertUserSettingView);
+  app.use(`${rest_api_path}/app2_user_setting_view`, router[3]);
 
 })();

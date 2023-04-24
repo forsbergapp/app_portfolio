@@ -3,8 +3,8 @@ const { read_app_files, get_module_with_init, countries } = await import(`file:/
 
 const themes = async (app_id) =>{
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}/apps/app2/service/db/app2_theme/app2_theme.service.js`).then(({getThemes}) => {
-            getThemes(app_id, (err, results)  => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
+            getSettings(app_id, 'en', 'REPORT_THEME%', (err, settings) => {
                 let html_themes='';
                 if (err){
                     resolve ([null, null, null])
@@ -12,31 +12,57 @@ const themes = async (app_id) =>{
                 else{
                     let span_themes_day ='', span_themes_month='', span_themes_year='';
                     //get themes and save result in three theme variables
-                    results.map( (themes_map,i) => {
-                        let new_span = `<span class="slide slide_${themes_map.type.toLowerCase()}">
-                                            <div id='theme_${themes_map.type.toLowerCase()}_${themes_map.id}'                       
-                                                data-theme_id='${themes_map.id}'
-                                                data-header_image=${themes_map.image_header}
-                                                data-footer_image=${themes_map.image_footer}
-                                                data-background_image=${themes_map.image_background}
-                                                data-category='${themes_map.category}'> 
+                    for (let theme of settings){
+                        let theme_type;
+                        switch (theme.setting_type_name){
+                            case 'REPORT_THEME_BASIC_DAY':
+                            case 'REPORT_THEME_PREMIUM_DAY':{
+                                theme_type = 'day';
+                                break;
+                            }
+                            case 'REPORT_THEME_BASIC_MONTH':
+                            case 'REPORT_THEME_PREMIUM_MONTH':{
+                                theme_type = 'month';
+                                break;
+                            }
+                            case 'REPORT_THEME_BASIC_YEAR':
+                            case 'REPORT_THEME_PREMIUM_YEAR':{
+                                theme_type = 'year';
+                                break;
+                            }
+                        }
+                        let new_span = `<span class="slide slide_${theme_type}">
+                                            <div id='theme_${theme_type}_${theme.data}'
+                                                data-theme_id='${theme.data}'> 
                                             </div>
                                         </span>`;
-                        switch (themes_map.type.toLowerCase()){
-                            case 'day':{
+                        switch (theme.setting_type_name){
+                            case 'REPORT_THEME_BASIC_DAY':{
                                 span_themes_day += new_span;
                                 break;
                             }
-                            case 'month':{
+                            case 'REPORT_THEME_PREMIUM_DAY':{
+                                span_themes_day += new_span;
+                                break;
+                            }
+                            case 'REPORT_THEME_BASIC_MONTH':{
                                 span_themes_month += new_span;
                                 break;
                             }
-                            case 'year':{
+                            case 'REPORT_THEME_PREMIUM_MONTH':{
+                                span_themes_month += new_span;
+                                break;
+                            }
+                            case 'REPORT_THEME_BASIC_YEAR':{
+                                span_themes_year += new_span;
+                                break;
+                            }
+                            case 'REPORT_THEME_PREMIUM_YEAR':{
                                 span_themes_year += new_span;
                                 break;
                             }
                         }  
-                    })
+                    }
                     resolve ([span_themes_day, span_themes_month, span_themes_year]);
                 }
             });
@@ -169,8 +195,9 @@ const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                 let APP_IQAMAT='';
                 let APP_FAST_START_END='';
                 let APP_MAP_TYPE='';
+                
                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
-                    getSettings(app_id, 'en', null, (err, settings) => {
+                    getSettings(app_id, 'en', '', (err, settings) => {
                         let option;
                         for (let i = 0; i < settings.length; i++) {
                             option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
