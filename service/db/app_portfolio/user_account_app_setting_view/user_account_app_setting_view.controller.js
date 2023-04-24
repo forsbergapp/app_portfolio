@@ -1,4 +1,4 @@
-const service = await import("./app2_user_setting_view.service.js");
+const service = await import("./user_account_app_setting_view.service.js");
 
 const insertUserSettingView = (req, res) => {
     req.body.client_ip = req.ip;

@@ -95,7 +95,7 @@ const REPORT_GLOBAL = {
 /*----------------------- */
 const timetable_user_setting_get = async (user_setting_id, callBack) => {
     let json;
-	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/${user_setting_id}?`,
+	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/${user_setting_id}?`,
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err){
 			report_exception(err);
@@ -235,11 +235,11 @@ const timetable_translate_settings = async (locale, locale_second) => {
 const updateReportViewStat = (user_setting_id, user_account_id) => {
     let json_data =`{
                     "user_account_id":${user_account_id==''?null:user_account_id},
-                    "app2_user_setting_id":${user_setting_id},
+                    "user_setting_id":${user_setting_id},
                     "client_longitude": "${common.COMMON_GLOBAL['client_longitude']}",
                     "client_latitude": "${common.COMMON_GLOBAL['client_latitude']}"
                     }`;
-	common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting_view?`,
+	common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting_view?`,
 				 'POST', 0, json_data, null, null, (err, result) =>{
 		null;
 	})
@@ -1235,7 +1235,7 @@ const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 	let json;
 	let user_settings = [];
 
-	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/user_account_id/${user_account_id}?`,
+	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/user_account_id/${user_account_id}?`,
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err)
 			callBack(err, null);
