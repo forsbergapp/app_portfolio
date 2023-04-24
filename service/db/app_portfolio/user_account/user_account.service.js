@@ -1,9 +1,6 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 const password_length_wrong = (password) => {
-    //constraint should be in db but password is encrypted when in db trigger
-    //and saved with constant 60 characters length
-    //check length before encrypted here
     if (password.length < 10 || password.length > 100){
         //'Password 10 - 100 characters'
         return true;
