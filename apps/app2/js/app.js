@@ -1201,7 +1201,7 @@ const user_settings_get = async (user_setting_id = '') => {
     let select = document.getElementById("setting_select_user_setting");
     let json;
     
-    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 
+    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 
                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -1603,7 +1603,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
                 spinner_item.innerHTML = common.APP_SPINNER;    
             }
             method = 'POST';
-            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting?initial=${initial_user_setting==true?1:0}`;
+            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting?initial=${initial_user_setting==true?1:0}`;
             break;
         }
         case 'SAVE':{
@@ -1613,7 +1613,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/${user_setting_id}?`;
+            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/${user_setting_id}?`;
             break;
         }
         default:{
@@ -1671,7 +1671,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/${user_setting_id}?`, 
+                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/${user_setting_id}?`, 
                                     'DELETE', 1, null, null, null, (err, result) =>{
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
@@ -1875,7 +1875,7 @@ const set_settings_select = () => {
 
 const profile_user_setting_stat = (id) => {
     let json;
-    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/profile/${id}?`, 
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/profile/${id}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
@@ -1925,7 +1925,7 @@ const profile_show_user_setting = () => {
     let json;
     document.getElementById('profile_user_settings_row').style.display = 'block';
 
-    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
                         '?id=' + common.COMMON_GLOBAL['user_account_id'],
                         'GET', 0, null, null, null, (err, result) =>{
         if (err)
@@ -1956,7 +1956,7 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     let profile_id = document.getElementById('common_profile_id').innerHTML;
     let json;
-    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting/profile/all/${profile_id}` +
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/profile/all/${profile_id}` +
                         '?id=' + common.COMMON_GLOBAL['user_account_id'],
                         'GET', 0, null, null, null, (err, result) =>{
         if (err)
@@ -1985,7 +1985,7 @@ const user_settings_like = (user_setting_id) => {
     let json_data;
     let method;
 
-    json_data = '{"app2_user_setting_id":' + user_setting_id + '}';
+    json_data = '{"user_setting_id":' + user_setting_id + '}';
 
     if (common.COMMON_GLOBAL['user_account_id'] == '')
         common.show_common_dialogue('LOGIN');
@@ -1996,7 +1996,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app2_user_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`,
+        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`,
                      method, 1, json_data, null, null, (err, result) =>{
             if (err)
                 null;
@@ -2209,21 +2209,21 @@ const setEvents = () => {
     }, false);
     
     //profile
-    document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/app2_user_setting/profile/detail', false) }, false);
-    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/app2_user_setting/profile/detail', true, 
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/user_account_app_setting/profile/detail', false) }, false);
+    document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/user_account_app_setting/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
                   common.ICONS['user_follows']}</div>`, show_profile_function) }, false);
-    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/app2_user_setting/profile/detail', true, 
+    document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/user_account_app_setting/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
                   common.ICONS['user_followed']}</div>`, show_profile_function) }, false);
-    document.getElementById('profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/app2_user_setting/profile/top', show_profile_function) }, false);
-    document.getElementById('profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/app2_user_setting/profile/top', show_profile_function) }, false);
+    document.getElementById('profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/user_account_app_setting/profile/top', show_profile_function) }, false);
+    document.getElementById('profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/user_account_app_setting/profile/top', show_profile_function) }, false);
     document.getElementById('profile_user_settings_day').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
     document.getElementById('profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
     document.getElementById('profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
