@@ -1211,58 +1211,63 @@ const user_settings_get = async (user_setting_id = '') => {
             //fill select
             let option_html = '';
             for (let i = 0; i < json.count; i++) {
-                option_html += `<option value=${i} id=${json.items[i].id} description='${json.items[i].description}'
-                                    regional_language_locale=${json.items[i].regional_language_locale}
-                                    regional_timezone=${json.items[i].regional_timezone}
-                                    regional_number_system=${json.items[i].regional_number_system}
-                                    regional_layout_direction=${json.items[i].regional_layout_direction}
-                                    regional_second_language_locale=${json.items[i].regional_second_language_locale}
-                                    regional_column_title=${json.items[i].regional_column_title}
-                                    regional_arabic_script=${json.items[i].regional_arabic_script}
-                                    regional_calendar_type=${json.items[i].regional_calendar_type}
-                                    regional_calendar_hijri_type=${json.items[i].regional_calendar_hijri_type}
-                                    gps_map_type=${json.items[i].gps_map_type}
-                                    ${json.items[i].gps_country_id==null?`gps_country_id `:'gps_country_id=' + json.items[i].gps_country_id}
-                                    ${json.items[i].gps_city_id==null?`gps_city_id `:'gps_city_id=' + json.items[i].gps_city_id}
-                                    ${json.items[i].gps_popular_place_id==null?`gps_popular_place_id `:'gps_popular_place_id=' + json.items[i].gps_popular_place_id}
-                                    gps_lat_text=${json.items[i].gps_lat_text}
-                                    gps_long_text=${json.items[i].gps_long_text}
-                                    design_theme_day_id=${json.items[i].design_theme_day_id}
-                                    design_theme_month_id=${json.items[i].design_theme_month_id}
-                                    design_theme_year_id=${json.items[i].design_theme_year_id}
-                                    design_paper_size=${json.items[i].design_paper_size}
-                                    design_row_highlight=${json.items[i].design_row_highlight}
-                                    design_column_weekday_checked=${json.items[i].design_column_weekday_checked}
-                                    design_column_calendartype_checked=${json.items[i].design_column_calendartype_checked}
-                                    design_column_notes_checked=${json.items[i].design_column_notes_checked}
-                                    design_column_gps_checked=${json.items[i].design_column_gps_checked}
-                                    design_column_timezone_checked=${json.items[i].design_column_timezone_checked}
-                                    image_header_image_img='${common.image_format(json.items[i].image_header_image_img)}'
-                                    image_footer_image_img='${common.image_format(json.items[i].image_footer_image_img)}'
-                                    text_header_1_text='${json.items[i].text_header_1_text==null?'':json.items[i].text_header_1_text}'
-                                    text_header_2_text='${json.items[i].text_header_2_text==null?'':json.items[i].text_header_2_text}'
-                                    text_header_3_text='${json.items[i].text_header_3_text==null?'':json.items[i].text_header_3_text}'
-                                    text_header_align='${json.items[i].text_header_align==null?'':json.items[i].text_header_align}'
-                                    text_footer_1_text='${json.items[i].text_footer_1_text==null?'':json.items[i].text_footer_1_text}'
-                                    text_footer_2_text='${json.items[i].text_footer_2_text==null?'':json.items[i].text_footer_2_text}'
-                                    text_footer_3_text='${json.items[i].text_footer_3_text==null?'':json.items[i].text_footer_3_text}'
-                                    text_footer_align='${json.items[i].text_footer_align==null?'':json.items[i].text_footer_align}'    
-                                    prayer_method=${json.items[i].prayer_method}
-                                    prayer_asr_method=${json.items[i].prayer_asr_method}
-                                    prayer_high_latitude_adjustment=${json.items[i].prayer_high_latitude_adjustment}
-                                    prayer_time_format=${json.items[i].prayer_time_format}
-                                    prayer_hijri_date_adjustment=${json.items[i].prayer_hijri_date_adjustment}
-                                    prayer_fajr_iqamat=${json.items[i].prayer_fajr_iqamat}
-                                    prayer_dhuhr_iqamat=${json.items[i].prayer_dhuhr_iqamat}
-                                    prayer_asr_iqamat=${json.items[i].prayer_asr_iqamat}
-                                    prayer_maghrib_iqamat=${json.items[i].prayer_maghrib_iqamat}
-                                    prayer_isha_iqamat=${json.items[i].prayer_isha_iqamat}
-                                    prayer_column_imsak_checked=${json.items[i].prayer_column_imsak_checked}
-                                    prayer_column_sunset_checked=${json.items[i].prayer_column_sunset_checked}
-                                    prayer_column_midnight_checked=${json.items[i].prayer_column_midnight_checked}
-                                    prayer_column_fast_start_end=${json.items[i].prayer_column_fast_start_end}
+                let settings;
+                if (json.items[i].settings_json)
+                    settings = JSON.parse(json.items[i].settings_json);
+                else
+                    settings = json.items[i];
+                option_html += `<option value=${i} id=${json.items[i].id} description='${settings.description}'
+                                    regional_language_locale=${settings.regional_language_locale}
+                                    regional_timezone=${settings.regional_timezone}
+                                    regional_number_system=${settings.regional_number_system}
+                                    regional_layout_direction=${settings.regional_layout_direction}
+                                    regional_second_language_locale=${settings.regional_second_language_locale}
+                                    regional_column_title=${settings.regional_column_title}
+                                    regional_arabic_script=${settings.regional_arabic_script}
+                                    regional_calendar_type=${settings.regional_calendar_type}
+                                    regional_calendar_hijri_type=${settings.regional_calendar_hijri_type}
+                                    gps_map_type=${settings.gps_map_type}
+                                    ${settings.gps_country_id==null?`gps_country_id `:'gps_country_id=' + settings.gps_country_id}
+                                    ${settings.gps_city_id==null?`gps_city_id `:'gps_city_id=' + settings.gps_city_id}
+                                    ${settings.gps_popular_place_id==null?`gps_popular_place_id `:'gps_popular_place_id=' + settings.gps_popular_place_id}
+                                    gps_lat_text=${settings.gps_lat_text}
+                                    gps_long_text=${settings.gps_long_text}
+                                    design_theme_day_id=${settings.design_theme_day_id}
+                                    design_theme_month_id=${settings.design_theme_month_id}
+                                    design_theme_year_id=${settings.design_theme_year_id}
+                                    design_paper_size=${settings.design_paper_size}
+                                    design_row_highlight=${settings.design_row_highlight}
+                                    design_column_weekday_checked=${settings.design_column_weekday_checked}
+                                    design_column_calendartype_checked=${settings.design_column_calendartype_checked}
+                                    design_column_notes_checked=${settings.design_column_notes_checked}
+                                    design_column_gps_checked=${settings.design_column_gps_checked}
+                                    design_column_timezone_checked=${settings.design_column_timezone_checked}
+                                    image_header_image_img='${common.image_format(settings.image_header_image_img)}'
+                                    image_footer_image_img='${common.image_format(settings.image_footer_image_img)}'
+                                    text_header_1_text='${settings.text_header_1_text==null?'':settings.text_header_1_text}'
+                                    text_header_2_text='${settings.text_header_2_text==null?'':settings.text_header_2_text}'
+                                    text_header_3_text='${settings.text_header_3_text==null?'':settings.text_header_3_text}'
+                                    text_header_align='${settings.text_header_align==null?'':settings.text_header_align}'
+                                    text_footer_1_text='${settings.text_footer_1_text==null?'':settings.text_footer_1_text}'
+                                    text_footer_2_text='${settings.text_footer_2_text==null?'':settings.text_footer_2_text}'
+                                    text_footer_3_text='${settings.text_footer_3_text==null?'':settings.text_footer_3_text}'
+                                    text_footer_align='${settings.text_footer_align==null?'':settings.text_footer_align}'    
+                                    prayer_method=${settings.prayer_method}
+                                    prayer_asr_method=${settings.prayer_asr_method}
+                                    prayer_high_latitude_adjustment=${settings.prayer_high_latitude_adjustment}
+                                    prayer_time_format=${settings.prayer_time_format}
+                                    prayer_hijri_date_adjustment=${settings.prayer_hijri_date_adjustment}
+                                    prayer_fajr_iqamat=${settings.prayer_fajr_iqamat}
+                                    prayer_dhuhr_iqamat=${settings.prayer_dhuhr_iqamat}
+                                    prayer_asr_iqamat=${settings.prayer_asr_iqamat}
+                                    prayer_maghrib_iqamat=${settings.prayer_maghrib_iqamat}
+                                    prayer_isha_iqamat=${settings.prayer_isha_iqamat}
+                                    prayer_column_imsak_checked=${settings.prayer_column_imsak_checked}
+                                    prayer_column_sunset_checked=${settings.prayer_column_sunset_checked}
+                                    prayer_column_midnight_checked=${settings.prayer_column_midnight_checked}
+                                    prayer_column_fast_start_end=${settings.prayer_column_fast_start_end}
                                     user_account_id=${json.items[i].user_account_app_user_account_id}
-                                    >${json.items[i].description}
+                                    >${settings.description}
                                 </option>`
             }
             select.innerHTML += option_html;
