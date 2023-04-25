@@ -103,68 +103,73 @@ const timetable_user_setting_get = async (user_setting_id, callBack) => {
 		}
 		else{
 			json = JSON.parse(result);
+			let settings;
+			if (json.settings_json)
+				settings = JSON.parse(json.settings_json);
+			else
+				settings = json;
 			//set papersize on paper div
-			document.getElementById('paper').className= json.design_paper_size;
+			document.getElementById('paper').className= settings.design_paper_size;
 			callBack(null,
-						{  	locale              	: json.regional_language_locale,  
-							timezone            	: json.regional_timezone,
-							number_system       	: json.regional_number_system,
-							direction           	: json.regional_layout_direction,
-							second_locale       	: json.regional_second_language_locale,
-							coltitle            	: json.regional_column_title,
-							arabic_script       	: json.regional_arabic_script,
-							calendartype        	: json.regional_calendar_type,
-							calendar_hijri_type 	: json.regional_calendar_hijri_type,
+						{  	locale              	: settings.regional_language_locale,  
+							timezone            	: settings.regional_timezone,
+							number_system       	: settings.regional_number_system,
+							direction           	: settings.regional_layout_direction,
+							second_locale       	: settings.regional_second_language_locale,
+							coltitle            	: settings.regional_column_title,
+							arabic_script       	: settings.regional_arabic_script,
+							calendartype        	: settings.regional_calendar_type,
+							calendar_hijri_type 	: settings.regional_calendar_hijri_type,
 
 							/* app ui settings
-							json.gps_map_type
-							json.gps_country_id		
-							json.gps_city_id		
-							json.gps_popular_place_id
+							settings.gps_map_type
+							settings.gps_country_id		
+							settings.gps_city_id		
+							settings.gps_popular_place_id
 							*/              
-							place               	: json.description,
-							gps_lat             	: parseFloat(json.gps_lat_text),
-							gps_long            	: parseFloat(json.gps_long_text),
+							place               	: settings.description,
+							gps_lat             	: parseFloat(settings.gps_lat_text),
+							gps_long            	: parseFloat(settings.gps_long_text),
 							
-							theme_day           	: 'theme_day_' + json.design_theme_day_id,
-							theme_month         	: 'theme_month_' + json.design_theme_month_id,
-							theme_year          	: 'theme_year_' + json.design_theme_year_id,
+							theme_day           	: 'theme_day_' + settings.design_theme_day_id,
+							theme_month         	: 'theme_month_' + settings.design_theme_month_id,
+							theme_year          	: 'theme_year_' + settings.design_theme_year_id,
 							//send from app and url query parameter to instruct papersize for PDF generation
 							//in report service
-							//papersize				: json.design_paper_size
-							highlight           	: json.design_row_highlight,
-							show_weekday        	: common.checkbox_checked(json.design_column_weekday_checked),
-							show_calendartype   	: common.checkbox_checked(json.design_column_calendartype_checked),
-							show_notes          	: common.checkbox_checked(json.design_column_notes_checked),
-							show_gps   	       		: common.checkbox_checked(json.design_column_gps_checked),
-							show_timezone       	: common.checkbox_checked(json.design_column_timezone_checked),
+							//papersize				: settings.design_paper_size
+							highlight           	: settings.design_row_highlight,
+							show_weekday        	: common.checkbox_checked(settings.design_column_weekday_checked),
+							show_calendartype   	: common.checkbox_checked(settings.design_column_calendartype_checked),
+							show_notes          	: common.checkbox_checked(settings.design_column_notes_checked),
+							show_gps   	       		: common.checkbox_checked(settings.design_column_gps_checked),
+							show_timezone       	: common.checkbox_checked(settings.design_column_timezone_checked),
 										
-							header_img_src      	: common.image_format(json.image_header_image_img),
-							footer_img_src      	: common.image_format(json.image_footer_image_img),
+							header_img_src      	: common.image_format(settings.image_header_image_img),
+							footer_img_src      	: common.image_format(settings.image_footer_image_img),
 
-							header_txt1         	: common.get_null_or_value(json.text_header_1_text),
-							header_txt2         	: common.get_null_or_value(json.text_header_2_text),
-							header_txt3         	: common.get_null_or_value(json.text_header_3_text),
-							header_align      		: common.get_null_or_value(json.text_header_align),
-							footer_txt1         	: common.get_null_or_value(json.text_footer_1_text),
-							footer_txt2         	: common.get_null_or_value(json.text_footer_2_text),
-							footer_txt3    	   		: common.get_null_or_value(json.text_footer_3_text),
-							footer_align			: common.get_null_or_value(json.text_footer_align),
+							header_txt1         	: common.get_null_or_value(settings.text_header_1_text),
+							header_txt2         	: common.get_null_or_value(settings.text_header_2_text),
+							header_txt3         	: common.get_null_or_value(settings.text_header_3_text),
+							header_align      		: common.get_null_or_value(settings.text_header_align),
+							footer_txt1         	: common.get_null_or_value(settings.text_footer_1_text),
+							footer_txt2         	: common.get_null_or_value(settings.text_footer_2_text),
+							footer_txt3    	   		: common.get_null_or_value(settings.text_footer_3_text),
+							footer_align			: common.get_null_or_value(settings.text_footer_align),
 
-							method              	: json.prayer_method,
-							asr                 	: json.prayer_asr_method,
-							highlat             	: json.prayer_high_latitude_adjustment,
-							format              	: json.prayer_time_format,
-							hijri_adj           	: json.prayer_hijri_date_adjustment,
-							iqamat_fajr         	: json.prayer_fajr_iqamat,
-							iqamat_dhuhr        	: json.prayer_dhuhr_iqamat,
-							iqamat_asr          	: json.prayer_asr_iqamat,
-							iqamat_maghrib      	: json.prayer_maghrib_iqamat,
-							iqamat_isha         	: json.prayer_isha_iqamat,
-							show_imsak          	: common.checkbox_checked(json.prayer_column_imsak_checked),
-							show_sunset         	: common.checkbox_checked(json.prayer_column_sunset_checked),
-							show_midnight       	: common.checkbox_checked(json.prayer_column_midnight_checked),
-							show_fast_start_end 	: json.prayer_column_fast_start_end,
+							method              	: settings.prayer_method,
+							asr                 	: settings.prayer_asr_method,
+							highlat             	: settings.prayer_high_latitude_adjustment,
+							format              	: settings.prayer_time_format,
+							hijri_adj           	: settings.prayer_hijri_date_adjustment,
+							iqamat_fajr         	: settings.prayer_fajr_iqamat,
+							iqamat_dhuhr        	: settings.prayer_dhuhr_iqamat,
+							iqamat_asr          	: settings.prayer_asr_iqamat,
+							iqamat_maghrib      	: settings.prayer_maghrib_iqamat,
+							iqamat_isha         	: settings.prayer_isha_iqamat,
+							show_imsak          	: common.checkbox_checked(settings.prayer_column_imsak_checked),
+							show_sunset         	: common.checkbox_checked(settings.prayer_column_sunset_checked),
+							show_midnight       	: common.checkbox_checked(settings.prayer_column_midnight_checked),
+							show_fast_start_end 	: settings.prayer_column_fast_start_end,
 							
 							timetable_class			: 'timetable_class',
 							timetable_month         : 'timetable_month_class', //class to add for month
@@ -1246,20 +1251,25 @@ const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 				//would be difficult to consider all settings on same page using
 				//different texts, images, second languages, directions, column titles, 
 				//arabic script, themes or what columns to display, for these use current users setting
+				let settings;
+                if (json.items[i].settings_json)
+                    settings = JSON.parse(json.items[i].settings_json);
+                else
+                    settings = json.items[i];
 				user_settings.push(
 					{
-					"description" : json.items[i].description,
-					"regional_language_locale" : json.items[i].regional_language_locale,
-					"regional_timezone" : json.items[i].regional_timezone,
-					"regional_number_system" : json.items[i].regional_number_system,
-					"regional_calendar_hijri_type" : json.items[i].regional_calendar_hijri_type,
-					"gps_lat_text" : parseFloat(json.items[i].gps_lat_text),
-					"gps_long_text" : parseFloat(json.items[i].gps_long_text),
-					"prayer_method" : json.items[i].prayer_method,
-					"prayer_asr_method" : json.items[i].prayer_asr_method,
-					"prayer_high_latitude_adjustment" : json.items[i].prayer_high_latitude_adjustment,
-					"prayer_time_format" : json.items[i].prayer_time_format,
-					"prayer_hijri_date_adjustment" : json.items[i].prayer_hijri_date_adjustment
+					"description" : settings.description,
+					"regional_language_locale" : settings.regional_language_locale,
+					"regional_timezone" : settings.regional_timezone,
+					"regional_number_system" : settings.regional_number_system,
+					"regional_calendar_hijri_type" : settings.regional_calendar_hijri_type,
+					"gps_lat_text" : parseFloat(settings.gps_lat_text),
+					"gps_long_text" : parseFloat(settings.gps_long_text),
+					"prayer_method" : settings.prayer_method,
+					"prayer_asr_method" : settings.prayer_asr_method,
+					"prayer_high_latitude_adjustment" : settings.prayer_high_latitude_adjustment,
+					"prayer_time_format" : settings.prayer_time_format,
+					"prayer_hijri_date_adjustment" : settings.prayer_hijri_date_adjustment
 					}
 				)
 			}
