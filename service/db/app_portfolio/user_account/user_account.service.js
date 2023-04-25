@@ -1139,10 +1139,30 @@ const getAppRole = (app_id, user_account_id, callBack) => {
 			});
 		})
 	}
+	const getDemousers = (app_id, callBack) => {
+		let sql;
+		let parameters;
+		sql = `SELECT id "id"
+				 FROM ${get_schema_name()}.user_account
+				WHERE user_level = :demo_level`;
+		parameters ={
+						demo_level: 2
+					};
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+			execute_db_sql(app_id, sql, parameters, 
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result[0]);
+			});
+		})
+	}
 
 export{password_length_wrong, verification_code,
 	   getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
 	   activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
 	   searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
 	   updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
-	   getEmailUser, getAppRole}
+	   getEmailUser, getAppRole, getDemousers}
