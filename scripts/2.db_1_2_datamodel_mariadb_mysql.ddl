@@ -705,6 +705,7 @@ GRANT ALL PRIVILEGES ON app_portfolio.user_account_app TO role_app_dba;
 CREATE TABLE app_portfolio.user_account_app_setting (
     id                                         INT NOT NULL AUTO_INCREMENT,
     description                                VARCHAR(100),
+    settings_json                              LONGBLOB,
     regional_language_locale	               VARCHAR(100),
     regional_timezone                          VARCHAR(100),
     regional_number_system                     VARCHAR(100),
