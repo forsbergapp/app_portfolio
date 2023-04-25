@@ -12,7 +12,7 @@ const { authAdmin, checkAdmin} = await import(`file://${process.cwd()}${rest_res
 //broadcast
 const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}${rest_resource_service}/broadcast/broadcast.controller.js`);
 //service db admin
-const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
+const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
 //service db app_portfolio app
 const { getApp, getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/app/app.controller.js`);
 //service db app_portfolio app category
@@ -154,6 +154,9 @@ const setRouters = async (app) =>{
     router[4].get("/DBInfoSpaceSum",  checkAdmin, DBInfoSpaceSum);
     router[4].get("/DBStart",  checkAdmin, DBStart);
     router[4].get("/DBStop",  checkAdmin, DBStop);
+    router[4].post("/demo",  checkAdmin, demo_add);
+    router[4].get("/demo",  checkAdmin, demo_get);
+    router[4].delete("/demo",  checkAdmin, demo_delete);
     app.use(`${rest_resource_service}/db/admin`, router[4]);
     //service db app_portfolio app
     router.push(Router());
