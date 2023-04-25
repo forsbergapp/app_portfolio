@@ -1106,7 +1106,8 @@ ALTER TABLE app_portfolio.user_account_app_setting_like
     ADD CONSTRAINT user_account_app_setting_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                                    user_account_app_app_id )
         REFERENCES app_portfolio.user_account_app ( user_account_id,
-                                                    app_id );
+                                                    app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app_setting_like
     ADD CONSTRAINT user_account_app_setting_like_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
@@ -1128,7 +1129,8 @@ ALTER TABLE app_portfolio.user_account_app_setting_view
     ADD CONSTRAINT user_account_app_setting_view_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                                    user_account_app_app_id )
         REFERENCES app_portfolio.user_account_app ( user_account_id,
-                                                    app_id );
+                                                    app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app_setting_view
     ADD CONSTRAINT user_account_app_setting_view_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
