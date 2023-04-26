@@ -286,6 +286,8 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 		let sql;
 		let parameters;
+		if (id_current_user=='')
+			id_current_user = null;
 		sql = `SELECT us.id "id",
 					  us.description "description",
 					  us.user_account_app_user_account_id "user_account_app_user_account_id",
