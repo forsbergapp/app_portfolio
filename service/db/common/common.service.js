@@ -161,6 +161,14 @@ async function execute_db_sql(app_id, sql, parameters,
 				return pool3
 				  .query(parsed_result.text, parsed_result.values)
 				  .then((result) => {
+					//add common attributes
+					if (result.command == 'INSERT' && result.rows.length>0)
+						result.insertId = result.rows[0].id;
+					if (result.command == 'INSERT' ||
+					    result.command == 'DELETE' ||
+						result.command == 'UPDATE'){
+						result.affectedRows = result.rowCount;
+					}
 					pool3.release();
 					//convert blob buffer to string if any column is a BYTEA type
 					if (result.rows.length>0){
@@ -174,7 +182,10 @@ async function execute_db_sql(app_id, sql, parameters,
 							}
 						};
 					}
-					return callBack(null, result.rows);
+					if (result.command == 'SELECT')
+						return callBack(null, result.rows);
+					else
+						return callBack(null, result);
 				  })
 				  .catch((err) => {
 					pool3.release();
@@ -219,11 +230,15 @@ async function execute_db_sql(app_id, sql, parameters,
 																});
 														}
 														else{
-															if (!result.rows && result)
-																return callBack(null, result);
-															else
+															if (result.rowsAffected)
+																result.affectedRows = result.rowsAffected;
+															if (result.rows)
 																return callBack(null, result.rows);
+															else
+																return callBack(null, result);
 														}
+															
+																
 													});
 			}catch (err) {
 				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
