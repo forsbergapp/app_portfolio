@@ -137,6 +137,13 @@ a:active {
 #common_dialogue_message{
 	z-index:53;
 }
+#common_message_title .common_icon{
+	vertical-align: middle;
+	margin-bottom: 1px;
+}
+#common_message_title .common_icon svg{
+	height: 1em;
+}
 /* Dialogue Verification code*/
 #common_dialogue_user_verify{
 	visibility: hidden;

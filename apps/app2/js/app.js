@@ -1536,7 +1536,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
         return;
     //boolean use common.boolean_to_number()
     //store 0/1 for checked value for checkboxes
-    let json_data =
+    let json_settings =
         `{"description": "${description}",
           "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
           "regional_timezone": "${document.getElementById('setting_select_report_timezone').value}",
@@ -1591,9 +1591,13 @@ const user_settings_function = async (function_name, initial_user_setting, callB
           "prayer_column_imsak_checked": ${common.boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked)},
           "prayer_column_sunset_checked": ${common.boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked)},
           "prayer_column_midnight_checked": ${common.boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
-          "prayer_column_fast_start_end": "${document.getElementById('setting_select_report_show_fast_start_end').value}",
-          "user_account_id": ${common.COMMON_GLOBAL['user_account_id']}
+          "prayer_column_fast_start_end": "${document.getElementById('setting_select_report_show_fast_start_end').value}"
          }`;
+    let json_data = `{
+                        "description": "${description}",
+                        "settings_json": ${json_settings},
+                        "user_account_id": ${common.COMMON_GLOBAL['user_account_id']}
+                    }`;	
     let method;
     let url;
     let old_button;
