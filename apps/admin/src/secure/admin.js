@@ -2777,12 +2777,22 @@ const init_admin_secure = () => {
                         document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
                         common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'POST', 2, json_data, null, null, (err, result) =>{
                             document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
-                            if (err == null)
-                                common.show_message('INFO', null, null, 
-                                                    common.ICONS['app_users'] + ' : ' + JSON.parse(result).count_records_user_account + ' ' +
-                                                    common.ICONS['app_apps'] + common.ICONS['app_login'] + ' : ' + JSON.parse(result).count_records_user_account_app + ' ' +
-                                                    common.ICONS['app_settings'] + ' : ' + JSON.parse(result).count_records_user_account_app_setting, 
-                                                    common.COMMON_GLOBAL['common_app_id']);
+                            if (err == null){
+                                let result_obj = JSON.parse(result);
+                                let stat_message =  common.ICONS['app_users'] +     ' : ' + result_obj.count_records_user_account + ' ' +
+                                                    common.ICONS['app_apps'] + 
+                                                    common.ICONS['app_login'] +     ' : ' + result_obj.count_records_user_account_app + ' ' +
+                                                    common.ICONS['app_settings'] +  ' : ' + result_obj.count_records_user_account_app_setting + ' ' +
+                                                    common.ICONS['user_like'] +     ' : ' + result_obj.count_records_user_account_like + ' ' +
+                                                    common.ICONS['user_views'] +    ' : ' + result_obj.count_records_user_account_view + ' ' +
+                                                    common.ICONS['user_follows'] +  ' : ' + result_obj.count_records_user_account_follow + ' ' +
+                                                    common.ICONS['app_settings'] + 
+                                                    common.ICONS['user_like'] +     ' : ' + result_obj.count_records_user_account_setting_like + ' ' +
+                                                    common.ICONS['app_settings'] + 
+                                                    common.ICONS['user_views'] +    ' : ' + result_obj.count_records_user_account_setting_view;
+
+                                common.show_message('INFO', null, null, stat_message, common.COMMON_GLOBAL['common_app_id']);
+                            }
                         })
                     }
                     break;
