@@ -76,6 +76,19 @@ const demo_add = async (req, res)=> {
 	const {insertUserSettingView} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_app_setting_view/user_account_app_setting_view.service.js`);
 	const fs = await import('node:fs');
 	try {
+		/*  Demo script format:
+			{"demo_users":[
+				[
+					{ "username": "[username]" },
+					{ "bio": "[bio text]]" },
+					{ "avatar": [BASE64 string] },
+					[ 
+						{"app_id": [app_id], "description": "[description]", [settings attributes] ...}
+					]
+				],   
+				...
+			]}
+		*/
 		const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
 		let demo_users = JSON.parse(fileBuffer.toString()).demo_users;
 		let email_index = 1000;
@@ -177,7 +190,7 @@ const demo_add = async (req, res)=> {
 					"user_account_id": ${demo_user.id}
 					}`;	
 				let result_createUserSetting = await create_setting(user_setting_app_id, JSON.parse(json_data_user_setting));
-				/*
+				/* to be implemented and logic reviewed first:
 				let social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'SETTINGS_LIKE', 'SETTINGS_VIEW', 'SETTINGS_VIEW_ANONYMOUS'];
 				social_types.ForEach(social_type => {
 					//select new random sample for each social type
@@ -280,21 +293,7 @@ const demo_add = async (req, res)=> {
 		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.controller.js`).then(({checked_error}) =>{
 			return checked_error(req.query.app_id, req.query.lang_code, error, res);
 		})
-	}
-	
-	/*  Demo script format:
-		{"demo_users":[
-			[
-				{ "username": "[username]" },
-				{ "bio": "[bio text]]" },
-				{ "avatar": [BASE64 string] },
-				[ 
-					{"app_id": [app_id], "description": "[description]", [settings attributes] ...}
-				]
-			],   
-			...
-		]}
-	*/
+	}	
 }
 const demo_delete = async (req, res)=> {
 	const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
