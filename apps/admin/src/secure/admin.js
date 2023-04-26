@@ -349,7 +349,7 @@ const show_chart = async (chart) => {
         let year = document.getElementById('select_year_menu1').value;
         let month = document.getElementById('select_month_menu1').value;
         let json;
-        document.getElementById(`box${chart}_chart`).innerHTML = common.APP_SPINNER;        
+        document.getElementById(`box${chart}_chart`).innerHTML = common.APP_SPINNER;
         document.getElementById(`box${chart}_legend`).innerHTML = common.APP_SPINNER;
         //no meaning showing one app in a pie chart will always be full
         if (chart==1)
@@ -2671,6 +2671,12 @@ const init_admin_secure = () => {
     document.getElementById('list_config_policy_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book'];
     document.getElementById('list_config_info_title').innerHTML = common.ICONS['app_info'];
     document.getElementById('config_save').innerHTML = common.ICONS['app_save'];
+    //menu 7
+    document.querySelector('#install_demo_demo_users_icon').innerHTML = common.ICONS['app_users'];
+    document.querySelector('#install_demo_button_install').innerHTML = common.ICONS['app_add'];
+    document.querySelector('#install_demo_button_uninstall').innerHTML = common.ICONS['app_delete'];
+    document.querySelector('#install_demo_password_icon').innerHTML = common.ICONS['user_password'];
+
     //menu 8
     document.getElementById('menu_8_db_info_database_title').innerHTML = common.ICONS['app_database'] + common.ICONS['regional_numbersystem'];
     document.getElementById('menu_8_db_info_name_title').innerHTML = common.ICONS['app_database'];
@@ -2758,6 +2764,39 @@ const init_admin_secure = () => {
     
     document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
 
+    document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
+            switch(event.target.parentNode.id){
+                case 'install_demo_button_install':{
+                    if (document.getElementById("install_demo_password").value == '') {
+                        common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
+                        return callBack('ERROR', null);
+                    }
+                    else{
+                        let json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
+                        let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
+                        document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
+                        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'POST', 2, json_data, null, null, (err, result) =>{
+                            document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
+                            if (err == null)
+                                common.show_message('INFO', null, null, 
+                                                    common.ICONS['app_users'] + ' : ' + JSON.parse(result).count_records_user_account + ' ' +
+                                                    common.ICONS['app_apps'] + common.ICONS['app_login'] + ' : ' + JSON.parse(result).count_records_user_account_app + ' ' +
+                                                    common.ICONS['app_settings'] + ' : ' + JSON.parse(result).count_records_user_account_app_setting, 
+                                                    common.COMMON_GLOBAL['common_app_id']);
+                        })
+                    }
+                    break;
+                }
+                case 'install_demo_button_uninstall':{
+                    let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
+                    document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'DELETE', 2, null, null, null, (err, result) =>{
+                        document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
+                    })
+                    break;
+                }
+            }
+    }, false);
     //SET APPS INFO, INIT MAP
     get_apps().then(() => {
         //SET MENU
