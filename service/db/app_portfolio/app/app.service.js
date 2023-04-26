@@ -98,6 +98,28 @@ const getAppsAdmin = (app_id, lang_code, callBack) => {
 			});
 		})
 	}
+const getAppsAdminId = async (app_id) => {
+	return new Promise((resolve, reject) => {
+		let sql;
+		let parameters;
+		sql = `SELECT a.id "id"
+					FROM ${get_schema_name()}.app a
+				ORDER BY 1`;
+		parameters = {};
+		let stack = new Error().stack;
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+			execute_db_sql(app_id, sql, parameters,
+						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				if (err)
+					reject(err)
+				else
+					resolve(result)
+			});
+		})
+	})
+
+}
+
 const updateAppAdmin = (app_id, id, body, callBack) => {
 		let sql;
 		let parameters;
@@ -123,4 +145,4 @@ const updateAppAdmin = (app_id, id, body, callBack) => {
 			});
 		})
 	}
-export{getApp, getAppsAdmin, updateAppAdmin}
+export{getApp, getAppsAdmin, getAppsAdminId, updateAppAdmin}
