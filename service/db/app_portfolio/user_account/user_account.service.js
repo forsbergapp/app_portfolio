@@ -337,12 +337,9 @@ const create = (app_id, data, callBack) => {
 					else
 						switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 							case '1':
-							case '2':{
-								return callBack(null, result);
-								break;
-							}
+							case '2':
 							case '3':{
-								return callBack(null, {insertId: result[0].id});
+								return callBack(null, result);
 								break;
 							}
 							case '4':{
@@ -357,7 +354,6 @@ const create = (app_id, data, callBack) => {
 								parameters = {
 												lastRowid: lastRowid
 											};
-								let stack = new Error().stack;
 								import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {											
 									execute_db_sql(app_id, sql, parameters, 
 												COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
@@ -415,31 +411,7 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 				if (err)
 					return callBack(err, null);
 				else{
-					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-						case '1':
-						case '2':{
-							return callBack(null, result);
-							break;
-						}
-						case '3':{
-							let pg_json = {
-								"count": result.length,
-								"affectedRows": result.length
-							};
-							//use affectedRows as mysql in app
-							return callBack(null, pg_json);
-							break;
-						}
-						case '4':{
-							let oracle_json = {
-								"count": result.rowsAffected,
-								"affectedRows": result.rowsAffected
-							};
-							//use affectedRows as mysql in app
-							return callBack(null, oracle_json);
-							break;
-						}
-					}
+					return callBack(null, result);
 				}
 			});
 		})
@@ -466,30 +438,7 @@ const updateUserVerificationCode = (app_id, id, verification_code, callBack) => 
 				if (err)
 					return callBack(err, null);
 				else{
-					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
-						case '1':{
-							return callBack(null, result);
-							break;
-						}
-						case '2':{
-							let oracle_json = {
-								"count": result.rowsAffected,
-								"affectedRows": result.rowsAffected
-							};
-							//use affectedRows as mysql in app
-							return callBack(null, oracle_json);
-							break;
-						}
-						case '3':{
-							let pg_json = {
-								"count": result.length,
-								"affectedRows": result.length
-							};
-							//use affectedRows as mysql in app
-							return callBack(null, pg_json);
-							break;
-						}
-					}
+					return callBack(null, result);
 				}
 			});
 		})

@@ -46,19 +46,9 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 					else
 						switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 							case '1':
-							case '2':{
-								return callBack(null, result);
-								break;
-							}
+							case '2':
 							case '3':{
-								if (initial==1){
-									//user logged in and if user setting is created or not
-									//not used here
-									return callBack(null, result);
-								}									
-								else{
-									return callBack(null, {insertId: result[0].id});
-								}
+								return callBack(null, result);
 								break;
 							}
 							case '4':{
@@ -79,7 +69,6 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 									parameters = {
 													lastRowid: lastRowid
 												};
-									let stack = new Error().stack;
 									import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
 										execute_db_sql(app_id, sql, parameters, 
 													COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
