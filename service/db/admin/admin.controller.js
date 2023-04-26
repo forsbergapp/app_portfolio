@@ -66,6 +66,7 @@ const demo_add = async (req, res)=> {
 	*/
 	const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
 	const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+	const {getAppsAdminId} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`);
 	const {create} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`);
 	const {createUserAccountApp} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_app/user_account_app.service.js`);
 	const {createUserSetting, getUserSettingsByUserId} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_app_setting/user_account_app_setting.service.js`);
@@ -135,7 +136,7 @@ const demo_add = async (req, res)=> {
 				}
 			})
 		}
-		const create_user_account_app = (app_id, user_account_id) =>{
+		const create_user_account_app = async (app_id, user_account_id) =>{
 			return new Promise((resolve, reject) => {
 				createUserAccountApp(app_id, user_account_id,  (err,results) => {
 					if (err)
@@ -146,7 +147,7 @@ const demo_add = async (req, res)=> {
 						resolve(results);
 					}
 				})
-			});
+			})
 		}
 		const create_setting = async (user_setting_app_id, json_data) => {
 			return new Promise((resolve, reject) => {
@@ -163,11 +164,15 @@ const demo_add = async (req, res)=> {
 		}
 		//create all users first and update with id
 		let result_create_user = await create_users();
+		let apps = await getAppsAdminId(req.query.app_id);
 		//create user settings
 		for (let demo_user of demo_users){
 			for (let i = 0; i < demo_user.settings.length; i++){
 				let user_setting_app_id = demo_user.settings[i].app_id;
-				let result_createUserAccountApp = await create_user_account_app(user_setting_app_id, demo_user.id);
+				//create user_account_app record for all apps
+				for (let app of apps){
+					let result_createUserAccountApp = await create_user_account_app(app.id, demo_user.id);
+				}
 				let settings_header_image;
 				//use file in settings or if missing then use filename same as demo username
 				if (demo_user.settings[i].image_header_image_img)
