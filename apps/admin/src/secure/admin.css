@@ -552,6 +552,27 @@
     .list_config_col:nth-child(3){
         width:700px;
     }
+    /* MENU INSTALLATION*/
+    #menu_7_content_widget1 {
+        height: calc(100% + 10px);
+        display:flex;
+    }
+    #install_demo{
+        margin:auto;
+    }
+    #install_demo_demo_users_icon{
+        display: block;
+        font-size: 30px;
+    }
+    #install_demo_button_row{
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+    }
+    #install_demo_password_icon{
+        display: inline-block;
+        font-size: 1.5em;
+    }
     /* MENU DATABASE*/
     #menu_8_content_widget1{
         height: 130px;
