@@ -828,12 +828,10 @@ const updateUserLocal = (app_id, data, search_id, callBack) => {
 		let sql;
 		let parameters;
 		let error_code = validation_before_update(data);
-		data.user_level = data.user_level ?? null;
 		if (error_code==null){
 			sql = `UPDATE ${get_schema_name()}.user_account
 					  SET bio = :bio,
 						  private = :private,
-						  user_level = :user_level,
 						  username = :username,
 						  password = :password,
 						  password_reminder = :Xpassword_reminder,
@@ -846,7 +844,6 @@ const updateUserLocal = (app_id, data, search_id, callBack) => {
 			parameters ={
 				bio: data.bio,
 				private: data.private,
-				user_level: data.user_level,
 				username: data.username,
 				password: data.password,
 				Xpassword_reminder: data.password_reminder,
@@ -879,13 +876,11 @@ const updateUserCommon = (app_id, data, id, callBack) => {
 					  SET username = :username,
 						  bio = :bio,
 						  private = :private,
-						  user_level = :user_level,
 						  date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id `;
 			parameters ={	username: data.username,
 							bio: data.bio,
 							private: data.private,
-							user_level: data.user_level,
 							id: id
 						};
 			let stack = new Error().stack;
