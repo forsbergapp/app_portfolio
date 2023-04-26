@@ -1155,7 +1155,7 @@ const getAppRole = (app_id, user_account_id, callBack) => {
 				if (err)
 					return callBack(err, null);
 				else
-					return callBack(null, result[0]);
+					return callBack(null, result);
 			});
 		})
 	}
