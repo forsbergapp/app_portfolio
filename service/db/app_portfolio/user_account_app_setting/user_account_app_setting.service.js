@@ -5,8 +5,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 		let sql;
 		let parameters;
 		let stack = new Error().stack;
-		let settings_json = JSON.parse(JSON.stringify(data));
-		delete settings_json['user_account_id'];
+		let settings_json = JSON.parse(JSON.stringify(data.settings_json));
 		//insert user settings if first time and no user settings exists already
 		sql = `INSERT INTO ${get_schema_name()}.user_account_app_setting(
 				description, 
