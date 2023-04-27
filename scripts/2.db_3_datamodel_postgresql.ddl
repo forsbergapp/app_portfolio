@@ -709,55 +709,6 @@ CREATE TABLE app_portfolio.user_account_app_setting (
     id                                         SERIAL NOT NULL,
     description                                VARCHAR(100),
     settings_json                              TEXT,
-    regional_language_locale	               VARCHAR(100),
-    regional_timezone                          VARCHAR(100),
-    regional_number_system                     VARCHAR(100),
-    regional_layout_direction                  VARCHAR(100),
-    regional_second_language_locale		       VARCHAR(100),
-    regional_column_title                      VARCHAR(100),
-    regional_arabic_script                     VARCHAR(100),
-    regional_calendar_type                     VARCHAR(100),
-    regional_calendar_hijri_type               VARCHAR(100),
-    gps_map_type                               VARCHAR(100),
-    gps_country_id                             INTEGER,
-    gps_city_id                                INTEGER,
-    gps_popular_place_id                       INTEGER,
-    gps_lat_text                               VARCHAR(100),
-    gps_long_text                              VARCHAR(100),
-    design_theme_day_id                        INTEGER,
-    design_theme_month_id                      INTEGER,
-    design_theme_year_id                       INTEGER,
-    design_paper_size                          VARCHAR(100),
-    design_row_highlight                       VARCHAR(100),
-    design_column_weekday_checked              DECIMAL(1,0),
-    design_column_calendartype_checked         DECIMAL(1,0),
-    design_column_notes_checked                DECIMAL(1,0),
-    design_column_gps_checked                  DECIMAL(1,0),
-    design_column_timezone_checked             DECIMAL(1,0),
-    image_header_image_img                     TEXT,
-    image_footer_image_img                     TEXT,
-    text_header_1_text                         VARCHAR(100),
-    text_header_2_text                         VARCHAR(100),
-    text_header_3_text                         VARCHAR(100),
-    text_header_align                          VARCHAR(10),
-    text_footer_1_text                         VARCHAR(100),
-    text_footer_2_text                         VARCHAR(100),
-    text_footer_3_text                         VARCHAR(100),
-    text_footer_align                          VARCHAR(10),
-    prayer_method                              VARCHAR(100),
-    prayer_asr_method                          VARCHAR(100),
-    prayer_high_latitude_adjustment            VARCHAR(100),
-    prayer_time_format                         VARCHAR(100),
-    prayer_hijri_date_adjustment               VARCHAR(100),
-    prayer_fajr_iqamat                         VARCHAR(100),
-    prayer_dhuhr_iqamat                        VARCHAR(100),
-    prayer_asr_iqamat                          VARCHAR(100),
-    prayer_maghrib_iqamat                      VARCHAR(100),
-    prayer_isha_iqamat                         VARCHAR(100),
-    prayer_column_imsak_checked                DECIMAL(1,0),
-    prayer_column_sunset_checked               DECIMAL(1,0),
-    prayer_column_midnight_checked             DECIMAL(1,0),
-    prayer_column_fast_start_end               VARCHAR(100),
     date_created                               TIMESTAMP,
     date_modified                              TIMESTAMP,
     user_account_app_user_account_id           INT NOT NULL,
@@ -1087,17 +1038,9 @@ ALTER TABLE app_portfolio.user_account
     ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
         REFERENCES app_portfolio.app_role ( id );
 
-ALTER TABLE app_portfolio.user_account_app_setting
-    ADD CONSTRAINT user_account_app_setting_country_fk FOREIGN KEY ( gps_country_id )
-        REFERENCES app_portfolio.country ( id );
-
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_setting_arabic_script_fk FOREIGN KEY ( setting_preference_arabic_script_id )
         REFERENCES app_portfolio.setting ( id );
-
-ALTER TABLE app_portfolio.user_account_app_setting
-    ADD CONSTRAINT user_account_app_setting_country_fk FOREIGN KEY ( gps_country_id )
-        REFERENCES app_portfolio.country ( id );
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_setting_direction_fk FOREIGN KEY ( setting_preference_direction_id )
