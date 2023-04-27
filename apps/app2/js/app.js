@@ -1210,7 +1210,7 @@ const user_settings_get = async (user_setting_id = '') => {
             select.innerHTML = '';
             //fill select
             let option_html = '';
-            for (let i = 0; i < json.count; i++) {
+            for (let i = 0; i < result_obj.count; i++) {
                 let settings;
                 settings = JSON.parse(result_obj.items[i].settings_json);
                 

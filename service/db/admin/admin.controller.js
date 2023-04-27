@@ -149,9 +149,14 @@ const demo_add = async (req, res)=> {
 				})
 			})
 		}
-		const create_setting = async (user_setting_app_id, json_data) => {
+		const create_setting = async (user_setting_app_id, json_data, i) => {
 			return new Promise((resolve, reject) => {
-				  createUserSetting(user_setting_app_id, 1, json_data, (err,results) => {
+				  let initial;
+				  if (i==0)
+				  	initial = 1;
+				  else
+				  	initial = 0;
+				  createUserSetting(user_setting_app_id, initial, json_data, (err,results) => {
 					if (err)
 						reject(err);
 					else{
@@ -167,12 +172,12 @@ const demo_add = async (req, res)=> {
 		let apps = await getAppsAdminId(req.query.app_id);
 		//create user settings
 		for (let demo_user of demo_users){
+			//create user_account_app record for all apps
+			for (let app of apps){
+				let result_createUserAccountApp = await create_user_account_app(app.id, demo_user.id);
+			}
 			for (let i = 0; i < demo_user.settings.length; i++){
 				let user_setting_app_id = demo_user.settings[i].app_id;
-				//create user_account_app record for all apps
-				for (let app of apps){
-					let result_createUserAccountApp = await create_user_account_app(app.id, demo_user.id);
-				}
 				let settings_header_image;
 				//use file in settings or if missing then use filename same as demo username
 				if (demo_user.settings[i].image_header_image_img)
@@ -196,7 +201,7 @@ const demo_add = async (req, res)=> {
 					"settings_json": ${JSON.stringify(settings_no_app_id)},
 					"user_account_id": ${demo_user.id}
 					}`;	
-				let result_createUserSetting = await create_setting(user_setting_app_id, JSON.parse(json_data_user_setting));
+				let result_createUserSetting = await create_setting(user_setting_app_id, JSON.parse(json_data_user_setting), i);
 			}
 		}
 		let records_user_account_like = 0;
