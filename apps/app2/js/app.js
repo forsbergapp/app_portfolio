@@ -1199,24 +1199,22 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 /*----------------------- */
 const user_settings_get = async (user_setting_id = '') => {
     let select = document.getElementById("setting_select_user_setting");
-    let json;
+    let result_obj;
     
     await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 
                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             null;
         else{
-            json = JSON.parse(result);
+            result_obj = JSON.parse(result);
             select.innerHTML = '';
             //fill select
             let option_html = '';
             for (let i = 0; i < json.count; i++) {
                 let settings;
-                if (json.items[i].settings_json)
-                    settings = JSON.parse(json.items[i].settings_json);
-                else
-                    settings = json.items[i];
-                option_html += `<option value=${i} id=${json.items[i].id} description='${settings.description}'
+                settings = JSON.parse(result_obj.items[i].settings_json);
+                
+                option_html += `<option value=${i} id=${result_obj.items[i].id} description='${settings.description}'
                                     regional_language_locale=${settings.regional_language_locale}
                                     regional_timezone=${settings.regional_timezone}
                                     regional_number_system=${settings.regional_number_system}
@@ -1266,7 +1264,7 @@ const user_settings_get = async (user_setting_id = '') => {
                                     prayer_column_sunset_checked=${settings.prayer_column_sunset_checked}
                                     prayer_column_midnight_checked=${settings.prayer_column_midnight_checked}
                                     prayer_column_fast_start_end=${settings.prayer_column_fast_start_end}
-                                    user_account_id=${json.items[i].user_account_app_user_account_id}
+                                    user_account_id=${result_obj.items[i].user_account_app_user_account_id}
                                     >${settings.description}
                                 </option>`
             }
