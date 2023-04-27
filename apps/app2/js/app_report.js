@@ -94,7 +94,7 @@ const REPORT_GLOBAL = {
 /* COMMON REPORT		  */
 /*----------------------- */
 const timetable_user_setting_get = async (user_setting_id, callBack) => {
-    let json;
+    let result_obj;
 	await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/${user_setting_id}?`,
 					   'GET', 0, null, null, null, (err, result) =>{
 		if (err){
@@ -102,12 +102,9 @@ const timetable_user_setting_get = async (user_setting_id, callBack) => {
 			callBack(err, null);
 		}
 		else{
-			json = JSON.parse(result);
+			result_obj = JSON.parse(result);
 			let settings;
-			if (json.settings_json)
-				settings = JSON.parse(json.settings_json);
-			else
-				settings = json;
+			settings = JSON.parse(result_obj.settings_json);
 			//set papersize on paper div
 			document.getElementById('paper').className= settings.design_paper_size;
 			callBack(null,
@@ -1252,10 +1249,7 @@ const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 				//different texts, images, second languages, directions, column titles, 
 				//arabic script, themes or what columns to display, for these use current users setting
 				let settings;
-                if (json.items[i].settings_json)
-                    settings = JSON.parse(json.items[i].settings_json);
-                else
-                    settings = json.items[i];
+                settings = JSON.parse(json.items[i].settings_json);
 				user_settings.push(
 					{
 					"description" : settings.description,
