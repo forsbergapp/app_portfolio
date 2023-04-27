@@ -211,6 +211,21 @@ async function execute_db_sql(app_id, sql, parameters,
 			let pool4;
 			try{
 				pool4 = await ORACLEDB.getConnection(get_pool(app_id));
+				/*
+				Fix CLOB column syntax to avoid ORA-01461 for these columns:
+					APP_ACCOUNT.SCREENSHOT
+					USER_ACCOUNT.AVATAR
+					USER_ACCOUNT.PROVIDER_IMAGE
+					USER_ACCOUNT_APP_SETTING.SETTINGS_JSON
+					use same parameter name as column name
+				*/
+				Object.keys(parameters).forEach((key, index) => {
+					if (key.toLowerCase() == 'screenshot' ||
+					    key.toLowerCase() == 'avatar' ||
+						key.toLowerCase() == 'provider_image' ||
+						key.toLowerCase() == 'settings_json')
+						parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
+				});
 				const result = await pool4.execute(sql, parameters, (err,result) => {
 														if (err) {
 															let app_code = get_app_code(err.errorNum, 
