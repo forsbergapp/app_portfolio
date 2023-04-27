@@ -194,8 +194,7 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 						 FROM ${get_schema_name()}.user_account_app_setting_like u_liked_current_user
 						WHERE u_liked_current_user.user_account_app_user_account_id = :Xuser_Xaccount_id_current
 						  AND u_liked_current_user.user_account_app_setting_id = us.id
-						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked",
-					  us.design_paper_size "design_paper_size"
+						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked"
 				 FROM ${get_schema_name()}.user_account_app_setting us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
