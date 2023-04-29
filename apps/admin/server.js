@@ -14,14 +14,14 @@ const server = (app) =>{
     app.use('/common/modules',express.static(process.cwd() + '/apps/common/modules'));
     //routes
     app.get("/admin",(req, res, next) => {
-        import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
+        import(`file://${process.cwd()}/apps/apps.service.js`).then(({check_app_subdomain}) => {
             if (check_app_subdomain(ADMIN_ID, req.headers.host) ||
                 req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getFormAdmin }) => {
-                    getFormAdmin(req, res, ADMIN_ID, (err, app_result)=>{
+                import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getAppAdmin}) => {
+                    getAppAdmin(req, res, ADMIN_ID, (err, app_result)=>{
                         return res.send(app_result);
                     })
-                });
+                })
             }
             else
                 next();

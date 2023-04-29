@@ -1,4 +1,4 @@
-const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/index.js`);
+const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const getReport = (app_id, module, gps_lat, gps_long, gps_place) => {
     return new Promise((resolve, reject) => {

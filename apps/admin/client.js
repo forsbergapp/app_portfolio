@@ -1,7 +1,7 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/index.js`);
+const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const getAdmin = (app_id, gps_lat, gps_long, gps_place) => {
+const createAdmin = (app_id, gps_lat, gps_long, gps_place) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/index.html'],
@@ -113,4 +113,4 @@ const getAdmin = (app_id, gps_lat, gps_long, gps_place) => {
         
     })
 }
-export {getAdmin}
+export {createAdmin}

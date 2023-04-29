@@ -1,5 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { read_app_files, get_module_with_init, countries } = await import(`file://${process.cwd()}/apps/index.js`);
+const { read_app_files, get_module_with_init} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const themes = async (app_id) =>{
     return new Promise((resolve, reject) => {
@@ -105,7 +105,51 @@ const places = async (app_id) => {
         })
     })
 }
-const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
+const countries = (app_id) => {
+    return new Promise((resolve, reject) => {
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/country/country.service.js`).then(({getCountries})=>{
+            getCountries(app_id, 'en', (err, results)  => {
+                let select_countries;
+                if (err){
+                    resolve (
+                                `<select name='country' id='setting_select_country'>
+                                <option value='' id='' label='…' selected='selected'>…</option>
+                                </select>`
+                            )
+                }     
+                else{
+                    let current_group_name;
+                    select_countries  =`<select name='country' id='setting_select_country'>
+                                        <option value='' id='' label='…' selected='selected'>…</option>`;
+            
+                    results.map( (countries_map,i) => {
+                        if (i === 0){
+                        select_countries += `<optgroup label=${countries_map.group_name} />`;
+                        current_group_name = countries_map.group_name;
+                        }
+                        else{
+                        if (countries_map.group_name !== current_group_name){
+                            select_countries += `<optgroup label=${countries_map.group_name} />`;
+                            current_group_name = countries_map.group_name;
+                        }
+                        select_countries +=
+                        `<option value=${i}
+                                id=${countries_map.id} 
+                                country_code=${countries_map.country_code} 
+                                flag_emoji=${countries_map.flag_emoji} 
+                                group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
+                        </option>`
+                        }
+                    })
+                    select_countries += '</select>';
+                    resolve (select_countries);
+                }
+            });
+        });
+    })
+}
+
+const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
     return new Promise((resolve, reject) => {
         const main = (app_id) => {
             const files = [
@@ -403,5 +447,4 @@ const getApp = (app_id, username, gps_lat, gps_long, gps_place) => {
 
     })
 }
-
-export{themes, places, getApp}
+export{createApp}
