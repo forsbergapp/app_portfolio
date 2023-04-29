@@ -8,7 +8,7 @@ const server = (app) =>{
   app.use('/app1/js',express.static(process.cwd() + '/apps/app1/js'));
   //routes
   app.get("/info/:info",(req, res, next) => {
-      import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
+      import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {
         if (check_app_subdomain(APP1_ID, req.headers.host) ||
           req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
             switch (req.params.info){
@@ -35,7 +35,7 @@ const server = (app) =>{
       })
   });
   app.get('/:user',(req, res, next) => {
-    import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
+    import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {
       if ((check_app_subdomain(APP1_ID, req.headers.host) ||
           req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www') &&
           req.params.user !== '' && 
@@ -45,8 +45,8 @@ const server = (app) =>{
           req.params.user!=='images' &&
           req.params.user!=='info' &&
           req.params.user!=='js'){
-          import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm }) => {
-            getForm(req, res, APP1_ID, req.params.user,(err, app_result)=>{
+          import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
+            getApp(req, res, APP1_ID, req.params.user,(err, app_result)=>{
                 //if app_result=0 means here redirect to /
                 if (app_result==0)
                   return res.redirect('/');
@@ -61,14 +61,14 @@ const server = (app) =>{
   });
   //config root url
   app.get('/',(req, res, next) => {
-    import(`file://${process.cwd()}/apps/index.js`).then(({ check_app_subdomain}) => {
+    import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {
       if (check_app_subdomain(APP1_ID, req.headers.host) ||
           req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
-          import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`).then(({ getForm }) => {
-            getForm(req, res, APP1_ID, null,(err, app_result)=>{
+            import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
+              getApp(req, res, APP1_ID, null,(err, app_result)=>{
                 return res.send(app_result);
+              })
             })
-          })
       }
       else
           next();

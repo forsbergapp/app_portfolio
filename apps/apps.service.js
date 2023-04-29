@@ -1,62 +1,105 @@
 const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
-const {getApp} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`);
 
-const {getCountries} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/country/country.service.js`);
-
+//APP EMAIL functions
+const getMail = (app_id, data, baseUrl) => {
+    return new Promise((resolve, reject) => {
+        let mailfile = '';
+        let files= [];
+        //email type 1-4 implented are emails with verification code
+        if (parseInt(data.emailType)==1 || 
+            parseInt(data.emailType)==2 || 
+            parseInt(data.emailType)==3 ||
+            parseInt(data.emailType)==4){
+            files = [
+                ['MAIL', process.cwd() + '/apps/common/mail/mail.html'],
+                ['<MailHeader/>', process.cwd() + `/apps/app${app_id}/mail/mail_header_verification.html`],
+                ['<MailBody/>', process.cwd() + `/apps/app${app_id}/mail/mail_body_verification.html`]
+            ];
+        }
+        read_app_files(app_id, files, (err, email)=>{
+            if (err)
+                reject(err);
+            else{
+                //email type 1-4 are emails with verification code
+                get_email_verification(app_id, data, email, baseUrl, data.lang_code, (err,email_verification)=>{
+                    if (err)
+                        reject(err);
+                    else
+                        resolve({"subject":         email_verification.subject, 
+                                    "html":            email_verification.email});    
+                })
+            }
+        })
+    })
+}
+const get_email_verification = async (app_id, data, email, baseUrl, lang_code, callBack) => {
+    email = email.replace('<Logo/>', 
+                        `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
+    email = email.replace('<Verification_code/>', 
+                        `${data.verificationCode}`);
+    email = email.replace('<Footer/>', 
+                        `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
+    callBack(null, {"subject": '❂❂❂❂❂❂',
+                    "email": email});
+}
+//APP ROUTER functions
 const getInfo = async (app_id, info, lang_code, callBack) => {
     const get_parameters = async (callBack) => {
-        getApp(app_id, app_id, lang_code, (err, result_app)=>{
-            getParameters_server(app_id, app_id, (err, result)=>{
-                //app_parameter table
-                let db_info_email_policy;
-                let db_info_email_disclaimer;
-                let db_info_email_terms;
-                let db_info_link_policy_url;
-                let db_info_link_disclaimer_url;
-                let db_info_link_terms_url;
-                let db_info_link_about_url;            
-                if (err) {
-                    let stack = new Error().stack;
-                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                callBack(err, null);
-                            })
-                        });
-                    })
-                }
-                else{
-                    let json = JSON.parse(JSON.stringify(result));
-                    for (let i = 0; i < json.length; i++){
-                        if (json[i].parameter_name=='INFO_EMAIL_POLICY')
-                            db_info_email_policy = json[i].parameter_value;
-                        if (json[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
-                            db_info_email_disclaimer = json[i].parameter_value;
-                        if (json[i].parameter_name=='INFO_EMAIL_TERMS')
-                            db_info_email_terms = json[i].parameter_value;
-                        if (json[i].parameter_name=='INFO_LINK_POLICY_URL')
-                            db_info_link_policy_url = json[i].parameter_value;
-                        if (json[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                            db_info_link_disclaimer_url = json[i].parameter_value;
-                        if (json[i].parameter_name=='INFO_LINK_TERMS_URL')
-                            db_info_link_terms_url = json[i].parameter_value;
-                        if (json[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                            db_info_link_about_url = json[i].parameter_value;
-                    }
-                    callBack(null, {app_name: result_app[0].app_name,
-                                    app_url: result_app[0].url,
-                                    info_email_policy: db_info_email_policy,
-                                    info_email_disclaimer: db_info_email_disclaimer,
-                                    info_email_terms: db_info_email_terms,
-                                    info_link_policy_url: db_info_link_policy_url,
-                                    info_link_disclaimer_url: db_info_link_disclaimer_url,
-                                    info_link_terms_url: db_info_link_terms_url,
-                                    info_link_about_url: db_info_link_about_url
+        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`).then(({getApp}) => {
+            getApp(app_id, app_id, lang_code, (err, result_app)=>{
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
+                    getParameters_server(app_id, app_id, (err, result)=>{
+                        //app_parameter table
+                        let db_info_email_policy;
+                        let db_info_email_disclaimer;
+                        let db_info_email_terms;
+                        let db_info_link_policy_url;
+                        let db_info_link_disclaimer_url;
+                        let db_info_link_terms_url;
+                        let db_info_link_about_url;            
+                        if (err) {
+                            let stack = new Error().stack;
+                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+                                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
+                                        callBack(err, null);
                                     })
-                }
-            })    
-        })
+                                });
+                            })
+                        }
+                        else{
+                            let json = JSON.parse(JSON.stringify(result));
+                            for (let i = 0; i < json.length; i++){
+                                if (json[i].parameter_name=='INFO_EMAIL_POLICY')
+                                    db_info_email_policy = json[i].parameter_value;
+                                if (json[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
+                                    db_info_email_disclaimer = json[i].parameter_value;
+                                if (json[i].parameter_name=='INFO_EMAIL_TERMS')
+                                    db_info_email_terms = json[i].parameter_value;
+                                if (json[i].parameter_name=='INFO_LINK_POLICY_URL')
+                                    db_info_link_policy_url = json[i].parameter_value;
+                                if (json[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                                    db_info_link_disclaimer_url = json[i].parameter_value;
+                                if (json[i].parameter_name=='INFO_LINK_TERMS_URL')
+                                    db_info_link_terms_url = json[i].parameter_value;
+                                if (json[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                                    db_info_link_about_url = json[i].parameter_value;
+                            }
+                            callBack(null, {app_name: result_app[0].app_name,
+                                            app_url: result_app[0].url,
+                                            info_email_policy: db_info_email_policy,
+                                            info_email_disclaimer: db_info_email_disclaimer,
+                                            info_email_terms: db_info_email_terms,
+                                            info_link_policy_url: db_info_link_policy_url,
+                                            info_link_disclaimer_url: db_info_link_disclaimer_url,
+                                            info_link_terms_url: db_info_link_terms_url,
+                                            info_link_about_url: db_info_link_about_url
+                                            })
+                        }
+                    })
+                });
+            })
+        });
     }
     let info_html1 = `<!DOCTYPE html>
                       <html>
@@ -133,6 +176,35 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
         break;
     }
 }
+const check_app_subdomain = (app_id, host) => {
+    //if using test subdomains, dns will point to correct server
+    switch (app_id){
+        case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
+            //show admin app for all subdomains
+            return true;
+        }
+        case 1:{
+            //app1, app1.test, test, www  or localhost
+            if (host.substring(0,host.indexOf('.')) == `app${app_id}` ||
+                host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
+                host.substring(0,host.indexOf('.')) == ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN') ||
+                host.substring(0,host.indexOf('.')) == 'www' ||
+                host.substring(0,host.indexOf('.')) == '')
+                return true;
+            else
+                return false;
+        }
+        default:{
+            //app[app_id].test or app[app_id]
+            if (host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
+                host.substring(0,host.indexOf('.')) == `app${app_id}`)
+                return true;
+            else
+                return false;
+        }
+    }
+}
+//APP functions
 const read_app_files = async (app_id, files, callBack) => {
     let i = 0;
     let stack = new Error().stack;
@@ -265,16 +337,6 @@ const get_module_with_init = async (app_id,
         })
     }
 }
-const get_email_verification = async (app_id, data, email, baseUrl, lang_code, callBack) => {
-    email = email.replace('<Logo/>', 
-                        `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
-    email = email.replace('<Verification_code/>', 
-                        `${data.verificationCode}`);
-    email = email.replace('<Footer/>', 
-                        `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
-    callBack(null, {"subject": '❂❂❂❂❂❂',
-                    "email": email});
-}
 
 const AppsStart = async (app) => {
     return await new Promise((resolve) => {
@@ -371,65 +433,7 @@ const getMaintenance = (app_id, gps_lat, gps_long, gps_place) => {
         })
     })
 }
-const getMail = (app_id, data, baseUrl) => {
-    return new Promise((resolve, reject) => {
-        let mailfile = '';
-        let files= [];
-        //email type 1-4 implented are emails with verification code
-        if (parseInt(data.emailType)==1 || 
-            parseInt(data.emailType)==2 || 
-            parseInt(data.emailType)==3 ||
-            parseInt(data.emailType)==4){
-            files = [
-                ['MAIL', process.cwd() + '/apps/common/mail/mail.html'],
-                ['<MailHeader/>', process.cwd() + `/apps/app${app_id}/mail/mail_header_verification.html`],
-                ['<MailBody/>', process.cwd() + `/apps/app${app_id}/mail/mail_body_verification.html`]
-            ];
-        }
-        read_app_files(app_id, files, (err, email)=>{
-            if (err)
-                reject(err);
-            else{
-                //email type 1-4 are emails with verification code
-                get_email_verification(app_id, data, email, baseUrl, data.lang_code, (err,email_verification)=>{
-                    if (err)
-                        reject(err);
-                    else
-                        resolve({"subject":         email_verification.subject, 
-                                    "html":            email_verification.email});    
-                })
-            }
-        })
-    })
-}
-const check_app_subdomain = (app_id, host) => {
-    //if using test subdomains, dns will point to correct server
-    switch (app_id){
-        case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
-            //show admin app for all subdomains
-            return true;
-        }
-        case 1:{
-            //app1, app1.test, test, www  or localhost
-            if (host.substring(0,host.indexOf('.')) == `app${app_id}` ||
-                host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
-                host.substring(0,host.indexOf('.')) == ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN') ||
-                host.substring(0,host.indexOf('.')) == 'www' ||
-                host.substring(0,host.indexOf('.')) == '')
-                return true;
-            else
-                return false;
-        }
-        default:{
-            //app[app_id].test or app[app_id]
-            if (host.indexOf(`app${app_id}.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')) == 0 ||
-                host.substring(0,host.indexOf('.')) == `app${app_id}`)
-                return true;
-            else
-                return false;
-        }
-    }
-}
+
 const getUserPreferences = (app_id) => {
     return new Promise((resolve, reject) => {
         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
@@ -473,47 +477,12 @@ const getUserPreferences = (app_id) => {
         
     })
 }
-const countries = (app_id) => {
-    return new Promise((resolve, reject) => {
-        getCountries(app_id, 'en', (err, results)  => {
-            let select_countries;
-            if (err){
-                resolve (
-                            `<select name='country' id='setting_select_country'>
-                            <option value='' id='' label='…' selected='selected'>…</option>
-                            </select>`
-                        )
-            }     
-            else{
-                let current_group_name;
-                select_countries  =`<select name='country' id='setting_select_country'>
-                                    <option value='' id='' label='…' selected='selected'>…</option>`;
-        
-                results.map( (countries_map,i) => {
-                    if (i === 0){
-                    select_countries += `<optgroup label=${countries_map.group_name} />`;
-                    current_group_name = countries_map.group_name;
-                    }
-                    else{
-                    if (countries_map.group_name !== current_group_name){
-                        select_countries += `<optgroup label=${countries_map.group_name} />`;
-                        current_group_name = countries_map.group_name;
-                    }
-                    select_countries +=
-                    `<option value=${i}
-                            id=${countries_map.id} 
-                            country_code=${countries_map.country_code} 
-                            flag_emoji=${countries_map.flag_emoji} 
-                            group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
-                    </option>`
-                    }
-                })
-                select_countries += '</select>';
-                resolve (select_countries);
-            }
-        });
-    })
-}
 
-export {getInfo, read_app_files, get_module_with_init, get_email_verification,
-        AppsStart, getMaintenance, getMail, check_app_subdomain, getUserPreferences, countries}
+export {/*APP EMAIL functions*/
+        getMail, get_email_verification,
+        /*APP ROUTER functiontions */
+        getInfo, check_app_subdomain,
+        /*APP functions */
+        read_app_files, get_module_with_init,
+        getMaintenance, getUserPreferences,
+        AppsStart}

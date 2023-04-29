@@ -119,7 +119,7 @@ const admin_login = async () => {
                     common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
                     common.COMMON_GLOBAL['system_admin'] = 1;
                     common.updateOnlineStatus();
-                    fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/forms/admin/secure`,
+                    fetch(`/apps/admin/secure`,
                     {method: 'POST',
                         headers: {
                             'Authorization': 'Bearer ' + common.COMMON_GLOBAL['rest_admin_at'],
