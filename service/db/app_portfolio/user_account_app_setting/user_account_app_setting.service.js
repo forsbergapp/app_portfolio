@@ -37,7 +37,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 							app_id: app_id,
 							initial_setting: initial
 						};
-			import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 				execute_db_sql(app_id, sql, parameters, 
 							   COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
@@ -68,7 +68,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 									parameters = {
 													lastRowid: lastRowid
 												};
-									import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+									import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 										execute_db_sql(app_id, sql, parameters, 
 													COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
 											if (err)
@@ -101,7 +101,7 @@ const getUserSetting = (app_id, id, callBack) => {
 						id: id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -129,7 +129,7 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 						app_id: app_id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -163,7 +163,7 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 						app_id: app_id
 					}; 
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -203,7 +203,7 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 						app_id: app_id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -272,7 +272,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 						detailchoice: detailchoice
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -344,7 +344,7 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 						statchoice: statchoice,
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -372,7 +372,7 @@ const updateUserSetting = (app_id, data, id, callBack) => {
 						id: id
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {				
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {				
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -391,7 +391,7 @@ const deleteUserSetting = (app_id, id, callBack) => {
 						id: id
 						};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

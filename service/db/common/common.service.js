@@ -15,7 +15,7 @@ function log_db_sql(app_id, sql, parameters){
 				return txt;
 		})
 	});
-	import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogDB}) => {
+	import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogDB}) => {
 		createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
 	})
 }
@@ -89,7 +89,7 @@ async function execute_db_sql(app_id, sql, parameters,
 			}
 			get_pool(app_id).getConnection((err, conn) => {
 				if (err){
-					import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+					import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 						//Both MariaDB and MySQL use err.sqlMessage
 						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(() => {
 							return callBack(database_error, null);
@@ -109,7 +109,7 @@ async function execute_db_sql(app_id, sql, parameters,
 								if (app_code != null)
 									return callBack(err, null);
 								else
-									import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+									import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 										//Both MariaDB and MySQL use err.sqlMessage
 										createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
 											return callBack(database_error, null);
@@ -197,7 +197,7 @@ async function execute_db_sql(app_id, sql, parameters,
 					if (app_code != null)
 						return callBack(err, null);
 					else
-						import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 							//PostgreSQL use err.message
 							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(() => {
 								return callBack(database_error, null);
@@ -236,7 +236,7 @@ async function execute_db_sql(app_id, sql, parameters,
 															if (app_code != null)
 																return callBack(err, null);
 															else
-																import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+																import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 																	//Oracle uses err.message
 																	createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line,
 																				'DB 4 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(() => {
@@ -256,7 +256,7 @@ async function execute_db_sql(app_id, sql, parameters,
 																
 													});
 			}catch (err) {
-				import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 catch:' + err.message).then(() => {
 						return callBack(database_error);
 					})
@@ -266,7 +266,7 @@ async function execute_db_sql(app_id, sql, parameters,
 					try {
 						await pool4.close(); 
 					} catch (err) {
-						import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 finally:' + err.message).then(() => {
 								return callBack(database_error);
 							})

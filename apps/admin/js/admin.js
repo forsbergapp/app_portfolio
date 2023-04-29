@@ -102,7 +102,7 @@ const admin_login = async () => {
         }
         let status;
         let json;
-        fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/auth/admin`,
+        fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/auth/admin`,
         {method: 'POST',
             headers: {
             'Authorization': 'Basic ' + window.btoa(document.getElementById("system_admin_login_username_input").value + ':' + document.getElementById("system_admin_login_password_input").value)

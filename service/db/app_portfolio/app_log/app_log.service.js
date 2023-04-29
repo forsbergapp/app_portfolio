@@ -62,7 +62,7 @@ const createLog = (app_id, data, callBack) => {
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -136,7 +136,7 @@ const createLogAdmin = (app_id, data, callBack) => {
 						server_http_accept_language: data.server_http_accept_language
 					};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -213,7 +213,7 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 						offset:offset,
 						limit:limit};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {						
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {						
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
@@ -263,7 +263,7 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, statchoice, year, month,
 						year_log: year,
 						month_log: month};
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters,
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)

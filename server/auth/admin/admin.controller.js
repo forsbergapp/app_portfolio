@@ -9,8 +9,8 @@ const checkAdmin = (req, res, next) => {
         verify(token, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), (err, decoded) => {
             if (err){
                 let stack = new Error().stack;
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'SYSTEM ADMIN CheckAdmin token verify error: ' + err,
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -29,8 +29,8 @@ const checkAdmin = (req, res, next) => {
         
     }else{
         let stack = new Error().stack;
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                               'SYSTEM ADMIN CheckAdmin token missing',
                               req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -55,8 +55,8 @@ const authAdmin = (req, res) => {
                                 expiresIn: ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
                                 });
             let stack = new Error().stack;
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                   'SYSTEM ADMIN login OK:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME'),
                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -71,8 +71,8 @@ const authAdmin = (req, res) => {
         }
         else{
             let stack = new Error().stack;
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                   'SYSTEM ADMIN login FAIL:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME'),
                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
