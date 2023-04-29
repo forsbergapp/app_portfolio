@@ -97,7 +97,7 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 						Xobject_Xname: object_name
 					 };
 		let stack = new Error().stack;
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			execute_db_sql(app_id, sql, parameters, 
 						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
