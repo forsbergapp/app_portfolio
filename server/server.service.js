@@ -17,6 +17,38 @@ else
 let SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 
 const app_portfolio_title = 'App Portfolio';
+
+//ES6 object with properties using concise method syntax
+const COMMON = {
+    app_filename(module){
+        let from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
+        return module.substring(from_app_root);
+    },
+    app_function(stack){
+        let e = stack.split("at ");
+        let functionName;
+        //loop from last to first
+        //ES6 rest parameter to avoid mutating array
+        for (let line of [...e].reverse()) {
+            //ES6 startsWith and includes
+            if ((line.startsWith('file')==false && 
+                line.includes('node_modules')==false &&
+                line.includes('node:internal')==false &&
+                line.startsWith('Query')==false)||
+                line.startsWith('router')){
+                    functionName = line.split(" ")[0];
+                    break;
+            }
+        }
+        return functionName;
+    },
+    app_line(){
+        let e = new Error();
+        let frame = e.stack.split("\n")[2];
+        let lineNumber = frame.split(":").reverse()[1];
+        return lineNumber;
+    }
+};
 const config_files = () => {
     return [
             [0, SERVER_CONFIG_INIT_PATH],
@@ -432,13 +464,11 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
         }
     } catch (error) {
         let stack = new Error().stack;
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
-                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                    callBack(err, null);
-                })
-            });
-        })
+        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
+                callBack(err, null);
+            })
+        });
     }
 }
 const CheckFirstTime = () => {
@@ -503,18 +533,16 @@ const Info = async (callBack) => {
 }
 const serverRouterLog = ((req,res,next)=>{
     let stack = new Error().stack;
-    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppRI}) => {
-            createLogAppRI(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), req.body,
-                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                next();
-            })
+    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppRI}) => {
+        createLogAppRI(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), req.body,
+                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+            next();
         })
     })
 })
 const serverExpressLogError = (app) =>{
-    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerE}) => {
+    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogServerE}) => {
         //ERROR LOGGING
         app.use((err,req,res,next) => {
             createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
@@ -532,11 +560,14 @@ const serverExpressRoutes = async (app) => {
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //auth
     const { dataToken, checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
-            checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
+            checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
-    const { authAdmin, checkAdmin} = await import(`file://${process.cwd()}${rest_resource_service}/auth/admin/admin.controller.js`);
+    const { authAdmin, checkAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
     //broadcast
-    const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}${rest_resource_service}/broadcast/broadcast.controller.js`);
+    const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
+    //log
+    const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
+
     //service db admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
     //service db app_portfolio app
@@ -607,8 +638,6 @@ const serverExpressRoutes = async (app) => {
     const { getFormAdminSecure } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`);
     //service geolocation
     const { getPlace, getPlaceAdmin, getPlaceSystemAdmin, getIp, getIpAdmin, getIpSystemAdmin, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
-    //service log
-    const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.controller.js`);
     //service mail
     const { getLogo } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
     //service report
@@ -619,255 +648,285 @@ const serverExpressRoutes = async (app) => {
     //router
     const {Router} = await import('express');
     const router = [Router()];
-    
+    let i = 0;
     //endpoints
     //server
-    router[0].use(serverRouterLog);
-    router[0].put("/config/systemadmin", checkAdmin, ConfigSave);
-    router[0].get("/config/systemadmin", checkAdmin, ConfigGetController);
-    router[0].get("/config/systemadmin/saved", checkAdmin, ConfigGetSaved);
-    router[0].get("/config/systemadmin/maintenance", checkAdmin, ConfigMaintenanceGet);
-    router[0].patch("/config/systemadmin/maintenance", checkAdmin, ConfigMaintenanceSet);
-    router[0].get("/config/info", checkAdmin, ConfigInfo);
-    router[0].get("/info", checkAdmin, Info);
-    router[0].get("/config/admin", checkAccessTokenAdmin, ConfigGetController);
-    app.use(ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'), router[0]);
+    router[i].use(serverRouterLog);
+    router[i].put("/config/systemadmin", checkAdmin, ConfigSave);
+    router[i].get("/config/systemadmin", checkAdmin, ConfigGetController);
+    router[i].get("/config/systemadmin/saved", checkAdmin, ConfigGetSaved);
+    router[i].get("/config/systemadmin/maintenance", checkAdmin, ConfigMaintenanceGet);
+    router[i].patch("/config/systemadmin/maintenance", checkAdmin, ConfigMaintenanceSet);
+    router[i].get("/config/info", checkAdmin, ConfigInfo);
+    router[i].get("/info", checkAdmin, Info);
+    router[i].get("/config/admin", checkAccessTokenAdmin, ConfigGetController);
+    app.use(ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'), router[i]);
+    i++;
     //auth
     router.push(Router());
-    router[1].use(serverRouterLog);
-    router[1].post("/", dataToken);
-    app.use(`${rest_resource_service}/auth`, router[1]);
+    router[i].use(serverRouterLog);
+    router[i].post("/", dataToken);
+    app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/auth`, router[i]);
+    i++;
     //auth admin
     router.push(Router());
-    router[2].use(serverRouterLog);
-    router[2].post("/", authAdmin);
-    app.use(`${rest_resource_service}/auth/admin`, router[2]);
+    router[i].use(serverRouterLog);
+    router[i].post("/", authAdmin);
+    app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/auth/admin`, router[i]);
+    i++;
     //broadcast
     router.push(Router());
-    router[3].use(serverRouterLog);
+    router[i].use(serverRouterLog);
     //message:
-    router[3].post("/message/SystemAdmin",checkAdmin, BroadcastSendSystemAdmin);
-    router[3].post("/message/Admin",checkAccessTokenAdmin, BroadcastSendAdmin);
+    router[i].post("/message/SystemAdmin",checkAdmin, BroadcastSendSystemAdmin);
+    router[i].post("/message/Admin",checkAccessTokenAdmin, BroadcastSendAdmin);
     //connection:
-    router[3].get("/connection/SystemAdmin", checkAdmin, ConnectedListSystemAdmin);
-    router[3].patch("/connection/SystemAdmin", checkAdmin, ConnectedUpdate);
-    router[3].get("/connection/Admin", checkAccessTokenAdmin, ConnectedList);
-    router[3].get("/connection/Admin/count", checkAccessTokenAdmin, ConnectedCount);
-    router[3].get("/connection/:clientId",BroadcastConnect);
-    router[3].patch("/connection", checkDataToken, ConnectedUpdate);
-    router[3].get("/connection/check/:user_account_id", checkDataToken, ConnectedCheck);
-    app.use(`${rest_resource_service}/broadcast`, router[3]);
-    //service db admin
-    router.push(Router());
-    router[4].use(serverRouterLog);
-    router[4].get("/DBInfo",  checkAdmin, DBInfo);
-    router[4].get("/DBInfoSpace",  checkAdmin, DBInfoSpace);
-    router[4].get("/DBInfoSpaceSum",  checkAdmin, DBInfoSpaceSum);
-    router[4].get("/DBStart",  checkAdmin, DBStart);
-    router[4].get("/DBStop",  checkAdmin, DBStop);
-    router[4].post("/demo",  checkAdmin, demo_add);
-    router[4].get("/demo",  checkAdmin, demo_get);
-    router[4].delete("/demo",  checkAdmin, demo_delete);
-    app.use(`${rest_resource_service}/db/admin`, router[4]);
-    //service db app_portfolio app
-    router.push(Router());
-    router[5].use(serverRouterLog);
-    router[5].get("/",  checkDataToken, getApp);
-    router[5].get("/admin",  checkAccessTokenAdmin, getAppsAdmin);
-    router[5].put("/admin/:id",  checkAccessTokenAdmin, updateAppAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app`, router[5]);
-    //service db app_portfolio app category
-    router.push(Router());
-    router[6].use(serverRouterLog);
-    router[6].get("/admin",  checkAccessTokenAdmin, getAppCategoryAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_category`, router[6]);
-    //service db app_portfolio app log
-    router.push(Router());
-    router[7].use(serverRouterLog);
-    router[7].get("/admin",  checkAccessTokenAdmin, getLogsAdmin);
-    router[7].get("/admin/stat/uniquevisitor", checkAccessTokenAdmin, getStatUniqueVisitorAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_log`, router[7]);
-    //service db app_portfolio app object
-    router.push(Router());
-    router[8].use(serverRouterLog);
-    router[8].get("/:lang_code",  checkDataToken, getObjects);
-    router[8].get("/admin/:lang_code",  checkDataToken, getObjects);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_object`, router[8]);
-    //service db app_portfolio app parameter
-    router.push(Router());
-    router[9].use(serverRouterLog);
-    router[9].get("/admin/all/:app_id", checkAccessTokenAdmin, getParametersAllAdmin);
-    router[9].put("/admin", checkAccessTokenAdmin, setParameter_admin);
-    router[9].patch("/admin/value", checkAccessTokenAdmin, setParameterValue_admin);
-    router[9].get("/admin/:app_id", checkDataToken, getParametersAdmin);
-    router[9].get("/:app_id", checkDataToken, getParameters);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_parameter`, router[9]);
-    //service db app_portfolio app role
-    router.push(Router());
-    router[10].use(serverRouterLog);
-    router[10].get("/admin",  checkAccessTokenAdmin, getAppRoleAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_role`, router[10]);
-    //service db app_portfolio country
-    router.push(Router());
-    router[11].use(serverRouterLog);
-    router[11].get("/:lang_code",  checkDataToken, getCountries);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/country`, router[11]);
-    //service db app_portfolio identity provider
-    router.push(Router());
-    router[12].use(serverRouterLog);
-    router[12].get("/", checkDataToken, getIdentityProviders);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/identity_provider`, router[12]);
-    //service db app_portfolio language locale
-    router.push(Router());
-    router[13].use(serverRouterLog);
-    router[13].get("/:lang_code", checkDataToken, getLocales);
-    router[13].get("/admin/:lang_code", checkDataToken, getLocales);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/language/locale`, router[13]);
-    //service db app_portfolio message translation
-    router.push(Router());
-    router[14].use(serverRouterLog);
-    router[14].get("/:code",  checkDataToken, getMessage);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/message_translation`, router[14]);
-    //service db app_portfolio parameter type
-    router.push(Router());
-    router[15].use(serverRouterLog);
-    router[15].get("/admin", checkAccessTokenAdmin, getParameterTypeAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/parameter_type`, router[15]);
-    //service db app_portfolio setting
-    router.push(Router());
-    router[16].use(serverRouterLog);
-    router[16].get("/",  checkDataToken, getSettings);
-    router[16].get("/admin",  checkDataToken, getSettings);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/setting`, router[16]);
-    //service db app_portfolio user account
-    router.push(Router());
-    router[17].use(serverRouterLog);
-        //admin, count user stat
-    router[17].get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
-        //admin, all users with option to search
-    router[17].get("/admin", checkAccessTokenAdmin, getUsersAdmin);
-        //admin update user, only for superadmin
-    router[17].put("/admin/:id", checkAccessTokenSuperAdmin, updateUserSuperAdmin);
-    router[17].put("/login", checkDataTokenLogin, userLogin);
-    router[17].post("/signup", checkDataTokenRegistration, userSignup);
-        //local user
-    router[17].put("/activate/:id", checkDataToken, activateUser);
-    router[17].put("/password_reset/", checkDataToken, passwordResetUser);
-    router[17].put("/password/:id", checkAccessToken, updatePassword);
-    router[17].put("/:id", checkAccessToken, updateUserLocal);
-        //provider user
-    router[17].put("/provider/:id", checkDataTokenLogin, providerSignIn);
-        //common user
-    router[17].get("/:id", checkAccessToken, getUserByUserId);
-    router[17].put("/common/:id", checkAccessToken, updateUserCommon);
-    router[17].delete("/:id", checkAccessToken, deleteUser);
-        //profile
-    router[17].get("/profile/detail/:id", checkAccessToken, getProfileDetail);
-    router[17].get("/profile/top/:statchoice", checkDataToken, getProfileTop);
-    router[17].post("/profile/id/:id", checkDataToken, getProfileUser);
-    router[17].post("/profile/username", checkDataToken, getProfileUser);
-    router[17].post("/profile/username/searchD", checkDataToken, searchProfileUser);
-    router[17].post("/profile/username/searchA", checkAccessToken, searchProfileUser);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account`, router[17]);
-    //service db app_portfolio user account app
-    router.push(Router());
-    router[18].use(serverRouterLog);
-    router[18].post("/", checkAccessToken, createUserAccountApp);
-    router[18].get("/:user_account_id", checkAccessToken, getUserAccountApp);
-    router[18].get("/apps/:user_account_id", checkAccessToken, getUserAccountApps);
-    router[18].patch("/:user_account_id", checkAccessToken, updateUserAccountApp);
-    router[18].delete("/:user_account_id/:app_id", checkAccessToken, deleteUserAccountApps);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app`, router[18]);
-    //service db app_portfolio user account app setting
-    router.push(Router());
-    router[19].get("/:id", checkDataToken, getUserSetting);
-    router[19].get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
-    router[19].get("/profile/:id", checkDataToken, getProfileUserSetting);
-    router[19].get("/profile/all/:id", checkDataToken, getProfileUserSettings);
-    router[19].get("/profile/detail/:id", checkAccessToken, getProfileUserSettingDetail);
-    router[19].get("/profile/top/:statchoice", checkDataToken, getProfileTopSetting);
-    router[19].post("/", checkAccessToken, createUserSetting);
-    router[19].put("/:id", checkAccessToken, updateUserSetting);
-    router[19].delete("/:id", checkAccessToken, deleteUserSetting);  
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting`, router[19]);
-    //service db app_portfolio user account app setting like
-    router.push(Router());
-    router[20].use(serverRouterLog);
-    router[20].post("/:id", checkAccessToken, likeUserSetting);
-    router[20].delete("/:id", checkAccessToken, unlikeUserSetting);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_like`, router[20]);
-    //service db app_portfolio user account app setting view
-    router.push(Router());
-    router[21].use(serverRouterLog);
-    router[21].post("/", checkDataToken, insertUserSettingView);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_view`, router[21]);
-    //service db app_portfolio user account follow
-    router.push(Router());
-    router[22].use(serverRouterLog);
-    router[22].post("/:id", checkAccessToken, followUser);
-    router[22].delete("/:id", checkAccessToken, unfollowUser);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_follow`, router[22]);
-    //service db app_portfolio user account like
-    router.push(Router());
-    router[23].use(serverRouterLog);
-    router[23].post("/:id", checkAccessToken, likeUser);
-    router[23].delete("/:id", checkAccessToken, unlikeUser);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_like`, router[23]);
-    //service db app_portfolio user account logon
-    router.push(Router());
-    router[24].use(serverRouterLog);
-    router[24].get("/admin/:user_account_id/:app_id",  checkAccessTokenAdmin, getUserAccountLogonAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon`, router[24]);
-    //service forms
-    router.push(Router());
-    router[25].use(serverRouterLog);
-    router[25].post("/admin/secure", checkAdmin, getFormAdminSecure);
-    app.use(`${rest_resource_service}/forms`, router[25]);
-    //service geolocation
-    router.push(Router());
-    router[26].use(serverRouterLog);
-    router[26].get("/place", checkDataToken, getPlace);
-    router[26].get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
-    router[26].get("/place/systemadmin", checkAdmin, getPlaceSystemAdmin);
-    router[26].get("/ip", checkDataToken, getIp);
-    router[26].get("/ip/admin", checkAccessTokenAdmin, getIpAdmin);
-    router[26].get("/ip/systemadmin", checkAdmin, getIpSystemAdmin);
-    router[26].get("/timezone", checkDataToken, getTimezone);
-    router[26].get("/timezone/admin", checkAccessTokenAdmin, getTimezoneAdmin);
-    router[26].get("/timezone/systemadmin", checkAdmin, getTimezoneSystemAdmin);    
-    app.use(`${rest_resource_service}/geolocation`, router[26]);
+    router[i].get("/connection/SystemAdmin", checkAdmin, ConnectedListSystemAdmin);
+    router[i].patch("/connection/SystemAdmin", checkAdmin, ConnectedUpdate);
+    router[i].get("/connection/Admin", checkAccessTokenAdmin, ConnectedList);
+    router[i].get("/connection/Admin/count", checkAccessTokenAdmin, ConnectedCount);
+    router[i].get("/connection/:clientId",BroadcastConnect);
+    router[i].patch("/connection", checkDataToken, ConnectedUpdate);
+    router[i].get("/connection/check/:user_account_id", checkDataToken, ConnectedCheck);
+    app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/broadcast`, router[i]);
+    i++;
     //service log
     router.push(Router());
-    router[27].use(serverRouterLog);
-    router[27].get("/parameters", checkAdmin, getLogParameters);
-    router[27].get("/logs", checkAdmin, getLogs);
-    router[27].get("/files", checkAdmin, getFiles);
-    router[27].get("/pm2logs", checkAdmin, getPM2Logs);
-    app.use(`${rest_resource_service}/log`, router[27]);
+    router[i].use(serverRouterLog);
+    router[i].get("/parameters", checkAdmin, getLogParameters);
+    router[i].get("/logs", checkAdmin, getLogs);
+    router[i].get("/files", checkAdmin, getFiles);
+    router[i].get("/pm2logs", checkAdmin, getPM2Logs);
+    app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/log`, router[i]);
+    i++;
+    //service db admin
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/DBInfo",  checkAdmin, DBInfo);
+    router[i].get("/DBInfoSpace",  checkAdmin, DBInfoSpace);
+    router[i].get("/DBInfoSpaceSum",  checkAdmin, DBInfoSpaceSum);
+    router[i].get("/DBStart",  checkAdmin, DBStart);
+    router[i].get("/DBStop",  checkAdmin, DBStop);
+    router[i].post("/demo",  checkAdmin, demo_add);
+    router[i].get("/demo",  checkAdmin, demo_get);
+    router[i].delete("/demo",  checkAdmin, demo_delete);
+    app.use(`${rest_resource_service}/db/admin`, router[i]);
+    i++;
+    //service db app_portfolio app
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/",  checkDataToken, getApp);
+    router[i].get("/admin",  checkAccessTokenAdmin, getAppsAdmin);
+    router[i].put("/admin/:id",  checkAccessTokenAdmin, updateAppAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app`, router[i]);
+    i++;
+    //service db app_portfolio app category
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/admin",  checkAccessTokenAdmin, getAppCategoryAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_category`, router[i]);
+    i++;
+    //service db app_portfolio app log
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/admin",  checkAccessTokenAdmin, getLogsAdmin);
+    router[i].get("/admin/stat/uniquevisitor", checkAccessTokenAdmin, getStatUniqueVisitorAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_log`, router[i]);
+    i++;
+    //service db app_portfolio app object
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/:lang_code",  checkDataToken, getObjects);
+    router[i].get("/admin/:lang_code",  checkDataToken, getObjects);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_object`, router[i]);
+    i++;
+    //service db app_portfolio app parameter
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/admin/all/:app_id", checkAccessTokenAdmin, getParametersAllAdmin);
+    router[i].put("/admin", checkAccessTokenAdmin, setParameter_admin);
+    router[i].patch("/admin/value", checkAccessTokenAdmin, setParameterValue_admin);
+    router[i].get("/admin/:app_id", checkDataToken, getParametersAdmin);
+    router[i].get("/:app_id", checkDataToken, getParameters);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_parameter`, router[i]);
+    i++;
+    //service db app_portfolio app role
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/admin",  checkAccessTokenAdmin, getAppRoleAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app_role`, router[i]);
+    i++;
+    //service db app_portfolio country
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/:lang_code",  checkDataToken, getCountries);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/country`, router[i]);
+    i++;
+    //service db app_portfolio identity provider
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/", checkDataToken, getIdentityProviders);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/identity_provider`, router[i]);
+    i++;
+    //service db app_portfolio language locale
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/:lang_code", checkDataToken, getLocales);
+    router[i].get("/admin/:lang_code", checkDataToken, getLocales);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/language/locale`, router[i]);
+    i++;
+    //service db app_portfolio message translation
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/:code",  checkDataToken, getMessage);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/message_translation`, router[i]);
+    i++;
+    //service db app_portfolio parameter type
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/admin", checkAccessTokenAdmin, getParameterTypeAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/parameter_type`, router[i]);
+    i++;
+    //service db app_portfolio setting
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/",  checkDataToken, getSettings);
+    router[i].get("/admin",  checkDataToken, getSettings);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/setting`, router[i]);
+    i++;
+    //service db app_portfolio user account
+    router.push(Router());
+    router[i].use(serverRouterLog);
+        //admin, count user stat
+    router[i].get("/admin/count", checkAccessTokenAdmin, getStatCountAdmin);
+        //admin, all users with option to search
+    router[i].get("/admin", checkAccessTokenAdmin, getUsersAdmin);
+        //admin update user, only for superadmin
+    router[i].put("/admin/:id", checkAccessTokenSuperAdmin, updateUserSuperAdmin);
+    router[i].put("/login", checkDataTokenLogin, userLogin);
+    router[i].post("/signup", checkDataTokenRegistration, userSignup);
+        //local user
+    router[i].put("/activate/:id", checkDataToken, activateUser);
+    router[i].put("/password_reset/", checkDataToken, passwordResetUser);
+    router[i].put("/password/:id", checkAccessToken, updatePassword);
+    router[i].put("/:id", checkAccessToken, updateUserLocal);
+        //provider user
+    router[i].put("/provider/:id", checkDataTokenLogin, providerSignIn);
+        //common user
+    router[i].get("/:id", checkAccessToken, getUserByUserId);
+    router[i].put("/common/:id", checkAccessToken, updateUserCommon);
+    router[i].delete("/:id", checkAccessToken, deleteUser);
+        //profile
+    router[i].get("/profile/detail/:id", checkAccessToken, getProfileDetail);
+    router[i].get("/profile/top/:statchoice", checkDataToken, getProfileTop);
+    router[i].post("/profile/id/:id", checkDataToken, getProfileUser);
+    router[i].post("/profile/username", checkDataToken, getProfileUser);
+    router[i].post("/profile/username/searchD", checkDataToken, searchProfileUser);
+    router[i].post("/profile/username/searchA", checkAccessToken, searchProfileUser);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account`, router[i]);
+    i++;
+    //service db app_portfolio user account app
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/", checkAccessToken, createUserAccountApp);
+    router[i].get("/:user_account_id", checkAccessToken, getUserAccountApp);
+    router[i].get("/apps/:user_account_id", checkAccessToken, getUserAccountApps);
+    router[i].patch("/:user_account_id", checkAccessToken, updateUserAccountApp);
+    router[i].delete("/:user_account_id/:app_id", checkAccessToken, deleteUserAccountApps);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app`, router[i]);
+    i++;
+    //service db app_portfolio user account app setting
+    router.push(Router());
+    router[i].get("/:id", checkDataToken, getUserSetting);
+    router[i].get("/user_account_id/:id", checkDataToken, getUserSettingsByUserId);
+    router[i].get("/profile/:id", checkDataToken, getProfileUserSetting);
+    router[i].get("/profile/all/:id", checkDataToken, getProfileUserSettings);
+    router[i].get("/profile/detail/:id", checkAccessToken, getProfileUserSettingDetail);
+    router[i].get("/profile/top/:statchoice", checkDataToken, getProfileTopSetting);
+    router[i].post("/", checkAccessToken, createUserSetting);
+    router[i].put("/:id", checkAccessToken, updateUserSetting);
+    router[i].delete("/:id", checkAccessToken, deleteUserSetting);  
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting`, router[i]);
+    i++;
+    //service db app_portfolio user account app setting like
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/:id", checkAccessToken, likeUserSetting);
+    router[i].delete("/:id", checkAccessToken, unlikeUserSetting);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_like`, router[i]);
+    i++;
+    //service db app_portfolio user account app setting view
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/", checkDataToken, insertUserSettingView);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_app_setting_view`, router[i]);
+    i++;
+    //service db app_portfolio user account follow
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/:id", checkAccessToken, followUser);
+    router[i].delete("/:id", checkAccessToken, unfollowUser);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_follow`, router[i]);
+    i++;
+    //service db app_portfolio user account like
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/:id", checkAccessToken, likeUser);
+    router[i].delete("/:id", checkAccessToken, unlikeUser);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_like`, router[i]);
+    i++;
+    //service db app_portfolio user account logon
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/admin/:user_account_id/:app_id",  checkAccessTokenAdmin, getUserAccountLogonAdmin);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon`, router[i]);
+    i++;
+    //service forms
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/admin/secure", checkAdmin, getFormAdminSecure);
+    app.use(`${rest_resource_service}/forms`, router[i]);
+    i++;
+    //service geolocation
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/place", checkDataToken, getPlace);
+    router[i].get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
+    router[i].get("/place/systemadmin", checkAdmin, getPlaceSystemAdmin);
+    router[i].get("/ip", checkDataToken, getIp);
+    router[i].get("/ip/admin", checkAccessTokenAdmin, getIpAdmin);
+    router[i].get("/ip/systemadmin", checkAdmin, getIpSystemAdmin);
+    router[i].get("/timezone", checkDataToken, getTimezone);
+    router[i].get("/timezone/admin", checkAccessTokenAdmin, getTimezoneAdmin);
+    router[i].get("/timezone/systemadmin", checkAdmin, getTimezoneSystemAdmin);    
+    app.use(`${rest_resource_service}/geolocation`, router[i]);
+    i++;
     //service mail
     router.push(Router());
-    router[28].use(serverRouterLog);
-    router[28].get("/logo", getLogo);
-    app.use(`${rest_resource_service}/mail`, router[28]);
+    router[i].use(serverRouterLog);
+    router[i].get("/logo", getLogo);
+    app.use(`${rest_resource_service}/mail`, router[i]);
+    i++;
     //service report
     router.push(Router());
-    router[29].use(serverRouterLog);
-    router[29].get("/", getReport);
-    app.use(`${rest_resource_service}/report`, router[29]);
+    router[i].use(serverRouterLog);
+    router[i].get("/", getReport);
+    app.use(`${rest_resource_service}/report`, router[i]);
+    i++;
     //service worldcities
     router.push(Router());
-    router[30].use(serverRouterLog);
-    router[30].get("/:country", checkDataToken, getCities);
-    app.use(`${rest_resource_service}/worldcities`, router[30]);
+    router[i].use(serverRouterLog);
+    router[i].get("/:country", checkDataToken, getCities);
+    app.use(`${rest_resource_service}/worldcities`, router[i]);
 }
 const serverExpress = async () => {
     const {default: express} = await import('express');
     const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-    const {policy_directives} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
+    const {policy_directives} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     const {default: compression} = await import('compression');
     const {default: helmet} = await import('helmet');
-    const { check_request, access_control} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
-    const {createLogServerI, createLogServerE} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`);    
+    const { check_request, access_control} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
+    const {createLogServerI, createLogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);    
     return new Promise((resolve, reject) =>{
         const app = express();
         //
@@ -876,7 +935,8 @@ const serverExpress = async () => {
         //use compression for better performance
         const shouldCompress = (req, res) => {
             //exclude broadcast messages
-            if (req.baseUrl == '/service/broadcast')
+            //check endpoint for broadcast
+            if (req.baseUrl == `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/broadcast`)
                 return false;
             else
                 return true;
@@ -1018,12 +1078,12 @@ const serverExpress = async () => {
 }
 const serverStart = async () =>{
     const {DBStart} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
-    const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/service/broadcast/broadcast.service.js`);
+    const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
     const fs = await import('node:fs');
     const https = await import('node:https');
     process.env.TZ = 'UTC';
     InitConfig().then(() => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogServerI})=>{
+        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogServerI})=>{
             DBStart().then((result) => {
                 //Get express app with all configurations
                 serverExpress().then((app)=>{
@@ -1065,6 +1125,6 @@ const serverStart = async () =>{
     })
 }
 
-export {ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
+export {COMMON, ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, ConfigInfo, Info, 
         ConfigGet, InitConfig, serverStart};

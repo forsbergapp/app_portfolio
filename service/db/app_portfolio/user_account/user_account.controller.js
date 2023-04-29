@@ -7,7 +7,7 @@ const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd
 const { insertUserAccountLogon } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`);
 const { getParameter } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
 const { sendEmail } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
-const { accessToken } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/auth/auth.controller.js`);
+const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
 
 const getUsersAdmin = (req, res) => {
     service.getUsersAdmin(req.query.app_id, req.query.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
@@ -610,8 +610,8 @@ const updateUserLocal = (req, res) => {
                     }
                 } else {
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                           'invalid password attempt for user id:' + req.params.id,
                                           req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -785,8 +785,8 @@ const deleteUser = (req, res) => {
                                 }
                                 else{
                                     let stack = new Error().stack;
-                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                         'invalid password attempt for user id:' + req.params.id,
                                                         req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -981,8 +981,8 @@ const userLogin = (req, res) => {
                     }
                     else{
                         //unauthorized, only admin allowed to log in to admin
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                 'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
                                                 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -1005,8 +1005,8 @@ const userLogin = (req, res) => {
                         }
                         else{
                             //Username or password not found
-                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                   'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username,
                                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -1028,8 +1028,8 @@ const userLogin = (req, res) => {
                 }
             } else{
                 //User not found
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'user not found:' + req.body.username,
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 

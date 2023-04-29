@@ -13,8 +13,8 @@ const access_control = (req, res, callBack) => {
         let ip_v4 = req.ip.replace('::ffff:','');
         service.block_ip_control(ip_v4, (err, result_range) =>{
             if (err){
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                             res.status(500).send(
                                 err
@@ -27,8 +27,8 @@ const access_control = (req, res, callBack) => {
                 if (result_range){
                     res.statusCode = result_range.statusCode;
                     res.statusMessage = `ip ${ip_v4} blocked, range: ${result_range.statusMessage}, tried URL: ${req.originalUrl}`;
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
 										  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 										  res.statusCode, 
@@ -44,8 +44,8 @@ const access_control = (req, res, callBack) => {
                         typeof req.headers.host=='undefined'){
                         res.statusCode = 406;
                         res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                             req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                             res.statusCode, 
@@ -64,8 +64,8 @@ const access_control = (req, res, callBack) => {
                                 req.headers.host==this_hostname){
                                 res.statusCode = 406;
                                 res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
-                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                                     req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                     res.statusCode, 
@@ -90,8 +90,8 @@ const access_control = (req, res, callBack) => {
                                                 typeof req.headers["user-agent"]=='undefined'){
                                                 res.statusCode = 406;
                                                 res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
-                                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                                                     req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                                     res.statusCode, 
@@ -108,8 +108,8 @@ const access_control = (req, res, callBack) => {
                                                     typeof req.headers["accept-language"]=='undefined'){
                                                     res.statusCode = 406;
                                                     res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
-                                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                                                         req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                                         res.statusCode, 
@@ -142,8 +142,8 @@ const checkAccessTokenCommon = (req, res, next) => {
     if (token){
         getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
             if (err) {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                             res.status(500).send(
                                 err
@@ -166,8 +166,8 @@ const checkAccessTokenCommon = (req, res, next) => {
                         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
                             checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
                                 if (err){
-                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                                 res.status(500).send(
                                                     err
@@ -180,8 +180,8 @@ const checkAccessTokenCommon = (req, res, next) => {
                                     if (result.length==1)
                                         next();
                                     else{
-                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                              `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`,
                                                               req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -257,8 +257,8 @@ const checkDataToken = (req, res, next) => {
     if (token){
         getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
             if (err) {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                             res.status(500).send(
                                 err
@@ -313,8 +313,8 @@ const dataToken = (req, res) => {
     if(req.headers.authorization){
         getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
             if (err) {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                             res.status(500).send(
                                 err
@@ -412,8 +412,8 @@ const accessToken = (req, callBack) => {
     getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
         if (err) {
             
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                         callBack(err);
                     })
@@ -496,8 +496,8 @@ const check_internet = async (req) => {
                 //use only resolve here, no reject to avoid .catch statement in calling function
                 if ((err) && err.code=='ECONNREFUSED') {
                     
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                 resolve(0);
                             })

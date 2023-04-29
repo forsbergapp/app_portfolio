@@ -113,8 +113,8 @@ const getFormAdmin = (req, res, app_id, callBack) => {
                                          result.geoplugin_latitude,
                                          result.geoplugin_longitude, 
                                          gps_place).then((app_result) => {
-                                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                                     createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                                   'SYSTEM ADMIN Forms Admin',
                                                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
@@ -142,8 +142,8 @@ const getFormAdminSecure = (req, res) => {
                 null, 
                 null)
             .then((app_result) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppC}) => {
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                       'SYSTEM ADMIN Forms admin secure',
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
