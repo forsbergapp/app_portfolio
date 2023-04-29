@@ -18,8 +18,8 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                 let db_info_link_about_url;            
                 if (err) {
                     let stack = new Error().stack;
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                 callBack(err, null);
                             })
@@ -154,8 +154,8 @@ const read_app_files = async (app_id, files, callBack) => {
             callBack(null, app);
         })
         .catch(err => {
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                         callBack(err, null);
                     })
@@ -306,8 +306,8 @@ const AppsStart = async (app) => {
                     getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {
                             let stack = new Error().stack;
-                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `getAppsAdmin, err:${err}`).then(() => {
                                         resolve();
                                     })

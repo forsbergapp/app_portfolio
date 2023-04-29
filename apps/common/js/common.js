@@ -307,7 +307,7 @@ const common_fetch_basic = async (token_type, json_data,  username, password, ca
     let status;
     if (token_type==0){
         //data token
-        url = COMMON_GLOBAL['rest_resource_service'] + '/auth' + 
+        url = COMMON_GLOBAL['rest_resource_server'] + '/auth' + 
               '?app_user_id=' + COMMON_GLOBAL['user_account_id'] +
               '&app_id=' + COMMON_GLOBAL['app_id'] + 
               '&lang_code=' + COMMON_GLOBAL['user_locale'];
@@ -3010,7 +3010,7 @@ const updateOnlineStatus = () => {
     let token_type='';
     let url='';
     if (COMMON_GLOBAL['system_admin']==1){
-        url =   `${COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/SystemAdmin`+ 
+        url =   `${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/SystemAdmin`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3018,7 +3018,7 @@ const updateOnlineStatus = () => {
         token_type=2;
     }
     else{
-        url =   `${COMMON_GLOBAL['rest_resource_service']}/broadcast/connection`+ 
+        url =   `${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3031,7 +3031,7 @@ const updateOnlineStatus = () => {
 }
 const connectOnline = (updateOnline=false) => {
     COMMON_GLOBAL['service_broadcast_client_ID'] = Date.now();
-    COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`${COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
+    COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
                                                 `?app_id=${COMMON_GLOBAL['app_id']}` +
                                                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` +
                                                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3046,7 +3046,7 @@ const connectOnline = (updateOnline=false) => {
     }
 }
 const checkOnline = (div_icon_online, user_account_id) => {
-    common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/check/${user_account_id}?`, 
+    common_fetch(`${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/check/${user_account_id}?`, 
                  'GET', 0, null, null, null, (err, result) =>{
         if (JSON.parse(result).online == 1)
             document.getElementById(div_icon_online).className = 'online';

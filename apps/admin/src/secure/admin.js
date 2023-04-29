@@ -221,11 +221,11 @@ const sendBroadcast = () => {
     let url='';
     let token_type;
     if (common.COMMON_GLOBAL['system_admin']==1){
-        url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/message/SystemAdmin?`;
+        url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/message/SystemAdmin?`;
         token_type = 2;
     }
     else{
-        url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/message/Admin?`;
+        url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/message/Admin?`;
         token_type = 1;
     }
         
@@ -445,7 +445,7 @@ const show_chart = async (chart) => {
 const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
     if (admin_token_has_value()){
         let json;
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
                  'GET', 1, null, null, null, (err, result) =>{
             if (err)
                 callBack(result, null);
@@ -1405,11 +1405,11 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL['system_admin']==1){
-                    url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/SystemAdmin?${url_parameters}`;
+                    url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/SystemAdmin?${url_parameters}`;
                     token_type = 2;
                 }
                 else{
-                    url = `${common.COMMON_GLOBAL['rest_resource_service']}/broadcast/connection/Admin?${url_parameters}`;
+                    url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/Admin?${url_parameters}`;
                     token_type = 1;
                 }
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
@@ -1422,13 +1422,13 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 break;
             }
             case 'list_server_log':{
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/log/logs?${url_parameters}`;
+                url = `${common.COMMON_GLOBAL['rest_resource_server']}/log/logs?${url_parameters}`;
                 token_type = 2;
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_pm2_log':{
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/log/pm2logs?`;
+                url = `${common.COMMON_GLOBAL['rest_resource_server']}/log/pm2logs?`;
                 token_type = 2;
                 document.getElementById(list_div + '_out').innerHTML = common.APP_SPINNER;
                 document.getElementById(list_div + '_err').innerHTML = common.APP_SPINNER;
@@ -2144,7 +2144,7 @@ const list_item_click = (item) => {
 }
 const get_server_log_parameters = async () => {
     let json;
-    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/log/parameters?`,
+    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/log/parameters?`,
                        'GET', 2, null, null, null, (err, result) =>{
         if (err)
             null;
