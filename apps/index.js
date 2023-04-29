@@ -276,31 +276,30 @@ const get_email_verification = async (app_id, data, email, baseUrl, lang_code, c
                     "email": email});
 }
 
-const AppsStart = async (express, app) => {
+const AppsStart = async (app) => {
     return await new Promise((resolve) => {
-        //express needed for dynamic code loading even if not used here, 
-        //inparameter app variable depends on express
-        //const express = await import("express");
         const load_dynamic_code = async (app_id) => {
             return await new Promise((resolve) => {
-                import('node:fs').then((fs) =>{
-                    let filename;
-                    //load dynamic server app code
-                    if (app_id == parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')))
-                        filename = `/apps/admin/server.js`;
-                    else
-                        filename = `/apps/app${app_id}/server.js`
-                    fs.readFile(process.cwd() + filename, 'utf8', (error, fileBuffer) => {
-                        //start one step debug server dynamic loaded code here
-                        eval(fileBuffer);
-                        resolve();
-                    });
+                /*each app must have server.js with minimum:
+                  const server = (app) =>{
+                        app.use(...);
+                        app.get(...);
+                  }
+                  export {server}
+                */
+                let filename;
+                if (app_id == parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')))
+                    filename = `/apps/admin/server.js`;
+                else
+                    filename = `/apps/app${app_id}/server.js`
+                import (`file://${process.cwd()}${filename}`).then(({ server }) => {
+                    server(app);
+                    resolve();
                 });
             })
-            
         }
         //start always admin app first
-        load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')).then(() => {
+        load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), app).then(() => {
             //load apps if database started
             if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`).then(({ getAppsAdmin }) => {
@@ -324,7 +323,7 @@ const AppsStart = async (express, app) => {
                                 for (let i = 0; i < json.length; i++) {
                                     //skip admin app
                                     if (json[i].id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-                                        load_dynamic_code(json[i].id).then(() => {
+                                        load_dynamic_code(json[i].id, app).then(() => {
                                             if (loaded == json.length - 2) //dont count admin app
                                                 resolve();
                                             else
