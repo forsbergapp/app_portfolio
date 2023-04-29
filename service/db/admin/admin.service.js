@@ -90,7 +90,7 @@ const DBInfo = async (app_id, callBack) => {
                   Xdatabase_schema: get_schema_name()
                   };
    let stack = new Error().stack;
-   import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+   import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters,
                      COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
          if (err)
@@ -161,7 +161,7 @@ const DBInfoSpace = async (app_id, callBack) => {
    }
    parameters = {db_schema: get_schema_name()};
    let stack = new Error().stack;
-   import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+   import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters,
                      COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
          if (err)
@@ -216,7 +216,7 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
    }
    parameters = {db_schema: get_schema_name()};
    let stack = new Error().stack;
-   import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
+   import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
       execute_db_sql(app_id, sql, parameters,
                      COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
          if (err)
@@ -236,8 +236,8 @@ const DBStart = async () => {
                const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
                const pool_log = (err) =>{
                   if (err){
-                     import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                              import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                              import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                                  createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                `DB ${db_use} startDBpool ${app_id} user: ` + db_user + `, err:${err}`).then(() => {
                                     reject(err);
@@ -247,8 +247,8 @@ const DBStart = async () => {
                   }
                   else{
                      // log with common app id at startup for all apps
-                     import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                           `DB ${db_use} startDBpool ${app_id} user: ` + db_user).then(() => {
                               resolve();
@@ -332,8 +332,8 @@ const DBStart = async () => {
                //app_id inparameter for log, all apps will be returned
                getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, results) =>{
                   if (err) {
-                     import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                          `getAppDBParameters, err:${err}`).then(() => {
                               reject(err);
@@ -362,8 +362,8 @@ const DBStart = async () => {
          }
          const admin_pool_log_startDBApps = (db_use, admin_user, err) => {
             if (err){
-               import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                  import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+               import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                  import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                      createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                     `${db_use} admin_pool_log ADMIN user: ${admin_user}, err:${err}`).then(() => {
                         reject(err);
@@ -373,8 +373,8 @@ const DBStart = async () => {
             }
             else{
                // log with common app id at startup for all apps
-               import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-                  import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+               import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                  import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                      createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                  `${db_use} admin_pool_log ADMIN user: ${admin_user}`).then(() => {
                         startDBApps()
@@ -512,8 +512,8 @@ const get_pool = (app_id) => {
       }
    }catch (err) {
       //unknown app id requested
-      import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/common/common.service.js`).then(({COMMON}) => {
-         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/log/log.service.js`).then(({createLogAppS}) => {
+      import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                           'get_pool error app_id: ' + app_id).then(() => {
                return null;
