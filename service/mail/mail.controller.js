@@ -131,7 +131,7 @@ const sendEmail = (req, data, callBack) => {
                         break;
                     }
                 }
-                import(`file://${process.cwd()}/apps/index.js`).then(({getMail}) => {
+                import(`file://${process.cwd()}/apps/apps.service.js`).then(({getMail}) => {
                     let mail = getMail(req.query.app_id, data, baseUrl)
                     .then((mail_result) => {
                         emailData =  {
