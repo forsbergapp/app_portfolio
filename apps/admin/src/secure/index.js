@@ -1,6 +1,6 @@
-const { read_app_files, get_module_with_init} = await import(`file://${process.cwd()}/apps/index.js`);
+const { read_app_files, get_module_with_init} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const getAdminSecure = (app_id, system_admin, user_account_id, gps_lat, gps_long, gps_place) => {
+const createAdminSecure = (app_id, system_admin, user_account_id, gps_lat, gps_long, gps_place) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/secure/index.html'],
@@ -42,4 +42,4 @@ const getAdminSecure = (app_id, system_admin, user_account_id, gps_lat, gps_long
         })
     })
 }
-export {getAdminSecure}
+export {createAdminSecure}

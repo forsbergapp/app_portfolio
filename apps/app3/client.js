@@ -1,6 +1,6 @@
-const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/index.js`);
+const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const getApp = (app_id, params, gps_lat, gps_long, gps_place) => {
+const createApp = (app_id, params, gps_lat, gps_long, gps_place) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
@@ -48,4 +48,4 @@ const getApp = (app_id, params, gps_lat, gps_long, gps_place) => {
         })           
     })
 }
-export{getApp}
+export{createApp}

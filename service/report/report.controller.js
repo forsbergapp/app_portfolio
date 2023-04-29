@@ -27,7 +27,7 @@ const getReport = async (req, res) => {
 							result.geoplugin_countryName;
 			//check if maintenance
 			if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-				import(`file://${process.cwd()}/apps/index.js`).then(({getMaintenance}) => {
+				import(`file://${process.cwd()}/apps/apps.service.js`).then(({getMaintenance}) => {
 					const app = getMaintenance(req.query.app_id,
 												result.geoplugin_latitude,
 												result.geoplugin_longitude,

@@ -556,6 +556,8 @@ const serverExpressRoutes = async (app) => {
     //ConfigGet function in service.js used to get parameter values
     const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
     const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
+    //apps
+    const { getAppAdminSecure } = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //auth
@@ -634,8 +636,6 @@ const serverExpressRoutes = async (app) => {
     const { likeUser, unlikeUser} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_like/user_account_like.controller.js`);
     //service db app_portfolio user account logon
     const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon/user_account_logon.controller.js`);
-    //service forms
-    const { getFormAdminSecure } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/forms/forms.controller.js`);
     //service geolocation
     const { getPlace, getPlaceAdmin, getPlaceSystemAdmin, getIp, getIpAdmin, getIpSystemAdmin, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
     //service mail
@@ -650,6 +650,12 @@ const serverExpressRoutes = async (app) => {
     const router = [Router()];
     let i = 0;
     //endpoints
+    //apps
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].post("/admin/secure", checkAdmin, getAppAdminSecure);
+    app.use('/apps', router[i]);
+    i++;
     //server
     router[i].use(serverRouterLog);
     router[i].put("/config/systemadmin", checkAdmin, ConfigSave);
@@ -881,12 +887,6 @@ const serverExpressRoutes = async (app) => {
     router[i].get("/admin/:user_account_id/:app_id",  checkAccessTokenAdmin, getUserAccountLogonAdmin);
     app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon`, router[i]);
     i++;
-    //service forms
-    router.push(Router());
-    router[i].use(serverRouterLog);
-    router[i].post("/admin/secure", checkAdmin, getFormAdminSecure);
-    app.use(`${rest_resource_service}/forms`, router[i]);
-    i++;
     //service geolocation
     router.push(Router());
     router[i].use(serverRouterLog);
@@ -1087,7 +1087,7 @@ const serverStart = async () =>{
             DBStart().then((result) => {
                 //Get express app with all configurations
                 serverExpress().then((app)=>{
-                    import(`file://${process.cwd()}/apps/index.js`).then(({AppsStart})=>{
+                    import(`file://${process.cwd()}/apps/apps.service.js`).then(({AppsStart})=>{
                         AppsStart(app).then(() => {
                             serverExpressLogError(app);
                             BroadcastCheckMaintenance();
