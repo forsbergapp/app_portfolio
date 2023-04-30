@@ -83,10 +83,6 @@
     {"LEVEL_VERBOSE": "VERBOSE", "COMMENT": ""},
     {"LEVEL_ERROR": "ERROR", "COMMENT": ""},
     {"LEVEL_INFO": "INFO", "COMMENT": ""},
-    {"DESTINATION": "0", "COMMENT": "0=File only, 1=URL REST API only method POST, 2=File and URL"},
-    {"URL_DESTINATION": "", "COMMENT": "URL to REST API method POST"},
-    {"URL_DESTINATION_USERNAME": "", "COMMENT": "Basic authorization username"},
-    {"URL_DESTINATION_PASSWORD": "", "COMMENT": "Basic authorization password"},
     {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"},
     {"DATE_FORMAT": "", "COMMENT": "empty uses ISO8601 format 'yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z' "},
     {"PM2_FILE": "PM2_LOG.json", "COMMENT": ""}
