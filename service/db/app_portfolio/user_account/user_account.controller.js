@@ -910,8 +910,8 @@ const userLogin = (req, res) => {
                                                                 }
                                                                 else
                                                                     if (req.query.app_id == 0)
-                                                                        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ getAdminSecure }) => {
-                                                                            getAdminSecure(req.query.app_id, 
+                                                                        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ createAdminSecure }) => {
+                                                                            createAdminSecure(req.query.app_id, 
                                                                                 null,
                                                                                 results.id,
                                                                                 req.body.client_latitude,
@@ -951,8 +951,8 @@ const userLogin = (req, res) => {
                                             }
                                             else
                                             if (req.query.app_id == 0)
-                                                import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ getAdminSecure }) => {
-                                                    getAdminSecure(req.query.app_id, 
+                                                import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ createAdminSecure }) => {
+                                                    createAdminSecure(req.query.app_id, 
                                                         null,
                                                         results.id,
                                                         req.body.client_latitude,
