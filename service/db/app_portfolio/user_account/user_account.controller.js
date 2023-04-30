@@ -916,7 +916,8 @@ const userLogin = (req, res) => {
                                                                                 results.id,
                                                                                 req.body.client_latitude,
                                                                                 req.body.client_longitude, 
-                                                                                req.body.client_place)
+                                                                                req.body.client_place,
+                                                                                req.query.lang_code)
                                                                             .then((app_result) => {
                                                                                 return res.status(200).json({
                                                                                     count: Array(results.items).length,
@@ -957,7 +958,8 @@ const userLogin = (req, res) => {
                                                         results.id,
                                                         req.body.client_latitude,
                                                         req.body.client_longitude, 
-                                                        req.body.client_place)
+                                                        req.body.client_place,
+                                                        req.query.lang_code)
                                                     .then((app_result) => {
                                                         return res.status(200).json({
                                                             count: Array(results.items).length,

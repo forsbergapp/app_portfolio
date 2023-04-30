@@ -1,5 +1,25 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service = await import('./apps.service.js')
+const client_locale = (accept_language) =>{
+    let locale;
+    if (accept_language.startsWith('text') || accept_language=='*')
+        locale = 'en';
+    else{
+        //check first lang ex syntax 'en-US,en;'
+        locale = accept_language.split(',')[0].toLowerCase();
+        if (locale.length==0){
+            //check first lang ex syntax 'en;'
+            locale = accept_language.split(';')[0].toLowerCase();
+            if (locale.length==0 && accept_language.length>0)
+                //check first lang ex syntax 'en' or 'zh-cn'
+                locale = accept_language.toLowerCase();
+            else{
+                locale = 'en';
+            }
+        }
+    }
+    return locale;
+}
 const getApp = (req, res, app_id, params, callBack) => {
     //getIp and createLog needs app_id
     req.query.app_id = app_id;
@@ -22,32 +42,33 @@ const getApp = (req, res, app_id, params, callBack) => {
             else{
                 import(`file://${process.cwd()}/apps/app${app_id}/client.js`).then(({ createApp }) => {
                     createApp(app_id, 
-                        params,
-                        result.geoplugin_latitude,
-                        result.geoplugin_longitude, 
-                        gps_place).then((app_result) => {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                            createLog(req.query.app_id,
-                                        { app_id : app_id,
-                                        app_module : 'APPS',
-                                        app_module_type : 'APP',
-                                        app_module_request : params,
-                                        app_module_result : gps_place,
-                                        app_user_id : null,
-                                        user_language : null,
-                                        user_timezone : null,
-                                        user_number_system : null,
-                                        user_platform : null,
-                                        server_remote_addr : req.ip,
-                                        server_user_agent : req.headers["user-agent"],
-                                        server_http_host : req.headers["host"],
-                                        server_http_accept_language : req.headers["accept-language"],
-                                        client_latitude : result.geoplugin_latitude,
-                                        client_longitude : result.geoplugin_longitude
-                                        }, (err,results)  => {
-                                            return callBack(null, app_result)
-                            });
-                        })
+                              params,
+                              result.geoplugin_latitude,
+                              result.geoplugin_longitude, 
+                              gps_place,
+                              client_locale(req.headers['accept-language'])).then((app_result) => {
+                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                    createLog(req.query.app_id,
+                                                { app_id : app_id,
+                                                app_module : 'APPS',
+                                                app_module_type : 'APP',
+                                                app_module_request : params,
+                                                app_module_result : gps_place,
+                                                app_user_id : null,
+                                                user_language : null,
+                                                user_timezone : null,
+                                                user_number_system : null,
+                                                user_platform : null,
+                                                server_remote_addr : req.ip,
+                                                server_user_agent : req.headers["user-agent"],
+                                                server_http_host : req.headers["host"],
+                                                server_http_accept_language : req.headers["accept-language"],
+                                                client_latitude : result.geoplugin_latitude,
+                                                client_longitude : result.geoplugin_longitude
+                                                }, (err,results)  => {
+                                                    return callBack(null, app_result)
+                                    });
+                                })
                     });
                 })
             }
@@ -70,7 +91,8 @@ const getAppAdmin = (req, res, app_id, callBack) => {
                     createAdmin(app_id,
                                 result.geoplugin_latitude,
                                 result.geoplugin_longitude, 
-                                gps_place).then((app_result) => {
+                                gps_place,
+                                client_locale(req.headers['accept-language'])).then((app_result) => {
                                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
                                     createLogAdmin(req.query.app_id,
                                                     { app_id : app_id,
@@ -108,7 +130,8 @@ const getAppAdmin = (req, res, app_id, callBack) => {
                     createAdmin(app_id,
                                 result.geoplugin_latitude,
                                 result.geoplugin_longitude, 
-                                gps_place).then((app_result) => {
+                                gps_place,
+                                client_locale(req.headers['accept-language'])).then((app_result) => {
                                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 

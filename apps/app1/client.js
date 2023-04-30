@@ -1,6 +1,6 @@
 const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
+const createApp = (app_id, username, gps_lat, gps_long, gps_place, locale) => {
     return new Promise((resolve, reject) => {
         const main = (app_id) => {
             const files = [
@@ -24,7 +24,7 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                 ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'], /*AppCommonProfileBtnTop inside AppToolbarBttom */
                 ['<AppCommonProfileInfoCloud/>', process.cwd() + '/apps/common/src/profile_info_cloud.html'] /*AppCommonProfileInfoCloud inside AppProfileInfo */
                 ];
-            getUserPreferences(app_id).then((user_preferences) => {
+            getUserPreferences(app_id, locale).then((user_preferences) => {
                 read_app_files(app_id, files, (err, app)=>{
                     if (err)
                         reject(err);
@@ -46,16 +46,17 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                         app = app.replace(
                                 '<AppProfileTop/>',
                                 '');   
-                        get_module_with_init(app_id, 
-                                                null,
-                                                null,
-                                                'app.app_exception',
-                                                null,
-                                                true,
-                                                gps_lat,
-                                                gps_long,
-                                                gps_place,
-                                                app, (err, app_init) =>{
+                        get_module_with_init(app_id,
+                                             locale,
+                                             null,
+                                             null,
+                                             'app.app_exception',
+                                             null,
+                                             true,
+                                             gps_lat,
+                                             gps_long,
+                                             gps_place,
+                                             app, (err, app_init) =>{
                             if (err)
                                 reject(err);
                             else{
