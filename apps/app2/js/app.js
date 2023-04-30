@@ -2384,7 +2384,7 @@ const serviceworker = () => {
         window.Promise = Promise;
     }
     if('serviceWorker' in navigator) {
-        navigator.serviceWorker.register('/sw.js', {scope: app_common.APP_GLOBAL['pwa_scope']});
+        navigator.serviceWorker.register('/sw.js', {scope: '/'});
     }
 }
 /*----------------------- */
@@ -2719,8 +2719,6 @@ const init = (parameters) => {
                     app_common.APP_GLOBAL['app_default_startup_page'] = parseInt(global_app_parameters[i].parameter_value);
                 if (global_app_parameters[i].parameter_name=='APP_REPORT_TIMETABLE')
                     app_common.APP_GLOBAL['app_report_timetable'] = global_app_parameters[i].parameter_value; 
-                if (global_app_parameters[i].parameter_name=='PWA_SCOPE')
-                    app_common.APP_GLOBAL['pwa_scope'] = global_app_parameters[i].parameter_value; 
                 if (global_app_parameters[i].parameter_name=='INFO_EMAIL_POLICY')
                     app_common.APP_GLOBAL['info_email_policy'] = global_app_parameters[i].parameter_value;
                 if (global_app_parameters[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
