@@ -428,9 +428,12 @@ const init = (parameters) => {
             }
             init_app().then(()=>{
                 document.getElementById('apps').innerHTML = common.APP_SPINNER;
-                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
-                        get_apps();
-                })
+                if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
+                    common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
+                            get_apps();
+                    })
+                else
+                    get_apps();
                 const show_start = async () => {
                     let user = window.location.pathname.substring(1);
                     if (user !='') {

@@ -289,9 +289,10 @@ const admin_exception_before = (error) => {
 const init_app = (system_admin_only) => {
     setEvents(system_admin_only);
     if (system_admin_only==0)
-        common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
-            null
-        });
+        if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
+            common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
+                null
+            });
 }
 const init = (parameters) => {
     //show admin login as default

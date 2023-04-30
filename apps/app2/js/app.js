@@ -2695,9 +2695,12 @@ const init_app = () => {
                                 dialogue_loading(0);
                                 common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); }).then(() => {
                                     serviceworker();
-                                    common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
+                                    if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
+                                        common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
+                                            resolve();
+                                        });
+                                    else
                                         resolve();
-                                    });
                                 });
                             })
                         });
