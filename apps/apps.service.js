@@ -237,6 +237,7 @@ const read_app_files = async (app_id, files, callBack) => {
     })
 }
 const get_module_with_init = async (app_id,
+                                    locale,
                                     system_admin,
                                     user_account_id,
                                     exception_app_function,
@@ -263,6 +264,7 @@ const get_module_with_init = async (app_id,
             app_name: 'SYSTEM ADMIN',
             app_url: '',
             app_logo: '',
+            locale: locale,
             exception_app_function: exception_app_function,
             close_eventsource: close_eventsource,
             ui: ui,
@@ -297,6 +299,7 @@ const get_module_with_init = async (app_id,
                     app_name: result[0].app_name,
                     app_url: result[0].app_url,
                     app_logo: result[0].app_logo,
+                    locale:locale,
                     exception_app_function: exception_app_function,
                     close_eventsource: close_eventsource,
                     ui: ui,
@@ -434,47 +437,50 @@ const getMaintenance = (app_id, gps_lat, gps_long, gps_place) => {
     })
 }
 
-const getUserPreferences = (app_id) => {
+const getUserPreferences = (app_id, locale) => {
     return new Promise((resolve, reject) => {
         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
-            let default_lang = 'en';
-            //do not fetch locales at startup, locales will be translated and fetched when app starts
-            let user_locales =`<option value='en'>English</option>`;
-            getSettings(app_id, default_lang, null, (err, settings) => {
-                let option;
-                let user_timezones;
-                let user_directions;
-                let user_arabic_scripts;
-                for (let i = 0; i < settings.length; i++) {
-                    option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
-                    switch (settings[i].setting_type_name){
-                        //static content
-                        case 'TIMEZONE':{
-                            user_timezones += option;
-                            break;
-                        }
-                        //will be translated in app
-                        case 'DIRECTION':{
-                            user_directions += option;
-                            break;
-                        }
-                        //static content
-                        case 'ARABIC_SCRIPT':{
-                            user_arabic_scripts += option;
-                            break;
-                        }
+            //let user_locales =`<option value='en'>English</option>`;
+            let user_locales ='';
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/language/locale/locale.service.js`).then(({getLocales}) => {
+                getLocales(app_id, locale, (err, result_user_locales) => {
+                    for (let user_locale of result_user_locales) {
+                        user_locales +=`<option value='${user_locale.locale}'>${user_locale.text}</option>`;
                     }
-                }
-                resolve({user_locales: user_locales,
-                            user_timezones: user_timezones,
-                            user_directions: user_directions,
-                            user_arabic_scripts: user_arabic_scripts
-                        })
-            })            
+                    getSettings(app_id, locale, null, (err, settings) => {
+                        let option;
+                        let user_timezones;
+                        let user_directions;
+                        let user_arabic_scripts;
+                        for (let i = 0; i < settings.length; i++) {
+                            option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
+                            switch (settings[i].setting_type_name){
+                                //static content
+                                case 'TIMEZONE':{
+                                    user_timezones += option;
+                                    break;
+                                }
+                                //will be translated in app
+                                case 'DIRECTION':{
+                                    user_directions += option;
+                                    break;
+                                }
+                                //static content
+                                case 'ARABIC_SCRIPT':{
+                                    user_arabic_scripts += option;
+                                    break;
+                                }
+                            }
+                        }
+                        resolve({user_locales: user_locales,
+                                 user_timezones: user_timezones,
+                                 user_directions: user_directions,
+                                 user_arabic_scripts: user_arabic_scripts
+                                })
+                    })  
+                })
+            })        
         })
-
-        
-        
     })
 }
 

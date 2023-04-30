@@ -1,5 +1,4 @@
 const {default:express} = await import('express');
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const server = (app) =>{
   const APP3_ID = 3;
   //app 3 directory

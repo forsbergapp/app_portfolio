@@ -3254,7 +3254,7 @@ const set_globals = (parameters) => {
         user_preferences_set_default_globals('ARABIC_SCRIPT');
     }
     if (parameters.ui==true){
-        COMMON_GLOBAL['user_locale']         = navigator.language.toLowerCase();
+        COMMON_GLOBAL['user_locale']         = parameters.locale;
         COMMON_GLOBAL['user_timezone']       = Intl.DateTimeFormat().resolvedOptions().timeZone;
         COMMON_GLOBAL['user_direction']      = '';
         COMMON_GLOBAL['user_arabic_script']  = '';
@@ -3592,10 +3592,11 @@ const normal_start = async (ui) => {
 const init_common = async (parameters, callBack) => {
     /*
     parameters:
-    {app_id: 
+    {app_id:
      app_name:
      app_url:
      app_logo:
+     locale:
      exception_app_function:
      close_eventsource:
      ui:
