@@ -2,7 +2,6 @@ const APP_GLOBAL = {
     "app_copyright":"",
     "app_default_startup_page":"",
     "app_report_timetable":"",
-    "pwa_scope":"",
     "info_social_link1_url":"",
     "info_social_link2_url":"",
     "info_social_link3_url":"",
