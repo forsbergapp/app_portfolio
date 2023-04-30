@@ -1,10 +1,10 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, get_module_with_init} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const themes = async (app_id) =>{
-    return new Promise((resolve, reject) => {
+const themes = async (app_id, locale) =>{
+    return new Promise((resolve) => {
         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
-            getSettings(app_id, 'en', 'REPORT_THEME%', (err, settings) => {
+            getSettings(app_id, locale, 'REPORT_THEME%', (err, settings) => {
                 let html_themes='';
                 if (err){
                     resolve ([null, null, null])
@@ -69,10 +69,10 @@ const themes = async (app_id) =>{
         })
     })
 }
-const places = async (app_id) => {
+const places = async (app_id, locale) => {
     return new Promise((resolve, reject) => {
         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
-            getSettings(app_id, 'en', 'PLACE', (err, settings) => {
+            getSettings(app_id, locale, 'PLACE', (err, settings) => {
                 let select_places;
                 if (err){
                     resolve (
@@ -105,10 +105,10 @@ const places = async (app_id) => {
         })
     })
 }
-const countries = (app_id) => {
+const countries = (app_id, locale) => {
     return new Promise((resolve, reject) => {
         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/country/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, 'en', (err, results)  => {
+            getCountries(app_id, locale, (err, results)  => {
                 let select_countries;
                 if (err){
                     resolve (
@@ -149,7 +149,7 @@ const countries = (app_id) => {
     })
 }
 
-const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
+const createApp = (app_id, username, gps_lat, gps_long, gps_place, locale) => {
     return new Promise((resolve, reject) => {
         const main = (app_id) => {
             const files = [
@@ -189,9 +189,8 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
             const getAppComponents = async (app_id) => {
                 return new Promise((resolve, reject) => {
                     try {
-                        let default_lang = 'en';
                         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/language/locale/locale.service.js`).then(({getLocales}) => {
-                            getLocales(app_id, default_lang, (err, locales) => {
+                            getLocales(app_id, locale, (err, locales) => {
                                 if (err)
                                     resolve(err)
                                 else{
@@ -199,9 +198,9 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                                     locales.forEach( (locale,i) => {
                                         AppLocales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                                     })
-                                    countries(app_id).then((AppCountries) => {
-                                        places(app_id).then((AppPlaces) => {
-                                            themes(app_id).then((AppSettingsThemes) => {
+                                    countries(app_id, locale).then((AppCountries) => {
+                                        places(app_id, locale).then((AppPlaces) => {
+                                            themes(app_id, locale).then((AppSettingsThemes) => {
                                                 resolve({AppLocales: AppLocales,
                                                             AppCountries: AppCountries,
                                                             AppPlaces: AppPlaces,
@@ -238,7 +237,7 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                 let APP_MAP_TYPE='';
                 
                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
-                    getSettings(app_id, 'en', '', (err, settings) => {
+                    getSettings(app_id, locale, '', (err, settings) => {
                         let option;
                         for (let i = 0; i < settings.length; i++) {
                             option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
@@ -409,15 +408,16 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place) => {
                                         '<USER_ARABIC_SCRIPT/>',
                                         `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
                                 get_module_with_init(app_id, 
-                                                        null,
-                                                        null,
-                                                        'app.app_exception',
-                                                        null,
-                                                        true,
-                                                        gps_lat,
-                                                        gps_long,
-                                                        gps_place,
-                                                        app, (err, app_init) =>{
+                                                     locale,
+                                                     null,
+                                                     null,
+                                                     'app.app_exception',
+                                                     null,
+                                                     true,
+                                                     gps_lat,
+                                                     gps_long,
+                                                     gps_place,
+                                                     app, (err, app_init) =>{
                                     if (err)
                                         reject(err);
                                     else{
