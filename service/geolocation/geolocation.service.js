@@ -1,11 +1,19 @@
-const {default: axios} = await import('axios');
-
 const getService = async (url) => {
-    let res = await axios({
-        url: url,
-        method: 'GET'
+    const http = await import('node:http');
+    return new Promise((resolve) =>{
+        //geolocation service using http 
+        http.get(url, res =>{
+            let responseBody = ''
+            res.setEncoding('UTF8');
+            res.on('data', (chunk) =>{
+                console.log('chunk',chunk.length);
+                responseBody += chunk;
+            })
+            res.on('end', ()=>{
+                resolve (JSON.parse(responseBody));
+            });
+        })
     })
-    return res.data;
 }
 const getTimezone = (latitude, longitude, callBack) => {
     //Time zone  lookup

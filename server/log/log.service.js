@@ -2,45 +2,6 @@ const pm2log = (log) => {
     console.log(log);
 }
     
-const remote_log = async (ConfigGet, config_destination, log) => {
-    return await new Promise((resolve) => {
-        if (config_destination=='1' || config_destination=='2'){
-            //url destination
-            const headers = { 
-                'Authorization': 'Basic ' + btoa(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_USERNAME') + ':' + ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION_PASSWORD'))
-            };
-            //add logscope and loglevel first and as all logfiles will be sent to same url
-            let url_old  = JSON.parse(log);
-            let url_log  = {};
-            url_log.logscope = logscope;
-            url_log.loglevel = loglevel;
-            url_log.logdate = url_old.logdate;
-            url_log.ip = url_old.ip;
-            url_log.host = url_old.host;
-            url_log.protocol = url_old.protocol;
-            url_log.url = url_old.url;
-            url_log.method = url_old.method;
-            url_log.statusCode = url_old.statusCode;
-            url_log['user-agent'] = url_old['user-agent'];
-            url_log['accept-language'] = url_old['accept-language'];
-            url_log.http_referer = url_old.http_referer;
-            url_log.app_id = url_old.app_id;
-            url_log.app_filename = url_old.app_filename;
-            url_log.app_function_name = url_old.app_function_name;
-            url_log.app_line = url_old.app_line;
-            url_log.logtext = url_old.logtext;
-    
-            url_log = JSON.stringify(url_log);
-            import('axios').then(({default: axios}) => {
-                axios.post(ConfigGet(1, 'SERVICE_LOG', 'URL_DESTINATION'), url_log).then(() => {
-                    resolve();
-                })
-            });
-        }   
-        else
-            resolve();
-    })
-}
 const sendLog = async (ConfigGet, logscope, loglevel, log) => {
     return await new Promise((resolve) => {
         let filename;
@@ -58,28 +19,23 @@ const sendLog = async (ConfigGet, logscope, loglevel, log) => {
         let config_file_interval = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')
         if (config_file_interval=='1D')
             filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-        else
+        else{
             if (config_file_interval=='1M')
                 filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
             else
                 filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-        let config_destination = ConfigGet(1, 'SERVICE_LOG', 'DESTINATION')
-        if (config_destination=='0' || config_destination=='2'){
-            //file destination
-            import('node:fs').then((fs) =>{
-                fs.appendFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
-                    if (err) {
-                        //if error here ignore and continue, where else should log file be saved?
-                        pm2log(err);
-                        resolve();
-                    }
-                    else
-                        resolve(remote_log(ConfigGet, config_destination, log));
-                });
-            })
         }
-        else
-            resolve(remote_log(ConfigGet, config_destination, log));
+        import('node:fs').then((fs) =>{
+            fs.appendFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
+                if (err) {
+                    //if error here ignore and continue, where else should log file be saved?
+                    pm2log(err);
+                    resolve();
+                }
+                else
+                    resolve();
+            });
+        })
     })
 }
 const logdate = (date_format) => {
