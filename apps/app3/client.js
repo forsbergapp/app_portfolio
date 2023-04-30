@@ -1,8 +1,8 @@
 const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const createApp = (app_id, params, gps_lat, gps_long, gps_place) => {
+const createApp = (app_id, params, gps_lat, gps_long, gps_place, locale) => {
     return new Promise((resolve, reject) => {
-        const files = [
+        const files = [ 
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
             ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
             ['<AppCommonFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
@@ -28,16 +28,17 @@ const createApp = (app_id, params, gps_lat, gps_long, gps_place) => {
                 app = app.replace(
                     '<AppProfileTop/>',
                     '');
-                get_module_with_init(app_id, 
-                                        null,
-                                        null,
-                                        'app.app_exception',
-                                        null,
-                                        true,
-                                        gps_lat,
-                                        gps_long,
-                                        gps_place,
-                                        app, (err, app_init) =>{
+                get_module_with_init(app_id,
+                                     locale,
+                                     null,
+                                     null,
+                                     'app.app_exception',
+                                     null,
+                                     true,
+                                     gps_lat,
+                                     gps_long,
+                                     gps_place,
+                                     app, (err, app_init) =>{
                     if (err)
                         reject(err);
                     else{
