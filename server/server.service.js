@@ -564,14 +564,14 @@ const serverExpressRoutes = async (app) => {
     const { dataToken, checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
             checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
-    const { authAdmin, checkAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
+    const { authSystemAdmin, checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
     //broadcast
     const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //log
     const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
 
     //service db admin
-    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
+    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
     //service db app_portfolio app
     const { getApp, getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/app/app.controller.js`);
     //service db app_portfolio app category
@@ -653,18 +653,18 @@ const serverExpressRoutes = async (app) => {
     //apps
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].post("/admin/secure", checkAdmin, getAppAdminSecure);
+    router[i].post("/admin/secure", checkSystemAdmin, getAppAdminSecure);
     app.use('/apps', router[i]);
     i++;
     //server
     router[i].use(serverRouterLog);
-    router[i].put("/config/systemadmin", checkAdmin, ConfigSave);
-    router[i].get("/config/systemadmin", checkAdmin, ConfigGetController);
-    router[i].get("/config/systemadmin/saved", checkAdmin, ConfigGetSaved);
-    router[i].get("/config/systemadmin/maintenance", checkAdmin, ConfigMaintenanceGet);
-    router[i].patch("/config/systemadmin/maintenance", checkAdmin, ConfigMaintenanceSet);
-    router[i].get("/config/info", checkAdmin, ConfigInfo);
-    router[i].get("/info", checkAdmin, Info);
+    router[i].put("/config/systemadmin", checkSystemAdmin, ConfigSave);
+    router[i].get("/config/systemadmin", checkSystemAdmin, ConfigGetController);
+    router[i].get("/config/systemadmin/saved", checkSystemAdmin, ConfigGetSaved);
+    router[i].get("/config/systemadmin/maintenance", checkSystemAdmin, ConfigMaintenanceGet);
+    router[i].patch("/config/systemadmin/maintenance", checkSystemAdmin, ConfigMaintenanceSet);
+    router[i].get("/config/info", checkSystemAdmin, ConfigInfo);
+    router[i].get("/info", checkSystemAdmin, Info);
     router[i].get("/config/admin", checkAccessTokenAdmin, ConfigGetController);
     app.use(ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'), router[i]);
     i++;
@@ -677,18 +677,18 @@ const serverExpressRoutes = async (app) => {
     //auth admin
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].post("/", authAdmin);
+    router[i].post("/", authSystemAdmin);
     app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/auth/admin`, router[i]);
     i++;
     //broadcast
     router.push(Router());
     router[i].use(serverRouterLog);
     //message:
-    router[i].post("/message/SystemAdmin",checkAdmin, BroadcastSendSystemAdmin);
+    router[i].post("/message/SystemAdmin",checkSystemAdmin, BroadcastSendSystemAdmin);
     router[i].post("/message/Admin",checkAccessTokenAdmin, BroadcastSendAdmin);
     //connection:
-    router[i].get("/connection/SystemAdmin", checkAdmin, ConnectedListSystemAdmin);
-    router[i].patch("/connection/SystemAdmin", checkAdmin, ConnectedUpdate);
+    router[i].get("/connection/SystemAdmin", checkSystemAdmin, ConnectedListSystemAdmin);
+    router[i].patch("/connection/SystemAdmin", checkSystemAdmin, ConnectedUpdate);
     router[i].get("/connection/Admin", checkAccessTokenAdmin, ConnectedList);
     router[i].get("/connection/Admin/count", checkAccessTokenAdmin, ConnectedCount);
     router[i].get("/connection/:clientId",BroadcastConnect);
@@ -699,23 +699,26 @@ const serverExpressRoutes = async (app) => {
     //service log
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].get("/parameters", checkAdmin, getLogParameters);
-    router[i].get("/logs", checkAdmin, getLogs);
-    router[i].get("/files", checkAdmin, getFiles);
-    router[i].get("/pm2logs", checkAdmin, getPM2Logs);
+    router[i].get("/parameters", checkSystemAdmin, getLogParameters);
+    router[i].get("/logs", checkSystemAdmin, getLogs);
+    router[i].get("/files", checkSystemAdmin, getFiles);
+    router[i].get("/pm2logs", checkSystemAdmin, getPM2Logs);
     app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/log`, router[i]);
     i++;
     //service db admin
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].get("/DBInfo",  checkAdmin, DBInfo);
-    router[i].get("/DBInfoSpace",  checkAdmin, DBInfoSpace);
-    router[i].get("/DBInfoSpaceSum",  checkAdmin, DBInfoSpaceSum);
-    router[i].get("/DBStart",  checkAdmin, DBStart);
-    router[i].get("/DBStop",  checkAdmin, DBStop);
-    router[i].post("/demo",  checkAdmin, demo_add);
-    router[i].get("/demo",  checkAdmin, demo_get);
-    router[i].delete("/demo",  checkAdmin, demo_delete);
+    router[i].get("/DBInfo",  checkSystemAdmin, DBInfo);
+    router[i].get("/DBInfoSpace",  checkSystemAdmin, DBInfoSpace);
+    router[i].get("/DBInfoSpaceSum",  checkSystemAdmin, DBInfoSpaceSum);
+    router[i].get("/DBStart",  checkSystemAdmin, DBStart);
+    router[i].get("/DBStop",  checkSystemAdmin, DBStop);
+    router[i].post("/demo",  checkSystemAdmin, demo_add);
+    router[i].get("/demo",  checkSystemAdmin, demo_get);
+    router[i].delete("/demo",  checkSystemAdmin, demo_delete);
+    router[i].post("/install",  checkSystemAdmin, install_db);
+    router[i].get("/install",  checkSystemAdmin, install_db_check);
+    router[i].delete("/install",  checkSystemAdmin, install_db_delete);
     app.use(`${rest_resource_service}/db/admin`, router[i]);
     i++;
     //service db app_portfolio app
@@ -892,13 +895,13 @@ const serverExpressRoutes = async (app) => {
     router[i].use(serverRouterLog);
     router[i].get("/place", checkDataToken, getPlace);
     router[i].get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
-    router[i].get("/place/systemadmin", checkAdmin, getPlaceSystemAdmin);
+    router[i].get("/place/systemadmin", checkSystemAdmin, getPlaceSystemAdmin);
     router[i].get("/ip", checkDataToken, getIp);
     router[i].get("/ip/admin", checkAccessTokenAdmin, getIpAdmin);
-    router[i].get("/ip/systemadmin", checkAdmin, getIpSystemAdmin);
+    router[i].get("/ip/systemadmin", checkSystemAdmin, getIpSystemAdmin);
     router[i].get("/timezone", checkDataToken, getTimezone);
     router[i].get("/timezone/admin", checkAccessTokenAdmin, getTimezoneAdmin);
-    router[i].get("/timezone/systemadmin", checkAdmin, getTimezoneSystemAdmin);    
+    router[i].get("/timezone/systemadmin", checkSystemAdmin, getTimezoneSystemAdmin);    
     app.use(`${rest_resource_service}/geolocation`, router[i]);
     i++;
     //service mail
