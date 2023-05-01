@@ -1,6 +1,6 @@
 const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const getReport = (app_id, module, gps_lat, gps_long, gps_place) => {
+const createReport = (app_id, module, gps_lat, gps_long, gps_place, locale) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['REPORT', process.cwd() + '/apps/app2/report/' + module],
@@ -18,6 +18,7 @@ const getReport = (app_id, module, gps_lat, gps_long, gps_place) => {
                 reject(err);
             else{
                 get_module_with_init(app_id, 
+                                     locale,
                                         null,
                                         null,
                                     'report.report_exception',
@@ -37,4 +38,4 @@ const getReport = (app_id, module, gps_lat, gps_long, gps_place) => {
         })
     })
 }
-export{getReport};
+export{createReport};

@@ -205,6 +205,26 @@ const check_app_subdomain = (app_id, host) => {
     }
 }
 //APP functions
+const client_locale = (accept_language) =>{
+    let locale;
+    if (accept_language.startsWith('text') || accept_language=='*')
+        locale = 'en';
+    else{
+        //check first lang ex syntax 'en-US,en;'
+        locale = accept_language.split(',')[0].toLowerCase();
+        if (locale.length==0){
+            //check first lang ex syntax 'en;'
+            locale = accept_language.split(';')[0].toLowerCase();
+            if (locale.length==0 && accept_language.length>0)
+                //check first lang ex syntax 'en' or 'zh-cn'
+                locale = accept_language.toLowerCase();
+            else{
+                locale = 'en';
+            }
+        }
+    }
+    return locale;
+}
 const read_app_files = async (app_id, files, callBack) => {
     let i = 0;
     let stack = new Error().stack;
@@ -489,6 +509,6 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo, check_app_subdomain,
         /*APP functions */
-        read_app_files, get_module_with_init,
+        client_locale, read_app_files, get_module_with_init,
         getMaintenance, getUserPreferences,
         AppsStart}
