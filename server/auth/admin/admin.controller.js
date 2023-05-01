@@ -2,7 +2,7 @@ const {default:{sign, verify}} = await import("jsonwebtoken");
 
 const {CheckFirstTime, ConfigGet, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-const checkAdmin = (req, res, next) => {
+const checkSystemAdmin = (req, res, next) => {
     let token = req.get("authorization");
     if (token){
         token = token.slice(7);
@@ -12,7 +12,7 @@ const checkAdmin = (req, res, next) => {
                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                         createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                      'SYSTEM ADMIN CheckAdmin token verify error: ' + err,
+                                      'SYSTEM ADMIN CheckSystemAdmin token verify error: ' + err,
                                       req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                       res.statusCode, 
                                       req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -32,7 +32,7 @@ const checkAdmin = (req, res, next) => {
         import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                              'SYSTEM ADMIN CheckAdmin token missing',
+                              'SYSTEM ADMIN CheckSystemAdmin token missing',
                               req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                               res.statusCode, 
                               req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -44,7 +44,7 @@ const checkAdmin = (req, res, next) => {
         })
     }
 }
-const authAdmin = (req, res) => {
+const authSystemAdmin = (req, res) => {
     const check_user = (username, password) => {
         let config_username = ConfigGet(6)['username'];
         let config_password = ConfigGet(6)['password'];
@@ -102,4 +102,4 @@ const authAdmin = (req, res) => {
             message: '⛔'
         });
 }
-export {checkAdmin, authAdmin}
+export {checkSystemAdmin, authSystemAdmin}

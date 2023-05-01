@@ -3,6 +3,20 @@
            {"db": 1, "sql": "drop user app_app3"},
            {"db": 2, "sql": "drop user app_app3"},
            {"db": 3, "sql": "drop user app_app3"},
-           {"db": 4, "sql": "drop user app_app3"}
+           {"db": 4, "sql": "drop user app_app3"},
+           {"db": 4, "sql": "DELETE FROM app_portfolio.app_object_subitem_translation WHERE app_object_item_subitem_app_object_item_app_object_app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_object_item_translation WHERE app_object_item_app_object_app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_object_item_subitem WHERE app_object_item_app_object_app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_object_item WHERE app_object_app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_object_translation WHERE app_object_app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_object WHERE app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_parameter WHERE app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_screenshot WHERE app_device_app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_device WHERE app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.setting WHERE setting_type_id IN (SELECT id FROM app_portfolio.setting_type WHERE app_id = 3)"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.setting_type WHERE app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_message WHERE app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app_log WHERE app_id = 3"},
+           {"db": null, "sql": "DELETE FROM app_portfolio.app WHERE id = 3"}
        ]
    }
