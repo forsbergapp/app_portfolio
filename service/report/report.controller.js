@@ -1,6 +1,6 @@
 const service = await import("./report.service.js");
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-
+const {client_locale} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const getReport = async (req, res) => {
 	let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
 	//example string:
@@ -50,12 +50,13 @@ const getReport = async (req, res) => {
 										})
 				}
 				else{
-					import(`file://${process.cwd()}/apps/app${req.query.app_id}/report/index.js`).then(({getReport}) => {
-						const report = getReport(req.query.app_id, 
+					import(`file://${process.cwd()}/apps/app${req.query.app_id}/report/index.js`).then(({createReport}) => {
+						const report = createReport(req.query.app_id, 
 											req.query.module, 
 											result.geoplugin_latitude, 
 											result.geoplugin_longitude, 
-											gps_place)
+											gps_place,
+											client_locale(req.headers['accept-language']))
 						.then((report_result) => {
 							import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
 								createLog(req.query.app_id,
