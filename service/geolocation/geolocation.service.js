@@ -6,7 +6,6 @@ const getService = async (url) => {
             let responseBody = ''
             res.setEncoding('UTF8');
             res.on('data', (chunk) =>{
-                console.log('chunk',chunk.length);
                 responseBody += chunk;
             })
             res.on('end', ()=>{
