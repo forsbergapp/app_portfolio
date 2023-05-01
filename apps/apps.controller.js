@@ -1,25 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service = await import('./apps.service.js')
-const client_locale = (accept_language) =>{
-    let locale;
-    if (accept_language.startsWith('text') || accept_language=='*')
-        locale = 'en';
-    else{
-        //check first lang ex syntax 'en-US,en;'
-        locale = accept_language.split(',')[0].toLowerCase();
-        if (locale.length==0){
-            //check first lang ex syntax 'en;'
-            locale = accept_language.split(';')[0].toLowerCase();
-            if (locale.length==0 && accept_language.length>0)
-                //check first lang ex syntax 'en' or 'zh-cn'
-                locale = accept_language.toLowerCase();
-            else{
-                locale = 'en';
-            }
-        }
-    }
-    return locale;
-}
 const getApp = (req, res, app_id, params, callBack) => {
     //getIp and createLog needs app_id
     req.query.app_id = app_id;
@@ -46,7 +26,7 @@ const getApp = (req, res, app_id, params, callBack) => {
                               result.geoplugin_latitude,
                               result.geoplugin_longitude, 
                               gps_place,
-                              client_locale(req.headers['accept-language'])).then((app_result) => {
+                              service.client_locale(req.headers['accept-language'])).then((app_result) => {
                                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
                                     createLog(req.query.app_id,
                                                 { app_id : app_id,
@@ -92,7 +72,7 @@ const getAppAdmin = (req, res, app_id, callBack) => {
                                 result.geoplugin_latitude,
                                 result.geoplugin_longitude, 
                                 gps_place,
-                                client_locale(req.headers['accept-language'])).then((app_result) => {
+                                service.client_locale(req.headers['accept-language'])).then((app_result) => {
                                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
                                     createLogAdmin(req.query.app_id,
                                                     { app_id : app_id,
@@ -131,7 +111,7 @@ const getAppAdmin = (req, res, app_id, callBack) => {
                                 result.geoplugin_latitude,
                                 result.geoplugin_longitude, 
                                 gps_place,
-                                client_locale(req.headers['accept-language'])).then((app_result) => {
+                                service.client_locale(req.headers['accept-language'])).then((app_result) => {
                                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                             createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
