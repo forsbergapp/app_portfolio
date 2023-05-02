@@ -2,25 +2,9 @@ CREATE ROLE role_app_admin;
 CREATE ROLE role_app_common;
 CREATE ROLE role_app_dba;
 
-CREATE USER app_admin IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
-GRANT role_app_admin TO app_admin;
-
-CREATE USER app_portfolio IDENTIFIED BY 'APP_1_portfolio'
+CREATE USER app_portfolio IDENTIFIED BY '<APP_PASSWORD/>'
     ACCOUNT UNLOCK;
 GRANT role_app_dba TO app_portfolio;
-
-CREATE USER app1 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
-GRANT role_app_common TO app1;
-
-CREATE USER app2 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
-GRANT role_app_common TO app2;
-
-CREATE USER app3 IDENTIFIED BY 'APP_1_portfolio'
-    ACCOUNT UNLOCK;
-GRANT role_app_common TO app3;
 
 GRANT ALL PRIVILEGES ON DATABASE app_portfolio.* TO role_app_dba;
 

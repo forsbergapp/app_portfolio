@@ -12,4 +12,4 @@ INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (3,'APP_DESCRI
 --
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_APP_USER','app3',NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_APP_PASSWORD','APP_1_portfolio',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (3,'2','SERVICE_DB_APP_PASSWORD','<APP_PASSWORD/>',NULL);

@@ -35,8 +35,10 @@
     "users":[
         {"db": 1, "app_id": 0, "sql": "CREATE USER app_admin IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 1, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"},
+        {"db": 1, "app_id": 0, "sql": "SET DEFAULT ROLE role_app_admin FOR app_admin"},
         {"db": 2, "app_id": 0, "sql": "CREATE USER app_admin IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 2, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"},
+        {"db": 2, "app_id": 0, "sql": "SET DEFAULT ROLE ALL TO app_admin"},
         {"db": 3, "app_id": 0, "sql": "CREATE USER app_admin PASSWORD '<APP_PASSWORD/>'"},
         {"db": 3, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"},
         {"db": 4, "app_id": 0, "sql": "CREATE USER app_admin IDENTIFIED BY <APP_PASSWORD/>"},
