@@ -1,24 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-function log_db_sql(app_id, sql, parameters){
-	let parsed_sql = sql;
-	//ES7 Object.entries
-	Object.entries(parameters).forEach((parameter) => {
-		//replace bind parameters with values in log
-		parsed_sql = parsed_sql.replace(/\:(\w+)/g, (txt, key) => {
-			if (key == parameter[0])
-				if (parameter[1] == null)
-					return parameter[1];
-				else 
-					return `'${parameter[1]}'`;
-			else
-				return txt;
-		})
-	});
-	import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogDB}) => {
-		createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
-	})
-}
 const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 	var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
     //check if user defined exception
@@ -61,13 +42,71 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 			return null;
 	}
 };
-
-async function execute_db_sql(app_id, sql, parameters, 
-							  app_filename, app_function, app_line, callBack){	
+const record_not_found = (res, app_id, lang_code) => {
+	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/message_translation/message_translation.service.js`).then(({ getMessage }) => {
+			getMessage( app_id, 
+						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+						20400, 
+						lang_code, (err,results_message)  => {
+							return res.status(404).send(
+								err ?? results_message.text
+							);
+						});
+		})
+	})
+}
+const get_locale = (lang_code, part) => {
+	if (lang_code==null)
+		return null;
+	else
+		switch (part){
+			case 1:{
+				return lang_code;
+				break;
+			}
+			case 2:{
+				if (lang_code.indexOf('-',lang_code.indexOf('-')+1) >-1)
+					//ex zh-hant from zh-hant-cn
+					return lang_code.substring(0,lang_code.indexOf('-',lang_code.indexOf('-')+1));
+				else
+					return lang_code;
+				break;
+			}
+			case 3:{
+				if (lang_code.indexOf('-')>-1)
+					//ex zh from zh-hant-cn
+					return lang_code.substring(0,lang_code.indexOf('-'));
+				else
+					return lang_code;
+				break;
+			}
+		}
+}
+function db_log(app_id, sql, parameters){
+	let parsed_sql = sql;
+	//ES7 Object.entries
+	Object.entries(parameters).forEach((parameter) => {
+		//replace bind parameters with values in log
+		parsed_sql = parsed_sql.replace(/\:(\w+)/g, (txt, key) => {
+			if (key == parameter[0])
+				if (parameter[1] == null)
+					return parameter[1];
+				else 
+					return `'${parameter[1]}'`;
+			else
+				return txt;
+		})
+	});
+	import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogDB}) => {
+		createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
+	})
+}
+async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_function, app_line, callBack){	
 	const { ORACLEDB, get_pool} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
 	const database_error = 'DATABASE ERROR';
 	if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
-		log_db_sql(app_id, sql, parameters);
+		db_log(app_id, sql, parameters);
 	}
 	switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
 		case '1':
@@ -87,52 +126,58 @@ async function execute_db_sql(app_id, sql, parameters,
 					});
 				};
 			}
-			get_pool(app_id).getConnection((err, conn) => {
-				if (err){
-					import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-						//Both MariaDB and MySQL use err.sqlMessage
-						createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(() => {
-							return callBack(database_error, null);
-						})
-					});
-				}
-				else
-					config_connection(conn, sql, parameters);
-					conn.query(sql, parameters, (err, result, fields) => {
-						conn.release();
-							if (err){
-								let app_code = get_app_code(err.errorNum, 
-									err.message, 
-									err.code, 
-									err.errno, 
-									err.sqlMessage);
-								if (app_code != null)
-									return callBack(err, null);
-								else
-									import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-										//Both MariaDB and MySQL use err.sqlMessage
-										createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
-											return callBack(database_error, null);
-										})
-									});
-							}
-						else{
-							//convert blob buffer to string if any column is a BLOB type
-							if (result.length>0){
-								for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
-									if (fields[dbcolumn].type == 252) { //BLOB
-										for (let i=0;i<result.length;i++){
-											if (fields[dbcolumn]['name'] == Object.keys(result[i])[dbcolumn])
-												if (result[i][Object.keys(result[i])[dbcolumn]]!=null && result[i][Object.keys(result[i])[dbcolumn]]!='')
-													result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
+			try {
+				get_pool(app_id, pool_col).getConnection((err, conn) => {
+					if (err){
+						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+							//Both MariaDB and MySQL use err.sqlMessage
+							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(() => {
+								return callBack(database_error, null);
+							})
+						});
+					}
+					else
+						config_connection(conn, sql, parameters);
+						conn.query(sql, parameters, (err, result, fields) => {
+							conn.release();
+								if (err){
+									let app_code = get_app_code(err.errorNum, 
+										err.message, 
+										err.code, 
+										err.errno, 
+										err.sqlMessage);
+									if (app_code != null)
+										return callBack(err, null);
+									else
+										import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+											//Both MariaDB and MySQL use err.sqlMessage
+											createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
+												return callBack(database_error, null);
+											})
+										});
+								}
+							else{
+								//convert blob buffer to string if any column is a BLOB type
+								if (result.length>0){
+									for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
+										if (fields[dbcolumn].type == 252) { //BLOB
+											for (let i=0;i<result.length;i++){
+												if (fields[dbcolumn]['name'] == Object.keys(result[i])[dbcolumn])
+													if (result[i][Object.keys(result[i])[dbcolumn]]!=null && result[i][Object.keys(result[i])[dbcolumn]]!='')
+														result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
+											}
 										}
-									}
-								};
+									};
+								}
+								return callBack(null, result);
 							}
-							return callBack(null, result);
-						}
-					})
-			});
+						})
+				});					
+			} catch (error) {
+				createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, `DB {ConfigGet(1, 'SERVICE_DB', 'USE')} catch:` + error).then(() => {
+					return callBack(database_error, null);
+				})
+			}
 			break;
 		}
 		case '3':{
@@ -157,60 +202,66 @@ async function execute_db_sql(app_id, sql, parameters,
 			    return { text, values };
 			}	
 			let parsed_result = queryConvert(sql, parameters);
-			get_pool(app_id).connect().then((pool3) => {
-				return pool3
-				  .query(parsed_result.text, parsed_result.values)
-				  .then((result) => {
-					//add common attributes
-					if (result.command == 'INSERT' && result.rows.length>0)
-						result.insertId = result.rows[0].id;
-					if (result.command == 'INSERT' ||
-					    result.command == 'DELETE' ||
-						result.command == 'UPDATE'){
-						result.affectedRows = result.rowCount;
-					}
-					pool3.release();
-					//convert blob buffer to string if any column is a BYTEA type
-					if (result.rows.length>0){
-						for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
-							if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
-								for (let i=0;i<result.rows.length;i++){
-									if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
-										if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
-											result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+			try {
+				get_pool(app_id, pool_col).connect().then((pool3) => {
+					return pool3
+					  .query(parsed_result.text, parsed_result.values)
+					  .then((result) => {
+						//add common attributes
+						if (result.command == 'INSERT' && result.rows.length>0)
+							result.insertId = result.rows[0].id;
+						if (result.command == 'INSERT' ||
+							result.command == 'DELETE' ||
+							result.command == 'UPDATE'){
+							result.affectedRows = result.rowCount;
+						}
+						pool3.release();
+						//convert blob buffer to string if any column is a BYTEA type
+						if (result.rows.length>0){
+							for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
+								if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+									for (let i=0;i<result.rows.length;i++){
+										if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
+											if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+												result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+									}
 								}
-							}
-						};
-					}
-					if (result.command == 'SELECT')
-						return callBack(null, result.rows);
-					else
-						return callBack(null, result);
+							};
+						}
+						if (result.command == 'SELECT')
+							return callBack(null, result.rows);
+						else
+							return callBack(null, result);
+					  })
+					  .catch((err) => {
+						pool3.release();
+						let app_code = get_app_code(err.errorNum, 
+							err.message, 
+							err.code, 
+							err.errno, 
+							err.sqlMessage);
+						if (app_code != null)
+							return callBack(err, null);
+						else
+							import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+								//PostgreSQL use err.message
+								createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(() => {
+									return callBack(database_error, null);
+								})
+							});
+					  })
 				  })
-				  .catch((err) => {
-					pool3.release();
-					let app_code = get_app_code(err.errorNum, 
-						err.message, 
-						err.code, 
-						err.errno, 
-						err.sqlMessage);
-					if (app_code != null)
-						return callBack(err, null);
-					else
-						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-							//PostgreSQL use err.message
-							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(() => {
-								return callBack(database_error, null);
-							})
-						});
-				  })
-			  })
+			} catch (error) {
+				createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + error).then(() => {
+					return callBack(database_error, null);
+				})
+			}
 			break;
 		}
 		case '4':{
 			let pool4;
 			try{
-				pool4 = await ORACLEDB.getConnection(get_pool(app_id));
+				pool4 = await ORACLEDB.getConnection(get_pool(app_id, pool_col));
 				/*
 				Fix CLOB column syntax to avoid ORA-01461 for these columns:
 					APP_ACCOUNT.SCREENSHOT
@@ -257,7 +308,7 @@ async function execute_db_sql(app_id, sql, parameters,
 													});
 			}catch (err) {
 				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 catch:' + err.message).then(() => {
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 catch:' + err).then(() => {
 						return callBack(database_error);
 					})
 				});
@@ -278,36 +329,9 @@ async function execute_db_sql(app_id, sql, parameters,
 		}
 	}
 }
-const get_schema_name = () => ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_NAME`);
+const db_schema = () => ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_NAME`);
 
-const get_locale = (lang_code, part) => {
-	if (lang_code==null)
-		return null;
-	else
-		switch (part){
-			case 1:{
-				return lang_code;
-				break;
-			}
-			case 2:{
-				if (lang_code.indexOf('-',lang_code.indexOf('-')+1) >-1)
-					//ex zh-hant from zh-hant-cn
-					return lang_code.substring(0,lang_code.indexOf('-',lang_code.indexOf('-')+1));
-				else
-					return lang_code;
-				break;
-			}
-			case 3:{
-				if (lang_code.indexOf('-')>-1)
-					//ex zh from zh-hant-cn
-					return lang_code.substring(0,lang_code.indexOf('-'));
-				else
-					return lang_code;
-				break;
-			}
-		}
-}
-const limit_sql = (sql, limit_type = null) => {
+const db_limit_rows = (sql, limit_type = null) => {
 	const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
 	if (db_use == '1' || db_use == '2' || db_use == '3')
 		switch (limit_type){
@@ -343,19 +367,6 @@ const limit_sql = (sql, limit_type = null) => {
 		else
 			return sql;
 }
-const record_not_found = (res, app_id, lang_code) => {
-	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/message_translation/message_translation.service.js`).then(({ getMessage }) => {
-			getMessage( app_id, 
-						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-						20400, 
-						lang_code, (err,results_message)  => {
-							return res.status(404).send(
-								err ?? results_message.text
-							);
-						});
-		})
-	})
-}
 
-export{get_app_code, execute_db_sql, get_schema_name, get_locale, limit_sql, record_not_found}
+export{get_app_code, record_not_found, get_locale,
+	   db_execute, db_schema,  db_limit_rows}

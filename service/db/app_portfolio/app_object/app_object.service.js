@@ -1,5 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 		let sql;
@@ -13,15 +13,15 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 						id "id",
 						text "text"
 				  FROM (SELECT 'APP_OBJECT' object, ao.app_id,  ao.object_name, null object_item_name,null subitem_name, l.lang_code, null id, aot.text
-						  FROM ${get_schema_name()}.app_object ao,
-							   ${get_schema_name()}.app_object_translation aot,
-							   ${get_schema_name()}.language l
+						  FROM ${db_schema()}.app_object ao,
+							   ${db_schema()}.app_object_translation aot,
+							   ${db_schema()}.language l
 						 WHERE l.id = aot.language_id
 						   AND aot.app_object_app_id = ao.app_id
 						   AND aot.app_object_object_name = ao.object_name
 						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${get_schema_name()}.language l1,
-													 ${get_schema_name()}.app_object_translation aot1
+												FROM ${db_schema()}.language l1,
+													 ${db_schema()}.app_object_translation aot1
 											   WHERE aot1.language_id = l1.id
 												 AND aot1.app_object_app_id = ao.app_id
 												 AND aot1.app_object_object_name = ao.object_name
@@ -29,34 +29,34 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 											 )
 						UNION ALL
 						SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, null subitem_name, l.lang_code, s.id, str.text
-						  FROM ${get_schema_name()}.app_object_item aoi,
-							   ${get_schema_name()}.setting_type st,
-							   ${get_schema_name()}.setting s,
-							   ${get_schema_name()}.setting_translation str,
-							   ${get_schema_name()}.language l
+						  FROM ${db_schema()}.app_object_item aoi,
+							   ${db_schema()}.setting_type st,
+							   ${db_schema()}.setting s,
+							   ${db_schema()}.setting_translation str,
+							   ${db_schema()}.language l
 						 WHERE st.id = aoi.setting_type_id
 						   AND s.setting_type_id = st.id  
 						   AND str.setting_id = s.id
 						   AND l.id = str.language_id
 						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${get_schema_name()}.language l1,
-													 ${get_schema_name()}.setting_translation str1
+												FROM ${db_schema()}.language l1,
+													 ${db_schema()}.setting_translation str1
 											   WHERE str1.language_id = l1.id
 												 AND str1.setting_id = s.id
 												 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 											 )
 						UNION ALL
 						SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name,null subitem_name, l.lang_code, null id, aoit.text
-						  FROM ${get_schema_name()}.app_object_item aoi,
-							   ${get_schema_name()}.app_object_item_translation aoit,
-							   ${get_schema_name()}.language l
+						  FROM ${db_schema()}.app_object_item aoi,
+							   ${db_schema()}.app_object_item_translation aoit,
+							   ${db_schema()}.language l
 						 WHERE l.id = aoit.language_id
 						   AND aoit.app_object_item_app_object_app_id = aoi.app_object_app_id
 						   AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
 						   AND aoit.app_object_item_object_item_name = aoi.object_item_name
 						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${get_schema_name()}.language l1,
-													 ${get_schema_name()}.app_object_item_translation aoit1
+												FROM ${db_schema()}.language l1,
+													 ${db_schema()}.app_object_item_translation aoit1
 											   WHERE aoit1.language_id = l1.id
 												 AND aoit1.app_object_item_app_object_app_id = aoi.app_object_app_id
 												 AND aoit1.app_object_item_app_object_object_name = aoi.app_object_object_name
@@ -65,17 +65,17 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 											 )
 						UNION ALL
 						SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, null id, aost.text
-						  FROM ${get_schema_name()}.app_object_item_subitem aois,
-							   ${get_schema_name()}.app_object_subitem_translation aost,
-							   ${get_schema_name()}.language l
+						  FROM ${db_schema()}.app_object_item_subitem aois,
+							   ${db_schema()}.app_object_subitem_translation aost,
+							   ${db_schema()}.language l
 						 WHERE l.id = aost.language_id
 						   AND aost.app_object_item_subitem_app_object_item_app_object_app_id = aois.app_object_item_app_object_app_id
 						   AND aost.app_object_item_subitem_app_object_item_app_object_object_name = aois.app_object_item_app_object_object_name
 						   AND aost.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
 						   AND aost.app_object_item_subitem_subitem_name = aois.subitem_name
 						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${get_schema_name()}.language l1,
-													 ${get_schema_name()}.app_object_subitem_translation aost1
+												FROM ${db_schema()}.language l1,
+													 ${db_schema()}.app_object_subitem_translation aost1
 											   WHERE aost1.language_id = l1.id
 												 AND aost1.app_object_item_subitem_app_object_item_app_object_app_id = aois.app_object_item_app_object_app_id
 												 AND aost1.app_object_item_subitem_app_object_item_app_object_object_name = aois.app_object_item_app_object_object_name
@@ -98,8 +98,7 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 					 };
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

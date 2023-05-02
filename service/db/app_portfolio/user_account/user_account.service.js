@@ -1,5 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 const password_length_wrong = (password) => {
     if (password.length < 10 || password.length > 100){
         //'Password 10 - 100 characters'
@@ -97,7 +97,7 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 		              ua.id "id",
 					  ua.app_role_id "app_role_id",
 					  (SELECT ap_user.icon
-						 FROM ${get_schema_name()}.app_role ap_user
+						 FROM ${db_schema()}.app_role ap_user
 						WHERE ap_user.id = COALESCE(ua.app_role_id,2)) "app_role_icon",
 					  ua.active "active",
 					  ua.user_level "user_level",
@@ -119,10 +119,10 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 					  ua.provider_email "provider_email",
 					  ua.date_created "date_created",
 					  ua.date_modified "date_modified"
-				 FROM ${get_schema_name()}.user_account ua
-					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
+				 FROM ${db_schema()}.user_account ua
+					  LEFT OUTER JOIN ${db_schema()}.identity_provider ip
 						ON ip.id = ua.identity_provider_id
-					  LEFT OUTER JOIN ${get_schema_name()}.app_role ap
+					  LEFT OUTER JOIN ${db_schema()}.app_role ap
 						ON ap.id = ua.app_role_id
 				WHERE (ua.username LIKE :search
 				   OR ua.bio LIKE :search
@@ -133,7 +133,7 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 				   OR ua.provider_email LIKE :search)
 				   OR :search = '*'
 				ORDER BY ${sort} ${order_by}`;
-		sql = limit_sql(sql, null);
+		sql = db_limit_rows(sql, null);
 		if (search!='*')
 			search = '%' + search + '%';
 		parameters = {search: search,
@@ -142,8 +142,7 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 					 };
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {					 
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -155,13 +154,12 @@ const getUserAppRoleAdmin = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT app_role_id "app_role_id"
-				 FROM ${get_schema_name()}.user_account
+				 FROM ${db_schema()}.user_account
 				WHERE id = :id`;
 		parameters = {id: id};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -180,16 +178,15 @@ const getStatCountAdmin = (app_id, callBack) => {
 							ip.provider_name 
 						END "provider_name",
 						COUNT(*) "count_users"
-				 FROM ${get_schema_name()}.user_account ua
-					  LEFT OUTER JOIN ${get_schema_name()}.identity_provider ip
+				 FROM ${db_schema()}.user_account ua
+					  LEFT OUTER JOIN ${db_schema()}.identity_provider ip
 						ON ip.id = ua.identity_provider_id
 				GROUP BY ua.identity_provider_id, ip.provider_name
 				ORDER BY ua.identity_provider_id`;
 		parameters = {};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -216,7 +213,7 @@ const updateUserSuperAdmin = (app_id, id, data, callBack) => {
 			data.verification_code = null;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			sql = `UPDATE ${get_schema_name()}.user_account
+			sql = `UPDATE ${db_schema()}.user_account
 					SET app_role_id = :app_role_id,
 						active = :active,
 						user_level = :user_level,
@@ -244,8 +241,7 @@ const updateUserSuperAdmin = (app_id, id, data, callBack) => {
 						};
 			let stack = new Error().stack;
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {						
-				execute_db_sql(app_id, sql, parameters,
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -267,7 +263,7 @@ const create = (app_id, data, callBack) => {
         }
 		let error_code = validation_before_insert(data);
 		if (error_code==null){
-			sql = `INSERT INTO ${get_schema_name()}.user_account(
+			sql = `INSERT INTO ${db_schema()}.user_account(
 						bio,
 						private,
 						user_level,
@@ -330,8 +326,7 @@ const create = (app_id, data, callBack) => {
 						 };
 			let stack = new Error().stack;
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -349,14 +344,13 @@ const create = (app_id, data, callBack) => {
 								//remove "" before and after
 								let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
 								sql = `SELECT id "insertId"
-										FROM ${get_schema_name()}.user_account
+										FROM ${db_schema()}.user_account
 										WHERE rowid = :lastRowid`;
 								parameters = {
 												lastRowid: lastRowid
 											};
 								import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {											
-									execute_db_sql(app_id, sql, parameters, 
-												COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
+									db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
 										if (err)
 											return callBack(err, null);
 										else
@@ -377,7 +371,7 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 		let sql;
     	let parameters;
 
-		sql = `UPDATE ${get_schema_name()}.user_account
+		sql = `UPDATE ${db_schema()}.user_account
 					SET active = 1,
 						verification_code = :auth,
 						email = CASE 
@@ -406,8 +400,7 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else{
@@ -419,7 +412,7 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 const updateUserVerificationCode = (app_id, id, verification_code, callBack) => {
 		let sql;
     	let parameters;
-		sql = `UPDATE ${get_schema_name()}.user_account
+		sql = `UPDATE ${db_schema()}.user_account
 				  SET verification_code = :verification_code,
 					  active = 0,
 					  date_modified = CURRENT_TIMESTAMP
@@ -433,8 +426,7 @@ const updateUserVerificationCode = (app_id, id, verification_code, callBack) => 
 					}; 
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else{
@@ -449,7 +441,7 @@ const getUserByUserId = (app_id, id, callBack) => {
 		sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
-							FROM ${get_schema_name()}.user_account_logon ul
+							FROM ${db_schema()}.user_account_logon ul
 							WHERE ul.user_account_id = u.id
 							AND ul.result=1) "last_logontime",
 						u.private "private",
@@ -471,15 +463,14 @@ const getUserByUserId = (app_id, id, callBack) => {
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
 						u.provider_email "provider_email"
-				 FROM   ${get_schema_name()}.user_account u
+				 FROM   ${db_schema()}.user_account u
 				WHERE   u.id = :id `;
 		parameters = {
 					  id: id
 					 };
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -493,17 +484,17 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 		sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT 1
-						   FROM ${get_schema_name()}.user_account ua_current
+						   FROM ${db_schema()}.user_account ua_current
 						  WHERE u.private = 1
 						    AND ua_current.id = :user_accound_id_current_user
 							and u.id <> :user_accound_id_current_user
 							AND (NOT EXISTS (SELECT NULL
-											   FROM ${get_schema_name()}.user_account_follow  uaf 
+											   FROM ${db_schema()}.user_account_follow  uaf 
 											  WHERE uaf.user_account_id = u.id
 												AND uaf.user_account_id_follow = ua_current.id)
 								 OR 
 								 NOT EXISTS (SELECT NULL
-											   FROM ${get_schema_name()}.user_account_follow  uaf 
+											   FROM ${db_schema()}.user_account_follow  uaf 
 											  WHERE uaf.user_account_id_follow = u.id
 												AND uaf.user_account_id = ua_current.id)
 								)) "private",
@@ -518,35 +509,35 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
 						(SELECT COUNT(u_following.user_account_id)   
-							FROM ${get_schema_name()}.user_account_follow  u_following
+							FROM ${db_schema()}.user_account_follow  u_following
 							WHERE u_following.user_account_id = u.id) 					"count_following",
 						(SELECT COUNT(u_followed.user_account_id_follow) 
-							FROM ${get_schema_name()}.user_account_follow  u_followed
+							FROM ${db_schema()}.user_account_follow  u_followed
 							WHERE u_followed.user_account_id_follow = u.id) 				"count_followed",
 						(SELECT COUNT(u_likes.user_account_id)
-							FROM ${get_schema_name()}.user_account_like    u_likes
+							FROM ${db_schema()}.user_account_like    u_likes
 							WHERE u_likes.user_account_id = u.id ) 						"count_likes",
 						(SELECT COUNT(u_likes.user_account_id_like)
-							FROM ${get_schema_name()}.user_account_like    u_likes
+							FROM ${db_schema()}.user_account_like    u_likes
 							WHERE u_likes.user_account_id_like = u.id )					"count_liked",
 						(SELECT COUNT(u_views.user_account_id_view)
-							FROM ${get_schema_name()}.user_account_view    u_views
+							FROM ${db_schema()}.user_account_view    u_views
 							WHERE u_views.user_account_id_view = u.id ) 					"count_views",
 						(SELECT COUNT(u_followed_current_user.user_account_id)
-							FROM ${get_schema_name()}.user_account_follow  u_followed_current_user 
+							FROM ${db_schema()}.user_account_follow  u_followed_current_user 
 							WHERE u_followed_current_user.user_account_id_follow = u.id
 							AND u_followed_current_user.user_account_id = :user_accound_id_current_user) 	"followed",
 						(SELECT COUNT(u_liked_current_user.user_account_id)  
-							FROM ${get_schema_name()}.user_account_like    u_liked_current_user
+							FROM ${db_schema()}.user_account_like    u_liked_current_user
 							WHERE u_liked_current_user.user_account_id_like = u.id
 							AND u_liked_current_user.user_account_id = :user_accound_id_current_user)      "liked"
-				 FROM ${get_schema_name()}.user_account u
+				 FROM ${db_schema()}.user_account u
 				WHERE (u.id = :id 
 					   OR 
 					   u.username = :username)
 				  AND u.active = 1
 				  AND EXISTS(SELECT NULL
-							   FROM ${get_schema_name()}.user_account_app uap
+							   FROM ${db_schema()}.user_account_app uap
 							  WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
 		parameters ={
@@ -557,8 +548,7 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 		}; 
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -577,16 +567,16 @@ const searchProfileUser = (app_id, username, callBack) => {
 						u.provider_first_name "provider_first_name",
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url"
-				FROM ${get_schema_name()}.user_account u
+				FROM ${db_schema()}.user_account u
 				WHERE (u.username LIKE :username
 						OR
 						u.provider_first_name LIKE :provider_first_name)
 				AND u.active = 1 
 				AND EXISTS(SELECT NULL
-								FROM ${get_schema_name()}.user_account_app uap
+								FROM ${db_schema()}.user_account_app uap
 							WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
-		sql = limit_sql(sql, 1);
+		sql = db_limit_rows(sql, 1);
 		parameters = {
 						username: '%' + username + '%',
 						provider_first_name: '%' + username + '%',
@@ -594,8 +584,7 @@ const searchProfileUser = (app_id, username, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -622,8 +611,8 @@ const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 							  u.provider_image_url,
 							  u.username,
 							  u.provider_first_name
-						 FROM ${get_schema_name()}.user_account_follow u_follow,
-							  ${get_schema_name()}.user_account u
+						 FROM ${db_schema()}.user_account_follow u_follow,
+							  ${db_schema()}.user_account u
 						WHERE u_follow.user_account_id = :user_account_id
 						  AND u.id = u_follow.user_account_id_follow
 						  AND u.active = 1
@@ -637,8 +626,8 @@ const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 							  u.provider_image_url,
 							  u.username,
 							  u.provider_first_name
-						 FROM ${get_schema_name()}.user_account_follow u_followed,
-							  ${get_schema_name()}.user_account u
+						 FROM ${db_schema()}.user_account_follow u_followed,
+							  ${db_schema()}.user_account u
 						WHERE u_followed.user_account_id_follow = :user_account_id
 						  AND u.id = u_followed.user_account_id
 						  AND u.active = 1
@@ -652,8 +641,8 @@ const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 							  u.provider_image_url,
 							  u.username,
 							  u.provider_first_name
-						 FROM ${get_schema_name()}.user_account_like u_like,
-							  ${get_schema_name()}.user_account u
+						 FROM ${db_schema()}.user_account_like u_like,
+							  ${db_schema()}.user_account u
 						WHERE u_like.user_account_id = :user_account_id
 						  AND u.id = u_like.user_account_id_like
 						  AND u.active = 1
@@ -667,22 +656,21 @@ const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 							  u.provider_image_url,
 							  u.username,
 							  u.provider_first_name
-						 FROM ${get_schema_name()}.user_account_like u_liked,
-							  ${get_schema_name()}.user_account u
+						 FROM ${db_schema()}.user_account_like u_liked,
+							  ${db_schema()}.user_account u
 						WHERE u_liked.user_account_id_like = :user_account_id
 						  AND u.id = u_liked.user_account_id
 						  AND u.active = 1
 						  AND 4 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
-		sql = limit_sql(sql,1);
+		sql = db_limit_rows(sql,1);
 		parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -713,9 +701,9 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 							  u.username,
 							  u.provider_first_name,
 							  (SELECT COUNT(u_visited.user_account_id_view)
-							     FROM ${get_schema_name()}.user_account_view u_visited
+							     FROM ${db_schema()}.user_account_view u_visited
 							    WHERE u_visited.user_account_id_view = u.id) count
-						FROM ${get_schema_name()}.user_account u
+						FROM ${db_schema()}.user_account u
 					   WHERE u.active = 1
 						 AND u.private <> 1
 						 AND 1 = :statchoice
@@ -730,9 +718,9 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 							 u.username,
 							 u.provider_first_name,
 							 (SELECT COUNT(u_follow.user_account_id_follow)
-							    FROM ${get_schema_name()}.user_account_follow u_follow
+							    FROM ${db_schema()}.user_account_follow u_follow
 							   WHERE u_follow.user_account_id_follow = u.id) count
-						FROM ${get_schema_name()}.user_account u
+						FROM ${db_schema()}.user_account u
 					   WHERE u.active = 1
 						 AND u.private <> 1
 						 AND 2 = :statchoice
@@ -747,26 +735,25 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 							 u.username,
 							 u.provider_first_name,
 							 (SELECT COUNT(u_like.user_account_id_like)
-							 	FROM ${get_schema_name()}.user_account_like u_like
+							 	FROM ${db_schema()}.user_account_like u_like
 							   WHERE u_like.user_account_id_like = u.id) count
-						FROM ${get_schema_name()}.user_account u
+						FROM ${db_schema()}.user_account u
 					   WHERE  u.active = 1
 						 AND  u.private <> 1
 						 AND  3 = :statchoice) t
 				WHERE EXISTS(SELECT NULL
-							   FROM ${get_schema_name()}.user_account_app uap
+							   FROM ${db_schema()}.user_account_app uap
 							  WHERE uap.user_account_id = t.id
 								AND uap.app_id = :app_id)
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-		sql = limit_sql(sql,2);
+		sql = db_limit_rows(sql,2);
 		parameters = {
 						statchoice: statchoice,
 						app_id: app_id
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -778,15 +765,14 @@ const checkPassword = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT password "password"
-				 FROM ${get_schema_name()}.user_account
+				 FROM ${db_schema()}.user_account
 				WHERE id = :id `;
 		parameters = {
 						id: id
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -799,7 +785,7 @@ const updatePassword = (app_id, id, data, callBack) => {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			sql = `UPDATE ${get_schema_name()}.user_account
+			sql = `UPDATE ${db_schema()}.user_account
 					  SET password = :new_password,
 						  verification_code = null
 					WHERE id = :id  
@@ -812,8 +798,7 @@ const updatePassword = (app_id, id, data, callBack) => {
 						}; 
 			let stack = new Error().stack;
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -829,7 +814,7 @@ const updateUserLocal = (app_id, data, search_id, callBack) => {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			sql = `UPDATE ${get_schema_name()}.user_account
+			sql = `UPDATE ${db_schema()}.user_account
 					  SET bio = :bio,
 						  private = :private,
 						  username = :username,
@@ -855,8 +840,7 @@ const updateUserLocal = (app_id, data, search_id, callBack) => {
 			}; 
 			let stack = new Error().stack;
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -872,7 +856,7 @@ const updateUserCommon = (app_id, data, id, callBack) => {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			sql = `UPDATE ${get_schema_name()}.user_account
+			sql = `UPDATE ${db_schema()}.user_account
 					  SET username = :username,
 						  bio = :bio,
 						  private = :private,
@@ -885,8 +869,7 @@ const updateUserCommon = (app_id, data, id, callBack) => {
 						};
 			let stack = new Error().stack;
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -900,15 +883,14 @@ const updateUserCommon = (app_id, data, id, callBack) => {
 const deleteUser = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `DELETE FROM ${get_schema_name()}.user_account
+		sql = `DELETE FROM ${db_schema()}.user_account
 				WHERE id = :id `;
 		parameters = {
 						id: id
 					 };
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -927,7 +909,7 @@ const userLogin = (app_id, data, callBack) => {
 						active "active",
 						avatar "avatar",
 						app_role_id "app_role_id"
-					FROM ${get_schema_name()}.user_account
+					FROM ${db_schema()}.user_account
 				WHERE username = :username 
 					AND provider_id IS NULL`;
 		parameters ={
@@ -935,8 +917,7 @@ const userLogin = (app_id, data, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -949,7 +930,7 @@ const updateSigninProvider = (app_id, id, data, callBack) => {
 		let parameters;
 		let error_code = validation_before_update(data);
 		if (error_code==null){
-			sql = `UPDATE ${get_schema_name()}.user_account
+			sql = `UPDATE ${db_schema()}.user_account
 					  SET identity_provider_id = :identity_provider_id,
 						  provider_id = :provider_id,
 						  provider_first_name = :provider_first_name,
@@ -972,8 +953,7 @@ const updateSigninProvider = (app_id, id, data, callBack) => {
 						};
 			let stack = new Error().stack;
 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -990,7 +970,7 @@ const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
 		sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
-							FROM ${get_schema_name()}.user_account_logon ul
+							FROM ${db_schema()}.user_account_logon ul
 							WHERE ul.user_account_id = u.id
 							AND ul.result=1) "last_logontime",
 						u.date_created "date_created",
@@ -1009,7 +989,7 @@ const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
 						u.provider_email "provider_email"
-					FROM ${get_schema_name()}.user_account u
+					FROM ${db_schema()}.user_account u
 					WHERE u.provider_id = :provider_id
 					AND u.identity_provider_id = :identity_provider_id`;
 		parameters = {
@@ -1018,8 +998,7 @@ const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -1032,15 +1011,14 @@ const getEmailUser = (app_id, email, callBack) => {
 		let parameters;
 		sql = `SELECT id "id",
 					  email "email"
-				 FROM ${get_schema_name()}.user_account
+				 FROM ${db_schema()}.user_account
 				WHERE email = :email `;
 		parameters ={
 						email: email
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -1055,17 +1033,17 @@ const getAppRole = (app_id, user_account_id, callBack) => {
 			user_account_id = null;
 		sql = `SELECT app_role_id "app_role_id",
 					  COALESCE(ar.icon,ar_user.icon) "icon"
-				 FROM ${get_schema_name()}.user_account ua
-				      LEFT OUTER JOIN ${get_schema_name()}.app_role ar
+				 FROM ${db_schema()}.user_account ua
+				      LEFT OUTER JOIN ${db_schema()}.app_role ar
 				      ON ar.id = ua.app_role_id,
-					  ${get_schema_name()}.app_role ar_user
+					  ${db_schema()}.app_role ar_user
 				WHERE ua.id = :id 
 				 AND  ar_user.id = :id_user_icon
 				 AND :id IS NOT NULL
 				UNION ALL
 			   SELECT NULL "app_role_id",
 			          ar.icon "icon"
-				 FROM ${get_schema_name()}.app_role ar
+				 FROM ${db_schema()}.app_role ar
 				WHERE ar.id = :id_user_icon
 				  AND :id IS NULL`;
 		parameters ={
@@ -1074,8 +1052,7 @@ const getAppRole = (app_id, user_account_id, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -1087,15 +1064,14 @@ const getAppRole = (app_id, user_account_id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT id "id"
-				 FROM ${get_schema_name()}.user_account
+				 FROM ${db_schema()}.user_account
 				WHERE user_level = :demo_level`;
 		parameters ={
 						demo_level: 2
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
