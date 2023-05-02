@@ -1,5 +1,5 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
 		let sql;
@@ -7,14 +7,14 @@ const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
 		sql = `SELECT ac.id "id",
 					  ac.category_name "category_name",
 					  act.text "app_category_text"
-				 FROM ${get_schema_name()}.app_category ac
-				 LEFT OUTER JOIN ${get_schema_name()}.app_category_translation act
+				 FROM ${db_schema()}.app_category ac
+				 LEFT OUTER JOIN ${db_schema()}.app_category_translation act
 					ON act.app_category_id = ac.id
 					AND act.language_id IN (SELECT id 
-											  FROM ${get_schema_name()}.language l
+											  FROM ${db_schema()}.language l
 											 WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																	FROM ${get_schema_name()}.app_category_translation act1,
-																		 ${get_schema_name()}.language l1
+																	FROM ${db_schema()}.app_category_translation act1,
+																		 ${db_schema()}.language l1
 																   WHERE l1.id  = act1.language_id
 																	 AND act1.app_category_id  = ac.id
 																	 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -28,8 +28,7 @@ const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
 					  id: id};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

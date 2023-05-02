@@ -1,12 +1,14 @@
 {
+    "install":[
+    ],
     "users":[
-        {"db": 1, "sql": "CREATE USER app3 IDENTIFIED BY '<APP3_PASSWORD/>' ACCOUNT UNLOCK"},
+        {"db": 1, "sql": "CREATE USER app3 IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 1, "sql": "GRANT role_app_common TO app3"},
-        {"db": 2, "sql": "CREATE USER app3 IDENTIFIED BY '<APP3_PASSWORD/>' ACCOUNT UNLOCK"},
+        {"db": 2, "sql": "CREATE USER app3 IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 2, "sql": "GRANT role_app_common TO app3"},
-        {"db": 3, "sql": "CREATE USER app3 PASSWORD '<APP3_PASSWORD/>'"},
+        {"db": 3, "sql": "CREATE USER app3 PASSWORD '<APP_PASSWORD/>'"},
         {"db": 3, "sql": "GRANT role_app_common TO app3"},
-        {"db": 4, "sql": "CREATE USER app3 IDENTIFIED BY <APP3_PASSWORD/>"},
+        {"db": 4, "sql": "CREATE USER app3 IDENTIFIED BY <APP_PASSWORD/>"},
         {"db": 4, "sql": "GRANT role_app_common TO app3"},
         {"db": 4, "sql": "GRANT UNLIMITED TABLESPACE TO app3"}
     ]
