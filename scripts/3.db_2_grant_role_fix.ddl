@@ -1,6 +1,1 @@
-GRANT role_app2, role_app_common TO role_app2;
-SET DEFAULT ROLE ALL TO app_admin;
 SET DEFAULT ROLE ALL TO app_portfolio;
-SET DEFAULT ROLE ALL TO app1;
-SET DEFAULT ROLE ALL TO app2;
-SET DEFAULT ROLE ALL TO app3;
