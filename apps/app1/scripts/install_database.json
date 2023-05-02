@@ -33,13 +33,13 @@
         {"db": null, "script": "1.db_all_app_zh.sql"}
     ],
     "users":[
-        {"db": 1, "sql": "CREATE USER app1 IDENTIFIED BY '<APP1_PASSWORD/>' ACCOUNT UNLOCK"},
+        {"db": 1, "sql": "CREATE USER app1 IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 1, "sql": "GRANT role_app_common TO app1"},
-        {"db": 2, "sql": "CREATE USER app1 IDENTIFIED BY '<APP1_PASSWORD/>' ACCOUNT UNLOCK"},
+        {"db": 2, "sql": "CREATE USER app1 IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 2, "sql": "GRANT role_app_common TO app1"},
-        {"db": 3, "sql": "CREATE USER app1 PASSWORD '<APP1_PASSWORD/>'"},
+        {"db": 3, "sql": "CREATE USER app1 PASSWORD '<APP_PASSWORD/>'"},
         {"db": 3, "sql": "GRANT role_app_common TO app1"},
-        {"db": 4, "sql": "CREATE USER app1 IDENTIFIED BY <APP1_PASSWORD/>"},
+        {"db": 4, "sql": "CREATE USER app1 IDENTIFIED BY <APP_PASSWORD/>"},
         {"db": 4, "sql": "GRANT role_app_common TO app1"},
         {"db": 4, "sql": "GRANT UNLIMITED TABLESPACE TO app1"}
     ]

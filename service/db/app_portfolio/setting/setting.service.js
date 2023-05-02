@@ -1,5 +1,5 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
     let sql;
@@ -14,16 +14,16 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                    s.data4 "data4",
                    s.data5 "data5",
                    COALESCE(str.text, s.description) "text"
-             FROM ${get_schema_name()}.setting_type st,
-                  ${get_schema_name()}.setting s
+             FROM ${db_schema()}.setting_type st,
+                  ${db_schema()}.setting s
              LEFT OUTER JOIN(SELECT str.setting_id,
                                     str.text
-                               FROM ${get_schema_name()}.setting_translation str,
-                                    ${get_schema_name()}.language l
+                               FROM ${db_schema()}.setting_translation str,
+                                    ${db_schema()}.language l
                               WHERE l.id = str.language_id
                                 AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-                                                     FROM ${get_schema_name()}.setting_translation str1,
-                                                          ${get_schema_name()}.language l1
+                                                     FROM ${db_schema()}.setting_translation str1,
+                                                          ${db_schema()}.language l1
                                                     WHERE l1.id  = str1.language_id
                                                       AND str1.setting_id = str.setting_id
                                                       AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -41,8 +41,7 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                    };
      let stack = new Error().stack;
      import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-          execute_db_sql(app_id, sql, parameters, 
-                    COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+          db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
                     if (err)
                          return callBack(err, null);
                     else
