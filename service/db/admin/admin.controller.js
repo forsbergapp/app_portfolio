@@ -101,9 +101,7 @@ const install_db = () =>{
 				data: err
 			});
 		}
-		return res.status(200).json({
-			data: results
-		});
+		return res.status(200).json(results);
 	});
 }
 const install_db_check = () =>{
@@ -113,9 +111,7 @@ const install_db_check = () =>{
 				data: err
 			});
 		}
-		return res.status(200).json({
-			data: results
-		});
+		return res.status(200).json(results);
 	});
 }
 const install_db_delete = () =>{
@@ -125,9 +121,7 @@ const install_db_delete = () =>{
 				data: err
 			});
 		}
-		return res.status(200).json({
-			data: results
-		});
+		return res.status(200).json(results);
 	});
 }
 

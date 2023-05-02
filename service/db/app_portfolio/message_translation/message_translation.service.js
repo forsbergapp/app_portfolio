@@ -1,5 +1,5 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 		let sql;
@@ -11,18 +11,18 @@ const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 					  l.lang_code "lang_code",
 					  mt.text "text",
 					  am.app_id "app_id"
-				 FROM ${get_schema_name()}.message m,
-					  ${get_schema_name()}.message_translation mt,
-					  ${get_schema_name()}.app_message am,
-					  ${get_schema_name()}.language l
+				 FROM ${db_schema()}.message m,
+					  ${db_schema()}.message_translation mt,
+					  ${db_schema()}.app_message am,
+					  ${db_schema()}.language l
 				WHERE mt.language_id = l.id
 				  AND mt.message_code = m.code
 				  AND am.message_code = m.code
 				  AND am.app_id = :app_id
 				  AND m.code = :code
 				  AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-									   FROM ${get_schema_name()}.message_translation mt1,
-											${get_schema_name()}.language l1
+									   FROM ${db_schema()}.message_translation mt1,
+											${db_schema()}.language l1
 									  WHERE mt1.message_code = mt.message_code
 										AND l1.id = mt1.language_id
 										AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -36,8 +36,7 @@ const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -55,18 +54,18 @@ const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
 					  l.lang_code "lang_code",
 					  mt.text "text",
 					  am.app_id "app_id"
-				 FROM ${get_schema_name()}.message m,
-					  ${get_schema_name()}.message_translation mt,
-					  ${get_schema_name()}.app_message am,
-					  ${get_schema_name()}.language l
+				 FROM ${db_schema()}.message m,
+					  ${db_schema()}.message_translation mt,
+					  ${db_schema()}.app_message am,
+					  ${db_schema()}.language l
 				WHERE mt.language_id = l.id
 				  AND mt.message_code = m.code
 				  AND am.message_code = m.code
 				  AND am.app_id = :app_id
 				  AND m.code = :code
 				  AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-									   FROM ${get_schema_name()}.message_translation mt1,
-											${get_schema_name()}.language l1
+									   FROM ${db_schema()}.message_translation mt1,
+											${db_schema()}.language l1
 									  WHERE mt1.message_code = mt.message_code
 										AND l1.id = mt1.language_id
 										AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -80,8 +79,7 @@ const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {					
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

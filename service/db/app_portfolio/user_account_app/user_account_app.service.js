@@ -1,16 +1,16 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const createUserAccountApp = (app_id, user_account_id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `INSERT INTO ${get_schema_name()}.user_account_app(
+		sql = `INSERT INTO ${db_schema()}.user_account_app(
 							app_id, user_account_id, date_created)
 			   SELECT :app_id, ua.id, CURRENT_TIMESTAMP
-				 FROM ${get_schema_name()}.user_account ua
+				 FROM ${db_schema()}.user_account ua
 				WHERE ua.id = :user_account_id
 				  AND NOT EXISTS (SELECT NULL
-									FROM ${get_schema_name()}.user_account_app uap
+									FROM ${db_schema()}.user_account_app uap
 								   WHERE uap.app_id = :app_id
 									 AND uap.user_account_id = ua.id)`;
 		parameters = {
@@ -19,8 +19,7 @@ const createUserAccountApp = (app_id, user_account_id, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -36,8 +35,8 @@ const getUserAccountApps = (app_id, user_account_id, callBack) => {
 					  a.url "url",
 					  a.logo "logo",
 					  uap.date_created "date_created"
-				 FROM ${get_schema_name()}.user_account_app uap,
-					  ${get_schema_name()}.app a
+				 FROM ${db_schema()}.user_account_app uap,
+					  ${db_schema()}.app a
 				WHERE a.id = uap.app_id
 				  AND uap.user_account_id = :user_account_id
 				  AND a.enabled = 1`;
@@ -46,8 +45,7 @@ const getUserAccountApps = (app_id, user_account_id, callBack) => {
 						};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -63,7 +61,7 @@ const getUserAccountApp = (app_id, user_account_id, callBack) => {
 					  setting_preference_direction_id "setting_preference_direction_id",
 					  setting_preference_arabic_script_id "setting_preference_arabic_script_id",
 					  date_created "date_created"
-				 FROM ${get_schema_name()}.user_account_app
+				 FROM ${db_schema()}.user_account_app
 				WHERE user_account_id = :user_account_id
 				  AND app_id = :app_id`;
 		parameters = {
@@ -72,8 +70,7 @@ const getUserAccountApp = (app_id, user_account_id, callBack) => {
 					 };
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -88,7 +85,7 @@ const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
 			data.setting_preference_direction_id = null;
 		if (data.setting_preference_arabic_script_id=='')
 			data.setting_preference_arabic_script_id = null;
-		sql = `UPDATE ${get_schema_name()}.user_account_app
+		sql = `UPDATE ${db_schema()}.user_account_app
 				  SET preference_locale = :preference_locale,
 				  	  setting_preference_timezone_id = :setting_preference_timezone_id,
 					  setting_preference_direction_id = :setting_preference_direction_id,
@@ -106,8 +103,7 @@ const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
 						};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -118,7 +114,7 @@ const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
 const deleteUserAccountApps = (app_id, user_account_id, data_app_id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `DELETE FROM ${get_schema_name()}.user_account_app
+		sql = `DELETE FROM ${db_schema()}.user_account_app
 				WHERE user_account_id = :user_account_id
 				  AND app_id = :app_id`;
 		parameters = {
@@ -127,8 +123,7 @@ const deleteUserAccountApps = (app_id, user_account_id, data_app_id, callBack) =
 						};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

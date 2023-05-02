@@ -1,5 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getParameters_server = (app_id, data_app_id, callBack) => {
 		//returns parameters for app_id=0 and given app_id
@@ -13,7 +13,7 @@ const getParameters_server = (app_id, data_app_id, callBack) => {
 						parameter_name "parameter_name",
 						parameter_value "parameter_value",
 						parameter_comment "parameter_comment"
-				FROM ${get_schema_name()}.app_parameter
+				FROM ${db_schema()}.app_parameter
 				WHERE (app_id = :app_id
 						OR 
 						app_id = 0)
@@ -22,8 +22,7 @@ const getParameters_server = (app_id, data_app_id, callBack) => {
 		parameters = {app_id: data_app_id};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -41,15 +40,15 @@ const getParametersAllAdmin = (app_id, data_app_id, lang_code, callBack) => {
 					  ap.parameter_name "parameter_name",
 					  ap.parameter_value "parameter_value",
 					  ap.parameter_comment "parameter_comment"
-				 FROM ${get_schema_name()}.app_parameter ap,
-					  ${get_schema_name()}.parameter_type pt
-				 LEFT OUTER JOIN ${get_schema_name()}.parameter_type_translation ptt
+				 FROM ${db_schema()}.app_parameter ap,
+					  ${db_schema()}.parameter_type pt
+				 LEFT OUTER JOIN ${db_schema()}.parameter_type_translation ptt
 				   ON ptt.parameter_type_id = pt.id
 				  AND ptt.language_id IN (SELECT id 
-											FROM ${get_schema_name()}.language l
+											FROM ${db_schema()}.language l
 										   WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																  FROM ${get_schema_name()}.parameter_type_translation ptt1,
-																	   ${get_schema_name()}.language l1
+																  FROM ${db_schema()}.parameter_type_translation ptt1,
+																	   ${db_schema()}.language l1
 																 WHERE l1.id  = ptt1.language_id
 																   AND ptt1.parameter_type_id  = pt.id
 																   AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -64,8 +63,7 @@ const getParametersAllAdmin = (app_id, data_app_id, lang_code, callBack) => {
 					  app_id: data_app_id};
 		let stack = new Error().stack;
 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -77,7 +75,7 @@ const getParameter = (app_id, data_app_id, parameter_name, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT parameter_value "parameter_value"
-				 FROM ${get_schema_name()}.app_parameter
+				 FROM ${db_schema()}.app_parameter
 				WHERE app_id = :app_id
 				  AND parameter_name = :parameter_name
 				  AND parameter_type_id IN ('0','1','2')
@@ -86,8 +84,7 @@ const getParameter = (app_id, data_app_id, parameter_name, callBack) => {
 					  parameter_name:parameter_name};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -98,7 +95,7 @@ const getParameter = (app_id, data_app_id, parameter_name, callBack) => {
 const setParameter_admin = (app_id, body, callBack) => {
 		let sql;
 		let parameters;
-		sql = `UPDATE ${get_schema_name()}.app_parameter
+		sql = `UPDATE ${db_schema()}.app_parameter
 				  SET parameter_type_id = :parameter_type_id,
 					  parameter_value = :parameter_value,
 				  	  parameter_comment = :parameter_comment
@@ -111,8 +108,7 @@ const setParameter_admin = (app_id, body, callBack) => {
 					  parameter_name: body.parameter_name};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -123,7 +119,7 @@ const setParameter_admin = (app_id, body, callBack) => {
 const setParameterValue_admin = (app_id, body, callBack) => {
 		let sql;
 		let parameters;
-		sql = `UPDATE ${get_schema_name()}.app_parameter
+		sql = `UPDATE ${db_schema()}.app_parameter
 				  SET parameter_value = :parameter_value
 				WHERE app_id = :app_id
 				  AND parameter_name = :parameter_name`;
@@ -132,8 +128,7 @@ const setParameterValue_admin = (app_id, body, callBack) => {
 					  parameter_name: body.parameter_name};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -149,21 +144,20 @@ const getAppDBParametersAdmin = (app_id, callBack) => {
 
 		sql = `SELECT a.id "id",
 					  (SELECT ap.parameter_value
-					     FROM ${get_schema_name()}.app_parameter ap
+					     FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :db_user
 						  AND ap.app_id = a.id) "db_user",
 					  (SELECT ap.parameter_value
-					 	 FROM ${get_schema_name()}.app_parameter ap
+					 	 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :db_password
 						  AND ap.app_id = a.id) "db_password"
-				 FROM ${get_schema_name()}.app a
+				 FROM ${db_schema()}.app a
 				ORDER BY 1, 3`;
 		parameters = {db_user: db_user,
 					  db_password: db_password};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -182,22 +176,22 @@ const getAppStartParameters = (app_id, callBack) => {
 					  a.url "app_url",
 					  a.logo "app_logo",
 					  (SELECT ap.parameter_value
-						 FROM ${get_schema_name()}.app_parameter ap
+						 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :service_auth
 						  AND ap.app_id = :app_main_id) "service_auth",
 					  (SELECT ap.parameter_value
-						 FROM ${get_schema_name()}.app_parameter ap
+						 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :app_rest_client_id
 						  AND ap.app_id = :app_main_id) "app_rest_client_id",
 					  (SELECT ap.parameter_value
-						 FROM ${get_schema_name()}.app_parameter ap
+						 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :app_rest_client_secret
 						  AND ap.app_id = :app_main_id) "app_rest_client_secret",
 					  (SELECT ap.parameter_value
-						 FROM ${get_schema_name()}.app_parameter ap
+						 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :rest_app_parameter
 						  AND ap.app_id = :app_main_id) "rest_app_parameter"
-			   FROM ${get_schema_name()}.app a
+			   FROM ${db_schema()}.app a
 			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
 						app_main_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
@@ -207,8 +201,7 @@ const getAppStartParameters = (app_id, callBack) => {
 						rest_app_parameter: rest_app_parameter}
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -226,7 +219,7 @@ const getParameters = (app_id, data_app_id, callBack) => {
 						parameter_name "parameter_name",
 						parameter_value "parameter_value",
 						parameter_comment "parameter_comment"
-				FROM ${get_schema_name()}.app_parameter
+				FROM ${db_schema()}.app_parameter
 				WHERE (app_id = :app_id
 						OR 
 						app_id = 0)
@@ -235,8 +228,7 @@ const getParameters = (app_id, data_app_id, callBack) => {
 		parameters = {app_id: data_app_id};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

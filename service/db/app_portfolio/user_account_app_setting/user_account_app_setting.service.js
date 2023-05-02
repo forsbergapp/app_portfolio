@@ -1,12 +1,12 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const createUserSetting = (app_id, initial, data, callBack) => {
 		let sql;
 		let parameters;
 		let stack = new Error().stack;
 		//insert user settings if first time and no user settings exists already
-		sql = `INSERT INTO ${get_schema_name()}.user_account_app_setting(
+		sql = `INSERT INTO ${db_schema()}.user_account_app_setting(
 				description, 
 				settings_json,
 				date_created,
@@ -20,10 +20,10 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 						CURRENT_TIMESTAMP,
 						:user_account_id,
 						:app_id
-				FROM ${get_schema_name()}.user_account ua
+				FROM ${db_schema()}.user_account ua
 				WHERE ua.id = :user_account_id
 				AND NOT EXISTS (SELECT null
-									FROM ${get_schema_name()}.user_account_app_setting aus2
+									FROM ${db_schema()}.user_account_app_setting aus2
 									WHERE aus2.user_account_app_user_account_id = ua.id
 									AND aus2.user_account_app_app_id = :app_id
 									AND :initial_setting = 1)`;
@@ -38,8 +38,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 							initial_setting: initial
 						};
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							   COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -63,14 +62,13 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 									//remove "" before and after
 									let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
 									sql = `SELECT id "insertId"
-											FROM ${get_schema_name()}.user_account_app_setting
+											FROM ${db_schema()}.user_account_app_setting
 											WHERE rowid = :lastRowid`;
 									parameters = {
 													lastRowid: lastRowid
 												};
 									import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-										execute_db_sql(app_id, sql, parameters, 
-													COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
+										db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result_id2)=>{
 											if (err)
 												return callBack(err, null);
 											else
@@ -95,15 +93,14 @@ const getUserSetting = (app_id, id, callBack) => {
 						date_modified "date_modified",
 						user_account_app_user_account_id "user_account_app_user_account_id",
 						user_account_app_app_id "user_account_app_app_id"
-					FROM ${get_schema_name()}.user_account_app_setting 
+					FROM ${db_schema()}.user_account_app_setting 
 					WHERE id = :id `;
 		parameters = {
 						id: id
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -121,7 +118,7 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 						date_modified "date_modified",
 						user_account_app_user_account_id "user_account_app_user_account_id",
 						user_account_app_app_id "app_id"
-				 FROM ${get_schema_name()}.user_account_app_setting
+				 FROM ${db_schema()}.user_account_app_setting
 				WHERE user_account_app_user_account_id = :user_account_id 
 				  AND user_account_app_app_id = :app_id`;
 		parameters = {
@@ -130,8 +127,7 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -143,20 +139,20 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
 		sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
-						 FROM ${get_schema_name()}.user_account_app_setting_like u_like,
-						   	  ${get_schema_name()}.user_account_app_setting us
+						 FROM ${db_schema()}.user_account_app_setting_like u_like,
+						   	  ${db_schema()}.user_account_app_setting us
 						WHERE u_like.user_account_app_user_account_id = u.id
 						  AND u_like.user_account_app_app_id = :app_id
 						  AND us.id = u_like.user_account_app_setting_id
 						  AND us.user_account_app_app_id = u_like.user_account_app_app_id)		"count_user_setting_likes",
 					  (SELECT COUNT(DISTINCT u_like.user_account_app_user_account_id)
-					     FROM ${get_schema_name()}.user_account_app_setting_like u_like,
-							  ${get_schema_name()}.user_account_app_setting us
+					     FROM ${db_schema()}.user_account_app_setting_like u_like,
+							  ${db_schema()}.user_account_app_setting us
 						WHERE us.user_account_app_user_account_id = u.id
 						  AND us.user_account_app_app_id = :app_id
 						  AND u_like.user_account_app_setting_id = us.id
 						  AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_setting_liked"
-				 FROM ${get_schema_name()}.user_account u
+				 FROM ${db_schema()}.user_account u
 				WHERE u.id = :id`;
 		parameters ={
 						id: id,
@@ -164,8 +160,7 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 					}; 
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -182,19 +177,19 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 					  us.description "description",
 					  us.user_account_app_user_account_id "user_account_app_user_account_id",
 					  (SELECT COUNT(u_like.id)
-						 FROM ${get_schema_name()}.user_account_app_setting_like u_like
+						 FROM ${db_schema()}.user_account_app_setting_like u_like
 						WHERE u_like.user_account_app_setting_id = us.id
 						 AND  u_like.user_account_app_app_id = us.user_account_app_app_id)					"count_likes",
 					  (SELECT COUNT(u_view.user_account_app_setting_id)
-						 FROM ${get_schema_name()}.user_account_app_setting_view u_view
+						 FROM ${db_schema()}.user_account_app_setting_view u_view
 						WHERE u_view.user_account_app_setting_id = us.id
 						 AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
 					  (SELECT COUNT(u_liked_current_user.id)
-						 FROM ${get_schema_name()}.user_account_app_setting_like u_liked_current_user
+						 FROM ${db_schema()}.user_account_app_setting_like u_liked_current_user
 						WHERE u_liked_current_user.user_account_app_user_account_id = :Xuser_Xaccount_id_current
 						  AND u_liked_current_user.user_account_app_setting_id = us.id
 						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked"
-				 FROM ${get_schema_name()}.user_account_app_setting us
+				 FROM ${db_schema()}.user_account_app_setting us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
 		parameters = {
@@ -204,8 +199,7 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 						};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -234,10 +228,10 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 							 u.provider_image_url,
 							 u.username,
 							 u.provider_first_name
-						FROM ${get_schema_name()}.user_account u
+						FROM ${db_schema()}.user_account u
 					   WHERE u.id IN (SELECT us.user_account_app_user_account_id
-										FROM ${get_schema_name()}.user_account_app_setting_like u_like,
-											 ${get_schema_name()}.user_account_app_user_setting us
+										FROM ${db_schema()}.user_account_app_setting_like u_like,
+											 ${db_schema()}.user_account_app_user_setting us
 									   WHERE u_like.user_account_app_user_account_id = :user_account_id
 									     AND u_like.user_account_app_app_id = :app_id
 										 AND us.user_account_app_app_id = u_like.user_account_app_app_id
@@ -254,10 +248,10 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 								u.provider_image_url,
 								u.username,
 								u.provider_first_name
-						  FROM  ${get_schema_name()}.user_account u
+						  FROM  ${db_schema()}.user_account u
 						 WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
-										   FROM ${get_schema_name()}.user_account_app_setting us,
-												${get_schema_name()}.user_account_app_setting_like u_like
+										   FROM ${db_schema()}.user_account_app_setting us,
+												${db_schema()}.user_account_app_setting_like u_like
 										  WHERE us.user_account_app_user_account_id = :user_account_id
 											AND us.user_account_app_app_id = :app_id
 											AND us.id = u_like.user_account_app_setting_id
@@ -265,7 +259,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 						   AND  u.active = 1
 						   AND  7 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
-		sql = limit_sql(sql,1);
+		sql = db_limit_rows(sql,1);
 		parameters = {
 						user_account_id: id,
 						app_id: app_id,
@@ -273,8 +267,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -306,13 +299,13 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 								u.username,
 								u.provider_first_name,
 								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM ${get_schema_name()}.user_account_app_setting_like u_like,
-										${get_schema_name()}.user_account_app_setting us
+								   FROM ${db_schema()}.user_account_app_setting_like u_like,
+										${db_schema()}.user_account_app_setting us
 								  WHERE us.user_account_app_user_account_id = u.id
 									AND us.user_account_app_app_id = :app_id
 									AND u_like.user_account_app_setting_id = us.id
 									AND u_like.user_account_app_app_id = us.user_account_app_app_id) count
-						  FROM  ${get_schema_name()}.user_account u
+						  FROM  ${db_schema()}.user_account u
 						 WHERE  u.active = 1
 						   AND  u.private <> 1
 						   AND  4 = :statchoice
@@ -327,26 +320,25 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 								u.username,
 								u.provider_first_name,
 								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM ${get_schema_name()}.user_account_app_setting_view u_view,
-										${get_schema_name()}.user_account_app_setting us
+								   FROM ${db_schema()}.user_account_app_setting_view u_view,
+										${db_schema()}.user_account_app_setting us
 								  WHERE us.user_account_app_user_account_id = u.id
 									AND us.user_account_app_app_id = :app_id
 									AND u_view.user_account_app_setting_id = us.id
 									AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
-						  FROM  ${get_schema_name()}.user_account u
+						  FROM  ${db_schema()}.user_account u
 						 WHERE  u.active = 1
 						   AND  u.private <> 1
 						   AND  5 = :statchoice) t
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-		sql = limit_sql(sql,2);
+		sql = db_limit_rows(sql,2);
 		parameters = {
 						app_id: app_id,
 						statchoice: statchoice,
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -357,7 +349,7 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 const updateUserSetting = (app_id, data, id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `UPDATE ${get_schema_name()}.user_account_app_setting
+		sql = `UPDATE ${db_schema()}.user_account_app_setting
 				SET description = :description,
 				    settings_json = :settings_json,
 					user_account_app_user_account_id = :user_account_id,
@@ -373,8 +365,7 @@ const updateUserSetting = (app_id, data, id, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {				
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -385,15 +376,14 @@ const updateUserSetting = (app_id, data, id, callBack) => {
 const deleteUserSetting = (app_id, id, callBack) => {
 		let sql;
 		let parameters;
-		sql = `DELETE FROM ${get_schema_name()}.user_account_app_setting
+		sql = `DELETE FROM ${db_schema()}.user_account_app_setting
 				WHERE id = :id `;
 		parameters = {
 						id: id
 						};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
