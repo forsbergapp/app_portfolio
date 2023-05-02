@@ -52,20 +52,5 @@
         {"db": null, "script": "5.db_all_lang_vi.sql"},
         {"db": null, "script": "5.db_all_lang_zh-hant.sql"},
         {"db": null, "script": "5.db_all_lang_zh.sql"}
-    ],
-    "users":[
-			{"db": 1, "app_id": 0, "sql": "ALTER USER app_portfolio IDENTIFIED BY '<APP_PORTFOLIO_PASSWORD/>' ACCOUNT UNLOCK"},
-			{"db": 1, "app_id": 0, "sql": "CREATE USER app_admin IDENTIFIED BY '<APP_ADMIN_PASSWORD/>' ACCOUNT UNLOCK"},
-			{"db": 1, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"},
-			{"db": 2, "app_id": 0, "sql": "ALTER USER app_portfolio IDENTIFIED BY '<APP_PORTFOLIO_PASSWORD/>' ACCOUNT UNLOCK"},
-			{"db": 2, "app_id": 0, "sql": "CREATE USER app_admin IDENTIFIED BY '<APP_ADMIN_PASSWORD/>' ACCOUNT UNLOCK"},
-			{"db": 2, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"},
-			{"db": 3, "app_id": 0, "sql": "ALTER USER app_portfolio PASSWORD '<APP_PORTFOLIO_PASSWORD/>'"},
-			{"db": 3, "app_id": 0, "sql": "CREATE USER app_admin PASSWORD '<APP_ADMIN_PASSWORD/>'"},
-			{"db": 3, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"},
-			{"db": 4, "app_id": 0, "sql": "ALTER USER app_portfolio IDENTIFIED BY <APP_PORTFOLIO_PASSWORD/>"},
-			{"db": 4, "app_id": 0, "sql": "CREATE USER app_admin IDENTIFIED BY <APP_ADMIN_PASSWORD/>"},
-			{"db": 4, "app_id": 0, "sql": "GRANT role_app_admin TO app_admin"}
-
-	]
+    ]
 }

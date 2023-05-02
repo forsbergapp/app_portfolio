@@ -1,5 +1,5 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBack) => {
 		let sql;
@@ -15,7 +15,7 @@ const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBa
 					  client_longitude "client_longitude",
 					  client_latitude "client_latitude",
 					  date_created "date_created"
-				 FROM ${get_schema_name()}.user_account_logon
+				 FROM ${db_schema()}.user_account_logon
 				WHERE user_account_id = :user_account_id
 				  AND app_id = COALESCE(:app_id_select,app_id)
 				ORDER BY 9 DESC`;
@@ -25,8 +25,7 @@ const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBa
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -38,8 +37,8 @@ const checkLogin = (app_id, user_account_id, access_token, client_ip, callBack) 
 		let sql;
 		let parameters;
 		sql = `SELECT 1
-				 FROM ${get_schema_name()}.user_account_logon ual,
-				 	  ${get_schema_name()}.user_account ua
+				 FROM ${db_schema()}.user_account_logon ual,
+				 	  ${db_schema()}.user_account ua
 				WHERE ua.id = :user_account_id
 				  AND ual.user_account_id = ua.id
 				  AND ual.app_id = :app_id
@@ -62,8 +61,7 @@ const checkLogin = (app_id, user_account_id, access_token, client_ip, callBack) 
 			};
 			let stack = new Error().stack;
 			import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-				execute_db_sql(app_id, sql, parameters, 
-							COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+				db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 					if (err)
 						return callBack(err, null);
 					else
@@ -77,7 +75,7 @@ const insertUserAccountLogon = (app_id, data, callBack) => {
 		let sql;
 		let parameters;
 		data.access_token = data.access_token ?? null;
-		sql = `INSERT INTO ${get_schema_name()}.user_account_logon(
+		sql = `INSERT INTO ${db_schema()}.user_account_logon(
 				user_account_id, app_id, result, access_token, client_ip,  client_user_agent,  client_longitude, client_latitude, date_created)
 				VALUES(:user_account_id, :app_id, :result_insert,:access_token,:client_ip,:client_user_agent, :client_longitude, :client_latitude, CURRENT_TIMESTAMP) `;
 		parameters = {
@@ -92,8 +90,7 @@ const insertUserAccountLogon = (app_id, data, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

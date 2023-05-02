@@ -1,5 +1,5 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, limit_sql} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const createLog = (app_id, data, callBack) => {
 	let stack = new Error().stack;
@@ -9,7 +9,7 @@ const createLog = (app_id, data, callBack) => {
 		//max 4000 characters can be saved
 		if (data.app_module_result!=null)
 			data.app_module_result = data.app_module_result.substr(0,3999);
-		sql = `INSERT INTO ${get_schema_name()}.app_log(
+		sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
 					app_module,
 					app_module_type,
@@ -63,8 +63,7 @@ const createLog = (app_id, data, callBack) => {
 						server_http_accept_language: data.server_http_accept_language
 					};
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -82,7 +81,7 @@ const createLogAdmin = (app_id, data, callBack) => {
 		//max 4000 characters can be saved
 		if (data.app_module_result!=null)
 			data.app_module_result = data.app_module_result.substr(0,3999);
-		sql = `INSERT INTO ${get_schema_name()}.app_log(
+		sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
 					app_module,
 					app_module_type,
@@ -137,8 +136,7 @@ const createLogAdmin = (app_id, data, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -201,12 +199,12 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 					  server_http_accept_language "server_http_accept_language",
 					  date_created "date_created",
 					  count(*) over() "total_rows"
-				 FROM ${get_schema_name()}.app_log
+				 FROM ${db_schema()}.app_log
 				WHERE app_id = COALESCE(:app_id, app_id)
 				  AND EXTRACT(year from date_created) = :year
 				  AND EXTRACT(month from date_created) = :month
 				ORDER BY ${sort} ${order_by} `;
-		sql = limit_sql(sql, null);
+		sql = db_limit_rows(sql, null);
 		parameters = {	app_id:data_app_id,
 						year:year,
 						month:month,
@@ -214,8 +212,7 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 						limit:limit};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {						
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -237,7 +234,7 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, statchoice, year, month,
 					          EXTRACT(MONTH FROM date_created) 		month_log,
 					          NULL 									day_log,
 					          server_remote_addr
-						 FROM ${get_schema_name()}.app_log
+						 FROM ${db_schema()}.app_log
 						WHERE 1 = :statchoice
 						  AND app_id = COALESCE(:app_id_log, app_id)
 						  AND EXTRACT(YEAR FROM date_created) = :year_log
@@ -248,7 +245,7 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, statchoice, year, month,
 							  EXTRACT(MONTH FROM date_created) 		month_log,
 							  EXTRACT(DAY FROM date_created) 		day_log,
 							  server_remote_addr
-						 FROM ${get_schema_name()}.app_log
+						 FROM ${db_schema()}.app_log
 						WHERE 2 = :statchoice
 						  AND app_id = COALESCE(:app_id_log, app_id)
 						  AND EXTRACT(YEAR FROM date_created) = :year_log
@@ -264,8 +261,7 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, statchoice, year, month,
 						month_log: month};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters,
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

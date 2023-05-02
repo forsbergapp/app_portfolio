@@ -1,10 +1,10 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const insertUserEvent = (app_id, data, callBack) => {
 		let sql;
 		let parameters;
-		sql = `INSERT INTO ${get_schema_name()}.user_account_event(
+		sql = `INSERT INTO ${db_schema()}.user_account_event(
 							user_account_id, event_id, event_status_id,
 							date_created, date_modified,
 							user_language, user_timezone, user_number_system, user_platform,
@@ -15,8 +15,8 @@ const insertUserEvent = (app_id, data, callBack) => {
 					  :user_language, :user_timezone, :user_number_system, :user_platform, 
 					  :client_latitude, :client_longitude,
 					  :server_remote_addr, :server_user_agent, :server_http_host, :server_http_accept_language
-				 FROM ${get_schema_name()}.event e,
-					  ${get_schema_name()}.event_status es
+				 FROM ${db_schema()}.event e,
+					  ${db_schema()}.event_status es
 				WHERE e.event_name = :event
 				  AND es.status_name = :event_status`;
 		parameters = {
@@ -36,8 +36,7 @@ const insertUserEvent = (app_id, data, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
@@ -56,16 +55,16 @@ const getLastUserEvent = (app_id, user_account_id, event, callBack) => {
 						uae.date_created "date_created",
 						uae.date_modified "date_modified",
 						CURRENT_TIMESTAMP "current_timestamp"
-					FROM ${get_schema_name()}.user_account_event uae,
-						${get_schema_name()}.event e,
-						${get_schema_name()}.event_status es
+					FROM ${db_schema()}.user_account_event uae,
+						${db_schema()}.event e,
+						${db_schema()}.event_status es
 				WHERE uae.user_account_id = :user_account_id
 					AND e.id = uae.event_id
 					AND e.event_name = :event
 					AND es.id = uae.event_status_id
 					AND uae.date_created = (SELECT MAX(uae_max.date_created)
-											FROM ${get_schema_name()}.user_account_event uae_max,
-													${get_schema_name()}.event_status es_max
+											FROM ${db_schema()}.user_account_event uae_max,
+													${db_schema()}.event_status es_max
 											WHERE uae_max.user_account_id = uae.user_account_id
 												AND uae_max.event_id = uae.event_id
 												AND es_max.id = uae_max.event_status_id)`;
@@ -75,8 +74,7 @@ const getLastUserEvent = (app_id, user_account_id, event, callBack) => {
 					};
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-			execute_db_sql(app_id, sql, parameters, 
-						COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else

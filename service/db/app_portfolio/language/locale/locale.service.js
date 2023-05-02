@@ -1,5 +1,5 @@
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {execute_db_sql, get_schema_name, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
 
 const getLocales = (app_id, lang_code, callBack) => {
     let sql;
@@ -23,33 +23,33 @@ const getLocales = (app_id, lang_code, callBack) => {
                                                                   ELSE 
                                                                     '' 
                                                                   END),2)) "text"
-             FROM ${get_schema_name()}.language_translation lt,
-                  ${get_schema_name()}.language l2,
-                  ${get_schema_name()}.country c,
-                  ${get_schema_name()}.country_translation ct
+             FROM ${db_schema()}.language_translation lt,
+                  ${db_schema()}.language l2,
+                  ${db_schema()}.country c,
+                  ${db_schema()}.country_translation ct
             WHERE l2.id = lt.language_id
               AND ct.country_id = c.id
               AND EXISTS( SELECT NULL
-                            FROM ${get_schema_name()}.locale loc
+                            FROM ${db_schema()}.locale loc
                            WHERE loc.country_id = c.id
                              AND loc.language_id = lt.language_id)
               AND lt.language_translation_id = (SELECT l3.id
-                                                  FROM ${get_schema_name()}.language l3
+                                                  FROM ${db_schema()}.language l3
                                                  WHERE l3.lang_code = (
                                                       SELECT COALESCE(MAX(l4.lang_code),:lang_code_default)
-                                                        FROM ${get_schema_name()}.language_translation lt4,
-                                                             ${get_schema_name()}.language l4
+                                                        FROM ${db_schema()}.language_translation lt4,
+                                                             ${db_schema()}.language l4
                                                        WHERE l4.id  = lt4.language_translation_id
                                                          AND lt4.language_id = l2.id
                                                          AND l4.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
                                                                       )
                                                )
               AND ct.language_id = (SELECT l3.id
-                                      FROM ${get_schema_name()}.language l3
+                                      FROM ${db_schema()}.language l3
                                      WHERE l3.lang_code = (
                                           SELECT COALESCE(MAX(l1.lang_code), :lang_code_default)
-                                            FROM ${get_schema_name()}.country_translation ct1,
-                                                 ${get_schema_name()}.language l1
+                                            FROM ${db_schema()}.country_translation ct1,
+                                                 ${db_schema()}.language l1
                                            WHERE l1.id  = ct1.language_id
                                              AND ct1.country_id = c.id
                                              AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -58,23 +58,23 @@ const getLocales = (app_id, lang_code, callBack) => {
           UNION ALL
           SELECT l2.lang_code "locale",
                  CONCAT(UPPER(SUBSTR(lt.text,1,1)), SUBSTR(lt.text,2)) "text"
-            FROM ${get_schema_name()}.language_translation lt,
-                 ${get_schema_name()}.language l2
+            FROM ${db_schema()}.language_translation lt,
+                 ${db_schema()}.language l2
            WHERE l2.lang_code NOT LIKE '%-%'
              AND l2.id = lt.language_id
              AND lt.language_translation_id = (SELECT l3.id
-                                                 FROM ${get_schema_name()}.language l3
+                                                 FROM ${db_schema()}.language l3
                                                 WHERE l3.lang_code = (
                                                       SELECT COALESCE(MAX(l4.lang_code),:lang_code_default)
-                                                        FROM ${get_schema_name()}.language_translation lt4,
-                                                             ${get_schema_name()}.language l4
+                                                        FROM ${db_schema()}.language_translation lt4,
+                                                             ${db_schema()}.language l4
                                                        WHERE l4.id  = lt4.language_translation_id
                                                          AND lt4.language_id = l2.id
                                                          AND l4.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
                                                                       )
                                               )
               AND  EXISTS(SELECT NULL
-                            FROM ${get_schema_name()}.locale loc
+                            FROM ${db_schema()}.locale loc
                            WHERE loc.language_id = lt.language_id)
           ORDER BY 2`;
     parameters = {lang_code_default: 'en',
@@ -84,8 +84,7 @@ const getLocales = (app_id, lang_code, callBack) => {
                 };
     let stack = new Error().stack;
     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-      execute_db_sql(app_id, sql, parameters, 
-                    COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
+      db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
         if (err)
           return callBack(err, null);
         else
