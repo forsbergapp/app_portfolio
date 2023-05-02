@@ -35,8 +35,10 @@
     "users":[
         {"db": 1, "sql": "CREATE USER app1 IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 1, "sql": "GRANT role_app_common TO app1"},
+        {"db": 1, "sql": "SET DEFAULT ROLE role_app_common FOR app1"},
         {"db": 2, "sql": "CREATE USER app1 IDENTIFIED BY '<APP_PASSWORD/>' ACCOUNT UNLOCK"},
         {"db": 2, "sql": "GRANT role_app_common TO app1"},
+        {"db": 2, "sql": "SET DEFAULT ROLE ALL TO app1"},
         {"db": 3, "sql": "CREATE USER app1 PASSWORD '<APP_PASSWORD/>'"},
         {"db": 3, "sql": "GRANT role_app_common TO app1"},
         {"db": 4, "sql": "CREATE USER app1 IDENTIFIED BY <APP_PASSWORD/>"},
