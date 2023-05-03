@@ -83,7 +83,7 @@ const get_locale = (lang_code, part) => {
 			}
 		}
 }
-function db_log(app_id, sql, parameters){
+const db_log = (app_id, sql, parameters) => {
 	let parsed_sql = sql;
 	//ES7 Object.entries
 	Object.entries(parameters).forEach((parameter) => {
@@ -102,7 +102,7 @@ function db_log(app_id, sql, parameters){
 		createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`);
 	})
 }
-async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_function, app_line, callBack){	
+const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_function, app_line, callBack) => {
 	const { ORACLEDB, get_pool} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
 	const database_error = 'DATABASE ERROR';
 	if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
@@ -112,7 +112,7 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 		case '1':
 		case '2':{
 			//Both MySQL and MariaDB use MySQL npm module
-			function config_connection(conn, query, values){
+			const config_connection = (conn, query, values) => {
 				//change json parameters to [] syntax with bind variable names
 				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
 				//mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
@@ -132,11 +132,15 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 							//Both MariaDB and MySQL use err.sqlMessage
 							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 getConnection:' + err.sqlMessage).then(() => {
-								return callBack(database_error, null);
+								//return full error to system admin
+								if (pool_col==2)
+									return callBack(err, null);
+								else
+									return callBack(database_error, null);
 							})
 						});
 					}
-					else
+					else{
 						config_connection(conn, sql, parameters);
 						conn.query(sql, parameters, (err, result, fields) => {
 							conn.release();
@@ -152,7 +156,11 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 										import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 											//Both MariaDB and MySQL use err.sqlMessage
 											createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
-												return callBack(database_error, null);
+												//return full error to system admin
+												if (pool_col==2)
+													return callBack(err, null);
+												else
+													return callBack(database_error, null);
 											})
 										});
 								}
@@ -172,16 +180,23 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 								return callBack(null, result);
 							}
 						})
+					}
 				});					
 			} catch (error) {
-				createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, `DB {ConfigGet(1, 'SERVICE_DB', 'USE')} catch:` + error).then(() => {
-					return callBack(database_error, null);
+				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, `DB {ConfigGet(1, 'SERVICE_DB', 'USE')} catch:` + error).then(() => {
+						//return full error to system admin
+						if (pool_col==2)
+							return callBack(err, null);
+						else
+							return callBack(database_error, null);
+					})
 				})
 			}
 			break;
 		}
 		case '3':{
-			function queryConvert(parameterizedSql, params) {
+			const queryConvert = (parameterizedSql, params) => {
 				//change json parameters to $ syntax
 				//use unique index with $1, $2 etc, parameter can be used several times
 				//example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
@@ -246,14 +261,24 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 							import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 								//PostgreSQL use err.message
 								createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + err.message).then(() => {
-									return callBack(database_error, null);
-								})
+									//return full error to system admin
+									if (pool_col==2)
+										return callBack(err, null);
+									else
+										return callBack(database_error, null);
+									})
 							});
 					  })
 				  })
 			} catch (error) {
-				createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + error).then(() => {
-					return callBack(database_error, null);
+				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + error).then(() => {
+						//return full error to system admin
+						if (pool_col==2)
+							return callBack(err, null);
+						else
+							return callBack(database_error, null);
+						})
 				})
 			}
 			break;
@@ -291,7 +316,11 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 																	//Oracle uses err.message
 																	createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line,
 																				'DB 4 execute:' + `${err.message}, SQL:${sql.substring(0,100)}...`).then(() => {
-																		return callBack(database_error, null);
+																		//return full error to system admin
+																		if (pool_col==2)
+																			return callBack(err, null);
+																		else
+																			return callBack(database_error, null);
 																	})
 																});
 														}
@@ -309,7 +338,11 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 			}catch (err) {
 				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 catch:' + err).then(() => {
-						return callBack(database_error);
+						//return full error to system admin
+						if (pool_col==2)
+							return callBack(err, null);
+						else
+							return callBack(database_error, null);
 					})
 				});
 			} finally {
@@ -319,7 +352,11 @@ async function db_execute(app_id, sql, parameters, pool_col, app_filename, app_f
 					} catch (err) {
 						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 finally:' + err.message).then(() => {
-								return callBack(database_error);
+								//return full error to system admin
+								if (pool_col==2)
+									return callBack(err, null);
+								else
+									return callBack(database_error, null);
 							})
 						});
 					}

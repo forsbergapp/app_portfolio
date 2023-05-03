@@ -553,18 +553,24 @@
         width:700px;
     }
     /* MENU INSTALLATION*/
-    #menu_7_content_widget1 {
-        height: calc(100% + 10px);
-        display:flex;
+    #menu_7_content_widget1{
+        height: calc(50% - 10px);
+        display: flex;
+        flex-direction: column;
     }
-    #install_demo{
+    #menu_7_content_widget2{
+        height: calc(50% - 10px);
+        display: flex;
+        flex-direction: column;
+    }
+    #install_db, #install_demo{
         margin:auto;
     }
-    #install_demo_demo_users_icon{
+    #install_db_icon, #install_demo_demo_users_icon{
         display: block;
         font-size: 30px;
     }
-    #install_demo_button_row{
+    #install_db_button_row, #install_demo_button_row{
         display: flex;
         flex-direction: row;
         justify-content: center;

@@ -347,18 +347,21 @@ const DBStart = async () => {
                }); 
             })
          }
-         const admin_pool_log_startDBApps = (db_use, admin_user, err) => {
+         const admin_pool_log_startDBApps = (db_use, system_admin_user, admin_user, admin_pool, err) => {
             if (err){
                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                              `${db_use} admin_pool_log ADMIN user: ${admin_user}, err:${err}`).then(() => {
+                              `${db_use} admin_pool_log SYSTEM ADMIN user: ${system_admin_user}, ADMIN user: ${admin_user}, err:${err}`).then(() => {
                   reject(err);
                })
             }
             else{
                // log with common app id at startup for all apps
                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                           `${db_use} admin_pool_log ADMIN user: ${admin_user}`).then(() => {
-                  startDBApps()
+                              `${db_use} admin_pool_log SYSTEM ADMIN user: ${system_admin_user}, ADMIN user: ${admin_user}`).then(() => {
+                  if (admin_pool== null)
+                     resolve();
+                  else
+                     startDBApps()
                })
             }
          }
@@ -368,73 +371,69 @@ const DBStart = async () => {
          POOL_DB[USE]_APP [APP_COMMON_APP_ID,   admin pool, system admin pool]
          POOL_DB[USE]_APP [app_id,              app pool]
          */
+         const init_pool_one_two = (db_use) =>{
+            let app_admin_pool = null;
+            let system_admin_pool = null;
+            //both system admin db pool and admin db pool should be enabled
+            if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`))
+               system_admin_pool = MYSQL.createPool({
+                  port: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
+                  host: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                  user: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                  password: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                  database: null,
+                  charset: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                  connnectionLimit: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)
+               });
+               
+            if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`))
+               app_admin_pool = MYSQL.createPool({
+                  port: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
+                  host: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                  user: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`),
+                  password: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`),
+                  database: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`),
+                  charset: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                  connnectionLimit: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)
+               });   
+            if (db_use == 1)
+               POOL_DB1_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                 app_admin_pool,
+                                 system_admin_pool]
+                                 );
+            else
+               POOL_DB2_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                 app_admin_pool,
+                                 system_admin_pool]
+                                 );
+            return admin_pool_log_startDBApps(db_use, ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`), ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`), app_admin_pool);
+         }
          switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
             case '1':{
-               //both system admin db pool and admin db pool should be enabled
-               if (ConfigGet(1, 'SERVICE_DB', 'DB1_SYSTEM_ADMIN_USER') &&
-                   ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER')){
-                  POOL_DB1_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                                    MYSQL.createPool({
-                                       port: ConfigGet(1, 'SERVICE_DB', 'DB1_PORT'),
-                                       host: ConfigGet(1, 'SERVICE_DB', 'DB1_HOST'),
-                                       user: ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER'),
-                                       password: ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_PASS'),
-                                       database: ConfigGet(1, 'SERVICE_DB', 'DB1_NAME'),
-                                       charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
-                                       connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')
-                                    }),
-                                    MYSQL.createPool({
-                                       port: ConfigGet(1, 'SERVICE_DB', 'DB1_PORT'),
-                                       host: ConfigGet(1, 'SERVICE_DB', 'DB1_HOST'),
-                                       user: ConfigGet(1, 'SERVICE_DB', 'DB1_SYSTEM_ADMIN_USER'),
-                                       password: ConfigGet(1, 'SERVICE_DB', 'DB1_SYSTEM_ADMIN_PASS'),
-                                       database: ConfigGet(1, 'SERVICE_DB', 'DB1_NAME'),
-                                       charset: ConfigGet(1, 'SERVICE_DB', 'DB1_CHARACTERSET'),
-                                       connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB1_CONNECTION_LIMIT')
-                                    })
-                                    ]);
-                  return admin_pool_log_startDBApps(1, ConfigGet(1, 'SERVICE_DB', 'DB1_APP_ADMIN_USER'));
-               }
-               else
-                  resolve();
+               return init_pool_one_two(1);
                break;
             }
             case '2':{
-               //both system admin db pool and admin db pool should be enabled
-               if (ConfigGet(1, 'SERVICE_DB', 'DB2_SYSTEM_ADMIN_USER') &&
-                   ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER')){
-                  POOL_DB2_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                                    MYSQL.createPool({
-                                       port: ConfigGet(1, 'SERVICE_DB', 'DB2_PORT'),
-                                       host: ConfigGet(1, 'SERVICE_DB', 'DB2_HOST'),
-                                       user: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER'),
-                                       password: ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_PASS'),
-                                       database: ConfigGet(1, 'SERVICE_DB', 'DB2_NAME'),
-                                       charset: ConfigGet(1, 'SERVICE_DB', 'DB2_CHARACTERSET'),
-                                       connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTION_LIMIT')
-                                    }),
-                                    MYSQL.createPool({
-                                       port: ConfigGet(1, 'SERVICE_DB', 'DB2_PORT'),
-                                       host: ConfigGet(1, 'SERVICE_DB', 'DB2_HOST'),
-                                       user: ConfigGet(1, 'SERVICE_DB', 'DB2_SYSTEM_ADMIN_USER'),
-                                       password: ConfigGet(1, 'SERVICE_DB', 'DB2_SYSTEM_ADMIN_PASS'),
-                                       database: ConfigGet(1, 'SERVICE_DB', 'DB2_NAME'),
-                                       charset: ConfigGet(1, 'SERVICE_DB', 'DB2_CHARACTERSET'),
-                                       connnectionLimit: ConfigGet(1, 'SERVICE_DB', 'DB2_CONNECTION_LIMIT')
-                                    })
-                                    ]);
-                  return admin_pool_log_startDBApps(2, ConfigGet(1, 'SERVICE_DB', 'DB2_APP_ADMIN_USER'));
-               }
-               else
-                  resolve();
+               return init_pool_one_two(2);
                break;
             }
             case '3':{
-               //both system admin db pool and admin db pool should be enabled
-               if (ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER') &&
-                   ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER')){
-                  POOL_DB3_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                                    new PG.Pool({
+               let app_admin_pool = null;
+               let system_admin_pool = null;
+               if (ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'))
+                  system_admin_pool = new PG.Pool({
+                                          user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
+                                          password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
+                                          host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                          database: null,
+                                          port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                          connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                          idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                          max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
+                                       });
+                  
+               if (ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'))
+                  app_admin_pool = new PG.Pool({
                                        user: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'),
                                        password: ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_PASS'),
                                        host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
@@ -443,22 +442,12 @@ const DBStart = async () => {
                                        connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
                                        idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
                                        max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
-                                    }),
-                                    new PG.Pool({
-                                       user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
-                                       password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
-                                       host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
-                                       database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
-                                       port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
-                                       connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
-                                       idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
-                                       max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
-                                    })
-                                    ]);
-                  return admin_pool_log_startDBApps(3, ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'));
-               }
-               else
-                  resolve();
+                                    });
+               POOL_DB3_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                 app_admin_pool,
+                                 system_admin_pool
+                                 ]);
+               return admin_pool_log_startDBApps(3, ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'), ConfigGet(1, 'SERVICE_DB', 'DB3_APP_ADMIN_USER'), app_admin_pool);
                break;
             }
             case '4':{
@@ -482,42 +471,69 @@ const DBStart = async () => {
                // enableStatistics: false // record pool usage for ORACLEDB.getPool().getStatistics() and logStatistics()
                */
                //both system admin db pool and admin db pool should be enabled
-               if (ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER') &&
-                   ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER')){
-                     ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'),
-                                           password: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_PASS'),
-                                           connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
-                                           poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
-                                           poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
-                                           poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
-                                           poolAlias: `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`}, (err,result_app_admin_pool) => {
-                        // log with common app id at startup for all apps
-                        if (err)
-                           return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'), err);
-                        else{
-                           ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'),
-                                                 password: ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_PASS'),
-                                                 connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
-                                                 poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
-                                                 poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
-                                                 poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
-                                                 poolAlias: `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_SYSTEM_ADMIN`}, (err,result_system_admin_pool) => {
-                              if (err){
-                                 return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'), err);
-                              }
+               if (ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER')){
+                  ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'),
+                                        password: ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_PASS'),
+                                        connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
+                                        poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
+                                        poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
+                                        poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
+                                        poolAlias: `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_SYSTEM_ADMIN`}, (err,result_system_admin_pool) => {
+                     if (err)
+                        return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'), null, null, err);
+                     else
+                        if (ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER')){
+                           ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'),
+                                             password: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_PASS'),
+                                             connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
+                                             poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
+                                             poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
+                                             poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
+                                             poolAlias: `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`}, (err,result_app_admin_pool) => {
+                              // log with common app id at startup for all apps
+                              if (err)
+                                 return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'), ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'), null, err);
                               else{
                                  POOL_DB4_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                                    `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`,
-                                    `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_SYSTEM_ADMIN`
-                                 ]);
-                                 return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'));
+                                       `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`,
+                                       `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_SYSTEM_ADMIN`
+                                    ]);
+                                 return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'), ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'), `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`);
                               }
                            })
-                        }							
-                     });
+                        }
+                        else{
+                           POOL_DB4_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                              null,
+                              `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_SYSTEM_ADMIN`
+                           ]);
+                           resolve();
+                        }
+                  })
                }
                else
-                  resolve();
+                  if (ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER')){
+                     ORACLEDB.createPool({ user: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'),
+                                       password: ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_PASS'),
+                                       connectString: ConfigGet(1, 'SERVICE_DB', 'DB4_CONNECTSTRING'),
+                                       poolMin: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MIN')),
+                                       poolMax: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_MAX')),
+                                       poolIncrement: parseInt(ConfigGet(1, 'SERVICE_DB', 'DB4_POOL_INCREMENT')),
+                                       poolAlias: `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`}, (err,result_app_admin_pool) => {
+                        // log with common app id at startup for all apps
+                        if (err)
+                           return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'), ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'), null, err);
+                        else{
+                           POOL_DB4_APP.push([ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                                 `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`,
+                                 null
+                              ]);
+                           return admin_pool_log_startDBApps(4, ConfigGet(1, 'SERVICE_DB', 'DB4_SYSTEM_ADMIN_USER'), ConfigGet(1, 'SERVICE_DB', 'DB4_APP_ADMIN_USER'), `POOL_DB4_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN`);
+                        }
+                     })
+                  }
+                  else
+                     resolve();
                break;
             }
          }
@@ -949,6 +965,7 @@ const demo_get = async (app_id, callBack)=> {
 	})
 }
 const install_db_execute_statement = async (app_id, sql, parameters) => {
+   const {db_execute} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
    let {COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
    let stack = new Error().stack;
    return new Promise((resolve, reject) =>{
@@ -961,6 +978,85 @@ const install_db_execute_statement = async (app_id, sql, parameters) => {
 
    })
 }
+const install_db_get_files = async (json_type) =>{
+   let files;
+   let app_installed = 1;
+   let fs = await import('node:fs');
+   if (json_type == 'install')
+      files = [
+      /*
+         /scripts/install_database.json syntax:
+         contanins one statement for app_portfolio user with <APP_PASSWORD/> in "install"
+         {
+            "install": [
+               {"db": 1, "script": "[filename]"},
+               {"db": 2, "script": "[filename]"},
+               {"db": 3, "script": "[filename]"},
+               {"db": 4, "script": "[filename]"},
+               {"db": null, "script": "[filename]"}, //execute in all databases
+            ]
+         } 
+      */
+      [0, '/scripts/install_database.json'],
+      /*
+         /apps/admin/scripts/install_database.json and /apps/app[app_id]/scripts/install_database.json syntax:
+         contanins one statement for app_admin or app[app_id] user with <APP_PASSWORD/> in "users"
+         {
+            "install": [
+               {"db": 1, "script": "[filename]"},
+               {"db": 2, "script": "[filename]"},
+               {"db": 3, "script": "[filename]"},
+               {"db": 4, "script": "[filename]"},
+               {"db": null, "script": "[filename]"} //execute in all databases
+            ],
+            "users":[
+               {"db": 1, "app_id": 0, "sql": "[sql]"},
+               {"db": 2, "app_id": 0, "sql": "[sql]"},
+               {"db": 3, "app_id": 0, "sql": "[sql]"},
+               {"db": 4, "app_id": 0, "sql": "[sql]"}
+            ]
+         }
+      */
+      [1, '/apps/admin/scripts/install_database.json']
+   ];
+   else
+      files  = [
+      /*
+         /scripts/uninstall_database.json syntax:
+         {
+            "uninstall": [
+               {"db": 1, "sql": "[sql]"},
+               {"db": 2, "sql": "[sql]"},
+               {"db": 3, "sql": "[sql]"},
+               {"db": 4, "sql": "[sql]"}
+            ]
+         } 
+      */
+      [0, '/scripts/uninstall_database.json'],
+      /*
+         /apps/admin/scripts/uninstall_database.json and /apps/app[app_id]/scripts/uninstall_database.json syntax:
+         {
+            "uninstall": [
+               {"db": 1, "sql": "[sql]"},
+               {"db": 2, "sql": "[sql]"},
+               {"db": 3, "sql": "[sql]"},
+               {"db": 4, "sql": "[sql]"}
+               {"db": null, "sql": "[sql]"}  //deletes data, can be ignored if database is dropped
+            ]
+         }
+      */
+      [1, '/apps/admin/scripts/uninstall_database.json']
+   ];
+   while (true){
+      try {
+         let check_access = await fs.promises.access(`${process.cwd()}/apps/app${app_installed}/scripts/${json_type}_database.json`);   
+         files.push([app_installed + 1, `/apps/app${app_installed}/scripts/${json_type}_database.json`, app_installed]);
+         app_installed += 1; 
+      } catch (error) {
+         return files;
+      }
+   }
+}
 const install_db = async (app_id, callBack)=> {
    
    const {db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
@@ -968,135 +1064,108 @@ const install_db = async (app_id, callBack)=> {
    let fs = await import('node:fs');
    let count_statements = 0;
    let users_created = [];
+   let password_tag = '<APP_PASSWORD/>';
+   let result_statement;
    try {
-      const files = [
-         /*
-            /scripts/install_database.json syntax:
-            contanins one statement for app_portfolio user with <APP_PASSWORD/> in "install"
-            {
-               "install": [
-                  {"db": 1, "script": "[filename]"},
-                  {"db": 2, "script": "[filename]"},
-                  {"db": 3, "script": "[filename]"},
-                  {"db": 4, "script": "[filename]"},
-                  {"db": null, "script": "[filename]"}, //execute in all databases
-               ]
-            } 
-         */
-         [0, `file://${process.cwd()}/scripts/install_database.json`],
-         /*
-            /apps/admin/scripts/install_database.json and /apps/app[app_id]/scripts/install_database.json syntax:
-            contanins one statement for app_admin or app[app_id] user with <APP_PASSWORD/> in "users"
-            {
-               "install": [
-                  {"db": 1, "script": "[filename]"},
-                  {"db": 2, "script": "[filename]"},
-                  {"db": 3, "script": "[filename]"},
-                  {"db": 4, "script": "[filename]"},
-                  {"db": null, "script": "[filename]"} //execute in all databases
-               ],
-               "users":[
-                  {"db": 1, "app_id": 0, "sql": "[sql]"},
-                  {"db": 2, "app_id": 0, "sql": "[sql]"},
-                  {"db": 3, "app_id": 0, "sql": "[sql]"},
-                  {"db": 4, "app_id": 0, "sql": "[sql]"}
-               ]
-            }
-         */
-         [1, `file://${process.cwd()}/apps/admin/scripts/install_database.json`]
-      ];
-      //loop apps
-      let app_installed = 1;
-      fs.access(`${process.cwd()}/apps/app${app_installed}/scripts/install_database.json`, (err) => {
-            if (err)
-               return;
-            else{
-               files.push([app_installed + 1, `file://${process.cwd()}/apps/app${app_installed}/scripts/install_database.json`]);
-               app_installed += 1; 
-            }
-      })
-      for (let json in files){
-         for (let install_row in install_json.install.filter((db) => db == ConfigGet(1, 'SERVICE_DB', 'USE') || null)){
-            let install_json;
-            switch (json[0]){
+      let files = await install_db_get_files('install');
+      for (let file of files){
+         let install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
+         install_json = JSON.parse(install_json);
+         for (let install_row of install_json.install.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null)){
+            let install_sql;
+            switch (file[0]){
                case 0:{
                   //main script
-                  install_json = JSON.parse(await fs.promises.readFile(`file://${process.cwd()}/scripts/${install_row.script}`, 'utf8'));
+                  install_sql = await fs.promises.readFile(`${process.cwd()}/scripts/${install_row.script}`, 'utf8');
                   break;
                }
                case 1:{
                   //admin script
-                  install_json = JSON.parse(await fs.promises.readFile(`file://${process.cwd()}/apps/admin/scripts/${install_row.script}`, 'utf8'));
+                  install_sql = await fs.promises.readFile(`${process.cwd()}/apps/admin/scripts/${install_row.script}`, 'utf8');
                   break;
                }
                default:{
                   //app scripts
-                  install_json = JSON.parse(await fs.promises.readFile(`file://${process.cwd()}/apps/app${app_installed}/scripts/${install_row.script}`, 'utf8'));
+                  install_sql = await fs.promises.readFile(`${process.cwd()}/apps/app${file[2]}/scripts/${install_row.script}`, 'utf8');
                }
             }
+            
             //split script file into separate sql statements
-            for (let sql in install_json.split(';')){
-               let result_statement;
-               //ignore some sql in main script, these are executed in users sql
-               if (json[0] == 0 && 
-                  (sql.includes('CREATE USER app_admin') ||
-                   sql.includes('CREATE USER app_app1') ||
-                   sql.includes('CREATE USER app_app2') ||
-                   sql.includes('CREATE USER app_app3') ||
-                   sql.includes('GRANT role_app_admin TO app_admin') ||
-                   sql.includes('GRANT role_app_common TO app1') ||
-                   sql.includes('GRANT role_app_common TO app2') ||
-                   sql.includes('GRANT role_app_common TO app3')))
-                  continue;
-               else{
-                  if (json[0] == 0){
-                     if (sql.includes('<APP_PASSWORD/>')){
-                        let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                        users_created.push({"username": "app_portfolio", "password": sha256_password});
-                        sql.replace('<APP_PASSWORD/>', sha256_password);
+            for (let sql of install_sql.split(';')){
+               if (sql && sql != '\r\n' && sql != '\r\n\r\n'){
+                  try {
+                     if (file[0] == 0 && sql.includes(password_tag)){
+                           let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
+                           users_created.push({"username": "app_portfolio", "password": sha256_password});
+                           sql = sql.replace(password_tag, `'${sha256_password}'`);
                      }
-                  }
-                  result_statement = await install_db_execute_statement(app_id, sql, {});
+                     //if ; must be in wrong place then set tag in import script and convert it
+                     if (sql.includes('<SEMICOLON/>'))
+                        sql = sql.replace('<SEMICOLON/>', ';')
+                     result_statement = await install_db_execute_statement(app_id, sql, {});   
+                     count_statements += 1;
+                  } catch (error) {
+                     let sql_error = error;
+                     throw error;
+                  } 
                }
             }  
          }
-         for (let users_row in install_json.users.filter((db) => db == ConfigGet(1, 'SERVICE_DB', 'USE'))){
-            switch (json[0]){
-               case 1:{
-                  if (users_row.sql.includes('<APP_PASSWORD/>')){
-                     let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                     users_created.push({"username": "admin", "password": sha256_password});
-                     users_row.sql.replace('<APP_PASSWORD/>', sha256_password);
-                     //update server parameter
+         if (install_json.users)
+            for (let users_row of install_json.users.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null)){
+               switch (file[0]){
+                  case 1:{
+                     try {
+                        if (users_row.sql.includes(password_tag)){
+                           let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
+                           users_created.push({"username": "admin", "password": sha256_password});
+                           users_row.sql = users_row.sql.replace(password_tag, `'${sha256_password}'`);
+                           //update server parameter
+                        }   
+                     } catch (error) {
+                        let sql_error = error;
+                        throw error;
+                     }           
+                     break;
                   }
-                  break;
-               }
-               default:{
-                  if (users_row.sql.includes('<APP_PASSWORD/>')){
-                     let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                     users_created.push({"username": `app${json[0]}`, "password": sha256_password});
-                     users_row.sql.replace('<APP_PASSWORD/>', sha256_password);
-                     result_statement = await install_db_execute_statement(
-                                                               app_id, 
-                                                               `UPDATE ${db_schema()}.app_parameter 
-                                                                     SET parameter_value = :password;
-                                                                  WHERE app_id = :app_id
-                                                                     AND parameter_name = :parameter_name`, 
-                                                               {	
-                                                                  app_id: json[0],
-                                                                  password: sha256_password,
-                                                                  parameter_name: 'SERVICE_DB_APP_PASSWORD'
-                                                               });
-                     count_statements += 1;
+                  default:{
+                     try {
+                        if (users_row.sql.includes(password_tag)){
+                           let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
+                           users_created.push({"username": `app${file[2]}`, "password": sha256_password});
+                           users_row.sql = users_row.sql.replace(password_tag, `'${sha256_password}'`);
+                           result_statement = await install_db_execute_statement(
+                              app_id, 
+                              `UPDATE ${db_schema()}.app_parameter 
+                                    SET parameter_value = :password
+                                 WHERE app_id = :app_id
+                                    AND parameter_name = :parameter_name`, 
+                              {	
+                                 app_id: file[2],
+                                 password: sha256_password,
+                                 parameter_name: 'SERVICE_DB_APP_PASSWORD'
+                              });            
+                           count_statements += 1;
+                        }
+                     } catch (error) {
+                        let sql_error = error;
+                        throw error;
+                     } 
+                     break;
                   }
-                  break;
                }
+               try {
+                  result_statement = await install_db_execute_statement(app_id, users_row.sql, {});
+                  count_statements += 1;
+               } catch (error) {
+                  let sql_error = error;
+                  throw error;
+               }           
+               count_statements += 1;
             }
-            result_statement = await execute_statement(app_id, users_row.sql, {});
-            count_statements += 1;
-         }
       }
-      return callBack(null, {"count_statements": count_statements});
+      return callBack(null, {"count_statements": count_statements, 
+                             "users_created": users_created});
    } 
       catch (error) {
 			return callBack(error, null);
@@ -1116,79 +1185,34 @@ const install_db_check = async (app_id, callBack)=> {
    }
 }
 const install_db_delete = async (app_id, callBack)=> {
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
-   let fs = await import('node:fs');
    let count_statements = 0;
-   const files = [
-      /*
-         /scripts/uninstall_database.json syntax:
-         {
-            "uninstall": [
-               {"db": 1, "sql": "[sql]"},
-               {"db": 2, "sql": "[sql]"},
-               {"db": 3, "sql": "[sql]"},
-               {"db": 4, "sql": "[sql]"}
-            ]
-         } 
-      */
-      [0, `file://${process.cwd()}/scripts/uninstall_database.json`],
-      /*
-         /apps/admin/scripts/uninstall_database.json and /apps/app[app_id]/scripts/uninstall_database.json syntax:
-         {
-            "uninstall": [
-               {"db": 1, "sql": "[sql]"},
-               {"db": 2, "sql": "[sql]"},
-               {"db": 3, "sql": "[sql]"},
-               {"db": 4, "sql": "[sql]"}
-               {"db": null, "sql": "[sql]"}  //deletes data, can be ignored if database is dropped
-            ]
-         }
-      */
-      [1, `file://${process.cwd()}/apps/admin/scripts/uninstall_database.json`]
-   ];
-   //loop apps with uninstall_database.json
-   let app_installed = 1;
-   fs.access(`${process.cwd()}/apps/app${app_installed}/scripts/uninstall_database.json`, (err) => {
-      if (err)
-         return;
-      else{
-         files.push([app_installed + 1, `file://${process.cwd()}/apps/app${app_installed}/scripts/uninstall_database.json`]);
-         app_installed += 1; 
-      }
-   })
-   for (let json in files){
-      for (let install_row in install_json.install.filter((db) => db == ConfigGet(1, 'SERVICE_DB', 'USE') || null)){
-         let uninstall_json;
-         let result_statement;
-         switch (json[0]){
-            case 0:{
-               //main script
-               uninstall_json = JSON.parse(await fs.promises.readFile(`file://${process.cwd()}/scripts/${install_row.script}`, 'utf8'));
-               break;
-            }
-            case 1:{
-               //admin script
-               uninstall_json = JSON.parse(await fs.promises.readFile(`file://${process.cwd()}/apps/admin/scripts/${install_row.script}`, 'utf8'));
-               break;
-            }
-            default:{
-               //app scripts
-               uninstall_json = JSON.parse(await fs.promises.readFile(`file://${process.cwd()}/apps/app${app_installed}/scripts/${install_row.script}`, 'utf8'));
-            }
-         }
-         for (let sql_row in uninstall_json.uninstall.filter((db) => db == ConfigGet(1, 'SERVICE_DB', 'USE'))){
-            result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});
+   let count_statements_fail = 0;
+   let fs = await import('node:fs');
+   let files = await install_db_get_files('uninstall');
+   let skip_error = true;
+   for (let file of  files){
+      let uninstall_sql = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
+      uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE'));
+      for (let sql_row of uninstall_sql){
+         try {
+            let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});
             count_statements += 1;
+         } catch (error) {
+            count_statements_fail += 1;
+            if (skip_error == true)
+               continue;
+            else
+               return callBack(error, null);
          }
-         /*update parameters in config.json
+      }
+      /*update parameters in config.json
             DB[USE]_SYSTEM_ADMIN_USER = null
             DB[USE]_SYSTEM_ADMIN_PASS = null
             DB[USE]_APP_ADMIN_USER = null
             DB[USE]_APP_ADMIN_PASS = null
-         */
-      }
+      */
    }
-	return callBack(null);
+   return callBack(null, {"count" : count_statements, "count_fail": count_statements_fail});
 }
 
 export{ORACLEDB, 

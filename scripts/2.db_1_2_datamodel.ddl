@@ -2,11 +2,11 @@ CREATE ROLE role_app_admin;
 CREATE ROLE role_app_common;
 CREATE ROLE role_app_dba;
 
-CREATE USER app_portfolio IDENTIFIED BY '<APP_PASSWORD/>'
+CREATE USER app_portfolio IDENTIFIED BY <APP_PASSWORD/>
     ACCOUNT UNLOCK;
 GRANT role_app_dba TO app_portfolio;
 
-GRANT ALL PRIVILEGES ON DATABASE app_portfolio.* TO role_app_dba;
+GRANT ALL PRIVILEGES ON app_portfolio.* TO role_app_dba;
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
@@ -144,7 +144,7 @@ ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_language VARCHAR(100) COMME
     'navigator.language';
 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_timezone VARCHAR(100) COMMENT
-    'Intl.DateTimeFormat().resolvedOptions().timeZone;';
+    'Intl.DateTimeFormat().resolvedOptions().timeZone';
 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_number_system VARCHAR(100) COMMENT
     'Intl.NumberFormat().resolvedOptions().numberingSystem';

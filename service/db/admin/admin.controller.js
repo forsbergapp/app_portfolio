@@ -94,34 +94,34 @@ const demo_get = async (req, res)=> {
 		});
 	});
 }
-const install_db = () =>{
+const install_db = (req, res) =>{
 	service.install_db(req.query.app_id, (err, results) =>{
-		if (err) {
+		if (err)
 			return res.status(500).send({
 				data: err
 			});
-		}
-		return res.status(200).json(results);
+		else
+			return res.status(200).json(results);
 	});
 }
-const install_db_check = () =>{
+const install_db_check = (req, res) =>{
 	service.install_db_check(req.query.app_id, (err, results) =>{
-		if (err) {
+		if (err)
 			return res.status(500).send({
 				data: err
 			});
-		}
-		return res.status(200).json(results);
+		else
+			return res.status(200).json(results);
 	});
 }
-const install_db_delete = () =>{
+const install_db_delete = (req, res) =>{
 	service.install_db_delete(req.query.app_id, (err, results) =>{
-		if (err) {
+		if (err)
 			return res.status(500).send({
 				data: err
 			});
-		}
-		return res.status(200).json(results);
+		else
+			return res.status(200).json(results);
 	});
 }
 
