@@ -1,3 +1,4 @@
+const { get_pool } = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
@@ -18,7 +19,7 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
             ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
             ['<AppDialogues/>', process.cwd() + '/apps/admin/src/dialogues.html']
             ];
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
+        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && get_pool(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),null)!=null){
             getUserPreferences(app_id, locale).then((user_preferences) => {
                 read_app_files('', files, (err, app)=>{
                     if (err)
@@ -93,15 +94,16 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
                         '<AppProfileTop/>',
                         '');
                     get_module_with_init(app_id,
-                                        1,  //system admin, no db available
-                                        null,  
-                                        'app.admin_exception_before',
-                                        null, //do not close eventsource before
-                                        true, //ui
-                                        gps_lat,
-                                        gps_long,
-                                        gps_place,
-                                        app, (err, app_init) =>{
+                                         locale,
+                                         1,  //system admin, no db available
+                                         null,  
+                                         'app.admin_exception_before',
+                                         null, //do not close eventsource before
+                                         true, //ui
+                                         gps_lat,
+                                         gps_long,
+                                         gps_place,
+                                         app, (err, app_init) =>{
                         if (err)
                             reject(err);
                         else{

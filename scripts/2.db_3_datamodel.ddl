@@ -2,7 +2,7 @@ CREATE ROLE role_app_admin;
 CREATE ROLE role_app_common;
 CREATE ROLE role_app_dba;
 
-CREATE USER app_portfolio PASSWORD '<APP_PASSWORD/>';
+CREATE USER app_portfolio PASSWORD <APP_PASSWORD/>;
 GRANT role_app_dba TO app_portfolio;
 
 CREATE SCHEMA AUTHORIZATION app_portfolio;
@@ -147,7 +147,7 @@ COMMENT ON COLUMN app_portfolio.app_log.user_language IS
     'navigator.language';
 
 COMMENT ON COLUMN app_portfolio.app_log.user_timezone IS
-    'Intl.DateTimeFormat().resolvedOptions().timeZone;';
+    'Intl.DateTimeFormat().resolvedOptions().timeZone';
 
 COMMENT ON COLUMN app_portfolio.app_log.user_number_system IS
     'Intl.NumberFormat().resolvedOptions().numberingSystem';
