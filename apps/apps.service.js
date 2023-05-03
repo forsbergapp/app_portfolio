@@ -270,8 +270,8 @@ const get_module_with_init = async (app_id,
 
     if (system_admin==1){
         let system_admin_only = '';
-        const { get_pool } = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='0' || get_pool(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),null)==null)
+        const { admin_pool_started } = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
+        if (ConfigGet(1, 'SERVICE_DB', 'START')=='0' || admin_pool_started() == 0)
             system_admin_only = 1;
         else
             system_admin_only = 0;
@@ -363,7 +363,7 @@ const get_module_with_init = async (app_id,
 }
 
 const AppsStart = async (app) => {
-    const { get_pool} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
+    const { admin_pool_started} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
     return await new Promise((resolve) => {
         const load_dynamic_code = async (app_id) => {
             return await new Promise((resolve) => {
@@ -388,7 +388,7 @@ const AppsStart = async (app) => {
         //start always admin app first
         load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), app).then(() => {
             //load apps if database started and admin pool is started, database can be started with system admin pool only
-            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && get_pool(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),null)!=null){
+            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`).then(({ getAppsAdmin }) => {
                     getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
                         if (err) {

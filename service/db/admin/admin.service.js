@@ -593,6 +593,12 @@ const get_pool = (app_id, pool_col=1) => {
    }
    return pool;
 }
+const admin_pool_started = () =>{
+   if (get_pool(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),null)==null)
+      return 0;
+   else
+      return 1;
+}
 const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
    /* create demo users with user settings from /scripts/demo/demo.json
 	   and reading images in /scripts/demo/demo*.webp
@@ -1250,4 +1256,7 @@ const install_db_delete = async (app_id, callBack)=> {
 }
 
 export{ORACLEDB, 
-       DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, get_pool, demo_add, demo_get, demo_delete, install_db, install_db_check, install_db_delete}
+       DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, 
+       get_pool, admin_pool_started, 
+       demo_add, demo_get, demo_delete, 
+       install_db, install_db_check, install_db_delete}
