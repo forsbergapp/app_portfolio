@@ -919,9 +919,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                                       {"user_account_setting_view": records_user_account_setting_view}
                                     ]});
 	} catch (error) {
-		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.controller.js`).then(({checked_error}) =>{
-			return callBack(checked_error(app_id, lang_code, error, res));
-		})
+		return callBack(error, null);
 	}	
 }
 const demo_delete = async (app_id, callBack)=> {
@@ -1072,14 +1070,40 @@ const install_db = async (app_id, optional=null, callBack)=> {
    const {createLogAppS} = await import(`file://${process.cwd()}/server/log/log.service.js`);
    const {COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
    let {createHash} = await import('node:crypto');
+   const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
    let fs = await import('node:fs');
    let count_statements = 0;
    let count_statements_optional = 0;
    let install_result = [];
    let password_tag = '<APP_PASSWORD/>';
    let result_statement;
+   let change_system_admin_pool=true;
    let stack = new Error().stack;
    install_result.push({"start": new Date().toISOString()});
+   const sql_with_password = (username, sql) =>{
+      let password;
+      //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
+      //Database users use SHA256
+      password = createHash('sha256').update(new Date().toISOString()).digest('hex');
+      install_result.push({[`${username}`]: password});
+      if (sql.toUpperCase().includes('INSERT INTO'))
+         password = hashSync(password, genSaltSync(10));
+      if (ConfigGet(1, 'SERVICE_DB', 'USE')=='4'){
+         // max 30 characters for passwords and without double quotes
+         // also fix ORA-28219: password verification failed for mandatory profile
+         // ! + random A-Z character
+         let random_characters = '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
+         password= password.substring(0,28) + random_characters;
+         //use singlequote for INSERT, else doublequote for CREATE USER
+         if (sql.toUpperCase().includes('INSERT INTO'))
+            sql = sql.replace(password_tag, `'${password}'`);
+         else
+            sql = sql.replace(password_tag, `"${password}"`);
+      }   
+      else
+         sql = sql.replace(password_tag, `'${password}'`);
+      return [sql, password];
+   }
    try {
       let files = await install_db_get_files('install');
       for (let file of files){
@@ -1110,19 +1134,56 @@ const install_db = async (app_id, optional=null, callBack)=> {
             
             //split script file into separate sql statements
             for (let sql of install_sql.split(';')){
-               if (sql && sql != '\r\n' && sql != '\r\n\r\n'){
+               const check_sql = (sql) =>{
+                  if (!sql || sql.endsWith('\r\n'))
+                     return false;
+                  else
+                     return true;
+               }
+               if (check_sql(sql)){
                   try {
                      if (file[0] == 0 && sql.includes(password_tag)){
-                           let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
+                           let sql_and_pw;
                            if (sql.toUpperCase().includes('INSERT INTO'))
-                              install_result.push({"admin": sha256_password});
+                              sql_and_pw = sql_with_password("admin", sql);
                            else
-                              install_result.push({"app_portfolio": sha256_password});
-                           sql = sql.replace(password_tag, `'${sha256_password}'`);
+                              sql_and_pw = sql_with_password("app_portfolio", sql);
+                           sql = sql_and_pw[0];
                      }
                      //if ; must be in wrong place then set tag in import script and convert it
                      if (sql.includes('<SEMICOLON/>'))
                         sql = sql.replace('<SEMICOLON/>', ';')
+                     if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
+                        if (sql.toUpperCase().includes('CREATE DATABASE')){
+                           POOL_DB3_APP[0][2].end()
+                           POOL_DB3_APP[0][2] = new PG.Pool({
+                              user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
+                              password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
+                              host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                              database: null,
+                              port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                              connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                              idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                              max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
+                           });
+                        }
+                        else{
+                           if (change_system_admin_pool == true){
+                              POOL_DB3_APP[0][2].end();
+                              POOL_DB3_APP[0][2] = new PG.Pool({
+                                 user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
+                                 password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
+                                 host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                 database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
+                                 port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                 connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                 idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                 max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
+                              });
+                              //change to database value for the rest of the function
+                              change_system_admin_pool = false;
+                           }
+                        }
                      result_statement = await install_db_execute_statement(app_id, sql, {});
                      if (install_row.hasOwnProperty('optional')==true && install_row.optional==optional)
                         count_statements_optional += 1;
@@ -1143,9 +1204,8 @@ const install_db = async (app_id, optional=null, callBack)=> {
                   case 1:{
                      try {
                         if (users_row.sql.includes(password_tag)){
-                           let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                           install_result.push({"app_admin": sha256_password});
-                           users_row.sql = users_row.sql.replace(password_tag, `'${sha256_password}'`);
+                           let sql_and_pw = sql_with_password("app_admin", users_row.sql);
+                           users_row.sql = sql_and_pw[0];
                            //update server parameter
                         }   
                      } catch (error) {
@@ -1159,10 +1219,8 @@ const install_db = async (app_id, optional=null, callBack)=> {
                   default:{
                      try {
                         if (users_row.sql.includes(password_tag)){
-                           let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                           let app_username = 'app' + file[2];
-                           install_result.push({[`${app_username}`]: sha256_password});
-                           users_row.sql = users_row.sql.replace(password_tag, `'${sha256_password}'`);
+                           let sql_and_pw = sql_with_password('app' + file[2], users_row.sql);
+                           users_row.sql = sql_and_pw[0];
                            result_statement = await install_db_execute_statement(
                               app_id, 
                               `UPDATE ${db_schema()}.app_parameter 
@@ -1171,7 +1229,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
                                     AND parameter_name = :parameter_name`, 
                               {	
                                  app_id: file[2],
-                                 password: sha256_password,
+                                 password: sql_and_pw[1],
                                  parameter_name: 'SERVICE_DB_APP_PASSWORD'
                               });            
                            count_statements += 1;
@@ -1233,6 +1291,30 @@ const install_db_delete = async (app_id, callBack)=> {
       uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE'));
       for (let sql_row of uninstall_sql){
          try {
+            if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
+               POOL_DB3_APP[0][2].end()
+               if (sql_row.sql.toUpperCase().includes('DROP DATABASE'))
+                  POOL_DB3_APP[0][2] = new PG.Pool({
+                                          user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
+                                          password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
+                                          host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                          database: null,
+                                          port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                          connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                          idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                          max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
+                                       });
+               else
+                  POOL_DB3_APP[0][2] = new PG.Pool({
+                                          user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
+                                          password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
+                                          host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
+                                          database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
+                                          port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
+                                          connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
+                                          idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
+                                          max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
+                                       });
             let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});
             count_statements += 1;
          } catch (error) {

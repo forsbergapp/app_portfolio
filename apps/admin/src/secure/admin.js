@@ -130,17 +130,20 @@ const show_menu = (menu) => {
         }
         //INSTALLATION
         case 7:{
+            let old_html = document.querySelector(`#install_db_icon`).innerHTML;
+            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'GET', 2, null, null, null, (err, result) =>{
+                document.querySelector(`#install_db_icon`).innerHTML = old_html;
+                document.querySelector(`#install_db_icon`).classList.remove('installed');
+                if (err==null && JSON.parse(result).installed == 1)
+                    document.querySelector(`#install_db_icon`).classList.add('installed');
+            })
             break;
         }
         //DATABASE
         case 8:{
-            if (common.COMMON_GLOBAL['system_admin_only']==1){
-                common.show_message('EXCEPTION', null, null, common.ICONS['app_database'] + ' ' + common.ICONS['app_database_notstarted'], common.COMMON_GLOBAL['app_id'])
-            }
-            else
-                show_db_info().then(() => {
-                    show_db_info_space();
-                })
+            show_db_info().then(() => {
+                show_db_info_space();
+            })
             break;
         }
         //BACKUP/RESTORE
@@ -2779,6 +2782,7 @@ const init_admin_secure = () => {
             common.common_fetch(url, 'POST', 2, null, null, null, (err, result) =>{
                 document.querySelector(`#install_db_button_install`).innerHTML = old_html;
                 if (err == null){
+                    document.querySelector(`#install_db_icon`).classList.add('installed');
                     let result_obj = JSON.parse(result);
                     common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                 }
@@ -2791,6 +2795,7 @@ const init_admin_secure = () => {
             common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'DELETE', 2, null, null, null, (err, result) =>{
                 document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
                 if (err == null){
+                    document.querySelector(`#install_db_icon`).classList.remove('installed');
                     let result_obj = JSON.parse(result);
                     common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                 }

@@ -187,7 +187,7 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, `DB {ConfigGet(1, 'SERVICE_DB', 'USE')} catch:` + error).then(() => {
 						//return full error to system admin
 						if (pool_col==2)
-							return callBack(err, null);
+							return callBack(error, null);
 						else
 							return callBack(database_error, null);
 					})
@@ -275,7 +275,7 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + error).then(() => {
 						//return full error to system admin
 						if (pool_col==2)
-							return callBack(err, null);
+							return callBack(error, null);
 						else
 							return callBack(database_error, null);
 						})
