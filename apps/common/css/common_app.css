@@ -144,6 +144,26 @@ a:active {
 #common_message_title .common_icon svg{
 	height: 1em;
 }
+#common_message_title #common_message_info_list{
+	display: block;
+	width: 300px;
+}
+#common_message_title #common_message_info_list #common_message_info_list_title{
+	font-weight: bold;
+	font-size: 1.5em;
+}
+#common_message_title #common_message_info_list .common_message_info_list_row{
+	display: inline-block;
+	width: 100%;
+	margin: 2px;
+}
+#common_message_title #common_message_info_list .common_message_info_list_row .common_message_info_list_col{
+	display: inline-block;
+	width: calc(50% - 10px);
+	text-align: start;
+	vertical-align: top;
+}
+
 /* Dialogue Verification code*/
 #common_dialogue_user_verify{
 	visibility: hidden;
