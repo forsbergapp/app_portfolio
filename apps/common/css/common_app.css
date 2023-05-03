@@ -986,5 +986,8 @@ a:active {
 	#common_window_info_toolbar{
 		margin-left: calc((100% - 420px)/2);
 		margin-right: calc((100% - 420px)/2);
+	}
+	#common_message_title #common_message_info_list{
+		width: 500px;
 	}	
 }

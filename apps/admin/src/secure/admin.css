@@ -566,6 +566,10 @@
     #install_db, #install_demo{
         margin:auto;
     }
+    #install_db_icon.installed{
+        animation: common_pulsate 2s ease-out;
+        animation-iteration-count: infinite;
+    }    
     #install_db_icon, #install_demo_demo_users_icon{
         display: block;
         font-size: 30px;

@@ -1032,87 +1032,74 @@ ALTER TABLE app_portfolio.user_account_view
         REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
-/*grant to all sequences created for SERIAL columns*/
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app_portfolio TO role_app_admin;
 GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA app_portfolio TO role_app_common;
 
-/*if tables are created logged in as postgres, then change owner of tables to app_portfolio
-when postgres user logged in to app_portfolio database
-SELECT format( 'ALTER TABLE %I OWNER TO app_portfolio;', tablename)
-FROM pg_catalog.pg_tables 
-WHERE schemaname = 'app_portfolio';
-*/
+ALTER TABLE app_portfolio.app OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_category OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_category_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_device OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app_category OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app_object_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app_parameter OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.device_type OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.event OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app_screenshot OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app_setting_like OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app_setting_view OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.device OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.country OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.country_group OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.country_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.language OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.event_type OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.event_status OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.identity_provider OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.language_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.locale OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.message OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.parameter_type OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.message_level OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.message_type OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.message_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.profile_search OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.setting_type OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.setting OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.setting_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_event OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app_setting OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_follow OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_like OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_log OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_message OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_item OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_item_subitem OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_item_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_subitem_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_object_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_parameter OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_role OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.app_screenshot OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.country OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.country_group OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.country_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.device OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.device_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.event OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.event_status OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.event_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.identity_provider OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.language OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.language_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.locale OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message_level OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.message_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.parameter_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.parameter_type_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.profile_search OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.setting OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.setting_translation OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.setting_type OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_setting OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_setting_like OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_setting_view OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_event OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_follow OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_like OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_logon OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_view OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app_log OWNER TO app_portfolio;
 
-/*if tables are created logged in as postgres, then change owner of sequences to app_portfolio
-this is implicitly already done in changning owner of tables
-list of sequences created:
-SELECT format( 'ALTER SEQUENCE %I OWNER TO app_portfolio;', sequencename)       
-FROM pg_catalog.pg_sequences 
-WHERE schemaname = 'app_portfolio';
-
-ALTER SEQUENCE app_portfolio.app_log_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.app_category_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app_log_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.app_screenshot_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.country_group_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.country_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.device_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.device_type_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_status_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.app_screenshot_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.user_account_app_setting_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.user_account_like_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.user_account_app_setting_like_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.country_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.country_group_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.device_type_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.device_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.event_type_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.language_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.message_level_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.message_type_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.setting_id_seq OWNER TO app_portfolio;
-ALTER SEQUENCE app_portfolio.user_account_follow_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.setting_type_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_app_setting_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_app_setting_like_id_seq OWNER TO app_portfolio;
+ALTER SEQUENCE app_portfolio.user_account_follow_id_seq OWNER TO app_portfolio;
 ALTER SEQUENCE app_portfolio.user_account_id_seq OWNER TO app_portfolio;
-*/
+ALTER SEQUENCE app_portfolio.user_account_like_id_seq OWNER TO app_portfolio;
