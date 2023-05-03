@@ -31,6 +31,7 @@
         {"db": null, "script": "2.db_all_app_vi.sql"},
         {"db": null, "script": "2.db_all_app_zh-hant.sql"},
         {"db": null, "script": "2.db_all_app_zh.sql"},
+        {"db": 1,    "script": "3.db_1_2_parameter_secrets.sql"},
         {"db": 2,    "script": "3.db_1_2_parameter_secrets.sql"},
         {"db": 3,    "script": "3.db_3_parameter_secrets.sql"},
         {"db": 4,    "script": "3.db_4_parameter_secrets.sql"}
