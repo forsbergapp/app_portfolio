@@ -217,7 +217,6 @@ const setEvents = (system_admin_only=0) => {
                                                                                     document.getElementById('common_user_menu_dropdown').style='none';
                                                                                 }, false);
 
-        document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
         document.getElementById('common_user_locale_select').addEventListener('change', (event) => { 
                                                                                     common.common_translate_ui(event.target.value, null, (err, result)=>{
                                                                                             null
@@ -225,6 +224,7 @@ const setEvents = (system_admin_only=0) => {
                                                                                 }, false);
         document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
     }
+    document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
     
 }
 const delete_globals = () => {
