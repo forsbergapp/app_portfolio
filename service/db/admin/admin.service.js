@@ -903,16 +903,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				}
 			}
 		}
-      return callBack(null, {
-			count_records_user_account: records_user_account,
-			count_records_user_account_app: records_user_account_app,
-			count_records_user_account_app_setting: records_user_account_app_setting,
-			count_records_user_account_like: records_user_account_like,
-			count_records_user_account_view: records_user_account_view,
-			count_records_user_account_follow: records_user_account_follow,
-			count_records_user_account_setting_like: records_user_account_setting_like,
-			count_records_user_account_setting_view: records_user_account_setting_view
-		});
+      return callBack(null, {"info":[{"user_account": records_user_account},
+                                      {"user_account_app": records_user_account_app},
+                                      {"user_account_app_setting": records_user_account_app_setting},
+                                      {"user_account_like": records_user_account_like},
+                                      {"user_account_view": records_user_account_view},
+                                      {"user_account_follow": records_user_account_follow},
+                                      {"user_account_setting_like": records_user_account_setting_like},
+                                      {"user_account_setting_view": records_user_account_setting_view}
+                                    ]});
 	} catch (error) {
 		import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.controller.js`).then(({checked_error}) =>{
 			return callBack(checked_error(app_id, lang_code, error, res));
@@ -945,11 +944,14 @@ const demo_delete = async (app_id, callBack)=> {
 						})
 					}
 					delete_user().then(()=>{
-                  return callBack(null, result_demo_users.length);
+                  if (err)
+                     return callBack(err, null);
+                  else
+                     return callBack(null, {"info": [{"count": deleted_user}]});
 					});
 				}
 				else
-               return callBack(null, result_demo_users.length);
+               return callBack(null, {"info": [{"count": result_demo_users.length}]});
 			}
 		});
 	})
@@ -994,6 +996,7 @@ const install_db_get_files = async (json_type) =>{
                {"db": 3, "script": "[filename]"},
                {"db": 4, "script": "[filename]"},
                {"db": null, "script": "[filename]"}, //execute in all databases
+               {"db": null, "script": "[filename]", "optional":1}, //installs if optional is chosen
             ]
          } 
       */
@@ -1057,21 +1060,30 @@ const install_db_get_files = async (json_type) =>{
       }
    }
 }
-const install_db = async (app_id, callBack)=> {
+const install_db = async (app_id, optional=null, callBack)=> {
    
    const {db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
+   const {createLogAppS} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+   const {COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
    let {createHash} = await import('node:crypto');
    let fs = await import('node:fs');
    let count_statements = 0;
-   let users_created = [];
+   let count_statements_optional = 0;
+   let install_result = [];
    let password_tag = '<APP_PASSWORD/>';
    let result_statement;
+   let stack = new Error().stack;
+   install_result.push({"start": new Date().toISOString()});
    try {
       let files = await install_db_get_files('install');
       for (let file of files){
          let install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
          install_json = JSON.parse(install_json);
-         for (let install_row of install_json.install.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null)){
+         //filter for current database or for all databases and optional rows
+         for (let install_row of install_json.install.filter((row) => (row.hasOwnProperty('optional')==false ||
+                                                                       (row.hasOwnProperty('optional')==true &&
+                                                                        row.optional==optional)) && 
+                                                             (row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null))){
             let install_sql;
             switch (file[0]){
                case 0:{
@@ -1096,17 +1108,25 @@ const install_db = async (app_id, callBack)=> {
                   try {
                      if (file[0] == 0 && sql.includes(password_tag)){
                            let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                           users_created.push({"username": "app_portfolio", "password": sha256_password});
+                           if (sql.toUpperCase().includes('INSERT INTO'))
+                              install_result.push({"admin": sha256_password});
+                           else
+                              install_result.push({"app_portfolio": sha256_password});
                            sql = sql.replace(password_tag, `'${sha256_password}'`);
                      }
                      //if ; must be in wrong place then set tag in import script and convert it
                      if (sql.includes('<SEMICOLON/>'))
                         sql = sql.replace('<SEMICOLON/>', ';')
-                     result_statement = await install_db_execute_statement(app_id, sql, {});   
-                     count_statements += 1;
+                     result_statement = await install_db_execute_statement(app_id, sql, {});
+                     if (install_row.hasOwnProperty('optional')==true && install_row.optional==optional)
+                        count_statements_optional += 1;
+                     else
+                        count_statements += 1;
                   } catch (error) {
-                     let sql_error = error;
-                     throw error;
+                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                   `install_db ${file[0]}: ` + sql + ' ' + error).then(() => {
+                        throw error;
+                     })
                   } 
                }
             }  
@@ -1118,13 +1138,15 @@ const install_db = async (app_id, callBack)=> {
                      try {
                         if (users_row.sql.includes(password_tag)){
                            let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                           users_created.push({"username": "admin", "password": sha256_password});
+                           install_result.push({"app_admin": sha256_password});
                            users_row.sql = users_row.sql.replace(password_tag, `'${sha256_password}'`);
                            //update server parameter
                         }   
                      } catch (error) {
-                        let sql_error = error;
-                        throw error;
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                      `install_db ${file[0]}: ` + users_row.sql + ' ' + error).then(() => {
+                           throw error;
+                        })
                      }           
                      break;
                   }
@@ -1132,7 +1154,8 @@ const install_db = async (app_id, callBack)=> {
                      try {
                         if (users_row.sql.includes(password_tag)){
                            let sha256_password = createHash('sha256').update(new Date().toISOString()).digest('hex');
-                           users_created.push({"username": `app${file[2]}`, "password": sha256_password});
+                           let app_username = 'app' + file[2];
+                           install_result.push({[`${app_username}`]: sha256_password});
                            users_row.sql = users_row.sql.replace(password_tag, `'${sha256_password}'`);
                            result_statement = await install_db_execute_statement(
                               app_id, 
@@ -1148,8 +1171,10 @@ const install_db = async (app_id, callBack)=> {
                            count_statements += 1;
                         }
                      } catch (error) {
-                        let sql_error = error;
-                        throw error;
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                      `install_db ${file[0]}: ` + users_row.sql + ' ' + error).then(() => {
+                           throw error;
+                        })
                      } 
                      break;
                   }
@@ -1158,17 +1183,24 @@ const install_db = async (app_id, callBack)=> {
                   result_statement = await install_db_execute_statement(app_id, users_row.sql, {});
                   count_statements += 1;
                } catch (error) {
-                  let sql_error = error;
-                  throw error;
+                  createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                `install_db ${file[0]}: ` + users_row.sql + ' ' + error).then(() => {
+                     throw error;
+                  })
                }           
                count_statements += 1;
             }
       }
-      return callBack(null, {"count_statements": count_statements, 
-                             "users_created": users_created});
+      install_result.push({"SQL": count_statements});
+      install_result.push({"SQL optional": count_statements_optional});
+      install_result.push({"finished": new Date().toISOString()});
+      return callBack(null, {"info": install_result});
    } 
       catch (error) {
-			return callBack(error, null);
+         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                       'catch:' +  error).then(() => {
+            return callBack(error, null);
+         })
    }
 }
 const install_db_check = async (app_id, callBack)=> {
@@ -1212,7 +1244,9 @@ const install_db_delete = async (app_id, callBack)=> {
             DB[USE]_APP_ADMIN_PASS = null
       */
    }
-   return callBack(null, {"count" : count_statements, "count_fail": count_statements_fail});
+   return callBack(null, {"info":[{"count"     : count_statements},
+                                   {"count_fail": count_statements_fail}
+                                 ]});
 }
 
 export{ORACLEDB, 

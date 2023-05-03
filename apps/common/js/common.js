@@ -155,6 +155,7 @@ const ICONS = {
     "app_logoff":               icon_string('f2f5'),
     "app_signup":               icon_string('f4ff'),
     "app_forgot":               icon_string('f059'),
+    "app_question":             icon_string('f059'),
     "app_timetable":            icon_string('f073'),
     "app_role":                 icon_string('f630'),
     "app_active":               icon_string('f205'),
@@ -870,6 +871,22 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
 /*----------------------- */
 /* MESSAGE & DIALOGUE     */
 /*----------------------- */
+const show_message_info_list = (list_obj) =>{
+    let html = '';
+    for (let item of list_obj){
+        html += `<div id='common_message_info_list'>
+                    <div class='common_message_info_list_row'>
+                        <div class='common_message_info_list_col'>
+                            <div>${Object.keys(item)}</div>
+                        </div>
+                        <div class='common_message_info_list_col'>
+                            <div>${Object.values(item)}</div>
+                        </div>
+                    </div>
+                </div>`;
+    }
+    return html;
+}
 const dialogue_close = async (dialogue) => {
     return new Promise((resolve, reject)=>{
         let animationDuration = 400;
@@ -3644,23 +3661,11 @@ export{/* GLOBALS*/
        list_image_format_src, recreate_img, convert_image, set_avatar, boolean_to_number, number_to_boolean,
        inIframe, show_image, getHostname, check_input, get_uservariables, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
-       dialogue_close, show_common_dialogue, show_message, dialogue_verify_clear, dialogue_new_password_clear,
+       show_message_info_list, dialogue_close, show_common_dialogue, show_message, dialogue_verify_clear, dialogue_new_password_clear,
        dialogue_user_edit_clear, dialogue_login_clear, dialogue_signup_clear, dialogue_forgot_clear, dialogue_profile_clear,
        dialogue_user_edit_remove_error, lov_close, lov_show, lov_keys, lov_filter,
        /* WINDOW INFO */
        zoom_info, move_info, show_window_info,
-       /* BROADCAST */
-       broadcast_init, maintenance_countdown, show_broadcast, show_broadcast_info, show_maintenance, reconnect,
-       updateOnlineStatus, connectOnline, checkOnline,
-       /* GPS */
-       get_place_from_gps, get_gps_from_ip, tzlookup,
-       /* MAP  */
-       map_init, map_resize, map_line_removeall, map_line_create,
-       map_setevent, map_setstyle, map_update_popup, map_update,
-       /* COUNTRY & CITIES */
-       get_cities,
-       /* QR */
-       create_qr,
        /* PROFILE */
        profile_follow_like, show_profile_click_events, profile_top, profile_detail, search_profile, profile_show,
        profile_close, profile_update_stat, search_input,
@@ -3670,6 +3675,18 @@ export{/* GLOBALS*/
        user_preferences_set_default_globals, user_preferences_update_select,
        /* USER PROVIDER */
        Providers_init, ProviderUser_update, ProviderSignIn,
+       /* MODULE LEAFLET  */
+       map_init, map_resize, map_line_removeall, map_line_create,
+       map_setevent, map_setstyle, map_update_popup, map_update,
+       /* MODULE EASY.QRCODE */
+       create_qr,
+       /* SERVICE BROADCAST */
+       broadcast_init, maintenance_countdown, show_broadcast, show_broadcast_info, show_maintenance, reconnect,
+       updateOnlineStatus, connectOnline, checkOnline,
+       /* SERVICE GEOLOCATION */
+       get_place_from_gps, get_gps_from_ip, tzlookup,
+       /* SERVICE WORLDCITIES */
+       get_cities,       
        /* EXCEPTION */
        exception,
        /* INIT */

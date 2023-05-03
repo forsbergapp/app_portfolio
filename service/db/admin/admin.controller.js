@@ -95,7 +95,7 @@ const demo_get = async (req, res)=> {
 	});
 }
 const install_db = (req, res) =>{
-	service.install_db(req.query.app_id, (err, results) =>{
+	service.install_db(req.query.app_id,req.query.optional, (err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
