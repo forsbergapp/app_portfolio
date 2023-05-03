@@ -2588,6 +2588,7 @@ const init_admin_secure = () => {
         common.COMMON_GLOBAL['module_leaflet_style']			    ='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL['module_leaflet_jumpto']		        ='0';
         common.COMMON_GLOBAL['module_leaflet_popup_offset']		    ='-25';
+        document.getElementById('common_confirm_question').innerHTML = common.ICONS['app_question'];
     }
     //session variables
     common.COMMON_GLOBAL['client_latitude'] = '';
@@ -2675,6 +2676,7 @@ const init_admin_secure = () => {
     document.querySelector('#install_db_icon').innerHTML = common.ICONS['app_database'];
     document.querySelector('#install_db_button_install').innerHTML = common.ICONS['app_add'];
     document.querySelector('#install_db_button_uninstall').innerHTML = common.ICONS['app_delete'];
+    document.querySelector('#install_db_country_language_translations_icon').innerHTML = common.ICONS['gps_country'] + common.ICONS['regional_locale'];;
 
     document.querySelector('#install_demo_demo_users_icon').innerHTML = common.ICONS['app_users'];
     document.querySelector('#install_demo_button_install').innerHTML = common.ICONS['app_add'];
@@ -2773,13 +2775,12 @@ const init_admin_secure = () => {
             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
             let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
             document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
-            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'POST', 2, null, null, null, (err, result) =>{
+            let url = `${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
+            common.common_fetch(url, 'POST', 2, null, null, null, (err, result) =>{
                 document.querySelector(`#install_db_button_install`).innerHTML = old_html;
                 if (err == null){
                     let result_obj = JSON.parse(result);
-                    let stat_message = `SQL : ${result_obj.count_statements}
-                                       ${common.ICONS['app_users']} : ${JSON.stringify(result_obj.users_created)}`;
-                    common.show_message('INFO', null, null, stat_message, common.COMMON_GLOBAL['common_app_id']);
+                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                 }
             })
         }
@@ -2789,6 +2790,10 @@ const init_admin_secure = () => {
             document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
             common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'DELETE', 2, null, null, null, (err, result) =>{
                 document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
+                if (err == null){
+                    let result_obj = JSON.parse(result);
+                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                }
             })
         }
         switch(event.target.parentNode.id){
@@ -2817,19 +2822,7 @@ const init_admin_secure = () => {
                             document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
                             if (err == null){
                                 let result_obj = JSON.parse(result);
-                                let stat_message =  common.ICONS['app_users'] +     ' : ' + result_obj.count_records_user_account + ' ' +
-                                                    common.ICONS['app_apps'] + 
-                                                    common.ICONS['app_login'] +     ' : ' + result_obj.count_records_user_account_app + ' ' +
-                                                    common.ICONS['app_settings'] +  ' : ' + result_obj.count_records_user_account_app_setting + ' ' +
-                                                    common.ICONS['user_like'] +     ' : ' + result_obj.count_records_user_account_like + ' ' +
-                                                    common.ICONS['user_views'] +    ' : ' + result_obj.count_records_user_account_view + ' ' +
-                                                    common.ICONS['user_follows'] +  ' : ' + result_obj.count_records_user_account_follow + ' ' +
-                                                    common.ICONS['app_settings'] + 
-                                                    common.ICONS['user_like'] +     ' : ' + result_obj.count_records_user_account_setting_like + ' ' +
-                                                    common.ICONS['app_settings'] + 
-                                                    common.ICONS['user_views'] +    ' : ' + result_obj.count_records_user_account_setting_view;
-
-                                common.show_message('INFO', null, null, stat_message, common.COMMON_GLOBAL['common_app_id']);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                             }
                         })
                     }
@@ -2840,6 +2833,10 @@ const init_admin_secure = () => {
                     document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
                     common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'DELETE', 2, null, null, null, (err, result) =>{
                         document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
+                        if (err == null){
+                            let result_obj = JSON.parse(result);
+                            common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                        }
                     })
                     break;
                 }
