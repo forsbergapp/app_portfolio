@@ -2672,6 +2672,10 @@ const init_admin_secure = () => {
     document.getElementById('list_config_info_title').innerHTML = common.ICONS['app_info'];
     document.getElementById('config_save').innerHTML = common.ICONS['app_save'];
     //menu 7
+    document.querySelector('#install_db_icon').innerHTML = common.ICONS['app_database'];
+    document.querySelector('#install_db_button_install').innerHTML = common.ICONS['app_add'];
+    document.querySelector('#install_db_button_uninstall').innerHTML = common.ICONS['app_delete'];
+
     document.querySelector('#install_demo_demo_users_icon').innerHTML = common.ICONS['app_users'];
     document.querySelector('#install_demo_button_install').innerHTML = common.ICONS['app_add'];
     document.querySelector('#install_demo_button_uninstall').innerHTML = common.ICONS['app_delete'];
@@ -2764,6 +2768,40 @@ const init_admin_secure = () => {
     
     document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
 
+    document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
+        const install_function = () =>{
+            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+            let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
+            document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
+            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'POST', 2, null, null, null, (err, result) =>{
+                document.querySelector(`#install_db_button_install`).innerHTML = old_html;
+                if (err == null){
+                    let result_obj = JSON.parse(result);
+                    let stat_message = `SQL : ${result_obj.count_statements}
+                                       ${common.ICONS['app_users']} : ${JSON.stringify(result_obj.users_created)}`;
+                    common.show_message('INFO', null, null, stat_message, common.COMMON_GLOBAL['common_app_id']);
+                }
+            })
+        }
+        const uninstall_function = () =>{
+            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+            let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
+            document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
+            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'DELETE', 2, null, null, null, (err, result) =>{
+                document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
+            })
+        }
+        switch(event.target.parentNode.id){
+            case 'install_db_button_install':{
+                common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL['app_id']);  
+                break;
+            }
+            case 'install_db_button_uninstall':{
+                common.show_message('CONFIRM',null,uninstall_function, null, common.COMMON_GLOBAL['app_id']);  
+                break;
+            }
+        }
+    }, false);
     document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
             switch(event.target.parentNode.id){
                 case 'install_demo_button_install':{

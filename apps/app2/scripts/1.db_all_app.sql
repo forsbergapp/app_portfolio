@@ -1,8 +1,140 @@
--- COMMON
 --
 -- app
 --
 INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (2,'Timetables','https://app2.localhost','/app2/images/logo.png',1, 6);
+--
+-- setting_type
+--
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (200, 'APP_THEME', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (201, 'REPORT_THEME_BASIC_DAY', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (202, 'REPORT_THEME_BASIC_MONTH', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (203, 'REPORT_THEME_BASIC_YEAR', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (204, 'REPORT_THEME_PREMIUM_DAY', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (205, 'REPORT_THEME_PREMIUM_MONTH', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (206, 'REPORT_THEME_PREMIUM_YEAR', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (207, 'PLACE', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (208, 'COLUMN_TITLE', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (209, 'HIGHLIGHT_ROW', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (210, 'METHOD', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (211, 'METHOD_ASR', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (212, 'HIGH_LATITUDE_ADJUSTMENT', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (213, 'TIMEFORMAT', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (214, 'HIJRI_DATE_ADJUSTMENT', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (215, 'IQAMAT', 2);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (216, 'FAST_START_END', 2);
+--
+-- setting
+--
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Light','1',NULL,NULL,NULL,NULL,200);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Dark','2',NULL,NULL,NULL,NULL,200);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Caffè Latte','3',NULL,NULL,NULL,NULL,200);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold 1','10001',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold 2','10002',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue 1','10003',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue 2','10004',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background 1','10005',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background 1','10006',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light 1','10007',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light 2','10008',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue simple','10009',NULL,NULL,NULL,NULL,201);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Simple','10010',NULL,NULL,NULL,NULL,201);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold no highlight','20001',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold row highlight','20002',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold column highlight','20003',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold no highlight + extra first','20004',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue no highlight','20005',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue row highlight','20006',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue column highlight','20007',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue no highlight + extra first','20008',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background no highlight','20009',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background row highlight','20010',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background column highlight','20011',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background no highlight + extra first','20012',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light no highlight','20013',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light row highlight','20014',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light column highlight','20015',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light no highlight + extra first','20016',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple no highlight','20017',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple row highlight','20018',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple column highlight','20019',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple no highlight + extra first','20020',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue simple','20021',NULL,NULL,NULL,NULL,202);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Simple','20022',NULL,NULL,NULL,NULL,202);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Simple','30001',NULL,NULL,NULL,NULL,203);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Pink with Cinzel Decorative','20030',NULL,NULL,NULL,NULL,205);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold with Caveat and Montserrat','20031',NULL,NULL,NULL,NULL,205);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Kaaba, Masjid al-Haram, Makkah','40002','+21.4225','+39.8262','Asia/Riyadh','🕌',207);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Al-Masjid an-Nabawi, Medina','40003','+24.469','+39.611','Asia/Riyadh','🕌',207);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Al-Aqsa, Jerusalem','40004','+31.7765','+35.2356','Asia/Jerusalem','🕌',207);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('0','0',NULL,NULL,NULL,NULL,208);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('1','1',NULL,NULL,NULL,NULL,208);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('2','2',NULL,NULL,NULL,NULL,208);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('3','3',NULL,NULL,NULL,NULL,208);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('None','0',NULL,NULL,NULL,NULL,209);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Friday','1',NULL,NULL,NULL,NULL,209);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Saturday','2',NULL,NULL,NULL,NULL,209);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Sunday','3',NULL,NULL,NULL,NULL,209);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('10 day groups','4',NULL,NULL,NULL,NULL,209);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Algerian Ministry of Religious Affairs and Wakfs','ALGERIAN','18','17',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Diyanet İşleri Başkanlığı','DIYANET','18','17',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Egyptian General Authority of Survey','EGYPT','19.5','17.5',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Egyptian General Authority of Survey Bis','EGYPTBIS','20','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('French15','FRANCE15','15','15',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('French18','FRANCE18','18','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Gulf region','GULF','19.5','90 min',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('University of Islamic Sciences, Karachi','KARACHI','18','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Kementerian Agama Republik Indonesia','KEMENAG','20','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Islamic Society of North America (ISNA)','ISNA','15','15',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Shia Ithna-Ashari, Leva Institute, Qum','JAFARI','16','14','4','Jafari',210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Jabatan Kemajuan Islam Malaysia','JAKIM','20','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Umm Al-Qura University, Makkah','MAKKAH','18.5','90 min',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Majlis Ugama Islam Singapura','MUIS','20','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Muslim World League','MWL','18','17',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Tunisian Ministry of Religious Affairs','TUNISIA','18','18',NULL,NULL,210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Institute of Geophysics, University of Tehran','TEHRAN','17.7','4','4.5','Jafari',210);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Union des Organisations Islamiques de France','UOIF','12','12',NULL,NULL,210);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Standard','Standard',NULL,NULL,NULL,NULL,211);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Hanafi','Hanafi',NULL,NULL,NULL,NULL,211);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Middle of night','NightMiddle',NULL,NULL,NULL,NULL,212);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Angle/60th of night (recommended)','AngleBased',NULL,NULL,NULL,NULL,212);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('1/7th of night','OneSeventh',NULL,NULL,NULL,NULL,212);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('No adjustment','None',NULL,NULL,NULL,NULL,212);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('12h with no suffix','12hNS',NULL,NULL,NULL,NULL,213);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('24h','24h',NULL,NULL,NULL,NULL,213);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('12h with suffix','12h',NULL,NULL,NULL,NULL,213);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('2+','2',NULL,NULL,NULL,NULL,214);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('1+','1',NULL,NULL,NULL,NULL,214);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('0','0',NULL,NULL,NULL,NULL,214);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('-1','-1',NULL,NULL,NULL,NULL,214);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('-2','-2',NULL,NULL,NULL,NULL,214);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('None','0',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('10 min','1',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('15 min','2',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('20 min','3',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('25 min','4',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('30 min','5',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Next hour','6',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Next hour + 15 min','7',NULL,NULL,NULL,NULL,215);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Next hour + 30 min','8',NULL,NULL,NULL,NULL,215);
+
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('No','0',NULL,NULL,NULL,NULL,216);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Fajr & Mahgrib','1',NULL,NULL,NULL,NULL,216);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Imsak & Mahgrib','2',NULL,NULL,NULL,NULL,216);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Fajr & Isha','3',NULL,NULL,NULL,NULL,216);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Imsak & Isha','4',NULL,NULL,NULL,NULL,216);
 --
 -- app_object
 --
@@ -178,136 +310,4 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 -- app_device
 --
 INSERT INTO app_portfolio.app_device(app_id, device_id) VALUES(2, 1);
---
--- setting_type
---
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (200, 'APP_THEME', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (201, 'REPORT_THEME_BASIC_DAY', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (202, 'REPORT_THEME_BASIC_MONTH', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (203, 'REPORT_THEME_BASIC_YEAR', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (204, 'REPORT_THEME_PREMIUM_DAY', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (205, 'REPORT_THEME_PREMIUM_MONTH', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (206, 'REPORT_THEME_PREMIUM_YEAR', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (207, 'PLACE', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (208, 'COLUMN_TITLE', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (209, 'HIGHLIGHT_ROW', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (210, 'METHOD', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (211, 'METHOD_ASR', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (212, 'HIGH_LATITUDE_ADJUSTMENT', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (213, 'TIMEFORMAT', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (214, 'HIJRI_DATE_ADJUSTMENT', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (215, 'IQAMAT', 2);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (216, 'FAST_START_END', 2);
---
--- setting
---
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Light','1',NULL,NULL,NULL,NULL,200);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Dark','2',NULL,NULL,NULL,NULL,200);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Caffè Latte','3',NULL,NULL,NULL,NULL,200);
 
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold 1','10001',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold 2','10002',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue 1','10003',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue 2','10004',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background 1','10005',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background 1','10006',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light 1','10007',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light 2','10008',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue simple','10009',NULL,NULL,NULL,NULL,201);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Simple','10010',NULL,NULL,NULL,NULL,201);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold no highlight','20001',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold row highlight','20002',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold column highlight','20003',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold no highlight + extra first','20004',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue no highlight','20005',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue row highlight','20006',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue column highlight','20007',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue no highlight + extra first','20008',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background no highlight','20009',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background row highlight','20010',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background column highlight','20011',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light background no highlight + extra first','20012',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light no highlight','20013',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light row highlight','20014',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light column highlight','20015',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light no highlight + extra first','20016',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple no highlight','20017',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple row highlight','20018',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple column highlight','20019',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue light simple no highlight + extra first','20020',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue simple','20021',NULL,NULL,NULL,NULL,202);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Simple','20022',NULL,NULL,NULL,NULL,202);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Simple','30001',NULL,NULL,NULL,NULL,203);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Pink with Cinzel Decorative','20030',NULL,NULL,NULL,NULL,205);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Blue gold with Caveat and Montserrat','20031',NULL,NULL,NULL,NULL,205);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Kaaba, Masjid al-Haram, Makkah','40002','+21.4225','+39.8262','Asia/Riyadh','🕌',207);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Al-Masjid an-Nabawi, Medina','40003','+24.469','+39.611','Asia/Riyadh','🕌',207);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Al-Aqsa, Jerusalem','40004','+31.7765','+35.2356','Asia/Jerusalem','🕌',207);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('0','0',NULL,NULL,NULL,NULL,208);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('1','1',NULL,NULL,NULL,NULL,208);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('2','2',NULL,NULL,NULL,NULL,208);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('3','3',NULL,NULL,NULL,NULL,208);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('None','0',NULL,NULL,NULL,NULL,209);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Friday','1',NULL,NULL,NULL,NULL,209);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Saturday','2',NULL,NULL,NULL,NULL,209);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Sunday','3',NULL,NULL,NULL,NULL,209);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('10 day groups','4',NULL,NULL,NULL,NULL,209);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Algerian Ministry of Religious Affairs and Wakfs','ALGERIAN','18','17',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Diyanet İşleri Başkanlığı','DIYANET','18','17',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Egyptian General Authority of Survey','EGYPT','19.5','17.5',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Egyptian General Authority of Survey Bis','EGYPTBIS','20','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('French15','FRANCE15','15','15',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('French18','FRANCE18','18','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Gulf region','GULF','19.5','90 min',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('University of Islamic Sciences, Karachi','KARACHI','18','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Kementerian Agama Republik Indonesia','KEMENAG','20','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Islamic Society of North America (ISNA)','ISNA','15','15',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Shia Ithna-Ashari, Leva Institute, Qum','JAFARI','16','14','4','Jafari',210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Jabatan Kemajuan Islam Malaysia','JAKIM','20','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Umm Al-Qura University, Makkah','MAKKAH','18.5','90 min',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Majlis Ugama Islam Singapura','MUIS','20','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Muslim World League','MWL','18','17',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Tunisian Ministry of Religious Affairs','TUNISIA','18','18',NULL,NULL,210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Institute of Geophysics, University of Tehran','TEHRAN','17.7','4','4.5','Jafari',210);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Union des Organisations Islamiques de France','UOIF','12','12',NULL,NULL,210);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Standard','Standard',NULL,NULL,NULL,NULL,211);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Hanafi','Hanafi',NULL,NULL,NULL,NULL,211);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Middle of night','NightMiddle',NULL,NULL,NULL,NULL,212);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Angle/60th of night (recommended)','AngleBased',NULL,NULL,NULL,NULL,212);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('1/7th of night','OneSeventh',NULL,NULL,NULL,NULL,212);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('No adjustment','None',NULL,NULL,NULL,NULL,212);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('12h with no suffix','12hNS',NULL,NULL,NULL,NULL,213);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('24h','24h',NULL,NULL,NULL,NULL,213);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('12h with suffix','12h',NULL,NULL,NULL,NULL,213);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('2+','2',NULL,NULL,NULL,NULL,214);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('1+','1',NULL,NULL,NULL,NULL,214);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('0','0',NULL,NULL,NULL,NULL,214);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('-1','-1',NULL,NULL,NULL,NULL,214);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('-2','-2',NULL,NULL,NULL,NULL,214);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('None','0',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('10 min','1',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('15 min','2',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('20 min','3',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('25 min','4',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('30 min','5',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Next hour','6',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Next hour + 15 min','7',NULL,NULL,NULL,NULL,215);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Next hour + 30 min','8',NULL,NULL,NULL,NULL,215);
-
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('No','0',NULL,NULL,NULL,NULL,216);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Fajr & Mahgrib','1',NULL,NULL,NULL,NULL,216);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Imsak & Mahgrib','2',NULL,NULL,NULL,NULL,216);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Fajr & Isha','3',NULL,NULL,NULL,NULL,216);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Imsak & Isha','4',NULL,NULL,NULL,NULL,216);
