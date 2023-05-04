@@ -3384,6 +3384,29 @@ const assign_icons = () => {
     document.getElementById('common_user_preference_direction').innerHTML = ICONS['regional_direction'];        
     document.getElementById('common_user_preference_arabic_script').innerHTML = ICONS['regional_script'];
 }
+const set_event_user_menu = () =>{
+    //user menu also for system admin
+    document.getElementById('common_user_menu').addEventListener('click', () => { let menu = document.getElementById('common_user_menu_dropdown');
+    if (menu.style.visibility == 'visible') 
+        menu.style.visibility = 'hidden'; 
+    else 
+        menu.style.visibility = 'visible' }, false);
+    document.addEventListener('keydown', (event) =>{ 
+    if (event.key === 'Escape') {
+        event.preventDefault();
+        //hide use menu dropdown
+        if (document.getElementById('common_user_menu_dropdown').style.visibility=='visible')
+            document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';
+        //hide search
+        let x = document.getElementById('common_profile_input_row'); 
+        if (x.style.visibility == 'visible') {
+            x.style.visibility = 'hidden';
+            document.getElementById('common_profile_search_list_wrap').style.visibility = 'hidden';
+        } 
+    }
+    }, false);
+}
+
 const set_events = () => {
     //login/signup/forgot
     document.getElementById('common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP') }, false);
@@ -3483,28 +3506,8 @@ const set_events = () => {
             }
         }
     }, false);
-    //user menu
-    document.getElementById('common_user_menu').addEventListener('click', () => { let menu = document.getElementById('common_user_menu_dropdown');
-                                                                                if (menu.style.visibility == 'visible') 
-                                                                                        menu.style.visibility = 'hidden'; 
-                                                                                else 
-                                                                                        menu.style.visibility = 'visible' }, false);
-    
-    document.addEventListener('keydown', (event) =>{ 
-
-        if (event.key === 'Escape') {
-            event.preventDefault();
-            //hide use menu dropdown
-            if (document.getElementById('common_user_menu_dropdown').style.visibility=='visible')
-                document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';
-            //hide search
-            let x = document.getElementById('common_profile_input_row'); 
-            if (x.style.visibility == 'visible') {
-                x.style.visibility = 'hidden';
-                document.getElementById('common_profile_search_list_wrap').style.visibility = 'hidden'
-            } 
-        }
-    }, false);
+    //usermenu
+    set_event_user_menu();
     document.getElementById('common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';}, false);
     document.getElementById('common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
     document.getElementById('common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
@@ -3690,4 +3693,4 @@ export{/* GLOBALS*/
        /* EXCEPTION */
        exception,
        /* INIT */
-       set_globals, assign_icons, set_events, set_common_parameters, normal_start, init_common}
+       set_globals, assign_icons, set_event_user_menu, set_events, set_common_parameters, normal_start, init_common}
