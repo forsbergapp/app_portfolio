@@ -1292,8 +1292,8 @@ const install_db_delete = async (app_id, callBack)=> {
       for (let sql_row of uninstall_sql){
          try {
             if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
-               POOL_DB3_APP[0][2].end()
-               if (sql_row.sql.toUpperCase().includes('DROP DATABASE'))
+               if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
+                  POOL_DB3_APP[0][2].end()
                   POOL_DB3_APP[0][2] = new PG.Pool({
                                           user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
                                           password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
@@ -1304,17 +1304,7 @@ const install_db_delete = async (app_id, callBack)=> {
                                           idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
                                           max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
                                        });
-               else
-                  POOL_DB3_APP[0][2] = new PG.Pool({
-                                          user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
-                                          password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
-                                          host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
-                                          database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
-                                          port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
-                                          connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
-                                          idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
-                                          max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
-                                       });
+               }
             let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});
             count_statements += 1;
          } catch (error) {
