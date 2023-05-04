@@ -84,28 +84,6 @@ const list_generate = (amount)=>{
     }
     return html;
 }
-const admin_logoff_app = (error) => {
-    common.COMMON_GLOBAL['rest_admin_at'] = '';
-    document.getElementById('common_user_menu_default_avatar').innerHTML = '';
-    const clear_common = () => {
-        //remove all event listeners in admin_secure
-        document.querySelector('#admin_secure').replaceWith(document.querySelector('#admin_secure').cloneNode(true));
-        delete_globals();
-        document.getElementById('dialogue_admin_login').style.visibility = 'visible';
-        document.querySelector('#menu').style.visibility = 'hidden';
-        document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='common_dialogue_button'></div>`;
-        document.getElementById('admin_secure').style.visibility = 'hidden';
-        //clear admin_secure data and events
-    }
-    if (common.COMMON_GLOBAL['system_admin']==1){
-        clear_common();
-        common.COMMON_GLOBAL['system_admin']=0;
-    }
-    else
-        common.user_logoff().then(() => {
-            clear_common();
-        })
-}
 const show_menu = (menu) => {
     document.getElementById('menu_1_content').style.display='none';
     document.getElementById(`menu_1`).classList.remove('menuitem_selected');
@@ -292,9 +270,6 @@ const show_start = async (yearvalues) =>{
         }
     }
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
-    //remove event listeners
-    document.querySelector('#menu_1_content').replaceWith(document.querySelector('#menu_1_content').cloneNode(true));
-
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
@@ -3097,83 +3072,6 @@ const init = () => {
     common.COMMON_GLOBAL['client_longitude'] = '';
     common.COMMON_GLOBAL['client_place'] = '';
 
-    //SET ICONS
-    document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
-    document.getElementById('common_message_cancel').innerHTML = common.ICONS['app_cancel'];
-
-    document.getElementById('menu_open').innerHTML = common.ICONS['app_menu_open'];
-    
-    document.getElementById('send_broadcast_send').innerHTML = common.ICONS['app_send'];
-    document.getElementById('send_broadcast_close').innerHTML = common.ICONS['app_close'];
-    document.getElementById('common_lov_close').innerHTML = common.ICONS['app_close'];
-
-    document.getElementById('send_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
-    document.getElementById('client_id_label').innerHTML = common.ICONS['user'];
-
-    //SET EVENTLISTENERS
-    document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
-    document.getElementById('menu_open').addEventListener('click', () => { document.getElementById('menu').style.display = 'block' }, false);    
-
-    document.getElementById('select_broadcast_type').addEventListener('change', () => { set_broadcast_type(); }, false);
-    document.getElementById('send_broadcast_send').addEventListener('click', () => { sendBroadcast(); }, false);
-    document.getElementById('send_broadcast_close').addEventListener('click', () => { closeBroadcast()}, false);
-    
-    //MENU ITEMS
-    document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
-    //DASHBOARD
-    document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; 
-    //USER STAT
-    document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log']; 
-    //USERS
-    document.getElementById('menu_3').innerHTML = common.ICONS['app_users']; 
-    //APP ADMIN
-    document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings']; 
-    //MONITOR
-    document.getElementById('menu_5').innerHTML = common.ICONS['app_log']; 
-    //PARAMETER
-    document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings'];
-    //INSTALLATION 
-    document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install']; 
-    //DATABASE
-    document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database']; 
-    //'BACKUP/RESTORE'
-    document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore']; 
-    //SERVER
-    document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; 
-    //LOGOUT
-    document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; 
-
-    document.getElementById('menu_secure').addEventListener('click', (event) => { 
-                                                                        let target_id;
-                                                                        if (event.target.id.startsWith('menu_')){
-                                                                            //menuitem
-                                                                            target_id = event.target.id;
-                                                                        }
-                                                                        else
-                                                                            if (event.target.parentNode.id.startsWith('menu_')){
-                                                                                //svg or icon in menuitem
-                                                                                target_id = event.target.parentNode.id;
-                                                                            }
-                                                                            else
-                                                                                if (event.target.parentNode.parentNode.id.startsWith('menu_')){
-                                                                                    //path in svg in menuitem
-                                                                                    target_id = event.target.parentNode.parentNode.id;
-                                                                                }
-                                                                        switch (target_id){
-                                                                            case 'menu_close':{
-                                                                                document.getElementById('menu').style.display = 'none';
-                                                                                break;
-                                                                            }
-                                                                            case 'menu_11':{
-                                                                                admin_logoff_app();
-                                                                                break;
-                                                                            }
-                                                                            default:{
-                                                                                show_menu(parseInt(target_id.substring(5)))
-                                                                            }
-                                                                        }
-                                                                        }, false);
-    document.getElementById('common_user_direction_select').addEventListener('change', (event) => { fix_pagination_buttons(event.target.value)}, false);
     //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
         document.getElementById(`menu_${i}`).style.display='none';
@@ -3220,4 +3118,4 @@ const init = () => {
         });
     }
 }
-export {init}
+export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, init}
