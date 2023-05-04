@@ -1,31 +1,6 @@
 const common = await import('/common/js/common.js');
 common.COMMON_GLOBAL['rest_admin_at'] = '';
 
-const APP_GLOBAL = {
-    "page":"",
-    "page_last":"",
-    "limit":"",
-    "previous_row":"",
-    "module_leaflet_map_container":"",
-    "module_leaflet_map_zoom":"",
-    "module_leaflet_map_marker_div_gps":"",
-    "service_log_scope_server":"",
-    "service_log_scope_service":"",
-    "service_log_scope_db":"",
-    "service_log_scope_router":"",
-    "service_log_scope_controller":"",
-    "service_log_level_verbose":"",
-    "service_log_level_error":"",
-    "service_log_level_info":"",
-    "service_log_file_interval":"",
-    "service_log_file_path_server":"",
-    "service_log_destination":"",
-    "service_log_url_destination":"",
-    "service_log_url_destination_username":"",
-    "service_log_url_destination_password":"",
-    "service_log_date_format":""
-}
-
 const admin_login_nav = (target) => {
     document.getElementById('admin_login_title').classList.remove('login_nav_button_selected');
     document.getElementById('system_admin_login_title').classList.remove('login_nav_button_selected');
@@ -40,7 +15,7 @@ const admin_login_nav = (target) => {
             document.getElementById('system_admin_login_title').classList.add('login_nav_button_selected');
     }
 }
-const start_admin_secure = (app) => {
+const clear_login = (app) => {
     document.getElementById('admin_login_username_input').value='';
     document.getElementById('admin_login_password_input').value='';
     document.getElementById('system_admin_login_username_input').value='';
@@ -48,56 +23,41 @@ const start_admin_secure = (app) => {
     document.getElementById('admin_first_time').style.display = 'none';
     document.getElementById('system_admin_login_password_confirm_input').value='';
     document.getElementById('system_admin_login_password_confirm').style.display = 'none';
-    let secure_div = 'admin_secure';                 
-    document.getElementById(secure_div).style.visibility = 'visible';
-    document.getElementById(secure_div).innerHTML = app;
-    //make script in innerHTML work:
-    let scripts = Array.prototype.slice.call(document.getElementById(secure_div).getElementsByTagName('script'));
-    for (let i = 0; i < scripts.length; i++) {
-        if (scripts[i].src != '') {
-            let tag = document.createElement('script');
-            tag.src = scripts[i].src;
-            document.getElementById(secure_div).insertBefore(tag, document.getElementById(secure_div).firstChild);
-        }
-        else {
-            eval(scripts[i].innerHTML);
-        }
-    }
 }
 const admin_login = async () => {
     let old_button = document.getElementById('admin_login_button').innerHTML;
     if (document.getElementById('system_admin_login').style.display == 'block'){
         if (document.getElementById("system_admin_login_username_input").value == '') {
             common.show_message('INFO', null, null, common.ICONS['app_system_admin'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
-            return callBack('ERROR', null);
+            return;
         }
         if (document.getElementById("system_admin_login_password_input").value == '') {
             common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
-            return callBack('ERROR', null);
+            return;
         }
         if (common.check_input(document.getElementById("system_admin_login_username_input").value, 100, true) == false || 
             common.check_input(document.getElementById("system_admin_login_password_input").value, 100, true)== false)
-            return callBack('ERROR', null);
+            return;
         //no : in username
         if (document.getElementById("system_admin_login_username_input").value.indexOf(':') > -1) {
             common.show_message('INFO', null, null, common.ICONS['app_system_admin'] + ' ":" ' + common.ICONS['message_error'], common.COMMON_GLOBAL['common_app_id']);
-            return callBack('ERROR', null);
+            return;
         }
         //no : in username
         if (document.getElementById("system_admin_login_password_input").value.indexOf(':') > -1) {
             common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ":" ' + common.ICONS['message_error'], common.COMMON_GLOBAL['common_app_id']);
-            return callBack('ERROR', null);
+            return;
         }
         //if first time then password confirm is shown
         if (document.getElementById("system_admin_login_password_confirm").style.display == 'block'){
             if (document.getElementById("system_admin_login_password_confirm_input").value == '') {
                 common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
-                return callBack('ERROR', null);
+                return;
             }
             if (document.getElementById("system_admin_login_password_input").value != 
                 document.getElementById("system_admin_login_password_confirm_input").value) {
                 common.show_message('INFO', null, null, common.ICONS['user_password'] + ' <> ' + common.ICONS['user_password'], common.COMMON_GLOBAL['common_app_id']);
-                return callBack('ERROR', null);
+                return;
             }
         }
         let status;
@@ -119,34 +79,20 @@ const admin_login = async () => {
                     common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
                     common.COMMON_GLOBAL['system_admin'] = 1;
                     common.updateOnlineStatus();
-                    fetch(`/apps/admin/secure`,
-                    {method: 'POST',
-                        headers: {
-                            'Authorization': 'Bearer ' + common.COMMON_GLOBAL['rest_admin_at'],
-                        }
+                    import('/apps/admin/js/secure.js').then((app_secure)=>{
+                        common.dialogue_close('dialogue_admin_login').then(() => {
+                            document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
+                            document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
+                            document.querySelector('#menu').style.visibility = 'visible';
+                            document.querySelector('#common_user_preferences').style.display = 'none';
+                            document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+                            document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                            document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+                            clear_login();
+                            document.getElementById('admin_secure').style.visibility = 'visible';
+                            app_secure.init();
+                        })
                     })
-                        .then((response) => {
-                            status = response.status;
-                            return response.text();
-                        })
-                        .then((result_form) => {
-                            if (status == 200){
-                                common.dialogue_close('dialogue_admin_login').then(() => {
-                                    document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
-                                    document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
-                                    document.querySelector('#menu').style.visibility = 'visible';
-                                    document.querySelector('#common_user_preferences').style.display = 'none';
-                                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-                                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                                    document.getElementById('common_dialogue_login').style.visibility = 'hidden';
-                                    start_admin_secure(JSON.parse(result_form).app)
-                                    
-                                })
-                            }
-                            else{
-                                common.show_message('EXCEPTION', null,null, result_form, common.COMMON_GLOBAL['app_id']);
-                            }
-                        })
                 }
                 else{
                     common.show_message('EXCEPTION', null,null, result_login, common.COMMON_GLOBAL['app_id']);
@@ -157,22 +103,25 @@ const admin_login = async () => {
         await common.user_login(document.getElementById('admin_login_username_input').value, 
                                 document.getElementById('admin_login_password_input').value, (err, result)=>{
             document.getElementById('admin_login_button').innerHTML = old_button;
-            if (err==null){         
-                common.dialogue_close('dialogue_admin_login').then(() => {
-                    document.querySelector('#menu').style.visibility = 'visible';
-                    document.querySelector('#common_user_preferences').style.display = 'block';
-                    common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
-                    document.getElementById('common_user_menu_username').innerHTML = result.username;
-                    
-                    document.getElementById('common_user_menu_logged_in').style.display = 'inline-block';
-                    document.getElementById('common_user_menu').classList.add('user_menu_logged_in');
-                    document.getElementById('common_user_menu_logged_out').style.display = 'none';
-    
-                    document.getElementById('common_user_menu_username').style.display = 'block';
-                    document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-                    document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'none';
-    
-                    start_admin_secure(result.app)
+            if (err==null){
+                import('/apps/admin/js/secure.js').then((app_secure)=>{
+                    common.dialogue_close('dialogue_admin_login').then(() => {
+                        document.querySelector('#menu').style.visibility = 'visible';
+                        document.querySelector('#common_user_preferences').style.display = 'block';
+                        common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
+                        document.getElementById('common_user_menu_username').innerHTML = result.username;
+                        
+                        document.getElementById('common_user_menu_logged_in').style.display = 'inline-block';
+                        document.getElementById('common_user_menu').classList.add('user_menu_logged_in');
+                        document.getElementById('common_user_menu_logged_out').style.display = 'none';
+
+                        document.getElementById('common_user_menu_username').style.display = 'block';
+                        document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+                        document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'none';
+                        clear_login();    
+                        document.getElementById('admin_secure').style.visibility = 'visible';
+                        app_secure.init();
+                    })
                 })  
             }
         })
@@ -235,61 +184,8 @@ const setEvents = (system_admin_only=0) => {
     document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
     
 }
-const delete_globals = () => {
-    APP_GLOBAL['page'] = null;
-    APP_GLOBAL['page_last'] = null;
-    APP_GLOBAL['limit'] = null;
-    APP_GLOBAL['previous_row'] = null;
-    APP_GLOBAL['module_leaflet_map_zoom'] = null;
-    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = null;
-    APP_GLOBAL['module_leaflet_map_container'] = null;
-    APP_GLOBAL['service_log_scope_server'] = null;
-    APP_GLOBAL['service_log_scope_service'] = null;
-    APP_GLOBAL['service_log_scope_db'] = null;
-    APP_GLOBAL['service_log_scope_router'] = null;
-    APP_GLOBAL['service_log_scope_controller'] = null;
-    APP_GLOBAL['service_log_level_verbose'] = null;
-    APP_GLOBAL['service_log_level_error'] = null;
-    APP_GLOBAL['service_log_level_info'] = null;
-    APP_GLOBAL['service_log_destination'] = null;
-    APP_GLOBAL['service_log_url_destination'] = null;
-    APP_GLOBAL['service_log_url_destination_username'] = null;
-    APP_GLOBAL['service_log_url_destination_password'] = null;
-    APP_GLOBAL['service_log_file_interval'] = null;
-    APP_GLOBAL['service_log_file_path_server'] = null;
-    APP_GLOBAL['service_log_date_format'] = null;
 
-    common.COMMON_GLOBAL['client_latitude'] = null;
-    common.COMMON_GLOBAL['client_longitude'] = null;
-    common.COMMON_GLOBAL['client_place'] = null;
-    common.COMMON_GLOBAL['module_leaflet_style'] = null;
-    common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
-    common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
-}
-
-const admin_logoff_app = (error) => {
-    common.COMMON_GLOBAL['rest_admin_at'] = '';
-    document.getElementById('common_user_menu_default_avatar').innerHTML = '';
-    const clear_common = () => {
-        delete_globals();
-        document.getElementById('dialogue_admin_login').style.visibility = 'visible';
-        document.querySelector('#menu').style.visibility = 'hidden';
-        document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='common_dialogue_button'></div>`;
-        document.getElementById('admin_secure').style.visibility = 'hidden';
-        document.getElementById('admin_secure').innerHTML = '';
-        document.getElementById('menu_secure').innerHTML = '';
-    }
-    if (common.COMMON_GLOBAL['system_admin']==1){
-        clear_common();
-        common.COMMON_GLOBAL['system_admin']=0;
-    }
-    else
-        common.user_logoff().then(() => {
-            clear_common();
-        })
-}
-
-const admin_exception_before = (error) => {
+const admin_exception = (error) => {
     common.show_message('EXCEPTION', null,null, error);
 }
 const init_app = (system_admin_only) => {
@@ -350,5 +246,4 @@ const init = (parameters) => {
         init_app(parameters.system_admin_only);
     })
 }
-export{admin_login_nav, start_admin_secure, admin_login, setEvents, delete_globals, admin_logoff_app, admin_exception_before,
-       init_app, init}
+export{init}

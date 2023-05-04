@@ -903,36 +903,16 @@ const userLogin = (req, res) => {
                                                         accessToken(req, (err, Token)=>{
                                                             req.body.access_token = Token;
                                                             insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                                                if (err) {
+                                                                if (err)
                                                                     return res.status(500).send(
                                                                         err
                                                                     );
-                                                                }
                                                                 else
-                                                                    if (req.query.app_id == 0)
-                                                                        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ createAdminSecure }) => {
-                                                                            createAdminSecure(req.query.app_id, 
-                                                                                null,
-                                                                                results.id,
-                                                                                req.body.client_latitude,
-                                                                                req.body.client_longitude, 
-                                                                                req.body.client_place,
-                                                                                req.query.lang_code)
-                                                                            .then((app_result) => {
-                                                                                return res.status(200).json({
-                                                                                    count: Array(results.items).length,
-                                                                                    accessToken: Token,
-                                                                                    items: Array(results),
-                                                                                    app: app_result
-                                                                                });
-                                                                            })
-                                                                        })
-                                                                    else
-                                                                        return res.status(200).json({
-                                                                            count: Array(results.items).length,
-                                                                            accessToken: Token,
-                                                                            items: Array(results)
-                                                                        });
+                                                                    return res.status(200).json({
+                                                                        count: Array(results.items).length,
+                                                                        accessToken: Token,
+                                                                        items: Array(results)
+                                                                    });
                                                             });
                                                         });
                                                     }
@@ -945,37 +925,17 @@ const userLogin = (req, res) => {
                                     accessToken(req, (err, Token)=>{
                                         req.body.access_token = Token;
                                         insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                            if (err) {
+                                            if (err)
                                                 return res.status(500).send(
                                                     err
                                                 );
-                                            }
-                                            else
-                                            if (req.query.app_id == 0)
-                                                import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ createAdminSecure }) => {
-                                                    createAdminSecure(req.query.app_id, 
-                                                        null,
-                                                        results.id,
-                                                        req.body.client_latitude,
-                                                        req.body.client_longitude, 
-                                                        req.body.client_place,
-                                                        req.query.lang_code)
-                                                    .then((app_result) => {
-                                                        return res.status(200).json({
-                                                            count: Array(results.items).length,
-                                                            accessToken: Token,
-                                                            items: Array(results),
-                                                            app: app_result
-                                                        });
-                                                    })
-                                                })
                                             else
                                                 return res.status(200).json({
                                                     count: Array(results.items).length,
                                                     accessToken: Token,
                                                     items: Array(results)
                                                 });
-                                            })
+                                        })
                                     });
                                 }
                             }

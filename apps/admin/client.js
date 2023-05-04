@@ -12,12 +12,14 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
             ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
             ['<AppCommonProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
             ['<AppCommonUserAccount/>', process.cwd() + '/apps/common/src/user_account.html'],
+            ['<AppMenu/>', process.cwd() + '/apps/admin/src/menu.html'],
+            ['<AppDialogues/>', process.cwd() + '/apps/admin/src/dialogues.html'],
+            ['<AppSecure/>', process.cwd() + '/apps/admin/src/secure.html'],
             ['<AppThemes/>', process.cwd() + '/apps/common/src/app_themes.html'],
             ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],
             ['<AppCommonProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], //Profile tag in common body
-            ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
-            ['<AppDialogues/>', process.cwd() + '/apps/admin/src/dialogues.html']
+            ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html']            
             ];
         if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
             getUserPreferences(app_id, locale).then((user_preferences) => {
@@ -50,8 +52,7 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
                                             locale,
                                             null,
                                             null,  
-                                            'app.admin_exception_before',
-                                            null, //do not close eventsource before
+                                            'app.admin_exception',
                                             true, //ui
                                             gps_lat,
                                             gps_long,
@@ -98,7 +99,6 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
                                          1,  //system admin, no db available
                                          null,  
                                          'app.admin_exception_before',
-                                         null, //do not close eventsource before
                                          true, //ui
                                          gps_lat,
                                          gps_long,
