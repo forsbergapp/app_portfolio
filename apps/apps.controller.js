@@ -130,36 +130,4 @@ const getAppAdmin = (req, res, app_id, callBack) => {
         })
     }
 }
-const getAppAdminSecure = (req, res) => {
-    try {
-        let stack = new Error().stack;
-        import(`file://${process.cwd()}/apps/admin/src/secure/index.js`).then(({ createAdminSecure }) => {
-            const app = createAdminSecure(req.query.app_id,
-                1,      //system admin=1
-                null,
-                null,
-                null, 
-                null)
-            .then((app_result) => {
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                      'SYSTEM ADMIN Forms admin secure',
-                                      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                      res.statusCode, 
-                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                            return res.status(200).json({
-                                app: app_result
-                            });
-                        })
-                    });
-                })
-            })    
-        })
-    } catch (error) {
-        return res.status(500).json({
-            error
-        });
-    }     
-}
-export{getApp, getAppAdmin, getAppAdminSecure}
+export{getApp, getAppAdmin}
