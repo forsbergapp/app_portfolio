@@ -412,7 +412,6 @@ const createApp = (app_id, username, gps_lat, gps_long, gps_place, locale) => {
                                                      null,
                                                      null,
                                                      'app.app_exception',
-                                                     null,
                                                      true,
                                                      gps_lat,
                                                      gps_long,

@@ -19,10 +19,9 @@ const createReport = (app_id, module, gps_lat, gps_long, gps_place, locale) => {
             else{
                 get_module_with_init(app_id, 
                                      locale,
-                                        null,
-                                        null,
+                                     null,
+                                     null,
                                     'report.report_exception',
-                                    null,
                                     false,
                                     gps_lat,
                                     gps_long,

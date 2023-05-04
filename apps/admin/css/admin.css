@@ -13,7 +13,6 @@
 	animation-name: common_roadRunnerIn;
 	animation-duration: 0.4s;
 	overflow: auto;
-	display:none;
 	padding-top: 10px;
 }
 .dialogue_content{
@@ -74,6 +73,10 @@ ul#admin_login_nav li{
 	font-size: 11px;
 }
 
+#dialogue_send_broadcast{
+	visibility: hidden;
+	display: inline-flex;
+}
 #dialogue_send_broadcast_content{
 	height:320px;
 	width:300px;
@@ -153,7 +156,6 @@ ul#admin_login_nav li{
 }
 
 .main_content{
-	display: none;
 	height: 85%;
 }
 .widget{
@@ -164,7 +166,7 @@ ul#admin_login_nav li{
 	border-radius: 4px;
 }
 .save_buttons, .button_save{
-	height:40px;
+	height:50px !important;
 	display:inline-block;
 }
 .button_save #common_app_spinner{
@@ -446,9 +448,6 @@ ul#admin_login_nav li{
 }
 .list_user_account_logon_col:nth-child(8){
 	width: 600px;
-}
-#users_buttons, #users_save{
-	height:50px !important;
 }
 /* MENU 4 APP ADMIN*/
 #menu_4_content_widget1{
