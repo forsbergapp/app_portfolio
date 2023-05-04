@@ -755,7 +755,6 @@ a:active {
 #common_user_menu_username{
 	cursor:pointer;
 	padding: 10px;
-	display: none;
 }
 #common_user_menu_default_avatar{
 	font-size: 48px;

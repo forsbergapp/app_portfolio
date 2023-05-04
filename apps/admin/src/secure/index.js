@@ -5,7 +5,6 @@ const createAdminSecure = (app_id, system_admin, user_account_id, gps_lat, gps_l
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/secure/index.html'],
             ['<AppHeadJS/>', process.cwd() + '/apps/admin/src/secure/admin.js'],
-            ['<AppHeadCSS/>', process.cwd() + '/apps/admin/src/secure/admin.css'],
             ['<AppAdminMainHTML/>', process.cwd() + '/apps/admin/src/secure/main.html'],
             ['<AppAdminDialogueHTML/>', process.cwd() + '/apps/admin/src/secure/dialogue.html']
         ];
@@ -18,10 +17,6 @@ const createAdminSecure = (app_id, system_admin, user_account_id, gps_lat, gps_l
                                     '<SCRIPT>');
                 app = app.replace(  '/*<APP_SCRIPT_END/>*/',
                                     '</SCRIPT>');
-                app = app.replace(  '/*<APP_STYLE_START/>*/',
-                                    '<STYLE>');
-                app = app.replace(  '/*<APP_STYLE_END/>*/',
-                                    '</STYLE>');
                 get_module_with_init(app_id, 
                                      locale,
                                      system_admin,
