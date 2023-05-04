@@ -77,6 +77,13 @@ const delete_globals = () => {
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+const list_generate = (amount)=>{
+    let html = '';
+    for (let i=1; i<=amount;i++){
+        html += `<option value='${i}'>${i}</option>`;
+    }
+    return html;
+}
 const admin_logoff_app = (error) => {
     common.COMMON_GLOBAL['rest_admin_at'] = '';
     document.getElementById('common_user_menu_default_avatar').innerHTML = '';
@@ -133,15 +140,7 @@ const show_menu = (menu) => {
     switch(menu){
         //START
         case 1:{
-            document.getElementById('select_year_menu1').innerHTML = yearvalues;
-            document.getElementById('select_year_menu1').selectedIndex = 0;
-            document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
-            if (common.COMMON_GLOBAL['system_admin']==1)
-                check_maintenance();
-            else
-                show_chart(1).then(() => {
-                    show_chart(2);
-                })
+            show_start(yearvalues);
             break;
         }
         //USER STAT
@@ -161,54 +160,12 @@ const show_menu = (menu) => {
         }
         //MONITOR
         case 5:{
-            let url;
-            let token_type = '';
-            if (common.COMMON_GLOBAL['system_admin']==1){
-                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
-                token_type = 2;
-            }
-            else{
-                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
-                token_type = 1;
-            }
-            common.common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
-                if (err)
-                    null;
-                else{
-                    APP_GLOBAL['limit'] = parseInt(JSON.parse(result_limit).data);
-                    //connected
-                    document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
-                    document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
-                    document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
-                    if (common.COMMON_GLOBAL['system_admin']==1){
-                        //server log
-                        document.getElementById('select_year_menu5').innerHTML = yearvalues;
-                        document.getElementById('select_year_menu5').selectedIndex = 0;
-                        document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
-                        document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
-                        get_server_log_parameters().then(() => {
-                            common.map_resize();
-                            nav_click(document.getElementById('list_connected_title'));
-                        })
-                    }
-                    else{
-                        APP_GLOBAL['page'] = 0;
-                        //log
-                        document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
-                        document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
-                        document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
-                        fix_pagination_buttons();
-                        common.map_resize();
-                        nav_click(document.getElementById('list_connected_title'));
-                    }    
-                }
-                
-            })
+            show_monitor(yearvalues);
             break;
         }
         //SERVER CONFIG
         case 6:{
-            nav_click(document.getElementById('list_config_server_title'));
+            show_server_config();
             break;
         }
         //INSTALLATION
@@ -232,38 +189,191 @@ const show_menu = (menu) => {
         }
     }            
 }
+
+const show_start = async (yearvalues) =>{
+    const show_charts = async () => {
+        if (admin_token_has_value()){
+            //chart 1 shows for all apps, app id used for chart 2
+            let app_id = document.getElementById('select_app_menu1').value; 
+            let year = document.getElementById('select_year_menu1').value;
+            let month = document.getElementById('select_month_menu1').value;
+            let result_obj;
+            document.getElementById('box1_chart').innerHTML = common.APP_SPINNER;
+            document.getElementById('box1_legend').innerHTML = common.APP_SPINNER;
+            document.getElementById('box2_chart').innerHTML = common.APP_SPINNER;
+            document.getElementById('box2_legend').innerHTML = common.APP_SPINNER;
+            //return result for both charts
+            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`,
+                                'GET', 1, null, null, null, (err, result) =>{
+                if (err){
+                    document.getElementById('box1_chart').innerHTML = '';
+                    document.getElementById('box1_legend').innerHTML = '';
+                    document.getElementById('box2_chart').innerHTML = '';
+                    document.getElementById('box2_legend').innerHTML = '';
+                }
+                else{
+                    let html = '';
+                    result_obj = JSON.parse(result);
+                    //chart 1=Piechart, 2= Barchart
+                    //CHART 1
+                    const SearchAndGetText = (item, search) => {
+                        for (let i=1;i<item.options.length;i++){
+                            if (item.options[i].value == search)
+                                return item.options[i].text
+                        }
+                        return null;
+                    }
+                    let sum_amount =0;
+                    let chart_1 = result_obj.data.filter((row)=> row.chart==1);
+                    for (let stat of chart_1) {
+                        sum_amount += +stat.amount;
+                    }
+                    let apps_color = '';
+                    let degree_start = 0;
+                    let degree_stop = 0;
+
+                    let app_color;
+                    chart_1.forEach((stat, i)=>{
+                        //calculate colors and degree
+                        degree_stop = degree_start + +stat.amount/sum_amount*360;
+                        app_color = `rgb(${i/chart_1.length*200},${i/chart_1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
+                        if (i < chart_1.length - 1)
+                            apps_color += app_color + ',';
+                        else
+                            apps_color += app_color;
+                        //add to legend below chart
+                        html += `<div id='box1_legend_row' class='box_legend_row'>
+                                    <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
+                                    <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id)}</div>
+                                </div>`;
+                        degree_start = degree_start + stat.amount/sum_amount*360;
+                    })
+                    //display pie chart
+                    document.getElementById('box1_chart').innerHTML = `<div id='box1_pie'></div>`;
+                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${apps_color})`
+                    //show legend below chart
+                    document.getElementById('box1_legend').innerHTML = html;
+
+                    //CHART 2
+                    html = '';
+                    let max_amount =0;
+                    let chart_2 = result_obj.data.filter((row)=> row.chart==2);
+                    for (let stat of chart_2) {
+                        if (+stat.amount>max_amount)
+                            max_amount = +stat.amount;
+                    }
+                    //set bar data
+                    let bar_color;
+                    if (app_id == '')
+                        bar_color = 'rgb(81, 171, 255)';
+                    else
+                        bar_color = 'rgb(197 227 255)';
+
+                    for (let stat of chart_2) {
+                        html += `<div class='box2_barcol box2_barcol_display' style='width:${100/stat.length}%'>
+                                    <div class='box2_barcol_color' style='background-color:${bar_color};height:${+stat.amount/max_amount*100}%'></div>
+                                    <div class='box2_barcol_legendX'>${stat.day}</div>
+                                </div>`;
+                    }
+                    //create bar chart
+                    document.getElementById('box2_chart').innerHTML = `<div id='box2_bar_legendY'>
+                                                                            <div id='box2_bar_legend_max'>${max_amount}</div>
+                                                                            <div id='box2_bar_legend_medium'>${max_amount/2}</div>
+                                                                            <div id='box2_bar_legend_min'>0</div>
+                                                                    </div>
+                                                                    <div id='box2_bar_data'>${html}</div>`;
+                    //legend below chart
+                    document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
+                                                                            <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                            <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text}</div>
+                                                                        </div>` ;
+                }
+            })
+        }
+    }
+    document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
+    //remove event listeners
+    document.querySelector('#menu_1_content').replaceWith(document.querySelector('#menu_1_content').cloneNode(true));
+
+    document.querySelector('#menu_1_content').innerHTML = 
+            `<div id='menu_1_content_widget1' class='widget'>
+                <div id='menu_1_row_sample'>
+                    <select id='select_app_menu1'>${await get_apps()}</select>
+                    <select id='select_year_menu1'>${yearvalues}</select>
+                    <select id='select_month_menu1'>${list_generate(12)}</select>
+                </div>
+                <div id='graphBox'>
+                    <div id='box1'>
+                        <div id='box1_title' class='box_title'>${common.ICONS['app_users'] + ' ' + common.ICONS['app_chart']}</div>
+                        <div id='box1_chart' class='box_chart'></div>
+                        <div id='box1_legend' class='box_legend'></div>
+                    </div>
+                    <div id='box2'>
+                        <div id='box2_title' class='box_title'>${common.ICONS['app_users'] + ' ' + common.ICONS['regional_numbersystem']}</div>
+                        <div id='box2_chart' class='box_chart'></div>
+                        <div id='box2_legend' class='box_legend'></div>
+                    </div>
+                </div>
+            </div>
+            <div id='menu_1_content_widget2' class='widget'>
+                <div id='menu_1_maintenance'>
+                    <div id='menu_1_maintenance_title'>${common.ICONS['app_maintenance']}</div>
+                    <div id='menu_1_maintenance_checkbox'>
+                        <input id='menu_1_checkbox_maintenance' type='checkbox' class='common_switch_input' />
+                        <label for='menu_1_checkbox_maintenance' class='common_switch_label'></label>
+                    </div>
+                </div>
+                <div id='menu_1_broadcast'>
+                    <div id='menu_1_broadcast_title'>${common.ICONS['app_broadcast']}</div>
+                    <div id='menu_1_broadcast_button' class='chat_click'>${common.ICONS['app_chat']}</div>
+                </div>
+            </div>`;
+            
+    if (common.COMMON_GLOBAL['system_admin']==1)
+        document.getElementById('menu_1_maintenance').style.display = 'inline-block';
+    else
+        document.getElementById('menu_1_maintenance').style.display = 'none';
+
+    document.getElementById('menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
+    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance() }, false);
+        
+    document.getElementById('select_year_menu1').selectedIndex = 0;
+    document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
+    document.getElementById('select_app_menu1').addEventListener('change', () => { show_charts();}, false);
+    document.getElementById('select_year_menu1').addEventListener('change', () => { show_charts();}, false);
+    document.getElementById('select_month_menu1').addEventListener('change', () => { show_charts();}, false);
+
+    if (common.COMMON_GLOBAL['system_admin']==1)
+        check_maintenance();
+    else
+        show_charts();
+}
 const show_user_agent = (user_agent) => {
     return null;
 }
-
 const get_apps = async () => {
-    let json;
-    let html=`<option value="">${common.ICONS['infinite']}</option>`;
-    if (common.COMMON_GLOBAL['system_admin']==1){
-        //system admin cant select app will show/use all
-        document.getElementById('select_app_menu5').innerHTML = html;
-        document.getElementById('select_app_menu5_list_connected').innerHTML = html;
-        document.getElementById('select_app_broadcast').innerHTML = html;
-    }
-    else{
-        
-        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app/admin?`, 'GET', 1, null, null, null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                json = JSON.parse(result);
-                for (let i = 0; i < json.data.length; i++) {
-                        html +=
-                        `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
-                }
-                document.getElementById('select_app_menu1').innerHTML = html;
-                document.getElementById('select_app_menu5_app_log').innerHTML = html;
-                document.getElementById('select_app_menu5_list_connected').innerHTML = html;
-                document.getElementById('select_app_menu5').innerHTML = html;
-                document.getElementById('select_app_broadcast').innerHTML = html;
+    return new Promise((resolve, reject)=>{
+        let json;
+        let html=`<option value="">${common.ICONS['infinite']}</option>`;
+        if (common.COMMON_GLOBAL['system_admin']==1){
+            //system admin cant select app will show/use all
+            resolve (html);
+        }
+        else{
+            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app/admin?`, 'GET', 1, null, null, null, (err, result) =>{
+                if (err)
+                    resolve();
+                else{
+                    json = JSON.parse(result);
+                    for (let i = 0; i < json.data.length; i++) {
+                            html +=
+                            `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
+                    }
+                    resolve(html);
                 }
             })
-    }
+        }
+    })
 }
 
 /*----------------------- */
@@ -323,7 +433,8 @@ const closeBroadcast = () => {
     document.getElementById('client_id').innerHTML='';
     document.getElementById('send_broadcast_message').value='';
 }
-const show_broadcast_dialogue = (dialogue_type, client_id=null) => {
+const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
+    document.getElementById('select_app_broadcast').innerHTML = await get_apps();
     switch (dialogue_type){
         case 'CHAT':{
             //hide and set INFO, should not be able to send MAINTENANCE message here
@@ -420,120 +531,21 @@ const set_maintenance = () => {
 /*----------------------- */
 /* USER STAT              */
 /*----------------------- */
-//chart 1=Piechart, 2= Barchart
-const show_chart = async (chart) => {
-    if (admin_token_has_value()){
-        let app_id;
-        let year = document.getElementById('select_year_menu1').value;
-        let month = document.getElementById('select_month_menu1').value;
-        let json;
-        document.getElementById(`box${chart}_chart`).innerHTML = common.APP_SPINNER;
-        document.getElementById(`box${chart}_legend`).innerHTML = common.APP_SPINNER;
-        //no meaning showing one app in a pie chart will always be full
-        if (chart==1)
-            app_id = '';
-        else
-            app_id =document.getElementById('select_app_menu1').value;
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&statchoice=${chart}&year=${year}&month=${month}`,
-                 'GET', 1, null, null, null, (err, result) =>{
-            if (err){
-                document.getElementById(`box${chart}_chart`).innerHTML = '';
-                document.getElementById(`box${chart}_legend`).innerHTML = '';
-            }
-            else{
-                json = JSON.parse(result);
-                document.getElementById(`box${chart}_chart`).innerHTML = '';
-                document.getElementById(`box${chart}_legend`).innerHTML = '';
-                if (chart==1){
-                    const SearchAndGetText = (item, search) => {
-                        for (let i=1;i<item.options.length;i++){
-                            if (item.options[i].value == search)
-                                return item.options[i].text
-                        }
-                        return null;
-                    }
-                    let sum_amount =0;
-                    for (let i = 0; i < json.data.length; i++) {
-                        sum_amount += json.data[i].amount;
-                    }
-                    let apps_color = '';
-                    let degree_start = 0;
-                    let degree_stop = 0;
-                    let html = '';
-                    let app_color;
-                    for (let i = 0; i < json.data.length; i++) {
-                        //calculate colors and degree
-                        degree_stop = degree_start + json.data[i].amount/sum_amount*360;
-                        app_color = `rgb(${i/json.data.length*200},${i/json.data.length*200},255) ${degree_start}deg ${degree_stop}deg`;
-                        if (i < json.data.length - 1)
-                            apps_color += app_color + ',';
-                        else
-                            apps_color += app_color;
-                        //add to legend below chart
-                        html += `<div id='box1_legend_row' class='box_legend_row'>
-                                    <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/json.data.length*200},${i/json.data.length*200},255)'></div>
-                                    <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu1'), json.data[i].app_id)}</div>
-                                </div>`;
-                        degree_start = degree_start + json.data[i].amount/sum_amount*360;
-                    }
-                    //display pie chart
-                    document.getElementById('box1_chart').innerHTML = `<div id='box1_pie'></div>`;
-                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${apps_color})`
-                    //show legend below chart
-                    document.getElementById('box1_legend').innerHTML = html;
-                }
-                else
-                    if (chart==2){
-                        let max_amount =0;
-                        for (let i = 0; i < json.data.length; i++) {
-                            if (json.data[i].amount>max_amount)
-                                max_amount = json.data[i].amount;
-                        }
-                        //set bar data
-                        let html='';
-                        let bar_color;
-                        if (app_id == '')
-                            bar_color = 'rgb(81, 171, 255)';
-                        else
-                            bar_color = 'rgb(197 227 255)';
 
-                        for (let i = 0; i < json.data.length; i++) {
-                            html += `<div class='box2_barcol box2_barcol_display' style='width:${100/json.data.length}%'>
-                                        <div class='box2_barcol_color' style='background-color:${bar_color};height:${json.data[i].amount/max_amount*100}%'></div>
-                                        <div class='box2_barcol_legendX'>${json.data[i].day}</div>
-                                    </div>`;
-                        }
-                        //create bar chart
-                        document.getElementById('box2_chart').innerHTML = `<div id='box2_bar_legendY'>
-                                                                                <div id='box2_bar_legend_max'>${max_amount}</div>
-                                                                                <div id='box2_bar_legend_medium'>${max_amount/2}</div>
-                                                                                <div id='box2_bar_legend_min'>0</div>
-                                                                          </div>
-                                                                          <div id='box2_bar_data'>${html}</div>`;
-                        //legend below chart
-                        document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
-                                                                                <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                                <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text}</div>
-                                                                            </div>` ;
-                    }
-            }
-        })
-    }
-}
-const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
-    if (admin_token_has_value()){
-        let json;
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
-                 'GET', 1, null, null, null, (err, result) =>{
-            if (err)
-                callBack(result, null);
-            else{
-                callBack(null, result);
-            }
-        });
-    }
-}
 const count_users = async () => {
+    const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
+        if (admin_token_has_value()){
+            let json;
+            await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
+                     'GET', 1, null, null, null, (err, result) =>{
+                if (err)
+                    callBack(result, null);
+                else{
+                    callBack(null, result);
+                }
+            });
+        }
+    }    
     if (admin_token_has_value()){
         let json;
         document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
@@ -607,7 +619,31 @@ const count_users = async () => {
 /*----------------------- */
 /* USERS                  */
 /*----------------------- */
-const show_users = (sort=8, order_by='ASC', focus=true) => {
+const show_users = () =>{
+    document.querySelector('#menu_3_content').innerHTML = common.APP_SPINNER;
+    document.querySelector('#menu_3_content').innerHTML = 
+            `<div id='menu_3_content_widget1' class='widget'>
+                <div id='list_user_account_title'>${common.ICONS['app_users']}</div>
+                <div id='list_user_account_search'>
+                    <input id='list_user_account_search_input' type='text' />
+                    <div id='list_user_account_search_icon'>${common.ICONS['app_search']}</div>
+                </div>
+                <div id='list_user_account' class='common_list_scrollbar'></div>
+            </div>
+            <div id='menu_3_content_widget2' class='widget'>
+                <div id='list_user_account_logon_title'>${common.ICONS['app_login']}</div>
+                <div id='list_user_account_logon' class='common_list_scrollbar'></div>
+                <div id='users_buttons' class="save_buttons">
+                    <button id='users_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
+                </div>
+            </div>`;
+    document.getElementById('list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
+    document.getElementById('list_user_account_search_icon').addEventListener('click', () => { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+    document.getElementById('users_save').addEventListener('click', () => { button_save('users_save')}, false); 
+    search_users();
+
+}
+const search_users = (sort=8, order_by='ASC', focus=true) => {
     let json;
 
     if (common.check_input(document.getElementById("list_user_account_search_input").value, 100, false) == false)
@@ -798,6 +834,7 @@ const show_users = (sort=8, order_by='ASC', focus=true) => {
             }
             document.getElementById('list_user_account').innerHTML = html;
             document.getElementById('list_user_account_col_title' + sort).classList.add(order_by);
+        
             if (common.COMMON_GLOBAL['user_app_role_id']==0){
                 //add lov icon for super admin
                 document.querySelectorAll(`#list_user_account .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
@@ -1384,6 +1421,226 @@ const list_events = (list_item, item_row, item_edit) => {
 /*----------------------- */
 /* MONITOR                */
 /*----------------------- */
+const show_monitor = async (yearvalues) =>{
+    document.querySelector('#menu_5_content').innerHTML = 
+        `<div id='menu_5_content_widget1' class='widget'>
+            <ul id='list_monitor_nav' class='list_nav'>
+                <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']}</button></li>
+                <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS['app_apps'] + ' ' + common.ICONS['app_log']}</button></li>
+                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
+                <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button' >${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log']}</button></li>
+            </ul>
+            <div id='list_connected_form'>
+                <div id='menu5_row_sample_list_connected'>
+                    <select id='select_app_menu5_list_connected'></select>
+                    <select id='select_year_menu5_list_connected'></select>
+                    <select id='select_month_menu5_list_connected'>${list_generate(12)}</select>
+                </div>
+                <div id='list_connected' class='common_list_scrollbar'></div>
+            </div>
+            <div id='list_app_log_form'>
+                <div id='menu5_row_sample_app_log'>
+                    <select id='select_app_menu5_app_log'></select>
+                    <select id='select_year_menu5_app_log'></select>
+                    <select id='select_month_menu5_app_log'>${list_generate(12)}</select>
+                </div>
+                <div id='list_app_log' class='common_list_scrollbar'></div>
+                <div id='list_app_pagination'>
+                    <div id='list_app_log_first' ></div>
+                    <div id='list_app_log_previous' ></div>
+                    <div id='list_app_log_next' ></div>
+                    <div id='list_app_log_last' ></div>
+                </div>
+            </div>
+            <div id='list_server_log_form'>
+                <div id='menu5_row_sample1' >
+                    <select id='select_logscope5'></select>
+                    <select id='select_app_menu5'></select>
+                </div>
+                <div id='menu5_row_sample2'>
+                    <select id='select_year_menu5'></select>
+                    <select id='select_month_menu5'>${list_generate(12)}</select>
+                    <select id='select_day_menu5'>${list_generate(31)}</select>
+                    <button id='filesearch_menu5' class='common_dialogue_button' >${common.ICONS['app_search']}</button>
+                </div>
+                <div id='menu5_row_parameters'>
+                    <div class='menu5_row_parameters_col'>
+                        <div id='menu5_row_parameters_col1'>${common.ICONS['app_server'] + ' info'}</div>
+                        <div id='menu5_row_parameters_col1_1'>${common.ICONS['app_checkbox_checked']}</div>
+                        <div id='menu5_row_parameters_col1_0'>${common.ICONS['app_checkbox_empty']}</div>
+                    </div>
+                    <div class='menu5_row_parameters_col'>
+                        <div id='menu5_row_parameters_col2'>${common.ICONS['app_server'] + ' verbose'}</div>
+                        <div id='menu5_row_parameters_col2_1'>${common.ICONS['app_checkbox_checked']}</div>
+                        <div id='menu5_row_parameters_col2_0'>${common.ICONS['app_checkbox_empty']}</div>
+                    </div>
+                    <div class='menu5_row_parameters_col'>
+                        <div id='menu5_row_parameters_col3'>${common.ICONS['app_database']}</div>
+                        <div id='menu5_row_parameters_col3_1'>${common.ICONS['app_checkbox_checked']}</div>
+                        <div id='menu5_row_parameters_col3_0'>${common.ICONS['app_checkbox_empty']}</div>
+                    </div>
+                    <div class='menu5_row_parameters_col'>
+                        <div id='menu5_row_parameters_col4'>${common.ICONS['app_route']}</div>
+                        <div id='menu5_row_parameters_col4_1'>${common.ICONS['app_checkbox_checked']}</div>
+                        <div id='menu5_row_parameters_col4_0'>${common.ICONS['app_checkbox_empty']}</div>
+                    </div>
+                    <div class='menu5_row_parameters_col'>
+                        <div id='menu5_row_parameters_col5'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' JSON'}</div>
+                        <div id='menu5_row_parameters_col5_1'>${common.ICONS['app_checkbox_checked']}</div>
+                        <div id='menu5_row_parameters_col5_0'>${common.ICONS['app_checkbox_empty']}</div>
+                    </div>
+                </div>
+                <div id='list_server_log' class='common_list_scrollbar'></div>
+            </div>
+            <div id='list_pm2_log_form'>
+                <div id='list_pm2_log_path_info'>
+                    <div id='list_pm2_log_path_title'>${common.ICONS['app_file_path']}</div>
+                    <div id='list_pm2_log_path'></div>
+                </div>
+                <div id='list_pm2_log' >
+                    <div id='list_pm2_log_title_out'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Out'}</div>
+                    <div id='list_pm2_log_out' class='common_list_scrollbar'></div>
+                    <div id='list_pm2_log_title_err'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Error'}</div>
+                    <div id='list_pm2_log_err' class='common_list_scrollbar'></div>
+                    <div id='list_pm2_log_title_process_event'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Process event'}</div>
+                    <div id='list_pm2_log_process_event' class='common_list_scrollbar'></div>
+                </div>
+            </div>
+        </div>
+        <div id='menu_5_content_widget2' class='widget'>
+            <div id='mapid'></div>
+            <select id='select_maptype' >
+                <option value='OpenStreetMap_Mapnik' selected='selected'>OpenStreetMap_Mapnik</option>
+                <option value='Esri.WorldImagery'>Esri.WorldImagery</option>
+            </select>
+        </div>`;
+    
+    if (common.COMMON_GLOBAL['system_admin']==1){
+        //hide APP LOG in MONITOR
+        document.getElementById('list_monitor_nav_2').style.display='none';
+    }
+    else{
+        //hide PM2LOG in MONITOR
+        document.getElementById('list_monitor_nav_3').style.display='none';
+        //hide SERVER LOG in MONITOR
+        document.getElementById('list_monitor_nav_4').style.display='none';
+    }
+    //server log
+    document.getElementById('select_app_menu5').innerHTML = await get_apps();
+    //app log
+    document.getElementById('select_app_menu5_app_log').innerHTML = document.getElementById('select_app_menu5').innerHTML;
+    //connected
+    document.getElementById('select_app_menu5_list_connected').innerHTML = document.getElementById('select_app_menu5').innerHTML;
+
+    document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
+        nav_click(event.target.id==''?event.target.parentNode:event.target)
+      }, true);
+
+    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
+
+    document.getElementById('list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+
+    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
+
+    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+
+    document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
+
+    document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
+
+    const init_monitor = () =>{
+        let url;
+        let token_type = '';
+        common.map_init(APP_GLOBAL['module_leaflet_map_container'],
+                        common.COMMON_GLOBAL['module_leaflet_style'],
+                        common.COMMON_GLOBAL['client_longitude'],
+                        common.COMMON_GLOBAL['client_latitude'],
+                        APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                        APP_GLOBAL['module_leaflet_map_zoom']).then(() => {
+            common.map_setevent('dblclick', (e) => {
+                let lng = e.latlng['lng'];
+                let lat = e.latlng['lat'];
+                //Update GPS position
+                common.get_place_from_gps(lng, lat).then((gps_place) => {
+                    common.map_update(lng,
+                                        lat,
+                                        '', //do not change zoom 
+                                        gps_place,
+                                        null,
+                                        APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                })
+            })
+            common.map_update(common.COMMON_GLOBAL['client_longitude'],
+                                common.COMMON_GLOBAL['client_latitude'],
+                                APP_GLOBAL['module_leaflet_map_zoom'],
+                                common.COMMON_GLOBAL['client_place'],
+                                null,
+                                APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                                common.COMMON_GLOBAL['module_leaflet_jumpto']);
+            
+            if (common.COMMON_GLOBAL['system_admin']==1){
+                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                token_type = 2;
+            }
+            else{
+                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                token_type = 1;
+            }                                            
+            common.common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
+                if (err)
+                    null;
+                else{
+                    APP_GLOBAL['limit'] = parseInt(JSON.parse(result_limit).data);
+                    //connected
+                    document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
+                    document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
+                    document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
+                    if (common.COMMON_GLOBAL['system_admin']==1){
+                        //server log
+                        document.getElementById('select_year_menu5').innerHTML = yearvalues;
+                        document.getElementById('select_year_menu5').selectedIndex = 0;
+                        document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
+                        document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
+                        get_server_log_parameters().then(() => {
+                            common.map_resize();
+                            nav_click(document.getElementById('list_connected_title'));
+                        })
+                    }
+                    else{
+                        APP_GLOBAL['page'] = 0;
+                        //log
+                        document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
+                        document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
+                        document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
+                        fix_pagination_buttons();
+                        common.map_resize();
+                        nav_click(document.getElementById('list_connected_title'));
+                    }    
+                }
+                
+            })
+        })
+    }
+    //fetch geolocation once
+    if (common.COMMON_GLOBAL['client_longitude'] && common.COMMON_GLOBAL['client_latitude'])
+        init_monitor();
+    else
+        common.get_gps_from_ip().then(() =>{
+            init_monitor();
+        })
+}
 const fix_pagination_buttons = () => {
     //function triggered by change in user preference before innerHTML loaded html
     //function called again when choosing app log monitor check if exist first
@@ -2396,6 +2653,29 @@ const show_pm2_logs = () => {
 /*----------------------- */
 /* SERVER CONFIG          */
 /*----------------------- */
+const show_server_config = () =>{
+    document.querySelector('#menu_6_content').innerHTML = 
+        `<div id='menu_6_content_widget1' class='widget'>
+            <ul id='list_config_nav' class='list_nav'>
+                <li id='list_config_nav_1'><button id='list_config_server_title' class='list_button' >${common.ICONS['app_server']}</button></li>
+                <li id='list_config_nav_2'><button id='list_config_blockip_title' class='list_button' >${common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['regional_numbersystem']}</button></li>
+                <li id='list_config_nav_3'><button id='list_config_useragent_title' class='list_button' >${common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['app_browser']}</button></li>
+                <li id='list_config_nav_4'><button id='list_config_policy_title' class='list_button' >${common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book']}</button></li>
+                <li id='list_config_nav_0'><button id='list_config_info_title' class='list_button' >${common.ICONS['app_info']}</button></li>
+            </ul>
+            <div id='list_config' class='common_list_scrollbar'></div>
+            <pre id='list_config_edit'></pre>
+            <div id='config_buttons' class="save_buttons">
+                <button id='config_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
+            </div>
+        </div>`;
+    document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save')}, false); 
+    document.querySelector('#list_config_nav').addEventListener('click', (event) => {
+        nav_click(event.target.id==''?event.target.parentNode:event.target)
+     }, true);
+
+    nav_click(document.getElementById('list_config_server_title'));
+}
 const show_config = async (config_nav=1) => {
     let url;
     document.getElementById(`list_config`).innerHTML = common.APP_SPINNER;
@@ -2817,260 +3097,127 @@ const init = () => {
     common.COMMON_GLOBAL['client_longitude'] = '';
     common.COMMON_GLOBAL['client_place'] = '';
 
-
     //SET ICONS
-    //common, since ui=false when called init_common, set some common items here
     document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
-    //if CONFIRM message is used
     document.getElementById('common_message_cancel').innerHTML = common.ICONS['app_cancel'];
-    //other in admin
+
     document.getElementById('menu_open').innerHTML = common.ICONS['app_menu_open'];
-    document.getElementById('menu_1_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
-    document.getElementById('menu_1_broadcast_button').innerHTML = common.ICONS['app_chat'];
     
     document.getElementById('send_broadcast_send').innerHTML = common.ICONS['app_send'];
     document.getElementById('send_broadcast_close').innerHTML = common.ICONS['app_close'];
     document.getElementById('common_lov_close').innerHTML = common.ICONS['app_close'];
 
-    //menu 1
-    document.getElementById('box1_title').innerHTML = common.ICONS['app_users'] + ' ' + common.ICONS['app_chart'];
-    document.getElementById('box2_title').innerHTML = common.ICONS['app_users'] + ' ' + common.ICONS['regional_numbersystem'];
-    document.getElementById('menu_1_maintenance_title').innerHTML = common.ICONS['app_maintenance'];
     document.getElementById('send_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
-
-    //menu 3
-    document.getElementById('list_user_account_search_icon').innerHTML = common.ICONS['app_search'];
-    document.getElementById('list_user_account_title').innerHTML = common.ICONS['app_users'];
-    document.getElementById('list_user_account_logon_title').innerHTML = common.ICONS['app_login'];
-    document.getElementById('users_save').innerHTML = common.ICONS['app_save'];
-    //menu 5
-    document.getElementById('list_connected_title').innerHTML = common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']; 
-    document.getElementById('list_app_log_title').innerHTML = common.ICONS['app_apps'] + ' ' + common.ICONS['app_log'];
-    document.getElementById('list_server_log_title').innerHTML = common.ICONS['app_server'] + ' ' + common.ICONS['app_log'];
-    document.getElementById('list_pm2_log_title').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'];
-    document.getElementById('list_pm2_log_path_title').innerHTML = common.ICONS['app_file_path'];
-    document.getElementById('filesearch_menu5').innerHTML =  common.ICONS['app_search'];
-
-    document.getElementById('menu5_row_parameters_col1_1').innerHTML = common.ICONS['app_checkbox_checked'];
-    document.getElementById('menu5_row_parameters_col1_0').innerHTML = common.ICONS['app_checkbox_empty'];
-    document.getElementById('menu5_row_parameters_col2_1').innerHTML = common.ICONS['app_checkbox_checked'];
-    document.getElementById('menu5_row_parameters_col2_0').innerHTML = common.ICONS['app_checkbox_empty'];
-    document.getElementById('menu5_row_parameters_col3_1').innerHTML = common.ICONS['app_checkbox_checked'];
-    document.getElementById('menu5_row_parameters_col3_0').innerHTML = common.ICONS['app_checkbox_empty'];
-    document.getElementById('menu5_row_parameters_col4_1').innerHTML = common.ICONS['app_checkbox_checked'];
-    document.getElementById('menu5_row_parameters_col4_0').innerHTML = common.ICONS['app_checkbox_empty'];
-    document.getElementById('menu5_row_parameters_col5_1').innerHTML = common.ICONS['app_checkbox_checked'];
-    document.getElementById('menu5_row_parameters_col5_0').innerHTML = common.ICONS['app_checkbox_empty'];
-
-
-    document.getElementById('menu5_row_parameters_col1').innerHTML = common.ICONS['app_server'] + ' info';
-    document.getElementById('menu5_row_parameters_col2').innerHTML = common.ICONS['app_server'] + ' verbose';
-    document.getElementById('menu5_row_parameters_col3').innerHTML = common.ICONS['app_database'];
-    document.getElementById('menu5_row_parameters_col4').innerHTML = common.ICONS['app_route'];
-    document.getElementById('menu5_row_parameters_col5').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' JSON';
-
-    document.getElementById('list_pm2_log_title_out').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Out';
-    document.getElementById('list_pm2_log_title_err').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Error';
-    document.getElementById('list_pm2_log_title_process_event').innerHTML = common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Process event';
-
     document.getElementById('client_id_label').innerHTML = common.ICONS['user'];
-    //menu 6
-    document.getElementById('list_config_server_title').innerHTML = common.ICONS['app_server'];
-    document.getElementById('list_config_blockip_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['regional_numbersystem'];
-    document.getElementById('list_config_useragent_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['app_browser'];
-    document.getElementById('list_config_policy_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book'];
-    document.getElementById('list_config_info_title').innerHTML = common.ICONS['app_info'];
-    document.getElementById('config_save').innerHTML = common.ICONS['app_save'];
-    
+
     //SET EVENTLISTENERS
     document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
     document.getElementById('menu_open').addEventListener('click', () => { document.getElementById('menu').style.display = 'block' }, false);    
 
-    document.getElementById('select_app_menu1').addEventListener('change', () => { show_chart(1); show_chart(2);}, false);
-    document.getElementById('select_year_menu1').addEventListener('change', () => { show_chart(1);show_chart(2);}, false);
-    document.getElementById('select_month_menu1').addEventListener('change', () => { show_chart(1);show_chart(2);}, false);
-    document.getElementById('menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
-    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance() }, false);
     document.getElementById('select_broadcast_type').addEventListener('change', () => { set_broadcast_type(); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', () => { sendBroadcast(); }, false);
     document.getElementById('send_broadcast_close').addEventListener('click', () => { closeBroadcast()}, false);
-
-    document.getElementById('list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(show_users, 8, 'ASC', false); }, false);
-    document.getElementById('list_user_account_search_icon').addEventListener('click', () => { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
-    document.getElementById('users_save').addEventListener('click', () => { button_save('users_save')}, false); 
     
-    document.getElementById('config_save').addEventListener('click', () => { button_save('config_save')}, false); 
+    //MENU ITEMS
+    document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
+    //DASHBOARD
+    document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; 
+    //USER STAT
+    document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log']; 
+    //USERS
+    document.getElementById('menu_3').innerHTML = common.ICONS['app_users']; 
+    //APP ADMIN
+    document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings']; 
+    //MONITOR
+    document.getElementById('menu_5').innerHTML = common.ICONS['app_log']; 
+    //PARAMETER
+    document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings'];
+    //INSTALLATION 
+    document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install']; 
+    //DATABASE
+    document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database']; 
+    //'BACKUP/RESTORE'
+    document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore']; 
+    //SERVER
+    document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; 
+    //LOGOUT
+    document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; 
 
-    document.querySelectorAll('.list_nav').forEach(e => e.addEventListener('click', (event) => {
-                                                                                        nav_click(event.target.id==''?event.target.parentNode:event.target)
-                                                                                    }, true));
-
-    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
-    
-    document.getElementById('list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    document.getElementById('list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    document.getElementById('list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    document.getElementById('list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    
-    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
-
-    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-
-    document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
-    
-    document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
-
-    //SET APPS INFO, INIT MAP
-    get_apps().then(() => {
-        //set for menu items created in menu_secure
-        document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
-        document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; //DASHBOARD
-        document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log']; //USER STAT
-        document.getElementById('menu_3').innerHTML = common.ICONS['app_users']; //USERS
-        document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings']; //APP ADMIN
-        document.getElementById('menu_5').innerHTML = common.ICONS['app_log']; //MONITOR
-        document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings']; //PARAMETER
-        document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install']; //INSTALLATION
-        document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database']; //DATABASE
-        document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore']; //'BACKUP/RESTORE';
-        document.getElementById('menu_10').innerHTML = common.ICONS['app_server']; //SERVER
-        document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff']; //LOGOUT
-
-        document.getElementById('menu_secure').addEventListener('click', (event) => { 
-                                                                            let target_id;
-                                                                            if (event.target.id.startsWith('menu_')){
-                                                                                //menuitem
-                                                                                target_id = event.target.id;
+    document.getElementById('menu_secure').addEventListener('click', (event) => { 
+                                                                        let target_id;
+                                                                        if (event.target.id.startsWith('menu_')){
+                                                                            //menuitem
+                                                                            target_id = event.target.id;
+                                                                        }
+                                                                        else
+                                                                            if (event.target.parentNode.id.startsWith('menu_')){
+                                                                                //svg or icon in menuitem
+                                                                                target_id = event.target.parentNode.id;
                                                                             }
                                                                             else
-                                                                                if (event.target.parentNode.id.startsWith('menu_')){
-                                                                                    //svg or icon in menuitem
-                                                                                    target_id = event.target.parentNode.id;
+                                                                                if (event.target.parentNode.parentNode.id.startsWith('menu_')){
+                                                                                    //path in svg in menuitem
+                                                                                    target_id = event.target.parentNode.parentNode.id;
                                                                                 }
-                                                                                else
-                                                                                    if (event.target.parentNode.parentNode.id.startsWith('menu_')){
-                                                                                        //path in svg in menuitem
-                                                                                        target_id = event.target.parentNode.parentNode.id;
-                                                                                    }
-                                                                            switch (target_id){
-                                                                                case 'menu_close':{
-                                                                                    document.getElementById('menu').style.display = 'none';
-                                                                                    break;
-                                                                                }
-                                                                                case 'menu_11':{
-                                                                                    admin_logoff_app();
-                                                                                    break;
-                                                                                }
-                                                                                default:{
-                                                                                    show_menu(parseInt(target_id.substring(5)))
-                                                                                }
+                                                                        switch (target_id){
+                                                                            case 'menu_close':{
+                                                                                document.getElementById('menu').style.display = 'none';
+                                                                                break;
                                                                             }
-                                                                            }, false);
-        document.getElementById('common_user_direction_select').addEventListener('change', (event) => { fix_pagination_buttons(event.target.value)}, false);
-        //hide all first (display none in css using eval not working)
-        for (let i=1;i<=10;i++){
-            document.getElementById(`menu_${i}`).style.display='none';
-        }
-        if (common.COMMON_GLOBAL['system_admin']==1){
-            //show DASHBOARD
-            document.getElementById('menu_1').style.display='block';
-            document.getElementById('select_broadcast_type').innerHTML = 
-                `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
-                    <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
-            
-            //show MONITOR (only SERVER LOG and PM2LOG)
-            document.getElementById('menu_5').style.display='block';
-            //hide APP LOG in MONITOR
-            document.getElementById('list_monitor_nav_2').style.display='none';
-            //show PARAMETER
-            document.getElementById('menu_6').style.display='block';
-            //show INSTALLATION
-            document.getElementById('menu_7').style.display='block';
-            //show DATABASE
-            document.getElementById('menu_8').style.display='block';
-            //show BACKUP/RESTORE
-            document.getElementById('menu_9').style.display='block';
-            //show SERVER
-            document.getElementById('menu_10').style.display='block';
-            //start with DASHBOARD
-            show_menu(1);
-        }
-        else{
-            //show DASHBOARD
-            document.getElementById('menu_1').style.display='block';
-            document.getElementById('select_broadcast_type').innerHTML = 
-                `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>`;
-            document.getElementById('menu_1_maintenance').style.display = 'none';
-            //show USER STAT
-            document.getElementById('menu_2').style.display='block';
-            //show USERS
-            document.getElementById('menu_3').style.display='block';
-            //show APP ADMIN
-            document.getElementById('menu_4').style.display='block';
-            //show MONITOR
-            document.getElementById('menu_5').style.display='block';
-            //hide PM2LOG in MONITOR
-            document.getElementById('list_monitor_nav_3').style.display='none';
-            //hide SERVER LOG in MONITOR
-            document.getElementById('list_monitor_nav_4').style.display='none';
-            //start with DASHBOARD
-            show_menu(1);
-            common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
-                null
-            });
-        }
-        common.get_gps_from_ip().then(() =>{
-            common.map_init(APP_GLOBAL['module_leaflet_map_container'],
-                            common.COMMON_GLOBAL['module_leaflet_style'],
-                            common.COMMON_GLOBAL['client_longitude'],
-                            common.COMMON_GLOBAL['client_latitude'],
-                            APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                            APP_GLOBAL['module_leaflet_map_zoom']).then(() => {
-                                common.map_setevent('dblclick', (e) => {
-                                    let lng = e.latlng['lng'];
-                                    let lat = e.latlng['lat'];
-                                    //Update GPS position
-                                    common.get_place_from_gps(lng, lat).then((gps_place) => {
-                                        common.map_update(lng,
-                                                          lat,
-                                                          '', //do not change zoom 
-                                                          gps_place,
-                                                          null,
-                                                          APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                                          common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                                    })
-                                })
-                                common.map_update(common.COMMON_GLOBAL['client_longitude'],
-                                                  common.COMMON_GLOBAL['client_latitude'],
-                                                  APP_GLOBAL['module_leaflet_map_zoom'],
-                                                  common.COMMON_GLOBAL['client_place'],
-                                                  null,
-                                                  APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                                  common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                            })
-        })
-    })
+                                                                            case 'menu_11':{
+                                                                                admin_logoff_app();
+                                                                                break;
+                                                                            }
+                                                                            default:{
+                                                                                show_menu(parseInt(target_id.substring(5)))
+                                                                            }
+                                                                        }
+                                                                        }, false);
+    document.getElementById('common_user_direction_select').addEventListener('change', (event) => { fix_pagination_buttons(event.target.value)}, false);
+    //hide all first (display none in css using eval not working)
+    for (let i=1;i<=10;i++){
+        document.getElementById(`menu_${i}`).style.display='none';
+    }
+    if (common.COMMON_GLOBAL['system_admin']==1){
+        //show DASHBOARD
+        document.getElementById('menu_1').style.display='block';
+        document.getElementById('select_broadcast_type').innerHTML = 
+            `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
+                <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
+        
+        //show MONITOR (only SERVER LOG and PM2LOG)
+        document.getElementById('menu_5').style.display='block';
+        //show PARAMETER
+        document.getElementById('menu_6').style.display='block';
+        //show INSTALLATION
+        document.getElementById('menu_7').style.display='block';
+        //show DATABASE
+        document.getElementById('menu_8').style.display='block';
+        //show BACKUP/RESTORE
+        document.getElementById('menu_9').style.display='block';
+        //show SERVER
+        document.getElementById('menu_10').style.display='block';
+        //start with DASHBOARD
+        show_menu(1);
+    }
+    else{
+        //show DASHBOARD
+        document.getElementById('menu_1').style.display='block';
+        document.getElementById('select_broadcast_type').innerHTML = 
+            `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>`;
+        //show USER STAT
+        document.getElementById('menu_2').style.display='block';
+        //show USERS
+        document.getElementById('menu_3').style.display='block';
+        //show APP ADMIN
+        document.getElementById('menu_4').style.display='block';
+        //show MONITOR
+        document.getElementById('menu_5').style.display='block';
+        //start with DASHBOARD
+        show_menu(1);
+        common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
+            null
+        });
+    }
 }
-export {show_menu, show_user_agent, get_apps,
-        sendBroadcast, closeBroadcast, show_broadcast_dialogue, set_broadcast_type, 
-        check_maintenance, set_maintenance, 
-        show_chart, count_connected, count_users,
-        show_users, show_user_account_logon, 
-        show_apps, show_app_parameter, button_save, update_record, list_events,
-        
-        fix_pagination_buttons, nav_click, show_list, show_connected, show_app_log, set_list_eventlisteners, 
-        get_sort, get_order, list_sort_click, page_navigation, list_item_click, 
-        get_server_log_parameters, show_server_logs, show_existing_logfiles, show_pm2_logs,
-        
-        show_config,
-        show_db_info,
-        show_server_info,
-        admin_token_has_value, init}
+export {init}
