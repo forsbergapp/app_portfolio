@@ -1,4 +1,5 @@
 const service = await import("./app_log.service.js");
+const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const getLogsAdmin = (req, res) => {
 	let year = parseInt(req.query.year);
@@ -32,10 +33,9 @@ const getStatUniqueVisitorAdmin = (req, res) => {
 		req.query.select_app_id = null;
 	else
 		req.query.select_app_id = parseInt(req.query.select_app_id);
-	req.query.statchoice = parseInt(req.query.statchoice);
 	req.query.year = parseInt(req.query.year);
 	req.query.month = parseInt(req.query.month);
-	service.getStatUniqueVisitorAdmin(req.query.app_id, req.query.select_app_id, req.query.statchoice, req.query.year, req.query.month,  (err, results)=>{
+	service.getStatUniqueVisitorAdmin(req.query.app_id, req.query.select_app_id, req.query.year, req.query.month,  (err, results)=>{
 		if (err) {
 			return res.status(500).send({
 				data: err
