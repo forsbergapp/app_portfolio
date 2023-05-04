@@ -2948,17 +2948,11 @@ const map_update = async (longitude, latitude, zoom, text_place, timezone_text =
 /*----------------------- */
 /* SERVICE BROADCAST      */
 /*----------------------- */
-const broadcast_init = (close_eventsource) => {
+const broadcast_init = () => {
     //broadcast
     document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
     document.getElementById('common_broadcast_info_title').innerHTML = ICONS['app_alert'];
-    if (close_eventsource==true){
-        COMMON_GLOBAL['service_broadcast_eventsource'].close();
-        connectOnline();
-    }
-    else{
-        connectOnline();
-    }
+    connectOnline();
 }
 const maintenance_countdown = (remaining) => {
     if(remaining <= 0)
@@ -3618,7 +3612,6 @@ const init_common = async (parameters, callBack) => {
      app_logo:
      locale:
      exception_app_function:
-     close_eventsource:
      ui:
      gps_lat: 
      gps_long: 
@@ -3636,10 +3629,9 @@ const init_common = async (parameters, callBack) => {
     if (COMMON_GLOBAL['app_id'] ==null)
         set_globals(parameters);
     if (parameters.app_id == COMMON_GLOBAL['common_app_id']){
-        //admin use different exception before and fter login
     	COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
 	    COMMON_GLOBAL['user_app_role_id'] = parameters.app_role_id;
-        broadcast_init(parameters.close_eventsource);
+        broadcast_init();
         if (parameters.system_admin==1){
             document.title = parameters.app_name;
             callBack(null, null);
@@ -3650,7 +3642,7 @@ const init_common = async (parameters, callBack) => {
             })
     }
     else{
-        broadcast_init(parameters.close_eventsource);
+        broadcast_init();
         normal_start(parameters.ui).then((global_app_parameters)=>{
             callBack(null, global_app_parameters);
         })

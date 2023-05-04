@@ -1,6 +1,7 @@
-/*<APP_SCRIPT_START/>*/
-    /*
+const common = await import('/common/js/common.js');
+/*
     Functions and globals in this order:
+    GLOBALS
     MISC
     BROADCAST
     USER STAT
@@ -8,14 +9,96 @@
     APP ADMIN
     MONITOR
     SERVER CONFIG
+    INSTALLATION
     DB INFO
     SERVER
     EXCEPTION
     INIT
-    */
+*/
+/*----------------------- */
+/* GLOBALS                */
+/*----------------------- */
+const APP_GLOBAL = {
+    "page":"",
+    "page_last":"",
+    "limit":"",
+    "previous_row":"",
+    "module_leaflet_map_container":"",
+    "module_leaflet_map_zoom":"",
+    "module_leaflet_map_marker_div_gps":"",
+    "service_log_scope_server":"",
+    "service_log_scope_service":"",
+    "service_log_scope_db":"",
+    "service_log_scope_router":"",
+    "service_log_scope_controller":"",
+    "service_log_level_verbose":"",
+    "service_log_level_error":"",
+    "service_log_level_info":"",
+    "service_log_file_interval":"",
+    "service_log_file_path_server":"",
+    "service_log_destination":"",
+    "service_log_url_destination":"",
+    "service_log_url_destination_username":"",
+    "service_log_url_destination_password":"",
+    "service_log_date_format":""
+}
+const delete_globals = () => {
+    APP_GLOBAL['page'] = null;
+    APP_GLOBAL['page_last'] = null;
+    APP_GLOBAL['limit'] = null;
+    APP_GLOBAL['previous_row'] = null;
+    APP_GLOBAL['module_leaflet_map_zoom'] = null;
+    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = null;
+    APP_GLOBAL['module_leaflet_map_container'] = null;
+    APP_GLOBAL['service_log_scope_server'] = null;
+    APP_GLOBAL['service_log_scope_service'] = null;
+    APP_GLOBAL['service_log_scope_db'] = null;
+    APP_GLOBAL['service_log_scope_router'] = null;
+    APP_GLOBAL['service_log_scope_controller'] = null;
+    APP_GLOBAL['service_log_level_verbose'] = null;
+    APP_GLOBAL['service_log_level_error'] = null;
+    APP_GLOBAL['service_log_level_info'] = null;
+    APP_GLOBAL['service_log_destination'] = null;
+    APP_GLOBAL['service_log_url_destination'] = null;
+    APP_GLOBAL['service_log_url_destination_username'] = null;
+    APP_GLOBAL['service_log_url_destination_password'] = null;
+    APP_GLOBAL['service_log_file_interval'] = null;
+    APP_GLOBAL['service_log_file_path_server'] = null;
+    APP_GLOBAL['service_log_date_format'] = null;
+
+    common.COMMON_GLOBAL['client_latitude'] = null;
+    common.COMMON_GLOBAL['client_longitude'] = null;
+    common.COMMON_GLOBAL['client_place'] = null;
+    common.COMMON_GLOBAL['module_leaflet_style'] = null;
+    common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
+    common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
+}
+
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+const admin_logoff_app = (error) => {
+    common.COMMON_GLOBAL['rest_admin_at'] = '';
+    document.getElementById('common_user_menu_default_avatar').innerHTML = '';
+    const clear_common = () => {
+        //remove all event listeners in admin_secure
+        document.querySelector('#admin_secure').replaceWith(document.querySelector('#admin_secure').cloneNode(true));
+        delete_globals();
+        document.getElementById('dialogue_admin_login').style.visibility = 'visible';
+        document.querySelector('#menu').style.visibility = 'hidden';
+        document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='common_dialogue_button'></div>`;
+        document.getElementById('admin_secure').style.visibility = 'hidden';
+        //clear admin_secure data and events
+    }
+    if (common.COMMON_GLOBAL['system_admin']==1){
+        clear_common();
+        common.COMMON_GLOBAL['system_admin']=0;
+    }
+    else
+        common.user_logoff().then(() => {
+            clear_common();
+        })
+}
 const show_menu = (menu) => {
     document.getElementById('menu_1_content').style.display='none';
     document.getElementById(`menu_1`).classList.remove('menuitem_selected');
@@ -130,20 +213,12 @@ const show_menu = (menu) => {
         }
         //INSTALLATION
         case 7:{
-            let old_html = document.querySelector(`#install_db_icon`).innerHTML;
-            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'GET', 2, null, null, null, (err, result) =>{
-                document.querySelector(`#install_db_icon`).innerHTML = old_html;
-                document.querySelector(`#install_db_icon`).classList.remove('installed');
-                if (err==null && JSON.parse(result).installed == 1)
-                    document.querySelector(`#install_db_icon`).classList.add('installed');
-            })
+            show_installation();
             break;
         }
         //DATABASE
         case 8:{
-            show_db_info().then(() => {
-                show_db_info_space();
-            })
+            show_db_info();
             break;
         }
         //BACKUP/RESTORE
@@ -461,13 +536,11 @@ const count_connected = async (identity_provider_id, count_logged_in, callBack) 
 const count_users = async () => {
     if (admin_token_has_value()){
         let json;
-        let old_html = document.getElementById('list_user_stat').innerHTML;
-        document.getElementById('list_user_stat').innerHTML = common.APP_SPINNER;
-
+        document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
         await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/admin/count?`,
                            'GET', 1, null, null, null, (err, result) =>{
             if (err)
-                document.getElementById('list_user_stat').innerHTML = old_html;
+                document.querySelector('#menu_2_content').innerHTML = '';
             else{
                 json = JSON.parse(result);
                 let html='';
@@ -502,7 +575,18 @@ const count_users = async () => {
                                 <div></div>
                             </div>
                         </div>`;
-                document.getElementById('list_user_stat').innerHTML = html;
+                document.querySelector('#menu_2_content').innerHTML =
+                   `<div id='menu_2_content' class='main_content'>
+                        <div id='menu_2_content_widget1' class='widget'>
+                            <div id='list_user_stat_row_title' class='list_user_stat_row'>
+                                <div id='list_user_stat_col_title1' class='list_user_stat_col'>${common.ICONS['provider_id']}</div>
+                                <div id='list_user_stat_col_title2' class='list_user_stat_col'>${common.ICONS['provider']}</div>
+                                <div id='list_user_stat_col_title3' class='list_user_stat_col'>${common.ICONS['app_sum']}</div>
+                                <div id='list_user_stat_col_title4' class='list_user_stat_col'>${common.ICONS['app_user_connections']}</div>
+                            </div>
+                            <div id='list_user_stat'>${html}</div>
+                        </div>
+                    </div>`;
                 //count logged in
                 document.querySelectorAll('.list_user_stat_row').forEach(e => {
                     if (e.id !='list_user_stat_row_title'){
@@ -821,12 +905,12 @@ const show_user_account_logon = async (user_account_id) => {
 /*----------------------- */
 const show_apps = async () => {
     let json;
-    document.getElementById('list_apps').innerHTML = common.APP_SPINNER;
+    document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
 
     await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app/admin?`,
                        'GET', 1, null, null, null, (err, result) =>{
         if (err)
-            document.getElementById('list_apps').innerHTML = '';
+            document.querySelector('#menu_4_content').innerHTML = '';
         else{
             json = JSON.parse(result);
             let html = `<div id='list_apps_row_title' class='list_apps_row'>
@@ -879,7 +963,19 @@ const show_apps = async () => {
                     </div>
                 </div>`;
             }
-            document.getElementById('list_apps').innerHTML = html;
+            document.querySelector('#menu_4_content').innerHTML = 
+                   `<div id='menu_4_content_widget1' class='widget'>
+                        <div id='list_apps_title'>${common.ICONS['app_apps']}</div>
+                        <div id='list_apps' class='common_list_scrollbar'>${html}</div>
+                    </div>
+                    <div id='menu_4_content_widget2' class='widget'>
+                        <div id='list_app_parameter_title'>${common.ICONS['app_apps'] + common.ICONS['app_settings']}</div>
+                        <div id='list_app_parameter' class='common_list_scrollbar'></div>
+                        <div id='apps_buttons' class="save_buttons">
+                            <button id='apps_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
+                        </div>
+                    </div>`;
+            document.getElementById('apps_save').addEventListener('click', () => { button_save('apps_save')}, false); 
             //add lov icon
             document.querySelectorAll(`#list_apps .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
             list_events('list_apps', 'list_apps_row', ' .list_edit');
@@ -1324,7 +1420,7 @@ const nav_click = (item) => {
     }
     
     switch (item.id){
-        //monitor nav
+        //MONITOR
         case 'list_connected_title':{
             reset_monitor();
             document.getElementById('list_connected_form').style.display='flex';
@@ -1366,7 +1462,7 @@ const nav_click = (item) => {
             show_pm2_logs();
             break;
         }
-        //config nav
+        //SERVER CONFIG
         case 'list_config_server_title':{
             reset_config();
             document.getElementById('list_config_nav_1').classList= 'list_nav_selected_tab';
@@ -2376,29 +2472,126 @@ const show_config = async (config_nav=1) => {
     })
 }
 /*----------------------- */
+/* INSTALLATION           */
+/*----------------------- */
+const show_installation = () =>{
+    document.querySelector(`#menu_7_content`).innerHTML = common.APP_SPINNER;
+    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'GET', 2, null, null, null, (err, result) =>{
+        if (err)
+            document.querySelector(`#menu_7_content`).innerHTML = '';
+        else{
+            document.querySelector(`#menu_7_content`).innerHTML =
+                `<div id='menu_7_content_widget1' class='widget'>
+                    <div id='install_db'>
+                        <div id='install_db_icon'>${common.ICONS['app_database']}</div>
+                        <div id='install_db_button_row'>
+                            <div id='install_db_button_install' class='common_dialogue_button'>${common.ICONS['app_add']}</div>
+                            <div id='install_db_button_uninstall' class='common_dialogue_button'>${common.ICONS['app_delete']}</div>
+                        </div>
+                        <div id='install_db_input'>
+                            <div id="install_db_country_language_translations_icon" >${common.ICONS['gps_country'] + common.ICONS['regional_locale']}</div>
+                            <input id='install_db_country_language_translations' type='checkbox' class='common_switch_input' />
+                            <label for='install_db_country_language_translations' class='common_switch_label'></label>
+                        </div>
+                    </div>
+                </div>
+                <div id='menu_7_content_widget2' class='widget'>
+                    <div id='install_demo'>
+                        <div id='install_demo_demo_users_icon'>${common.ICONS['app_users']}</div>
+                        <div id='install_demo_button_row'>
+                            <div id='install_demo_button_install' class='common_dialogue_button'>${common.ICONS['app_add']}</div>
+                            <div id='install_demo_button_uninstall' class='common_dialogue_button'>${common.ICONS['app_delete']}</div>
+                        </div>
+                        <div id='install_demo_input'>
+                            <div id="install_demo_password_icon" >${common.ICONS['user_password']}</div>
+                            <input id='install_demo_password' type='password' />
+                        </div>
+                    </div>
+                </div>`;
+                document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
+                    const install_function = () =>{
+                        document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+                        let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
+                        document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
+                        let url = `${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
+                        common.common_fetch(url, 'POST', 2, null, null, null, (err, result) =>{
+                            document.querySelector(`#install_db_button_install`).innerHTML = old_html;
+                            if (err == null){
+                                document.querySelector(`#install_db_icon`).classList.add('installed');
+                                let result_obj = JSON.parse(result);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                            }
+                        })
+                    }
+                    const uninstall_function = () =>{
+                        document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+                        let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
+                        document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
+                        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'DELETE', 2, null, null, null, (err, result) =>{
+                            document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
+                            if (err == null){
+                                document.querySelector(`#install_db_icon`).classList.remove('installed');
+                                let result_obj = JSON.parse(result);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                            }
+                        })
+                    }
+                    switch(event.target.parentNode.id){
+                        case 'install_db_button_install':{
+                            common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL['app_id']);  
+                            break;
+                        }
+                        case 'install_db_button_uninstall':{
+                            common.show_message('CONFIRM',null,uninstall_function, null, common.COMMON_GLOBAL['app_id']);  
+                            break;
+                        }
+                    }
+                }, false);
+            document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
+                switch(event.target.parentNode.id){
+                    case 'install_demo_button_install':{
+                        if (document.getElementById("install_demo_password").value == '') {
+                            common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
+                            return callBack('ERROR', null);
+                        }
+                        else{
+                            let json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
+                            let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
+                            document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
+                            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'POST', 2, json_data, null, null, (err, result) =>{
+                                document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
+                                if (err == null){
+                                    let result_obj = JSON.parse(result);
+                                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                                }
+                            })
+                        }
+                        break;
+                    }
+                    case 'install_demo_button_uninstall':{
+                        let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
+                        document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
+                        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'DELETE', 2, null, null, null, (err, result) =>{
+                            document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
+                            if (err == null){
+                                let result_obj = JSON.parse(result);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                            }
+                        })
+                        break;
+                    }
+                }
+            }, false);
+        }
+        document.querySelector(`#install_db_icon`).classList.remove('installed');
+        if (err==null && JSON.parse(result).installed == 1)
+            document.querySelector(`#install_db_icon`).classList.add('installed');
+    })
+}
+/*----------------------- */
 /* DB INFO                */
 /*----------------------- */
 const show_db_info = async () => {
-    if (admin_token_has_value()){
-        let json;
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfo?`,
-                           'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
-            if (err)
-                null;
-            else{
-                json = JSON.parse(result);
-                document.getElementById('menu_8_db_info_database_data').innerHTML = json.data.database_use;
-                document.getElementById('menu_8_db_info_name_data').innerHTML = json.data.database_name;
-                document.getElementById('menu_8_db_info_version_data').innerHTML = json.data.version;
-                document.getElementById('menu_8_db_info_database_schema_data').innerHTML = json.data.database_schema;
-                document.getElementById('menu_8_db_info_host_data').innerHTML = json.data.hostname;
-                document.getElementById('menu_8_db_info_connections_data').innerHTML = json.data.connections;
-                document.getElementById('menu_8_db_info_started_data').innerHTML = json.data.started;
-            }
-        })
-    }
-}
-const show_db_info_space = async () => {
     if (admin_token_has_value()){
         let json;
         let size = '(Mb)';
@@ -2406,75 +2599,103 @@ const show_db_info_space = async () => {
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfoSpace?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+
+        document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
+        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfo?`,
+                           'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
             if (err)
-                null;
+                document.querySelector('#menu_8_content').innerHTML = '';
             else{
                 json = JSON.parse(result);
-                let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
-                                <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>TABLE NAME</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>SIZE ${size}</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>DATA USED ${size}</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>DATA FREE ${size}</div>
-                                </div>
-                                <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>
-                                    <div>% USED</div>
-                                </div>
-                            </div>`;
-                for (let i = 0; i < json.data.length; i++) {
-                    html += 
-                    `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${json.data[i].table_name}</div>
+                document.querySelector('#menu_8_content').innerHTML = 
+                    `<div id='menu_8_content_widget1' class='widget'>
+                        <div id='menu_8_db_info1'>
+                            <div id='menu_8_db_info_database_title'>${common.ICONS['app_database'] + common.ICONS['regional_numbersystem']}</div><div id='menu_8_db_info_database_data'>${json.data.database_use}</div>
+                            <div id='menu_8_db_info_name_title'>${common.ICONS['app_database']}</div><div id='menu_8_db_info_name_data'>${json.data.database_name}</div>
+                            <div id='menu_8_db_info_version_title'>${common.ICONS['app_database'] + common.ICONS['regional_numbersystem'] + common.ICONS['app_info']}</div><div id='menu_8_db_info_version_data'>${json.data.version}</div>
+                            <div id='menu_8_db_info_database_schema_title'>${common.ICONS['app_database'] + common.ICONS['app_database_schema']}</div><div id='menu_8_db_info_database_schema_data'>${json.data.database_schema}</div>
+                            <div id='menu_8_db_info_host_title'>${common.ICONS['app_server']}</div><div id='menu_8_db_info_host_data'>${json.data.hostname}</div>
+                            <div id='menu_8_db_info_connections_title'>${common.ICONS['app_user_connections']}</div><div id='menu_8_db_info_connections_data'>${json.data.connections}</div>
+                            <div id='menu_8_db_info_started_title'>${common.ICONS['app_database_started']}</div><div id='menu_8_db_info_started_data'>${json.data.started}</div>
                         </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].total_size)}</div>
+                    </div>
+                    <div id='menu_8_content_widget2' class='widget'>
+                        <div>
+                            <div id='menu_8_db_info_space_title'>${common.ICONS['app_database'] + common.ICONS['app_database_calc']}</div>
                         </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].data_used)}</div>
-                        </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].data_free)}</div>
-                        </div>
-                        <div class='menu_8_db_info_space_detail_col'>
-                            <div>${roundOff(json.data[i].pct_used)}</div>
-                        </div>
+                        <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
-                }
-                document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfoSpaceSum?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
-                    if (err)
-                        null;
-                    else{
-                        json = JSON.parse(result);
-                        document.getElementById('menu_8_db_info_space_detail').innerHTML += 
-                            `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${common.ICONS['app_sum']}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.total_size)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.data_used)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.data_free)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(json.data.pct_used)}</div>
-                                </div>
-                            </div>`;
-                    }
-                })
+                    document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
+                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfoSpace?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+                        if (err)
+                            document.getElementById('menu_8_db_info_space_detail').innerHTML = '';
+                        else{
+                            json = JSON.parse(result);
+                            let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
+                                            <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
+                                                <div>TABLE NAME</div>
+                                            </div>
+                                            <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>
+                                                <div>SIZE ${size}</div>
+                                            </div>
+                                            <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>
+                                                <div>DATA USED ${size}</div>
+                                            </div>
+                                            <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>
+                                                <div>DATA FREE ${size}</div>
+                                            </div>
+                                            <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>
+                                                <div>% USED</div>
+                                            </div>
+                                        </div>`;
+                            for (let i = 0; i < json.data.length; i++) {
+                                html += 
+                                `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
+                                    <div class='menu_8_db_info_space_detail_col'>
+                                        <div>${json.data[i].table_name}</div>
+                                    </div>
+                                    <div class='menu_8_db_info_space_detail_col'>
+                                        <div>${roundOff(json.data[i].total_size)}</div>
+                                    </div>
+                                    <div class='menu_8_db_info_space_detail_col'>
+                                        <div>${roundOff(json.data[i].data_used)}</div>
+                                    </div>
+                                    <div class='menu_8_db_info_space_detail_col'>
+                                        <div>${roundOff(json.data[i].data_free)}</div>
+                                    </div>
+                                    <div class='menu_8_db_info_space_detail_col'>
+                                        <div>${roundOff(json.data[i].pct_used)}</div>
+                                    </div>
+                                </div>`;
+                            }
+                            document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
+                            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/DBInfoSpaceSum?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+                                if (err)
+                                    null;
+                                else{
+                                    json = JSON.parse(result);
+                                    document.getElementById('menu_8_db_info_space_detail').innerHTML += 
+                                        `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
+                                            <div class='menu_8_db_info_space_detail_col'>
+                                                <div>${common.ICONS['app_sum']}</div>
+                                            </div>
+                                            <div class='menu_8_db_info_space_detail_col'>
+                                                <div>${roundOff(json.data.total_size)}</div>
+                                            </div>
+                                            <div class='menu_8_db_info_space_detail_col'>
+                                                <div>${roundOff(json.data.data_used)}</div>
+                                            </div>
+                                            <div class='menu_8_db_info_space_detail_col'>
+                                                <div>${roundOff(json.data.data_free)}</div>
+                                            </div>
+                                            <div class='menu_8_db_info_space_detail_col'>
+                                                <div>${roundOff(json.data.pct_used)}</div>
+                                            </div>
+                                        </div>`;
+                                }
+                            })
+                        }
+                    })
             }
         })
     }
@@ -2509,43 +2730,41 @@ const show_server_info = async () => {
                     return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
                 }
                 json = JSON.parse(result);
-                //os info
-                document.getElementById('menu_10_os_info_hostname_data').innerHTML = json.os.hostname;
-                //cpus: array of cpus, if 8 cores then 8 array records
-                `[  {"model":"Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
-                     "speed":2112,
-                     "times":{"user":14255406,
-                              "nice":0,
-                              "sys":21800421,
-                              "idle":147874109,
-                              "irq":5560156}},
-                    {"model":"Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
-                      "...": "..."}
-                ]`
-                document.getElementById('menu_10_os_info_cpus_data').innerHTML = json.os.cpus.length ;
-                document.getElementById('menu_10_os_info_arch_data').innerHTML = json.os.arch;
-                document.getElementById('menu_10_os_info_freemem_data').innerHTML = json.os.freemem;
-                document.getElementById('menu_10_os_info_totalmem_data').innerHTML = json.os.totalmem;
-                document.getElementById('menu_10_os_info_platform_data').innerHTML = json.os.platform;
-                document.getElementById('menu_10_os_info_type_data').innerHTML = json.os.type;
-                document.getElementById('menu_10_os_info_release_data').innerHTML = json.os.release;
-                document.getElementById('menu_10_os_info_version_data').innerHTML = json.os.version;
-                document.getElementById('menu_10_os_info_uptime_data').innerHTML = seconds_to_time(json.os.uptime);
-                document.getElementById('menu_10_os_info_homedir_data').innerHTML = json.os.homedir;
-                document.getElementById('menu_10_os_info_tmpdir_data').innerHTML = json.os.tmpdir;
-                document.getElementById('menu_10_os_info_userinfo_username_data').innerHTML = json.os.userinfo['username']; 
-                document.getElementById('menu_10_os_info_userinfo_homedir_data').innerHTML = json.os.userinfo['homedir']; 
-                //process info
-                document.getElementById('menu_10_process_info_memoryusage_rss_data').innerHTML = json.process.memoryusage_rss;
-                document.getElementById('menu_10_process_info_memoryusage_heaptotal_data').innerHTML = json.process.memoryusage_heaptotal;
-                document.getElementById('menu_10_process_info_memoryusage_heapused_data').innerHTML = json.process.memoryusage_heapused;
-                document.getElementById('menu_10_process_info_memoryusage_external_data').innerHTML = json.process.memoryusage_external;
-                document.getElementById('menu_10_process_info_memoryusage_arraybuffers_data').innerHTML = json.process.memoryusage_arraybuffers;
-                document.getElementById('menu_10_process_info_uptime_data').innerHTML = seconds_to_time(json.process.uptime);
-                document.getElementById('menu_10_process_info_version_data').innerHTML = json.process.version;
-                document.getElementById('menu_10_process_info_path_data').innerHTML = json.process.path;
-                document.getElementById('menu_10_process_info_start_arg_0_data').innerHTML = json.process.start_arg_0;
-                document.getElementById('menu_10_process_info_start_arg_1_data').innerHTML = json.process.start_arg_1;
+                document.querySelector('#menu_10_content').innerHTML = 
+                    `<div id='menu_10_content_widget1' class='widget'>
+                        <div id='menu_10_os_title'>${common.ICONS['app_server']}</div>
+                        <div id='menu_10_os_info'>
+                            <div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${json.os.hostname}</div>
+                            <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${json.os.cpus.length}</div>
+                            <div id='menu_10_os_info_arch_title'>${'ARCH'}</div><div id='menu_10_os_info_arch_data'>${json.os.arch}</div>
+                            <div id='menu_10_os_info_freemem_title'>${'FREEMEM'}</div><div id='menu_10_os_info_freemem_data'>${json.os.freemem}</div>
+                            <div id='menu_10_os_info_totalmem_title'>${'TOTALMEM'}</div><div id='menu_10_os_info_totalmem_data'>${json.os.totalmem}</div>
+                            <div id='menu_10_os_info_platform_title'>${'PLATFORM'}</div><div id='menu_10_os_info_platform_data'>${json.os.platform}</div>
+                            <div id='menu_10_os_info_type_title'>${'TYPE'}</div><div id='menu_10_os_info_type_data'>${json.os.type}</div>
+                            <div id='menu_10_os_info_release_title'>${'RELEASE'}</div><div id='menu_10_os_info_release_data'>${json.os.release}</div>
+                            <div id='menu_10_os_info_version_title'>${'VERSION'}</div><div id='menu_10_os_info_version_data'>${json.os.version}</div>
+                            <div id='menu_10_os_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_os_info_uptime_data'>${seconds_to_time(json.os.uptime)}</div>
+                            <div id='menu_10_os_info_homedir_title'>${'HOMEDIR'}</div><div id='menu_10_os_info_homedir_data'>${json.os.homedir}</div>
+                            <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${json.os.tmpdir}</div>
+                            <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${json.os.userinfo['username']}</div>
+                            <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${json.os.userinfo['homedir']}</div>
+                        </div>
+                    </div>
+                    <div id='menu_10_content_widget2' class='widget'>
+                        <div id='menu_10_process_title'>${common.ICONS['app_server'] + ' ' + common.ICONS['app_apps']}</div>
+                        <div id='menu_10_process_info'>
+                            <div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${json.process.memoryusage_rss}</div>
+                            <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${json.process.memoryusage_heaptotal}</div>
+                            <div id='menu_10_process_info_memoryusage_heapused_title'>${'MEMORY HEAPUSED'}</div><div id='menu_10_process_info_memoryusage_heapused_data'>${json.process.memoryusage_heapused}</div>
+                            <div id='menu_10_process_info_memoryusage_external_title'>${'MEMORY EXTERNAL'}</div><div id='menu_10_process_info_memoryusage_external_data'>${json.process.memoryusage_external}</div>
+                            <div id='menu_10_process_info_memoryusage_arraybuffers_title'>${'MEMORY ARRAYBUFFERS'}</div><div id='menu_10_process_info_memoryusage_arraybuffers_data'>${json.process.memoryusage_arraybuffers}</div>
+                            <div id='menu_10_process_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_process_info_uptime_data'>${seconds_to_time(json.process.uptime)}</div>
+                            <div id='menu_10_process_info_version_title'>${'NODEJS VERSION'}</div><div id='menu_10_process_info_version_data'>${json.process.version}</div>
+                            <div id='menu_10_process_info_path_title'>${'PATH'}</div><div id='menu_10_process_info_path_data'>${json.process.path}</div>
+                            <div id='menu_10_process_info_start_arg_0_title'>${'START ARG 0'}</div><div id='menu_10_process_info_start_arg_0_data'>${json.process.start_arg_0}</div>
+                            <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${json.process.start_arg_1}</div>
+                        </div>
+                    </div>`;
             }
         })
     }
@@ -2560,7 +2779,7 @@ const admin_token_has_value = () => {
         return true;
 }
 
-const init_admin_secure = () => {
+const init = () => {
 
     //SET GLOBALS
     APP_GLOBAL['page'] = 0;
@@ -2618,25 +2837,12 @@ const init_admin_secure = () => {
     document.getElementById('box2_title').innerHTML = common.ICONS['app_users'] + ' ' + common.ICONS['regional_numbersystem'];
     document.getElementById('menu_1_maintenance_title').innerHTML = common.ICONS['app_maintenance'];
     document.getElementById('send_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
-    //menu 2
-    //ID
-    document.getElementById('list_user_stat_col_title1').innerHTML = common.ICONS['provider_id'];
-    //PROVIDER
-    document.getElementById('list_user_stat_col_title2').innerHTML = common.ICONS['provider'];
-    //SUM
-    document.getElementById('list_user_stat_col_title3').innerHTML = common.ICONS['app_sum'];
-    //CONNECTED
-    document.getElementById('list_user_stat_col_title4').innerHTML = common.ICONS['app_user_connections'];
 
     //menu 3
     document.getElementById('list_user_account_search_icon').innerHTML = common.ICONS['app_search'];
     document.getElementById('list_user_account_title').innerHTML = common.ICONS['app_users'];
     document.getElementById('list_user_account_logon_title').innerHTML = common.ICONS['app_login'];
     document.getElementById('users_save').innerHTML = common.ICONS['app_save'];
-    //menu 4
-    document.getElementById('list_apps_title').innerHTML = common.ICONS['app_apps'];
-    document.getElementById('list_app_parameter_title').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings'];
-    document.getElementById('apps_save').innerHTML = common.ICONS['app_save'];
     //menu 5
     document.getElementById('list_connected_title').innerHTML = common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']; 
     document.getElementById('list_app_log_title').innerHTML = common.ICONS['app_apps'] + ' ' + common.ICONS['app_log'];
@@ -2675,58 +2881,7 @@ const init_admin_secure = () => {
     document.getElementById('list_config_policy_title').innerHTML = common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book'];
     document.getElementById('list_config_info_title').innerHTML = common.ICONS['app_info'];
     document.getElementById('config_save').innerHTML = common.ICONS['app_save'];
-    //menu 7
-    document.querySelector('#install_db_icon').innerHTML = common.ICONS['app_database'];
-    document.querySelector('#install_db_button_install').innerHTML = common.ICONS['app_add'];
-    document.querySelector('#install_db_button_uninstall').innerHTML = common.ICONS['app_delete'];
-    document.querySelector('#install_db_country_language_translations_icon').innerHTML = common.ICONS['gps_country'] + common.ICONS['regional_locale'];;
-
-    document.querySelector('#install_demo_demo_users_icon').innerHTML = common.ICONS['app_users'];
-    document.querySelector('#install_demo_button_install').innerHTML = common.ICONS['app_add'];
-    document.querySelector('#install_demo_button_uninstall').innerHTML = common.ICONS['app_delete'];
-    document.querySelector('#install_demo_password_icon').innerHTML = common.ICONS['user_password'];
-
-    //menu 8
-    document.getElementById('menu_8_db_info_database_title').innerHTML = common.ICONS['app_database'] + common.ICONS['regional_numbersystem'];
-    document.getElementById('menu_8_db_info_name_title').innerHTML = common.ICONS['app_database'];
-    document.getElementById('menu_8_db_info_version_title').innerHTML = common.ICONS['app_database'] + common.ICONS['regional_numbersystem'] + common.ICONS['app_info'];
-    document.getElementById('menu_8_db_info_database_schema_title').innerHTML = common.ICONS['app_database'] + common.ICONS['app_database_schema'];
-    document.getElementById('menu_8_db_info_host_title').innerHTML = common.ICONS['app_server'];
-    document.getElementById('menu_8_db_info_connections_title').innerHTML = common.ICONS['app_user_connections'];
-    document.getElementById('menu_8_db_info_started_title').innerHTML = common.ICONS['app_database_started'];
-    document.getElementById('menu_8_db_info_space_title').innerHTML = common.ICONS['app_database'] + common.ICONS['app_database_calc'];
-
-    //menu 10 
-    //os info
-    document.getElementById('menu_10_os_title').innerHTML = common.ICONS['app_server'];
-    document.getElementById('menu_10_os_info_hostname_title').innerHTML = 'HOSTNAME';
-    document.getElementById('menu_10_os_info_cpus_title').innerHTML = 'CPUS';
-    document.getElementById('menu_10_os_info_arch_title').innerHTML = 'ARCH';
-    document.getElementById('menu_10_os_info_freemem_title').innerHTML = 'FREEMEM';
-    document.getElementById('menu_10_os_info_totalmem_title').innerHTML = 'TOTALMEM';
-    document.getElementById('menu_10_os_info_platform_title').innerHTML = 'PLATFORM';
-    document.getElementById('menu_10_os_info_type_title').innerHTML = 'TYPE';
-    document.getElementById('menu_10_os_info_release_title').innerHTML = 'RELEASE';
-    document.getElementById('menu_10_os_info_version_title').innerHTML = 'VERSION';
-    document.getElementById('menu_10_os_info_uptime_title').innerHTML = 'UPTIME';
-    document.getElementById('menu_10_os_info_homedir_title').innerHTML = 'HOMEDIR';
-    document.getElementById('menu_10_os_info_tmpdir_title').innerHTML = 'TMPDIR';
-    document.getElementById('menu_10_os_info_userinfo_username_title').innerHTML = 'USERNAME';
-    document.getElementById('menu_10_os_info_userinfo_homedir_title').innerHTML = 'USER HOMEDIR';
-    //process info
-    document.getElementById('menu_10_process_title').innerHTML = common.ICONS['app_server'] + ' ' + common.ICONS['app_apps'];
-    document.getElementById('menu_10_process_info_memoryusage_rss_title').innerHTML = 'MEMORY RSS';
-    document.getElementById('menu_10_process_info_memoryusage_heaptotal_title').innerHTML = 'MEMORY HEAPTOTAL';
-    document.getElementById('menu_10_process_info_memoryusage_heapused_title').innerHTML = 'MEMORY HEAPUSED';
-    document.getElementById('menu_10_process_info_memoryusage_external_title').innerHTML = 'MEMORY EXTERNAL';
-    document.getElementById('menu_10_process_info_memoryusage_arraybuffers_title').innerHTML = 'MEMORY ARRAYBUFFERS';
-    document.getElementById('menu_10_process_info_uptime_title').innerHTML = 'UPTIME';
-    document.getElementById('menu_10_process_info_version_title').innerHTML = 'NODEJS VERSION';
-    document.getElementById('menu_10_process_info_path_title').innerHTML = 'PATH';
-    document.getElementById('menu_10_process_info_start_arg_0_title').innerHTML = 'START ARG 0';
-    document.getElementById('menu_10_process_info_start_arg_1_title').innerHTML = 'START ARG 1';
-
-
+    
     //SET EVENTLISTENERS
     document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
     document.getElementById('menu_open').addEventListener('click', () => { document.getElementById('menu').style.display = 'block' }, false);    
@@ -2743,7 +2898,7 @@ const init_admin_secure = () => {
     document.getElementById('list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(show_users, 8, 'ASC', false); }, false);
     document.getElementById('list_user_account_search_icon').addEventListener('click', () => { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     document.getElementById('users_save').addEventListener('click', () => { button_save('users_save')}, false); 
-    document.getElementById('apps_save').addEventListener('click', () => { button_save('apps_save')}, false); 
+    
     document.getElementById('config_save').addEventListener('click', () => { button_save('config_save')}, false); 
 
     document.querySelectorAll('.list_nav').forEach(e => e.addEventListener('click', (event) => {
@@ -2773,96 +2928,8 @@ const init_admin_secure = () => {
     
     document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
 
-    document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
-        const install_function = () =>{
-            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-            let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
-            document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
-            let url = `${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
-            common.common_fetch(url, 'POST', 2, null, null, null, (err, result) =>{
-                document.querySelector(`#install_db_button_install`).innerHTML = old_html;
-                if (err == null){
-                    document.querySelector(`#install_db_icon`).classList.add('installed');
-                    let result_obj = JSON.parse(result);
-                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
-                }
-            })
-        }
-        const uninstall_function = () =>{
-            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-            let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
-            document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
-            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/install?`, 'DELETE', 2, null, null, null, (err, result) =>{
-                document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
-                if (err == null){
-                    document.querySelector(`#install_db_icon`).classList.remove('installed');
-                    let result_obj = JSON.parse(result);
-                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
-                }
-            })
-        }
-        switch(event.target.parentNode.id){
-            case 'install_db_button_install':{
-                common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL['app_id']);  
-                break;
-            }
-            case 'install_db_button_uninstall':{
-                common.show_message('CONFIRM',null,uninstall_function, null, common.COMMON_GLOBAL['app_id']);  
-                break;
-            }
-        }
-    }, false);
-    document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
-            switch(event.target.parentNode.id){
-                case 'install_demo_button_install':{
-                    if (document.getElementById("install_demo_password").value == '') {
-                        common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
-                        return callBack('ERROR', null);
-                    }
-                    else{
-                        let json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
-                        let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
-                        document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
-                        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'POST', 2, json_data, null, null, (err, result) =>{
-                            document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
-                            if (err == null){
-                                let result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
-                            }
-                        })
-                    }
-                    break;
-                }
-                case 'install_demo_button_uninstall':{
-                    let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
-                    document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
-                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db/admin/demo?`, 'DELETE', 2, null, null, null, (err, result) =>{
-                        document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
-                        if (err == null){
-                            let result_obj = JSON.parse(result);
-                            common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
-                        }
-                    })
-                    break;
-                }
-            }
-    }, false);
     //SET APPS INFO, INIT MAP
     get_apps().then(() => {
-        //SET MENU
-        document.getElementById('menu_secure').innerHTML = 
-            `<div id='menu_close' class='common_dialogue_button'></div>
-            <div id='menu_1' class='menuitem'></div>
-            <div id='menu_2' class='menuitem'></div>
-            <div id='menu_3' class='menuitem'></div>
-            <div id='menu_4' class='menuitem'></div>
-            <div id='menu_5' class='menuitem'></div>
-            <div id='menu_6' class='menuitem'></div>
-            <div id='menu_7' class='menuitem'></div>
-            <div id='menu_8' class='menuitem'></div>
-            <div id='menu_9' class='menuitem'></div>
-            <div id='menu_10' class='menuitem'></div>
-            <div id='menu_11' class='menuitem'></div>`;
         //set for menu items created in menu_secure
         document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
         document.getElementById('menu_1').innerHTML = common.ICONS['app_chart']; //DASHBOARD
@@ -2992,12 +3059,18 @@ const init_admin_secure = () => {
         })
     })
 }
-common.init_common(<ITEM_COMMON_PARAMETERS/>, (err, global_app_parameters)=>{
-    if (err)
-        null;
-    else{
-        init_admin_secure();
-    }
-})
-
-/*<APP_SCRIPT_END/>*/
+export {show_menu, show_user_agent, get_apps,
+        sendBroadcast, closeBroadcast, show_broadcast_dialogue, set_broadcast_type, 
+        check_maintenance, set_maintenance, 
+        show_chart, count_connected, count_users,
+        show_users, show_user_account_logon, 
+        show_apps, show_app_parameter, button_save, update_record, list_events,
+        
+        fix_pagination_buttons, nav_click, show_list, show_connected, show_app_log, set_list_eventlisteners, 
+        get_sort, get_order, list_sort_click, page_navigation, list_item_click, 
+        get_server_log_parameters, show_server_logs, show_existing_logfiles, show_pm2_logs,
+        
+        show_config,
+        show_db_info,
+        show_server_info,
+        admin_token_has_value, init}

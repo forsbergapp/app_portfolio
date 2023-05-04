@@ -650,12 +650,6 @@ const serverExpressRoutes = async (app) => {
     const router = [Router()];
     let i = 0;
     //endpoints
-    //apps
-    router.push(Router());
-    router[i].use(serverRouterLog);
-    router[i].post("/admin/secure", checkSystemAdmin, getAppAdminSecure);
-    app.use('/apps', router[i]);
-    i++;
     //server
     router[i].use(serverRouterLog);
     router[i].put("/config/systemadmin", checkSystemAdmin, ConfigSave);
