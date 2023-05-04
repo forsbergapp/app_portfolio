@@ -132,11 +132,15 @@ const admin_login = async () => {
                         .then((result_form) => {
                             if (status == 200){
                                 common.dialogue_close('dialogue_admin_login').then(() => {
-                                    document.getElementById('common_app_select_theme').style.display = 'block';
-                                    document.getElementById('common_app_select_theme').style.visibility = 'visible';
+                                    document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
+                                    document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
+                                    document.querySelector('#menu').style.visibility = 'visible';
+                                    document.querySelector('#common_user_preferences').style.display = 'none';
+                                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+                                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                                     document.getElementById('common_dialogue_login').style.visibility = 'hidden';
                                     start_admin_secure(JSON.parse(result_form).app)
-                                    document.getElementById('system_admin_avatar').innerHTML = common.ICONS['app_system_admin'];
+                                    
                                 })
                             }
                             else{
@@ -155,7 +159,8 @@ const admin_login = async () => {
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err==null){         
                 common.dialogue_close('dialogue_admin_login').then(() => {
-                    document.getElementById('common_user_account').style.visibility = 'visible';
+                    document.querySelector('#menu').style.visibility = 'visible';
+                    document.querySelector('#common_user_preferences').style.display = 'block';
                     common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
                     document.getElementById('common_user_menu_username').innerHTML = result.username;
                     
@@ -191,7 +196,10 @@ const setEvents = (system_admin_only=0) => {
     document.getElementById('admin_login_button').addEventListener('click', () => { admin_login() }, false);
     document.getElementById('admin_login_nav').addEventListener('click', (event) => { admin_login_nav(event.target) }, true);
     
-    if (system_admin_only==0){
+    
+    if (common.COMMON_GLOBAL['system_admin_only']==1)
+        common.set_event_user_menu();
+    else{
         //common
         //profile
         document.getElementById('common_profile_home').addEventListener('click', () => {common.profile_top(1);}, false);
@@ -261,13 +269,11 @@ const delete_globals = () => {
 
 const admin_logoff_app = (error) => {
     common.COMMON_GLOBAL['rest_admin_at'] = '';
-    document.getElementById('system_admin_avatar').innerHTML = '';
+    document.getElementById('common_user_menu_default_avatar').innerHTML = '';
     const clear_common = () => {
         delete_globals();
-        document.getElementById('common_app_select_theme').style.display = 'unset';
-        document.getElementById('common_app_select_theme').style.visibility = 'unset';
-        document.getElementById('common_user_account').style.visibility = 'hidden';
         document.getElementById('dialogue_admin_login').style.visibility = 'visible';
+        document.querySelector('#menu').style.visibility = 'hidden';
         document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='common_dialogue_button'></div>`;
         document.getElementById('admin_secure').style.visibility = 'hidden';
         document.getElementById('admin_secure').innerHTML = '';
