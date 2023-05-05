@@ -569,7 +569,9 @@ const serverExpressRoutes = async (app) => {
     const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //log
     const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
-
+    
+    //service registry
+    const { callService} = await import(`file://${process.cwd()}${rest_resource_service}/service.controller.js`);
     //service db admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
     //service db app_portfolio app
@@ -690,7 +692,7 @@ const serverExpressRoutes = async (app) => {
     router[i].get("/connection/check/:user_account_id", checkDataToken, ConnectedCheck);
     app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/broadcast`, router[i]);
     i++;
-    //service log
+    //log
     router.push(Router());
     router[i].use(serverRouterLog);
     router[i].get("/parameters", checkSystemAdmin, getLogParameters);
@@ -698,6 +700,12 @@ const serverExpressRoutes = async (app) => {
     router[i].get("/files", checkSystemAdmin, getFiles);
     router[i].get("/pm2logs", checkSystemAdmin, getPM2Logs);
     app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/log`, router[i]);
+    i++;
+    //service registry
+    router.push(Router());
+    router[i].use(serverRouterLog);
+    router[i].get("/",  checkDataToken, callService);
+    app.use(`${rest_resource_service}`, router[i]);
     i++;
     //service db admin
     router.push(Router());
