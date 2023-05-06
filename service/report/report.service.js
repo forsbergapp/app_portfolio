@@ -1,13 +1,19 @@
 const puppeteer = await import('puppeteer');
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+
+const EXECUTABLE_PATH = '';         //if using different browser for Puppeteer, 
+                                    //ex Linux: /snap/bin/chromium
+                                    //ex Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe
+const PDF_TIMEOUT = 20000;          //milliseconds
+const PDF_EMPTY_SIZE_CHECK = 900;   //bytes, PDF with content should be bigger than this
+const PDF_WAIT_ATTEMPTS = 100;      //number of attempts
+const PDF_WAIT_INTERVAL = 100;      //milliseconds
 
 let BROWSER;
 const initReportService = async () => {
-    //if ConfigGet(1, 'SERVICE_REPORT', 'EXECUTABLE_PATH') is empty then default browser is used
     BROWSER = await puppeteer.launch({
         pipe:true,
         headless: true,
-        executablePath: ConfigGet(1, 'SERVICE_REPORT', 'EXECUTABLE_PATH'),
+        executablePath: EXECUTABLE_PATH,
         ignoreHTTPSErrors: true,
         ignoreDefaultArgs: ['--enable-automation'],
         args: [ '--ignore-certificate-errors',
@@ -62,7 +68,7 @@ const getReportService = async (url, ps, hf) => {
         BROWSER.newPage().then((webPage) => {
             webPage.goto(url, {
                 waitUntil: "networkidle2",
-                timeout: parseInt(ConfigGet(1, 'SERVICE_REPORT', 'PDF_TIMEOUT')),
+                timeout: PDF_TIMEOUT,
             }).then(() => {
                 let width_viewport;
                 let height_viewport;
@@ -149,10 +155,10 @@ const getReportService = async (url, ps, hf) => {
                                         676
                                         %%EOF
                                     */
-                                    if (pdf.toString().length < parseInt(ConfigGet(1, 'SERVICE_REPORT', 'PDF_EMPTY_SIZE_CHECK')))
-                                        //try ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_ATTEMPTS') * ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_INTERVAL') = total time
+                                    if (pdf.toString().length < PDF_EMPTY_SIZE_CHECK)
+                                        //try PDF_WAIT_ATTEMPTS * PDF_WAIT_INTERVAL = total time
                                         //ex. 20 * 500 = 10 seconds
-                                        if (wait_count>parseInt(ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_ATTEMPTS')))
+                                        if (wait_count>PDF_WAIT_ATTEMPTS)
                                             resolve(null);
                                         else{
                                             //continue recursive call until PDF created with content
@@ -165,7 +171,7 @@ const getReportService = async (url, ps, hf) => {
                                             resolve(pdf);
                                         });
                                     });    
-                    }, parseInt(ConfigGet(1, 'SERVICE_REPORT', 'PDF_WAIT_INTERVAL')));
+                    }, PDF_WAIT_INTERVAL);
                 }
                 waitpdf();
                 })

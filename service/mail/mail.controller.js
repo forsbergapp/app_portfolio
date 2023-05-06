@@ -17,45 +17,7 @@ const getLogo = (req, res) => {
     }
     res.sendFile(process.cwd() + `/apps/app${req.query.app_id}/mail/logo.png`, (err) =>{
         if (err){
-            let stack = new Error().stack;
-            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                        return res.send(null);
-                    })
-                });
-            })
-        }
-        else {
-            req.query.callback = 1;
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIp}) => {
-                getIp(req, res, (err, result)=>{
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                        createLog(req.query.app_id,
-                                    { app_id : req.query.app_id,
-                                    app_module : 'MAIL',
-                                    app_module_type : 'READ',
-                                    app_module_request : req.protocol + '://' + req.get('host') + req.originalUrl,
-                                    app_module_result : result.geoplugin_city + ', ' +
-                                                        result.geoplugin_regionName + ', ' +
-                                                        result.geoplugin_countryName,
-                                    app_user_id : req.query.app_user_id,
-                                    user_language : null,
-                                    user_timezone : null,
-                                    user_number_system : null,
-                                    user_platform : null,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : result.geoplugin_latitude,
-                                    client_longitude : result.geoplugin_longitude
-                                    }, (err,results)  => {
-                                        null;
-                        });
-                    })
-                })
-            })
+            return res.send(null);
         }
     });
 }

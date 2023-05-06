@@ -556,8 +556,6 @@ const serverExpressRoutes = async (app) => {
     //ConfigGet function in service.js used to get parameter values
     const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
     const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-    //apps
-    const { getAppAdminSecure } = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //auth
@@ -639,7 +637,7 @@ const serverExpressRoutes = async (app) => {
     //service db app_portfolio user account logon
     const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}${rest_resource_service}/db${rest_resource_service_db_schema}/user_account_logon/user_account_logon.controller.js`);
     //service geolocation
-    const { getPlace, getPlaceAdmin, getPlaceSystemAdmin, getIp, getIpAdmin, getIpSystemAdmin, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
+    const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
     //service mail
     const { getLogo } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
     //service report
@@ -705,6 +703,8 @@ const serverExpressRoutes = async (app) => {
     router.push(Router());
     router[i].use(serverRouterLog);
     router[i].get("/",  checkDataToken, callService);
+    router[i].get("/admin",  checkAccessTokenAdmin, callService);
+    router[i].get("/systemadmin",  checkSystemAdmin, callService);
     app.use(`${rest_resource_service}`, router[i]);
     i++;
     //service db admin
@@ -818,7 +818,7 @@ const serverExpressRoutes = async (app) => {
     router[i].post("/signup", checkDataTokenRegistration, userSignup);
         //local user
     router[i].put("/activate/:id", checkDataToken, activateUser);
-    router[i].put("/password_reset/", checkDataToken, passwordResetUser);
+    router[i].put("/forgot", checkDataToken, passwordResetUser);
     router[i].put("/password/:id", checkAccessToken, updatePassword);
     router[i].put("/:id", checkAccessToken, updateUserLocal);
         //provider user
@@ -896,11 +896,11 @@ const serverExpressRoutes = async (app) => {
     router.push(Router());
     router[i].use(serverRouterLog);
     router[i].get("/place", checkDataToken, getPlace);
-    router[i].get("/place/admin", checkAccessTokenAdmin, getPlaceAdmin);
-    router[i].get("/place/systemadmin", checkSystemAdmin, getPlaceSystemAdmin);
+    router[i].get("/place/admin", checkAccessTokenAdmin, getPlace);
+    router[i].get("/place/systemadmin", checkSystemAdmin, getPlace);
     router[i].get("/ip", checkDataToken, getIp);
-    router[i].get("/ip/admin", checkAccessTokenAdmin, getIpAdmin);
-    router[i].get("/ip/systemadmin", checkSystemAdmin, getIpSystemAdmin);
+    router[i].get("/ip/admin", checkAccessTokenAdmin, getIp);
+    router[i].get("/ip/systemadmin", checkSystemAdmin, getIp);
     router[i].get("/timezone", checkDataToken, getTimezone);
     router[i].get("/timezone/admin", checkAccessTokenAdmin, getTimezoneAdmin);
     router[i].get("/timezone/systemadmin", checkSystemAdmin, getTimezoneSystemAdmin);    
