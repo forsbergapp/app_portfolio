@@ -3072,19 +3072,22 @@ const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
         let url;
         let tokentype;
+        let encodedparameters;
+
         if (COMMON_GLOBAL['system_admin']==1){
-            url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/place/systemadmin?longitude=${longitude}&latitude=${latitude}`;
+            encodedparameters = toBase64(`/place/systemadmin?longitude=${longitude}&latitude=${latitude}`);
+            url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             tokentype = 2;
         }
         else 
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/place/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}` + 
-                      `&longitude=${longitude}&latitude=${latitude}`;
+                encodedparameters = toBase64(`/place/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 1;
             }
             else{
-                url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/place?app_user_id=${COMMON_GLOBAL['user_account_id']}` +
-                      `&longitude=${longitude}&latitude=${latitude}`;
+                encodedparameters = toBase64(`/place?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}?service=geolocation&parameters=${encodedparameters}`;                      
                 tokentype = 0;
             }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
@@ -3104,52 +3107,64 @@ const get_place_from_gps = async (longitude, latitude) => {
 }
 const get_gps_from_ip = async () => {
 
-    let url;
-    let tokentype;
-    if (COMMON_GLOBAL['system_admin']==1){
-        url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/ip/systemadmin?`;
-        tokentype = 2;
-    }
-    else
-        if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-            url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`;
-            tokentype = 1;
+    return new Promise((resolve)=>{
+        let url;
+        let tokentype;
+        let encodedparameters;
+        if (COMMON_GLOBAL['system_admin']==1){
+            encodedparameters = toBase64(`/ip/systemadmin?`);
+            url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            tokentype = 2;
         }
-        else{
-            url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`;
-            tokentype = 0;
-        }
-    await common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
-        if (err)
-            null;
-        else{
-            let json = JSON.parse(result);
-            COMMON_GLOBAL['client_latitude']  = json.geoplugin_latitude;
-            COMMON_GLOBAL['client_longitude'] = json.geoplugin_longitude;
-            if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
-                COMMON_GLOBAL['client_place'] = '';
-            else
-                COMMON_GLOBAL['client_place'] = json.geoplugin_city + ', ' +
-                                                       json.geoplugin_regionName + ', ' +
-                                                       json.geoplugin_countryName;
-        }
+        else
+            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
+                encodedparameters = toBase64(`/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                tokentype = 1;
+            }
+            else{
+                encodedparameters = toBase64(`/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}?service=geolocation&parameters=${encodedparameters}`;
+                tokentype = 0;
+            }
+        common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+            if (err)
+                resolve(null);
+            else{
+                let json = JSON.parse(result);
+                COMMON_GLOBAL['client_latitude']  = json.geoplugin_latitude;
+                COMMON_GLOBAL['client_longitude'] = json.geoplugin_longitude;
+                if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
+                    COMMON_GLOBAL['client_place'] = '';
+                else
+                    COMMON_GLOBAL['client_place'] = json.geoplugin_city + ', ' +
+                                                           json.geoplugin_regionName + ', ' +
+                                                           json.geoplugin_countryName;
+                resolve();
+            }
+        })
     })
+
 }
 const tzlookup = async (latitude, longitude) => {
     return new Promise((resolve, reject)=>{
         let url;
         let tokentype;
+        let encodedparameters;
         if (COMMON_GLOBAL['system_admin']==1){
-            url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/timezone/systemadmin?latitude=${latitude}&longitude=${longitude}`;
+            encodedparameters = toBase64(`/timezone/systemadmin?latitude=${latitude}&longitude=${longitude}`);
+            url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/timezone/admin?latitude=${latitude}&longitude=${longitude}`;
+                encodedparameters = toBase64(`/timezone/admin?latitude=${latitude}&longitude=${longitude}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 1;
             }
             else{
-                url = `${COMMON_GLOBAL['rest_resource_service']}/geolocation/timezone?latitude=${latitude}&longitude=${longitude}`;
+                encodedparameters = toBase64(`/timezone?latitude=${latitude}&longitude=${longitude}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 0;
             }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
@@ -3161,7 +3176,8 @@ const tzlookup = async (latitude, longitude) => {
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
-    await common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/worldcities/${countrycode}?app_user_id=${COMMON_GLOBAL['user_account_id']}`, 
+    let encoded_parameters = toBase64(`/${countrycode}?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
+    await common_fetch(`${COMMON_GLOBAL['rest_resource_service']}?service=worldcities&parameters=${encoded_parameters}`, 
                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             callBack(err, null);
