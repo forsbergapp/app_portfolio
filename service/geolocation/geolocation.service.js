@@ -1,17 +1,28 @@
-const getService = async (url) => {
+const getService = async (url, language) => {
     const http = await import('node:http');
     return new Promise((resolve) =>{
         //geolocation service using http 
-        http.get(url, res =>{
-            let responseBody = ''
+
+        const options = {
+            method: 'GET',
+            headers : {
+                'User-Agent': 'Server',
+                'Accept-Language': language
+            }
+        };
+        
+        let request = http.request(url, options, res =>{
+            let responseBody = '';
             res.setEncoding('UTF8');
+            const body = []
             res.on('data', (chunk) =>{
                 responseBody += chunk;
             })
             res.on('end', ()=>{
-                resolve (JSON.parse(responseBody));
+                resolve (responseBody);
             });
         })
+        request.end();        
     })
 }
 const getTimezone = (latitude, longitude, callBack) => {

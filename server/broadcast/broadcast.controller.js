@@ -6,123 +6,110 @@ const BroadcastConnect = (req, res) => {
     req.params.clientId = parseInt(req.params.clientId);
     service.ClientConnect(res);
     req.query.app_user_id ='';
-    let res_not_used;
     req.query.callback=1;
     let stack = new Error().stack;
     if (req.query.system_admin=='1'){
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpSystemAdmin}) => {
-            getIpSystemAdmin(req, res, (err, geodata) =>{
-                const newClient = {
-                    id: req.params.clientId,
-                    app_id: req.query.app_id,
-                    user_account_id: null,
-                    system_admin: 1,
-                    user_agent: req.headers["user-agent"],
-                    connection_date: new Date().toISOString(),
-                    ip: req.ip,
-                    gps_latitude: geodata.geoplugin_latitude,
-                    gps_longitude: geodata.geoplugin_longitude,
-                    identity_provider_id: req.query.identity_provider_id,
-                    response: res
-                };
-                service.ClientAdd(newClient);
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                      'SYSTEM ADMIN Broadcast connect',
-                                      req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                      res.statusCode, 
-                                      req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                            service.ClientClose(res, req.params.clientId);
-                        })
-                    });
+        const newClient = {
+            id: req.params.clientId,
+            app_id: req.query.app_id,
+            user_account_id: null,
+            system_admin: 1,
+            user_agent: req.headers["user-agent"],
+            connection_date: new Date().toISOString(),
+            ip: req.ip,
+            gps_latitude: null,
+            gps_longitude: null,
+            identity_provider_id: req.query.identity_provider_id,
+            response: res
+        };
+        service.ClientAdd(newClient);
+        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                'SYSTEM ADMIN Broadcast connect',
+                                req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                res.statusCode, 
+                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                    service.ClientClose(res, req.params.clientId);
                 })
-            })
+            });
         })
     }
     else
         if (req.query.app_id ==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIpAdmin}) => {
-                getIpAdmin(req, res_not_used, (err, geodata) =>{
-                    const newClient = {
-                        id: req.params.clientId,
-                        app_id: req.query.app_id,
-                        user_account_id: req.query.user_account_id,
-                        system_admin: 0,
-                        user_agent: req.headers["user-agent"],
-                        connection_date: new Date().toISOString(),
-                        ip: req.ip,
-                        gps_latitude: geodata.geoplugin_latitude,
-                        gps_longitude: geodata.geoplugin_longitude,
-                        identity_provider_id: req.query.identity_provider_id,
-                        response: res
-                    };
-                    service.ClientAdd(newClient);
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
-                        createLogAdmin(req.query.app_id,
-                            { app_id : req.query.app_id,
-                                app_module : 'BROADCAST',
-                                app_module_type : 'CONNECT',
-                                app_module_request : req.originalUrl,
-                                app_module_result : JSON.stringify(geodata),
-                                app_user_id : null,
-                                user_language : null,
-                                user_timezone : null,
-                                user_number_system : null,
-                                user_platform : null,
-                                server_remote_addr : req.ip,
-                                server_user_agent : req.headers["user-agent"],
-                                server_http_host : req.headers["host"],
-                                server_http_accept_language : req.headers["accept-language"],
-                                client_latitude : geodata.geoplugin_latitude,
-                                client_longitude : geodata.geoplugin_longitude
-                                }, (err,results)  => {
-                                    service.ClientClose(res, req.params.clientId);
-                            });
-                    })
+                const newClient = {
+                    id: req.params.clientId,
+                    app_id: req.query.app_id,
+                    user_account_id: req.query.user_account_id,
+                    system_admin: 0,
+                    user_agent: req.headers["user-agent"],
+                    connection_date: new Date().toISOString(),
+                    ip: req.ip,
+                    gps_latitude: null,
+                    gps_longitude: null,
+                    identity_provider_id: req.query.identity_provider_id,
+                    response: res
+                };
+                service.ClientAdd(newClient);
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLogAdmin}) => {
+                    createLogAdmin(req.query.app_id,
+                        { app_id : req.query.app_id,
+                            app_module : 'BROADCAST',
+                            app_module_type : 'CONNECT',
+                            app_module_request : req.originalUrl,
+                            app_module_result : null,
+                            app_user_id : null,
+                            user_language : null,
+                            user_timezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : null,
+                            client_longitude : null
+                            }, (err,results)  => {
+                                service.ClientClose(res, req.params.clientId);
+                        });
                 })
-            })
         }
         else{
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`).then(({getIp}) => {
-                getIp(req, res_not_used, (err, geodata) =>{
-                    const newClient = {
-                        id: req.params.clientId,
-                        app_id: req.query.app_id,
-                        user_account_id: req.query.user_account_id,
-                        system_admin: 0,
-                        user_agent: req.headers["user-agent"],
-                        connection_date: new Date().toISOString(),
-                        ip: req.ip,
-                        gps_latitude: geodata.geoplugin_latitude,
-                        gps_longitude: geodata.geoplugin_longitude,
-                        identity_provider_id: req.query.identity_provider_id,
-                        response: res
-                    };
-                    service.ClientAdd(newClient);
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                        createLog(req.query.app_id,
-                                { app_id : req.query.app_id,
-                                    app_module : 'BROADCAST',
-                                    app_module_type : 'CONNECT',
-                                    app_module_request : req.originalUrl,
-                                    app_module_result : JSON.stringify(geodata),
-                                    app_user_id : req.query.user_account_id,
-                                    user_language : null,
-                                    user_timezone : null,
-                                    user_number_system : null,
-                                    user_platform : null,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : geodata.geoplugin_latitude,
-                                    client_longitude : geodata.geoplugin_longitude
-                                    }, (err,results)  => {
-                                        service.ClientClose(res, req.params.clientId);
-                        });
-                    })
-                })
+            const newClient = {
+                id: req.params.clientId,
+                app_id: req.query.app_id,
+                user_account_id: req.query.user_account_id,
+                system_admin: 0,
+                user_agent: req.headers["user-agent"],
+                connection_date: new Date().toISOString(),
+                ip: req.ip,
+                gps_latitude: null,
+                gps_longitude: null,
+                identity_provider_id: req.query.identity_provider_id,
+                response: res
+            };
+            service.ClientAdd(newClient);
+            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                createLog(req.query.app_id,
+                        { app_id : req.query.app_id,
+                            app_module : 'BROADCAST',
+                            app_module_type : 'CONNECT',
+                            app_module_request : req.originalUrl,
+                            app_module_result : null,
+                            app_user_id : req.query.user_account_id,
+                            user_language : null,
+                            user_timezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : req.ip,
+                            server_user_agent : req.headers["user-agent"],
+                            server_http_host : req.headers["host"],
+                            server_http_accept_language : req.headers["accept-language"],
+                            client_latitude : null,
+                            client_longitude : null
+                            }, (err,results)  => {
+                                service.ClientClose(res, req.params.clientId);
+                });
             })
         }
 }
