@@ -31,7 +31,7 @@ const checkSystemAdmin = (req, res, next) => {
         let stack = new Error().stack;
         import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                               'SYSTEM ADMIN CheckSystemAdmin token missing',
                               req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                               res.statusCode, 
@@ -73,7 +73,7 @@ const authSystemAdmin = (req, res) => {
             let stack = new Error().stack;
             import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                    createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                    createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                   'SYSTEM ADMIN login FAIL:' + ConfigGet(1, 'SERVER', 'ADMIN_NAME'),
                                   req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                   res.statusCode, 

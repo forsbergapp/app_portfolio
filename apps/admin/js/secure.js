@@ -1142,9 +1142,7 @@ const button_save = async (item) => {
                                 "SERVICE_AUTH":${config_json[1]},
                                 "SERVICE_BROADCAST":${config_json[2]},
                                 "SERVICE_DB":${config_json[3]},
-                                "SERVICE_LOG":${config_json[4]},
-                                "SERVICE_REPORT":${config_json[5]},
-                                "SERVICE_GEOLOCATION":${config_json[6]}
+                                "SERVICE_LOG":${config_json[4]}}
                             }`;
                 }
                 //no fetched from end of item name list_config_nav_X
@@ -2410,11 +2408,15 @@ const list_item_click = (item) => {
             //if localhost show default position
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `&ip=${item.children[0].innerHTML}`;
-            if (common.COMMON_GLOBAL['system_admin']==1){                
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/ip/systemadmin?app_user_id=${ip_filter}`;
+            let encodedparameters;
+            if (common.COMMON_GLOBAL['system_admin']==1){    
+                encodedparameters = toBase64(`/ip/systemadmin?app_user_id=${ip_filter}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             }
-            else
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/ip/admin?app_user_id=${ip_filter}`;
+            else{
+                encodedparameters = toBase64(`/ip/admin?app_user_id=${ip_filter}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+            }
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
@@ -2444,11 +2446,16 @@ const list_item_click = (item) => {
                     break;
                 }       
             }
+            let encodedparameters;
             if (common.COMMON_GLOBAL['system_admin']==1){
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`;
+                encodedparameters = toBase64(`/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             }
-            else
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/geolocation/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`;
+            else{
+                encodedparameters = toBase64(`/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`);
+                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+            }
+                
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
                         null;
@@ -2679,9 +2686,9 @@ const show_config = async (config_nav=1) => {
                             </div>
                         </div>`;
                     //create div groups with parameters, each group with a title
-                    //first 7 attributes in config json contains array of parameter records
+                    //first 5 attributes in config json contains array of parameter records
                     //metadata is saved last in config
-                    for (let i_group = 0; i_group <= 6;i_group++){
+                    for (let i_group = 0; i_group <= 4;i_group++){
                         html += 
                         `<div id='list_config_row_${i_group}' class='list_config_row list_config_group' >
                             <div class='list_config_col list_config_group_title'>

@@ -29,7 +29,7 @@ const access_control = (req, res, callBack) => {
                     res.statusMessage = `ip ${ip_v4} blocked, range: ${result_range.statusMessage}, tried URL: ${req.originalUrl}`;
                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
 										  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
 										  res.statusCode, 
 										  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -46,7 +46,7 @@ const access_control = (req, res, callBack) => {
                         res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
                         import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                             req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                             res.statusCode, 
                                             req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -66,7 +66,7 @@ const access_control = (req, res, callBack) => {
                                 res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
                                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                                     req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                     res.statusCode, 
                                                     req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -92,7 +92,7 @@ const access_control = (req, res, callBack) => {
                                                 res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
                                                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                                                     req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                                     res.statusCode, 
                                                                     req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -110,7 +110,7 @@ const access_control = (req, res, callBack) => {
                                                     res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
                                                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
+                                                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
                                                                         req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                                         res.statusCode, 
                                                                         req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
@@ -154,12 +154,21 @@ const checkAccessTokenCommon = (req, res, next) => {
             }
             else{
                 token = token.slice(7);
-                
                 verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
                     if (err){
-                        res.status(401).send({
-                            message: "Invalid token"
-                        });
+                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} invalid token`,
+                                                req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                res.statusCode, 
+                                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                                                res.status(401).send({
+                                                    message: "Invalid token"
+                                                });
+                                })
+                            });
+                        })
                     } else {
                         //check access token belongs to user_account.id, app_id and ip saved when logged in
                         //and if app_id=0 then check user is admin
