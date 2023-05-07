@@ -3111,18 +3111,22 @@ const get_gps_from_ip = async () => {
         let url;
         let tokentype;
         let encodedparameters;
-        if (COMMON_GLOBAL['system_admin']==1){
+        
+        if (COMMON_GLOBAL['system_admin']==1 && COMMON_GLOBAL['rest_admin_at']){
+            //system admin logged in use this token and path
             encodedparameters = toBase64(`/ip/systemadmin?`);
             url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             tokentype = 2;
         }
         else
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
+            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'] && COMMON_GLOBAL['rest_at']){
+                //system admin logged in use this token and path
                 encodedparameters = toBase64(`/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
                 url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 1;
             }
             else{
+                //not logged in or a user use this token and path
                 encodedparameters = toBase64(`/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
                 url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 0;
