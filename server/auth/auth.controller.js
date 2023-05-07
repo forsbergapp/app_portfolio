@@ -191,7 +191,7 @@ const checkAccessTokenCommon = (req, res, next) => {
                                     else{
                                         import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
                                                              `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`,
                                                               req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                               res.statusCode, 
