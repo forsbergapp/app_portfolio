@@ -1,5 +1,5 @@
 const https = await import('node:https');
-const service_request = async (path, service, method, timeout, authorization, language, body) =>{
+const service_request = async (hostname, path, service, method, timeout, authorization, language, body) =>{
     return new Promise ((resolve, reject)=>{
         //implement CLIENT_ID and CLIENT_SECRET so microservice can only be called from server
         //and not directly from apps
@@ -31,7 +31,7 @@ const service_request = async (path, service, method, timeout, authorization, la
             timeout: timeout,
             headers : headers,
             path: path,
-            host: 'localhost',
+            host: hostname,
             rejectUnauthorized: false
         };
         request = https.request(options, res =>{
@@ -62,11 +62,11 @@ class CircuitBreaker {
         this.cooldownPeriod = 10;
         this.requestTimetout = 2;
     }
-    async callService(path, service, method, authorization, language, body){
+    async callService(hostname, path, service, method, authorization, language, body){
         if (!this.canRequest(service))
             return false;
         try {
-            const response = await service_request (path, service, method, this.requestTimetout * 1000, authorization, language, body);
+            const response = await service_request (hostname, path, service, method, this.requestTimetout * 1000, authorization, language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {
