@@ -568,8 +568,8 @@ const serverExpressRoutes = async (app) => {
     //log
     const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
     
-    //service registry
-    const { callService} = await import(`file://${process.cwd()}${rest_resource_service}/service.controller.js`);
+    //apps
+    const { BFF, BFF_report} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //service db admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
     //service db app_portfolio app
@@ -699,13 +699,14 @@ const serverExpressRoutes = async (app) => {
     router[i].get("/pm2logs", checkSystemAdmin, getPM2Logs);
     app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/log`, router[i]);
     i++;
-    //service registry
+    //apps bff
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].get("/",  checkDataToken, callService);
-    router[i].get("/admin",  checkAccessTokenAdmin, callService);
-    router[i].get("/systemadmin",  checkSystemAdmin, callService);
-    app.use(`${rest_resource_service}`, router[i]);
+    router[i].get("/",  checkDataToken, BFF);
+    router[i].get("/admin",  checkAccessTokenAdmin, BFF);
+    router[i].get("/systemadmin",  checkSystemAdmin, BFF);
+    router[i].get("/report", BFF_report);
+    app.use('/apps/bff', router[i]);
     i++;
     //service db admin
     router.push(Router());
