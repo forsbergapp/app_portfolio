@@ -66,11 +66,8 @@ const getPlace = async (req, res) => {
 const getIp = async (req, res, callBack) => {
 	let geodata;
 	let url;
-	if (typeof req.query.ip == 'undefined')
-		if (req.ip == '::1' || req.ip == '::ffff:127.0.0.1')
-			url = `http://www.geoplugin.net/json.gp?ip=`;
-		else
-			url = `http://www.geoplugin.net/json.gp?ip=${req.ip}`;
+	if (req.query.ip == '::1' || req.query.ip == '::ffff:127.0.0.1')
+		url = `http://www.geoplugin.net/json.gp?ip=`;
 	else
 		url = `http://www.geoplugin.net/json.gp?ip=${req.query.ip}`;
 

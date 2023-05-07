@@ -33,13 +33,7 @@ const getReport = async (req, res) => {
 	}
 	else{
 		import(`file://${process.cwd()}/apps/app${req.query.app_id}/report/index.js`).then(({createReport}) => {
-			const report = createReport(req.query.app_id, 
-								req.query.module, 
-								null, 
-								null, 
-								null,
-								client_locale(req.headers['accept-language']))
-			.then((report_result) => {
+			createReport(req.query.app_id, req.query.module, client_locale(req.headers['accept-language'])).then((report_result) => {
 				res.send(report_result);
 			})	
 		})

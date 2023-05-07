@@ -2411,11 +2411,11 @@ const list_item_click = (item) => {
             let encodedparameters;
             if (common.COMMON_GLOBAL['system_admin']==1){    
                 encodedparameters = toBase64(`/ip/systemadmin?app_user_id=${ip_filter}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             }
             else{
                 encodedparameters = toBase64(`/ip/admin?app_user_id=${ip_filter}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
             }
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
                     if (err)
@@ -2449,11 +2449,11 @@ const list_item_click = (item) => {
             let encodedparameters;
             if (common.COMMON_GLOBAL['system_admin']==1){
                 encodedparameters = toBase64(`/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             }
             else{
                 encodedparameters = toBase64(`/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
             }
                 
             common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{

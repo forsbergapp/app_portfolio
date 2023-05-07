@@ -2,7 +2,7 @@ const { admin_pool_started } = await import(`file://${process.cwd()}/service/db/
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
+const createAdmin = (app_id, locale) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/index.html'],
@@ -54,9 +54,6 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
                                             null,  
                                             'app.admin_exception',
                                             true, //ui
-                                            gps_lat,
-                                            gps_long,
-                                            gps_place,
                                             app, (err, app_init) =>{
                             if (err)
                                 reject(err);
@@ -100,9 +97,6 @@ const createAdmin = (app_id, gps_lat, gps_long, gps_place, locale) => {
                                          null,  
                                          'app.admin_exception_before',
                                          true, //ui
-                                         gps_lat,
-                                         gps_long,
-                                         gps_place,
                                          app, (err, app_init) =>{
                         if (err)
                             reject(err);
