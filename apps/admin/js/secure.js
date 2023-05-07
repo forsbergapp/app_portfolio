@@ -2038,10 +2038,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                 <div>${json.data[i].ip.replace('::ffff:','')}</div>
                                             </div>
                                             <div class='list_connected_col list_gps_click gps_click'>
-                                                <div>${json.data[i].gps_latitude}</div>
+                                                <div>${common.get_null_or_value(json.data[i].gps_latitude)}</div>
                                             </div>
                                             <div class='list_connected_col list_gps_click gps_click'>
-                                                <div>${json.data[i].gps_longitude}</div>
+                                                <div>${common.get_null_or_value(json.data[i].gps_longitude)}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${common.get_null_or_value(show_user_agent(json.data[i].user_agent))}</div>
@@ -2085,10 +2085,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                 <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
                                             </div>
                                             <div class='list_app_log_col list_gps_click gps_click'>
-                                                <div>${json.data[i].client_latitude}</div>
+                                                <div>${common.get_null_or_value(json.data[i].client_latitude)}</div>
                                             </div>
                                             <div class='list_app_log_col list_gps_click gps_click'>
-                                                <div>${json.data[i].client_longitude}</div>
+                                                <div>${common.get_null_or_value(json.data[i].client_longitude)}</div>
                                             </div>
                                             <div class='list_app_log_col'>
                                                 <div>${json.data[i].user_language}</div>
