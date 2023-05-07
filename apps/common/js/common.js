@@ -3076,18 +3076,18 @@ const get_place_from_gps = async (longitude, latitude) => {
 
         if (COMMON_GLOBAL['system_admin']==1){
             encodedparameters = toBase64(`/place/systemadmin?longitude=${longitude}&latitude=${latitude}`);
-            url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             tokentype = 2;
         }
         else 
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
                 encodedparameters = toBase64(`/place/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 1;
             }
             else{
                 encodedparameters = toBase64(`/place?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}?service=geolocation&parameters=${encodedparameters}`;                      
+                url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;                      
                 tokentype = 0;
             }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
@@ -3113,18 +3113,18 @@ const get_gps_from_ip = async () => {
         let encodedparameters;
         if (COMMON_GLOBAL['system_admin']==1){
             encodedparameters = toBase64(`/ip/systemadmin?`);
-            url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
                 encodedparameters = toBase64(`/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 1;
             }
             else{
                 encodedparameters = toBase64(`/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 0;
             }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
@@ -3153,18 +3153,18 @@ const tzlookup = async (latitude, longitude) => {
         let encodedparameters;
         if (COMMON_GLOBAL['system_admin']==1){
             encodedparameters = toBase64(`/timezone/systemadmin?latitude=${latitude}&longitude=${longitude}`);
-            url = `${COMMON_GLOBAL['rest_resource_service']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
                 encodedparameters = toBase64(`/timezone/admin?latitude=${latitude}&longitude=${longitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 1;
             }
             else{
                 encodedparameters = toBase64(`/timezone?latitude=${latitude}&longitude=${longitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_service']}?service=geolocation&parameters=${encodedparameters}`;
+                url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;
                 tokentype = 0;
             }
         common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
@@ -3177,7 +3177,7 @@ const tzlookup = async (latitude, longitude) => {
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
     let encoded_parameters = toBase64(`/${countrycode}?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
-    await common_fetch(`${COMMON_GLOBAL['rest_resource_service']}?service=worldcities&parameters=${encoded_parameters}`, 
+    await common_fetch(`${COMMON_GLOBAL['rest_resource_bff']}?service=worldcities&parameters=${encoded_parameters}`, 
                        'GET', 0, null, null, null, (err, result) =>{
         if (err)
             callBack(err, null);
@@ -3241,7 +3241,7 @@ const exception = (app_exception_function, error) => {
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-const set_globals = (parameters) => {
+const set_globals = async (parameters) => {
     //app info
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
@@ -3254,6 +3254,7 @@ const set_globals = (parameters) => {
 
     //rest 
     COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;
+    COMMON_GLOBAL['rest_resource_bff'] = parameters.rest_resource_bff;
     COMMON_GLOBAL['rest_resource_service'] = parameters.rest_resource_service;
     COMMON_GLOBAL['rest_resource_service_db_schema'] = parameters.rest_resource_service_db_schema;
 
@@ -3269,10 +3270,6 @@ const set_globals = (parameters) => {
     //user info
     COMMON_GLOBAL['user_identity_provider_id']='';
     COMMON_GLOBAL['user_account_id'] = '';
-    COMMON_GLOBAL['client_latitude'] = parameters.gps_lat;
-    COMMON_GLOBAL['client_longitude'] = parameters.gps_long;
-    COMMON_GLOBAL['client_place'] = parameters.gps_place;
-
     
     if (parameters.system_admin==0){
         user_preferences_set_default_globals('LOCALE');
@@ -3285,7 +3282,7 @@ const set_globals = (parameters) => {
         COMMON_GLOBAL['user_timezone']       = Intl.DateTimeFormat().resolvedOptions().timeZone;
         COMMON_GLOBAL['user_direction']      = '';
         COMMON_GLOBAL['user_arabic_script']  = '';
-    }   
+    }  
 }
 const assign_icons = () => {
     //dialogue user verify
@@ -3591,30 +3588,32 @@ const normal_start = async (ui) => {
         }
         //get data token
         common_fetch_basic(0, null,  null, null, (err, result)=>{
-            //get parameters
-            common_fetch(url, 'GET', 0, null, null, null, (err, result) =>{
-                if (err)
-                    null;
-                else{
-                    let global_app_parameters = [];
-                    let json = JSON.parse(result);
-                    for (let i = 0; i < json.data.length; i++) {
-                        //set common parameters
-                        if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
-                            set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                        //return all parameters for admin app and for other apps all except admin app id parameters
-                        if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
-                            json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
-                            global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
-                                                                    "parameter_name":"${json.data[i].parameter_name}",
-                                                                    "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
+            get_gps_from_ip().then(()=>{
+                //get parameters
+                common_fetch(url, 'GET', 0, null, null, null, (err, result) =>{
+                    if (err)
+                        null;
+                    else{
+                        let global_app_parameters = [];
+                        let json = JSON.parse(result);
+                        for (let i = 0; i < json.data.length; i++) {
+                            //set common parameters
+                            if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
+                                set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
+                            //return all parameters for admin app and for other apps all except admin app id parameters
+                            if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
+                                json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
+                                global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
+                                                                        "parameter_name":"${json.data[i].parameter_name}",
+                                                                        "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
+                        }
+                        if (ui == true){
+                            assign_icons();
+                            set_events();
+                        }            
+                        resolve(global_app_parameters);
                     }
-                    if (ui == true){
-                        assign_icons();
-                        set_events();
-                    }            
-                    resolve(global_app_parameters);
-                }
+                })
             })
         })
     })    
@@ -3638,6 +3637,7 @@ const init_common = async (parameters, callBack) => {
      global_rest_client_id: 
      global_rest_client_secret:
      rest_resource_server:
+     rest_resource_bff:
      rest_resource_service:
 	 rest_resource_service_db:
     }

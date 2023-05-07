@@ -217,39 +217,37 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 			    return { text, values };
 			}	
 			let parsed_result = queryConvert(sql, parameters);
+			let pool3;
 			try {
-				get_pool(app_id, pool_col).connect().then((pool3) => {
-					return pool3
-					  .query(parsed_result.text, parsed_result.values)
-					  .then((result) => {
-						//add common attributes
-						if (result.command == 'INSERT' && result.rows.length>0)
-							result.insertId = result.rows[0].id;
-						if (result.command == 'INSERT' ||
-							result.command == 'DELETE' ||
-							result.command == 'UPDATE'){
-							result.affectedRows = result.rowCount;
-						}
-						pool3.release();
-						//convert blob buffer to string if any column is a BYTEA type
-						if (result.rows.length>0){
-							for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
-								if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
-									for (let i=0;i<result.rows.length;i++){
-										if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
-											if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
-												result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
-									}
+				pool3 = await get_pool(app_id, pool_col).connect();
+				pool3.query(parsed_result.text, parsed_result.values)
+					.then((result) => {
+					//add common attributes
+					if (result.command == 'INSERT' && result.rows.length>0)
+						result.insertId = result.rows[0].id;
+					if (result.command == 'INSERT' ||
+						result.command == 'DELETE' ||
+						result.command == 'UPDATE'){
+						result.affectedRows = result.rowCount;
+					}
+					//convert blob buffer to string if any column is a BYTEA type
+					if (result.rows.length>0){
+						for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
+							if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+								for (let i=0;i<result.rows.length;i++){
+									if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
+										if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+											result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
 								}
-							};
-						}
-						if (result.command == 'SELECT')
-							return callBack(null, result.rows);
-						else
-							return callBack(null, result);
-					  })
-					  .catch((err) => {
-						pool3.release();
+							}
+						};
+					}
+					if (result.command == 'SELECT')
+						return callBack(null, result.rows);
+					else
+						return callBack(null, result);
+					})
+					.catch((err) => {
 						let app_code = get_app_code(err.errorNum, 
 							err.message, 
 							err.code, 
@@ -268,8 +266,7 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 										return callBack(database_error, null);
 									})
 							});
-					  })
-				  })
+					})
 			} catch (error) {
 				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 3 catch:' + error).then(() => {
@@ -280,6 +277,10 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 							return callBack(database_error, null);
 						})
 				})
+			}
+			finally{
+				if (pool3)
+					pool3.release();
 			}
 			break;
 		}

@@ -79,30 +79,6 @@ const server = (app) =>{
         next();
     })
   });
-  app.get('/report', (req, res,next) => {
-    import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {
-      if (check_app_subdomain(APP2_ID, req.headers.host) &&
-        req.params.user !== '' && 
-        req.params.user!=='manifest.json' &&
-        req.params.user!=='sw.js' &&
-        req.params.user!=='css' &&
-        req.params.user!=='images' &&
-        req.params.user!=='info' &&
-        req.params.user!=='js') {
-        import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
-          getApp(req, res, APP2_ID, req.params.user, (err, app_result)=>{
-            //if app_result=0 means here redirect to /
-            if (app_result==0)
-              return res.redirect('/');
-            else
-              return res.send(app_result);
-          })
-        });
-      }
-    else
-      next();
-    })
-  });
   //app 2 show profile directly from url
   app.get('/:user', (req, res,next) => {
     import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {

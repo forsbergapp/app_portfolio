@@ -1450,8 +1450,10 @@ const report_exception = (error) => {
 /*----------------------- */
 const init = async (parameters) => {
 	let encodedParams = new URLSearchParams(window.location.search);
-	let decodedparameters = common.fromBase64(encodedParams.get('reportid'))
-	let urlParams = new URLSearchParams(decodedparameters);
+	let decodedparameters = common.fromBase64(encodedParams.get('parameters'));
+	let encodedReportParams = new URLSearchParams(decodedparameters);
+	let decodedReportparameters = common.fromBase64(encodedReportParams.get('reportid'));
+	let urlParams = new URLSearchParams(decodedReportparameters);
 	let user_account_id = urlParams.get('id');
 	let user_setting_id = urlParams.get('sid');
 	let lang_code = urlParams.get('lang_code');
