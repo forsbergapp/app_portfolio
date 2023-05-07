@@ -133,12 +133,13 @@ const BFF = async (req, res) =>{
                                 case 'PUT':
                                 case 'PATCH':
                                 case 'DELETE':{
-                                    resolve(microservice_circuitbreak.callService(db_url, 
-                                                                                   service_called, 
-                                                                                   req.method, 
-                                                                                   req.headers.authorization, 
-                                                                                   req.headers["accept-language"], 
-                                                                                   req.body));
+                                    resolve(microservice_circuitbreak.callService(req.hostname,
+                                                                                  db_url, 
+                                                                                  service_called, 
+                                                                                  req.method, 
+                                                                                  req.headers.authorization, 
+                                                                                  req.headers["accept-language"], 
+                                                                                  req.body));
                                     break;
                                 }
                                 default:{
@@ -169,13 +170,14 @@ const BFF = async (req, res) =>{
                                         decodedparameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += param)}`;
                                     }
                                     //replace input path 
-                                    resolve(microservice_circuitbreak.callService(`${rest_resource_service}/geolocation${decodedparameters}` +
-                                                                                   `&app_id=${req.query.app_id}&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}&lang_code=${req.query.lang_code}`, 
-                                                                                   service_called, 
-                                                                                   req.method, 
-                                                                                   req.headers.authorization, 
-                                                                                   req.headers["accept-language"], 
-                                                                                   req.body));
+                                    resolve(microservice_circuitbreak.callService(req.hostname,
+                                                                                  `${rest_resource_service}/geolocation${decodedparameters}` +
+                                                                                  `&app_id=${req.query.app_id}&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}&lang_code=${req.query.lang_code}`, 
+                                                                                  service_called, 
+                                                                                  req.method, 
+                                                                                  req.headers.authorization, 
+                                                                                  req.headers["accept-language"], 
+                                                                                  req.body));
                                 }
                                 else
                                     resolve('service GEOLOCATION GET only');
@@ -190,12 +192,13 @@ const BFF = async (req, res) =>{
                             // ?&app_id=[id]&lang_code=en
                             log_result = true;
                             if (req.method=='POST')
-                                resolve(microservice_circuitbreak.callService( `${rest_resource_service}/mail${decodedparameters}`, 
-                                                                                service_called, 
-                                                                                req.method, 
-                                                                                req.headers.authorization, 
-                                                                                req.headers["accept-language"], 
-                                                                                req.body));
+                                resolve(microservice_circuitbreak.callService( req.hostname,
+                                                                               `${rest_resource_service}/mail${decodedparameters}`, 
+                                                                               service_called, 
+                                                                               req.method, 
+                                                                               req.headers.authorization, 
+                                                                               req.headers["accept-language"], 
+                                                                               req.body));
                             else
                                 resolve('service MAIL POST only')
                             break;
@@ -217,12 +220,13 @@ const BFF = async (req, res) =>{
                             }
                             else
                                 if (req.method=='GET')
-                                    resolve(microservice_circuitbreak.callService(`${rest_resource_service}/report${decodedparameters}`, 
-                                                                                    service_called, 
-                                                                                    req.method, 
-                                                                                    null, 
-                                                                                    req.headers["accept-language"], 
-                                                                                    req.body));
+                                    resolve(microservice_circuitbreak.callService(req.hostname,
+                                                                                  `${rest_resource_service}/report${decodedparameters}`, 
+                                                                                  service_called, 
+                                                                                  req.method, 
+                                                                                  null, 
+                                                                                  req.headers["accept-language"], 
+                                                                                  req.body));
                                 else
                                     resolve('service REPORT GET only')
                             break;
@@ -233,12 +237,13 @@ const BFF = async (req, res) =>{
                             // parameters ex:
                             // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
                             if (req.method=='GET')
-                                resolve(microservice_circuitbreak.callService( `${rest_resource_service}/worldcities${decodedparameters}`, 
-                                                                                service_called, 
-                                                                                req.method, 
-                                                                                req.headers.authorization, 
-                                                                                req.headers["accept-language"], 
-                                                                                req.body));
+                                resolve(microservice_circuitbreak.callService(req.hostname,
+                                                                              `${rest_resource_service}/worldcities${decodedparameters}`, 
+                                                                              service_called, 
+                                                                              req.method, 
+                                                                              req.headers.authorization, 
+                                                                              req.headers["accept-language"], 
+                                                                              req.body));
                             else
                                 resolve('service WORLDCITIES GET only')
                             break;
