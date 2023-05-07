@@ -154,8 +154,10 @@ const BFF = async (req, res) =>{
                             if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && result_internet==1){
                                 if (req.method=='GET'){
                                     //set req.ip from client in case ip query parameter is missing
-                                    if (decodedparameters.startsWith('/ip?')){    
-                                        let params = decodedparameters.split('/ip?')[1].split('&');
+                                    let basepath = decodedparameters.split('?')[0];
+                                    // /ip, /ip/admin or /systemadmin
+                                    if (decodedparameters.startsWith('/ip')){    
+                                        let params = decodedparameters.split('?')[1].split('&');
                                         //if ip parameter does not exist
 	                                    if (params.filter(parm=>parm.includes('ip=')).length==0 )
                                             params.push(`&ip=${req.ip}`);
@@ -164,10 +166,11 @@ const BFF = async (req, res) =>{
                                             if (params.filter(parm=>parm == 'ip=').length==1)
                                                 params.map(parm=>parm = parm.replace('ip=', `ip=${req.ip}`));
                                         }
-                                        decodedparameters = `/ip?${params.reduce((param_sum,param)=>param_sum += param)}`;
+                                        decodedparameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += param)}`;
                                     }
-                                    
-                                    resolve(microservice_circuitbreak.callService(`${rest_resource_service}/geolocation${decodedparameters}`, 
+                                    //replace input path 
+                                    resolve(microservice_circuitbreak.callService(`${rest_resource_service}/geolocation${decodedparameters}` +
+                                                                                   `&app_id=${req.query.app_id}&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}&lang_code=${req.query.lang_code}`, 
                                                                                    service_called, 
                                                                                    req.method, 
                                                                                    req.headers.authorization, 
