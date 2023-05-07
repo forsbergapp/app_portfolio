@@ -1,6 +1,6 @@
 const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const createApp = (app_id, params, gps_lat, gps_long, gps_place, locale) => {
+const createApp = (app_id, params, locale) => {
     return new Promise((resolve, reject) => {
         const files = [ 
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
@@ -34,9 +34,6 @@ const createApp = (app_id, params, gps_lat, gps_long, gps_place, locale) => {
                                      null,
                                      'app.app_exception',
                                      true,
-                                     gps_lat,
-                                     gps_long,
-                                     gps_place,
                                      app, (err, app_init) =>{
                     if (err)
                         reject(err);

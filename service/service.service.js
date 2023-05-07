@@ -1,6 +1,5 @@
 const https = await import('node:https');
-const http = await import('node:http');
-const service_request = async (protocol, url, method, timeout, authorization, language, body) =>{
+const service_request = async (path, service, method, timeout, authorization, language, body) =>{
     return new Promise ((resolve, reject)=>{
         //implement CLIENT_ID and CLIENT_SECRET so microservice can only be called from server
         //and not directly from apps
@@ -27,42 +26,27 @@ const service_request = async (protocol, url, method, timeout, authorization, la
 
         
         let request;
-        if (protocol=='https'){
-            const options = {
-                method: method,
-                timeout: timeout,
-                headers : headers,
-                rejectUnauthorized: false,
-            };
-            request = https.request(url, options, res =>{
-                let responseBody = '';
-                res.setEncoding('UTF8');
-                res.on('data', (chunk) =>{
-                    responseBody += chunk;
-                })
-                res.on('end', ()=>{
-                    resolve (responseBody);
-                });
+        const options = {
+            method: method,
+            timeout: timeout,
+            headers : headers,
+            path: path,
+            host: 'localhost',
+            rejectUnauthorized: false
+        };
+        request = https.request(options, res =>{
+            let responseBody = '';
+            //for REPORT statucode 301 is returned, resolve the redirected path
+            if (res.statusCode==301 && service == 'REPORT')
+                resolve(service_request(res.headers.location, service, method, timeout, authorization, language, body));
+            res.setEncoding('UTF8');
+            res.on('data', (chunk) =>{
+                responseBody += chunk;
             })
-        }
-        else{
-            const options = {
-                method: method,
-                timeout: timeout,
-                headers : headers
-            };
-            request = http.request(url, options, res =>{
-                let responseBody = '';
-                res.setEncoding('UTF8');
-                const body = []
-                res.on('data', (chunk) =>{
-                    responseBody += chunk;
-                })
-                res.on('end', ()=>{
-                    resolve (responseBody);
-                });
-            })
-        }
+            res.on('end', ()=>{
+                resolve (responseBody);
+            });
+        })
         if (method !='GET')
             request.write(JSON.stringify(body));
         request.on('timeout', () => {
@@ -78,11 +62,11 @@ class CircuitBreaker {
         this.cooldownPeriod = 10;
         this.requestTimetout = 2;
     }
-    async callService(protocol, url, service, method, authorization, language, body){
+    async callService(path, service, method, authorization, language, body){
         if (!this.canRequest(service))
             return false;
         try {
-            const response = await service_request(protocol, url, method, this.requestTimetout * 1000, authorization, language, body);
+            const response = await service_request (path, service, method, this.requestTimetout * 1000, authorization, language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {

@@ -262,9 +262,6 @@ const get_module_with_init = async (app_id,
                                     user_account_id,
                                     exception_app_function,
                                     ui,
-                                    gps_lat,
-                                    gps_long,
-                                    gps_place,
                                     module, callBack) => {
 
     if (system_admin==1){
@@ -287,9 +284,6 @@ const get_module_with_init = async (app_id,
             locale: locale,
             exception_app_function: exception_app_function,
             ui: ui,
-            gps_lat: gps_lat, 
-            gps_long: gps_long, 
-            gps_place: gps_place,
             system_admin: system_admin,
             system_admin_only: system_admin_only,
             app_role_id: '',
@@ -297,6 +291,7 @@ const get_module_with_init = async (app_id,
             app_rest_client_secret: '',
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
             rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
+            rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
             rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
 		    rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
             first_time: first_time
@@ -321,9 +316,6 @@ const get_module_with_init = async (app_id,
                     locale:locale,
                     exception_app_function: exception_app_function,
                     ui: ui,
-                    gps_lat: gps_lat, 
-                    gps_long: gps_long, 
-                    gps_place: gps_place,
                     system_admin: system_admin,
                     system_admin_only: 0,
                     app_role_id: '',
@@ -331,6 +323,7 @@ const get_module_with_init = async (app_id,
                     app_rest_client_secret: result[0].app_rest_client_secret,
                     common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                     rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
+                    rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
                     rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
 		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
                     first_time: null
@@ -429,7 +422,7 @@ const AppsStart = async (app) => {
         });
     })
 }
-const getMaintenance = (app_id, gps_lat, gps_long, gps_place) => {
+const getMaintenance = (app_id) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/common/src/index_maintenance.html'],
@@ -445,6 +438,7 @@ const getMaintenance = (app_id, gps_lat, gps_long, gps_place) => {
                 let parameters = {   
                     app_id: app_id,
                     rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
+                    rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
                     rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
 		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')
                 };

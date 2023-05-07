@@ -475,7 +475,7 @@ const policy_directives = (callBack) => {
         callBack(null, result);
     })
 }
-const check_internet = async (req) => {
+const check_internet = async (app_id) => {
     return await new Promise((resolve) => {
         //test connection with localhost
         //no need to specify other domain to test internet
@@ -507,7 +507,7 @@ const check_internet = async (req) => {
                     
                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
+                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
                                 resolve(0);
                             })
                         });
