@@ -124,7 +124,7 @@ const BFF = async (req, res) =>{
                     switch (service_called){
                         case 'DB':{
                             const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-                            let db_url = `${url}${rest_resource_service}/db/${rest_resource_service_db_schema}${decodedparameters}`;
+                            let db_url = `${url}${rest_resource_service}/db/${rest_resource_service_db_schema}${decodedparameters}&proxy_ip=${req_ip}`;
                             switch (req.method){
                                 // parameters ex:
                                 // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
@@ -136,7 +136,7 @@ const BFF = async (req, res) =>{
                                     resolve(microservice_circuitbreak.callService(req.hostname,
                                                                                   db_url, 
                                                                                   service_called, 
-                                                                                  req.method, 
+                                                                                  req.method,
                                                                                   req.headers.authorization, 
                                                                                   req.headers["accept-language"], 
                                                                                   req.body));
@@ -172,9 +172,9 @@ const BFF = async (req, res) =>{
                                     //replace input path 
                                     resolve(microservice_circuitbreak.callService(req.hostname,
                                                                                   `${rest_resource_service}/geolocation${decodedparameters}` +
-                                                                                  `&app_id=${req.query.app_id}&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}&lang_code=${req.query.lang_code}`, 
+                                                                                  `&app_id=${req.query.app_id}&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}&lang_code=${req.query.lang_code}&proxy_ip=${req.ip}`, 
                                                                                   service_called, 
-                                                                                  req.method, 
+                                                                                  req.method,
                                                                                   req.headers.authorization, 
                                                                                   req.headers["accept-language"], 
                                                                                   req.body));
@@ -193,9 +193,9 @@ const BFF = async (req, res) =>{
                             log_result = true;
                             if (req.method=='POST')
                                 resolve(microservice_circuitbreak.callService( req.hostname,
-                                                                               `${rest_resource_service}/mail${decodedparameters}`, 
+                                                                               `${rest_resource_service}/mail${decodedparameters}&proxy_ip=${req.ip}`, 
                                                                                service_called, 
-                                                                               req.method, 
+                                                                               req.method,
                                                                                req.headers.authorization, 
                                                                                req.headers["accept-language"], 
                                                                                req.body));
@@ -221,9 +221,9 @@ const BFF = async (req, res) =>{
                             else
                                 if (req.method=='GET')
                                     resolve(microservice_circuitbreak.callService(req.hostname,
-                                                                                  `${rest_resource_service}/report${decodedparameters}`, 
+                                                                                  `${rest_resource_service}/report${decodedparameters}&proxy_ip=${req.ip}`, 
                                                                                   service_called, 
-                                                                                  req.method, 
+                                                                                  req.method,
                                                                                   null, 
                                                                                   req.headers["accept-language"], 
                                                                                   req.body));
@@ -238,9 +238,9 @@ const BFF = async (req, res) =>{
                             // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
                             if (req.method=='GET')
                                 resolve(microservice_circuitbreak.callService(req.hostname,
-                                                                              `${rest_resource_service}/worldcities${decodedparameters}`, 
+                                                                              `${rest_resource_service}/worldcities${decodedparameters}&proxy_ip=${req.ip}`,
                                                                               service_called, 
-                                                                              req.method, 
+                                                                              req.method,
                                                                               req.headers.authorization, 
                                                                               req.headers["accept-language"], 
                                                                               req.body));
