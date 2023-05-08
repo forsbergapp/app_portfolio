@@ -7,7 +7,7 @@ const server = (app) =>{
   app.use('/app1/js',express.static(process.cwd() + '/apps/app1/js'));
   //routes
   app.get("/info/:info",(req, res, next) => {
-      import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {
+      import(`file://${process.cwd()}/apps/apps.service.js`).then(({ getInfo, check_app_subdomain}) => {
         if (check_app_subdomain(APP1_ID, req.headers.host) ||
           req.headers.host.substring(0,req.headers.host.indexOf('.'))=='www'){
             switch (req.params.info){

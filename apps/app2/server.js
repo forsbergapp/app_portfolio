@@ -20,28 +20,26 @@ const server = (app) =>{
     })
   });
   app.get("/info/:info", (req, res, next) => {
-    import(`file://${process.cwd()}/apps/apps.service.js`).then(({ check_app_subdomain}) => {
+    import(`file://${process.cwd()}/apps/apps.service.js`).then(({ getInfo, check_app_subdomain}) => {
       if (check_app_subdomain(APP2_ID, req.headers.host)) {
-          import(`file://${process.cwd()}/apps/apps.service.js`).then(({ getInfo}) => {
-            switch (req.params.info){
-              case 'about':
-              case 'disclaimer':
-              case 'privacy_policy':
-              case 'terms':{
-                if (typeof req.query.lang_code !='undefined'){
-                  req.query.lang_code = 'en';
-                }
-                getInfo(APP2_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
-                  res.send(info_result);
-                })
-                break;
-              }
-              default:{
-                res.send(null);
-                break;
-              }
+        switch (req.params.info){
+          case 'about':
+          case 'disclaimer':
+          case 'privacy_policy':
+          case 'terms':{
+            if (typeof req.query.lang_code !='undefined'){
+              req.query.lang_code = 'en';
             }
-          });
+            getInfo(APP2_ID, req.params.info, req.query.lang_code, (err, info_result)=>{
+              res.send(info_result);
+            })
+            break;
+          }
+          default:{
+            res.send(null);
+            break;
+          }
+        }
       }
       else
         next();

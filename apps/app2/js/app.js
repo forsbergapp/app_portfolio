@@ -206,7 +206,7 @@ const get_report_url = (id, sid, papersize, item, format) => {
                                      language_parameter +
                                      service_parameter);
     //url query parameters are decoded in report module and in report service
-    return common.getHostname() + `${common.COMMON_GLOBAL['rest_resource_bff']}/report?service=report&parameters=${common.toBase64('?reportid=' + encodedurl)}`;
+    return common.getHostname() + `${common.COMMON_GLOBAL['rest_resource_bff']}/reports?service=report&parameters=${common.toBase64('?reportid=' + encodedurl)}`;
 }
 const updateViewStat_app = (user_setting_id, user_setting_user_account_id) => {
     if (parseInt(user_setting_user_account_id) == parseInt(common.COMMON_GLOBAL['user_account_id']))
@@ -358,8 +358,7 @@ const common_translate_ui_app = async (lang_code, callBack) => {
             select_second_locale.value = current_second_locale;   
             
             //country
-            common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/country/${lang_code}?`, 
-                         'GET', 0, null, null, null, (err, result) =>{
+            common.FFB ('DB', `/country/${lang_code}?`, 'GET', 0, null, (err, result) => {
                 if (err)
                     callBack(err,null);
                 else{
@@ -407,8 +406,7 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 
-                           'GET', 0, null, null, null, (err, result) =>{
+        await common.FFB ('DB', `/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
             if (err)
                 null;
             else{
@@ -1199,9 +1197,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 const user_settings_get = async (user_setting_id = '') => {
     let select = document.getElementById("setting_select_user_setting");
     let result_obj;
-    
-    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 
-                       'GET', 0, null, null, null, (err, result) =>{
+    await common.FFB ('DB', `/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1596,7 +1592,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
                         "user_account_id": ${common.COMMON_GLOBAL['user_account_id']}
                     }`;	
     let method;
-    let url;
+    let path;
     let old_button;
     let spinner_item;
     
@@ -1609,7 +1605,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
                 spinner_item.innerHTML = common.APP_SPINNER;    
             }
             method = 'POST';
-            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting?initial=${initial_user_setting==true?1:0}`;
+            path = `/user_account_app_setting?initial=${initial_user_setting==true?1:0}`;
             break;
         }
         case 'SAVE':{
@@ -1619,15 +1615,14 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             method = 'PUT';
             let select_user_setting = document.getElementById('setting_select_user_setting');
             let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/${user_setting_id}?`;
+            path = `/user_account_app_setting/${user_setting_id}?`;
             break;
         }
         default:{
             break;
         }
     }
-    await common.common_fetch(url, 
-                       method, 1, json_data, null, null, (err, result) =>{
+    await common.FFB ('DB', path, method, 1, json_data, (err, result) => {
         if (err){
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
@@ -1677,8 +1672,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/${user_setting_id}?`, 
-                                    'DELETE', 1, null, null, null, (err, result) =>{
+                common.FFB ('DB', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err, result) => {
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -1881,8 +1875,7 @@ const set_settings_select = () => {
 
 const profile_user_setting_stat = (id) => {
     let json;
-    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/profile/${id}?`, 
-                 'GET', 0, null, null, null, (err, result) =>{
+    common.FFB ('DB', `/user_account_app_setting/profile/${id}?`, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1931,9 +1924,8 @@ const profile_show_user_setting = () => {
     let json;
     document.getElementById('profile_user_settings_row').style.display = 'block';
 
-    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
-                        '?id=' + common.COMMON_GLOBAL['user_account_id'],
-                        'GET', 0, null, null, null, (err, result) =>{
+    common.FFB ('DB', `/user_account_app_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
+                      '?id=' + common.COMMON_GLOBAL['user_account_id'], 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1962,9 +1954,8 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     let profile_id = document.getElementById('common_profile_id').innerHTML;
     let json;
-    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting/profile/all/${profile_id}` +
-                        '?id=' + common.COMMON_GLOBAL['user_account_id'],
-                        'GET', 0, null, null, null, (err, result) =>{
+    common.FFB ('DB', `/user_account_app_setting/profile/all/${profile_id}` +
+                      '?id=' + common.COMMON_GLOBAL['user_account_id'], 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -2002,8 +1993,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`,
-                     method, 1, json_data, null, null, (err, result) =>{
+        common.FFB ('DB', `/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
             if (err)
                 null;
             else{

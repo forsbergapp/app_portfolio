@@ -155,6 +155,8 @@ const getReportService = async (url, ps, hf) => {
                                         676
                                         %%EOF
                                     */
+                                    let pdf_length = pdf.toString().length;
+                                    let test = 1;
                                     if (pdf.toString().length < PDF_EMPTY_SIZE_CHECK)
                                         //try PDF_WAIT_ATTEMPTS * PDF_WAIT_INTERVAL = total time
                                         //ex. 20 * 500 = 10 seconds

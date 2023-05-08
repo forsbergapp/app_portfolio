@@ -231,7 +231,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 						FROM ${db_schema()}.user_account u
 					   WHERE u.id IN (SELECT us.user_account_app_user_account_id
 										FROM ${db_schema()}.user_account_app_setting_like u_like,
-											 ${db_schema()}.user_account_app_user_setting us
+											 ${db_schema()}.user_account_app_setting us
 									   WHERE u_like.user_account_app_user_account_id = :user_account_id
 									     AND u_like.user_account_app_app_id = :app_id
 										 AND us.user_account_app_app_id = u_like.user_account_app_app_id
