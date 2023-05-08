@@ -1,15 +1,10 @@
-const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
-const microservice_circuitbreak = new microservice.CircuitBreaker();
 const {ConfigGet, COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service = await import('./apps.service.js')
-const { check_internet } = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
-
 const getApp = async (req, res, app_id, params, callBack) => {
     //createLog needs app_id
     req.query.app_id = app_id;
     req.query.app_user_id = null;
     req.query.callback=1;
-
     //check if maintenance
     if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
         service.getMaintenance(app_id, null, null,null).then((app_result) => {
@@ -98,6 +93,8 @@ const getAppAdmin = async (req, res, app_id, callBack) => {
     }
 }
 //backend for frontend
+//returns status 401 (parameter errors), 503(ANY error in called service) or 200 if ok
+//together with error or result
 const BFF = async (req, res) =>{
     //check inparameters
     if (!req.query.app_id &&
@@ -109,155 +106,16 @@ const BFF = async (req, res) =>{
             message: '⛔'
         });
     else{
-        //usage /service?parameters=[base64]
-        //parameters content: 'app_id=[app_id]&service=[SERVICENAME]&lang_code=[LANG_CODE]&parameters=[BASE64]
         let stack = new Error().stack;
         let decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
         let log_result=false;
-        const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
         const service_called = req.query.service.toUpperCase();
-        let result_internet = await check_internet(req.query.app_id);
-        // called from app req.originalUrl: '/service?parameters=[base64]
-        const callServiceResult = async () => {
-            return new Promise((resolve, reject) => {
-                try {
-                    switch (service_called){
-                        case 'DB':{
-                            const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-                            let db_url = `${url}${rest_resource_service}/db/${rest_resource_service_db_schema}${decodedparameters}&proxy_ip=${req_ip}`;
-                            switch (req.method){
-                                // parameters ex:
-                                // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
-                                case 'GET':
-                                case 'POST':
-                                case 'PUT':
-                                case 'PATCH':
-                                case 'DELETE':{
-                                    resolve(microservice_circuitbreak.callService(req.hostname,
-                                                                                  db_url, 
-                                                                                  service_called, 
-                                                                                  req.method,
-                                                                                  req.headers.authorization, 
-                                                                                  req.headers["accept-language"], 
-                                                                                  req.body));
-                                    break;
-                                }
-                                default:{
-                                    resolve('service DB GET, POST, PUT, PATCH or DELETE only');
-                                }
-                            }
-                            break;
-                        }
-                        case 'GEOLOCATION':{
-                            // parameters ex:
-                            // /ip?app_id=[id]&lang_code=en
-                            // /place?latitude[latitude]&longitude=[longitude]
-                            if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' && result_internet==1){
-                                if (req.method=='GET'){
-                                    //set req.ip from client in case ip query parameter is missing
-                                    let basepath = decodedparameters.split('?')[0];
-                                    // /ip, /ip/admin or /systemadmin
-                                    if (decodedparameters.startsWith('/ip')){    
-                                        let params = decodedparameters.split('?')[1].split('&');
-                                        //if ip parameter does not exist
-	                                    if (params.filter(parm=>parm.includes('ip=')).length==0 )
-                                            params.push(`&ip=${req.ip}`);
-                                        else{
-                                            //if empty ip parameter
-                                            if (params.filter(parm=>parm == 'ip=').length==1)
-                                                params.map(parm=>parm = parm.replace('ip=', `ip=${req.ip}`));
-                                        }
-                                        decodedparameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += param)}`;
-                                    }
-                                    //replace input path 
-                                    resolve(microservice_circuitbreak.callService(req.hostname,
-                                                                                  `${rest_resource_service}/geolocation${decodedparameters}` +
-                                                                                  `&app_id=${req.query.app_id}&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}&lang_code=${req.query.lang_code}&proxy_ip=${req.ip}`, 
-                                                                                  service_called, 
-                                                                                  req.method,
-                                                                                  req.headers.authorization, 
-                                                                                  req.headers["accept-language"], 
-                                                                                  req.body));
-                                }
-                                else
-                                    resolve('service GEOLOCATION GET only');
-                            }
-                            else
-                                resolve();
-                            break;
-
-                        }
-                        case 'MAIL':{
-                            // parameters ex:
-                            // ?&app_id=[id]&lang_code=en
-                            log_result = true;
-                            if (req.method=='POST')
-                                resolve(microservice_circuitbreak.callService( req.hostname,
-                                                                               `${rest_resource_service}/mail${decodedparameters}&proxy_ip=${req.ip}`, 
-                                                                               service_called, 
-                                                                               req.method,
-                                                                               req.headers.authorization, 
-                                                                               req.headers["accept-language"], 
-                                                                               req.body));
-                            else
-                                resolve('service MAIL POST only')
-                            break;
-                        }
-                        case 'REPORT':{
-                            // parameter ex
-                            // app_id=[id]&service=REPORT&reportid=[base64]
-                            // decode
-                            // ?reportid=[base64]
-                            // req.headers.authorization not used for this service
-                            //check if maintenance
-                            if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-                                import(`file://${process.cwd()}/apps/apps.service.js`).then(({getMaintenance}) => {
-                                    getMaintenance(req.query.app_id)
-                                    .then((app_result) => {
-                                        resolve(app_result);
-                                    });
-                                })
-                            }
-                            else
-                                if (req.method=='GET')
-                                    resolve(microservice_circuitbreak.callService(req.hostname,
-                                                                                  `${rest_resource_service}/report${decodedparameters}&proxy_ip=${req.ip}`, 
-                                                                                  service_called, 
-                                                                                  req.method,
-                                                                                  null, 
-                                                                                  req.headers["accept-language"], 
-                                                                                  req.body));
-                                else
-                                    resolve('service REPORT GET only')
-                            break;
-                        }
-                        case 'WORLDCITIES':{
-                            //from app req.originalUrl:
-                            //  '/service?parameters=[base64]
-                            // parameters ex:
-                            // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
-                            if (req.method=='GET')
-                                resolve(microservice_circuitbreak.callService(req.hostname,
-                                                                              `${rest_resource_service}/worldcities${decodedparameters}&proxy_ip=${req.ip}`,
-                                                                              service_called, 
-                                                                              req.method,
-                                                                              req.headers.authorization, 
-                                                                              req.headers["accept-language"], 
-                                                                              req.body));
-                            else
-                                resolve('service WORLDCITIES GET only')
-                            break;
-                        }
-                        default:{
-                            resolve(`service ${req.query.service} does not exist`);
-                        }
-                    }
-                } catch (error) {
-                    reject(error);
-                }
-            })
-        }
-        callServiceResult()
+        let parameters;
+        if (req.query.user_account_logon_user_account_id)
+            parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`
+        else
+            parameters = decodedparameters;
+        service.BFF(req.query.app_id, service_called, parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["accept-language"], req.body)
         .then(result_service => {
             //log INFO to module log and to files
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
@@ -269,7 +127,12 @@ const BFF = async (req, res) =>{
                     if (log_result)
                         return res.status(200).send();
                     else
-                        res.send(result_service);
+                        if (result_service.startsWith('%PDF')){
+                            res.type('application/pdf');
+			                return res.send(result_service);
+                        }
+                        else
+                            return res.status(200).send(result_service);
                 })
             });
         })
