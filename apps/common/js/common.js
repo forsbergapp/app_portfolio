@@ -8,6 +8,7 @@
     USER PROVIDER
     MODULE EASY.QRCODE
     MODULE LEAFLET
+    FFB
     SERVICE BROADCAST
     SERVICE GEOLOCATION
     SERVICE WORLDCITIES
@@ -367,10 +368,10 @@ const common_fetch_basic = async (token_type, json_data,  username, password, ca
         }
     })
 }
+
 const common_fetch = async (url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) => {
     let status;
     let headers;
-
     let token;
     switch (token_type){
         case 0:{
@@ -477,19 +478,19 @@ const fromBase64 = (str) => {
 const common_translate_ui = async (lang_code, object = null, callBack) => {
     let json;
     let object_parameter;
-    let url='';
+    let path='';
     if  (object==null)
         object_parameter ='';
     else
         object_parameter = `object=${object}`;
     if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/app_object/admin/${lang_code}?${object_parameter}`;
+        path = `/app_object/admin/${lang_code}?${object_parameter}`;
     }
     else{
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/app_object/${lang_code}?${object_parameter}`;
+        path = `/app_object/${lang_code}?${object_parameter}`;
     }
     //translate objects
-    await common_fetch(url, 'GET', 0, null, null, null, (err, result) =>{
+    await FFB ('DB', path, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -578,12 +579,12 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
             //translate locales
             json = '';
             if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
-                url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/language/locale/admin/${lang_code}?`;
+                path = `/language/locale/admin/${lang_code}?`;
             }
             else{
-                url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/language/locale/${lang_code}?`;
+                path = `/language/locale/${lang_code}?`;
             }
-            common_fetch(url, 'GET', 0, null, null, null, (err, result) =>{
+            FFB ('DB', path, 'GET', 0, null, (err, result) => {
                 if (err)
                     null;
                 else{
@@ -599,12 +600,12 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                 //translate regional settings
                 json = '';
                 if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
-                    url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/setting/admin?setting_type=DIRECTION`;
+                    path = `/settings/admin?setting_type=DIRECTION`;
                 }
                 else{
-                    url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/setting?setting_type=DIRECTION`;
+                    path = `/settings?setting_type=DIRECTION`;
                 }
-                common_fetch(url, 'GET', 0, null, null, null, (err, result) =>{
+                FFB ('DB', path, 'GET', 0, null, (err, result) => {
                     if (err)
                         null;
                     else{
@@ -997,8 +998,7 @@ const show_message = (message_type, code, function_event, message_text='', data_
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/message_translation/${code}?data_app_id=${data_app_id}`, 
-                         'GET', 0, null, null, null, (err, result) =>{
+            FFB ('DB', `/message_translation/${code}?data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
@@ -1458,22 +1458,21 @@ const show_profile_click_events = (item, click_function) => {
     }));
 }
 const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
-    let url;
+    let path;
     document.getElementById('common_dialogue_profile').style.visibility = 'visible';
     document.getElementById('common_profile_info').style.display = 'none';
     document.getElementById('common_profile_top').style.display = 'block';
                 
     if (statschoice ==1 || statschoice ==2 || statschoice ==3){
         /*statschoice 1,2,3: user_account*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/top`;
+        path = `/user_account/profile/top/${statschoice}?`;
     }
     else{
         /*other statschoice, apps can use >3 and return same columns*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${app_rest_url}`;
+        path = `${app_rest_url}/${statschoice}?`;
     }
     //TOP
-    common_fetch(url + '/' + statschoice + '?', 
-                 'GET', 0, null, null, null, (err, result) =>{
+    FFB ('DB', path, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1510,16 +1509,16 @@ const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
     })
 }
 const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, click_function) => {
-    let url;
+    let path;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/detail/`;
+        path = `/user_account/profile/detail/`;
     }
     else{
         /* detailchoice 5, apps, returns same columns*/
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${rest_url_app}/`;
+        path = `${rest_url_app}/`;
     }
-    url += `${document.getElementById('common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
+    path += `${document.getElementById('common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
     if (parseInt(COMMON_GLOBAL['user_account_id']) || 0 !== 0) {
@@ -1598,7 +1597,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                 }
         }
         if (fetch_detail){
-            common_fetch(url,  'GET', 1, null, null, null, (err, result) =>{
+            FFB ('DB', path, 'GET', 1, null, (err, result) => {
                 if (err)
                     null;
                 else{
@@ -1698,14 +1697,14 @@ const search_profile = (click_function) => {
         document.getElementById('common_profile_search_input').classList.add('common_input_error');
     else{
         let searched_username = document.getElementById('common_profile_search_input').value;
-        let url;
+        let path;
         let token;
         let json_data;
         if (check_input(searched_username) == false)
             return;
         if (COMMON_GLOBAL['user_account_id']!=''){
             //search using access token with logged in user_account_id
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/username/searchA?search=${searched_username}`;
+            path = `/user_account/profile/username/searchA?search=${searched_username}`;
             token = 1;
             json_data = `{
                         "user_account_id":${COMMON_GLOBAL['user_account_id']},
@@ -1715,14 +1714,14 @@ const search_profile = (click_function) => {
         }
         else{
             //search using data token without logged in user_account_id
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/username/searchD?search=${searched_username}`;
+            path = `/user_account/profile/username/searchD?search=${searched_username}`;
             token = 0;
             json_data = `{
                         "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
                         "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
                         }`;
         }
-        common_fetch(url, 'POST', token, json_data, null, null, (err, result) =>{
+        FFB ('DB', path, 'POST', token, json_data, (err, result) => {
             if (err)
                 null;
             else{
@@ -1768,7 +1767,7 @@ profile_show(null, username) from init startup when user enters url
 const profile_show = async (user_account_id_other = null, username = null, callBack) => {
     let json;
     let user_account_id_search;
-    let url;
+    let path;
 
     show_common_dialogue('PROFILE');
     if (user_account_id_other == null && COMMON_GLOBAL['user_account_id'] == '' && username == null) {
@@ -1776,14 +1775,14 @@ const profile_show = async (user_account_id_other = null, username = null, callB
     } else {
         if (user_account_id_other !== null) {
             user_account_id_search = user_account_id_other;
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
+            path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
         } else
         if (username !== null) {
             user_account_id_search = '';
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL['user_account_id']}`;
+            path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL['user_account_id']}`;
         } else {
             user_account_id_search = COMMON_GLOBAL['user_account_id'];
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
+            path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
         }
         //PROFILE MAIN
         let json_data =
@@ -1791,8 +1790,7 @@ const profile_show = async (user_account_id_other = null, username = null, callB
             "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
             "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
             }`;
-
-        common_fetch(url, 'POST', 0, json_data, null, null, (err, result) =>{
+        FFB ('DB', path, 'POST', 0, json_data, (err, result) => {
             if (err)
                 return callBack(err,null);
             else{
@@ -1865,10 +1863,7 @@ const profile_update_stat = async (callBack) => {
     }`;
     //get updated stat for given user
     //to avoid update in stat set searched by same user
-    let url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/profile/id/${profile_id.innerHTML}`;
-    
-    common_fetch(url + '?id=' + profile_id.innerHTML, 
-                 'POST', 0, json_data, null, null, (err, result) =>{
+    FFB ('DB', `/user_account/profile/id/${profile_id.innerHTML}?id=${profile_id.innerHTML}`, 'POST', 0, json_data, (err, result) => {
         if (err)
             return callBack(err,null);
         else{
@@ -1993,8 +1988,9 @@ const user_login = async (username, password, callBack) => {
                  }`;
 
     //get user with username and password from REST API
-    common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/login?`, 
-                 'PUT', 0, json_data, null, null, (err, result) =>{
+    //common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/login?`, 
+    //             'PUT', 0, json_data, null, null, (err, result) =>{
+    FFB ('DB', `/user_account/login?`, 'PUT', 0, json_data, (err, result) => {
         if (err)
             return callBack(err, null);
         else{
@@ -2061,8 +2057,7 @@ const user_logoff = async () => {
 const user_edit = async () => {
     let json;
     //get user from REST API
-    common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/${COMMON_GLOBAL['user_account_id']}?`, 
-                 'GET', 1, null, null, null, (err, result) =>{
+    FFB ('DB', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{
@@ -2119,7 +2114,7 @@ const user_update = async () => {
     let avatar = document.getElementById('common_user_edit_avatar_img').src;
     let new_email = document.getElementById('common_user_edit_input_new_email').value;
 
-    let url;
+    let path;
     let json_data;
 
     if (check_input(bio, 150) == false)
@@ -2182,21 +2177,20 @@ const user_update = async () => {
                         "avatar":"${avatar}",
                         ${get_uservariables()}
                     }`;
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/${COMMON_GLOBAL['user_account_id']}`;
+        path = `/user_account/${COMMON_GLOBAL['user_account_id']}?`;
     } else {
         json_data = `{"provider_id": "${document.getElementById('common_user_edit_provider_id').innerHTML}",
                       "username":"${username}",
                       "bio":"${bio}",
                       "private":${boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)}
                      }`;
-        url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/common/${COMMON_GLOBAL['user_account_id']}`;
+        path = `/user_account/common/${COMMON_GLOBAL['user_account_id']}?`;
     }
     let old_button = document.getElementById('common_user_edit_btn_user_update').innerHTML;
     let json;
     document.getElementById('common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
     //update user using REST API
-    common_fetch(url + '?', 
-                 'PUT', 1, json_data, null, null, (err, result) =>{
+    FFB ('DB', path, 'PUT', 1, json_data, (err, result) => {
         document.getElementById('common_user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
             return null;
@@ -2255,8 +2249,7 @@ const user_signup = () => {
 
     let old_button = document.getElementById('common_signup_button').innerHTML;
     document.getElementById('common_signup_button').innerHTML = APP_SPINNER;
-    common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/signup?`,
-                 'POST', 0, json_data, null, null, (err, result) =>{    
+    FFB ('DB', `/user_account/signup?`, 'POST', 0, json_data, (err, result) => {
         document.getElementById('common_signup_button').innerHTML = old_button;
         if (err){    
             null;
@@ -2306,8 +2299,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                           "verification_type": ${verification_type},
                           ${get_uservariables()}
                          }`;
-            common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/activate/${COMMON_GLOBAL['user_account_id']}?`, 
-                         'PUT', 0, json_data, null, null, (err, result) =>{    
+            FFB ('DB', `/user_account/activate/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 0, json_data, (err, result) => {
                 document.getElementById('common_user_verify_email').innerHTML = old_button;
                 if (err){    
                     return callBack(err, null);
@@ -2397,8 +2389,7 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             let json_data = `{"password":"${password}"}`;
 
-            common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/${COMMON_GLOBAL['user_account_id']}?`, 
-                         'DELETE', 1, json_data, null, null, (err, result) =>{    
+            FFB ('DB', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err, result) => {
                 document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
@@ -2417,19 +2408,19 @@ const user_function = (user_function, callBack) => {
     let user_id_profile = document.getElementById('common_profile_id').innerHTML;
     let json_data;
     let method;
-    let rest_path;
+    let path;
     let check_div;
     switch (user_function) {
         case 'FOLLOW':
             {
-                rest_path = '/user_account_follow';
+                path = '/user_account_follow';
                 json_data = '{"user_account_id":' + user_id_profile + '}';
                 check_div = document.getElementById('common_profile_follow');
                 break;
             }
         case 'LIKE':
             {
-                rest_path = '/user_account_like';
+                path = '/user_account_like';
                 json_data = '{"user_account_id":' + user_id_profile + '}';
                 check_div = document.getElementById('common_profile_like');
                 break;
@@ -2444,8 +2435,7 @@ const user_function = (user_function, callBack) => {
         } else {
             method = 'DELETE';
         }
-        common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}${rest_path}/${COMMON_GLOBAL['user_account_id']}?`, 
-                         method, 1, json_data, null, null, (err, result) =>{    
+        FFB ('DB', `${path}/${COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -2493,8 +2483,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.getElementById('common_dialogue_message').style.visibility = "hidden";
-            common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app/${user_account_id}/${app_id}?`, 
-                         'DELETE', 1, null, null, null, (err, result) =>{    
+            FFB ('DB', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 1, null, (err, result) => {
                 if (err)
                     null;
                 else{
@@ -2519,8 +2508,7 @@ const user_forgot = async () => {
     else{
         let old_button = document.getElementById('common_forgot_button').innerHTML;
         document.getElementById('common_forgot_button').innerHTML = APP_SPINNER;
-        common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/forgot?`,
-                     'PUT', 0, json_data, null, null, (err, result) =>{
+        FFB ('DB', `/user_account/forgot?`, 'PUT', 0, json_data, (err, result) => {
             document.getElementById('common_forgot_button').innerHTML = old_button;
             if (err)
                 null;
@@ -2561,9 +2549,7 @@ const updatePassword = () => {
         }
         let old_button = document.getElementById('common_user_new_password_icon').innerHTML;
         document.getElementById('common_user_new_password_icon').innerHTML = APP_SPINNER;
-
-        common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/password/${COMMON_GLOBAL['user_account_id']}?`,
-                     'PUT', 1, json_data, null, null, (err, result) =>{
+        FFB ('DB', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err, result) => {
             document.getElementById('common_user_new_password_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -2583,9 +2569,7 @@ const user_preference_save = async () => {
         "setting_preference_direction_id": "${document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id}",
         "setting_preference_arabic_script_id": "${document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id}"
         }`;
-
-        await common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 
-                    'PATCH', 1, json_data, null, null, (err, result) =>{
+        await FFB ('DB', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err, result) => {
             if (err)
                 null;
             else{
@@ -2596,8 +2580,7 @@ const user_preference_save = async () => {
     
 }
 const user_preference_get = async (callBack) => {
-    await common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 
-                 'GET', 1, null, null, null, (err, result) =>{
+    await FFB ('DB', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{
@@ -2675,8 +2658,7 @@ const Providers_init = async (function_event) => {
     let div = document.getElementById('identity_provider_login');
     let json;
     div.innerHTML = APP_SPINNER;
-    common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/identity_provider?`, 
-                 'GET', 0, null, null, null, (err, result) =>{
+    FFB ('DB', `/identityprovider?`, 'GET', 0, null, (err, result) => {
         if (err)
             div.innerHTML = '';
         else{
@@ -2702,21 +2684,19 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                   COMMON_GLOBAL['image_avatar_width'],
                   COMMON_GLOBAL['image_avatar_height']).then((profile_image)=>{
         let json;
-        let json_data =
-        `{
-        "app_id": ${COMMON_GLOBAL['app_id']},
-        "active": 1,
-        "identity_provider_id": ${identity_provider_id},
-        "provider_id":"${profile_id}",
-        "provider_first_name":"${profile_first_name}",
-        "provider_last_name":"${profile_last_name}",
-        "provider_image":"${window.btoa(profile_image)}",
-        "provider_image_url":"${profile_image_url}",
-        "provider_email":"${profile_email}",
-        ${get_uservariables()}
-        }`;
-        common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/provider/${profile_id}?`, 
-                    'PUT', 0, json_data, null, null, (err, result) =>{
+        let json_data =`{
+                            "app_id": ${COMMON_GLOBAL['app_id']},
+                            "active": 1,
+                            "identity_provider_id": ${identity_provider_id},
+                            "provider_id":"${profile_id}",
+                            "provider_first_name":"${profile_first_name}",
+                            "provider_last_name":"${profile_last_name}",
+                            "provider_image":"${window.btoa(profile_image)}",
+                            "provider_image_url":"${profile_image_url}",
+                            "provider_email":"${profile_email}",
+                            ${get_uservariables()}
+                        }`;
+        FFB ('DB', `/user_account/provider/${profile_id}?`, 'PUT', 0, json_data, (err, result) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -2946,6 +2926,110 @@ const map_update = async (longitude, latitude, zoom, text_place, timezone_text =
     })
 }
 /*----------------------- */
+/* FFB                    */
+/*----------------------- */
+const FFB = async (service, path, method, token_type, json_data, callBack) => {
+    let status;
+    let headers;
+    let encodedparameters;
+    let token;
+    let bff_path;
+    switch (token_type){
+        case 0:{
+            //data token
+            token = COMMON_GLOBAL['rest_dt'];
+            bff_path = COMMON_GLOBAL['rest_resource_bff'];
+            break;
+        }
+        case 1:{
+            //access token for users admin and superadmin
+            token = COMMON_GLOBAL['rest_at'];
+            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'])
+                bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/admin`;
+            else
+                bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/access`;
+            break;
+        }
+        case 2:{
+            //systemadmin token
+            token = COMMON_GLOBAL['rest_admin_at'];
+            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin`;
+            break;
+        }
+    }
+    if (json_data !='' && json_data !=null){
+        headers = {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                  };
+    }
+    else{
+        headers = {
+                    'Authorization': 'Bearer ' + token
+                  };
+    }
+    let options = {
+                    method: method,
+                    headers: headers,
+                    body: json_data
+                  };
+    path += `&lang_code=${COMMON_GLOBAL['user_locale']}`
+    encodedparameters = toBase64(path);
+    let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
+    //for accesstoken add parameter for authorization check
+    if (token_type==1)
+        url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
+    await fetch(url, options)
+    .then((response) => {
+        status = response.status;
+        return response.text();
+    })
+    .then((result) => {
+        switch (status){
+            case 200:{
+                //OK
+                callBack(null, result);
+                break;
+            }
+            case 400:{
+                //Bad request
+                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                callBack(result, null);
+                break;
+            }
+            case 404:{
+                //Not found
+                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                callBack(result, null);
+                break;
+            }
+            case 401:{
+                //Unauthorized, token expired
+                exception(COMMON_GLOBAL['exception_app_function'], result);
+                break;
+            }
+            case 403:{
+                //Forbidden, not allowed to login or register new user
+                show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
+                callBack(result, null);
+                break;
+            }
+            case 500:{
+                //Unknown error
+                show_message('EXCEPTION', null,null, result, COMMON_GLOBAL['app_id']);
+                callBack(result, null);
+                break;
+            }
+            case 503:{
+                //Service unavailable or other error in microservice
+                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                callBack(result, null);
+                break;
+            }
+        }
+    })
+}
+/*----------------------- */
 /* SERVICE BROADCAST      */
 /*----------------------- */
 const broadcast_init = () => {
@@ -3070,27 +3154,23 @@ const checkOnline = (div_icon_online, user_account_id) => {
 /*----------------------- */
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
-        let url;
         let tokentype;
-        let encodedparameters;
+        let path;
 
         if (COMMON_GLOBAL['system_admin']==1){
-            encodedparameters = toBase64(`/place/systemadmin?longitude=${longitude}&latitude=${latitude}`);
-            url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            path = `/place/systemadmin?longitude=${longitude}&latitude=${latitude}`;
             tokentype = 2;
         }
         else 
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                encodedparameters = toBase64(`/place/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/place/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`;
                 tokentype = 1;
             }
             else{
-                encodedparameters = toBase64(`/place?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;                      
+                path = `/place?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`;             
                 tokentype = 0;
             }
-        common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+        FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
             if (err)
                 resolve('');
             else{
@@ -3108,30 +3188,26 @@ const get_place_from_gps = async (longitude, latitude) => {
 const get_gps_from_ip = async () => {
 
     return new Promise((resolve)=>{
-        let url;
         let tokentype;
-        let encodedparameters;
+        let path;
         
         if (COMMON_GLOBAL['system_admin']==1 && COMMON_GLOBAL['rest_admin_at']){
             //system admin logged in use this token and path
-            encodedparameters = toBase64(`/ip/systemadmin?`);
-            url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            path = `/ip/systemadmin?`;
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'] && COMMON_GLOBAL['rest_at']){
                 //system admin logged in use this token and path
-                encodedparameters = toBase64(`/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`;
                 tokentype = 1;
             }
             else{
                 //not logged in or a user use this token and path
-                encodedparameters = toBase64(`/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;
+                path = `/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`;
                 tokentype = 0;
             }
-        common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+        FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
             if (err)
                 resolve(null);
             else{
@@ -3152,26 +3228,22 @@ const get_gps_from_ip = async () => {
 }
 const tzlookup = async (latitude, longitude) => {
     return new Promise((resolve, reject)=>{
-        let url;
+        let path;
         let tokentype;
-        let encodedparameters;
         if (COMMON_GLOBAL['system_admin']==1){
-            encodedparameters = toBase64(`/timezone/systemadmin?latitude=${latitude}&longitude=${longitude}`);
-            url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+            path = `/timezone/systemadmin?latitude=${latitude}&longitude=${longitude}`;
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                encodedparameters = toBase64(`/timezone/admin?latitude=${latitude}&longitude=${longitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/timezone/admin?latitude=${latitude}&longitude=${longitude}`;
                 tokentype = 1;
             }
             else{
-                encodedparameters = toBase64(`/timezone?latitude=${latitude}&longitude=${longitude}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}?service=geolocation&parameters=${encodedparameters}`;
+                path = `/timezone?latitude=${latitude}&longitude=${longitude}`;
                 tokentype = 0;
             }
-        common_fetch(url, 'GET', tokentype, null, null, null, (err, text_timezone) =>{
+        FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, text_timezone) => {
             resolve (text_timezone);
         })
     })
@@ -3180,9 +3252,7 @@ const tzlookup = async (latitude, longitude) => {
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
-    let encoded_parameters = toBase64(`/${countrycode}?app_user_id=${COMMON_GLOBAL['user_account_id']}`);
-    await common_fetch(`${COMMON_GLOBAL['rest_resource_bff']}?service=worldcities&parameters=${encoded_parameters}`, 
-                       'GET', 0, null, null, null, (err, result) =>{
+    await FFB ('WORLDCITIES', `/${countrycode}?app_user_id=${COMMON_GLOBAL['user_account_id']}`, 'GET', 0, null, (err, result) => {
         if (err)
             callBack(err, null);
         else{
@@ -3583,18 +3653,18 @@ const set_common_parameters = (app_id, parameter_name, parameter_value) => {
 const normal_start = async (ui) => {
     return new Promise((resolve)=>{
         document.title = COMMON_GLOBAL['app_name'];
-        let url= '';
+        let path= '';
         if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/app_parameter/admin/${COMMON_GLOBAL['app_id']}?`;
+            path = `/app_parameter/admin/${COMMON_GLOBAL['app_id']}?`;
         }
         else{
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/app_parameter/${COMMON_GLOBAL['app_id']}?`;
+            path = `/app_parameter/${COMMON_GLOBAL['app_id']}?`;
         }
         //get data token
         common_fetch_basic(0, null,  null, null, (err, result)=>{
             get_gps_from_ip().then(()=>{
                 //get parameters
-                common_fetch(url, 'GET', 0, null, null, null, (err, result) =>{
+                FFB ('DB', path, 'GET', 0, null, (err, result) => {
                     if (err)
                         null;
                     else{
@@ -3695,6 +3765,8 @@ export{/* GLOBALS*/
        map_setevent, map_setstyle, map_update_popup, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
+       /*FFB */
+       FFB,
        /* SERVICE BROADCAST */
        broadcast_init, maintenance_countdown, show_broadcast, show_broadcast_info, show_maintenance, reconnect,
        updateOnlineStatus, connectOnline, checkOnline,
