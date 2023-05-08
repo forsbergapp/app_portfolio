@@ -174,7 +174,9 @@ const checkAccessTokenCommon = (req, res, next) => {
                         //and if app_id=0 then check user is admin
                         import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
                             //check first req.query.proxy_ip if service used or if calling microservice direct req.ip
-                            checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.query.proxy_ip ?? req.ip, (err, result)=>{
+                            let check_ip;
+                            check_ip = req.query.proxy_ip ?? req.ip;
+                            checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), check_ip, (err, result)=>{
                                 if (err){
                                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
@@ -193,8 +195,8 @@ const checkAccessTokenCommon = (req, res, next) => {
                                         import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
                                                 createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                             `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.query.proxy_ip} accesstoken unauthorized`,
-                                                              req.query.proxy_ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                             `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${check_ip} accesstoken unauthorized`,
+                                                              check_ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                               res.statusCode, 
                                                               req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                                                     res.status(401).send({
@@ -476,50 +478,6 @@ const policy_directives = (callBack) => {
         callBack(null, result);
     })
 }
-const check_internet = async (app_id) => {
-    return await new Promise((resolve) => {
-        //test connection with localhost
-        //no need to specify other domain to test internet
-        let stack = new Error().stack;
-        import('node:dns').then(({resolve: dns_resolve}) => {
-            dns_resolve('localhost', 'A', (err, result) => {
-                /*  error if disconnected internet:
-                code:       'ECONNREFUSED'
-                errno:      undefined
-                hostname:   'localhost'
-                syscall:    'queryA'
-                message:    'queryA ECONNREFUSED localhost'
-                stack:      'Error: queryA ECONNREFUSED localhost\n    
-                                at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
-                                at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
-                
-                error if not found              
-                code:       'ENOTFOUND'
-                errno:      undefined
-                hostname:   'localhost'
-                syscall:    'queryA'
-                message:    'queryA ENOTFOUND localhost'
-                stack:      'Error: queryA ENOTFOUND localhost\n    
-                            at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
-                            at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
-                */
-                //use only resolve here, no reject to avoid .catch statement in calling function
-                if ((err) && err.code=='ECONNREFUSED') {
-                    
-                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                resolve(0);
-                            })
-                        });
-                    })
-                } else {
-                    resolve(1);
-                }
-            })
-        })
-    })
-}
 const check_request = (req, callBack) =>{
     let err = null;
     try {
@@ -536,4 +494,4 @@ const check_request = (req, callBack) =>{
 }
 export {access_control, checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
         checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, dataToken, accessToken, policy_directives, 
-        check_internet, check_request}
+        check_request}

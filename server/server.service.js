@@ -702,10 +702,28 @@ const serverExpressRoutes = async (app) => {
     //apps bff
     router.push(Router());
     router[i].use(serverRouterLog);
+    router[i].delete("/",  checkDataToken, BFF);
     router[i].get("/",  checkDataToken, BFF);
+    router[i].patch("/",  checkDataToken, BFF);
+    router[i].post("/",  checkDataToken, BFF);
+    router[i].put("/",  checkDataToken, BFF);
+    router[i].delete("/access",  checkAccessToken, BFF);
+    router[i].get("/access",  checkAccessToken, BFF);
+    router[i].patch("/access",  checkAccessToken, BFF);
+    router[i].post("/access",  checkAccessToken, BFF);
+    router[i].put("/access",  checkAccessToken, BFF);
+    router[i].delete("/admin",  checkAccessTokenAdmin, BFF);
     router[i].get("/admin",  checkAccessTokenAdmin, BFF);
+    router[i].patch("/admin",  checkAccessTokenAdmin, BFF);
+    router[i].post("/admin",  checkAccessTokenAdmin, BFF);
+    router[i].put("/admin",  checkAccessTokenAdmin, BFF);
+    router[i].delete("/systemadmin",  checkSystemAdmin, BFF);
     router[i].get("/systemadmin",  checkSystemAdmin, BFF);
-    router[i].get("/report", BFF_report);
+    router[i].patch("/systemadmin",  checkSystemAdmin, BFF);
+    router[i].post("/systemadmin",  checkSystemAdmin, BFF);
+    router[i].put("/systemadmin",  checkSystemAdmin, BFF);
+    
+    router[i].get("/reports", BFF_report);
     app.use('/apps/bff', router[i]);
     i++;
     //service db admin
@@ -730,7 +748,7 @@ const serverExpressRoutes = async (app) => {
     router[i].get("/",  checkDataToken, getApp);
     router[i].get("/admin",  checkAccessTokenAdmin, getAppsAdmin);
     router[i].put("/admin/:id",  checkAccessTokenAdmin, updateAppAdmin);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/app`, router[i]);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/apps`, router[i]);
     i++;
     //service db app_portfolio app category
     router.push(Router());
@@ -778,7 +796,7 @@ const serverExpressRoutes = async (app) => {
     router.push(Router());
     router[i].use(serverRouterLog);
     router[i].get("/", checkDataToken, getIdentityProviders);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/identity_provider`, router[i]);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/identityprovider`, router[i]);
     i++;
     //service db app_portfolio language locale
     router.push(Router());
@@ -804,7 +822,7 @@ const serverExpressRoutes = async (app) => {
     router[i].use(serverRouterLog);
     router[i].get("/",  checkDataToken, getSettings);
     router[i].get("/admin",  checkDataToken, getSettings);
-    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/setting`, router[i]);
+    app.use(`${rest_resource_service}/db${rest_resource_service_db_schema}/settings`, router[i]);
     i++;
     //service db app_portfolio user account
     router.push(Router());
@@ -917,7 +935,7 @@ const serverExpressRoutes = async (app) => {
     router.push(Router());
     router[i].use(serverRouterLog);
     router[i].get("/", getReport);
-    app.use(`${rest_resource_service}/report`, router[i]);
+    app.use(`${rest_resource_service}/reports`, router[i]);
     i++;
     //service worldcities
     router.push(Router());
@@ -947,7 +965,7 @@ const serverExpress = async () => {
             else
                 return true;
             }
-        app.use(compression({ filter: shouldCompress }))
+        app.use(compression({ filter: shouldCompress }));
         //configuration of Content Security Policies    
         policy_directives((err, result_directives)=>{
             if (err)
