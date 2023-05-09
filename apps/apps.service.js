@@ -526,6 +526,12 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
                         break;
                     }
+                    case 'SERVER':{
+                        // parameters ex:
+                        // /config...  /info
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        break;
+                    }
                     case 'DB':{
                         const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
                         switch (method){
