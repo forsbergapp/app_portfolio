@@ -637,7 +637,7 @@ const serverExpressRoutes = async (app) => {
     //service geolocation
     const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
     //service mail
-    const { getLogo } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
+    const { sendEmail } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
     //service report
     const { getReport } = await import(`file://${process.cwd()}${rest_resource_service}/report/report.controller.js`);
     //service worldcities
@@ -924,12 +924,14 @@ const serverExpressRoutes = async (app) => {
     router[i].get("/timezone/systemadmin", checkSystemAdmin, getTimezoneSystemAdmin);    
     app.use(`${rest_resource_service}/geolocation`, router[i]);
     i++;
-    //service mail
-    router.push(Router());
-    router[i].use(serverRouterLog);
-    router[i].get("/logo", getLogo);
-    app.use(`${rest_resource_service}/mail`, router[i]);
-    i++;
+     //service mail
+     router.push(Router());
+     router[i].use(serverRouterLog);
+     router[i].post("/", checkDataToken, sendEmail);
+     router[i].post("/signup", checkDataTokenRegistration, sendEmail);
+     router[i].post("/access", checkAccessToken, sendEmail);
+     app.use(`${rest_resource_service}/mail`, router[i]);
+     i++;
     //service report
     router.push(Router());
     router[i].use(serverRouterLog);
