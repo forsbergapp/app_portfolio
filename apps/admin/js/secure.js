@@ -247,7 +247,7 @@ const show_start = async (yearvalues) =>{
                         bar_color = 'rgb(197 227 255)';
 
                     for (let stat of chart_2) {
-                        html += `<div class='box2_barcol box2_barcol_display' style='width:${100/stat.length}%'>
+                        html += `<div class='box2_barcol box2_barcol_display' style='width:${100/chart_2.length}%'>
                                     <div class='box2_barcol_color' style='background-color:${bar_color};height:${+stat.amount/max_amount*100}%'></div>
                                     <div class='box2_barcol_legendX'>${stat.day}</div>
                                 </div>`;
