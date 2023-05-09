@@ -334,7 +334,7 @@ const get_apps = async () => {
             resolve (html);
         }
         else{
-            common.FFB ('DB', `/app/admin?`, 'GET', 1, null, (err, result) => {
+            common.FFB ('DB', `/apps/admin?`, 'GET', 1, null, (err, result) => {
                 if (err)
                     resolve();
                 else{
@@ -2725,7 +2725,7 @@ const show_config = async (config_nav=1) => {
 /*----------------------- */
 const show_installation = () =>{
     document.querySelector(`#menu_7_content`).innerHTML = common.APP_SPINNER;
-    common.FFB ('DB', `/db/admin/install?`, 'GET', 2, null, (err, result) => {
+    common.FFB ('DB', `/admin/install?`, 'GET', 2, null, (err, result) => {
         if (err)
             document.querySelector(`#menu_7_content`).innerHTML = '';
         else{
@@ -2762,7 +2762,7 @@ const show_installation = () =>{
                         document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                         let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
                         document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
-                        let path = `/db/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
+                        let path = `/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
                         common.FFB ('DB', path, 'POST', 2, null, (err, result) => {
                             document.querySelector(`#install_db_button_install`).innerHTML = old_html;
                             if (err == null){
@@ -2776,7 +2776,7 @@ const show_installation = () =>{
                         document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                         let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
                         document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB', `/db/admin/install?`, 'DELETE', 2, null, (err, result) => {
+                        common.FFB ('DB', `/admin/install?`, 'DELETE', 2, null, (err, result) => {
                             document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
                             if (err == null){
                                 document.querySelector(`#install_db_icon`).classList.remove('installed');
@@ -2807,7 +2807,7 @@ const show_installation = () =>{
                             let json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
                             let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
                             document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
-                            common.FFB ('DB', `/db/admin/demo?`, 'POST', 2, json_data, (err, result) => {
+                            common.FFB ('DB', `/admin/demo?`, 'POST', 2, json_data, (err, result) => {
                                 document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
                                 if (err == null){
                                     let result_obj = JSON.parse(result);
@@ -2820,7 +2820,7 @@ const show_installation = () =>{
                     case 'install_demo_button_uninstall':{
                         let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
                         document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB', `/db/admin/demo?`, 'DELETE', 2, null, (err, result) => {
+                        common.FFB ('DB', `/admin/demo?`, 'DELETE', 2, null, (err, result) => {
                             document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
                             if (err == null){
                                 let result_obj = JSON.parse(result);
@@ -2850,7 +2850,7 @@ const show_db_info = async () => {
           }
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB', `/db/admin/DBInfo?`, 'GET', 2, null, (err, result) => {
+        await common.FFB ('DB', `/admin/DBInfo?`, 'GET', 2, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_8_content').innerHTML = '';
             else{
@@ -2874,7 +2874,7 @@ const show_db_info = async () => {
                         <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
                     document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB', `/db/admin/DBInfoSpace?`, 'GET', 2, null, (err, result) => {
+                    common.FFB ('DB', `/admin/DBInfoSpace?`, 'GET', 2, null, (err, result) => {
                         if (err)
                             document.getElementById('menu_8_db_info_space_detail').innerHTML = '';
                         else{
@@ -2917,7 +2917,7 @@ const show_db_info = async () => {
                                 </div>`;
                             }
                             document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                            common.FFB ('DB', `/db/admin/DBInfoSpaceSum?`, 'GET', 2, null, (err, result) => {
+                            common.FFB ('DB', `/admin/DBInfoSpaceSum?`, 'GET', 2, null, (err, result) => {
                                 if (err)
                                     null;
                                 else{
