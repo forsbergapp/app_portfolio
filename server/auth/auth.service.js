@@ -192,4 +192,43 @@ const check_internet = async () => {
         })
     })
 }
-export {block_ip_control, safe_user_agents, policy_directives, check_internet}
+const CreateDataToken = async (app_id, authorization, callBack)=>{
+    const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
+    const {default:{sign}} = await import("jsonwebtoken");
+    getParameters_server(app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
+        if (err) {
+            callBack(err, null)
+        }
+        else{
+            let json = JSON.parse(JSON.stringify(result));
+            let db_APP_REST_CLIENT_ID;
+            let db_APP_REST_CLIENT_SECRET;
+            let db_SERVICE_AUTH_TOKEN_DATA_SECRET;
+            let db_SERVICE_AUTH_TOKEN_DATA_EXPIRE;
+            for (let i = 0; i < json.length; i++){
+                if (json[i].parameter_name=='APP_REST_CLIENT_ID')
+                    db_APP_REST_CLIENT_ID = json[i].parameter_value;
+                if (json[i].parameter_name=='APP_REST_CLIENT_SECRET')
+                    db_APP_REST_CLIENT_SECRET = json[i].parameter_value;
+                if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_DATA_SECRET')
+                    db_SERVICE_AUTH_TOKEN_DATA_SECRET = json[i].parameter_value;
+                if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_DATA_EXPIRE')
+                    db_SERVICE_AUTH_TOKEN_DATA_EXPIRE = json[i].parameter_value;
+            }                    
+            let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+            if (userpass == db_APP_REST_CLIENT_ID + ':' + db_APP_REST_CLIENT_SECRET) {
+                let jsontoken_dt;
+                jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
+                                    db_SERVICE_AUTH_TOKEN_DATA_SECRET, 
+                                    {
+                                    expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
+                                    });
+                callBack(null, jsontoken_dt);
+            } 
+            else{
+                callBack(null, null);
+            }
+        }
+    })
+}
+export {block_ip_control, safe_user_agents, policy_directives, check_internet, CreateDataToken}
