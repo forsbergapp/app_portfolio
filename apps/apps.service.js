@@ -513,12 +513,16 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         switch (method){
                             // parameters ex:
                             // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
+                            // /db/admin and /db/common have no db schema
                             case 'GET':
                             case 'POST':
                             case 'PUT':
                             case 'PATCH':
                             case 'DELETE':{
-                                path = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
+                                if (parameters.startsWith('/admin'))
+                                    path = `${rest_resource_service}/db${parameters}&app_id=${app_id}`;
+                                else
+                                    path = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
                                 break;
                             }
                             default:{
@@ -540,13 +544,13 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                                     let params = parameters.split('?')[1].split('&');
                                     //if ip parameter does not exist
                                     if (params.filter(parm=>parm.includes('ip=')).length==0 )
-                                        params.push(`&ip=${ip}`);
+                                        params.push(`ip=${ip}`);
                                     else{
                                         //if empty ip parameter
                                         if (params.filter(parm=>parm == 'ip=').length==1)
                                             params.map(parm=>parm = parm.replace('ip=', `ip=${ip}`));
                                     }
-                                    parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += param)}`;
+                                    parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                                 }
                                 path = `${rest_resource_service}/geolocation${parameters}&app_id=${app_id}`
                             }
