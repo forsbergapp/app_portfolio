@@ -110,6 +110,8 @@ const BFF = async (req, res) =>{
         let decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
         let log_result=false;
         const service_called = req.query.service.toUpperCase();
+        if (service_called=='MAIL')
+            log_result=true;
         let parameters;
         if (req.query.user_account_logon_user_account_id)
             parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`

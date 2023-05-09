@@ -1,14 +1,64 @@
 const service = await import("./user_account.service.js");
 const { default: {genSaltSync, hashSync, compareSync} } = await import("bcryptjs");
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 const { getMessage } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/message_translation/message_translation.service.js`);
 const { createUserAccountApp } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_app/user_account_app.service.js`);
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_event/user_account_event.service.js`);
 const { insertUserAccountLogon } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`);
 const { getParameter } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
-const { sendEmail } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
+
 const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
 
+const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, 
+                             ip, authorization, headers_user_agent, headers_accept_language, callBack) => {
+    const { createMail, BFF } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    createMail(app_id, 
+        {
+            "emailtype":        emailtype,
+            "host":             host,
+            "app_user_id":      userid,
+            "verificationCode": verification_code,
+            "to":               email,
+        }).then((email)=>{
+            let path;
+            switch (parseInt(emailtype)){
+                case 1:{
+                    //1=SIGNUP
+                    //not logged in
+                    //has middleware for signup that checks if signup is enabled
+                    path = '/signup?';
+                    break;
+                }
+                case 2:{
+                    //2=UNVERIFIED
+                    //logged in
+                    path = '/access?';
+                    break;
+                }
+                case 3:{
+                    //3=PASSWORD RESET (FORGOT)
+                    //not logged in
+                    path = '/';
+                    break;
+                }
+                case 4:{
+                    //4=CHANGE EMAIL
+                    //logged in
+                    path = '/access?';
+                    break;
+                }
+            }
+            BFF(app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email).then(()=>{
+                callBack(null, result_sendemail);
+            })
+            .catch((error)=>{
+                callBack(error, null);
+            })
+        })
+        .catch((error)=>{
+            callBack(error, null);
+        })
+}
 const getUsersAdmin = (req, res) => {
     service.getUsersAdmin(req.query.app_id, req.query.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
         if (err) {
@@ -113,17 +163,11 @@ const userSignup = (req, res) => {
             }
             else{
                 if (req.body.provider_id == null ) {
+                    //send email for local users only
                     getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
-                        //send email for local users only
-                        const emailData = {
-                            lang_code : req.query.lang_code,
-                            app_user_id : results.insertId,
-                            emailType : parameter_value,
-                            toEmail : req.body.email,
-                            verificationCode : req.body.verification_code
-                        }
                         //send email SIGNUP
-                        sendEmail(req, emailData, (err, result_sendemail) => {
+                        sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], results.insertId, req.body.verification_code, req.body.email, 
+                                      req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                             if (err) {
                                 //return res from userSignup
                                 return res.status(500).send(
@@ -272,15 +316,9 @@ const passwordResetUser = (req, res) => {
                                                 );
                                             else{
                                                 getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
-                                                    const emailData = {
-                                                        lang_code : req.query.lang_code,
-                                                        app_user_id : results.id,
-                                                        emailType : parameter_value,
-                                                        toEmail : email,
-                                                        verificationCode : new_code
-                                                    }
                                                     //send email PASSWORD_RESET
-                                                    sendEmail(req, emailData, (err, result_sendemail) => {
+                                                    sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], results.id, new_code, email, 
+                                                                  req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                                                         if (err) {
                                                             return res.status(500).send(
                                                                 err
@@ -529,15 +567,9 @@ const updateUserLocal = (req, res) => {
                                     if (results_update){
                                         if (send_email){
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
-                                                const emailData = {
-                                                    lang_code : req.query.lang_code,
-                                                    app_user_id : req.params.id,
-                                                    emailType : parameter_value,
-                                                    toEmail : req.body.new_email,
-                                                    verificationCode : req.body.verification_code
-                                                }
                                                 //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                                sendEmail(req, emailData, (err, result_sendemail) => {
+                                                sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], req.params.id, req.body.verification_code, req.body.new_email, 
+                                                              req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                                                     if (err) {
                                                         return res.status(500).send(
                                                             err
@@ -885,15 +917,9 @@ const userLogin = (req, res) => {
                                             );
                                         else{
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
-                                                const emailData = {
-                                                    lang_code : req.query.lang_code,
-                                                    app_user_id : results.id,
-                                                    emailType : parameter_value,
-                                                    toEmail : results.email,
-                                                    verificationCode : new_code
-                                                }
                                                 //send email UNVERIFIED
-                                                sendEmail(req, emailData, (err, result_email) => {
+                                                sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], results.id, new_code, results.email, 
+                                                              req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                                                     if (err) {
                                                         return res.status(500).send(
                                                             err
