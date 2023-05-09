@@ -201,14 +201,15 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
                         if (err)
                             callBack(err, null);
                         else{
-                            client.app_role_id = result_app_role.app_role_id;
-                            client.app_role_icon = result_app_role.icon;
+                            if (result_app_role){
+                                client.app_role_id = result_app_role.app_role_id;
+                                client.app_role_icon = result_app_role.icon;
+                            }
                             if (i== connected_clients_no_res.length - 1) 
                                 sort_and_return();
                             else
                                 i++;
                         }
-                        
                     })
                 })
             })
