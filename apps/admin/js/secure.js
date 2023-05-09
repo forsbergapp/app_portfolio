@@ -473,7 +473,7 @@ const set_broadcast_type = () => {
 const check_maintenance = async () => {
     if (admin_token_has_value()){
         let json;
-        await common.common_fetch('/server/config/systemadmin/maintenance?', 'GET', 2, null, null, null, (err, result) =>{
+        await common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'GET', 2, null, (err, result) => {
             if (err)
                 null;
             else{
@@ -496,7 +496,7 @@ const set_maintenance = () => {
         let json_data = `{
                             "value": ${check_value}
                          }`;
-        common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, null, null, (err, result) =>{
+        common.FFB ('SERVER', `/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, (err, result) => {
             null;
         })
     }
@@ -1130,7 +1130,7 @@ const button_save = async (item) => {
                                 "SERVICE_AUTH":${config_json[1]},
                                 "SERVICE_BROADCAST":${config_json[2]},
                                 "SERVICE_DB":${config_json[3]},
-                                "SERVICE_LOG":${config_json[4]}}
+                                "SERVICE_LOG":${config_json[4]}
                             }`;
                 }
                 //no fetched from end of item name list_config_nav_X
@@ -1142,15 +1142,15 @@ const button_save = async (item) => {
                 else{
                     if (config_no == 1)
                         json_data = `{"config_no":   ${config_no},
-                                    "config_json": ${JSON.stringify(config_create_server_json())}}`;
+                                      "config_json": ${config_create_server_json()}}`;
                     else
                         json_data = `{"config_no":   ${config_no},
-                                    "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
-                    json_data = JSON.stringify(JSON.parse(json_data), undefined, 2);
+                                      "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
+                    let json_object = JSON.parse(json_data);
+                    json_data = JSON.stringify(json_object, undefined, 2);
                     let old_button = document.getElementById(item).innerHTML;
                     document.getElementById(item).innerHTML = common.APP_SPINNER;
-                    common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin?`,
-                        'PUT', 2, json_data, null, null,(err, result) =>{
+                    common.FFB ('SERVER', `/config/systemadmin?`, 'PUT', 2, json_data, (err, result) => {
                         document.getElementById(item).innerHTML = old_button;
                     })
                 }
@@ -1517,7 +1517,7 @@ const show_monitor = async (yearvalues) =>{
     document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
 
     const init_monitor = () =>{
-        let url;
+        let path;
         let token_type = '';
         common.map_init(APP_GLOBAL['module_leaflet_map_container'],
                         common.COMMON_GLOBAL['module_leaflet_style'],
@@ -1548,14 +1548,14 @@ const show_monitor = async (yearvalues) =>{
                                 common.COMMON_GLOBAL['module_leaflet_jumpto']);
             
             if (common.COMMON_GLOBAL['system_admin']==1){
-                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                path  = `/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
                 token_type = 2;
             }
             else{
-                url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                path  = `/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
                 token_type = 1;
-            }                                            
-            common.common_fetch(url, 'GET', token_type, null, null, null, (err, result_limit) =>{
+            }      
+            common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {
                 if (err)
                     null;
                 else{
@@ -2639,10 +2639,8 @@ const show_server_config = () =>{
     nav_click(document.getElementById('list_config_server_title'));
 }
 const show_config = async (config_nav=1) => {
-    let url;
     document.getElementById(`list_config`).innerHTML = common.APP_SPINNER;
-    url  = `${common.COMMON_GLOBAL['rest_resource_server']}/config/systemadmin/saved?config_type_no=${config_nav}`;
-    await common.common_fetch(url, 'GET', 2, null, null, null, (err, result) =>{
+    await common.FFB ('SERVER', `/config/systemadmin/saved?config_type_no=${config_nav}`, 'GET', 2, null, (err, result) => {
         if (err)
             document.getElementById(`list_config`).innerHTML = '';
         else{
@@ -2952,7 +2950,7 @@ const show_server_info = async () => {
             const x = Math.pow(10,2);
             return Math.round(num * x) / x;
           }
-        await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/info?`, 'GET', 2, null, common.COMMON_GLOBAL['common_app_id'], null, (err, result) =>{
+        await common.FFB ('SERVER', `/info?`, 'GET', 2, null, (err, result) => {
             if (err)
                 null;
             else{         
