@@ -3183,6 +3183,8 @@ const set_globals = async (parameters) => {
     //client credentials
     COMMON_GLOBAL['app_rest_client_id'] = parameters.app_rest_client_id;
     COMMON_GLOBAL['app_rest_client_secret'] = parameters.app_rest_client_secret;
+    COMMON_GLOBAL['rest_dt'] = parameters.app_datatoken;
+
     //set users app role
     COMMON_GLOBAL['user_app_role_id'] = parameters.app_role_id;
     //system admin
@@ -3508,40 +3510,32 @@ const normal_start = async (ui) => {
         else{
             path = `/app_parameter/${COMMON_GLOBAL['app_id']}?`;
         }
-        //get data token
-        FFB ('AUTH', `/auth?`, 'POST', 4, null, (err, result_token) => {
-            if (err)
-                null;
-            else{
-                COMMON_GLOBAL['rest_dt'] = JSON.parse(result_token).token_dt;
-                get_gps_from_ip().then(()=>{
-                    //get parameters
-                    FFB ('DB', path, 'GET', 0, null, (err, result) => {
-                        if (err)
-                            null;
-                        else{
-                            let global_app_parameters = [];
-                            let json = JSON.parse(result);
-                            for (let i = 0; i < json.data.length; i++) {
-                                //set common parameters
-                                if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
-                                    set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                                //return all parameters for admin app and for other apps all except admin app id parameters
-                                if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
-                                    json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
-                                    global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
-                                                                            "parameter_name":"${json.data[i].parameter_name}",
-                                                                            "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
-                            }
-                            if (ui == true){
-                                assign_icons();
-                                set_events();
-                            }            
-                            resolve(global_app_parameters);
-                        }
-                    })
-                })
-            }
+        get_gps_from_ip().then(()=>{
+            //get parameters
+            FFB ('DB', path, 'GET', 0, null, (err, result) => {
+                if (err)
+                    null;
+                else{
+                    let global_app_parameters = [];
+                    let json = JSON.parse(result);
+                    for (let i = 0; i < json.data.length; i++) {
+                        //set common parameters
+                        if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
+                            set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
+                        //return all parameters for admin app and for other apps all except admin app id parameters
+                        if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
+                            json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
+                            global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
+                                                                    "parameter_name":"${json.data[i].parameter_name}",
+                                                                    "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
+                    }
+                    if (ui == true){
+                        assign_icons();
+                        set_events();
+                    }            
+                    resolve(global_app_parameters);
+                }
+            })
         })
     })    
 }
