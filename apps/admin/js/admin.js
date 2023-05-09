@@ -83,43 +83,31 @@ const admin_login = async () => {
                 return;
             }
         }
-        let status;
         let json;
-        fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/auth/admin`,
-            {
-                method: 'POST',
-                headers: {
-                    'Authorization': 'Basic ' + window.btoa(document.getElementById("system_admin_login_username_input").value + ':' + document.getElementById("system_admin_login_password_input").value)
-                }
-            })
-            .then((response) => {
-                status = response.status;
-                return response.text();
-            })
-            .then((result_login) => {
-                document.getElementById('admin_login_button').innerHTML = old_button;
-                if (status == 200) {
-                    json = JSON.parse(result_login);
-                    common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
-                    common.COMMON_GLOBAL['system_admin'] = 1;
-                    common.updateOnlineStatus();
-                    common.dialogue_close('dialogue_admin_login').then(() => {
-                        document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
-                        document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
-                        document.querySelector('#menu').style.visibility = 'visible';
-                        document.querySelector('#common_user_preferences').style.display = 'none';
-                        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-                        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                        document.getElementById('common_dialogue_login').style.visibility = 'hidden';
-                        clear_login();
-                        document.getElementById('admin_secure').style.visibility = 'visible';
-                        app_secure.init();
-                    })
-                }
-                else {
-                    common.show_message('EXCEPTION', null, null, result_login, common.COMMON_GLOBAL['app_id']);
-                }
-            })
+        common.FFB ('AUTH', `/auth/admin?`, 'POST', 5, `{"username": "${document.getElementById("system_admin_login_username_input").value}",
+                                                        "password": "${document.getElementById("system_admin_login_password_input").value}"}`, (err, result_login) => {
+            document.getElementById('admin_login_button').innerHTML = old_button;
+            if (err)
+                common.show_message('EXCEPTION', null, null, result_login, common.COMMON_GLOBAL['app_id']);
+            else{
+                json = JSON.parse(result_login);
+                common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
+                common.COMMON_GLOBAL['system_admin'] = 1;
+                common.updateOnlineStatus();
+                common.dialogue_close('dialogue_admin_login').then(() => {
+                    document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
+                    document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
+                    document.querySelector('#menu').style.visibility = 'visible';
+                    document.querySelector('#common_user_preferences').style.display = 'none';
+                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                    document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+                    clear_login();
+                    document.getElementById('admin_secure').style.visibility = 'visible';
+                    app_secure.init();
+                })
+            }
+        })
     }
     else {
         await common.user_login(document.getElementById('admin_login_username_input').value,
