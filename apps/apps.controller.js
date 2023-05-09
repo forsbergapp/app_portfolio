@@ -115,7 +115,7 @@ const BFF = async (req, res) =>{
             parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`
         else
             parameters = decodedparameters;
-        service.BFF(req.query.app_id, service_called, parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["accept-language"], req.body)
+        service.BFF(req.query.app_id, service_called, parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], req.body)
         .then(result_service => {
             //log INFO to module log and to files
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
