@@ -1,7 +1,7 @@
 const service = await import("./app_role.service.js");
 
 const getAppRoleAdmin = (req, res) => {
-	service.getAppRoleAdmin(req.query.app_id, req.query.id, req.query.lang_code, (err, results) =>{
+	service.getAppRoleAdmin(req.query.app_id, req.query.id, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
