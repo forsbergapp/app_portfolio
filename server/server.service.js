@@ -965,6 +965,7 @@ const serverExpress = async () => {
             else
                 return true;
             }
+        app.set('trust proxy', true);
         app.use(compression({ filter: shouldCompress }));
         //configuration of Content Security Policies    
         policy_directives((err, result_directives)=>{

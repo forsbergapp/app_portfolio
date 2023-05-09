@@ -1,5 +1,5 @@
 const https = await import('node:https');
-const service_request = async (hostname, path, method, timeout, authorization, language, body) =>{
+const service_request = async (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
         //implement CLIENT_ID and CLIENT_SECRET so microservice can only be called from server
         //and not directly from apps
@@ -11,17 +11,19 @@ const service_request = async (hostname, path, method, timeout, authorization, l
         let headers;
         if (method == 'GET')
             headers = {
-                'User-Agent': 'Server',
-                'Accept-Language': language,
-                'Authorization': authorization
+                'User-Agent': headers_user_agent,
+                'Accept-Language': headers_accept_language,
+                'Authorization': authorization,
+                'X-Forwarded-For': client_ip
             };
         else
             headers = {
-                'User-Agent': 'Server',
-                'Accept-Language': language,
+                'User-Agent': headers_user_agent,
+                'Accept-Language': headers_accept_language,
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(body),
-                'Authorization': authorization
+                'Authorization': authorization,
+                'X-Forwarded-For': client_ip
             };
 
         
@@ -62,11 +64,11 @@ class CircuitBreaker {
         this.cooldownPeriod = 10;
         this.requestTimetout = 10;
     }
-    async callService(hostname, path, service, method, authorization, language, body){
+    async callService(hostname, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
         if (!this.canRequest(service))
             return false;
         try {
-            const response = await service_request (hostname, path, method, this.requestTimetout * 1000, authorization, language, body);
+            const response = await service_request (hostname, path, method, this.requestTimetout * 1000, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {
