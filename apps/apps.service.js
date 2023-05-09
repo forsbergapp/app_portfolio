@@ -508,6 +508,24 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
             try {
                 let path;
                 switch (service){
+                    case 'AUTH':{
+                        // parameters ex:
+                        // /auth /auth/admin
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        break;
+                    }
+                    case 'BROADCAST':{
+                        // parameters ex:
+                        // /broadcast...
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        break;
+                    }
+                    case 'LOG':{
+                        // parameters ex:
+                        // /log...
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        break;
+                    }
                     case 'DB':{
                         const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
                         switch (method){
