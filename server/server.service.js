@@ -413,7 +413,6 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
             if (first_time){
                 if (config_no == 1){
                     //add metadata to server config
-                    config_json = JSON.parse(config_json);
                     config_json['configuration'] = app_portfolio_title;
                     config_json['comment'] = '';
                     config_json['created'] = new Date().toISOString();
@@ -444,7 +443,6 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                                     else{
                                         if (config_no == 1){
                                             //add metadata to server config
-                                            config_json = JSON.parse(config_json);
                                             config_json['configuration'] = app_portfolio_title;
                                             config_json['comment'] = '';
                                             config_json['created'] = JSON.parse(old_config)['created'];

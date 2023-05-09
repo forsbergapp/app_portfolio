@@ -304,106 +304,6 @@ const typewatch = (callBack, ...parameter) =>{
         callBack(...parameter);
     }, 500);
 };
-const common_fetch = async (url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) => {
-    let status;
-    let headers;
-    let token;
-    switch (token_type){
-        case 0:{
-            //data token
-            token = COMMON_GLOBAL['rest_dt'];
-            break;
-        }
-        case 1:{
-            //access token for users admin and superadmin
-            token = COMMON_GLOBAL['rest_at'];
-            break;
-        }
-        case 2:{
-            //systemadmin token
-            token = COMMON_GLOBAL['rest_admin_at'];
-            break;
-        }
-    }
-    if (json_data !='' && json_data !=null){
-        headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                  };
-    }
-    else{
-        headers = {
-                    'Authorization': 'Bearer ' + token
-                  };
-    }
-    let fetch_parameters = {
-                                method: method,
-                                headers: headers,
-                                body: json_data
-                           };
-    let app_id;
-    if (app_id_override !=null)
-        app_id = app_id_override;
-    else{
-        app_id = COMMON_GLOBAL['app_id'];
-    }
-    
-    let lang_code;
-    if (lang_code_override != null && lang_code_override !='')
-       lang_code = lang_code_override;
-    else
-       lang_code = COMMON_GLOBAL['user_locale'];
-    let url = url_parameters +
-              '&app_id=' + app_id + 
-              '&lang_code=' + lang_code;
-    //for accesstoken add parameter for authorization check
-    if (token_type==1)
-        url = url + '&user_account_logon_user_account_id=' + COMMON_GLOBAL['user_account_id'];
-    await fetch(url, 
-                fetch_parameters)
-    .then((response) => {
-        status = response.status;
-        return response.text();
-    })
-    .then((result) => {
-        switch (status){
-            case 200:{
-                //OK
-                callBack(null, result);
-                break;
-            }
-            case 400:{
-                //Bad request
-                show_message('INFO', null,null, result, app_id);
-                callBack(result, null);
-                break;
-            }
-            case 404:{
-                //Not found
-                show_message('INFO', null,null, result, app_id);
-                callBack(result, null);
-                break;
-            }
-            case 401:{
-                //Unauthorized, token expired
-                exception(COMMON_GLOBAL['exception_app_function'], result);
-                break;
-            }
-            case 403:{
-                //Forbidden, not allowed to login or register new user
-                show_message('INFO', null,null, JSON.parse(result).message, app_id);
-                callBack(result, null);
-                break;
-            }
-            case 500:{
-                //Unknown error
-                show_message('EXCEPTION', null,null, result, app_id);
-                callBack(result, null);
-                break;
-            }
-        }
-    })
-}
 const toBase64 = (str) => {
     return window.btoa(unescape(encodeURIComponent(str)));
 }	
@@ -3694,7 +3594,7 @@ const init_common = async (parameters, callBack) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       getGregorian, checkconnected, typewatch, common_fetch, toBase64, fromBase64, common_translate_ui,
+       getGregorian, checkconnected, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, format_json_date, mobile, parseJwt, checkbox_value, checkbox_checked,image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar, boolean_to_number, number_to_boolean,
        inIframe, show_image, getHostname, check_input, get_uservariables, SearchAndSetSelectedIndex,
