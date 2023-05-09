@@ -35,7 +35,7 @@ const admin_logoff_app = (error) => {
         });
         document.getElementById('dialogue_admin_login').style.visibility = 'visible';
         document.querySelector('#menu').style.visibility = 'hidden';
-        document.getElementById('menu_open').outerHTML = `<div id='menu_open' class='common_dialogue_button'></div>`;
+        document.querySelector('#menu_open').style.visibility = 'hidden';
         document.getElementById('admin_secure').style.visibility = 'hidden';
     }
     if (common.COMMON_GLOBAL['system_admin'] == 1) {
@@ -98,6 +98,7 @@ const admin_login = async () => {
                     document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
                     document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
                     document.querySelector('#menu').style.visibility = 'visible';
+                    document.querySelector('#menu_open').style.visibility = 'visible';
                     document.querySelector('#common_user_preferences').style.display = 'none';
                     document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
                     document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
@@ -116,6 +117,7 @@ const admin_login = async () => {
                 if (err == null) {
                     common.dialogue_close('dialogue_admin_login').then(() => {
                         document.querySelector('#menu').style.visibility = 'visible';
+                        document.querySelector('#menu_open').style.visibility = 'visible';
                         document.querySelector('#common_user_preferences').style.display = 'block';
                         common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img'));
                         document.getElementById('common_user_menu_username').innerHTML = result.username;
