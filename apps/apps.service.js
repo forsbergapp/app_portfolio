@@ -497,7 +497,7 @@ const getUserPreferences = (app_id, locale) => {
     })
 }
 //APP BFF functions
-const BFF = async (app_id, service, parameters, ip, hostname, method, authorization, accept_language, data) => {
+const BFF = async (app_id, service, parameters, ip, hostname, method, authorization, headers_user_agent, headers_accept_language, data) => {
     const { check_internet } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
     let result_internet = await check_internet();
@@ -506,10 +506,10 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
     return new Promise((resolve, reject) => {
         if (result_internet==1){
             try {
+                let path;
                 switch (service){
                     case 'DB':{
                         const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-                        let url = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}&proxy_ip=${ip}`;
                         switch (method){
                             // parameters ex:
                             // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
@@ -518,13 +518,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                             case 'PUT':
                             case 'PATCH':
                             case 'DELETE':{
-                                resolve(microservice_circuitbreak.callService(hostname,
-                                                                            url, 
-                                                                            service,
-                                                                            method,
-                                                                            authorization, 
-                                                                            accept_language, 
-                                                                            data));
+                                path = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}&proxy_ip=${ip}`;
                                 break;
                             }
                             default:{
@@ -554,14 +548,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                                     }
                                     parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += param)}`;
                                 }
-                                //replace input path 
-                                resolve(microservice_circuitbreak.callService(hostname,
-                                                                            `${rest_resource_service}/geolocation${parameters}&app_id=${app_id}&proxy_ip=${ip}`, 
-                                                                            service, 
-                                                                            method,
-                                                                            authorization, 
-                                                                            accept_language, 
-                                                                            data));
+                                path = `${rest_resource_service}/geolocation${parameters}&app_id=${app_id}`
                             }
                             else
                                 reject('service GEOLOCATION GET only');
@@ -573,13 +560,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         // ?&app_id=[id]&lang_code=en
                         log_result = true;
                         if (method=='POST')
-                            resolve(microservice_circuitbreak.callService( hostname,
-                                                                        `${rest_resource_service}/mail${parameters}&app_id=${app_id}&proxy_ip=${ip}`, 
-                                                                        service, 
-                                                                        method,
-                                                                        authorization, 
-                                                                        accept_language, 
-                                                                        data));
+                            path = `${rest_resource_service}/mail${parameters}&app_id=${app_id}`
                         else
                             reject('service MAIL POST only')
                         break;
@@ -598,14 +579,10 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                             });
                         }
                         else
-                            if (method=='GET')
-                                resolve(microservice_circuitbreak.callService(hostname,
-                                                                            `${rest_resource_service}/reports${parameters}&app_id=${app_id}&proxy_ip=${ip}`, 
-                                                                            service, 
-                                                                            method,
-                                                                            null, 
-                                                                            accept_language, 
-                                                                            data));
+                            if (method=='GET'){
+                                authorization = null;
+                                path = `${rest_resource_service}/reports${parameters}&app_id=${app_id}`
+                            }
                             else
                                 reject('service REPORT GET only')
                         break;
@@ -614,13 +591,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         // parameters ex:
                         // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
                         if (method=='GET')
-                            resolve(microservice_circuitbreak.callService(hostname,
-                                                                        `${rest_resource_service}/worldcities${parameters}&app_id=${app_id}&proxy_ip=${ip}`,
-                                                                        service, 
-                                                                        method,
-                                                                        authorization, 
-                                                                        accept_language, 
-                                                                        data));
+                            path = `${rest_resource_service}/worldcities${parameters}&app_id=${app_id}`
                         else
                             reject('service WORLDCITIES GET only')
                         break;
@@ -629,6 +600,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         reject(`service ${service} does not exist`);
                     }
                 }
+                resolve(microservice_circuitbreak.callService(hostname,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data));
             } catch (error) {
                 reject(error);
             }
