@@ -1834,6 +1834,7 @@ const user_login = async (username, password, callBack) => {
             json = JSON.parse(result);
             COMMON_GLOBAL['user_account_id'] = json.items[0].id;
             COMMON_GLOBAL['user_identity_provider_id'] = '';
+            COMMON_GLOBAL['user_app_role_id'] = json.items[0].app_role_id;
             COMMON_GLOBAL['rest_at']	= json.accessToken;
             updateOnlineStatus();
             user_preference_get((err, results) =>{
@@ -3185,8 +3186,6 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['app_rest_client_secret'] = parameters.app_rest_client_secret;
     COMMON_GLOBAL['rest_dt'] = parameters.app_datatoken;
 
-    //set users app role
-    COMMON_GLOBAL['user_app_role_id'] = parameters.app_role_id;
     //system admin
     COMMON_GLOBAL['system_admin'] = parameters.system_admin;
     COMMON_GLOBAL['system_admin_only'] = parameters.system_admin_only;
@@ -3554,7 +3553,6 @@ const init_common = async (parameters, callBack) => {
      gps_place:
      system_admin:
      system_admin_only:
-     app_role_id:
      global_rest_client_id: 
      global_rest_client_secret:
      rest_resource_server:
@@ -3567,7 +3565,6 @@ const init_common = async (parameters, callBack) => {
         set_globals(parameters);
     if (parameters.app_id == COMMON_GLOBAL['common_app_id']){
     	COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
-	    COMMON_GLOBAL['user_app_role_id'] = parameters.app_role_id;
         broadcast_init();
         if (parameters.system_admin==1){
             document.title = parameters.app_name;
