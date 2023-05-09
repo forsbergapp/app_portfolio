@@ -135,7 +135,7 @@ ul#admin_login_nav li{
 	vertical-align: sub;
 }
 #menu_open{
-	display: block;
+	visibility:hidden;
 	margin-inline-start: 20px;
 	height: 30px;
 }
