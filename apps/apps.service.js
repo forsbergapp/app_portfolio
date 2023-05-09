@@ -2,45 +2,110 @@ const microservice = await import(`file://${process.cwd()}/service/service.servi
 const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
 //APP EMAIL functions
-const getMail = (app_id, data, baseUrl) => {
+const createMail = async (app_id, data) =>{
+    /*data:
+    {
+        "emailtype":        [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
+        "host":             [host],
+        "app_user_id":      [user id],
+        "verificationCode": [verificationcode],
+        "to":               [to email]
+    }
+    */
+    const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
         let files= [];
-        //email type 1-4 implented are emails with verification code
-        if (parseInt(data.emailType)==1 || 
-            parseInt(data.emailType)==2 || 
-            parseInt(data.emailType)==3 ||
-            parseInt(data.emailType)==4){
+        let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+        let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+        let db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+        let db_SERVICE_MAIL_HOST;
+        let db_SERVICE_MAIL_PORT;
+        let db_SERVICE_MAIL_SECURE;
+        let db_SERVICE_MAIL_USERNAME;
+        let db_SERVICE_MAIL_PASSWORD;
+        //email type 1-4 implemented are emails with verification code
+        if (parseInt(data.emailtype)==1 || 
+            parseInt(data.emailtype)==2 || 
+            parseInt(data.emailtype)==3 ||
+            parseInt(data.emailtype)==4){
+
             files = [
-                ['MAIL', process.cwd() + '/apps/common/mail/mail.html'],
-                ['<MailHeader/>', process.cwd() + `/apps/app${app_id}/mail/mail_header_verification.html`],
-                ['<MailBody/>', process.cwd() + `/apps/app${app_id}/mail/mail_body_verification.html`]
+                ['MAIL', process.cwd() + '/apps/common/src/mail.html'],
+                ['<MailHeader/>', process.cwd() + `/apps/common/src/mail_header_verification.html`],
+                ['<MailBody/>', process.cwd() + `/apps/common/src/mail_body_verification.html`]
             ];
+            read_app_files(app_id, files, (err, email)=>{
+                if (err)
+                    reject(err);
+                else{                
+                    getParameters_server(app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), (err, result)=>{
+                        if (err) {                
+                            reject(err);
+                        }
+                        else{
+                            let json = JSON.parse(JSON.stringify(result));
+                            for (let i = 0; i < json.length; i++){
+                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_HOST')
+                                    db_SERVICE_MAIL_HOST = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_PORT')
+                                    db_SERVICE_MAIL_PORT = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_SECURE')
+                                    db_SERVICE_MAIL_SECURE = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_USERNAME')
+                                    db_SERVICE_MAIL_USERNAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_PASSWORD')
+                                    db_SERVICE_MAIL_PASSWORD = json[i].parameter_value;                                        
+                            }
+                            let email_from;
+                            switch (parseInt(data.emailtype)){
+                                case 1:{
+                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    break;
+                                }
+                                case 2:{
+                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    break;
+                                }
+                                case 3:{
+                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    break;
+                                }
+                                case 4:{
+                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    break;
+                                }
+                            }
+                            email = email.replace('<Logo/>',                `<img id='app_logo' src='/apps/common/images/logo.png'>`);
+                            email = email.replace('<Verification_code/>',   data.verificationCode);
+                            email = email.replace('<Footer/>',              `<a target='_blank' href='https://${data.host}'>${data.host}</a>`);
+                            resolve ({
+                                "email_host":         db_SERVICE_MAIL_HOST,
+                                "email_port":         db_SERVICE_MAIL_PORT,
+                                "email_secure":       db_SERVICE_MAIL_SECURE,
+                                "email_auth_user":    db_SERVICE_MAIL_USERNAME,
+                                "email_auth_pass":    db_SERVICE_MAIL_PASSWORD,
+                                "from":               email_from,
+                                "to":                 data.to,
+                                "subject":            "❂❂❂❂❂❂",
+                                "html":               email
+                            });
+                        }
+                    })
+                }
+            })
         }
-        read_app_files(app_id, files, (err, email)=>{
-            if (err)
-                reject(err);
-            else{
-                //email type 1-4 are emails with verification code
-                get_email_verification(app_id, data, email, baseUrl, data.lang_code, (err,email_verification)=>{
-                    if (err)
-                        reject(err);
-                    else
-                        resolve({"subject":         email_verification.subject, 
-                                    "html":            email_verification.email});    
-                })
-            }
-        })
+        else
+            reject ('not implemented');
     })
-}
-const get_email_verification = async (app_id, data, email, baseUrl, lang_code, callBack) => {
-    email = email.replace('<Logo/>', 
-                        `<img id='app_logo' src='${data.protocol}://${data.host}${baseUrl}/logo?id=${app_id}&uid=${data.app_user_id}&et=${data.emailType}'>`);
-    email = email.replace('<Verification_code/>', 
-                        `${data.verificationCode}`);
-    email = email.replace('<Footer/>', 
-                        `<a target='_blank' href='${data.protocol}://${data.host}'>${data.protocol}://${data.host}</a>`);
-    callBack(null, {"subject": '❂❂❂❂❂❂',
-                    "email": email});
 }
 //APP ROUTER functions
 const getInfo = async (app_id, info, lang_code, callBack) => {
@@ -574,7 +639,6 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                     case 'MAIL':{
                         // parameters ex:
                         // ?&app_id=[id]&lang_code=en
-                        log_result = true;
                         if (method=='POST')
                             path = `${rest_resource_service}/mail${parameters}&app_id=${app_id}`
                         else
@@ -626,7 +690,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
     })
 }
 export {/*APP EMAIL functions*/
-        getMail, get_email_verification,
+        createMail,
         /*APP ROUTER functiontions */
         getInfo, check_app_subdomain,
         /*APP functions */
