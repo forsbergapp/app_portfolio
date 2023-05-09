@@ -557,7 +557,7 @@ const serverExpressRoutes = async (app) => {
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //auth
-    const { dataToken, checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
+    const { CreateDataToken, checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
             checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
     const { authSystemAdmin, checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
@@ -663,7 +663,7 @@ const serverExpressRoutes = async (app) => {
     //auth
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].post("/", dataToken);
+    router[i].post("/", CreateDataToken);
     app.use(`${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/auth`, router[i]);
     i++;
     //auth admin
