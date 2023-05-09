@@ -286,7 +286,6 @@ const get_module_with_init = async (app_id,
             ui: ui,
             system_admin: system_admin,
             system_admin_only: system_admin_only,
-            app_role_id: '',
             app_rest_client_id: '',
             app_rest_client_secret: '',
             app_datatoken: '',
@@ -304,7 +303,6 @@ const get_module_with_init = async (app_id,
     }
     else{
         const { getAppStartParameters } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
-        const { getAppRole } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`);
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
@@ -322,7 +320,6 @@ const get_module_with_init = async (app_id,
                         ui: ui,
                         system_admin: system_admin,
                         system_admin_only: 0,
-                        app_role_id: '',
                         app_rest_client_id: result[0].app_rest_client_id,
                         app_rest_client_secret: result[0].app_rest_client_secret,
                         app_datatoken: jstoken_dt,
@@ -333,25 +330,10 @@ const get_module_with_init = async (app_id,
                         rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
                         first_time: null
                     };
-                    if (system_admin==1){  
-                        module = module.replace(
-                                '<ITEM_COMMON_PARAMETERS/>',
-                                JSON.stringify(parameters));
-                        callBack(null, module);
-                    }
-                    else{
-                        getAppRole(app_id, user_account_id, (err, result_app_role)=>{
-                            if (err)
-                                callBack(err, null);
-                            else{
-                                parameters.app_role_id = result_app_role.app_role_id;
-                                module = module.replace(
-                                        '<ITEM_COMMON_PARAMETERS/>',
-                                        JSON.stringify(parameters));
-                                callBack(null, module);
-                            }
-                        })
-                    }
+                    module = module.replace(
+                            '<ITEM_COMMON_PARAMETERS/>',
+                            JSON.stringify(parameters));
+                    callBack(null, module);
                 })
             }
         })
