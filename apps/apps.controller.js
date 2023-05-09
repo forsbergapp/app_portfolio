@@ -166,4 +166,17 @@ const BFF_report = async (req, res) =>{
         });
     }
 }
-export{getApp, getAppAdmin, BFF, BFF_report}
+//backend for frontend auth with basic authorization and no middleware
+const BFF_auth = async (req, res) =>{
+    //check inparameters
+    if (req.query.service.toUpperCase()=='AUTH' && req.headers.authorization.toUpperCase().startsWith('BASIC'))
+        return BFF(req,res);
+    else{
+        //required parameters not provided
+        //use common app id to get message and use first lang_code form app or if missing use language in headers
+        return res.status(401).send({
+            message: '⛔'
+        });
+    }
+}
+export{getApp, getAppAdmin, BFF, BFF_report, BFF_auth}
