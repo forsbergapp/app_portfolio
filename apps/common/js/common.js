@@ -304,71 +304,6 @@ const typewatch = (callBack, ...parameter) =>{
         callBack(...parameter);
     }, 500);
 };
-const common_fetch_basic = async (token_type, json_data,  username, password, callBack) => {
-    let url;
-    let status;
-    if (token_type==0){
-        //data token
-        url = COMMON_GLOBAL['rest_resource_server'] + '/auth' + 
-              '?app_user_id=' + COMMON_GLOBAL['user_account_id'] +
-              '&app_id=' + COMMON_GLOBAL['app_id'] + 
-              '&lang_code=' + COMMON_GLOBAL['user_locale'];
-        username = COMMON_GLOBAL['app_rest_client_id'];
-        password = COMMON_GLOBAL['app_rest_client_secret'];
-    }
-    await fetch(url,
-                {method: 'POST',
-                 headers: {
-                            'Authorization': 'Basic ' + window.btoa(username + ':' + password)
-                          },
-                 body: json_data
-    })
-    .then((response) => {
-        status = response.status;
-        return response.text();
-    })
-    .then((result) => {
-        switch (status){
-            case 200:{
-                //OK
-                switch (token_type){
-                    case 0:{
-                        //data token
-                        COMMON_GLOBAL['rest_dt'] = JSON.parse(result).token_dt;
-                        break;
-                    }
-                }
-                callBack(null, result);
-                break;
-            }
-            case 400:{
-                //Bad request
-                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 401:{
-                //Unauthorized, wrong credentials
-                show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 404:{
-                //Not found
-                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 500:{
-                //Unknown error
-                show_message('EXCEPTION', null,null, result, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-        }
-    })
-}
-
 const common_fetch = async (url_parameters, method, token_type, json_data, app_id_override, lang_code_override, callBack) => {
     let status;
     let headers;
@@ -1188,41 +1123,45 @@ const lov_show = (lov, function_event) => {
     
     document.getElementById('common_dialogue_lov').style.visibility = 'visible';
     document.getElementById('common_lov_list').innerHTML = APP_SPINNER;
-    let url = '';
+    let path = '';
     let token_type = '';
     let lov_column_value='';
+    let service;
     switch (lov){
         case 'PARAMETER_TYPE':{
             document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_settings']  + ' ' + ICONS['app_type'];
             lov_column_value = 'parameter_type_text';            
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/parameter_type/admin?`;
+            path = `/parameter_type/admin?`;
+            service = 'DB';
             token_type = 1;
             break;
         }
         case 'SERVER_LOG_FILES':{
             document.getElementById('common_lov_title').innerHTML = ICONS['app_server'] + ' ' + ICONS['app_file_path'];
             lov_column_value = 'filename';
-            url = `${COMMON_GLOBAL['rest_resource_service']}/log/files?`;
+            path = `/log/files?`;
+            service = 'LOG';
             token_type = 2;
             break;
         }
         case 'APP_CATEGORY':{
             document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_type'];
             lov_column_value = 'app_category_text';
-            
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/app_category/admin?`;
+            path = `/app_category/admin?`;
+            service = 'DB';
             token_type = 1;
             break;
         }
         case 'APP_ROLE':{
             document.getElementById('common_lov_title').innerHTML = ICONS['app_role'];
             lov_column_value = 'icon';
-            url = `${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/app_role/admin?`;
+            path = `/app_role/admin?`;
+            service = 'DB';
             token_type = 1;
             break;
         }
     }
-    common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
+    FFB (service, path, 'GET', token_type, null, (err, result) => {
         if (err)
             document.getElementById('common_lov_list').innerHTML = '';
         else{
@@ -1987,9 +1926,6 @@ const user_login = async (username, password, callBack) => {
                     ${get_uservariables()}
                  }`;
 
-    //get user with username and password from REST API
-    //common_fetch(`${COMMON_GLOBAL['rest_resource_service']}/db${COMMON_GLOBAL['rest_resource_service_db_schema']}/user_account/login?`, 
-    //             'PUT', 0, json_data, null, null, (err, result) =>{
     FFB ('DB', `/user_account/login?`, 'PUT', 0, json_data, (err, result) => {
         if (err)
             return callBack(err, null);
@@ -2038,7 +1974,7 @@ const user_logoff = async () => {
     updateOnlineStatus();
     document.getElementById('common_profile_avatar_online_status').className='';
     //get new data token to avoid endless loop och invalid token
-    await common_fetch_basic(0, null,  null, null,  (err, result)=>{
+    await FFB ('AUTH', `/auth?`, 'POST', 4, null, (err, result) => {
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_new_password_clear();
@@ -2928,22 +2864,22 @@ const map_update = async (longitude, latitude, zoom, text_place, timezone_text =
 /*----------------------- */
 /* FFB                    */
 /*----------------------- */
-const FFB = async (service, path, method, token_type, json_data, callBack) => {
+const FFB = async (service, path, method, authorization_type, json_data, callBack) => {
     let status;
     let headers;
     let encodedparameters;
-    let token;
+    let authorization;
     let bff_path;
-    switch (token_type){
+    switch (authorization_type){
         case 0:{
-            //data token
-            token = COMMON_GLOBAL['rest_dt'];
+            //data token authorization check
+            authorization = `Bearer ${COMMON_GLOBAL['rest_dt']}`;
             bff_path = COMMON_GLOBAL['rest_resource_bff'];
             break;
         }
         case 1:{
-            //access token for users admin and superadmin
-            token = COMMON_GLOBAL['rest_at'];
+            //user admin and superadmin authorization
+            authorization = `Bearer ${COMMON_GLOBAL['rest_at']}`;
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'])
                 bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/admin`;
             else
@@ -2951,21 +2887,34 @@ const FFB = async (service, path, method, token_type, json_data, callBack) => {
             break;
         }
         case 2:{
-            //systemadmin token
-            token = COMMON_GLOBAL['rest_admin_at'];
+            //systemadmin authorization
+            authorization = `Bearer ${COMMON_GLOBAL['rest_admin_at']}`;
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin`;
+            break;
+        }
+        case 4:{
+            //data token authorization post
+            authorization = `Basic ${window.btoa(COMMON_GLOBAL['app_rest_client_id'] + ':' + COMMON_GLOBAL['app_rest_client_secret'])}`;
+            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
+            break;
+        }
+        case 5:{
+            //admin login authorization post
+            authorization = `Basic ${window.btoa(JSON.parse(json_data).username + ':' + JSON.parse(json_data).password)}`;
+            json_data = null;
+            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
             break;
         }
     }
     if (json_data !='' && json_data !=null){
         headers = {
                     'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
+                    'Authorization': authorization
                   };
     }
     else{
         headers = {
-                    'Authorization': 'Bearer ' + token
+                    'Authorization': authorization
                   };
     }
     let options = {
@@ -2977,7 +2926,7 @@ const FFB = async (service, path, method, token_type, json_data, callBack) => {
     encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
     //for accesstoken add parameter for authorization check
-    if (token_type==1)
+    if (authorization_type==1)
         url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
     await fetch(url, options)
     .then((response) => {
@@ -3103,9 +3052,9 @@ const reconnect = () => {
 }
 const updateOnlineStatus = () => {
     let token_type='';
-    let url='';
+    let path='';
     if (COMMON_GLOBAL['system_admin']==1){
-        url =   `${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/SystemAdmin`+ 
+        path =   `/broadcast/connection/SystemAdmin`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
@@ -3113,14 +3062,14 @@ const updateOnlineStatus = () => {
         token_type=2;
     }
     else{
-        url =   `${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection`+ 
+        path =   `/broadcast/connection`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
                 `&system_admin=${COMMON_GLOBAL['system_admin']}`
         token_type=0;
     }
-    common_fetch(url, 'PATCH', token_type, null, null, null, (err, result) =>{
+    FFB ('BROADCAST', path, 'PATCH', token_type, null, (err, result) => {
         null;
     })
 }
@@ -3141,8 +3090,7 @@ const connectOnline = (updateOnline=false) => {
     }
 }
 const checkOnline = (div_icon_online, user_account_id) => {
-    common_fetch(`${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/check/${user_account_id}?`, 
-                 'GET', 0, null, null, null, (err, result) =>{
+    FFB ('BROADCAST', `/broadcast/connection/check/${user_account_id}?`, 'GET', 0, null, (err, result) => {
         if (JSON.parse(result).online == 1)
             document.getElementById(div_icon_online).className = 'online';
         else
@@ -3661,34 +3609,39 @@ const normal_start = async (ui) => {
             path = `/app_parameter/${COMMON_GLOBAL['app_id']}?`;
         }
         //get data token
-        common_fetch_basic(0, null,  null, null, (err, result)=>{
-            get_gps_from_ip().then(()=>{
-                //get parameters
-                FFB ('DB', path, 'GET', 0, null, (err, result) => {
-                    if (err)
-                        null;
-                    else{
-                        let global_app_parameters = [];
-                        let json = JSON.parse(result);
-                        for (let i = 0; i < json.data.length; i++) {
-                            //set common parameters
-                            if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
-                                set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                            //return all parameters for admin app and for other apps all except admin app id parameters
-                            if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
-                                json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
-                                global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
-                                                                        "parameter_name":"${json.data[i].parameter_name}",
-                                                                        "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
+        FFB ('AUTH', `/auth?`, 'POST', 4, null, (err, result_token) => {
+            if (err)
+                null;
+            else{
+                COMMON_GLOBAL['rest_dt'] = JSON.parse(result_token).token_dt;
+                get_gps_from_ip().then(()=>{
+                    //get parameters
+                    FFB ('DB', path, 'GET', 0, null, (err, result) => {
+                        if (err)
+                            null;
+                        else{
+                            let global_app_parameters = [];
+                            let json = JSON.parse(result);
+                            for (let i = 0; i < json.data.length; i++) {
+                                //set common parameters
+                                if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
+                                    set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
+                                //return all parameters for admin app and for other apps all except admin app id parameters
+                                if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
+                                    json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
+                                    global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
+                                                                            "parameter_name":"${json.data[i].parameter_name}",
+                                                                            "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
+                            }
+                            if (ui == true){
+                                assign_icons();
+                                set_events();
+                            }            
+                            resolve(global_app_parameters);
                         }
-                        if (ui == true){
-                            assign_icons();
-                            set_events();
-                        }            
-                        resolve(global_app_parameters);
-                    }
+                    })
                 })
-            })
+            }
         })
     })    
 }
@@ -3741,7 +3694,7 @@ const init_common = async (parameters, callBack) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       getGregorian, checkconnected, typewatch, common_fetch_basic, common_fetch, toBase64, fromBase64, common_translate_ui,
+       getGregorian, checkconnected, typewatch, common_fetch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, format_json_date, mobile, parseJwt, checkbox_value, checkbox_checked,image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar, boolean_to_number, number_to_boolean,
        inIframe, show_image, getHostname, check_input, get_uservariables, SearchAndSetSelectedIndex,

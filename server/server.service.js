@@ -569,7 +569,7 @@ const serverExpressRoutes = async (app) => {
     const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
     
     //apps
-    const { BFF, BFF_report} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
+    const { BFF, BFF_report, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //service db admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, DBStart, DBStop, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}${rest_resource_service}/db/admin/admin.controller.js`);
     //service db app_portfolio app
@@ -724,6 +724,7 @@ const serverExpressRoutes = async (app) => {
     router[i].put("/systemadmin",  checkSystemAdmin, BFF);
     
     router[i].get("/reports", BFF_report);
+    router[i].post("/auth", BFF_auth);
     app.use('/apps/bff', router[i]);
     i++;
     //service db admin
