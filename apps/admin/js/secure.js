@@ -380,18 +380,17 @@ const sendBroadcast = () => {
                      "client_id_current": ${common.COMMON_GLOBAL['service_broadcast_client_ID']},
                      "broadcast_type" :"${broadcast_type}", 
                      "broadcast_message":"${broadcast_message}"}`;
-    let url='';
+    let path='';
     let token_type;
     if (common.COMMON_GLOBAL['system_admin']==1){
-        url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/message/SystemAdmin?`;
+        path = `/broadcast/message/SystemAdmin?`;
         token_type = 2;
     }
     else{
-        url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/message/Admin?`;
+        path = `/broadcast/message/Admin?`;
         token_type = 1;
     }
-        
-    common.common_fetch(url, 'POST', token_type, json_data, null, null, (err, result) =>{
+    common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err, result) => {
         if (err)
             null;
         else{
@@ -509,9 +508,7 @@ const set_maintenance = () => {
 const count_users = async () => {
     const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
         if (admin_token_has_value()){
-            let json;
-            await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`,
-                     'GET', 1, null, null, null, (err, result) =>{
+            await common.FFB ('BROADCAST', `/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 1, null, (err, result) => {
                 if (err)
                     callBack(result, null);
                 else{
@@ -1716,35 +1713,41 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
     if (admin_token_has_value()){
         let json;
         let token_type;
-        let url;
+        let path;
+        let service;
         //set spinner
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL['system_admin']==1){
-                    url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/SystemAdmin?${url_parameters}`;
+                    path = `/broadcast/connection/SystemAdmin?${url_parameters}`;
+                    service = 'BROADCAST';
                     token_type = 2;
                 }
                 else{
-                    url = `${common.COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/Admin?${url_parameters}`;
+                    path = `/broadcast/connection/Admin?${url_parameters}`;
+                    service = 'BROADCAST';
                     token_type = 1;
                 }
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_app_log':{
-                url = `${common.COMMON_GLOBAL['rest_resource_service']}/db${common.COMMON_GLOBAL['rest_resource_service_db_schema']}/app_log/admin?${url_parameters}`;
+                path = `/app_log/admin?${url_parameters}`;
+                service = 'DB';
                 token_type = 1;
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_server_log':{
-                url = `${common.COMMON_GLOBAL['rest_resource_server']}/log/logs?${url_parameters}`;
+                path = `/log/logs?${url_parameters}`;
+                service = 'LOG';
                 token_type = 2;
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_pm2_log':{
-                url = `${common.COMMON_GLOBAL['rest_resource_server']}/log/pm2logs?`;
+                path = `/log/pm2logs?`;
+                service = 'LOG';
                 token_type = 2;
                 document.getElementById(list_div + '_out').innerHTML = common.APP_SPINNER;
                 document.getElementById(list_div + '_err').innerHTML = common.APP_SPINNER;
@@ -1753,8 +1756,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 break;
             }
         }
-
-        common.common_fetch(url, 'GET', token_type, null, null, null, (err, result) =>{
+        common.FFB (service, path, 'GET', token_type, null, (err, result) => {
             if (err){
                 switch (list_div){
                     case 'list_pm2_log':{
@@ -2381,44 +2383,38 @@ const page_navigation = (item) => {
     }
 }
 const list_item_click = (item) => {
-    let url;
+    let path;
     let tokentype;
     if (item.className.indexOf('gps_click')>0){
-        if (common.COMMON_GLOBAL['system_admin']==1){
-            tokentype = 2;
-        }
-        else
-            tokentype = 1;
         if (item.parentNode.parentNode.id =='list_server_log'){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
             //if localhost show default position
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `&ip=${item.children[0].innerHTML}`;
-            let encodedparameters;
             if (common.COMMON_GLOBAL['system_admin']==1){    
-                encodedparameters = toBase64(`/ip/systemadmin?app_user_id=${ip_filter}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/ip/systemadmin?app_user_id=${ip_filter}`;
+                tokentype = 2;
             }
             else{
-                encodedparameters = toBase64(`/ip/admin?app_user_id=${ip_filter}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/ip/admin?app_user_id=${ip_filter}`;
+                tokentype = 1;
             }
-            common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
-                    if (err)
-                        null;
-                    else{
-                        let json = JSON.parse(result);
-                        common.map_update(json.geoplugin_longitude,
-                                   json.geoplugin_latitude,
-                                   APP_GLOBAL['module_leaflet_map_zoom'],
-                                   json.geoplugin_city + ', ' +
-                                   json.geoplugin_regionName + ', ' +
-                                   json.geoplugin_countryName,
-                                   null,
-                                   APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                   common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                    }
+            common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
+                if (err)
+                    null;
+                else{
+                    let json = JSON.parse(result);
+                    common.map_update(json.geoplugin_longitude,
+                                json.geoplugin_latitude,
+                                APP_GLOBAL['module_leaflet_map_zoom'],
+                                json.geoplugin_city + ', ' +
+                                json.geoplugin_regionName + ', ' +
+                                json.geoplugin_countryName,
+                                null,
+                                APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                                common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                }
             })
         }
         else{
@@ -2433,17 +2429,15 @@ const list_item_click = (item) => {
                     break;
                 }       
             }
-            let encodedparameters;
             if (common.COMMON_GLOBAL['system_admin']==1){
-                encodedparameters = toBase64(`/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`;
+                tokentype = 2;
             }
             else{
-                encodedparameters = toBase64(`/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`);
-                url = `${COMMON_GLOBAL['rest_resource_bff']}/admin?service=geolocation&parameters=${encodedparameters}`;
+                path = `/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`;
+                tokentype = 1;
             }
-                
-            common.common_fetch(url, 'GET', tokentype, null, null, null, (err, result) =>{
+            common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                     if (err)
                         null;
                     else{
@@ -2469,8 +2463,7 @@ const list_item_click = (item) => {
 }
 const get_server_log_parameters = async () => {
     let json;
-    await common.common_fetch(`${common.COMMON_GLOBAL['rest_resource_server']}/log/parameters?`,
-                       'GET', 2, null, null, null, (err, result) =>{
+    await common.FFB ('LOG', `/log/parameters?`, 'GET', 2, null, (err, result) => {
         if (err)
             null;
         else{

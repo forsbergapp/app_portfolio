@@ -36,21 +36,19 @@ const getdocs = (docid = null) => {
 }
 const init_app = async () => {
     document.querySelector('#app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
-    await common.common_fetch_basic(0, null,  null, null, (err, result)=>{
-        getdocs();
-        //event show start documents when closing document
-        document.querySelector('#common_window_info_btn_close').addEventListener('click',(event) => {
-            document.querySelector('#dialogue_documents').style.visibility = 'visible';
-        });
-        let docid = window.location.pathname.substring(1);
-        if (docid!=''){
-            document.querySelector('#dialogue_documents').style.visibility = 'hidden';
-            common.show_window_info(0, document.querySelector(`#doc_${docid}`).getAttribute('full_size'));
-        }
-        else{
-            document.querySelector('#dialogue_documents').style.visibility = 'visible';
-        }
-    })
+    getdocs();
+    //event show start documents when closing document
+    document.querySelector('#common_window_info_btn_close').addEventListener('click',(event) => {
+        document.querySelector('#dialogue_documents').style.visibility = 'visible';
+    });
+    let docid = window.location.pathname.substring(1);
+    if (docid!=''){
+        document.querySelector('#dialogue_documents').style.visibility = 'hidden';
+        common.show_window_info(0, document.querySelector(`#doc_${docid}`).getAttribute('full_size'));
+    }
+    else{
+        document.querySelector('#dialogue_documents').style.visibility = 'visible';
+    }
 }
 const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
