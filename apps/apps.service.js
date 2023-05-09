@@ -518,7 +518,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                             case 'PUT':
                             case 'PATCH':
                             case 'DELETE':{
-                                path = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}&proxy_ip=${ip}`;
+                                path = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
                                 break;
                             }
                             default:{
