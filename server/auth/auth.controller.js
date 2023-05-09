@@ -5,6 +5,7 @@ const {default:{sign, verify}} = await import("jsonwebtoken");
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {getParameter, getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
 
+//SERVER MIDDLEWARE
 const access_control = (req, res, callBack) => {
     let stack = new Error().stack;
     if (typeof req.query.app_id=='undefined' || req.query.app_id=='')
@@ -136,6 +137,100 @@ const access_control = (req, res, callBack) => {
     else
         return callBack(null,null);
 }
+const policy_directives = (callBack) => {
+    service.policy_directives((err, result)=>{
+        callBack(null, result);
+    })
+}
+const check_request = (req, callBack) =>{
+    let err = null;
+    try {
+        decodeURIComponent(req.path)
+    }
+    catch(e) {
+        err = e;
+    }
+    if (err){
+        callBack(err, null)
+    }
+    else
+        callBack(null, null)
+}
+//SERVER ROUTER
+const CreateDataToken = (req, res) => {
+    let stack = new Error().stack;
+    if(req.headers.authorization){
+        CreateDataToken(app_id, req.headers.authorization, (err, jsontoken_dt) =>{
+            if (err)
+                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
+                            res.status(500).send(
+                                err
+                            );
+                        })
+                    });
+                })
+            else
+                if (jsontoken_dt == null)
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                            createLog(req.query.app_id,
+                                { app_id : req.query.app_id,
+                                app_module : 'AUTH',
+                                app_module_type : 'DATATOKEN_FAIL',
+                                app_module_request : req.baseUrl,
+                                app_module_result : 'HTTP Error 401 Unauthorized: Access is denied.',
+                                app_user_id : req.query.app_user_id,
+                                user_language : null,
+                                user_stimezone : null,
+                                user_number_system : null,
+                                user_platform : null,
+                                server_remote_addr : req.ip,
+                                server_user_agent : req.headers["user-agent"],
+                                server_http_host : req.headers["host"],
+                                server_http_accept_language : req.headers["accept-language"],
+                                client_latitude : null,
+                                client_longitude : null
+                                }, (err,results)  => {
+                                    return res.status(401).send({ 
+                                        message: '⛔'
+                                    });
+                            }); 
+                        })
+                else
+                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                            createLog(req.query.app_id,
+                                        { app_id : req.query.app_id,
+                                        app_module : 'AUTH',
+                                        app_module_type : 'DATATOKEN_OK',
+                                        app_module_request : req.baseUrl,
+                                        app_module_result : 'DT:' + jsontoken_dt,
+                                        app_user_id : req.query.app_user_id,
+                                        user_language : null,
+                                        user_timezone : null,
+                                        user_number_system : null,
+                                        user_platform : null,
+                                        server_remote_addr : req.ip,
+                                        server_user_agent : req.headers["user-agent"],
+                                        server_http_host : req.headers["host"],
+                                        server_http_accept_language : req.headers["accept-language"],
+                                        client_latitude : null,
+                                        client_longitude : null
+                                        }, (err,results)  => {
+                                            return res.status(200).json({ 
+                                                token_dt: jsontoken_dt
+                                        });
+                            }); 
+                        })
+        })
+    }
+    else{
+        return res.status(401).send({ 
+            message: '⛔'
+        });
+    }
+}
+//ENDPOINT MIDDLEWARE
 const checkAccessTokenCommon = (req, res, next) => {
     let token = req.get("authorization");
     let stack = new Error().stack;
@@ -317,105 +412,7 @@ const checkDataTokenLogin = (req, res, next) => {
         });
     }
 }
-const dataToken = (req, res) => {
-    let stack = new Error().stack;
-    if(req.headers.authorization){
-        getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
-            if (err) {
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(
-                                err
-                            );
-                        })
-                    });
-                })
-            }
-            else{
-                let json = JSON.parse(JSON.stringify(result));
-                let db_APP_REST_CLIENT_ID;
-                let db_APP_REST_CLIENT_SECRET;
-                let db_SERVICE_AUTH_TOKEN_DATA_SECRET;
-                let db_SERVICE_AUTH_TOKEN_DATA_EXPIRE;
-                for (let i = 0; i < json.length; i++){
-                    if (json[i].parameter_name=='APP_REST_CLIENT_ID')
-                        db_APP_REST_CLIENT_ID = json[i].parameter_value;
-                    if (json[i].parameter_name=='APP_REST_CLIENT_SECRET')
-                        db_APP_REST_CLIENT_SECRET = json[i].parameter_value;
-                    if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_DATA_SECRET')
-                        db_SERVICE_AUTH_TOKEN_DATA_SECRET = json[i].parameter_value;
-                    if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_DATA_EXPIRE')
-                        db_SERVICE_AUTH_TOKEN_DATA_EXPIRE = json[i].parameter_value;
-                }                    
-                let userpass = new Buffer.from((req.headers.authorization || '').split(' ')[1] || '', 'base64').toString();
-                if (userpass !== db_APP_REST_CLIENT_ID + ':' + db_APP_REST_CLIENT_SECRET) {
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                        createLog(req.query.app_id,
-                            { app_id : req.query.app_id,
-                            app_module : 'AUTH',
-                            app_module_type : 'DATATOKEN_FAIL',
-                            app_module_request : req.baseUrl,
-                            app_module_result : 'HTTP Error 401 Unauthorized: Access is denied.',
-                            app_user_id : req.query.app_user_id,
-                            user_language : null,
-                            user_stimezone : null,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : req.ip,
-                            server_user_agent : req.headers["user-agent"],
-                            server_http_host : req.headers["host"],
-                            server_http_accept_language : req.headers["accept-language"],
-                            client_latitude : null,
-                            client_longitude : null
-                            }, (err,results)  => {
-                                return res.status(401).send({ 
-                                    message: "HTTP Error 401 Unauthorized: Access is denied."
-                                });
-                        }); 
-                    })
-                } 
-                else{
-                    let jsontoken_dt;
-                    jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
-                                        db_SERVICE_AUTH_TOKEN_DATA_SECRET, 
-                                        {
-                                        expiresIn: db_SERVICE_AUTH_TOKEN_DATA_EXPIRE
-                                        });
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                        createLog(req.query.app_id,
-                                    { app_id : req.query.app_id,
-                                    app_module : 'AUTH',
-                                    app_module_type : 'DATATOKEN_OK',
-                                    app_module_request : req.baseUrl,
-                                    app_module_result : 'DT:' + jsontoken_dt,
-                                    app_user_id : req.query.app_user_id,
-                                    user_language : null,
-                                    user_timezone : null,
-                                    user_number_system : null,
-                                    user_platform : null,
-                                    server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
-                                    client_latitude : null,
-                                    client_longitude : null
-                                    }, (err,results)  => {
-                                        return res.status(200).json({ 
-                                            token_dt: jsontoken_dt
-                                    });
-                        }); 
-                    })
-                }
-            }
-        })
-    }
-    else{
-        return res.status(401).send({ 
-            message: "HTTP Error 401 Unauthorized: Access is denied"
-        });
-    }
-}
+
 const accessToken = (req, callBack) => {
     let stack = new Error().stack;
     getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
@@ -470,25 +467,7 @@ const accessToken = (req, callBack) => {
         }
     })
 }
-const policy_directives = (callBack) => {
-    service.policy_directives((err, result)=>{
-        callBack(null, result);
-    })
-}
-const check_request = (req, callBack) =>{
-    let err = null;
-    try {
-        decodeURIComponent(req.path)
-    }
-    catch(e) {
-        err = e;
-    }
-    if (err){
-        callBack(err, null)
-    }
-    else
-        callBack(null, null)
-}
+
 export {access_control, checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
-        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, dataToken, accessToken, policy_directives, 
+        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, CreateDataToken, accessToken, policy_directives, 
         check_request}
