@@ -31,20 +31,20 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
                 }
                 case 2:{
                     //2=UNVERIFIED
-                    //logged in
-                    path = '/access?';
+                    //accesstoken still not available, use datatoken
+                    path = '?';
                     break;
                 }
                 case 3:{
                     //3=PASSWORD RESET (FORGOT)
-                    //not logged in
-                    path = '/';
+                    //not logged in use datatoken
+                    path = '?';
                     break;
                 }
                 case 4:{
                     //4=CHANGE EMAIL
-                    //logged in
-                    path = '/access?';
+                    //logged in, use accesstoken and send user id
+                    path = `/access?user_account_logon_user_account_id=${userid}`;
                     break;
                 }
             }
