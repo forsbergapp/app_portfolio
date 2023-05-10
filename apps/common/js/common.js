@@ -2872,7 +2872,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             }
             case 503:{
                 //Service unavailable or other error in microservice
-                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
                 callBack(result, null);
                 break;
             }

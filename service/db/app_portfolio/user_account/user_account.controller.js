@@ -48,7 +48,8 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
                     break;
                 }
             }
-            BFF(app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email).then(()=>{
+            BFF(app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email)
+            .then((result_sendemail)=>{
                 callBack(null, result_sendemail);
             })
             .catch((error)=>{

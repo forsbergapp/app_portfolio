@@ -160,14 +160,12 @@ const check_request = (req, callBack) =>{
 const CreateDataToken = (req, res) => {
     let stack = new Error().stack;
     if(req.headers.authorization){
-        CreateDataToken(app_id, req.headers.authorization, (err, jsontoken_dt) =>{
+        service.CreateDataToken(req.query.app_id, req.headers.authorization, (err, jsontoken_dt) =>{
             if (err)
                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(
-                                err
-                            );
+                            res.status(500).send(err);
                         })
                     });
                 })
@@ -192,9 +190,7 @@ const CreateDataToken = (req, res) => {
                                 client_latitude : null,
                                 client_longitude : null
                                 }, (err,results)  => {
-                                    return res.status(401).send({ 
-                                        message: '⛔'
-                                    });
+                                    return res.status(401).send('⛔');
                             }); 
                         })
                 else
@@ -225,9 +221,7 @@ const CreateDataToken = (req, res) => {
         })
     }
     else{
-        return res.status(401).send({ 
-            message: '⛔'
-        });
+        return res.status(401).send('⛔');
     }
 }
 //ENDPOINT MIDDLEWARE
@@ -240,9 +234,7 @@ const checkAccessTokenCommon = (req, res, next) => {
                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(
-                                err
-                            );
+                            res.status(500).send(err);
                         })
                     });
                 })
@@ -258,9 +250,7 @@ const checkAccessTokenCommon = (req, res, next) => {
                                                 req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                 res.statusCode, 
                                                 req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                                res.status(401).send({
-                                                    message: "Invalid token"
-                                                });
+                                    res.status(401).send('⛔');
                                 })
                             });
                         })
@@ -273,9 +263,7 @@ const checkAccessTokenCommon = (req, res, next) => {
                                     import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                                         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                                             createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                                res.status(500).send(
-                                                    err
-                                                );
+                                                res.status(500).send(err);
                                             })
                                         });
                                     })
@@ -291,9 +279,7 @@ const checkAccessTokenCommon = (req, res, next) => {
                                                               req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
                                                               res.statusCode, 
                                                               req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                                    res.status(401).send({
-                                                        message: 'Not authorized'
-                                                    });
+                                                    res.status(401).send('⛔');
                                                 })
                                             });
                                         })
@@ -307,9 +293,7 @@ const checkAccessTokenCommon = (req, res, next) => {
         });
         
     }else{
-        res.status(401).json({
-            message: 'Not authorized'
-        });
+        res.status(401).send('⛔');
     }
 
 }
@@ -321,24 +305,18 @@ const checkAccessTokenSuperAdmin = (req, res, next) => {
                     checkAccessTokenCommon(req, res, next);
                 }
                 else
-                    res.status(401).json({
-                        message: '⛔'
-                    });
+                    res.status(401).send('⛔');
             })
         })
     else
-        res.status(401).json({
-            message: '⛔'
-        });
+        res.status(401).send('⛔');
 }
 const checkAccessTokenAdmin = (req, res, next) => {
     if (req.query.app_id==0){
         checkAccessTokenCommon(req, res, next);
     }
     else
-        res.status(401).json({
-            message: '⛔'
-        });
+        res.status(401).send('⛔');
 }
 const checkAccessToken = (req, res, next) => {
     //if user login is disabled then check also current logged in user
@@ -349,9 +327,7 @@ const checkAccessToken = (req, res, next) => {
     else{
         //return 401 Not authorized here instead of 403 Forbidden
         //so a user will be logged out instead of getting a message
-        res.status(401).json({
-            message: '⛔'
-        });
+        res.status(401).send('⛔');
     }
 
 }
@@ -364,9 +340,7 @@ const checkDataToken = (req, res, next) => {
                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
                         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(
-                                err
-                            );
+                            res.status(500).send(err);
                         })
                     });
                 })
@@ -375,9 +349,7 @@ const checkDataToken = (req, res, next) => {
                 token = token.slice(7);
                 verify(token, db_SERVICE_AUTH_TOKEN_DATA_SECRET, (err, decoded) => {
                     if (err){
-                        res.status(401).send({
-                            message: "Invalid token"
-                        });
+                        res.status(401).send('⛔');
                     } else {
                         next();
                     }
@@ -386,9 +358,7 @@ const checkDataToken = (req, res, next) => {
         });
         
     }else{
-        res.status(401).json({
-            message: 'Not authorized'
-        });
+        res.status(401).send('⛔');
     }
 }
 const checkDataTokenRegistration = (req, res, next) => {
@@ -396,9 +366,7 @@ const checkDataTokenRegistration = (req, res, next) => {
         checkDataToken(req, res, next);
     else{
         //return 403 Forbidden
-        res.status(403).json({
-            message: '⛔'
-        });
+        res.status(403).send('⛔');
     }
         
 }
@@ -407,9 +375,7 @@ const checkDataTokenLogin = (req, res, next) => {
         checkDataToken(req, res, next);
     else{
         //return 403 Forbidden
-        res.status(403).json({
-            message: '⛔'
-        });
+        res.status(403).send('⛔');
     }
 }
 
