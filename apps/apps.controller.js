@@ -127,7 +127,7 @@ const BFF = async (req, res) =>{
                             res.statusCode, 
                             req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                     if (log_result)
-                        return res.status(200).send();
+                        return res.status(200).send('✅');
                     else
                         if (result_service.startsWith('%PDF')){
                             res.type('application/pdf');
@@ -147,9 +147,9 @@ const BFF = async (req, res) =>{
                             res.statusCode, 
                             req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
                     //return service unavailable and error message
-                    return res.status(503).json(
-                        error
-                    );
+                    return res.status(503).json({
+                        message: error
+                    });
                 })
             });
         })
