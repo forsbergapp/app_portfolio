@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (162,'20310','Teksti liian pitkä');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (162,'20400','Tietuetta ei löydy');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (162,'20401','Väärä salasana');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (162,'20500','Leveys- tai pituusaste puuttuu');
 --
 -- parameter_type_translation
 --

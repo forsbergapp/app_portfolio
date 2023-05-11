@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (224,'20310','テキストが長すぎます');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (224,'20400','記録が見当たりませんでした');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (224,'20401','無効なパスワード');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (224,'20500','緯度または経度がありません');
 --
 -- parameter_type_translation
 --

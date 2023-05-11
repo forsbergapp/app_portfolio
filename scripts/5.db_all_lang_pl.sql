@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (434,'20310','Tekst jest za długi');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (434,'20400','Nie znaleziono rekordu');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (434,'20401','Nieprawidłowe hasło');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (434,'20500','Brak szerokości lub długości geograficznej');
 --
 -- parameter_type_translation
 --

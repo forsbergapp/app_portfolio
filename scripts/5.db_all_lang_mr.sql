@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20310','मजकूर खूप मोठा आहे');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20400','रेकॉर्ड सापडला नाही');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20401','अवैध पासवर्ड');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (338,'20500','गहाळ अक्षांश किंवा रेखांश');
 --
 -- parameter_type_translation
 --

@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (546,'20310','文本太長');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (546,'20400','記錄不存在');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (546,'20401','無效的密碼');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (546,'20500','缺少緯度或經度');
 --
 -- parameter_type_translation
 --

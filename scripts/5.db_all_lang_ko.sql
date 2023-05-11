@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (267,'20310','텍스트가 너무 깁니다.');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (267,'20400','레코드를 찾을 수 없음');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (267,'20401','유효하지 않은 비밀번호');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (267,'20500','위도 또는 경도 누락');
 --
 -- parameter_type_translation
 --

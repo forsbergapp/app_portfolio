@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (393,'20310','Teksten er for lang');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (393,'20400','Finner ikke posten');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (393,'20401','Ugyldig passord');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (393,'20500','Mangler breddegrad eller lengdegrad');
 --
 -- parameter_type_translation
 --

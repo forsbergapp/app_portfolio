@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (63,'20310','টেক্সট অনেক লম্বা');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (63,'20400','রেকর্ড পাওয়া যায়নি');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (63,'20401','অবৈধ পাসওয়ার্ড');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (63,'20500','অনুপস্থিত অক্ষাংশ বা দ্রাঘিমাংশ');
 --
 -- parameter_type_translation
 --

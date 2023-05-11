@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (527,'20310','உரை மிக நீளமானது');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (527,'20400','பதிவு கிடைக்கவில்லை');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (527,'20401','தவறான கடவுச்சொல்');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (527,'20500','அட்சரேகை அல்லது தீர்க்கரேகை இல்லை');
 --
 -- parameter_type_translation
 --

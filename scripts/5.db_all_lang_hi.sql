@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (201,'20310','टेक्स्ट बहुत लंबा');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (201,'20400','रिकॉर्ड नहीं मिला');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (201,'20401','अवैध पासवर्ड');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (201,'20500','लापता अक्षांश या देशांतर');
 --
 -- parameter_type_translation
 --

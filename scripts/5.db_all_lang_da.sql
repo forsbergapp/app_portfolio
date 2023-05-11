@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (128,'20310','Teksten er for lang');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (128,'20400','Optegnelsen blev ikke fundet');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (128,'20401','Forkert kodeord');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (128,'20500','Manglende breddegrad eller længdegrad');
 --
 -- parameter_type_translation
 --

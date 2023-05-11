@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (575,'20310','Văn bản quá dài');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (575,'20400','Không tìm thấy bản ghi');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (575,'20401','Mật khẩu không hợp lệ');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (575,'20500','Thiếu vĩ độ hoặc kinh độ');
 --
 -- parameter_type_translation
 --
