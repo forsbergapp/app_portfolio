@@ -128,6 +128,7 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 			}
 			try {
 				get_pool(app_id, pool_col).getConnection((err, conn) => {
+					conn.release();
 					if (err){
 						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
 							//Both MariaDB and MySQL use err.sqlMessage
@@ -143,27 +144,26 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 					else{
 						config_connection(conn, sql, parameters);
 						conn.query(sql, parameters, (err, result, fields) => {
-							conn.release();
-								if (err){
-									let app_code = get_app_code(err.errorNum, 
-										err.message, 
-										err.code, 
-										err.errno, 
-										err.sqlMessage);
-									if (app_code != null)
-										return callBack(err, null);
-									else
-										import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-											//Both MariaDB and MySQL use err.sqlMessage
-											createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
-												//return full error to system admin
-												if (pool_col==2)
-													return callBack(err, null);
-												else
-													return callBack(database_error, null);
-											})
-										});
-								}
+							if (err){
+								let app_code = get_app_code(err.errorNum, 
+									err.message, 
+									err.code, 
+									err.errno, 
+									err.sqlMessage);
+								if (app_code != null)
+									return callBack(err, null);
+								else
+									import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+										//Both MariaDB and MySQL use err.sqlMessage
+										createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 1 query:' + err.sqlMessage).then(() => {
+											//return full error to system admin
+											if (pool_col==2)
+												return callBack(err, null);
+											else
+												return callBack(database_error, null);
+										})
+									});
+							}
 							else{
 								//convert blob buffer to string if any column is a BLOB type
 								if (result.length>0){
@@ -348,19 +348,7 @@ const db_execute = async (app_id, sql, parameters, pool_col, app_filename, app_f
 				});
 			} finally {
 				if (pool4) {
-					try {
-						await pool4.close(); 
-					} catch (err) {
-						import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-							createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, app_filename, app_function, app_line, 'DB 4 finally:' + err.message).then(() => {
-								//return full error to system admin
-								if (pool_col==2)
-									return callBack(err, null);
-								else
-									return callBack(database_error, null);
-							})
-						});
-					}
+					pool4.close(); 
 				}
 			}
 			break;
