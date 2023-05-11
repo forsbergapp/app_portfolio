@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (198,'20310','טקסט ארוך מדי');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (198,'20400','רשומה לא נמצאה');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (198,'20401','סיסמה שגויה');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (198,'20500','חסרים קו רוחב או קו אורך');
 --
 -- parameter_type_translation
 --

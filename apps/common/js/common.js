@@ -2806,6 +2806,13 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
             break;
         }
+        case 6:{
+            //broadcast connect no authorization get
+            authorization = null;
+            json_data = null;
+            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/noauth`;
+            break;
+        }
     }
     if (json_data !='' && json_data !=null){
         headers = {
@@ -2826,58 +2833,65 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     path += `&lang_code=${COMMON_GLOBAL['user_locale']}`
     encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
-    //for accesstoken add parameter for authorization check
-    if (authorization_type==1)
-        url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
-    await fetch(url, options)
-    .then((response) => {
-        status = response.status;
-        return response.text();
-    })
-    .then((result) => {
-        switch (status){
-            case 200:{
-                //OK
-                callBack(null, result);
-                break;
-            }
-            case 400:{
-                //Bad request
-                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 404:{
-                //Not found
-                show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 401:{
-                //Unauthorized, token expired
-                exception(COMMON_GLOBAL['exception_app_function'], result);
-                break;
-            }
-            case 403:{
-                //Forbidden, not allowed to login or register new user
-                show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 500:{
-                //Unknown error
-                show_message('EXCEPTION', null,null, result, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
-            case 503:{
-                //Service unavailable or other error in microservice
-                show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
-                callBack(result, null);
-                break;
-            }
+    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
+    if (service=='BROADCAST' && authorization_type==6){
+        let method = 'DIRECT';
+        if (method== 'DIRECT'){
+            //direct until bff path working
+            url = `${COMMON_GLOBAL['rest_resource_server']}${path}&app_id=${COMMON_GLOBAL['app_id']}&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
         }
-    })
+        callBack(null, new EventSource(url));
+    }
+    else
+        await fetch(url, options)
+        .then((response) => {
+            status = response.status;
+            return response.text();
+        })
+        .then((result) => {
+            switch (status){
+                case 200:{
+                    //OK
+                    callBack(null, result);
+                    break;
+                }
+                case 400:{
+                    //Bad request
+                    show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                    callBack(result, null);
+                    break;
+                }
+                case 404:{
+                    //Not found
+                    show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                    callBack(result, null);
+                    break;
+                }
+                case 401:{
+                    //Unauthorized, token expired
+                    exception(COMMON_GLOBAL['exception_app_function'], result);
+                    break;
+                }
+                case 403:{
+                    //Forbidden, not allowed to login or register new user
+                    show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
+                    callBack(result, null);
+                    break;
+                }
+                case 500:{
+                    //Unknown error
+                    show_message('EXCEPTION', null,null, result, COMMON_GLOBAL['app_id']);
+                    callBack(result, null);
+                    break;
+                }
+                case 503:{
+                    //Service unavailable or other error in microservice
+                    show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
+                    callBack(result, null);
+                    break;
+                }
+            }
+        })
 }
 /*----------------------- */
 /* SERVICE BROADCAST      */
@@ -2898,16 +2912,25 @@ const show_broadcast = (broadcast_message) => {
     broadcast_message = window.atob(broadcast_message);
     let broadcast_type = JSON.parse(broadcast_message).broadcast_type;
     let message = JSON.parse(broadcast_message).broadcast_message;
-    if (broadcast_type=='MAINTENANCE'){
-        if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
-            exception(COMMON_GLOBAL['exception_app_function'], null);
-        document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
-        show_maintenance(message);
-    }
-    else
-        if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
-            show_broadcast_info(message);
+    switch (broadcast_type){
+        case 'MAINTENANCE':{
+            if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
+                exception(COMMON_GLOBAL['exception_app_function'], null);
+            document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
+            show_maintenance(message);
+            break;
+        
         }
+        case 'CONNECTINFO':{
+            COMMON_GLOBAL['service_broadcast_client_ID'] = JSON.parse(message).client_id;
+            break;
+        }
+        case 'CHAT':
+        case 'INFO':{
+            show_broadcast_info(message);
+            break;
+        }
+    }
 }
 const show_broadcast_info = (message) => {
     const hide_function = () => { document.getElementById('common_broadcast_info').style.visibility='hidden';
@@ -2957,7 +2980,6 @@ const updateOnlineStatus = () => {
     if (COMMON_GLOBAL['system_admin']==1){
         path =   `/broadcast/connection/SystemAdmin`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
-                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
                 `&system_admin=${COMMON_GLOBAL['system_admin']}`
         token_type=2;
@@ -2965,7 +2987,6 @@ const updateOnlineStatus = () => {
     else{
         path =   `/broadcast/connection`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
-                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` + 
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
                 `&system_admin=${COMMON_GLOBAL['system_admin']}`
         token_type=0;
@@ -2974,21 +2995,20 @@ const updateOnlineStatus = () => {
         null;
     })
 }
-const connectOnline = (updateOnline=false) => {
-    COMMON_GLOBAL['service_broadcast_client_ID'] = Date.now();
-    COMMON_GLOBAL['service_broadcast_eventsource'] = new EventSource(`${COMMON_GLOBAL['rest_resource_server']}/broadcast/connection/${COMMON_GLOBAL['service_broadcast_client_ID']}` +
-                                                `?app_id=${COMMON_GLOBAL['app_id']}` +
-                                                `&user_account_id=${COMMON_GLOBAL['user_account_id']}` +
-                                                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                                                `&system_admin=${COMMON_GLOBAL['system_admin']}`);
-    COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
-        
+const connectOnline = async () => {
+    FFB ('BROADCAST', `/broadcast/connection/connect` +
+                      `?identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
+                      `&system_admin=${COMMON_GLOBAL['system_admin']}`, 'GET', 6, null, (err, result_eventsource) => {
+        //return broadcast stream
+        COMMON_GLOBAL['service_broadcast_eventsource'] = result_eventsource;
+        COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
             show_broadcast(event.data);
-    }
-    COMMON_GLOBAL['service_broadcast_eventsource'].onerror = (err) => {
-        COMMON_GLOBAL['service_broadcast_eventsource'].close();
-        reconnect();
-    }
+        }
+        COMMON_GLOBAL['service_broadcast_eventsource'].onerror = (err) => {
+            COMMON_GLOBAL['service_broadcast_eventsource'].close();
+            reconnect();
+        }
+    })
 }
 const checkOnline = (div_icon_online, user_account_id) => {
     FFB ('BROADCAST', `/broadcast/connection/check/${user_account_id}?`, 'GET', 0, null, (err, result) => {

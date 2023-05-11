@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (515,'20310','Text för lång');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (515,'20400','Post finns inte');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (515,'20401','Ogiltigt lösenord');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (515,'20500','Saknar latitud eller longitud');
 --
 -- parameter_type_translation
 --
