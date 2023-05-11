@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20310','టెక్స్ట్ చాలా పొడవుగా ఉంది');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20400','రికార్డు దొరకలేదు');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20401','చెల్లని పాస్వర్డ్');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (531,'20500','అక్షాంశం లేదా రేఖాంశం లేదు');
 --
 -- parameter_type_translation
 --

@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20310','نص طويل جدا');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20400','لم يتم العثور على السجل');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20401','رمز مرور خاطئ');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (25,'20500','خط العرض أو خط الطول مفقود');
 --
 -- parameter_type_translation
 --

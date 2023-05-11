@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (214,'20310','Teks terlalu panjang');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (214,'20400','Rekaman tidak ditemukan');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (214,'20401','Kata sandi salah');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (214,'20500','Garis lintang atau garis bujur tidak ada');
 --
 -- parameter_type_translation
 --

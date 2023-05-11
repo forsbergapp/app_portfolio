@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (107,'20310','文本太长');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (107,'20400','记录不存在');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (107,'20401','无效的密码');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (107,'20500','缺少纬度或经度');
 --
 -- parameter_type_translation
 --

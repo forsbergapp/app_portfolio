@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20310','Надто довгий текст');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20400','Запис не знайдено');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20401','Недійсний пароль');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (564,'20500','Відсутня широта або довгота');
 --
 -- parameter_type_translation
 --
