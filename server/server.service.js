@@ -123,25 +123,22 @@ const ConfigExists = async () => {
 }
 const DefaultConfig = async () => {
     return new Promise((resolve, reject) => {
-        const create_config_dir = async () => {
-            return new Promise((resolve, reject) => {
-                //create /config directory first time if needed
-                import('node:fs').then((fs) => {
-                    fs.access(process.cwd() + '/config', (err) => {
-                        if (err)
-                            fs.mkdir(process.cwd() + '/config', (err) => {
-                                if (err)
-                                    reject(err);
-                                else
-                                    resolve();
-                            });
-                        else
-                            resolve();
-                    });
+        const create_config_and_logs_dir = async () => {
+            const fs = await import('node:fs');
+            const mkdir = async (dir) =>{
+                let result_mkdir = await fs.promises.mkdir(process.cwd() + dir)
+                .catch((error)=>{
+                    throw error;
                 })
-            })
+            }
+            for (let dir of ['/config', '/service/logs','/logs']){
+                let check_dir = await fs.promises.access(process.cwd() + dir)
+                .catch(()=>{
+                    mkdir(dir);  
+                });
+            }
         }
-        create_config_dir()
+        create_config_and_logs_dir()
         .then(() => {
             let i = 0;
             //read all default files
