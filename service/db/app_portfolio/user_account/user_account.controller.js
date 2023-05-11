@@ -12,6 +12,8 @@ const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.c
 const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, 
                              ip, authorization, headers_user_agent, headers_accept_language, callBack) => {
     const { createMail, BFF } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
+    
     createMail(app_id, 
         {
             "emailtype":        emailtype,
@@ -48,9 +50,10 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
                     break;
                 }
             }
-            BFF(app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email)
-            .then((result_sendemail)=>{
-                callBack(null, result_sendemail);
+            //BFF(app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email)
+            MessageQueue('MAIL', 'PUBLISH', email, null)
+            .then(()=>{
+                callBack(null, null);
             })
             .catch((error)=>{
                 callBack(error, null);
