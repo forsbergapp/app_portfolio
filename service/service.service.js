@@ -108,35 +108,122 @@ class CircuitBreaker {
     }
 }
 
-/*
-app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email
-const MessageQueue= async (message) => {
-    return new Promise((resolve, reject) ={
-      switch (message.type) {
-          case 'PUBLISH': {
-          create PUBLISH message in message_queue.json
-          resolve(call message_que(message.CONSUME));
-            break;
-          }
-          case 'CONSUME': {
-          //process MESSAGE PUBLISH RECEIVED
-            if (message.service === 'EMAIL') {
-           callservice MAIL sendemail	use apps.service.js not apps.controller.js FIX FIRST!
-           if ok
-              set CONSUMED id: ISO timestamp in message_queue.json
-          else
-              set ERROR id: ISO timestamp in message_queue.json
-          resolve()
-            break;
-          }
-  
-          default: {
-          add record:
-          message_queue_error.json
-            reject()
-          }
-      }
+const MessageQueue = async (service, message_type, message, message_id) => {
+    const fs = await import('node:fs');
+    return new Promise((resolve, reject) =>{
+        const write_file = (file, message, result) =>{
+            return new Promise((resolve, reject)=>{
+                //add record:
+                let json_message;
+                let filename;
+                switch (file){
+                    case 0:{
+                        filename = '/service/logs/message_queue_error.json';
+                        json_message = JSON.stringify({"message_id": new Date().toISOString(), "message":   message, "result":result});
+                        break;
+                    }
+                    case 1:{
+                        filename = '/service/logs/message_queue_publish.json';
+                        json_message = JSON.stringify(message);
+                        break;
+                    }
+                    case 2:{
+                        filename = '/service/logs/message_queue_consume.json';
+                        json_message = JSON.stringify(message);
+                        break;
+                    }
+                }
+                fs.appendFile(process.cwd() + filename, json_message + '\r\n', 'utf8', (err) => {
+                    if (err) {
+                        reject(err)
+                    }
+                    else
+                        resolve();
+                })
+            })
+        }
+        try {
+            switch (message_type) {
+                case 'PUBLISH': {
+                    //message PUBLISH message in message_queue_publish.json
+                    let message_id = new Date().toISOString();
+                    let message_queue = {"message_id": message_id, service: service, message:   message};
+                    write_file(1, message_queue, null)
+                    .then(()=>{
+                        resolve (MessageQueue(service, 'CONSUME', null, message_id));
+                    })
+                    .catch(error=>{
+                        reject(error);
+                    })
+                    break;
+                }
+                case 'CONSUME': {
+                    //message CONSUME
+                    //direct microservice call
+                    fs.promises.readFile(`${process.cwd()}/service/logs/message_queue_publish.json`, 'utf8')
+                    .then((message_queue)=>{
+                        let message_consume = null;
+                        for (let row of message_queue.split('\r\n')){
+                            let row_obj = JSON.parse(row);
+                            if (row_obj.message_id == message_id){
+                                message_consume = row_obj;
+                                break;
+                            }
+                        }
+                        if (service === 'MAIL') {
+                            import(`file://${process.cwd()}/service/mail/mail.service.js`).then(({ sendEmail })=>{
+                                message_consume.start = new Date().toISOString();
+                                sendEmail(message_consume.message)
+                                .then((result)=>{
+                                    message_consume.finished = new Date().toISOString();
+                                    message_consume.result = result;
+                                    //write to message_queue_consume.json
+                                    write_file(2, message_consume, result)
+                                    .then(()=>{
+                                        resolve ();
+                                    })
+                                    .catch(error=>{
+                                        write_file(0, message_consume, error)
+                                        .then(()=>{
+                                            reject (error);
+                                        })
+                                        .catch(error=>{
+                                            reject(error);
+                                        })
+                                    })
+                                })
+                                .catch((error)=>{
+                                    write_file(0, message_consume, error)
+                                    .then(()=>{
+                                        reject (error);
+                                    })
+                                    .catch(error=>{
+                                        reject(error);
+                                    })
+                                })
+                            });
+                        }
+                    })
+                    .catch((error)=>{
+                        write_file(0, message, error).then(()=>{
+                            reject(message);
+                        })
+                    })
+                    break;
+                }
+                default: {
+                    //unknown message, add record:
+                    write_file(0, message, '?').then(()=>{
+                        reject(message);
+                    })
+                }
+            }
+        } catch (error) {
+            write_file(0, message, error).then(()=>{
+                reject(message);
+            })
+        }
     })
-  });
-*/
-export {CircuitBreaker}
+};
+
+export {CircuitBreaker, MessageQueue}
