@@ -206,7 +206,7 @@ const get_report_url = (id, sid, papersize, item, format) => {
                                      language_parameter +
                                      service_parameter);
     //url query parameters are decoded in report module and in report service
-    return common.getHostname() + `${common.COMMON_GLOBAL['rest_resource_bff']}/reports?service=report&parameters=${common.toBase64('?reportid=' + encodedurl)}`;
+    return common.getHostname() + `${common.COMMON_GLOBAL['rest_resource_bff']}/noauth?service=report&parameters=${common.toBase64('?reportid=' + encodedurl)}`;
 }
 const updateViewStat_app = (user_setting_id, user_setting_user_account_id) => {
     if (parseInt(user_setting_user_account_id) == parseInt(common.COMMON_GLOBAL['user_account_id']))

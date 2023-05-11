@@ -920,7 +920,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20310','Text too long');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20400','Record not found');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20401','Invalid password');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20500','Missing latitude or longitude');
 --
 -- parameter_type_translation
 --

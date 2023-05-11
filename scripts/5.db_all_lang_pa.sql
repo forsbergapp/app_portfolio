@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (438,'20310','ਟੈਕਸਟ ਬਹੁਤ ਲੰਮਾ ਹੈ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (438,'20400','ਰਿਕਾਰਡ ਨਹੀਂ ਮਿਲਿਆ');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (438,'20401','ਗਲਤ ਪਾਸਵਰਡ');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (438,'20500','ਗੁੰਮ ਵਿਥਕਾਰ ਜਾਂ ਲੰਬਕਾਰ');
 --
 -- parameter_type_translation
 --

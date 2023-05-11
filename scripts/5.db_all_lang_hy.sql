@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (31,'20310','Տեքստը չափազանց երկար է');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (31,'20400','Գրառումը չի գտնվել');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (31,'20401','Անվավեր գաղտնաբառ');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (31,'20500','Բացակայում է լայնությունը կամ երկայնությունը');
 --
 -- parameter_type_translation
 --

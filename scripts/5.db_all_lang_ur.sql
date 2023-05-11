@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (568,'20310','متن بہت لمبا ہے۔');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (568,'20400','ریکارڈ نہیں ملا');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (568,'20401','غلط پاسورڈ');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (568,'20500','عرض بلد یا عرض البلد غائب ہے۔');
 --
 -- parameter_type_translation
 --

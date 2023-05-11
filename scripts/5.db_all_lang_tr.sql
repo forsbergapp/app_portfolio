@@ -37,7 +37,6 @@ INSERT INTO app_portfolio.message_translation (language_id, message_code, text) 
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (555,'20310','Metin çok uzun');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (555,'20400','Kayıt bulunamadı');
 INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (555,'20401','Geçersiz şifre');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (555,'20500','Eksik enlem veya boylam');
 --
 -- parameter_type_translation
 --

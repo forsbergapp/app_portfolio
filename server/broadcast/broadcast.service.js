@@ -8,7 +8,7 @@ const ClientConnect = (res) => {
         };
     res.writeHead(200, headers);
 }
-const ClientClose = (res, client_id) => {
+const ClientOnClose = (res, client_id) => {
     res.on('close', ()=>{
         CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
         res.end();
@@ -17,6 +17,10 @@ const ClientClose = (res, client_id) => {
 const ClientAdd = (newClient) => {
     CONNECTED_CLIENTS.push(newClient);
 }
+const ClientSend = (res, message, message_type) => {
+    res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
+                               "broadcast_message": "${ message }"}`)}\n\n`);
+}
 const BroadcastCheckMaintenance = () => {
     //start interval if apps are started
     if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
@@ -24,9 +28,7 @@ const BroadcastCheckMaintenance = () => {
             if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
                 CONNECTED_CLIENTS.forEach(client=>{
                     if (client.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-                        const broadcast =`{"broadcast_type" :"MAINTENANCE", 
-                                        "broadcast_message":""}`;
-                        client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        ClientSend(client.response, "", 'MAINTENANCE');
                     }
                 })
             }
@@ -34,7 +36,6 @@ const BroadcastCheckMaintenance = () => {
     }
 }
 const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
-    let broadcast;
     if (app_id == '' || app_id == 'null')
         app_id = null;
     if (broadcast_type=='INFO' || broadcast_type=='MAINTENANCE'){
@@ -46,9 +47,7 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
                     null;
                 else
                     if (client.app_id == app_id || app_id == null){
-                        broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                    "broadcast_message": "${broadcast_message}"}`;
-                        client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        ClientSend(client.response, broadcast_message, broadcast_type);
                     }
         })
     }
@@ -57,17 +56,13 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
             //broadcast CHAT to specific client
             CONNECTED_CLIENTS.forEach(client=>{
                 if (client.id == client_id){
-                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                "broadcast_message": "${broadcast_message}"}`;
-                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
-                    
+                    ClientSend(client.response, broadcast_message, broadcast_type);
                 }
             })
         }
     callBack(null, null);
 }
 const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
-    let broadcast;
     if (app_id == '' || app_id == 'null')
         app_id = null;
     if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
@@ -76,9 +71,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
             CONNECTED_CLIENTS.forEach(client=>{
                 if (client.id != client_id_current)
                     if (client.app_id == app_id || app_id == null){
-                        broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                        "broadcast_message": "${broadcast_message}"}`;
-                        client.response.write (`data: ${btoa(broadcast)}\n\n`);
+                        ClientSend(client.response, broadcast_message, broadcast_type);
                     }
             })
         }
@@ -86,10 +79,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
             //broadcast CHAT to specific client
             CONNECTED_CLIENTS.forEach(client=>{
                 if (client.id == client_id){
-                    broadcast =`{"broadcast_type"   : "${broadcast_type}", 
-                                "broadcast_message": "${broadcast_message}"}`;
-                    client.response.write (`data: ${btoa(broadcast)}\n\n`);
-                    
+                    ClientSend(client.response, broadcast_message, broadcast_type);
                 }
             })
         }
@@ -265,5 +255,5 @@ const ConnectedCheck = (user_account_id, callBack) => {
     }
     return callBack(null, 0)
 }
-export {ClientConnect, ClientClose, ClientAdd, BroadcastCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
+export {ClientConnect, ClientOnClose, ClientAdd, ClientSend, BroadcastCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
         ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck}
