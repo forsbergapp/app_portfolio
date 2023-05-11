@@ -1384,9 +1384,6 @@ INSERT INTO app_portfolio.message_type (id, message_type) VALUES (2,'INFO');
 --	20300-20399
 --	node rest api info/error
 --	20400-20499
---	service info/error
---	20500-20599
---
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20100');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20101');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20102');
@@ -1413,7 +1410,6 @@ INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALU
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (2,1,'20310');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20400');
 INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20401');
-INSERT INTO app_portfolio.message (message_level_id, message_type_id, code) VALUES (1,1,'20500');
 --
 -- parameter_type
 --

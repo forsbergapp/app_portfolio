@@ -107,4 +107,36 @@ class CircuitBreaker {
         }
     }
 }
+
+/*
+app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email
+const MessageQueue= async (message) => {
+    return new Promise((resolve, reject) ={
+      switch (message.type) {
+          case 'PUBLISH': {
+          create PUBLISH message in message_queue.json
+          resolve(call message_que(message.CONSUME));
+            break;
+          }
+          case 'CONSUME': {
+          //process MESSAGE PUBLISH RECEIVED
+            if (message.service === 'EMAIL') {
+           callservice MAIL sendemail	use apps.service.js not apps.controller.js FIX FIRST!
+           if ok
+              set CONSUMED id: ISO timestamp in message_queue.json
+          else
+              set ERROR id: ISO timestamp in message_queue.json
+          resolve()
+            break;
+          }
+  
+          default: {
+          add record:
+          message_queue_error.json
+            reject()
+          }
+      }
+    })
+  });
+*/
 export {CircuitBreaker}

@@ -607,7 +607,6 @@ INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20309',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20310',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',0);
 INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20401',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20500',0);
 --
 -- app_device
 --
