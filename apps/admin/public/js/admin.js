@@ -1,5 +1,5 @@
 const common = await import('/common/js/common.js');
-const app_secure = await import('/apps/admin/js/secure.js');
+const app_secure = await import('/admin/js/secure.js');
 common.COMMON_GLOBAL['rest_admin_at'] = '';
 
 const admin_login_nav = (target) => {

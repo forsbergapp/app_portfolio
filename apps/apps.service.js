@@ -245,8 +245,12 @@ const check_app_subdomain = (app_id, host) => {
     //if using test subdomains, dns will point to correct server
     switch (app_id){
         case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
-            //show admin app for all subdomains
-            return true;
+            //app1, app1.test, test, www  or localhost
+            if (host.substring(0,host.indexOf('.')) == `admin` ||
+                host.startsWith(`admin.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')))
+                return true;
+            else
+                return false;
         }
         case 1:{
             //app1, app1.test, test, www  or localhost

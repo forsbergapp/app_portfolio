@@ -12,7 +12,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
         });
     }
     else{
-        import(`file://${process.cwd()}/apps/app${app_id}/client.js`).then(({ createApp }) => {
+        import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
             createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app_result) => {
                 import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
                     createLog(req.query.app_id,
@@ -47,7 +47,7 @@ const getAppAdmin = async (req, res, app_id, callBack) => {
     req.query.callback=1;
     let stack = new Error().stack;
     if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
-        import(`file://${process.cwd()}/apps/admin/client.js`).then(({ createAdmin }) => {
+        import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
             createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app_result) => {
             import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
                 createLog(req.query.app_id,
@@ -75,7 +75,7 @@ const getAppAdmin = async (req, res, app_id, callBack) => {
         })
     }
     else{
-        import(`file://${process.cwd()}/apps/admin/client.js`).then(({ createAdmin }) => {
+        import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
             createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app_result) => {
                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
                     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {

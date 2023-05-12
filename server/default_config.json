@@ -7,7 +7,7 @@
     {"HTTPS_SSL_VERIFICATION": "1", "COMMENT": "1=YES, check if enable tempory path for Letsencrypt using certbot"},
     {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the tempory path for Letsencrypt using certbot"},
     {"JSON_LIMIT": "10MB", "COMMENT": ""},
-    {"TEST_SUBDOMAIN": "test", "COMMENT": "test.[domain] test network with subdomains for test environment, update DNS to point to test.[domain], *.test.[domain]/admin,  app1.test.[domain] etc create SSL for *.test.[domain], *.[domain], [domain]"},
+    {"TEST_SUBDOMAIN": "test", "COMMENT": "test.[domain] test network with subdomains for test environment, update DNS to point to test.[domain], use wildcard or admin.test.[domain] etc create SSL for *.test.[domain], *.[domain], [domain]"},
     {"APP_START": "0", "COMMENT": "0=NO, 1=YES, when 0 then only admin is started"},
     {"APP_COMMON_APP_ID": "0", "COMMENT": "admin and common app id"},
     {"REST_RESOURCE_SERVER": "/server", "COMMENT": "rest resource path for server"},
