@@ -402,75 +402,106 @@ const get_module_with_init = async (app_id,
 }
 
 const AppsStart = async (app) => {
+    const {default:express} = await import('express');
     const { admin_pool_started} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
-    return await new Promise((resolve) => {
-        const load_dynamic_code = async (app_id) => {
-            return await new Promise((resolve) => {
-                /*each app must have server.js with minimum:
-                  const server = (app) =>{
-                        app.use(...);
-                        app.get(...);
+    
+    app.use('/common',express.static(process.cwd() + '/apps/common/public'));
+
+    for (let app_config of ConfigGet(7, null, 'APPS'))
+        app.use(app_config.ENDPOINT,express.static(process.cwd() + app_config.PATH));
+    
+    //routes
+    app.get("/info/:info",(req, res, next) => {
+        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
+            if (ConfigGet(7, app_id, 'SHOWINFO')==1)
+                switch (req.params.info){
+                    case 'about':
+                    case 'disclaimer':
+                    case 'privacy_policy':
+                    case 'terms':{
+                      if (typeof req.query.lang_code !='undefined'){
+                        req.query.lang_code = 'en';
+                      }
+                      getInfo(app_id, req.params.info, req.query.lang_code, (err, info_result)=>{
+                        res.send(info_result);
+                      })
+                      break;
+                    }
+                    default:{
+                      res.send(null);
+                      break;
+                    }
                   }
-                  export {server}
-                */
-                let filename;
-                if (app_id == parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')))
-                    filename = `/apps/admin/server.js`;
-                else
-                    filename = `/apps/app${app_id}/server.js`
-                import (`file://${process.cwd()}${filename}`).then(({ server }) => {
-                    server(app);
-                    resolve();
-                });
-            })
+            else
+                  next();
         }
-        //start always admin app first
-        load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), app).then(() => {
-            //load apps if database started and admin pool is started, database can be started with system admin pool only
-            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`).then(({ getAppsAdmin }) => {
-                    getAppsAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, (err, results) =>{
-                        if (err) {
-                            let stack = new Error().stack;
-                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), `getAppsAdmin, err:${err}`).then(() => {
-                                        resolve();
-                                    })
-                                });
-                            })
-                        }
-                        else {
-                            let json;
-                            let loaded = 0;
-                            json = JSON.parse(JSON.stringify(results));
-                            //start apps if enabled else only admin app will be started
-                            if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
-                                for (let i = 0; i < json.length; i++) {
-                                    //skip admin app
-                                    if (json[i].id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-                                        load_dynamic_code(json[i].id, app).then(() => {
-                                            if (loaded == json.length - 2) //dont count admin app
-                                                resolve();
-                                            else
-                                                loaded++;
-                                        });
-                                }
-                            }
-                            else{
-                                load_dynamic_code(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'));
-                                resolve();
-                            }
-                        }
-                    })
+        else
+            if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
+                getMaintenance(app_id)
+                .then((app_result) => {
+                    res.send(app_result);
                 });
             }
-            else{
-                resolve();
+            else
+                next();
+    });
+    app.get("/",(req, res, next) => {
+        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        if (app_id == 0)
+            import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getAppAdmin}) => {
+                    getAppAdmin(req, res, app_id, (err, app_result)=>{
+                    return res.send(app_result);
+                })
+            })
+        else
+            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1)
+                import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
+                    getApp(req, res, app_id, null,(err, app_result)=>{
+                        return res.send(app_result);
+                    })
+                })
+            else
+                if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
+                    getMaintenance(app_id)
+                    .then((app_result) => {
+                        res.send(app_result);
+                    });
+                }
+                else
+                    next();
+    });
+    app.get("/:sub",(req, res, next) => {
+        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        if (ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') == app_id)
+            return res.redirect('/');
+        else
+            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
+                if (ConfigGet(7, app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
+                    import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
+                        getApp(req, res, app_id, req.params.sub, (err, app_result)=>{
+                            //if app_result=0 means here redirect to /
+                            if (app_result==0)
+                                return res.redirect('/');
+                            else
+                                return res.send(app_result);
+                        })
+                    });
+                else
+                    next();
             }
-        });
-    })
+            else
+                if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
+                    getMaintenance(app_id)
+                    .then((app_result) => {
+                        res.send(app_result);
+                    });
+                }
+                else
+                    next();
+    });
 }
+    
 const getMaintenance = (app_id) => {
     return new Promise((resolve, reject) => {
         const files = [
