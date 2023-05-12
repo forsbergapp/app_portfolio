@@ -411,6 +411,19 @@ const AppsStart = async (app) => {
         app.use(app_config.ENDPOINT,express.static(process.cwd() + app_config.PATH));
     
     //routes
+    app.get("/sw.js",(req, res, next) => {
+        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        import('node:fs').then((fs) =>{
+            fs.readFile(process.cwd() + `${ConfigGet(7, app_id, 'PATH')}/sw.js`, 'utf8', (error, fileBuffer) => {
+                if (error)
+                    next();
+                else{
+                    res.type('text/javascript');
+                    res.send(fileBuffer.toString());
+                }
+            })
+        })
+    });
     app.get("/info/:info",(req, res, next) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
