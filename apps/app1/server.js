@@ -1,10 +1,7 @@
 const {default:express} = await import('express');
 const server = (app) =>{  
   const APP1_ID = 1;
-  //app 1 directories
-  app.use('/app1/css',express.static(process.cwd() + '/apps/app1/css'));
-  app.use('/app1/images',express.static(process.cwd() + '/apps/app1/images'));
-  app.use('/app1/js',express.static(process.cwd() + '/apps/app1/js'));
+  app.use('/app1',express.static(process.cwd() + '/apps/app1/public'));
   //routes
   app.get("/info/:info",(req, res, next) => {
       import(`file://${process.cwd()}/apps/apps.service.js`).then(({ getInfo, check_app_subdomain}) => {
