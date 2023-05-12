@@ -12,7 +12,7 @@ const BroadcastConnect = (req, res) => {
         id: client_id,
         app_id: req.query.app_id,
         user_account_id: req.query.user_account_logon_user_account_id ?? null,
-        system_admin: req.query.system_admin,
+        system_admin: req.query.system_admin=='null'?'':req.query.system_admin,
         user_agent: req.headers["user-agent"],
         connection_date: new Date().toISOString(),
         ip: req.ip,
@@ -100,7 +100,7 @@ const ConnectedCount = (req, res) => {
     })
 }
 const ConnectedUpdate = (req, res) => {
-    service.ConnectedUpdate(req.query.client_id, req.query.user_account_id, req.query.system_admin, req.query.identity_provider_id, (err, result) =>{
+    service.ConnectedUpdate(req.query.client_id, req.query.user_account_logon_user_account_id, req.query.system_admin, req.query.identity_provider_id, (err, result) =>{
         return res.status(200).json(
             err ?? result
         );
