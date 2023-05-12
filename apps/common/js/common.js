@@ -3189,8 +3189,6 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
     COMMON_GLOBAL['app_name'] = parameters.app_name;
-    COMMON_GLOBAL['app_url'] = parameters.app_url;
-    COMMON_GLOBAL['app_logo'] = parameters.app_logo;
 
     //app exception function
     COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
@@ -3198,8 +3196,6 @@ const set_globals = async (parameters) => {
     //rest 
     COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;
     COMMON_GLOBAL['rest_resource_bff'] = parameters.rest_resource_bff;
-    COMMON_GLOBAL['rest_resource_service'] = parameters.rest_resource_service;
-    COMMON_GLOBAL['rest_resource_service_db_schema'] = parameters.rest_resource_service_db_schema;
 
     //client credentials
     COMMON_GLOBAL['app_rest_client_id'] = parameters.app_rest_client_id;

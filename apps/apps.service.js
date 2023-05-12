@@ -344,8 +344,6 @@ const get_module_with_init = async (app_id,
         let parameters = {   
             app_id: app_id,
             app_name: 'SYSTEM ADMIN',
-            app_url: '',
-            app_logo: '',
             locale: locale,
             exception_app_function: exception_app_function,
             ui: ui,
@@ -357,8 +355,6 @@ const get_module_with_init = async (app_id,
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
             rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
             rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
-            rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
-		    rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
             first_time: first_time
         };
         module = module.replace(
@@ -378,8 +374,6 @@ const get_module_with_init = async (app_id,
                     let parameters = {   
                         app_id: app_id,
                         app_name: result[0].app_name,
-                        app_url: result[0].app_url,
-                        app_logo: result[0].app_logo,
                         locale:locale,
                         exception_app_function: exception_app_function,
                         ui: ui,
@@ -391,8 +385,6 @@ const get_module_with_init = async (app_id,
                         common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                         rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
                         rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
-                        rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
-                        rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA'),
                         first_time: null
                     };
                     module = module.replace(

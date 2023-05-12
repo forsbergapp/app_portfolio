@@ -11,7 +11,6 @@ const init = (parameters) => {
     document.getElementById('common_maintenance_message').innerHTML = common.ICONS['app_maintenance'];;
     
     common.COMMON_GLOBAL['app_id'] = parameters.app_id;
-    common.COMMON_GLOBAL['rest_resource_service'] = parameters.rest_resource_service;
     common.COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function; 
     common.COMMON_GLOBAL['user_account_id'] = '';
     common.COMMON_GLOBAL['user_identity_provider_id'] = '';
