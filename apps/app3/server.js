@@ -2,9 +2,7 @@ const {default:express} = await import('express');
 const server = (app) =>{
   const APP3_ID = 3;
   //app 3 directory
-  app.use('/app3/css',express.static(process.cwd() + '/apps/app3/css'));
-  app.use('/app3/images',express.static(process.cwd() + '/apps/app3/images'));
-  app.use('/app3/js',express.static(process.cwd() + '/apps/app3/js'));
+  app.use('/app3',express.static(process.cwd() + '/apps/app3/public'));
   //routes
   app.get('/:doc', (req, res,next) => {
     import(`file://${process.cwd()}/apps/apps.service.js`).then(({check_app_subdomain}) => {

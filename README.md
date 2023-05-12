@@ -241,9 +241,9 @@
 
 	[docs/1.download_and_info.md](docs/1.download_and_info.md)
 
-2. Install Node.js, modules on server and SSL
+2. Install Node.js, modules on server, set DNS records and create SSL
 
-	[docs/2.install_nodejs_ssl.md](docs/2.install_nodejs_ssl.md)
+	[docs/2.install_nodejs_dn_ssl.md](docs/2.install_nodejs_dns_ssl.md)
 
 3. Install MariaDB/MySQL/Oracle/PostgreSQL on same server or other server
    and run db scripts
@@ -254,7 +254,7 @@
 	
 	[docs/4.start_nodejs.md](docs/4.start_nodejs.md)
 
-5. Enter application at http://localhost/admin or http://[yourdomain]/admin
+5. Enter application at http://admin.localhost or http://admin.[yourdomain]
 
    	Set server parameters.
 

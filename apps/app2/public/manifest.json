@@ -1,0 +1,23 @@
+{
+    "short_name": "Timetables",
+    "name": "Timetables",
+    "description": "Timetables",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#51abff",
+    "orientation": "portrait-primary",
+    "icons": [
+    {
+        "src": "/app2/images/pwa/icon-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+    },
+    {
+        "src": "/app2/images/pwa/icon-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+    }
+    ],
+    "scope": "/"
+}
