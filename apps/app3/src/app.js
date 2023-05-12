@@ -16,33 +16,37 @@ const createApp = (app_id, params, locale) => {
             ['<AppHead/>', process.cwd() + '/apps/app3/src/head.html'],
             ['<AppDialogues/>', process.cwd() + '/apps/app3/src/dialogues.html']
             ];
-        read_app_files(app_id, files, (err, app)=>{
-            if (err)
-                reject(err);
-            else{
-                //APP Profile tag not used in common body
-                app = app.replace(
-                    '<AppProfileInfo/>',
-                    '');
-                //APP Profile tag not used in common body
-                app = app.replace(
-                    '<AppProfileTop/>',
-                    '');
-                get_module_with_init(app_id,
-                                     locale,
-                                     null,
-                                     null,
-                                     'app.app_exception',
-                                     true,
-                                     app, (err, app_init) =>{
-                    if (err)
-                        reject(err);
-                    else{
-                        resolve(app_init);
-                    }
-                })
-            }
-        })           
+        if (params==null || params =='1' || params =='2' || params =='3' ){
+            read_app_files(app_id, files, (err, app)=>{
+                if (err)
+                    reject(err);
+                else{
+                    //APP Profile tag not used in common body
+                    app = app.replace(
+                        '<AppProfileInfo/>',
+                        '');
+                    //APP Profile tag not used in common body
+                    app = app.replace(
+                        '<AppProfileTop/>',
+                        '');
+                    get_module_with_init(app_id,
+                                        locale,
+                                        null,
+                                        null,
+                                        'app.app_exception',
+                                        true,
+                                        app, (err, app_init) =>{
+                        if (err)
+                            reject(err);
+                        else{
+                            resolve(app_init);
+                        }
+                    })
+                }
+            })
+        }
+        else
+            resolve(0);        
     })
 }
 export{createApp}
