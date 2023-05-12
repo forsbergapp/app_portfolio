@@ -168,17 +168,9 @@ const getAppDBParametersAdmin = (app_id, callBack) => {
 const getAppStartParameters = (app_id, callBack) => {
 		let sql;
 		let parameters;
-		let service_auth = 'SERVICE_AUTH';
 		let app_rest_client_id = 'APP_REST_CLIENT_ID';
 		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
-		let rest_app_parameter ='REST_APP_PARAMETER';
 		sql = `SELECT a.app_name "app_name",
-					  a.url "app_url",
-					  a.logo "app_logo",
-					  (SELECT ap.parameter_value
-						 FROM ${db_schema()}.app_parameter ap
-						WHERE ap.parameter_name = :service_auth
-						  AND ap.app_id = :app_main_id) "service_auth",
 					  (SELECT ap.parameter_value
 						 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :app_rest_client_id
@@ -186,19 +178,13 @@ const getAppStartParameters = (app_id, callBack) => {
 					  (SELECT ap.parameter_value
 						 FROM ${db_schema()}.app_parameter ap
 						WHERE ap.parameter_name = :app_rest_client_secret
-						  AND ap.app_id = :app_main_id) "app_rest_client_secret",
-					  (SELECT ap.parameter_value
-						 FROM ${db_schema()}.app_parameter ap
-						WHERE ap.parameter_name = :rest_app_parameter
-						  AND ap.app_id = :app_main_id) "rest_app_parameter"
+						  AND ap.app_id = :app_main_id) "app_rest_client_secret"
 			   FROM ${db_schema()}.app a
 			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
 						app_main_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-						service_auth: service_auth,
 						app_rest_client_id: app_rest_client_id,
-						app_rest_client_secret: app_rest_client_secret,
-						rest_app_parameter: rest_app_parameter}
+						app_rest_client_secret: app_rest_client_secret}
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{
