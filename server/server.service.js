@@ -19,6 +19,15 @@ let SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 
 const app_portfolio_title = 'App Portfolio';
 
+const CreateRandomString =()=>{
+    let randomstring = "";
+    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+    for (let i = 0; i < 256; i++) {
+        randomstring += chars[Math.floor(Math.random() * chars.length)] + Math.floor(1 + Math.random() * 10);
+    }
+    return randomstring;
+}
+
 //ES6 object with properties using concise method syntax
 const COMMON = {
     app_filename(module){
@@ -206,33 +215,36 @@ const DefaultConfig = async () => {
                         //update default file for config 1 server
                         config_json[0] = JSON.parse(config_json[0]);
                         //update path
-                        config_json[0]['SERVER'].forEach((row,index)=>{
-                            for (let i=0; i < Object.keys(row).length;i++){
-                                if (Object.keys(row)[i]=='HTTPS_KEY'){
-                                    config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
+                        config_json[0]['SERVER'].map(row=>{
+                            for (let key of Object.keys(row)){
+                                if (key=='HTTPS_KEY'){
+                                    row.HTTPS_KEY = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                                 }
-                            } 
-                        })
-                        config_json[0]['SERVER'].forEach((row,index)=>{
-                            for (let i=0; i < Object.keys(row).length;i++){
-                                if (Object.keys(row)[i]=='HTTPS_CERT'){
-                                    config_json[0]['SERVER'][index][Object.keys(row)[i]] = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
+                                if (key=='HTTPS_CERT'){
+                                    row.HTTPS_CERT = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                                 }
                             } 
                         })
                         //generate hash
-                        config_json[0]['SERVICE_AUTH'].forEach((row,index)=>{
-                            for (let i=0; i < Object.keys(row).length;i++){
-                                if (Object.keys(row)[i]=='ADMIN_TOKEN_SECRET'){                            
-                                    config_json[0]['SERVICE_AUTH'][index][Object.keys(row)[i]] = `${createHash('sha256').update(new Date().toISOString()).digest('hex')}`;
+                        config_json[0]['SERVICE_AUTH'].map(row=>{
+                            for (let key of Object.keys(row))
+                                if (key== 'ADMIN_TOKEN_SECRET'){
+                                    row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                                 }
-                            } 
                         })
                         config_json[0] = JSON.stringify(config_json[0]);
         
                         config_json[4] = JSON.parse(config_json[4]);
                         config_json[4]['created'] = new Date().toISOString();
                         config_json[4] = JSON.stringify(config_json[4], undefined, 2);
+                        
+                        //generate hash for apps
+                        config_json[5] = JSON.parse(config_json[5]);
+                        config_json[5]['APPS'].map(row=>{
+                            row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+                            row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+                        })
+                        config_json[5] = JSON.stringify(config_json[5], undefined, 2);
                         //default server metadata
                         let config_init = {
                                             "CONFIGURATION": app_portfolio_title,
@@ -1206,4 +1218,4 @@ const serverStart = async () =>{
 
 export {COMMON, ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, ConfigInfo, Info, 
-        ConfigGet, InitConfig, serverStart};
+        ConfigGet, InitConfig, serverStart, CreateRandomString};
