@@ -1068,7 +1068,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
    
    const {db_schema} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`);
    const {createLogAppS} = await import(`file://${process.cwd()}/server/log/log.service.js`);
-   const {COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
+   const {COMMON, CreateRandomString} = await import(`file://${process.cwd()}/server/server.service.js`);
    let {createHash} = await import('node:crypto');
    const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
    let fs = await import('node:fs');
@@ -1084,7 +1084,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
       let password;
       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
       //Database users use SHA256
-      password = createHash('sha256').update(new Date().toISOString()).digest('hex');
+      password = createHash('sha256').update(CreateRandomString()).digest('hex');
       install_result.push({[`${username}`]: password});
       if (sql.toUpperCase().includes('INSERT INTO'))
          password = hashSync(password, genSaltSync(10));
