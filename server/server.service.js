@@ -8,6 +8,7 @@ let CONFIG_BLOCKIP;
 let CONFIG_USERAGENT;
 let CONFIG_POLICY;
 let CONFIG_USER;
+let CONFIG_APPS;
 let SLASH;
 if (process.platform == 'win32')
     SLASH = '\\';
@@ -57,7 +58,8 @@ const config_files = () => {
             [3, JSON.parse(CONFIG_INIT)['FILE_CONFIG_AUTH_USERAGENT']],
             [4, JSON.parse(CONFIG_INIT)['FILE_CONFIG_AUTH_POLICY']],
             [5, JSON.parse(CONFIG_INIT)['PATH_LOG']],
-            [6, JSON.parse(CONFIG_INIT)['FILE_CONFIG_AUTH_USER']]
+            [6, JSON.parse(CONFIG_INIT)['FILE_CONFIG_AUTH_USER']],
+            [7, JSON.parse(CONFIG_INIT)['FILE_CONFIG_APPS']]
            ];
 }
 const ConfigGet = (config_no, config_group = null, parameter = null) => {
@@ -100,6 +102,50 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
         } 
         case 6:{
             //ADMIN username and password
+            return JSON.parse(CONFIG_USER);
+        } 
+        case 7:{
+            //APPS 
+            switch(parameter){
+                //config_group = subdomain requested, return app id for given subdomain
+                case 'SUBDOMAIN':{
+                    switch (config_group.split('.')[0]){
+                        case 'localhost':
+                        case 'www':{
+                            //localhost
+                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.SUBDOMAIN == 'www'})[0].CLIENT_ID;
+                        }
+                        default:{
+                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return config_group.split('.')[0] == app.SUBDOMAIN})[0].CLIENT_ID;
+                        }
+                    }
+                    break;
+                }
+                //config_group = app id, return parameter value for given app id
+                case 'SHOWINFO':
+                case 'SHOWPARAM':
+                case 'ENDPOINT':
+                case 'PATH':
+                case 'CLIENT_ID':
+                case 'CLIENT_SECRET':
+                case 'DATA_SECRET':{
+                    return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.CLIENT_ID == config_group})[0][parameter];
+                    break;
+                }
+                //config_group = app id or null, return all apps or given app id without secret
+                case 'APPS':{
+                    let apps_no_secrets = JSON.parse(CONFIG_APPS)['APPS'];
+                    apps_no_secrets = apps_no_secrets.filter((app)=>{ 
+                                                            return app.CLIENT_ID == config_group || config_group == null}
+                                                            )
+                    
+                    apps_no_secrets.map((app)=>{
+                        delete app.CLIENT_SECRET;
+                        delete app.DATA_SECRET;
+                    })                    
+                    return apps_no_secrets;
+                }
+            }
             return JSON.parse(CONFIG_USER);
         } 
     }
@@ -147,7 +193,8 @@ const DefaultConfig = async () => {
                                     [2, `default_auth_blockip.json`],
                                     [3, `default_auth_useragent.json`],
                                     [4, `default_auth_policy.json`],
-                                    [6, `default_auth_user.json`]
+                                    [6, `default_auth_user.json`],
+                                    [7, `default_apps.json`]
                                 ];
             let config_json = [];
             //ES2020 import() with ES6 promises, object destructuring
@@ -197,7 +244,8 @@ const DefaultConfig = async () => {
                                             "FILE_CONFIG_AUTH_USERAGENT":`${SLASH}config${SLASH}auth_useragent.json`,
                                             "FILE_CONFIG_AUTH_POLICY":`${SLASH}config${SLASH}auth_policy.json`,
                                             "PATH_LOG":`${SLASH}logs${SLASH}`,
-                                            "FILE_CONFIG_AUTH_USER":`${SLASH}config${SLASH}auth_user.json`
+                                            "FILE_CONFIG_AUTH_USER":`${SLASH}config${SLASH}auth_user.json`,
+                                            "FILE_CONFIG_APPS":`${SLASH}config${SLASH}apps.json`
                                             };
                         config_init = JSON.stringify(config_init, undefined, 2);
                         //save initial config files with metadata including path to config files
@@ -209,10 +257,9 @@ const DefaultConfig = async () => {
                                     //save json in variable
                                     CONFIG_INIT = config_init;
                                     let config_created=0;
-                                    for (let config_no=0;config_no<config_json.length;config_no++){
-                                        let json_pretty = JSON.stringify(JSON.parse(config_json[config_no]), undefined, 2);
+                                    for (let config_no=0;config_no<config_json.length;config_no++){;
                                         //send fileno in file array
-                                        ConfigSave(default_files[config_no][0], json_pretty, true, (err, result)=>{
+                                        ConfigSave(default_files[config_no][0], JSON.parse(config_json[config_no]), true, (err, result)=>{
                                             if (err)
                                                 reject(err);
                                             else{
@@ -271,6 +318,10 @@ const InitConfig = async () => {
                                         }
                                         case 6:{
                                             CONFIG_USER = fileBuffer.toString();
+                                            break;
+                                        }
+                                        case 7:{
+                                            CONFIG_APPS = fileBuffer.toString();
                                             break;
                                         }
                                     }
@@ -349,6 +400,7 @@ const ConfigGetSaved = (config_type_no, callBack) => {
     4 = auth policy     path + file
     5 = log path        path
     6 = auth user       path + file
+    7 = apps            path + file
     */
     
     let config_file = config_files().filter((file) => {
@@ -395,6 +447,10 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                                     CONFIG_USER = config_json;
                                     break;
                                 }
+                                case 6:{
+                                    CONFIG_APPS = config_json;
+                                    break;
+                                }
                             }
                             resolve();
                         }
@@ -414,8 +470,8 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                     config_json['comment'] = '';
                     config_json['created'] = new Date().toISOString();
                     config_json['modified'] = '';
-                    config_json = JSON.stringify(config_json, undefined, 2);
-                }                
+                }
+                config_json = JSON.stringify(config_json, undefined, 2);
                 write_config(config_no, config_file, config_json).then(() => {
                     callBack(null, null);
                 });
