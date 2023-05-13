@@ -92,6 +92,41 @@ const getAppAdmin = async (req, res, app_id, callBack) => {
         })
     }
 }
+const getReport = async (req, res, app_id, callBack) => {
+
+    let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
+    //example string:
+    //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
+    let query_parameters = '{';
+    decodedparameters.split('&').forEach((parameter, index)=>{
+        query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
+        if (index < decodedparameters.split('&').length - 1)
+            query_parameters += ',';
+    });
+    query_parameters += '}';
+    query_parameters = JSON.parse(query_parameters);
+
+    req.query.ps = query_parameters.ps; //papersize     A4/Letter
+    req.query.hf = query_parameters.hf; //header/footer 1/0
+
+	if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.microservice == "undefined" ){
+		//PDF
+        req.query.service ='PDF';
+        let parameters =  `?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&url=${req.protocol}://${req.get('host')}${req.originalUrl}`;
+        let pdf = await service.BFF(app_id, 'PDF', parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], null)
+        callBack(null,pdf)
+	}
+	else{
+		import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
+			createReport(app_id, query_parameters.module, service.client_locale(req.headers['accept-language'])).then((report_result) => {
+                callBack(null,report_result)
+			})
+		})
+        .catch(error=>{
+            callBack(error,null)
+        })
+	}
+}		
 //backend for frontend
 //returns status 401 (parameter errors), 503(ANY error in called service) or 200 if ok
 //together with error or result
@@ -151,12 +186,7 @@ const BFF = async (req, res) =>{
                     if (log_result)
                         return res.status(200).send('✅');
                     else
-                        if (result_service.startsWith('%PDF')){
-                            res.type('application/pdf');
-                            return res.send(result_service);
-                        }
-                        else
-                            return res.status(200).send(result_service);
+                        return res.status(200).send(result_service);
                 })
             })
             .catch(error => {
@@ -207,4 +237,4 @@ const BFF_auth = async (req, res) =>{
         });
     }
 }
-export{getApp, getAppAdmin, BFF, BFF_noauth, BFF_auth}
+export{getApp, getAppAdmin, getReport, BFF, BFF_noauth, BFF_auth}

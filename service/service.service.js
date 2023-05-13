@@ -38,16 +38,22 @@ const service_request = async (hostname, path, method, timeout, client_ip, autho
         };
         request = https.request(options, res =>{
             let responseBody = '';
-            res.setEncoding('UTF8');
-            res.on('data', (chunk) =>{
-                responseBody += chunk;
-            })
-            res.on('end', ()=>{
-                if (res.statusCode == 200)
-                    resolve (responseBody);
-                else
-                    reject(responseBody);
-            });
+            //for REPORT statucode 301 is returned, resolve the redirected path
+            if (res.statusCode==301)
+                resolve(service_request(hostname, res.headers.location, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body));
+            else{
+                res.setEncoding('UTF8');
+                res.on('data', (chunk) =>{
+                    responseBody += chunk;
+                })
+                res.on('end', ()=>{
+                    if (res.statusCode == 200)
+                        resolve (responseBody);
+                    else
+                        reject(responseBody);
+                });
+            }
+            
         })
         if (method !='GET')
             request.write(body);
@@ -62,7 +68,7 @@ class CircuitBreaker {
         this.states = {};
         this.failureThreshold = 5;
         this.cooldownPeriod = 10;
-        this.requestTimetout = 10;
+        this.requestTimetout = 20;
     }
     async callService(hostname, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
         if (!this.canRequest(service))

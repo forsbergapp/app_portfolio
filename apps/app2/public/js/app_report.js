@@ -1445,16 +1445,7 @@ const report_exception = (error) => {
 /*----------------------- */
 const init = async (parameters) => {
 	let params = new URLSearchParams(window.location.search);
-	let decodedReportparameters;
-    if (params.get('service')=='1'){
-		//used when creating PDF
-		decodedReportparameters = common.fromBase64(params.get('reportid'));
-	}
-	else{
-		let decodedparameters = common.fromBase64(params.get('parameters'));
-		let encodedReportParams = new URLSearchParams(decodedparameters);
-		decodedReportparameters = common.fromBase64(encodedReportParams.get('reportid'));
-	}
+	let decodedReportparameters = common.fromBase64(params.get('reportid'));
 	let urlParams = new URLSearchParams(decodedReportparameters);
 	let user_account_id = urlParams.get('id');
 	let user_setting_id = urlParams.get('sid');

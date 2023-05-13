@@ -51,7 +51,6 @@ const createAdmin = (app_id, locale) => {
                         get_module_with_init(app_id,
                                             locale,
                                             null,
-                                            null,  
                                             'app.admin_exception',
                                             true, //ui
                                             app, (err, app_init) =>{
@@ -94,7 +93,6 @@ const createAdmin = (app_id, locale) => {
                     get_module_with_init(app_id,
                                          locale,
                                          1,  //system admin, no db available
-                                         null,  
                                          'app.admin_exception_before',
                                          true, //ui
                                          app, (err, app_init) =>{
