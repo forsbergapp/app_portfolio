@@ -450,14 +450,10 @@ const AppsStart = async (app) => {
                   next();
         }
         else
-            if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-                getMaintenance(app_id)
-                .then((app_result) => {
-                    res.send(app_result);
-                });
-            }
-            else
-                next();
+            getMaintenance(app_id)
+            .then((app_result) => {
+                res.send(app_result);
+            });
     });
     app.get("/",(req, res, next) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
@@ -475,14 +471,10 @@ const AppsStart = async (app) => {
                     })
                 })
             else
-                if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-                    getMaintenance(app_id)
-                    .then((app_result) => {
-                        res.send(app_result);
-                    });
-                }
-                else
-                    next();
+                getMaintenance(app_id)
+                .then((app_result) => {
+                    res.send(app_result);
+                });
     });
     app.get("/:sub",(req, res, next) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
@@ -504,14 +496,10 @@ const AppsStart = async (app) => {
                     next();
             }
             else
-                if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-                    getMaintenance(app_id)
-                    .then((app_result) => {
-                        res.send(app_result);
-                    });
-                }
-                else
-                    next();
+                getMaintenance(app_id)
+                .then((app_result) => {
+                    res.send(app_result);
+                });
     });
 }
     
@@ -531,9 +519,7 @@ const getMaintenance = (app_id) => {
                 let parameters = {   
                     app_id: app_id,
                     rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
-                    rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
-                    rest_resource_service: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE'),
-		            rest_resource_service_db_schema: ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')
+                    rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF')
                 };
                 app = app.replace('<ITEM_COMMON_PARAMETERS/>',
                                     JSON.stringify(parameters));
