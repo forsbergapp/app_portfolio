@@ -9,7 +9,7 @@ const PDF_WAIT_ATTEMPTS = 100;      //number of attempts
 const PDF_WAIT_INTERVAL = 100;      //milliseconds
 
 let BROWSER;
-const initReportService = async () => {
+const initPDFService = async () => {
     BROWSER = await puppeteer.launch({
         pipe:true,
         headless: true,
@@ -56,18 +56,18 @@ const initReportService = async () => {
                 '--disable-webgl',
                 '--no-default-browser-check',
                 '--hide-crash-restore-bubble',
-                '--user-data-dir=' + process.cwd() + '/service/report/tmp']
+                '--user-data-dir=' + process.cwd() + '/service/pdf/tmp']
     });
     
 };
 
-const getReportService = async (url, ps, hf) => {
+const getPDF = async (url, ps, hf) => {
     if (!BROWSER)
-        await initReportService();
+        await initPDFService();
     return await new Promise((resolve) => {
         BROWSER.newPage().then((webPage) => {
             webPage.goto(url, {
-                waitUntil: "networkidle2",
+                waitUntil: ["networkidle2"],
                 timeout: PDF_TIMEOUT,
             }).then(() => {
                 let width_viewport;
@@ -155,8 +155,6 @@ const getReportService = async (url, ps, hf) => {
                                         676
                                         %%EOF
                                     */
-                                    let pdf_length = pdf.toString().length;
-                                    let test = 1;
                                     if (pdf.toString().length < PDF_EMPTY_SIZE_CHECK)
                                         //try PDF_WAIT_ATTEMPTS * PDF_WAIT_INTERVAL = total time
                                         //ex. 20 * 500 = 10 seconds
@@ -170,7 +168,8 @@ const getReportService = async (url, ps, hf) => {
                                         webPage.close().then(() => {
                                             //if closing browser and not only page:
                                             //BROWSER.close();
-                                            resolve(pdf);
+                                            //return PDF encoded to base64
+                                            resolve(pdf.toString('base64'));
                                         });
                                     });    
                     }, PDF_WAIT_INTERVAL);
@@ -181,4 +180,4 @@ const getReportService = async (url, ps, hf) => {
         })
     })
 }
-export{getReportService};
+export{getPDF};
