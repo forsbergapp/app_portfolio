@@ -32,7 +32,6 @@ const createApp = (app_id, params, locale) => {
                     get_module_with_init(app_id,
                                         locale,
                                         null,
-                                        null,
                                         'app.app_exception',
                                         true,
                                         app, (err, app_init) =>{

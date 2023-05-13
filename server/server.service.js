@@ -703,8 +703,8 @@ const serverExpressRoutes = async (app) => {
     const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
     //service mail
     const { sendEmail } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/mail/mail.controller.js`);
-    //service report
-    const { getReport } = await import(`file://${process.cwd()}${rest_resource_service}/report/report.controller.js`);
+    //service pdf
+    const { getPDF } = await import(`file://${process.cwd()}${rest_resource_service}/pdf/pdf.controller.js`);
     //service worldcities
     const { getCities} = await import(`file://${process.cwd()}${rest_resource_service}/worldcities/worldcities.controller.js`);
     
@@ -997,11 +997,11 @@ const serverExpressRoutes = async (app) => {
      router[i].post("/access", checkAccessToken, sendEmail);
      app.use(`${rest_resource_service}/mail`, router[i]);
      i++;
-    //service report
+    //service pdf
     router.push(Router());
     router[i].use(serverRouterLog);
-    router[i].get("/", getReport);
-    app.use(`${rest_resource_service}/reports`, router[i]);
+    router[i].get("/", getPDF);
+    app.use(`${rest_resource_service}/pdf`, router[i]);
     i++;
     //service worldcities
     router.push(Router());

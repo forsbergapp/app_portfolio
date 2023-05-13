@@ -328,7 +328,6 @@ const read_app_files = async (app_id, files, callBack) => {
 const get_module_with_init = async (app_id,
                                     locale,
                                     system_admin,
-                                    user_account_id,
                                     exception_app_function,
                                     ui,
                                     module, callBack) => {
@@ -455,7 +454,36 @@ const AppsStart = async (app) => {
                 res.send(app_result);
             });
     });
-    app.get("/",(req, res, next) => {
+    app.get("/reports",(req, res) => {
+        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        if (app_id == 0)
+            res.redirect('/');
+        else
+            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1)
+                import(`file://${process.cwd()}/apps/apps.controller.js`)
+                .then(({ getReport}) => {
+                        getReport(req, res, app_id, (err, report_result)=>{
+                            if (err)
+                                res.redirect('/');
+                            else{
+                                if (req.query.service==='PDF'){
+                                    let pdf = Buffer.from(report_result, 'base64').toString('binary');
+                                    res.type('application/pdf');
+                                    res.end(pdf, 'binary');
+                                }
+                                else    
+                                    res.send(report_result);
+                            }
+                                
+                        })                    
+                })
+            else
+                getMaintenance(app_id)
+                .then((app_result) => {
+                    res.send(app_result);
+                });
+    });
+    app.get("/",(req, res) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         if (app_id == 0)
             import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getAppAdmin}) => {
@@ -671,9 +699,9 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                             reject('service MAIL POST only')
                         break;
                     }
-                    case 'REPORT':{
+                    case 'PDF':{
                         // parameter ex
-                        // app_id=[id]&service=REPORT&reportid=[base64]
+                        // app_id=[id]&service=PDF&reportid=[base64]
                         // decode
                         // ?reportid=[base64]
                         // authorization not used for this service
@@ -687,10 +715,10 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         else
                             if (method=='GET'){
                                 authorization = null;
-                                path = `${rest_resource_service}/reports${parameters}&app_id=${app_id}`
+                                path = `${rest_resource_service}/pdf${parameters}`
                             }
                             else
-                                reject('service REPORT GET only')
+                                reject('service PDF GET only')
                         break;
                     }
                     case 'WORLDCITIES':{
