@@ -467,9 +467,8 @@ const AppsStart = async (app) => {
                                 res.redirect('/');
                             else{
                                 if (req.query.service==='PDF'){
-                                    let pdf = Buffer.from(report_result, 'base64').toString('binary');
                                     res.type('application/pdf');
-                                    res.end(pdf, 'binary');
+                                    res.end(report_result, 'binary');
                                 }
                                 else    
                                     res.send(report_result);
@@ -688,37 +687,6 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                             else
                                 reject('service GEOLOCATION GET only');
                         }
-                        break;
-                    }
-                    case 'MAIL':{
-                        // parameters ex:
-                        // ?&app_id=[id]&lang_code=en
-                        if (method=='POST')
-                            path = `${rest_resource_service}/mail${parameters}&app_id=${app_id}`
-                        else
-                            reject('service MAIL POST only')
-                        break;
-                    }
-                    case 'PDF':{
-                        // parameter ex
-                        // app_id=[id]&service=PDF&reportid=[base64]
-                        // decode
-                        // ?reportid=[base64]
-                        // authorization not used for this service
-                        //check if maintenance
-                        if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-                            getMaintenance(app_id)
-                            .then((app_result) => {
-                                resolve(app_result);
-                            });
-                        }
-                        else
-                            if (method=='GET'){
-                                authorization = null;
-                                path = `${rest_resource_service}/pdf${parameters}`
-                            }
-                            else
-                                reject('service PDF GET only')
                         break;
                     }
                     case 'WORLDCITIES':{

@@ -11,7 +11,7 @@ const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.c
 
 const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, 
                              ip, authorization, headers_user_agent, headers_accept_language, callBack) => {
-    const { createMail, BFF } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
     const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
     
     createMail(app_id, 
@@ -22,35 +22,6 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
             "verificationCode": verification_code,
             "to":               email,
         }).then((email)=>{
-            let path;
-            switch (parseInt(emailtype)){
-                case 1:{
-                    //1=SIGNUP
-                    //not logged in
-                    //has middleware for signup that checks if signup is enabled
-                    path = '/signup?';
-                    break;
-                }
-                case 2:{
-                    //2=UNVERIFIED
-                    //accesstoken still not available, use datatoken
-                    path = '?';
-                    break;
-                }
-                case 3:{
-                    //3=PASSWORD RESET (FORGOT)
-                    //not logged in use datatoken
-                    path = '?';
-                    break;
-                }
-                case 4:{
-                    //4=CHANGE EMAIL
-                    //logged in, use accesstoken and send user id
-                    path = `/access?user_account_logon_user_account_id=${userid}`;
-                    break;
-                }
-            }
-            //BFF(app_id, 'MAIL', path, ip, host, 'POST', authorization, headers_user_agent, headers_accept_language, email)
             MessageQueue('MAIL', 'PUBLISH', email, null)
             .then(()=>{
                 callBack(null, null);
