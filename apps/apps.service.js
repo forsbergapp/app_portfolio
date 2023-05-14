@@ -456,6 +456,8 @@ const AppsStart = async (app) => {
     });
     app.get("/reports",(req, res) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        //no app_id in reports url
+        req.query.app_id = app_id;
         if (app_id == 0)
             res.redirect('/');
         else
@@ -468,7 +470,8 @@ const AppsStart = async (app) => {
                             else{
                                 if (req.query.service==='PDF'){
                                     res.type('application/pdf');
-                                    res.end(report_result, 'binary');
+                                    res.send(report_result);
+                                    //res.end(report_result, 'binary');
                                 }
                                 else    
                                     res.send(report_result);
