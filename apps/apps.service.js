@@ -347,14 +347,14 @@ const get_module_with_init = async (app_id,
         let parameters = {   
             app_id: app_id,
             app_name: 'SYSTEM ADMIN',
+            app_client_id: ConfigGet(7, app_id, 'CLIENT_ID'),
+            app_client_secret: ConfigGet(7, app_id, 'CLIENT_SECRET'),
+            app_datatoken: '',
             locale: locale,
             exception_app_function: exception_app_function,
             ui: ui,
             system_admin: system_admin,
             system_admin_only: system_admin_only,
-            app_rest_client_id: '',
-            app_rest_client_secret: '',
-            app_datatoken: '',
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
             rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
             rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
@@ -372,19 +372,19 @@ const get_module_with_init = async (app_id,
             if (err)
                 callBack(err, null);
             else{
-                let authorization = `Basic ${btoa(result[0].app_rest_client_id + ':' + result[0].app_rest_client_secret)}`;
+                let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
                 CreateDataToken(app_id,  authorization, (err, jstoken_dt)=>{
                     let parameters = {   
                         app_id: app_id,
                         app_name: result[0].app_name,
+                        app_client_id: ConfigGet(7, app_id, 'CLIENT_ID'),
+                        app_client_secret: ConfigGet(7, app_id, 'CLIENT_SECRET'),
+                        app_datatoken: jstoken_dt,
                         locale:locale,
                         exception_app_function: exception_app_function,
                         ui: ui,
                         system_admin: system_admin,
                         system_admin_only: 0,
-                        app_rest_client_id: result[0].app_rest_client_id,
-                        app_rest_client_secret: result[0].app_rest_client_secret,
-                        app_datatoken: jstoken_dt,
                         common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
                         rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
                         rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),

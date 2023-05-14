@@ -168,23 +168,11 @@ const getAppDBParametersAdmin = (app_id, callBack) => {
 const getAppStartParameters = (app_id, callBack) => {
 		let sql;
 		let parameters;
-		let app_rest_client_id = 'APP_REST_CLIENT_ID';
-		let app_rest_client_secret ='APP_REST_CLIENT_SECRET';
-		sql = `SELECT a.app_name "app_name",
-					  (SELECT ap.parameter_value
-						 FROM ${db_schema()}.app_parameter ap
-						WHERE ap.parameter_name = :app_rest_client_id
-						  AND ap.app_id = :app_main_id) "app_rest_client_id",
-					  (SELECT ap.parameter_value
-						 FROM ${db_schema()}.app_parameter ap
-						WHERE ap.parameter_name = :app_rest_client_secret
-						  AND ap.app_id = :app_main_id) "app_rest_client_secret"
+		sql = `SELECT a.app_name "app_name"
 			   FROM ${db_schema()}.app a
 			  WHERE a.id = :app_id`;
 		parameters = {  app_id: app_id,
-						app_main_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-						app_rest_client_id: app_rest_client_id,
-						app_rest_client_secret: app_rest_client_secret}
+						app_main_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}
 		let stack = new Error().stack;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
 			db_execute(app_id, sql, parameters, null, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), (err, result)=>{

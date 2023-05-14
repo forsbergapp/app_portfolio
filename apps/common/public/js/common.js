@@ -27,8 +27,8 @@ const COMMON_GLOBAL = {
     "app_url":"",
     "app_logo":"",
     "exception_app_function":"",
-    "app_rest_client_id":"",
-    "app_rest_client_secret":"",
+    "app_client_id":"",
+    "app_client_secret":"",
     "user_app_role_id":"",
     "system_admin":"",
     "system_admin_only":"",
@@ -2795,7 +2795,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
         }
         case 4:{
             //data token authorization post
-            authorization = `Basic ${window.btoa(COMMON_GLOBAL['app_rest_client_id'] + ':' + COMMON_GLOBAL['app_rest_client_secret'])}`;
+            authorization = `Basic ${window.btoa(COMMON_GLOBAL['app_client_id'] + ':' + COMMON_GLOBAL['app_client_secret'])}`;
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
             break;
         }
@@ -3198,8 +3198,8 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['rest_resource_bff'] = parameters.rest_resource_bff;
 
     //client credentials
-    COMMON_GLOBAL['app_rest_client_id'] = parameters.app_rest_client_id;
-    COMMON_GLOBAL['app_rest_client_secret'] = parameters.app_rest_client_secret;
+    COMMON_GLOBAL['app_client_id'] = parameters.app_client_id;
+    COMMON_GLOBAL['app_client_secret'] = parameters.app_client_secret;
     COMMON_GLOBAL['rest_dt'] = parameters.app_datatoken;
 
     //system admin
