@@ -605,6 +605,15 @@ const openTab = async (tab_selected) => {
     //mark active tab
     document.getElementById("tab_nav_" + tab_selected).classList.add("tab_nav_selected");
     
+    if (tab_selected==2){
+        document.querySelector('#mapid').outerHTML = `<div id='mapid'></div>`;
+        //init map thirdparty module
+        init_map().then(()=>{
+            update_ui(4);
+            common.map_resize();
+        });
+    }
+    
     if (tab_selected==3){
         update_all_theme_thumbnails();
     }
@@ -777,16 +786,18 @@ const update_ui = async (option, item_id=null) => {
                     settings.country.options[settings.country.selectedIndex].text;
                 //display empty popular place select
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                //Update map
-                map_update_app(settings.gps_long_input.value,
-                               settings.gps_lat_input.value,
-                               app_common.APP_GLOBAL['gps_module_leaflet_zoom_city'],
-                               document.getElementById('setting_input_place').value,
-                               null,
-                               app_common.APP_GLOBAL['gps_module_leaflet_marker_div_city'],
-                               common.COMMON_GLOBAL['module_leaflet_flyto']).then((timezone_selected) => {
-                                   settings.timezone_report.value = timezone_selected;
-                               });
+                if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
+                    //Update map
+                    map_update_app(settings.gps_long_input.value,
+                        settings.gps_lat_input.value,
+                        app_common.APP_GLOBAL['gps_module_leaflet_zoom_city'],
+                        document.getElementById('setting_input_place').value,
+                        null,
+                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_city'],
+                        common.COMMON_GLOBAL['module_leaflet_flyto']).then((timezone_selected) => {
+                            settings.timezone_report.value = timezone_selected;
+                        });
+                }
                 break;
             }
         //GPS, popular places
@@ -798,14 +809,16 @@ const update_ui = async (option, item_id=null) => {
                 let timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
                 settings.gps_long_input.value = longitude_selected;
                 settings.gps_lat_input.value = latitude_selected;
-                //Update map
-                map_update_app(settings.gps_long_input.value,
-                               settings.gps_lat_input.value,
-                               app_common.APP_GLOBAL['gps_module_leaflet_zoom_pp'], //zoom for popular places
-                               settings.select_place.options[settings.select_place.selectedIndex].text,
-                               timezone_selected,
-                               app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'], //marker for popular places
-                               common.COMMON_GLOBAL['module_leaflet_flyto']);
+                if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
+                    //Update map
+                    map_update_app(settings.gps_long_input.value,
+                                settings.gps_lat_input.value,
+                                app_common.APP_GLOBAL['gps_module_leaflet_zoom_pp'], //zoom for popular places
+                                settings.select_place.options[settings.select_place.selectedIndex].text,
+                                timezone_selected,
+                                app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'], //marker for popular places
+                                common.COMMON_GLOBAL['module_leaflet_flyto']);
+                }
                 settings.timezone_report.value = timezone_selected;
 
                 //display empty country
@@ -833,15 +846,17 @@ const update_ui = async (option, item_id=null) => {
                 common.get_place_from_gps(settings.gps_long_input.value, settings.gps_lat_input.value).then((gps_place) => {
                     //Update map
                     document.getElementById('setting_input_place').value = gps_place;
-                    map_update_app(settings.gps_long_input.value,
-                                   settings.gps_lat_input.value,
-                                   '', //do not change zoom 
-                                   gps_place,
-                                   null,
-                                   app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
-                                   common.COMMON_GLOBAL['module_leaflet_jumpto']).then((timezone_text) => {
-                                           settings.timezone_report.value = timezone_text;
-                                   });
+                    if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
+                        map_update_app(settings.gps_long_input.value,
+                                        settings.gps_lat_input.value,
+                                        '', //do not change zoom 
+                                        gps_place,
+                                        null,
+                                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                                        common.COMMON_GLOBAL['module_leaflet_jumpto']).then((timezone_text) => {
+                                                settings.timezone_report.value = timezone_text;
+                                        });
+                    }
                     //display empty country
                     common.SearchAndSetSelectedIndex('', settings.country,0);
                     //remove old city list:            
@@ -1356,7 +1371,6 @@ const user_settings_load = async () => {
     //GPS
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_map_type'),
         document.getElementById('setting_select_maptype'),1);
-    common.map_setstyle(document.getElementById('setting_select_maptype').value);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'),
         document.getElementById('setting_select_country'),0);
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id')||null !=null) {
@@ -1723,7 +1737,6 @@ const set_default_settings = async () => {
 
     //GPS 
     common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL['module_leaflet_style'], document.getElementById('setting_select_maptype'),1);
-    common.map_setstyle(document.getElementById('setting_select_maptype').value);
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['gps_default_country'], document.getElementById('setting_select_country'),0);
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['gps_default_city'], document.getElementById('setting_select_city'),0);
     
@@ -2079,7 +2092,6 @@ const setEvents = () => {
             }
             case 'tab_nav_btn_2':{
                 openTab('2');
-                common.map_resize();
                 break;
             }
             case 'tab_nav_btn_3':{
@@ -2656,47 +2668,45 @@ const init_app = () => {
         setInterval(showreporttime, 1000);
         //show dialogue about using mobile and scan QR code after 5 seconds
         setTimeout(() => {show_dialogue('SCAN')}, 5000);
-        //init map thirdparty module
-        init_map().then(() => {
-            //Start of app:
-            //1.set_prayer_method
-            //2.set default settings
-            //3.translate ui
-            //4.display default timetable settings
-            //5.show profile if user in url
-            //6.user provider login
-            //7.service worker
-            app2_report.set_prayer_method(true).then(() => {
-                set_default_settings().then(() => {
-                    settings_translate(true).then(() => {
-                        settings_translate(false).then(() => {
-                            const show_start = async () => {
-                                //show default startup
-                                toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
-                                let user = window.location.pathname.substring(1);
-                                if (user !='') {
-                                    //show profile for user entered in url
-                                    document.getElementById('common_dialogue_profile').style.visibility = "visible";
-                                    profile_show_app(null, user);
-                                }
+        
+        //Start of app:
+        //1.set_prayer_method
+        //2.set default settings
+        //3.translate ui
+        //4.display default timetable settings
+        //5.show profile if user in url
+        //6.user provider login
+        //7.service worker
+        app2_report.set_prayer_method(true).then(() => {
+            set_default_settings().then(() => {
+                settings_translate(true).then(() => {
+                    settings_translate(false).then(() => {
+                        const show_start = async () => {
+                            //show default startup
+                            toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
+                            let user = window.location.pathname.substring(1);
+                            if (user !='') {
+                                //show profile for user entered in url
+                                document.getElementById('common_dialogue_profile').style.visibility = "visible";
+                                profile_show_app(null, user);
                             }
-                            show_start().then(() => {
-                                dialogue_loading(0);
-                                common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); }).then(() => {
-                                    serviceworker();
-                                    if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-                                        common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
-                                            resolve();
-                                        });
-                                    else
+                        }
+                        show_start().then(() => {
+                            dialogue_loading(0);
+                            common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); }).then(() => {
+                                serviceworker();
+                                if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
+                                    common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
                                         resolve();
-                                });
+                                    });
+                                else
+                                    resolve();
                             })
-                        });
-                    });
-                });
+                        })
+                    })
+                })
             })
-        });
+        })
     })    
 }
 const init = (parameters) => {
