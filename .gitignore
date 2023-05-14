@@ -4,4 +4,5 @@ config/
 logs/
 node_modules/
 service/pdf/tmp/
+service/pdf/config/
 service/logs/

@@ -186,7 +186,7 @@ const DefaultConfig = async () => {
                     throw error;
                 })
             }
-            for (let dir of ['/config', '/service/logs','/logs']){
+            for (let dir of ['/config', '/service/logs','/logs', '/service/pdf/config']){
                 let check_dir = await fs.promises.access(process.cwd() + dir)
                 .catch(()=>{
                     mkdir(dir);  
@@ -203,7 +203,8 @@ const DefaultConfig = async () => {
                                     [3, `default_auth_useragent.json`],
                                     [4, `default_auth_policy.json`],
                                     [6, `default_auth_user.json`],
-                                    [7, `default_apps.json`]
+                                    [7, `default_apps.json`],
+                                    [8, `default_service_pdf_config.json`]
                                 ];
             let config_json = [];
             //ES2020 import() with ES6 promises, object destructuring
@@ -270,17 +271,31 @@ const DefaultConfig = async () => {
                                     CONFIG_INIT = config_init;
                                     let config_created=0;
                                     for (let config_no=0;config_no<config_json.length;config_no++){;
-                                        //send fileno in file array
-                                        ConfigSave(default_files[config_no][0], JSON.parse(config_json[config_no]), true, (err, result)=>{
-                                            if (err)
-                                                reject(err);
-                                            else{
-                                                if (config_created== config_json.length - 1)
-                                                    resolve();
+                                        if (config_no == 6){
+                                            //create default service pdf config, not part of server parameter management
+                                            fs.writeFile(process.cwd() + `${SLASH}service${SLASH}pdf${SLASH}config${SLASH}config.json`, JSON.stringify(JSON.parse(config_json[config_no]), undefined,2),  'utf8', (err) => {
+                                                if (err)
+                                                    reject(err);
                                                 else
-                                                    config_created++;
-                                            }
-                                        })
+                                                    if (config_created== config_json.length - 1)
+                                                        resolve();
+                                                    else
+                                                        config_created++;
+                                            })
+                                        }
+                                        else{
+                                            //send fileno in file array
+                                            ConfigSave(default_files[config_no][0], JSON.parse(config_json[config_no]), true, (err, result)=>{
+                                                if (err)
+                                                    reject(err);
+                                                else{
+                                                    if (config_created== config_json.length - 1)
+                                                        resolve();
+                                                    else
+                                                        config_created++;
+                                                }
+                                            })
+                                        }
                                     }
                                 }
                             })
