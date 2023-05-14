@@ -61,24 +61,24 @@ const initPDFService = async () => {
     
 };
 
-const getPDF = async (url, ps, hf) => {
+const getPDF = async (message) => {
     if (!BROWSER)
         await initPDFService();
     return await new Promise((resolve) => {
         BROWSER.newPage().then((webPage) => {
-            webPage.goto(url, {
+            webPage.goto(message.url, {
                 waitUntil: ["networkidle2"],
                 timeout: PDF_TIMEOUT,
             }).then(() => {
                 let width_viewport;
                 let height_viewport;
-                if (ps=='A4'){
+                if (message.ps=='A4'){
                     //https://pixelsconverter.com/a-paper-sizes-to-pixels
                     //96DPI
                     width_viewport = 794;
                     height_viewport = 1123;
                     }
-                if (ps=='Letter'){
+                if (message.ps=='Letter'){
                     //https://pixelsconverter.com/us-paper-sizes-to-pixels
                     //96DPI
                     width_viewport = 816;
@@ -93,8 +93,8 @@ const getPDF = async (url, ps, hf) => {
                     setTimeout(() => {
                         wait_count++;
                         webPage.pdf({   printBackground: true,
-                            format: ps,
-                            displayHeaderFooter: hf,
+                            format: message.ps,
+                            displayHeaderFooter: message.hf,
                             margin: {
                                 top: "0px",
                                 bottom: "0px",
@@ -168,8 +168,7 @@ const getPDF = async (url, ps, hf) => {
                                         webPage.close().then(() => {
                                             //if closing browser and not only page:
                                             //BROWSER.close();
-                                            //return PDF encoded to base64
-                                            resolve(pdf.toString('base64'));
+                                            resolve(pdf);
                                         });
                                     });    
                     }, PDF_WAIT_INTERVAL);
