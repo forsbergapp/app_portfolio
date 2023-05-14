@@ -1,4 +1,0 @@
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_ID',SHA2(CONCAT(CURRENT_TIMESTAMP),256),NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','APP_REST_CLIENT_SECRET',SHA2(CONCAT(CURRENT_TIMESTAMP),256),NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_ACCESS_SECRET',SHA2(CONCAT(CURRENT_TIMESTAMP),256),NULL);
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'2','SERVICE_AUTH_TOKEN_DATA_SECRET',SHA2(CONCAT(CURRENT_TIMESTAMP),256),NULL);

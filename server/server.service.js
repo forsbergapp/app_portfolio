@@ -137,7 +137,10 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                 case 'PATH':
                 case 'CLIENT_ID':
                 case 'CLIENT_SECRET':
-                case 'DATA_SECRET':{
+                case 'DATA_SECRET':
+                case 'DATA_EXPIRE':
+                case 'ACCESS_SECRET':
+                case 'ACCESS_EXPIRE':{
                     return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.CLIENT_ID == config_group})[0][parameter];
                     break;
                 }
@@ -151,6 +154,9 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                     apps_no_secrets.map((app)=>{
                         delete app.CLIENT_SECRET;
                         delete app.DATA_SECRET;
+                        delete app.DATA_EXPIRE;
+                        delete app.ACCESS_SECRET;
+                        delete app.ACCESS_EXPIRE;
                     })                    
                     return apps_no_secrets;
                 }
@@ -244,6 +250,7 @@ const DefaultConfig = async () => {
                         config_json[5]['APPS'].map(row=>{
                             row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                             row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+                            row.ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                         })
                         config_json[5] = JSON.stringify(config_json[5], undefined, 2);
                         //default server metadata
