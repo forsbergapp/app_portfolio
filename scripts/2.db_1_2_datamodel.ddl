@@ -112,13 +112,13 @@ REPORT
 WORLDCITIES
 	CITIES';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_request VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_request VARCHAR(500) COMMENT
     'MAIL%: 		emailaddress
 GEOLOCATION%: 	url
 REPORT%: 		url
 WORLDCITIES%:	countrycode';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_result VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN app_module_result VARCHAR(4000) COMMENT
     'AUTH
 ADMINTOKEN_OK	AT: token
 ADMINTOKEN_FAIL	error message
@@ -140,16 +140,16 @@ MAIL
 			result or error message
 ';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_language VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_language VARCHAR(1000) COMMENT
     'navigator.language';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_timezone VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_timezone VARCHAR(1000) COMMENT
     'Intl.DateTimeFormat().resolvedOptions().timeZone';
 
 ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_number_system VARCHAR(100) COMMENT
     'Intl.NumberFormat().resolvedOptions().numberingSystem';
 
-ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_platform VARCHAR(100) COMMENT
+ALTER TABLE app_portfolio.app_log MODIFY COLUMN user_platform VARCHAR(1000) COMMENT
     'navigator.platform';
 
 CREATE INDEX app_log_date_created_index ON
