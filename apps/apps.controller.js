@@ -109,12 +109,19 @@ const getReport = async (req, res, app_id, callBack) => {
     req.query.ps = query_parameters.ps; //papersize     A4/Letter
     req.query.hf = query_parameters.hf; //header/footer 1/0
 
-	if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.microservice == "undefined" ){
+	if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == "undefined" ){
 		//PDF
         req.query.service ='PDF';
-        let parameters =  `?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&url=${req.protocol}://${req.get('host')}${req.originalUrl}`;
-        let pdf = await service.BFF(app_id, 'PDF', parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], null)
-        callBack(null,pdf)
+        let url = `${req.protocol}://${req.get('host')}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
+        //call message queue
+        const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
+        MessageQueue('PDF', 'PUBLISH', {"url":url, "ps":req.query.ps, "hf":(req.query.hf==1)}, null)
+            .then((pdf)=>{
+                callBack(null, pdf);
+            })
+            .catch((error)=>{
+                callBack(error, null);
+            })
 	}
 	else{
 		import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
@@ -207,15 +214,12 @@ const BFF = async (req, res) =>{
 //backend for frontend without authorization
 const BFF_noauth = async (req, res) =>{
     //check inparameters
-    if (req.query.service.toUpperCase()=='REPORT')
-        return BFF(req,res); 
-    else 
-        if (req.query.service.toUpperCase()=='BROADCAST' && 
-            Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-                import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`).then((broadcast)=>{
-                    BFF(req,res);
-                })
-            }
+    if (req.query.service.toUpperCase()=='BROADCAST' && 
+        Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
+            import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`).then((broadcast)=>{
+                BFF(req,res);
+            })
+        }
     else{
         //required parameters not provided
         //use common app id to get message and use first lang_code form app or if missing use language in headers

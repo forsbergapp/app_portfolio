@@ -176,17 +176,62 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                 break;
                             }
                         }
-                        if (service === 'MAIL') {
-                            import(`file://${process.cwd()}/service/mail/mail.service.js`).then(({ sendEmail })=>{
-                                message_consume.start = new Date().toISOString();
-                                sendEmail(message_consume.message)
-                                .then((result)=>{
-                                    message_consume.finished = new Date().toISOString();
-                                    message_consume.result = result;
-                                    //write to message_queue_consume.json
-                                    write_file(2, message_consume, result)
-                                    .then(()=>{
-                                        resolve ();
+                        switch (service){
+                            case 'MAIL':{
+                                import(`file://${process.cwd()}/service/mail/mail.service.js`).then(({ sendEmail })=>{
+                                    message_consume.start = new Date().toISOString();
+                                    sendEmail(message_consume.message)
+                                    .then((result)=>{
+                                        message_consume.finished = new Date().toISOString();
+                                        message_consume.result = result;
+                                        //write to message_queue_consume.json
+                                        write_file(2, message_consume, result)
+                                        .then(()=>{
+                                            resolve ();
+                                        })
+                                        .catch(error=>{
+                                            write_file(0, message_consume, error)
+                                            .then(()=>{
+                                                reject (error);
+                                            })
+                                            .catch(error=>{
+                                                reject(error);
+                                            })
+                                        })
+                                    })
+                                    .catch((error)=>{
+                                        write_file(0, message_consume, error)
+                                        .then(()=>{
+                                            reject (error);
+                                        })
+                                        .catch(error=>{
+                                            reject(error);
+                                        })
+                                    })
+                                });
+                                break
+                            }
+                            case 'PDF':{
+                                import(`file://${process.cwd()}/service/pdf/pdf.service.js`).then(({getPDF})=>{
+                                    message_consume.start = new Date().toISOString();
+                                    getPDF(message_consume.message).then((pdf)=>{
+                                        message_consume.finished = new Date().toISOString();
+                                        message_consume.result = 'PDF';
+                                        //write to message_queue_consume.json
+                                        write_file(2, message_consume, 'PDF')
+                                        .then(()=>{
+                                            resolve(pdf);
+                                        })
+                                        .catch(error=>{
+                                            write_file(0, message_consume, error)
+                                            .then(()=>{
+                                                reject (error);
+                                            })
+                                            .catch(error=>{
+                                                reject(error);
+                                            })
+                                        })
+                                        
                                     })
                                     .catch(error=>{
                                         write_file(0, message_consume, error)
@@ -196,18 +241,10 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                         .catch(error=>{
                                             reject(error);
                                         })
-                                    })
+                                    });
                                 })
-                                .catch((error)=>{
-                                    write_file(0, message_consume, error)
-                                    .then(()=>{
-                                        reject (error);
-                                    })
-                                    .catch(error=>{
-                                        reject(error);
-                                    })
-                                })
-                            });
+                                break;
+                            }
                         }
                     })
                     .catch((error)=>{
