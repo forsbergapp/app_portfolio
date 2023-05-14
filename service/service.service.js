@@ -116,6 +116,7 @@ class CircuitBreaker {
 
 const MessageQueue = async (service, message_type, message, message_id) => {
     const fs = await import('node:fs');
+    
     return new Promise((resolve, reject) =>{
         const write_file = (file, message, result) =>{
             return new Promise((resolve, reject)=>{
@@ -178,8 +179,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                         }
                         switch (service){
                             case 'MAIL':{
-                                import(`file://${process.cwd()}/service/mail/mail.service.js`).then(({ sendEmail })=>{
-                                    message_consume.start = new Date().toISOString();
+                                message_consume.start = new Date().toISOString();
+                                import(`file://${process.cwd()}/service/mail/mail.service.js`).then(({sendEmail})=>{
                                     sendEmail(message_consume.message)
                                     .then((result)=>{
                                         message_consume.finished = new Date().toISOString();
@@ -212,8 +213,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                 break
                             }
                             case 'PDF':{
+                                message_consume.start = new Date().toISOString();
                                 import(`file://${process.cwd()}/service/pdf/pdf.service.js`).then(({getPDF})=>{
-                                    message_consume.start = new Date().toISOString();
                                     getPDF(message_consume.message).then((pdf)=>{
                                         message_consume.finished = new Date().toISOString();
                                         message_consume.result = 'PDF';
