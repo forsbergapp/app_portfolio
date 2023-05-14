@@ -101,7 +101,7 @@ const getPDF = async (message) => {
                 });
 
                 webPage.goto(message.url, {
-                    waitUntil: ["networkidle2"],
+                    waitUntil: ['networkidle2'],
                     timeout: pdf_timeout,
                 }).then(() => {
                     let width_viewport;
