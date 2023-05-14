@@ -1,9 +1,6 @@
 const service = await import('./auth.service.js')
-
 const {default:{sign, verify}} = await import("jsonwebtoken");
-
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {getParameter, getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
 
 //SERVER MIDDLEWARE
 const access_control = (req, res, callBack) => {
@@ -230,70 +227,57 @@ const checkAccessTokenCommon = (req, res, next) => {
     let token = req.get("authorization");
     let stack = new Error().stack;
     if (token){
-        getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_ACCESS_SECRET', (err, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET)=>{
-            if (err) {
+        token = token.slice(7);
+        verify(token, ConfigGet(7, req.query.app_id, 'ACCESS_SECRET'), (err, decoded) => {
+            if (err){
                 import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(err);
+                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                        `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} invalid token`,
+                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                        res.statusCode, 
+                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                            res.status(401).send('⛔');
                         })
                     });
                 })
-            }
-            else{
-                token = token.slice(7);
-                verify(token, db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, (err, decoded) => {
-                    if (err){
-                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} invalid token`,
-                                                req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                res.statusCode, 
-                                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                    res.status(401).send('⛔');
-                                })
-                            });
-                        })
-                    } else {
-                        //check access token belongs to user_account.id, app_id and ip saved when logged in
-                        //and if app_id=0 then check user is admin
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
-                            checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
-                                if (err){
-                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                                res.status(500).send(err);
-                                            })
-                                        });
+            } else {
+                //check access token belongs to user_account.id, app_id and ip saved when logged in
+                //and if app_id=0 then check user is admin
+                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
+                    checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
+                        if (err){
+                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+                                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
+                                        res.status(500).send(err);
                                     })
-                                }
-                                else{
-                                    if (result.length==1)
-                                        next();
-                                    else{
-                                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                             `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`,
-                                                              req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                              res.statusCode, 
-                                                              req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                                    res.status(401).send('⛔');
-                                                })
-                                            });
-                                        })
-                                    }
-                                }
+                                });
                             })
-                        })
-                    }
-                });
+                        }
+                        else{
+                            if (result.length==1)
+                                next();
+                            else{
+                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                        `user  ${req.query.user_account_logon_user_account_id} app_id ${req.query.app_id} with ip ${req.ip} accesstoken unauthorized`,
+                                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                        res.statusCode, 
+                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                                            res.status(401).send('⛔');
+                                        })
+                                    });
+                                })
+                            }
+                        }
+                    })
+                })
             }
         });
-        
-    }else{
+    }
+    else{
         res.status(401).send('⛔');
     }
 
@@ -336,29 +320,16 @@ const checkDataToken = (req, res, next) => {
     let token = req.get("authorization");
     let stack = new Error().stack;
     if (token){
-        getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_AUTH_TOKEN_DATA_SECRET', (err, db_SERVICE_AUTH_TOKEN_DATA_SECRET)=>{
-            if (err) {
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(err);
-                        })
-                    });
-                })
+        token = token.slice(7);
+        verify(token, ConfigGet(7, req.query.app_id, 'DATA_SECRET'), (err, decoded) => {
+            if (err){
+                res.status(401).send('⛔');
+            } else {
+                next();
             }
-            else{
-                token = token.slice(7);
-                verify(token, db_SERVICE_AUTH_TOKEN_DATA_SECRET, (err, decoded) => {
-                    if (err){
-                        res.status(401).send('⛔');
-                    } else {
-                        next();
-                    }
-                });
-            }
-        });
-        
-    }else{
+        });    
+    }
+    else{
         res.status(401).send('⛔');
     }
 }
@@ -381,57 +352,34 @@ const checkDataTokenLogin = (req, res, next) => {
 }
 
 const accessToken = (req, callBack) => {
-    let stack = new Error().stack;
-    getParameters_server(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),  (err, result)=>{
-        if (err) {
-            
-            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                        callBack(err);
-                    })
-                });
-            })
-        }
-        else{
-            let json = JSON.parse(JSON.stringify(result));
-            let db_SERVICE_AUTH_TOKEN_ACCESS_SECRET;
-            let db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE;
-            for (let i = 0; i < json.length; i++){
-                if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_ACCESS_SECRET')
-                    db_SERVICE_AUTH_TOKEN_ACCESS_SECRET = json[i].parameter_value;
-                if (json[i].parameter_name=='SERVICE_AUTH_TOKEN_ACCESS_EXPIRE')
-                    db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE = json[i].parameter_value;
-            }                    
-            let jsontoken_at;                    
-            jsontoken_at = sign ({tokentimstamp: Date.now()}, 
-                                db_SERVICE_AUTH_TOKEN_ACCESS_SECRET, 
-                                {
-                                expiresIn: db_SERVICE_AUTH_TOKEN_ACCESS_EXPIRE
-                                });
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                createLog(req.query.app_id,
-                            { app_id : req.query.app_id,
-                            app_module : 'AUTH',
-                            app_module_type : 'ACCESSTOKEN_OK',
-                            app_module_request : req.baseUrl,
-                            app_module_result : 'AT:' + jsontoken_at,
-                            app_user_id : req.body.user_account_id,
-                            user_language : req.body.user_language,
-                            user_timezone : req.body.user_timezone,
-                            user_number_system : req.body.user_number_system,
-                            user_platform : req.body.user_platform,
-                            server_remote_addr : req.ip,
-                            server_user_agent : req.headers["user-agent"],
-                            server_http_host : req.headers["host"],
-                            server_http_accept_language : req.headers["accept-language"],
-                            client_latitude : req.body.client_latitude,
-                            client_longitude : req.body.client_longitude
-                            }, (err,results)  => {
-                                callBack(null,jsontoken_at);
-                });
-            })
-        }
+    let stack = new Error().stack;   
+    let jsontoken_at;                    
+    jsontoken_at = sign ({tokentimstamp: Date.now()}, 
+                          ConfigGet(7, req.query.app_id, 'ACCESS_SECRET'), 
+                         {
+                          expiresIn: ConfigGet(7, req.query.app_id, 'ACCESS_EXPIRE')
+                         });
+    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+        createLog(req.query.app_id,
+                    { app_id : req.query.app_id,
+                    app_module : 'AUTH',
+                    app_module_type : 'ACCESSTOKEN_OK',
+                    app_module_request : req.baseUrl,
+                    app_module_result : 'AT:' + jsontoken_at,
+                    app_user_id : req.body.user_account_id,
+                    user_language : req.body.user_language,
+                    user_timezone : req.body.user_timezone,
+                    user_number_system : req.body.user_number_system,
+                    user_platform : req.body.user_platform,
+                    server_remote_addr : req.ip,
+                    server_user_agent : req.headers["user-agent"],
+                    server_http_host : req.headers["host"],
+                    server_http_accept_language : req.headers["accept-language"],
+                    client_latitude : req.body.client_latitude,
+                    client_longitude : req.body.client_longitude
+                    }, (err,results)  => {
+                        callBack(null,jsontoken_at);
+        });
     })
 }
 
