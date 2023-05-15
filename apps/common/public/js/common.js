@@ -353,8 +353,6 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                                         break;
                                     }
                                     case 'BIO':{
-                                        document.getElementById('common_signup_email').placeholder = json.data[i].text;
-                                        document.getElementById('common_forgot_email').placeholder = json.data[i].text;
                                         document.getElementById('common_user_edit_input_bio').placeholder = json.data[i].text;
                                         break;
                                     }
