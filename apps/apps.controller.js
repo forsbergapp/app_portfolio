@@ -1,138 +1,247 @@
 const {ConfigGet, COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service = await import('./apps.service.js')
 const getApp = async (req, res, app_id, params, callBack) => {
-    //createLog needs app_id
     req.query.app_id = app_id;
     req.query.app_user_id = null;
-    req.query.callback=1;
-    //check if maintenance
-    if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
-        service.getMaintenance(app_id, null, null,null).then((app_result) => {
-            return callBack(null, app_result);
+    /*
+        1.CreateDataToken	        -> BFF AUTH	(need token to call bff, return the token)
+        2.get GPS	                -> BFF GEOLOCATION
+        3.get app		            -> apps/app[id]/client.js contains calls to BFF DB
+        4.getAppData		        -> BFF DB common requests (translation, get parameters)
+        5.setData		            translation app_objects
+        6.get app with parameters   get_module_with_init moved from apps/app[id]/client.js, remove getAppStartParameters and CreateDataToken
+        
+    */
+    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'))
+        service.getMaintenance(app_id).then((result_maintenance) => {
+            return callBack(null, result_maintenance);
         });
-    }
     else{
-        import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
-            createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app_result) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                    createLog(req.query.app_id,
-                                { app_id : app_id,
-                                app_module : 'APPS',
-                                app_module_type : 'APP',
-                                app_module_request : params,
-                                app_module_result : null,
-                                app_user_id : null,
-                                user_language : null,
-                                user_timezone : null,
-                                user_number_system : null,
-                                user_platform : null,
-                                server_remote_addr : req.ip,
-                                server_user_agent : req.headers["user-agent"],
-                                server_http_host : req.headers["host"],
-                                server_http_accept_language : req.headers["accept-language"],
-                                client_latitude : null,
-                                client_longitude : null
-                                }, (err,results)  => {
-                                    return callBack(null, app_result)
-                    });
-                })
-            });
-        })
-    }
-}
-const getAppAdmin = async (req, res, app_id, callBack) => {
-    //createLog needs app_id
-    req.query.app_id = app_id;
-    req.query.app_user_id = null;
-    req.query.callback=1;
-    let stack = new Error().stack;
-    if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){
-        import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
-            createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app_result) => {
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                createLog(req.query.app_id,
-                            { app_id : app_id,
-                            app_module : 'APPS',
-                            app_module_type : 'ADMIN',
-                            app_module_request : null,
-                            app_module_result : null,
-                            app_user_id : null,
-                            user_language : null,
-                            user_timezone : null,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : req.ip,
-                            server_user_agent : req.headers["user-agent"],
-                            server_http_host : req.headers["host"],
-                            server_http_accept_language : req.headers["accept-language"],
-                            client_latitude : null,
-                            client_longitude : null
-                            }, (err,results)  => {
-                                    return callBack(null, app_result);
+        //1.Data token
+        let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
+        const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+        CreateDataToken(app_id,  authorization, (err, result_datatoken)=>{
+            //2. get GPS from IP
+            let parameters = `/ip?ip=${req.ip}`;
+            service.BFF(app_id, 'GEOLOCATION', parameters, 
+                        req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                result_geodata = JSON.parse(result_geodata);
+                result_geodata.latitude = result_geodata.geoplugin_latitude;
+                result_geodata.longitude = result_geodata.geoplugin_longitude;
+                result_geodata.place = result_geodata.geoplugin_city + ', ' +
+                                       result_geodata.geoplugin_regionName + ', ' +
+                                       result_geodata.geoplugin_countryName;
+                //3.get app
+                if (app_id == 0){
+                    //get app admin
+                    import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
+                        createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app) => {
+                            //4.
+                            //5.
+                            //6.get app with parameters
+                            let system_admin_only;
+                            import(`file://${process.cwd()}/service/db/admin/admin.service.js`).then(({ admin_pool_started })=>{
+                                if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
+                                    system_admin_only = 0;
+                                }
+                                else{
+                                    system_admin_only = 1;
+                                }
+                                    
+                                service.get_module_with_init(app_id, 
+                                                            service.client_locale(req.headers['accept-language']),
+                                                            system_admin_only,
+                                                            'app.admin_exception',
+                                                            true,  //ui
+                                                            result_datatoken,
+                                                            result_geodata.latitude,
+                                                            result_geodata.longitude,
+                                                            result_geodata.place,
+                                                            app, (err, app_with_init) =>{
+                                    if (ConfigGet(1, 'SERVICE_DB', 'START')=='1')
+                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                            createLog(req.query.app_id,
+                                                    { app_id : app_id,
+                                                        app_module : 'APPS',
+                                                        app_module_type : 'ADMIN',
+                                                        app_module_request : null,
+                                                        app_module_result : result_geodata.place,
+                                                        app_user_id : null,
+                                                        user_language : null,
+                                                        user_timezone : null,
+                                                        user_number_system : null,
+                                                        user_platform : null,
+                                                        server_remote_addr : req.ip,
+                                                        server_user_agent : req.headers["user-agent"],
+                                                        server_http_host : req.headers["host"],
+                                                        server_http_accept_language : req.headers["accept-language"],
+                                                        client_latitude : result_geodata.latitude,
+                                                        client_longitude : result_geodata.longitude
+                                                    }, (err,results)  => {
+                                                        return callBack(null, app_with_init);
+                                            })
+                                        })
+                                    else
+                                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                            'SYSTEM ADMIN APPS Admin',
+                                                            req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                            res.statusCode, 
+                                                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                                                    return callBack(null, app_with_init);
+                                                })
+                                            });
+                                        })
+                                })
                             });
-                })
-            })
-        })
-    }
-    else{
-        import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
-            createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app_result) => {
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                    'SYSTEM ADMIN APPS Admin',
-                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                    res.statusCode, 
-                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                            return callBack(null, app_result);
                         })
-                    });
-                })
+                    })
+                }
+                else{
+                    import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
+                        createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app) => {
+                            //4.
+                            //5.
+                            //6.get app with parameters
+                            service.get_module_with_init(app_id, 
+                                                        service.client_locale(req.headers['accept-language']),
+                                                        0,  //system_admin_only
+                                                        'app.app_exception',
+                                                        true,  //ui
+                                                        result_datatoken,
+                                                        result_geodata.latitude,
+                                                        result_geodata.longitude,
+                                                        result_geodata.place,
+                                                        app, (err, app_with_init) =>{
+                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                    createLog(req.query.app_id,
+                                                { app_id : app_id,
+                                                app_module : 'APPS',
+                                                app_module_type : 'APP',
+                                                app_module_request : params,
+                                                app_module_result : result_geodata.place,
+                                                app_user_id : null,
+                                                user_language : null,
+                                                user_timezone : null,
+                                                user_number_system : null,
+                                                user_platform : null,
+                                                server_remote_addr : req.ip,
+                                                server_user_agent : req.headers["user-agent"],
+                                                server_http_host : req.headers["host"],
+                                                server_http_accept_language : req.headers["accept-language"],
+                                                client_latitude : result_geodata.latitude,
+                                                client_longitude : result_geodata.longitude
+                                                }, (err,results)  => {
+                                                    return callBack(null, app_with_init);
+                                    })
+                                })
+                            })
+                        })
+                    })
+                }
             })
         })
     }
 }
 const getReport = async (req, res, app_id, callBack) => {
 
-    let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
-    //example string:
-    //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
-    let query_parameters = '{';
-    decodedparameters.split('&').forEach((parameter, index)=>{
-        query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
-        if (index < decodedparameters.split('&').length - 1)
-            query_parameters += ',';
-    });
-    query_parameters += '}';
-    query_parameters = JSON.parse(query_parameters);
-
-    req.query.ps = query_parameters.ps; //papersize     A4/Letter
-    req.query.hf = query_parameters.hf; //header/footer 1/0
-
-	if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == "undefined" ){
-		//PDF
-        req.query.service ='PDF';
-        let url = `${req.protocol}://${req.get('host')}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
-        //call message queue
-        const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
-        MessageQueue('PDF', 'PUBLISH', {"url":url, "ps":req.query.ps, "hf":(req.query.hf==1)}, null)
-            .then((pdf)=>{
-                callBack(null, pdf);
+    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'))
+        service.getMaintenance(app_id).then((result_maintenance) => {
+            callBack(null, result_maintenance);
+        });
+    else{
+        let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
+        //example string:
+        //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
+        let query_parameters = '{';
+        decodedparameters.split('&').forEach((parameter, index)=>{
+            query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
+            if (index < decodedparameters.split('&').length - 1)
+                query_parameters += ',';
+        });
+        query_parameters += '}';
+        query_parameters = JSON.parse(query_parameters);
+    
+        req.query.ps = query_parameters.ps; //papersize     A4/Letter
+        req.query.hf = query_parameters.hf; //header/footer 1/0
+    
+        if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == "undefined" ){
+            //PDF
+            req.query.service ='PDF';
+            let url = `${req.protocol}://${req.get('host')}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
+            //call message queue
+            const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
+            MessageQueue('PDF', 'PUBLISH', {"url":url, "ps":req.query.ps, "hf":(req.query.hf==1)}, null)
+                .then((pdf)=>{
+                    callBack(null, pdf);
+                })
+                .catch((error)=>{
+                    callBack(error, null);
+                })
+        }
+        else{
+            let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
+            const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+            CreateDataToken(app_id,  authorization, (err, result_datatoken)=>{
+                let parameters = `/ip?ip=${req.ip}`;
+                service.BFF(app_id, 'GEOLOCATION', parameters, 
+                            req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                    result_geodata = JSON.parse(result_geodata);
+                    result_geodata.latitude = result_geodata.geoplugin_latitude;
+                    result_geodata.longitude = result_geodata.geoplugin_longitude;
+                    result_geodata.place = result_geodata.geoplugin_city + ', ' +
+                                           result_geodata.geoplugin_regionName + ', ' +
+                                           result_geodata.geoplugin_countryName;
+                    import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
+                        createReport(app_id, query_parameters.module, service.client_locale(req.headers['accept-language'])).then((report) => {
+                            service.get_module_with_init(   app_id, 
+                                                            service.client_locale(req.headers['accept-language']),
+                                                            0,  //system_admin_only
+                                                            'report.report_exception',
+                                                            false,
+                                                            result_datatoken,
+                                                            result_geodata.latitude,
+                                                            result_geodata.longitude,
+                                                            result_geodata.place,
+                                                            report, (err, report_with_init) =>{
+                                                                if (err)
+                                                                    callBack(err, null);
+                                                                else{
+                                                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                                                        createLog(req.query.app_id,
+                                                                                    { app_id : app_id,
+                                                                                    app_module : 'APPS',
+                                                                                    app_module_type : 'REPORT',
+                                                                                    app_module_request : query_parameters.format,
+                                                                                    app_module_result : result_geodata.place,
+                                                                                    app_user_id : null,
+                                                                                    user_language : null,
+                                                                                    user_timezone : null,
+                                                                                    user_number_system : null,
+                                                                                    user_platform : null,
+                                                                                    server_remote_addr : req.ip,
+                                                                                    server_user_agent : req.headers["user-agent"],
+                                                                                    server_http_host : req.headers["host"],
+                                                                                    server_http_accept_language : req.headers["accept-language"],
+                                                                                    client_latitude : result_geodata.latitude,
+                                                                                    client_longitude : result_geodata.longitude
+                                                                                    }, (err,results)  => {
+                                                                            callBack(null,report_with_init)
+                                                                        });
+                                                                    })
+                                                                    
+                                                            }
+                            })
+                        })
+                    })
+                    .catch(error=>{
+                        callBack(error,null)
+                    })
+                })
             })
-            .catch((error)=>{
-                callBack(error, null);
-            })
-	}
-	else{
-		import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
-			createReport(app_id, query_parameters.module, service.client_locale(req.headers['accept-language'])).then((report_result) => {
-                callBack(null,report_result)
-			})
-		})
-        .catch(error=>{
-            callBack(error,null)
-        })
-	}
+        }
+    }
 }		
 //backend for frontend
 //returns status 401 (parameter errors), 503(ANY error in called service) or 200 if ok
@@ -241,4 +350,4 @@ const BFF_auth = async (req, res) =>{
         });
     }
 }
-export{getApp, getAppAdmin, getReport, BFF, BFF_noauth, BFF_auth}
+export{getApp, getReport, BFF, BFF_noauth, BFF_auth}

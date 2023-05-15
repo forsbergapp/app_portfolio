@@ -1,4 +1,4 @@
-const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { read_app_files, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
@@ -46,18 +46,7 @@ const createApp = (app_id, username, locale) => {
                         app = app.replace(
                                 '<AppProfileTop/>',
                                 '');   
-                        get_module_with_init(app_id,
-                                             locale,
-                                             null,
-                                             'app.app_exception',
-                                             true,
-                                             app, (err, app_init) =>{
-                            if (err)
-                                reject(err);
-                            else{
-                                resolve(app_init);
-                            }
-                        })
+                        resolve(app);
                     }
                 }) 
             }) 
