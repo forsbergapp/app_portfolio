@@ -16,8 +16,8 @@ const BroadcastConnect = (req, res) => {
         user_agent: req.headers["user-agent"],
         connection_date: new Date().toISOString(),
         ip: req.ip,
-        gps_latitude: null,
-        gps_longitude: null,
+        gps_latitude: req.query.latitude,
+        gps_longitude: req.query.longitude,
         identity_provider_id: req.query.identity_provider_id,
         response: res
     };
@@ -100,7 +100,9 @@ const ConnectedCount = (req, res) => {
     })
 }
 const ConnectedUpdate = (req, res) => {
-    service.ConnectedUpdate(req.query.client_id, req.query.user_account_logon_user_account_id, req.query.system_admin, req.query.identity_provider_id, (err, result) =>{
+    service.ConnectedUpdate(req.query.client_id, req.query.user_account_logon_user_account_id, req.query.system_admin, req.query.identity_provider_id, 
+                            req.query.latitude, req.query.longitude,
+                            (err, result) =>{
         return res.status(200).json(
             err ?? result
         );
