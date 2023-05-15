@@ -1,6 +1,6 @@
 const { admin_pool_started } = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { read_app_files, get_module_with_init, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { read_app_files, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createAdmin = (app_id, locale) => {
     return new Promise((resolve, reject) => {
@@ -48,18 +48,7 @@ const createAdmin = (app_id, locale) => {
                         app = app.replace(
                             '<AppProfileTop/>',
                             '');
-                        get_module_with_init(app_id,
-                                            locale,
-                                            null,
-                                            'app.admin_exception',
-                                            true, //ui
-                                            app, (err, app_init) =>{
-                            if (err)
-                                reject(err);
-                            else{
-                                resolve(app_init);
-                            }
-                        })
+                        resolve(app);
                     }
                 })
             })
@@ -90,18 +79,7 @@ const createAdmin = (app_id, locale) => {
                     app = app.replace(
                         '<AppProfileTop/>',
                         '');
-                    get_module_with_init(app_id,
-                                         locale,
-                                         1,  //system admin, no db available
-                                         'app.admin_exception_before',
-                                         true, //ui
-                                         app, (err, app_init) =>{
-                        if (err)
-                            reject(err);
-                        else{
-                            resolve(app_init);
-                        }
-                    })
+                    resolve(app);
                 }
             })
         }

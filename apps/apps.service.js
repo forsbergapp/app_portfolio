@@ -327,34 +327,28 @@ const read_app_files = async (app_id, files, callBack) => {
 }
 const get_module_with_init = async (app_id,
                                     locale,
-                                    system_admin,
+                                    system_admin_only,
                                     exception_app_function,
                                     ui,
+                                    data_token,
+                                    client_latitude,
+                                    client_longitude,
+                                    client_place,
                                     module, callBack) => {
-
-    if (system_admin==1){
-        let system_admin_only = '';
-        const { admin_pool_started } = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='0' || admin_pool_started() == 0)
-            system_admin_only = 1;
-        else
-            system_admin_only = 0;
-        let first_time = null;
-        if (CheckFirstTime()){
-            //no system admin created yet, user will be prompt first time
-            first_time = 1;
-        }
+    const return_with_parameters = (app_name, first_time)=>{
         let parameters = {   
             app_id: app_id,
-            app_name: 'SYSTEM ADMIN',
+            app_name: app_name,
             app_client_id: ConfigGet(7, app_id, 'CLIENT_ID'),
             app_client_secret: ConfigGet(7, app_id, 'CLIENT_SECRET'),
-            app_datatoken: '',
+            app_datatoken: data_token,
             locale: locale,
             exception_app_function: exception_app_function,
             ui: ui,
-            system_admin: system_admin,
             system_admin_only: system_admin_only,
+            client_latitude: client_latitude,
+            client_longitude: client_longitude,
+            client_place: client_place,
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
             rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
             rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
@@ -363,46 +357,25 @@ const get_module_with_init = async (app_id,
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
                 JSON.stringify(parameters));
-        callBack(null, module);
+        return module;
+    }
+    if (system_admin_only==1){
+        callBack(null, return_with_parameters('SYSTEM ADMIN', CheckFirstTime()==true?1:0));
     }
     else{
         const { getAppStartParameters } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
-        const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
             else{
-                let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
-                CreateDataToken(app_id,  authorization, (err, jstoken_dt)=>{
-                    let parameters = {   
-                        app_id: app_id,
-                        app_name: result[0].app_name,
-                        app_client_id: ConfigGet(7, app_id, 'CLIENT_ID'),
-                        app_client_secret: ConfigGet(7, app_id, 'CLIENT_SECRET'),
-                        app_datatoken: jstoken_dt,
-                        locale:locale,
-                        exception_app_function: exception_app_function,
-                        ui: ui,
-                        system_admin: system_admin,
-                        system_admin_only: 0,
-                        common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-                        rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
-                        rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
-                        first_time: null
-                    };
-                    module = module.replace(
-                            '<ITEM_COMMON_PARAMETERS/>',
-                            JSON.stringify(parameters));
-                    callBack(null, module);
-                })
+                callBack(null, return_with_parameters(result[0].app_name, 0)); 
             }
         })
-    }
+    }        
 }
 
 const AppsStart = async (app) => {
     const {default:express} = await import('express');
-    const { admin_pool_started} = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
     
     app.use('/common',express.static(process.cwd() + '/apps/common/public'));
 
@@ -425,7 +398,12 @@ const AppsStart = async (app) => {
     });
     app.get("/info/:info",(req, res, next) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
+        if (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0')
+            getMaintenance(app_id)
+            .then((app_result) => {
+                res.send(app_result);
+            })
+        else
             if (ConfigGet(7, app_id, 'SHOWINFO')==1)
                 switch (req.params.info){
                     case 'about':
@@ -447,12 +425,6 @@ const AppsStart = async (app) => {
                   }
             else
                   next();
-        }
-        else
-            getMaintenance(app_id)
-            .then((app_result) => {
-                res.send(app_result);
-            });
     });
     app.get("/reports",(req, res) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
@@ -461,75 +433,48 @@ const AppsStart = async (app) => {
         if (app_id == 0)
             res.redirect('/');
         else
-            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1)
-                import(`file://${process.cwd()}/apps/apps.controller.js`)
-                .then(({ getReport}) => {
-                        getReport(req, res, app_id, (err, report_result)=>{
-                            if (err)
-                                res.redirect('/');
-                            else{
-                                if (req.query.service==='PDF'){
-                                    res.type('application/pdf');
-                                    res.send(report_result);
-                                    //res.end(report_result, 'binary');
-                                }
-                                else    
-                                    res.send(report_result);
-                            }
-                                
-                        })                    
-                })
-            else
-                getMaintenance(app_id)
-                .then((app_result) => {
-                    res.send(app_result);
-                });
+            import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getReport}) => {
+                getReport(req, res, app_id, (err, report_result)=>{
+                    if (err)
+                        res.redirect('/');
+                    else{
+                        if (req.query.service==='PDF'){
+                            res.type('application/pdf');
+                            res.send(report_result);
+                            //res.end(report_result, 'binary');
+                        }
+                        else    
+                            res.send(report_result);
+                    }
+                        
+                })                    
+            })
     });
     app.get("/",(req, res) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
-        if (app_id == 0)
-            import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getAppAdmin}) => {
-                    getAppAdmin(req, res, app_id, (err, app_result)=>{
+        import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
+                getApp(req, res, app_id, null,(err, app_result)=>{
                     return res.send(app_result);
                 })
             })
-        else
-            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1)
-                import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
-                    getApp(req, res, app_id, null,(err, app_result)=>{
-                        return res.send(app_result);
-                    })
-                })
-            else
-                getMaintenance(app_id)
-                .then((app_result) => {
-                    res.send(app_result);
-                });
     });
     app.get("/:sub",(req, res, next) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         if (ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') == app_id)
             return res.redirect('/');
         else
-            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
-                if (ConfigGet(7, app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
-                    import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
-                        getApp(req, res, app_id, req.params.sub, (err, app_result)=>{
-                            //if app_result=0 means here redirect to /
-                            if (app_result==0)
-                                return res.redirect('/');
-                            else
-                                return res.send(app_result);
-                        })
-                    });
-                else
-                    next();
-            }
-            else
-                getMaintenance(app_id)
-                .then((app_result) => {
-                    res.send(app_result);
+            if (ConfigGet(7, app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
+                import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
+                    getApp(req, res, app_id, req.params.sub, (err, app_result)=>{
+                        //if app_result=0 means here redirect to /
+                        if (app_result==0)
+                            return res.redirect('/');
+                        else
+                            return res.send(app_result);
+                    })
                 });
+            else
+                next();
     });
 }
     

@@ -233,7 +233,7 @@ const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
     }
     return callBack(null, count_connected);
 }
-const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, callBack) => {
+const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, latitude, longitude, callBack) => {
     let i=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].id==client_id){
@@ -241,6 +241,8 @@ const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_prov
             CONNECTED_CLIENTS[i].system_admin = system_admin;
             CONNECTED_CLIENTS[i].connection_date = new Date().toISOString();
             CONNECTED_CLIENTS[i].identity_provider_id = identity_provider_id;
+            CONNECTED_CLIENTS[i].gps_latitude = latitude;
+            CONNECTED_CLIENTS[i].gps_longitude = longitude;
             return callBack(null, null);
         }
     }
