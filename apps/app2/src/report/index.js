@@ -1,4 +1,4 @@
-const { read_app_files, get_module_with_init } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { read_app_files } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createReport = (app_id, module, locale) => {
     return new Promise((resolve, reject) => {
@@ -17,18 +17,7 @@ const createReport = (app_id, module, locale) => {
             if (err)
                 reject(err);
             else{
-                get_module_with_init(app_id, 
-                                     locale,
-                                     null,
-                                    'report.report_exception',
-                                    false,
-                                    report, (err, report_init) =>{
-                    if (err)
-                        reject(err);
-                    else{
-                        resolve(report_init);
-                    }
-                })
+                resolve(report);
             }
         })
     })

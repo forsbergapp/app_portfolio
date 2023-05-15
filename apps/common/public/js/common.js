@@ -2892,6 +2892,9 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
                 }
             }
         })
+        .catch(error=>{
+            callBack(error, null);
+        })
 }
 /*----------------------- */
 /* SERVICE BROADCAST      */
@@ -2972,7 +2975,13 @@ const show_maintenance = (message, init) => {
                 document.getElementById('common_maintenance_footer').innerHTML = message;
 }
 const reconnect = () => {
-    setTimeout(connectOnline, 5000);
+    setTimeout(()=>{
+                    if (checkconnected())
+                        get_gps_from_ip().then(()=>{
+                            connectOnline()})
+                    else
+                        connectOnline()
+                   }, 5000);
 }
 const updateOnlineStatus = () => {
     let token_type='';
@@ -2981,14 +2990,14 @@ const updateOnlineStatus = () => {
         path =   `/broadcast/connection/SystemAdmin`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                `&system_admin=${COMMON_GLOBAL['system_admin']}`
+                `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`
         token_type=2;
     }
     else{
         path =   `/broadcast/connection`+ 
                 `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
                 `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                `&system_admin=${COMMON_GLOBAL['system_admin']}`
+                `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`
         token_type=0;
     }
     FFB ('BROADCAST', path, 'PATCH', token_type, null, (err, result) => {
@@ -2998,15 +3007,20 @@ const updateOnlineStatus = () => {
 const connectOnline = async () => {
     FFB ('BROADCAST', `/broadcast/connection/connect` +
                       `?identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                      `&system_admin=${COMMON_GLOBAL['system_admin']}`, 'GET', 6, null, (err, result_eventsource) => {
-        //return broadcast stream
-        COMMON_GLOBAL['service_broadcast_eventsource'] = result_eventsource;
-        COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
-            show_broadcast(event.data);
-        }
-        COMMON_GLOBAL['service_broadcast_eventsource'].onerror = (err) => {
-            COMMON_GLOBAL['service_broadcast_eventsource'].close();
+                      `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`, 
+         'GET', 6, null, (err, result_eventsource) => {
+        if (err)
             reconnect();
+        else{
+            //return broadcast stream
+            COMMON_GLOBAL['service_broadcast_eventsource'] = result_eventsource;
+            COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
+                show_broadcast(event.data);
+            }
+            COMMON_GLOBAL['service_broadcast_eventsource'].onerror = (err) => {
+                COMMON_GLOBAL['service_broadcast_eventsource'].close();
+                reconnect();
+            }
         }
     })
 }
@@ -3203,12 +3217,17 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['rest_dt'] = parameters.app_datatoken;
 
     //system admin
-    COMMON_GLOBAL['system_admin'] = parameters.system_admin;
+    COMMON_GLOBAL['system_admin'] = 0;
     COMMON_GLOBAL['system_admin_only'] = parameters.system_admin_only;
 
     //user info
     COMMON_GLOBAL['user_identity_provider_id']='';
     COMMON_GLOBAL['user_account_id'] = '';
+    
+    //client info
+    COMMON_GLOBAL['client_latitude']  = parameters.client_latitude;
+    COMMON_GLOBAL['client_longitude'] = parameters.client_longitude;
+    COMMON_GLOBAL['client_place'] = parameters.client_place;
     
     if (parameters.system_admin==0){
         user_preferences_set_default_globals('LOCALE');
@@ -3525,32 +3544,30 @@ const normal_start = async (ui) => {
         else{
             path = `/app_parameter/${COMMON_GLOBAL['app_id']}?`;
         }
-        get_gps_from_ip().then(()=>{
-            //get parameters
-            FFB ('DB', path, 'GET', 0, null, (err, result) => {
-                if (err)
-                    null;
-                else{
-                    let global_app_parameters = [];
-                    let json = JSON.parse(result);
-                    for (let i = 0; i < json.data.length; i++) {
-                        //set common parameters
-                        if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
-                            set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                        //return all parameters for admin app and for other apps all except admin app id parameters
-                        if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
-                            json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
-                            global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
-                                                                    "parameter_name":"${json.data[i].parameter_name}",
-                                                                    "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
-                    }
-                    if (ui == true){
-                        assign_icons();
-                        set_events();
-                    }            
-                    resolve(global_app_parameters);
+        //get parameters
+        FFB ('DB', path, 'GET', 0, null, (err, result) => {
+            if (err)
+                null;
+            else{
+                let global_app_parameters = [];
+                let json = JSON.parse(result);
+                for (let i = 0; i < json.data.length; i++) {
+                    //set common parameters
+                    if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
+                        set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
+                    //return all parameters for admin app and for other apps all except admin app id parameters
+                    if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
+                        json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
+                        global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
+                                                                "parameter_name":"${json.data[i].parameter_name}",
+                                                                "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
                 }
-            })
+                if (ui == true){
+                    assign_icons();
+                    set_events();
+                }            
+                resolve(global_app_parameters);
+            }
         })
     })    
 }
