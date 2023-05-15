@@ -101,39 +101,48 @@ const getApp = async (req, res, app_id, params, callBack) => {
                 else{
                     import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
                         createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app) => {
-                            //4.
-                            //5.
-                            //6.get app with parameters
-                            service.get_module_with_init(app_id, 
-                                                        service.client_locale(req.headers['accept-language']),
-                                                        0,  //system_admin_only
-                                                        'app.app_exception',
-                                                        true,  //ui
-                                                        result_datatoken,
-                                                        result_geodata.latitude,
-                                                        result_geodata.longitude,
-                                                        result_geodata.place,
-                                                        app, (err, app_with_init) =>{
-                                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
-                                    createLog(req.query.app_id,
-                                                { app_id : app_id,
-                                                app_module : 'APPS',
-                                                app_module_type : 'APP',
-                                                app_module_request : params,
-                                                app_module_result : result_geodata.place,
-                                                app_user_id : null,
-                                                user_language : null,
-                                                user_timezone : null,
-                                                user_number_system : null,
-                                                user_platform : null,
-                                                server_remote_addr : req.ip,
-                                                server_user_agent : req.headers["user-agent"],
-                                                server_http_host : req.headers["host"],
-                                                server_http_accept_language : req.headers["accept-language"],
-                                                client_latitude : result_geodata.latitude,
-                                                client_longitude : result_geodata.longitude
-                                                }, (err,results)  => {
-                                                    return callBack(null, app_with_init);
+                            //4. get translation data
+                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_object/app_object.service.js`).then(({getObjects}) => {
+                                getObjects(app_id, service.client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
+                                    for (let row of result_objects){
+                                        app = app.replaceAll(
+                                            `<CommonTranslation${row.object_item_name.toUpperCase()}/>`,
+                                            `${row.text}`);
+                                    }
+                                    //5. set translation data
+                                    //6.get app with parameters
+                                    service.get_module_with_init(app_id, 
+                                        service.client_locale(req.headers['accept-language']),
+                                        0,  //system_admin_only
+                                        'app.app_exception',
+                                        true,  //ui
+                                        result_datatoken,
+                                        result_geodata.latitude,
+                                        result_geodata.longitude,
+                                        result_geodata.place,
+                                        app, (err, app_with_init) =>{
+                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                            createLog(req.query.app_id,
+                                                        { app_id : app_id,
+                                                        app_module : 'APPS',
+                                                        app_module_type : 'APP',
+                                                        app_module_request : params,
+                                                        app_module_result : result_geodata.place,
+                                                        app_user_id : null,
+                                                        user_language : null,
+                                                        user_timezone : null,
+                                                        user_number_system : null,
+                                                        user_platform : null,
+                                                        server_remote_addr : req.ip,
+                                                        server_user_agent : req.headers["user-agent"],
+                                                        server_http_host : req.headers["host"],
+                                                        server_http_accept_language : req.headers["accept-language"],
+                                                        client_latitude : result_geodata.latitude,
+                                                        client_longitude : result_geodata.longitude
+                                                        }, (err,results)  => {
+                                                            return callBack(null, app_with_init);
+                                            })
+                                        })
                                     })
                                 })
                             })
