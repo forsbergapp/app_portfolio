@@ -31,7 +31,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                             //get app with parameters
                             let system_admin_only;
                             import(`file://${process.cwd()}/service/db/db.service.js`).then(({ admin_pool_started })=>{
-                                if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
+                                if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE') )==1){
                                     system_admin_only = 0;
                                 }
                                 else{
