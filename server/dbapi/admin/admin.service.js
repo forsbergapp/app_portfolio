@@ -1,13 +1,85 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const DBStart = async () => {
+   const {start_pool_admin, start_pool_apps} = await import(`file://${process.cwd()}/service/db/db.service.js`);
    return await new Promise((resolve, reject) => {
-      null;
+      if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){         
+         let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+         let dbparameters = `{
+            "startpool_app_id":        "${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}",
+
+            "use":                     "${ConfigGet(1, 'SERVICE_DB', 'USE')}",
+            "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
+            "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+            "system_admin_user":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
+            "system_admin_password":   "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
+            "app_admin_user":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}",
+            "app_admin_password":      "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}",
+            "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",`;
+            //db 1 + 2 parameters
+            dbparameters +=
+            `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
+            "connnectionLimit":        "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)}",`;
+            // db 3 parameters
+            dbparameters +=
+            `"connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
+            "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
+            "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}",`;
+            //db 4 parameters
+            dbparameters +=
+            `"connectString":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`)}",
+            "poolMin":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`)},
+            "poolMax":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`)},
+            "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)},`;
+            // pool variables
+            dbparameters +=
+            `"poolAlias_system_admin": "POOL_DB${db_use}_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_SYSTEM_ADMIN",
+            "poolAlias_app_admin":     "POOL_DB${db_use}_APP_${ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}_APP_ADMIN"
+         }`;
+         start_pool_admin(dbparameters)
+         .then((result)=>{
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
+               //app_id inparameter for log, all apps will be returned
+               getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
+                  if (err) {
+                     reject(err);
+                  }
+                  else {
+                     //get app id, db username and db password
+                     let apps = null;
+                     for (let app  of result_apps){
+                        if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
+                           if (apps==null)
+                              apps = '{"APPS":[';
+                           else
+                              apps += ',';
+                           apps += `{"id":${app.id}, "db_user":"${app.db_user}", "db_password":"${app.db_password}"}`;
+                        }
+                     }
+                     apps += ']}';
+                     start_pool_apps(dbparameters, apps)
+                     .then((result)=>{
+                        resolve(result)
+                     })
+                     .catch(error=>{
+                        reject(error);
+                     })
+                  }
+               })
+            })
+         })
+         .catch(error=>{
+            reject(error);
+         })
+      }
+      else
+         resolve()
    })
 }
 const DBStop = async () => {
+   const {stop} = await import(`file://${process.cwd()}/service/db/db.service.js`);
    return await new Promise((resolve, reject) => {
-      null;
+      resolve(stop());
    })
 }
 const DBInfo = async (app_id, callBack) => {
@@ -927,6 +999,7 @@ const install_db_delete = async (app_id, callBack)=> {
                                    {"count_fail": count_statements_fail}
                                  ]});
 }
-export{DBInfo, DBInfoSpace, DBInfoSpaceSum,
+export{DBStart, DBStop,
+       DBInfo, DBInfoSpace, DBInfoSpaceSum,
        demo_add, demo_get, demo_delete, 
        install_db, install_db_check, install_db_delete}

@@ -314,7 +314,15 @@ const accessToken = (req, callBack) => {
         });
     })
 }
-
-export {access_control, checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
-        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, accessToken, policy_directives, 
-        check_request}
+const checkClientAccess = (req, res, next) => {
+    service.checkClientAccess(req.query.app_id, req.headers.authorization).then((result)=>{
+        if (result == 1)
+            next();
+        else
+            res.status(401).send('⛔');
+    })
+}
+export {access_control, policy_directives, check_request, 
+        checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
+        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, accessToken, 
+        checkClientAccess}
