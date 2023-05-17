@@ -959,7 +959,7 @@ const getEmailUser = (app_id, email, callBack) => {
 				return callBack(null, result[0]);
 		});
     }
-const getAppRole = (app_id, user_account_id, callBack) => {
+const getUserRoleAdmin = (app_id, user_account_id, system_admin, callBack) => {
 		let sql;
 		let parameters;
 		if (user_account_id =='')
@@ -983,7 +983,8 @@ const getAppRole = (app_id, user_account_id, callBack) => {
 						id: user_account_id,
 						id_user_icon: 2
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
+		//use pool column 2 for system admin
+		db_execute(app_id, sql, parameters, system_admin==1?2:null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
@@ -1012,4 +1013,4 @@ export{password_length_wrong, verification_code,
 	   activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
 	   searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
 	   updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
-	   getEmailUser, getAppRole, getDemousers}
+	   getEmailUser, getUserRoleAdmin, getDemousers}
