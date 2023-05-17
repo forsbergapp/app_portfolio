@@ -52,7 +52,7 @@ const BroadcastSendAdmin = (req, res) => {
 }
 const ConnectedList = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
-                            req.query.order_by, req.query.sort,  (err, result) => {
+                            req.query.order_by, req.query.sort, 0, (err, result) => {
         if (err) {
             return res.status(500).send({
                 data: err
@@ -73,7 +73,7 @@ const ConnectedList = (req, res) => {
 }
 const ConnectedListSystemAdmin = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
-                            req.query.order_by, req.query.sort,  (err, result) => {
+                            req.query.order_by, req.query.sort,  1, (err, result) => {
         if (err) {
             return res.status(500).send({
                 data: err
