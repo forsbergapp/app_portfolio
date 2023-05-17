@@ -154,7 +154,7 @@ const db_execute = (app_id, sql, parameters, pool_col, callBack) =>{
 			if (err){
 				const database_error = 'DATABASE ERROR';
 				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, null, null, err).then(() => {
+					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, null, null, err + 'SQL:' + sql).then(() => {
 						import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({ get_app_code }) => {
 							let app_code = get_app_code(err.errorNum, 
 								err.message, 
