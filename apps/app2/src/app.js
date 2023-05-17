@@ -3,7 +3,7 @@ const { read_app_files} = await import(`file://${process.cwd()}/apps/apps.servic
 
 const themes = async (app_id, locale) =>{
     return new Promise((resolve) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
             getSettings(app_id, locale, 'REPORT_THEME%', (err, settings) => {
                 let html_themes='';
                 if (err){
@@ -71,7 +71,7 @@ const themes = async (app_id, locale) =>{
 }
 const places = async (app_id, locale) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
             getSettings(app_id, locale, 'PLACE', (err, settings) => {
                 let select_places;
                 if (err){
@@ -107,7 +107,7 @@ const places = async (app_id, locale) => {
 }
 const countries = (app_id, locale) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/country/country.service.js`).then(({getCountries})=>{
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
             getCountries(app_id, locale, (err, results)  => {
                 let select_countries;
                 if (err){
@@ -189,7 +189,7 @@ const createApp = (app_id, username, locale) => {
             const getAppComponents = async (app_id) => {
                 return new Promise((resolve, reject) => {
                     try {
-                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/language/locale/locale.service.js`).then(({getLocales}) => {
+                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`).then(({getLocales}) => {
                             getLocales(app_id, locale, (err, locales) => {
                                 if (err)
                                     resolve(err)
@@ -236,7 +236,7 @@ const createApp = (app_id, username, locale) => {
                 let APP_FAST_START_END='';
                 let APP_MAP_TYPE='';
                 
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
                     getSettings(app_id, locale, '', (err, settings) => {
                         let option;
                         for (let i = 0; i < settings.length; i++) {
@@ -415,7 +415,7 @@ const createApp = (app_id, username, locale) => {
             });
         }
         if (username!=null){
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`).then(({getProfileUser}) => {
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, username, null, (err,result)=>{
                     if (result)
                         main(app_id);

@@ -40,7 +40,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                             //5.
                             //6.get app with parameters
                             let system_admin_only;
-                            import(`file://${process.cwd()}/service/db/admin/admin.service.js`).then(({ admin_pool_started })=>{
+                            import(`file://${process.cwd()}/service/db/db.service.js`).then(({ admin_pool_started })=>{
                                 if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
                                     system_admin_only = 0;
                                 }
@@ -59,7 +59,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                             result_geodata.place,
                                                             app, (err, app_with_init) =>{
                                     if (ConfigGet(1, 'SERVICE_DB', 'START')=='1')
-                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                                             createLog(req.query.app_id,
                                                     { app_id : app_id,
                                                         app_module : 'APPS',
@@ -102,7 +102,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                     import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
                         createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app) => {
                             //4. get translation data
-                            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_object/app_object.service.js`).then(({getObjects}) => {
+                            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`).then(({getObjects}) => {
                                 getObjects(app_id, service.client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
                                     for (let row of result_objects){
                                         app = app.replaceAll(
@@ -121,7 +121,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                         result_geodata.longitude,
                                         result_geodata.place,
                                         app, (err, app_with_init) =>{
-                                        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                                             createLog(req.query.app_id,
                                                         { app_id : app_id,
                                                         app_module : 'APPS',
@@ -217,7 +217,7 @@ const getReport = async (req, res, app_id, callBack) => {
                                                                 if (err)
                                                                     callBack(err, null);
                                                                 else{
-                                                                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                                                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                                                                         createLog(req.query.app_id,
                                                                                     { app_id : app_id,
                                                                                     app_module : 'APPS',

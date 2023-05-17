@@ -3570,28 +3570,6 @@ const normal_start = async (ui) => {
     })    
 }
 const init_common = async (parameters, callBack) => {
-    /*
-    parameters:
-    {app_id:
-     app_name:
-     app_url:
-     app_logo:
-     locale:
-     exception_app_function:
-     ui:
-     gps_lat: 
-     gps_long: 
-     gps_place:
-     system_admin:
-     system_admin_only:
-     global_rest_client_id: 
-     global_rest_client_secret:
-     rest_resource_server:
-     rest_resource_bff:
-     rest_resource_service:
-	 rest_resource_service_db:
-    }
-    */  
     if (COMMON_GLOBAL['app_id'] ==null)
         set_globals(parameters);
     if (parameters.app_id == COMMON_GLOBAL['common_app_id']){

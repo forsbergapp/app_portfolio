@@ -237,7 +237,7 @@
 
 # Installation instructions
 
-1. Download and info about folders
+1. Download and info about directories
 
 	[docs/1.download_and_info.md](docs/1.download_and_info.md)
 
