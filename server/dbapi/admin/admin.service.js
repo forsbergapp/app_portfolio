@@ -1,7 +1,7 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const DBStart = async () => {
-   const {start_pool_admin, start_pool_apps} = await import(`file://${process.cwd()}/service/db/db.service.js`);
+   const {start_pool_admin, start_pool_apps, admin_pool_started} = await import(`file://${process.cwd()}/service/db/db.service.js`);
    return await new Promise((resolve, reject) => {
       if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){         
          let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
@@ -38,35 +38,38 @@ const DBStart = async () => {
          }`;
          start_pool_admin(dbparameters)
          .then((result)=>{
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
-               //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
-                  if (err) {
-                     reject(err);
-                  }
-                  else {
-                     //get app id, db username and db password
-                     let apps = null;
-                     for (let app  of result_apps){
-                        if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-                           if (apps==null)
-                              apps = '{"APPS":[';
-                           else
-                              apps += ',';
-                           apps += `{"id":${app.id}, "db_user":"${app.db_user}", "db_password":"${app.db_password}"}`;
-                        }
+            if (admin_pool_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE')))
+               import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
+                  //app_id inparameter for log, all apps will be returned
+                  getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
+                     if (err) {
+                        reject(err);
                      }
-                     apps += ']}';
-                     start_pool_apps(dbparameters, apps)
-                     .then((result)=>{
-                        resolve(result)
-                     })
-                     .catch(error=>{
-                        reject(error);
-                     })
-                  }
+                     else {
+                        //get app id, db username and db password
+                        let apps = null;
+                        for (let app  of result_apps){
+                           if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
+                              if (apps==null)
+                                 apps = '{"APPS":[';
+                              else
+                                 apps += ',';
+                              apps += `{"id":${app.id}, "db_user":"${app.db_user}", "db_password":"${app.db_password}"}`;
+                           }
+                        }
+                        apps += ']}';
+                        start_pool_apps(dbparameters, apps)
+                        .then((result)=>{
+                           resolve(result)
+                        })
+                        .catch(error=>{
+                           reject(error);
+                        })
+                     }
+                  })
                })
-            })
+            else
+               resolve();
          })
          .catch(error=>{
             reject(error);

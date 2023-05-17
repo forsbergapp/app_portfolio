@@ -1,9 +1,11 @@
 const {ConfigGet, COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service = await import('./apps.service.js')
+const {admin_pool_started} = await import(`file://${process.cwd()}/service/db/db.service.js`);
 const getApp = async (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
-    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'))
+    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0' ||
+                        admin_pool_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE')) ==false ))
         service.getMaintenance(app_id).then((result_maintenance) => {
             return callBack(null, result_maintenance);
         });
@@ -144,7 +146,8 @@ const getApp = async (req, res, app_id, params, callBack) => {
 }
 const getReport = async (req, res, app_id, callBack) => {
 
-    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'))
+    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'||
+                        admin_pool_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE')) ==false ))
         service.getMaintenance(app_id).then((result_maintenance) => {
             callBack(null, result_maintenance);
         });
