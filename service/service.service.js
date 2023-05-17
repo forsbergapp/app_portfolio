@@ -1,13 +1,6 @@
 const https = await import('node:https');
 const service_request = async (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
-        //implement CLIENT_ID and CLIENT_SECRET so microservice can only be called from server
-        //and not directly from apps
-        //all requests with authorization header
-        //GET
-        // response can be HTML, PDF or JSON, let the app decide what to do with the response
-        //POST, PUT, PATCH and DELETE always should use JSON in body
-        //response should be JSON, return unparsed
         let headers;
         if (method == 'GET')
             headers = {

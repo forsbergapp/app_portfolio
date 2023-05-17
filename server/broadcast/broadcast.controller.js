@@ -64,7 +64,7 @@ const ConnectedList = (req, res) => {
                     data: result
                 });
             else{
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db/common/common.service.js`).then(({record_not_found}) => {
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
                 })
             }
