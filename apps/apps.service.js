@@ -339,8 +339,6 @@ const get_module_with_init = async (app_id,
         let parameters = {   
             app_id: app_id,
             app_name: app_name,
-            app_client_id: ConfigGet(7, app_id, 'CLIENT_ID'),
-            app_client_secret: ConfigGet(7, app_id, 'CLIENT_SECRET'),
             app_datatoken: data_token,
             locale: locale,
             exception_app_function: exception_app_function,
