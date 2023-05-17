@@ -154,74 +154,6 @@ const check_request = (req, callBack) =>{
     else
         callBack(null, null)
 }
-//SERVER ROUTER
-const CreateDataToken = (req, res) => {
-    let stack = new Error().stack;
-    if(req.headers.authorization){
-        service.CreateDataToken(req.query.app_id, req.headers.authorization, (err, jsontoken_dt) =>{
-            if (err)
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(err);
-                        })
-                    });
-                })
-            else
-                if (jsontoken_dt == null)
-                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
-                            createLog(req.query.app_id,
-                                { app_id : req.query.app_id,
-                                app_module : 'AUTH',
-                                app_module_type : 'DATATOKEN_FAIL',
-                                app_module_request : req.baseUrl,
-                                app_module_result : 'HTTP Error 401 Unauthorized: Access is denied.',
-                                app_user_id : req.query.app_user_id,
-                                user_language : null,
-                                user_stimezone : null,
-                                user_number_system : null,
-                                user_platform : null,
-                                server_remote_addr : req.ip,
-                                server_user_agent : req.headers["user-agent"],
-                                server_http_host : req.headers["host"],
-                                server_http_accept_language : req.headers["accept-language"],
-                                client_latitude : null,
-                                client_longitude : null
-                                }, (err,results)  => {
-                                    return res.status(401).send('⛔');
-                            }); 
-                        })
-                else
-                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
-                            createLog(req.query.app_id,
-                                        { app_id : req.query.app_id,
-                                        app_module : 'AUTH',
-                                        app_module_type : 'DATATOKEN_OK',
-                                        app_module_request : req.baseUrl,
-                                        app_module_result : 'DT:' + jsontoken_dt,
-                                        app_user_id : req.query.app_user_id,
-                                        user_language : null,
-                                        user_timezone : null,
-                                        user_number_system : null,
-                                        user_platform : null,
-                                        server_remote_addr : req.ip,
-                                        server_user_agent : req.headers["user-agent"],
-                                        server_http_host : req.headers["host"],
-                                        server_http_accept_language : req.headers["accept-language"],
-                                        client_latitude : null,
-                                        client_longitude : null
-                                        }, (err,results)  => {
-                                            return res.status(200).json({ 
-                                                token_dt: jsontoken_dt
-                                        });
-                            }); 
-                        })
-        })
-    }
-    else{
-        return res.status(401).send('⛔');
-    }
-}
 //ENDPOINT MIDDLEWARE
 const checkAccessTokenCommon = (req, res, next) => {
     let token = req.get("authorization");
@@ -384,5 +316,5 @@ const accessToken = (req, callBack) => {
 }
 
 export {access_control, checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
-        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, CreateDataToken, accessToken, policy_directives, 
+        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, accessToken, policy_directives, 
         check_request}
