@@ -1,6 +1,6 @@
 const common = await import('/common/js/common.js');
 const app_exception = (error) => {
-    null;
+    common.show_message('EXCEPTION', null, null, error);
 }
 const getdocs = (docid = null) => {
     document.querySelector('#doc_list').innerHTML = common.APP_SPINNER;

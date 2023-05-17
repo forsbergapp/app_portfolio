@@ -122,10 +122,10 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                         case 'localhost':
                         case 'www':{
                             //localhost
-                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.SUBDOMAIN == 'www'})[0].CLIENT_ID;
+                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.SUBDOMAIN == 'www'})[0].APP_ID;
                         }
                         default:{
-                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return config_group.split('.')[0] == app.SUBDOMAIN})[0].CLIENT_ID;
+                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return config_group.split('.')[0] == app.SUBDOMAIN})[0].APP_ID;
                         }
                     }
                     break;
@@ -141,17 +141,18 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                 case 'DATA_EXPIRE':
                 case 'ACCESS_SECRET':
                 case 'ACCESS_EXPIRE':{
-                    return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.CLIENT_ID == config_group})[0][parameter];
+                    return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.APP_ID == config_group})[0][parameter];
                     break;
                 }
                 //config_group = app id or null, return all apps or given app id without secret
                 case 'APPS':{
                     let apps_no_secrets = JSON.parse(CONFIG_APPS)['APPS'];
                     apps_no_secrets = apps_no_secrets.filter((app)=>{ 
-                                                            return app.CLIENT_ID == config_group || config_group == null}
+                                                            return app.APP_ID == config_group || config_group == null}
                                                             )
                     
                     apps_no_secrets.map((app)=>{
+                        delete app.CLIENT_ID;
                         delete app.CLIENT_SECRET;
                         delete app.DATA_SECRET;
                         delete app.DATA_EXPIRE;
@@ -248,6 +249,7 @@ const DefaultConfig = async () => {
                         //generate hash for apps
                         config_json[5] = JSON.parse(config_json[5]);
                         config_json[5]['APPS'].map(row=>{
+                            row.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
                             row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                             row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                             row.ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
@@ -641,7 +643,7 @@ const serverExpressRoutes = async (app) => {
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //auth
-    const { CreateDataToken, checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
+    const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
             checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
     const { authSystemAdmin, checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
@@ -753,7 +755,6 @@ const serverExpressRoutes = async (app) => {
     app.route('/apps/bff/noauth').get           (serverRouterLog, BFF_noauth);
     app.route('/apps/bff/auth').post            (serverRouterLog, BFF_auth);
 
-    app.route(`${rest_resouce_server}/auth`).post                                        (serverRouterLog, CreateDataToken);
     app.route(`${rest_resouce_server}/auth/admin`).post                                  (serverRouterLog, authSystemAdmin);
 
     app.route(`${rest_resouce_server}/config/systemadmin`).put                           (serverRouterLog, checkSystemAdmin, ConfigSave);

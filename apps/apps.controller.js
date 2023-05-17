@@ -3,25 +3,17 @@ const service = await import('./apps.service.js')
 const getApp = async (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
-    /*
-        1.CreateDataToken	        -> BFF AUTH	(need token to call bff, return the token)
-        2.get GPS	                -> BFF GEOLOCATION
-        3.get app		            -> apps/app[id]/client.js contains calls to BFF DB
-        4.getAppData		        -> BFF DB common requests (translation, get parameters)
-        5.setData		            translation app_objects
-        6.get app with parameters   get_module_with_init moved from apps/app[id]/client.js, remove getAppStartParameters and CreateDataToken
-        
-    */
     if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'))
         service.getMaintenance(app_id).then((result_maintenance) => {
             return callBack(null, result_maintenance);
         });
     else{
-        //1.Data token
+        //authorization for microservice access
         let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
+        //Data token
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-        CreateDataToken(app_id,  authorization, (err, result_datatoken)=>{
-            //2. get GPS from IP
+        CreateDataToken(app_id, (err, result_datatoken)=>{
+            //get GPS from IP
             let parameters = `/ip?ip=${req.ip}`;
             service.BFF(app_id, 'GEOLOCATION', parameters, 
                         req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
@@ -31,14 +23,12 @@ const getApp = async (req, res, app_id, params, callBack) => {
                 result_geodata.place = result_geodata.geoplugin_city + ', ' +
                                        result_geodata.geoplugin_regionName + ', ' +
                                        result_geodata.geoplugin_countryName;
-                //3.get app
+                //get app
                 if (app_id == 0){
                     //get app admin
                     import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
                         createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app) => {
-                            //4.
-                            //5.
-                            //6.get app with parameters
+                            //get app with parameters
                             let system_admin_only;
                             import(`file://${process.cwd()}/service/db/db.service.js`).then(({ admin_pool_started })=>{
                                 if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && admin_pool_started()==1){
@@ -101,7 +91,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                 else{
                     import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
                         createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app) => {
-                            //4. get translation data
+                            //get translation data
                             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`).then(({getObjects}) => {
                                 getObjects(app_id, service.client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
                                     for (let row of result_objects){
@@ -109,8 +99,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                             `<CommonTranslation${row.object_item_name.toUpperCase()}/>`,
                                             `${row.text}`);
                                     }
-                                    //5. set translation data
-                                    //6.get app with parameters
+                                    //get app with parameters
                                     service.get_module_with_init(app_id, 
                                         service.client_locale(req.headers['accept-language']),
                                         0,  //system_admin_only
@@ -190,9 +179,9 @@ const getReport = async (req, res, app_id, callBack) => {
                 })
         }
         else{
-            let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
+            //data token
             const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-            CreateDataToken(app_id,  authorization, (err, result_datatoken)=>{
+            CreateDataToken(app_id, (err, result_datatoken)=>{
                 let parameters = `/ip?ip=${req.ip}`;
                 service.BFF(app_id, 'GEOLOCATION', parameters, 
                             req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{

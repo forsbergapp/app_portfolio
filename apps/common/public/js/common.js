@@ -27,8 +27,6 @@ const COMMON_GLOBAL = {
     "app_url":"",
     "app_logo":"",
     "exception_app_function":"",
-    "app_client_id":"",
-    "app_client_secret":"",
     "user_app_role_id":"",
     "system_admin":"",
     "system_admin_only":"",
@@ -1872,22 +1870,19 @@ const user_logoff = async () => {
 
     updateOnlineStatus();
     document.getElementById('common_profile_avatar_online_status').className='';
-    //get new data token to avoid endless loop och invalid token
-    await FFB ('AUTH', `/auth?`, 'POST', 4, null, (err, result) => {
-        dialogue_user_edit_clear();
-        dialogue_verify_clear();
-        dialogue_new_password_clear();
-        dialogue_login_clear();
-        dialogue_signup_clear();
-        dialogue_forgot_clear();
-        document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
-        dialogue_profile_clear();
-        user_preferences_set_default_globals('LOCALE');
-        user_preferences_set_default_globals('TIMEZONE');
-        user_preferences_set_default_globals('DIRECTION');
-        user_preferences_set_default_globals('ARABIC_SCRIPT');
-        user_preferences_update_select();
-    })
+    dialogue_user_edit_clear();
+    dialogue_verify_clear();
+    dialogue_new_password_clear();
+    dialogue_login_clear();
+    dialogue_signup_clear();
+    dialogue_forgot_clear();
+    document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
+    dialogue_profile_clear();
+    user_preferences_set_default_globals('LOCALE');
+    user_preferences_set_default_globals('TIMEZONE');
+    user_preferences_set_default_globals('DIRECTION');
+    user_preferences_set_default_globals('ARABIC_SCRIPT');
+    user_preferences_update_select();
 }
 const user_edit = async () => {
     let json;
@@ -2791,20 +2786,14 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin`;
             break;
         }
-        case 4:{
-            //data token authorization post
-            authorization = `Basic ${window.btoa(COMMON_GLOBAL['app_client_id'] + ':' + COMMON_GLOBAL['app_client_secret'])}`;
-            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
-            break;
-        }
-        case 5:{
+        case 3:{
             //admin login authorization post
             authorization = `Basic ${window.btoa(JSON.parse(json_data).username + ':' + JSON.parse(json_data).password)}`;
             json_data = null;
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
             break;
         }
-        case 6:{
+        case 4:{
             //broadcast connect no authorization get
             authorization = null;
             json_data = null;
@@ -3006,7 +2995,7 @@ const connectOnline = async () => {
     FFB ('BROADCAST', `/broadcast/connection/connect` +
                       `?identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
                       `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`, 
-         'GET', 6, null, (err, result_eventsource) => {
+         'GET', 4, null, (err, result_eventsource) => {
         if (err)
             reconnect();
         else{
@@ -3210,8 +3199,6 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['rest_resource_bff'] = parameters.rest_resource_bff;
 
     //client credentials
-    COMMON_GLOBAL['app_client_id'] = parameters.app_client_id;
-    COMMON_GLOBAL['app_client_secret'] = parameters.app_client_secret;
     COMMON_GLOBAL['rest_dt'] = parameters.app_datatoken;
 
     //system admin

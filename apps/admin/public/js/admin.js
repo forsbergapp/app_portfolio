@@ -84,7 +84,7 @@ const admin_login = async () => {
             }
         }
         let json;
-        common.FFB ('AUTH', `/auth/admin?`, 'POST', 5, `{"username": "${document.getElementById("system_admin_login_username_input").value}",
+        common.FFB ('AUTH', `/auth/admin?`, 'POST', 3, `{"username": "${document.getElementById("system_admin_login_username_input").value}",
                                                         "password": "${document.getElementById("system_admin_login_password_input").value}"}`, (err, result_login) => {
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err)
