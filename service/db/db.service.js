@@ -14,7 +14,7 @@ let POOL_DB4_APP = [];
 const DBInit = async (DB_USE) => {
    const fs = await import('node:fs');
    const fileBuffer = await fs.promises.readFile(`${process.cwd()}/service/db/config/config.json`, 'utf8');
-	const DBCONFIG = JSON.parse(fileBuffer.toString());      
+   const DBCONFIG = JSON.parse(fileBuffer.toString());
    if (DB_USE=='4'){
       ORACLEDB.autoCommit = true;
       ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
@@ -26,9 +26,9 @@ const DBInit = async (DB_USE) => {
 const start_pool_admin = async (dbparameters) => {
 
    dbparameters = JSON.parse(dbparameters);
-   
+   await DBInit(dbparameters.use);
    return await new Promise((resolve, reject) => {
-      DBInit(dbparameters.use);
+      
       switch (dbparameters.use){
          case '1':
          case '2':{
