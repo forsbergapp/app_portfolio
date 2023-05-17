@@ -53,7 +53,7 @@ const createApp = (app_id, username, locale) => {
         }
         if (username!=null){
             import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`).then(({getProfileUser}) => {
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
                     getProfileUser(app_id, null, username, null, (err,result)=>{
                         if (result)
                             main(app_id);
