@@ -202,4 +202,11 @@ const CreateDataToken = async (app_id, callBack)=>{
                             });
     callBack(null, jsontoken_dt);
 }
-export {block_ip_control, safe_user_agents, policy_directives, check_internet, CreateDataToken}
+const checkClientAccess = async (app_id, authorization) =>{
+    let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+    if (userpass == ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))
+        return 1;
+    else
+        return 0;
+}
+export {block_ip_control, safe_user_agents, policy_directives, check_internet, CreateDataToken, checkClientAccess}

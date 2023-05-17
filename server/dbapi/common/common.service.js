@@ -149,8 +149,8 @@ const db_limit_rows = (sql, limit_type = null) => {
 }
 
 const db_execute = (app_id, sql, parameters, pool_col, callBack) =>{
-	import(`file://${process.cwd()}/service/db/db.service.js`).then(({DBSQL}) => {
-		DBSQL(app_id, sql, parameters, pool_col, (err, result) => {
+	import(`file://${process.cwd()}/service/db/db.service.js`).then(({db_query}) => {
+		db_query(app_id, ConfigGet(1, 'SERVICE_DB', 'USE'), sql, parameters, pool_col, (err, result) => {
 			if (err){
 				const database_error = 'DATABASE ERROR';
 				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
