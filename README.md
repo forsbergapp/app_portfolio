@@ -268,9 +268,9 @@
    
 	[docs/7.sign_in_provider.md](docs/7.sign_in_provider.md)
 
-8. How to add a new app
+8. Apps
 
-	[docs/8.how_to_add_new_app.md](docs/8.how_to_add_new_app.md)
+	[docs/8.apps.md](docs/8.apps.md)
 
 9. Install development environment
 	
