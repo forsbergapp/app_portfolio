@@ -192,20 +192,14 @@ const check_internet = async () => {
         })
     })
 }
-const CreateDataToken = async (app_id, authorization, callBack)=>{
+const CreateDataToken = async (app_id, callBack)=>{
     const {default:{sign}} = await import("jsonwebtoken");
-    let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-    if (userpass == ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET')) {
-        let jsontoken_dt;
-        jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
-                              ConfigGet(7, app_id, 'DATA_SECRET'), 
-                             {
-                              expiresIn: ConfigGet(7, app_id, 'DATA_EXPIRE')
-                             });
-        callBack(null, jsontoken_dt);
-    } 
-    else{
-        callBack(null, null);
-    }
+    let jsontoken_dt;
+    jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
+                            ConfigGet(7, app_id, 'DATA_SECRET'), 
+                            {
+                            expiresIn: ConfigGet(7, app_id, 'DATA_EXPIRE')
+                            });
+    callBack(null, jsontoken_dt);
 }
 export {block_ip_control, safe_user_agents, policy_directives, check_internet, CreateDataToken}
