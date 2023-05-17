@@ -153,8 +153,7 @@ const getAppStartParameters = (app_id, callBack) => {
 		sql = `SELECT a.app_name "app_name"
 			   FROM ${db_schema()}.app a
 			  WHERE a.id = :app_id`;
-		parameters = {  app_id: app_id,
-						app_main_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')}
+		parameters = {  app_id: app_id}
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
