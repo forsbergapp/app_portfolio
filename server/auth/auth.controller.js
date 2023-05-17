@@ -169,7 +169,7 @@ const CreateDataToken = (req, res) => {
                 })
             else
                 if (jsontoken_dt == null)
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                             createLog(req.query.app_id,
                                 { app_id : req.query.app_id,
                                 app_module : 'AUTH',
@@ -192,7 +192,7 @@ const CreateDataToken = (req, res) => {
                             }); 
                         })
                 else
-                    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                             createLog(req.query.app_id,
                                         { app_id : req.query.app_id,
                                         app_module : 'AUTH',
@@ -244,7 +244,7 @@ const checkAccessTokenCommon = (req, res, next) => {
             } else {
                 //check access token belongs to user_account.id, app_id and ip saved when logged in
                 //and if app_id=0 then check user is admin
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
                     checkLogin(req.query.app_id, req.query.user_account_logon_user_account_id, req.headers.authorization.replace('Bearer ',''), req.ip, (err, result)=>{
                         if (err){
                             import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
@@ -284,7 +284,7 @@ const checkAccessTokenCommon = (req, res, next) => {
 }
 const checkAccessTokenSuperAdmin = (req, res, next) => {
     if (req.query.app_id==0)
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
             getUserAppRoleAdmin(req.query.app_id, req.query.user_account_logon_user_account_id, (err, result)=>{
                 if (result[0].app_role_id == 0){
                     checkAccessTokenCommon(req, res, next);
@@ -359,7 +359,7 @@ const accessToken = (req, callBack) => {
                          {
                           expiresIn: ConfigGet(7, req.query.app_id, 'ACCESS_EXPIRE')
                          });
-    import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_log/app_log.service.js`).then(({createLog}) => {
+    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
         createLog(req.query.app_id,
                     { app_id : req.query.app_id,
                     app_module : 'AUTH',

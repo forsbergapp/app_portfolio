@@ -12,7 +12,7 @@ const createMail = async (app_id, data) =>{
         "to":               [to email]
     }
     */
-    const {getParameters_server} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
+    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
         let files= [];
         let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
@@ -110,9 +110,9 @@ const createMail = async (app_id, data) =>{
 //APP ROUTER functions
 const getInfo = async (app_id, info, lang_code, callBack) => {
     const get_parameters = async (callBack) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app/app.service.js`).then(({getApp}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`).then(({getApp}) => {
             getApp(app_id, app_id, lang_code, (err, result_app)=>{
-                import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
                     getParameters_server(app_id, app_id, (err, result)=>{
                         //app_parameter table
                         let db_info_email_policy;
@@ -363,7 +363,7 @@ const get_module_with_init = async (app_id,
         callBack(null, return_with_parameters('SYSTEM ADMIN', CheckFirstTime()==true?1:0));
     }
     else{
-        const { getAppStartParameters } = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/app_parameter/app_parameter.service.js`);
+        const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
         getAppStartParameters(app_id, (err,result) =>{
             if (err)
                 callBack(err, null);
@@ -506,10 +506,10 @@ const getMaintenance = (app_id) => {
 
 const getUserPreferences = (app_id, locale) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/setting/setting.service.js`).then(({getSettings}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
             //let user_locales =`<option value='en'>English</option>`;
             let user_locales ='';
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/language/locale/locale.service.js`).then(({getLocales}) => {
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`).then(({getLocales}) => {
                 getLocales(app_id, locale, (err, result_user_locales) => {
                     for (let user_locale of result_user_locales) {
                         user_locales +=`<option value='${user_locale.locale}'>${user_locale.text}</option>`;
@@ -598,9 +598,9 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                             case 'PATCH':
                             case 'DELETE':{
                                 if (parameters.startsWith('/admin'))
-                                    path = `${rest_resource_service}/db${parameters}&app_id=${app_id}`;
+                                    path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/dbapi${parameters}&app_id=${app_id}`;
                                 else
-                                    path = `${rest_resource_service}/db${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
+                                    path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
                                 break;
                             }
                             default:{
