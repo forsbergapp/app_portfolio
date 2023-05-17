@@ -3562,7 +3562,7 @@ const init_common = async (parameters, callBack) => {
     if (parameters.app_id == COMMON_GLOBAL['common_app_id']){
     	COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
         broadcast_init();
-        if (parameters.system_admin==1){
+        if (parameters.system_admin_only==1){
             document.title = parameters.app_name;
             callBack(null, null);
         }
