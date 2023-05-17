@@ -1,4 +1,4 @@
-const { admin_pool_started } = await import(`file://${process.cwd()}/service/db/admin/admin.service.js`);
+const { admin_pool_started } = await import(`file://${process.cwd()}/service/db/db.service.js`);
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 

@@ -185,7 +185,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     if (connected_clients_no_res.length>0)
         //update list using map with app role icons if database started
         if(ConfigGet(1, 'SERVICE_DB', 'START')==1){
-            import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/db${ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA')}/user_account/user_account.service.js`).then(({ getAppRole }) => {
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({ getAppRole }) => {
                 connected_clients_no_res.map(client=>{
                     getAppRole(app_id, client.user_account_id, (err, result_app_role)=>{
                         if (err)
