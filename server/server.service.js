@@ -193,7 +193,7 @@ const DefaultConfig = async () => {
                     throw error;
                 })
             }
-            for (let dir of ['/config', '/service/logs','/logs', '/service/pdf/config']){
+            for (let dir of ['/config', '/service/logs','/logs', '/service/db/config', '/service/pdf/config']){
                 let check_dir = await fs.promises.access(process.cwd() + dir)
                 .catch(()=>{
                     mkdir(dir);  
@@ -211,7 +211,8 @@ const DefaultConfig = async () => {
                                     [4, `default_auth_policy.json`],
                                     [6, `default_auth_user.json`],
                                     [7, `default_apps.json`],
-                                    [8, `default_service_pdf_config.json`]
+                                    [8, `default_service_pdf_config.json`],
+                                    [9, `default_service_db_config.json`]
                                 ];
             let config_json = [];
             //ES2020 import() with ES6 promises, object destructuring
@@ -280,9 +281,9 @@ const DefaultConfig = async () => {
                                     CONFIG_INIT = config_init;
                                     let config_created=0;
                                     for (let config_no=0;config_no<config_json.length;config_no++){;
-                                        if (config_no == 6){
-                                            //create default service pdf config, not part of server parameter management
-                                            fs.writeFile(process.cwd() + `${SLASH}service${SLASH}pdf${SLASH}config${SLASH}config.json`, JSON.stringify(JSON.parse(config_json[config_no]), undefined,2),  'utf8', (err) => {
+                                        if (config_no == 6 || config_no == 7){
+                                            //create default service pdf and db config, not part of server parameter management
+                                            fs.writeFile(process.cwd() + `${SLASH}service${SLASH}${config_no==6?'pdf':'db'}${SLASH}config${SLASH}config.json`, JSON.stringify(JSON.parse(config_json[config_no]), undefined,2),  'utf8', (err) => {
                                                 if (err)
                                                     reject(err);
                                                 else
@@ -642,47 +643,44 @@ const serverExpressLogError = (app) =>{
 const serverExpressRoutes = async (app) => {
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
+    //apps
+    const { BFF, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //auth
     const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
-            checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
+            checkAccessTokenAdmin, checkAccessTokenSuperAdmin, checkClientAccess} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
     const { authSystemAdmin, checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
     //broadcast
     const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //log
-    const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
-    
-    //apps
-    const { BFF, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
-    //service db admin
-    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
-    const { DBStart, DBStop, DBSQL} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
-    
-    //service db app_portfolio app
+    const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);    
+    //server db api admin
+    const { DBStart, DBStop, DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
+    //server db api app_portfolio app
     const { getApp, getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.controller.js`);
-    //service db app_portfolio app category
+    //server db api app_portfolio app category
     const {getAppCategoryAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_category/app_category.controller.js`);
-    //service db app_portfolio app log
+    //server db api app_portfolio app log
     const { getLogsAdmin, getStatUniqueVisitorAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.controller.js`);
-    //service db app_portfolio app object
+    //server db api app_portfolio app object
     const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.controller.js`);
-    //service db app_portfolio app parameter
+    //server db api app_portfolio app parameter
     const { getParameters, getParametersAdmin, getParametersAllAdmin, setParameter_admin, setParameterValue_admin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.controller.js`);
-    //service db app_portfolio app role
+    //server db api app_portfolio app role
     const { getAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_role/app_role.controller.js`);
-    //service db app_portfolio country
+    //server db api app_portfolio country
     const { getCountries } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.controller.js`);
-    //service db app_portfolio identity provider
+    //server db api app_portfolio identity provider
     const { getIdentityProviders} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.controller.js`);
-    //service db app_portfolio locale
+    //server db api app_portfolio locale
     const { getLocales } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.controller.js`);
-    //service db app_portfolio message translation
+    //server db api app_portfolio message translation
     const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.controller.js`);
-    //service db app_portfolio parameter type
+    //server db api app_portfolio parameter type
     const { getParameterTypeAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/parameter_type/parameter_type.controller.js`);
-    //service db app_portfolio setting
+    //server db api app_portfolio setting
     const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.controller.js`);
-    //service db app_portfolio user account
+    //server db api app_portfolio user account
     const {
         getUsersAdmin,
         getStatCountAdmin,
@@ -701,7 +699,7 @@ const serverExpressRoutes = async (app) => {
         getProfileTop,
         getProfileUser,
         searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.controller.js`);
-    //service db app_portfolio user account app
+    //server db api app_portfolio user account app
     const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.controller.js`);
 
     const { createUserSetting, 
@@ -716,12 +714,15 @@ const serverExpressRoutes = async (app) => {
     const { likeUserSetting, unlikeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like/user_account_app_setting_like.controller.js`);
     const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.controller.js`);
 
-    //service db app_portfolio user account follow
+    //server db api db app_portfolio user account follow
     const { followUser, unfollowUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow/user_account_follow.controller.js`);
-    //service db app_portfolio user account like
+    //server db api app_portfolio user account like
     const { likeUser, unlikeUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like/user_account_like.controller.js`);
-    //service db app_portfolio user account logon
+    //server db api app_portfolio user account logon
     const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.controller.js`);
+
+    //service db
+    const { start_pool_admin, start_pool_apps, db_query, close_pools} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
     //service geolocation
     const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
     //service worldcities
@@ -857,9 +858,10 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/log/files`).get                                    (serverRouterLog, checkSystemAdmin, getFiles);
     app.route(`${rest_resouce_server}/log/pm2logs`).get                                  (serverRouterLog, checkSystemAdmin, getPM2Logs);
 
-    app.route(`${rest_resource_service}/db/DBStart`).get(serverRouterLog, checkSystemAdmin, DBStart);
-    app.route(`${rest_resource_service}/db/DBStop`).get(serverRouterLog, checkSystemAdmin, DBStop);
-    //app.route(`${rest_resource_service}/db/sql`).get(serverRouterLog, checkSystemAdmin, DBSQL);
+    app.route(`${rest_resource_service}/db/start_pool_admin`).post(serverRouterLog, checkClientAccess, start_pool_admin);
+    app.route(`${rest_resource_service}/db/start_pool_apps`).post(serverRouterLog, checkClientAccess, start_pool_apps);
+    app.route(`${rest_resource_service}/db/close_pools`).post(serverRouterLog, checkClientAccess, close_pools);
+    app.route(`${rest_resource_service}/db/query`).post(serverRouterLog, checkClientAccess, db_query);
 
     app.route(`${rest_resource_service}/geolocation/place`).get(serverRouterLog, checkDataToken, getPlace);
     app.route(`${rest_resource_service}/geolocation/place/admin`).get(serverRouterLog, checkAccessTokenAdmin, getPlace);
@@ -1048,7 +1050,7 @@ const serverExpress = async () => {
     })
 }
 const serverStart = async () =>{
-    const {DBStart} = await import(`file://${process.cwd()}/service/db/db.service.js`);
+    const {DBStart} = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
     const fs = await import('node:fs');
     const https = await import('node:https');
