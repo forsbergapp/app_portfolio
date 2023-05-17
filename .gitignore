@@ -3,6 +3,7 @@
 config/
 logs/
 node_modules/
+service/db/config/
 service/pdf/tmp/
 service/pdf/config/
 service/logs/
