@@ -876,23 +876,6 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resource_service}/geolocation/timezone/admin`).get(serverRouterLog, checkAccessTokenAdmin, getTimezoneAdmin);
     app.route(`${rest_resource_service}/geolocation/timezone/systemadmin`).get(serverRouterLog, checkSystemAdmin, getTimezoneSystemAdmin);
     app.route(`${rest_resource_service}/worldcities/:country`).get(serverRouterLog, checkDataToken, getCities);
-
-    /*
-    let routes = [];
-    let app_routers = app._router.stack.filter(row=>{return row.name=='router'});
-    app_routers.forEach(middleware=>{
-        middleware.handle.stack.forEach(handler=> {
-            if (handler.route)
-                routes.push(handler.route);
-        });
-    });
-    let tmp = routes.filter(row=>row.path=='/config/systemadmin' && row.methods['put']==true)[0].stack;
-
-    //router[i].get("/:app_id", checkDataToken, getParameters);
-    app.route('/server/dbapi/app_portfolio/app_parameter/:app_id').get(checkDataToken, getParameters)
-    */
-
-
 }
 const serverExpress = async () => {
     const {default: express} = await import('express');
