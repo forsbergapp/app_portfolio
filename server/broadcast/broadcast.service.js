@@ -87,7 +87,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
     
     callBack(null, null);
 }
-const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, system_admin, callBack) => {
+const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba, callBack) => {
     let connected_clients_no_res = [];
     let i=0;
     CONNECTED_CLIENTS.forEach(client=>{
@@ -187,7 +187,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
         if(ConfigGet(1, 'SERVICE_DB', 'START')==1){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({ getUserRoleAdmin }) => {
                 connected_clients_no_res.map(client=>{
-                    getUserRoleAdmin(app_id, client.user_account_id, system_admin, (err, result_app_role)=>{
+                    getUserRoleAdmin(app_id, client.user_account_id, dba, (err, result_app_role)=>{
                         if (err)
                             callBack(err, null);
                         else{

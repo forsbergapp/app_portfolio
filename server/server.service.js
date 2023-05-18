@@ -722,7 +722,7 @@ const serverExpressRoutes = async (app) => {
     const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.controller.js`);
 
     //service db
-    const { start_pool_admin, start_pool_apps, db_query, close_pools} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
+    const { DBInit, DBShutdown, pool_start, pool_close, pool_get, pool_check_started, db_query} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
     //service geolocation
     const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
     //service worldcities
@@ -858,9 +858,12 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/log/files`).get                                    (serverRouterLog, checkSystemAdmin, getFiles);
     app.route(`${rest_resouce_server}/log/pm2logs`).get                                  (serverRouterLog, checkSystemAdmin, getPM2Logs);
 
-    app.route(`${rest_resource_service}/db/start_pool_admin`).post(serverRouterLog, checkClientAccess, start_pool_admin);
-    app.route(`${rest_resource_service}/db/start_pool_apps`).post(serverRouterLog, checkClientAccess, start_pool_apps);
-    app.route(`${rest_resource_service}/db/close_pools`).post(serverRouterLog, checkClientAccess, close_pools);
+    app.route(`${rest_resource_service}/db/init`).post(serverRouterLog, checkClientAccess, DBInit);
+    app.route(`${rest_resource_service}/db/shutdown`).post(serverRouterLog, checkClientAccess, DBShutdown);
+    app.route(`${rest_resource_service}/db/pool_start`).post(serverRouterLog, checkClientAccess, pool_start);
+    app.route(`${rest_resource_service}/db/pool_close`).post(serverRouterLog, checkClientAccess, pool_close);
+    app.route(`${rest_resource_service}/db/pool`).get(serverRouterLog, checkClientAccess, pool_get);
+    app.route(`${rest_resource_service}/db/pool/check`).get(serverRouterLog, checkClientAccess, pool_check_started);
     app.route(`${rest_resource_service}/db/query`).post(serverRouterLog, checkClientAccess, db_query);
 
     app.route(`${rest_resource_service}/geolocation/place`).get(serverRouterLog, checkDataToken, getPlace);
