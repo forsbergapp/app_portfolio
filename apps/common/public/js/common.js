@@ -428,30 +428,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                     select_locale.innerHTML = html;
                     select_locale.value = lang_code;
                 }
-                //translate regional settings
-                json = '';
-                if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
-                    path = `/settings/admin?setting_type=DIRECTION`;
-                }
-                else{
-                    path = `/settings?setting_type=DIRECTION`;
-                }
-                FFB ('DB', path, 'GET', 0, null, (err, result) => {
-                    if (err)
-                        null;
-                    else{
-                        json = JSON.parse(result);
-                        let html='';
-                        let select = document.getElementById('common_user_direction_select');
-                        let current_value = select.value;
-                        for (let i = 0; i < json.settings.length; i++){
-                            html += `<option id="${json.settings[i].id}" value="${json.settings[i].data}">${json.settings[i].text}</option>`;
-                        }
-                        select.innerHTML = select.options[0].outerHTML + html;
-                        select.value = current_value;
-                        callBack(null,null);
-                    }
-                })
+                callBack(null,null);
             })
         }
 
@@ -2452,16 +2429,11 @@ const user_preferences_set_default_globals = (preference) => {
             break;
         }
         case 'DIRECTION':{
-            COMMON_GLOBAL['user_direction']      = ''; // ltr, rtl, initial, inherit
+            COMMON_GLOBAL['user_direction']      = '';
             break;
         }
         case 'ARABIC_SCRIPT':{
-            COMMON_GLOBAL['user_arabic_script']  = ''; /*classes 
-                                                                font_arabic_sans (default)
-                                                                font_arabic_kufi
-                                                                font_arabic_nashk
-                                                                font_arabic_nastaliq
-                                                            */
+            COMMON_GLOBAL['user_arabic_script']  = '';
             break;
         }
     }

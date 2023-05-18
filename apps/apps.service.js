@@ -514,9 +514,9 @@ const getUserPreferences = (app_id, locale) => {
                     }
                     getSettings(app_id, locale, null, (err, settings) => {
                         let option;
-                        let user_timezones;
-                        let user_directions;
-                        let user_arabic_scripts;
+                        let user_timezones = '';
+                        let user_directions = '';
+                        let user_arabic_scripts = '';
                         for (let i = 0; i < settings.length; i++) {
                             option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
                             switch (settings[i].setting_type_name){
