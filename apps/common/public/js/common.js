@@ -2793,7 +2793,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
     url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
-    if (service=='BROADCAST' && authorization_type==6){
+    if (service=='BROADCAST' && authorization_type==4){
         let method = 'DIRECT';
         if (method== 'DIRECT'){
             //direct until bff path working
