@@ -148,9 +148,9 @@ const db_limit_rows = (sql, limit_type = null) => {
 			return sql;
 }
 
-const db_execute = (app_id, sql, parameters, pool_col, callBack) =>{
+const db_execute = (app_id, sql, parameters, system_admin, callBack) =>{
 	import(`file://${process.cwd()}/service/db/db.service.js`).then(({db_query}) => {
-		db_query(app_id, ConfigGet(1, 'SERVICE_DB', 'USE'), sql, parameters, pool_col, (err, result) => {
+		db_query(app_id, ConfigGet(1, 'SERVICE_DB', 'USE'), sql, parameters, system_admin, (err, result) => {
 			if (err){
 				const database_error = 'DATABASE ERROR';
 				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
@@ -165,7 +165,7 @@ const db_execute = (app_id, sql, parameters, pool_col, callBack) =>{
 								return callBack(err, null);
 							else{
 								//return full error to system admin
-								if (pool_col==2)
+								if (system_admin==1)
 									return callBack(err, null);
 								else
 									return callBack(database_error, null);

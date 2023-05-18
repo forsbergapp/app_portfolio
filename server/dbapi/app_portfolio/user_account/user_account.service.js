@@ -959,7 +959,7 @@ const getEmailUser = (app_id, email, callBack) => {
 				return callBack(null, result[0]);
 		});
     }
-const getUserRoleAdmin = (app_id, user_account_id, system_admin, callBack) => {
+const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
 		let sql;
 		let parameters;
 		if (user_account_id =='')
@@ -984,7 +984,7 @@ const getUserRoleAdmin = (app_id, user_account_id, system_admin, callBack) => {
 						id_user_icon: 2
 					};
 		//use pool column 2 for system admin
-		db_execute(app_id, sql, parameters, system_admin==1?2:null, (err, result)=>{
+		db_execute(app_id, sql, parameters, dba, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
