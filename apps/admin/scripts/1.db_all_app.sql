@@ -501,8 +501,8 @@ INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('thai','thai',NULL,NULL,NULL,NULL,4);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('tibt','tibt',NULL,NULL,NULL,NULL,4);
 
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('ltr','ltr',NULL,NULL,NULL,NULL,5);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('rtl','rtl',NULL,NULL,NULL,NULL,5);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('🠆','ltr',NULL,NULL,NULL,NULL,5);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('🠄','rtl',NULL,NULL,NULL,NULL,5);
 
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Arabic Sans','font_arabic_sans',NULL,NULL,NULL,NULL,6);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Arabic Kufi','font_arabic_kufi',NULL,NULL,NULL,NULL,6);
