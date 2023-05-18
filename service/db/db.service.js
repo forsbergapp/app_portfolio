@@ -1,15 +1,14 @@
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-
 //mysql module used for both MariaDB and MySQL
 let MYSQL               = await import("mysql");
 let {default: PG}       = await import('pg');
 let {default: ORACLEDB} = await import('oracledb');
 
-
-let POOL_DB1_APP = [];
-let POOL_DB2_APP = [];
-let POOL_DB3_APP = [];
-let POOL_DB4_APP = [];
+const POOL_DB =[
+                  [1, null, []], //MySQL pools        [db number, dba, apps in array]
+                  [2, null, []], //MariaDB pools      [db number, dba, apps in array]
+                  [3, null, []], //PostgreSQL pools   [db number, dba, apps in array]
+                  [4, null, []]  //Oracle pools       [db number, dba, apps in array]
+               ];                     
 
 const DBInit = async (DB_USE) => {
    const fs = await import('node:fs');
@@ -23,256 +22,185 @@ const DBInit = async (DB_USE) => {
       ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
    }
 }
-const start_pool_admin = async (dbparameters) => {
+const DBShutdown = async (db)=>{
+      //relase db pools from memory, not shutting down db
+      for (let dbnumber in POOL_DB_EMPTY){
+         if (dbnumber[0]==parseInt(db)){
+            db[1] = null;
+            db[2] = []
+         }
+      }
+      //reset db variables
+      switch (parseInt(db)){
+         case 1:
+         case 2:{
+            MYSQL = null;
+            MYSQL = await import('mysql');
+         }
+         case 3:{
+            PG = null;
+            PG = await import('pg');
+         }
+         case 4:{
+            ORACLEDB = null;
+            ORACLEDB = await import('oracledb');
+         }
+      }
+}
+const pool_start = async (dbparameters) =>{
+   /* dbparameters in JSON format:
+      "use":                     1-4
+      "init":                    1/0,
+      "pool_id":                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
+      "port":                    port,
+      "host":                    host,
+      "dba":                     1/0,
+      "user":                    username,
+      "password":                password,
+      "database":                database,
 
+      //db 1 + 2 parameters      see MySQL/MariaDB documentation
+      "charset":                 character set,
+      "connnectionLimit":        connection limit
+
+      // db 3 parameters         see PostgreSQL documentation
+      "connectionTimeoutMillis": connection timout milliseconds
+      "idleTimeoutMillis":       idle timeout milliseconds
+      "max":                     max
+
+      //db 4 parameters          see Oracle documentation
+      "connectString":           connectstring
+      "poolMin":                 pool min
+      "poolMax":                 pool max
+      "poolIncrement":           pool increment
+   */
    dbparameters = JSON.parse(dbparameters);
-   await DBInit(dbparameters.use);
-   return await new Promise((resolve, reject) => {
-      
-      switch (dbparameters.use){
+   if (dbparameters.init == 1)
+      await DBInit(dbparameters.use);
+   return new Promise((resolve, reject) => {
+      switch(dbparameters.use){
          case '1':
          case '2':{
-            let app_admin_pool = null;
-            let system_admin_pool = null;
-            //both system admin db pool and admin db pool should be enabled
-            if (dbparameters.system_admin_user)
-               system_admin_pool = MYSQL.createPool({
-                  host: dbparameters.host,
-                  port: dbparameters.port,
-                  user: dbparameters.system_admin_user,
-                  password: dbparameters.system_admin_password,
-                  database: null,
-                  charset: dbparameters.charset,
-                  connnectionLimit: dbparameters.connectionLimit
-               });
-               
-            if (dbparameters.app_admin_user)
-               app_admin_pool = MYSQL.createPool({
-                  host: dbparameters.host,
-                  port: dbparameters.port,
-                  user: dbparameters.app_admin_user,
-                  password: dbparameters.app_admin_password,
-                  database: dbparameters.database,
-                  charset: dbparameters.charset,
-                  connnectionLimit: dbparameters.connectionLimit
-               });   
-            if (dbparameters.use == 1)
-               POOL_DB1_APP.push([dbparameters.startpool_app_id, app_admin_pool, system_admin_pool]);
+            let test = POOL_DB.filter(db=>db[0]==parseInt(dbparameters.use));
+            if (dbparameters.dba==1)
+               POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use)) 
+                                    db[1]=MYSQL.createPool({
+                                          host: dbparameters.host,
+                                          port: dbparameters.port,
+                                          user: dbparameters.user,
+                                          password: dbparameters.password,
+                                          database: dbparameters.database,
+                                          charset: dbparameters.charset,
+                                          connnectionLimit: dbparameters.connnectionLimit
+               })
+            })
             else
-               POOL_DB2_APP.push([dbparameters.startpool_app_id, app_admin_pool, system_admin_pool]);
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use))
+                                    db[2].push(
+                                       MYSQL.createPool({
+                                       host: dbparameters.host,
+                                       port: dbparameters.port,
+                                       user: dbparameters.user,
+                                       password: dbparameters.password,
+                                       database: dbparameters.database,
+                                       charset: dbparameters.charset,
+                                       connnectionLimit: dbparameters.connnectionLimit
+                                       }))
+                                 });
             resolve();
             break;
          }
          case '3':{
-            let app_admin_pool = null;
-            let system_admin_pool = null;
-            if (dbparameters.system_admin_user)
-               system_admin_pool = new PG.Pool({
-                                       user: dbparameters.system_admin_user,
-                                       password: dbparameters.system_admin_password,
-                                       host: dbparameters.host,
-                                       port: dbparameters.port,
-                                       database: null,
-                                       connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
-                                       idleTimeoutMillis: dbparameters.idleTimeoutMillis,
-                                       max: dbparameters.max
-                                    });
-               
-            if (dbparameters.app_admin_user)
-               app_admin_pool = new PG.Pool({
-                                    user: dbparameters.app_admin_user,
-                                    password: dbparameters.app_admin_password,
+            if (dbparameters.dba==1)
+               POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use)) 
+                  db[1]=new PG.Pool({
+                           user: dbparameters.user,
+                           password: dbparameters.password,
+                           host: dbparameters.host,
+                           port: dbparameters.port,
+                           database: dbparameters.database,
+                           connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
+                           idleTimeoutMillis: dbparameters.idleTimeoutMillis,
+                           max: dbparameters.max
+               })
+            })
+            else
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use))
+                                    db[2].push(new PG.Pool({
+                                    user: dbparameters.user,
+                                    password: dbparameters.password,
                                     host: dbparameters.host,
                                     port: dbparameters.port,
                                     database: dbparameters.database,
                                     connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
                                     idleTimeoutMillis: dbparameters.idleTimeoutMillis,
                                     max: dbparameters.max
+                                    }))
                                  });
-            POOL_DB3_APP.push([dbparameters.startpool_app_id, app_admin_pool, system_admin_pool]);
             resolve();
             break;
          }
          case '4':{
-            /* 
-            other params and default values
-            // edition: 'ORA$BASE', // used for Edition Based Redefintion
-            // events: false, // whether to handle Oracle Database FAN and RLB events or support CQN
-            // externalAuth: false, // whether connections should be established using External Authentication
-            // homogeneous: true, // all connections in the pool have the same credentials
-            // poolAlias: 'default', // set an alias to allow access to the pool via a name.
-            // poolIncrement: 1, // only grow the pool by one connection at a time
-            // poolMax: 4, // maximum size of the pool. Increase UV_THREADPOOL_SIZE if you increase poolMax
-            // poolMin: 0, // start with no connections; let the pool shrink completely
-            // poolPingInterval: 60, // check aliveness of connection if idle in the pool for 60 seconds
-            // poolTimeout: 60, // terminate connections that are idle in the pool for 60 seconds
-            // queueMax: 500, // don't allow more than 500 unsatisfied getConnection() calls in the pool queue
-            // queueTimeout: 60000, // terminate getConnection() calls queued for longer than 60000 milliseconds
-            // sessionCallback: myFunction, // function invoked for brand new connections or by a connection tag mismatch
-            // sodaMetaDataCache: false, // Set true to improve SODA collection access performance
-            // stmtCacheSize: 30, // number of statements that are cached in the statement cache of each connection
-            // enableStatistics: false // record pool usage for ORACLEDB.getPool().getStatistics() and logStatistics()
-            */
-            if (dbparameters.system_admin_user){
-               ORACLEDB.createPool({ user: dbparameters.system_admin_user,
-                                       password: dbparameters.system_admin_password,
-                                       connectString: dbparameters.connectString,
-                                       poolMin: dbparameters.poolMin,
-                                       poolMax: dbparameters.poolMax,
-                                       poolIncrement: dbparameters.poolIncrement,
-                                       poolAlias: dbparameters.poolAlias_system_admin}, (err,result_system_admin_pool) => {
-                  if (err)
-                     reject(err);
-                  else
-                     if (dbparameters.app_admin_user){
-                        ORACLEDB.createPool({ user: dbparameters.app_admin_user,
-                                          password: dbparameters.app_admin_password,
-                                          connectString: dbparameters.connectString,
-                                          poolMin: dbparameters.poolMin,
-                                          poolMax: dbparameters.poolMax,
-                                          poolIncrement: dbparameters.poolIncrement,
-                                          poolAlias: dbparameters.poolAlias_app_admin}, (err,result_app_admin_pool) => {
-                           if (err)
-                              reject(err);
-                           else{
-                              POOL_DB4_APP.push([dbparameters.startpool_app_id,dbparameters.poolAlias_app_admin,dbparameters.poolAlias_system_admin]);
-                              resolve();
-                           }
-                        })
-                     }
-                     else{
-                        POOL_DB4_APP.push([dbparameters.startpool_app_id, null, dbparameters.poolAlias_system_admin]);
-                        resolve();
-                     }
-               })
+            let pool_id;
+            if (dbparameters.dba==1){
+               pool_id = 'DBA';
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[1]=pool_id});
             }
-            else
-               if (dbparameters.app_admin_user){
-                  ORACLEDB.createPool({ user: dbparameters.app_admin_user,
-                                       password: dbparameters.app_admin_password,
-                                       connectString: dbparameters.connectString,
-                                       poolMin: dbparameters.poolMin,
-                                       poolMax: dbparameters.poolMax,
-                                       poolIncrement: dbparameters.poolIncrement,
-                                       poolAlias: dbparameters.poolAlias_app_admin}, (err,result_app_admin_pool) => {
-                     if (err)
-                        reject(err);
-                     else{
-                        POOL_DB4_APP.push([dbparameters.startpool_app_id, dbparameters.poolAlias_app_admin, null]);
-                        resolve();
-                     }
-                  })
-               }
+            else{
+               pool_id = dbparameters.pool_id;
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id)});
+            }
+            ORACLEDB.createPool({	
+               user: dbparameters.user,
+               password: dbparameters.password,
+               connectString: dbparameters.connectString,
+               poolMin: dbparameters.poolMin,
+               poolMax: dbparameters.poolMax,
+               poolIncrement: dbparameters.poolIncrement,
+               poolAlias: pool_id
+            }, (err,result) => {
+               if (err)
+                  reject(err);
                else
                   resolve();
+            });
             break;
          }
       }
    })
 }
-const start_pool_apps = async (dbparameters, apps)=>{
-   dbparameters = JSON.parse(dbparameters);
-   apps = JSON.parse(apps).APPS;
-   const startDBpool = async (app_id, db_user, db_password) => {
-      return new Promise((resolve, reject) => {
-         switch(dbparameters.use){
-            case '1':{
-               POOL_DB1_APP.push([app_id,
-                                 MYSQL.createPool({
-                                    host: dbparameters.host,
-                                    port: dbparameters.port,
-                                    user: db_user,
-                                    password: db_password,
-                                    database: dbparameters.database,
-                                    charset: dbparameters.charset,
-                                    connnectionLimit: dbparameters.connnectionLimit
-                                 })
-                                 ]);
-               resolve();
-               break;
-            }
-            case '2':{
-               POOL_DB2_APP.push([app_id,
-                                 MYSQL.createPool({
-                                    host: dbparameters.host,
-                                    port: dbparameters.port,
-                                    user: db_user,
-                                    password: db_password,
-                                    database: dbparameters.database,
-                                    charset: dbparameters.charset,
-                                    connnectionLimit: dbparameters.connnectionLimit
-                                 })
-                                 ]);
-               resolve();
-               break;
-            }
-            case '3':{
-               POOL_DB3_APP.push([app_id,
-                                          new PG.Pool({
-                                             user: db_user,
-                                             password: db_password,
-                                             host: dbparameters.host,
-                                             port: dbparameters.port,
-                                             database: dbparameters.database,
-                                             connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
-                                             idleTimeoutMillis: dbparameters.idleTimeoutMillis,
-                                             max: dbparameters.max
-                                          })
-                                          ]);
-               resolve();
-               break;
-            }
-            case '4':{
-               POOL_DB4_APP.push([app_id, `POOL_DB${dbparameters.use}_${app_id}`]);
-               ORACLEDB.createPool({	
-                  user:  db_user,
-                  password: db_password,
-                  connectString: dbparameters.connectString,
-                  poolMin: dbparameters.poolMin,
-                  poolMax: dbparameters.poolMax,
-                  poolIncrement: dbparameters.poolIncrement,
-                  poolAlias: `POOL_DB${dbparameters.use}_${app_id}`
-               }, (err,result) => {
-                  if (err)
-                     reject(err);
-                  else
-                     resolve();
-               });
-               break;
-            }
-         }
-      })
+const pool_close = (pool_id, db_use, dba) =>{
+   try {
+      if (dba==1)
+         POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1] = null;
+      else
+         POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)] = null;
+   } catch (error) {
+      return null;   
    }
-   return new Promise((resolve, reject) => {
-      let dbcounter =1;
-      for (let app of apps) {
-         startDBpool(app.id, app.db_user, app.db_password)
-         .then((result) => {
-            dbcounter++;
-            //return when all db pools started, can be in random order
-            if (dbcounter==apps.length)
-               resolve();
-         })
-         .catch((err) => {
-            reject(err);
-         });
-      }
-   })
+   return null;
+
 }
-const close_pools = async (app_id, callBack) => {
-   //relase db pools from memory, not shutting down db
-   POOL_DB1_APP = [];
-   POOL_DB2_APP = [];
-   POOL_DB3_APP = [];
-   POOL_DB4_APP = [];
-   MYSQL = null;
-   MYSQL = await import('mysql');
-   PG = null;
-   PG = await import('pg');
-   ORACLEDB = null;
-   ORACLEDB = await import('oracledb');
+const pool_get = (pool_id, db_use, dba) => {
+   let test = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0];
+   try {
+      if (dba==1)
+         return POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1];
+      else
+         return POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)];
+   } catch (error) {
+      return null;
+   }  
 }
-const db_query = async (app_id, db_use, sql, parameters, pool_col, callBack) => {
+const pool_check_started = (pool_id, db_use, dba=null) =>{
+   let pool = pool_get(pool_id, db_use, dba);
+   if (pool==null)
+      return 0;
+   else
+      return 1;
+}
+
+const db_query = async (pool_id, db_use, sql, parameters, dba, callBack) => {
 	switch (db_use){
 		case '1':
 		case '2':{
@@ -292,15 +220,10 @@ const db_query = async (app_id, db_use, sql, parameters, pool_col, callBack) => 
 				};
 			}
 			try {
-				get_pool(app_id, db_use, pool_col).getConnection((err, conn) => {
+				pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
 					conn.release();
-					if (err){
-                  //return full error to system admin
-						if (pool_col==2)
-                     return callBack(err, null);
-                  else
-                     return callBack(database_error, null);
-					}
+					if (err)
+                  return callBack(err, null);
 					else{
 						config_connection(conn, sql, parameters);
 						conn.query(sql, parameters, (err, result, fields) => {
@@ -354,7 +277,7 @@ const db_query = async (app_id, db_use, sql, parameters, pool_col, callBack) => 
 			let parsed_result = queryConvert(sql, parameters);
 			let pool3;
 			try {
-				pool3 = await get_pool(app_id, db_use, pool_col).connect();
+				pool3 = await pool_get(pool_id, db_use, dba).connect();
 				pool3.query(parsed_result.text, parsed_result.values)
 					.then((result) => {
 					//add common attributes
@@ -398,7 +321,7 @@ const db_query = async (app_id, db_use, sql, parameters, pool_col, callBack) => 
 		case '4':{
 			let pool4;
 			try{
-				pool4 = await ORACLEDB.getConnection(get_pool(app_id, db_use, pool_col));
+				pool4 = await ORACLEDB.getConnection(pool_get(pool_id, db_use, dba));
 				/*
 				Fix CLOB column syntax to avoid ORA-01461 for these columns:
 					APP_ACCOUNT.SCREENSHOT
@@ -440,42 +363,7 @@ const db_query = async (app_id, db_use, sql, parameters, pool_col, callBack) => 
 		}
 	}
 }
-const get_pool = (app_id, db_use, pool_col=1) => {
-   let pool = null;
-   const pool_filter = (dbpool) => (parseInt(dbpool[0]) == parseInt(app_id));
-   if (pool_col==null)
-      pool_col = 1;
-   try{
-      switch (db_use){
-         case '1':{
-            pool = POOL_DB1_APP.filter(pool_filter)[0][pool_col];
-            break;
-         }
-         case '2':{
-            pool = POOL_DB2_APP.filter(pool_filter)[0][pool_col];
-            break;
-         }
-         case '3':{
-            pool = POOL_DB3_APP.filter(pool_filter)[0][pool_col];
-            break;
-         }
-         case '4':{
-            pool = POOL_DB4_APP.filter(pool_filter)[0][pool_col];
-            break;
-         }
-      }
-   }catch (err) {
-      return null;
-   }
-   return pool;
-}
 
-const admin_pool_started = (startpool_app_id, db_use) =>{
-   if (get_pool(startpool_app_id,db_use, null)==null)
-      return 0;
-   else
-      return 1;
-}
-export{ORACLEDB, 
-       start_pool_admin, start_pool_apps, close_pools, db_query,
-       get_pool, admin_pool_started}
+export{DBInit, DBShutdown, 
+       pool_start, pool_close, pool_get, pool_check_started,
+       db_query}
