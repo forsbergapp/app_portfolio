@@ -183,7 +183,7 @@ const get_apps = () => {
 }
 
 const user_menu_item_click = (item) => {
-    switch (item.id){
+    switch (item.id==''?item.parentNode.id:item.id){
         case 'common_user_menu_username':{
             document.getElementById('common_dialogue_profile').style.visibility = 'visible';
             common.profile_show(null,
