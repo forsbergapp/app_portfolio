@@ -1,8 +1,6 @@
 const service = await import('./broadcast.service.js');
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-
-const BroadcastConnect = (req, res) => {
+const BroadcastConnect = async (req, res) => {
     
     let client_id = Date.now();
     
@@ -23,6 +21,7 @@ const BroadcastConnect = (req, res) => {
     };
     service.ClientAdd(newClient);
     service.ClientSend(res, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
+    res.flush();
 }
 const BroadcastSendSystemAdmin = (req, res) => {
     if (req.body.app_id)
