@@ -1,5 +1,5 @@
 const https = await import('node:https');
-const os = await import('node:os');
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service_request = async (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
         let headers;
@@ -79,15 +79,20 @@ const service_request = async (hostname, path, method, timeout, client_ip, autho
 class CircuitBreaker {
     constructor() {
         this.states = {};
-        this.failureThreshold = 5;
-        this.cooldownPeriod = 10;
-        this.requestTimetout = 20;
+        this.failureThreshold = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_FAILURETHRESHOLD');
+        this.cooldownPeriod = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD');
+        this.requestTimetout = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT');
     }
-    async callService(hostname, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
+    async callService(app_id, hostname, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
         if (!this.canRequest(service))
             return false;
         try {
-            const response = await service_request (hostname, path, method, this.requestTimetout * 1000, client_ip, authorization, headers_user_agent, headers_accept_language, body);
+            let timeout;
+            if (app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+                timeout = 60 * 1000 * ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
+            else
+                timeout = this.requestTimetout * 1000
+            const response = await service_request (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {
