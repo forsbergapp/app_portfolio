@@ -95,7 +95,7 @@ const REPORT_GLOBAL = {
 /*----------------------- */
 const timetable_user_setting_get = async (user_setting_id, callBack) => {
     let result_obj;
-	await common.FFB ('DB', `/user_account_app_setting/${user_setting_id}?`, 'GET', 0, null, (err, result) => {
+	await common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'GET', 0, null, (err, result) => {
 		if (err){
 			report_exception(err);
 			callBack(err, null);
@@ -187,7 +187,7 @@ const timetable_translate_settings = async (locale, locale_second) => {
     let json;
 	const fetch_translation = async (locale, first) => {
 		//show translation using first or second language
-		await common.FFB ('DB', `/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
+		await common.FFB ('DB_API', `/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
 			if (err){
 				report_exception(err);
 			}
@@ -239,7 +239,7 @@ const updateReportViewStat = (user_setting_id, user_account_id) => {
                     "client_longitude": "${common.COMMON_GLOBAL['client_longitude']}",
                     "client_latitude": "${common.COMMON_GLOBAL['client_latitude']}"
                     }`;
-	common.FFB ('DB', `/user_account_app_setting_view?`, 'POST', 0, json_data, (err, result) => {
+	common.FFB ('DB_API', `/user_account_app_setting_view?`, 'POST', 0, json_data, (err, result) => {
 		null;
 	})
 }
@@ -482,7 +482,7 @@ const set_prayer_method = async(ui) => {
 		}
 		else{
 			//called from report
-			common.FFB ('DB', `/settings?setting_type=METHOD`, 'GET', 0, null, (err, result) => {
+			common.FFB ('DB_API', `/settings?setting_type=METHOD`, 'GET', 0, null, (err, result) => {
 				if (err)
 					reject(err);
 				else{
@@ -1233,7 +1233,7 @@ const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 	let json;
 	let user_settings = [];
 
-	await common.FFB ('DB', `/user_account_app_setting/user_account_id/${user_account_id}?`, 'GET', 0, null, (err, result) => {
+	await common.FFB ('DB_API', `/user_account_app_setting/user_account_id/${user_account_id}?`, 'GET', 0, null, (err, result) => {
 		if (err)
 			callBack(err, null);
 		else{

@@ -181,7 +181,7 @@ const show_start = async (yearvalues) =>{
             document.getElementById('box2_chart').innerHTML = common.APP_SPINNER;
             document.getElementById('box2_legend').innerHTML = common.APP_SPINNER;
             //return result for both charts
-            common.FFB ('DB', `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`, 'GET', 1, null, (err, result) => {
+            common.FFB ('DB_API', `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`, 'GET', 1, null, (err, result) => {
                 if (err){
                     document.getElementById('box1_chart').innerHTML = '';
                     document.getElementById('box1_legend').innerHTML = '';
@@ -334,7 +334,7 @@ const get_apps = async () => {
             resolve (html);
         }
         else{
-            common.FFB ('DB', `/apps/admin?`, 'GET', 1, null, (err, result) => {
+            common.FFB ('DB_API', `/apps/admin?`, 'GET', 1, null, (err, result) => {
                 if (err)
                     resolve();
                 else{
@@ -520,7 +520,7 @@ const count_users = async () => {
     if (admin_token_has_value()){
         let json;
         document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB', `/user_account/admin/count?`, 'GET', 1, null, (err, result) => {
+        await common.FFB ('DB_API', `/user_account/admin/count?`, 'GET', 1, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_2_content').innerHTML = '';
             else{
@@ -625,7 +625,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
         search_user = document.getElementById('list_user_account_search_input').value;
-    common.FFB ('DB', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 1, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 1, null, (err, result) => {
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
         else{
@@ -834,7 +834,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
 const show_user_account_logon = async (user_account_id) => {
     let json;
     document.getElementById('list_user_account_logon').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB', `/user_account_logon/admin/${parseInt(user_account_id)}/''?`, 'GET', 1, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_logon/admin/${parseInt(user_account_id)}/''?`, 'GET', 1, null, (err, result) => {
         if (err)
             document.getElementById('list_user_account_logon').innerHTML = '';
         else{
@@ -910,7 +910,7 @@ const show_user_account_logon = async (user_account_id) => {
 const show_apps = async () => {
     let json;
     document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
-    await common.FFB ('DB', `/apps/admin?`, 'GET', 1, null, (err, result) => {
+    await common.FFB ('DB_API', `/apps/admin?`, 'GET', 1, null, (err, result) => {
         if (err)
             document.querySelector('#menu_4_content').innerHTML = '';
         else{
@@ -992,7 +992,7 @@ const show_apps = async () => {
 const show_app_parameter = (app_id) => {
     let json;
     document.getElementById('list_app_parameter').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB', `/app_parameter/admin/all/${parseInt(app_id)}?`, 'GET', 1, null, (err, result) => {
+    common.FFB ('DB_API', `/app_parameter/admin/all/${parseInt(app_id)}?`, 'GET', 1, null, (err, result) => {
         if (err)
             document.getElementById('list_app_parameter').innerHTML = '';
         else{
@@ -1207,7 +1207,7 @@ const update_record = async (table,
                 break;
             }
         }
-        await common.FFB ('DB', path, 'PUT', 1, json_data, (err, result) => {
+        await common.FFB ('DB_API', path, 'PUT', 1, json_data, (err, result) => {
             document.getElementById(button).innerHTML = old_button;
             if (err)
                 null;
@@ -1256,7 +1256,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common.FFB ('DB', `/app_category/admin?id=${event.target.value}`, 'GET', 1, null, (err, result) => {
+                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.value}`, 'GET', 1, null, (err, result) => {
                         row_action(err, result, event.target, event, 6, '');
                     });
                 }
@@ -1265,7 +1265,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.value = event.target.defaultValue;
                 else{
-                    common.FFB ('DB', `/parameter_type/admin?id=${event.target.value}`, 'GET', 1, null, (err, result) => {
+                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.value}`, 'GET', 1, null, (err, result) => {
                         row_action(err, result, event.target, event, 2);
                     });
                 }
@@ -1278,7 +1278,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     app_role_id_lookup=2;
                 else
                     app_role_id_lookup=event.target.value;
-                common.FFB ('DB', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 1, null, (err, result) => {
+                common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 1, null, (err, result) => {
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
                     if (old_value!='' && event.target.value=='')
@@ -1733,7 +1733,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
             }
             case 'list_app_log':{
                 path = `/app_log/admin?${url_parameters}`;
-                service = 'DB';
+                service = 'DB_API';
                 token_type = 1;
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
@@ -2716,7 +2716,7 @@ const show_config = async (config_nav=1) => {
 /*----------------------- */
 const show_installation = () =>{
     document.querySelector(`#menu_7_content`).innerHTML = common.APP_SPINNER;
-    common.FFB ('DB', `/admin/install?`, 'GET', 2, null, (err, result) => {
+    common.FFB ('DB_API', `/admin/install?`, 'GET', 2, null, (err, result) => {
         if (err)
             document.querySelector(`#menu_7_content`).innerHTML = '';
         else{
@@ -2754,7 +2754,7 @@ const show_installation = () =>{
                         let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
                         document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
                         let path = `/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
-                        common.FFB ('DB', path, 'POST', 2, null, (err, result) => {
+                        common.FFB ('DB_API', path, 'POST', 2, null, (err, result) => {
                             document.querySelector(`#install_db_button_install`).innerHTML = old_html;
                             if (err == null){
                                 document.querySelector(`#install_db_icon`).classList.add('installed');
@@ -2767,7 +2767,7 @@ const show_installation = () =>{
                         document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                         let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
                         document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB', `/admin/install?`, 'DELETE', 2, null, (err, result) => {
+                        common.FFB ('DB_API', `/admin/install?`, 'DELETE', 2, null, (err, result) => {
                             document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
                             if (err == null){
                                 document.querySelector(`#install_db_icon`).classList.remove('installed');
@@ -2798,7 +2798,7 @@ const show_installation = () =>{
                             let json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
                             let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
                             document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
-                            common.FFB ('DB', `/admin/demo?`, 'POST', 2, json_data, (err, result) => {
+                            common.FFB ('DB_API', `/admin/demo?`, 'POST', 2, json_data, (err, result) => {
                                 document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
                                 if (err == null){
                                     let result_obj = JSON.parse(result);
@@ -2811,7 +2811,7 @@ const show_installation = () =>{
                     case 'install_demo_button_uninstall':{
                         let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
                         document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB', `/admin/demo?`, 'DELETE', 2, null, (err, result) => {
+                        common.FFB ('DB_API', `/admin/demo?`, 'DELETE', 2, null, (err, result) => {
                             document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
                             if (err == null){
                                 let result_obj = JSON.parse(result);
@@ -2841,7 +2841,7 @@ const show_db_info = async () => {
           }
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB', `/admin/DBInfo?`, 'GET', 2, null, (err, result) => {
+        await common.FFB ('DB_API', `/admin/DBInfo?`, 'GET', 2, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_8_content').innerHTML = '';
             else{
@@ -2865,7 +2865,7 @@ const show_db_info = async () => {
                         <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
                     document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB', `/admin/DBInfoSpace?`, 'GET', 2, null, (err, result) => {
+                    common.FFB ('DB_API', `/admin/DBInfoSpace?`, 'GET', 2, null, (err, result) => {
                         if (err)
                             document.getElementById('menu_8_db_info_space_detail').innerHTML = '';
                         else{
@@ -2908,7 +2908,7 @@ const show_db_info = async () => {
                                 </div>`;
                             }
                             document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                            common.FFB ('DB', `/admin/DBInfoSpaceSum?`, 'GET', 2, null, (err, result) => {
+                            common.FFB ('DB_API', `/admin/DBInfoSpaceSum?`, 'GET', 2, null, (err, result) => {
                                 if (err)
                                     null;
                                 else{

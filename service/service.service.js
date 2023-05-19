@@ -1,34 +1,54 @@
 const https = await import('node:https');
+const os = await import('node:os');
 const service_request = async (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
         let headers;
-        if (method == 'GET')
+        let options;
+        if (hostname == null && client_ip == null && headers_user_agent == null && headers_accept_language == null){    
             headers = {
-                'User-Agent': headers_user_agent,
-                'Accept-Language': headers_accept_language,
-                'Authorization': authorization,
-                'X-Forwarded-For': client_ip
-            };
-        else
-            headers = {
-                'User-Agent': headers_user_agent,
-                'Accept-Language': headers_accept_language,
+                'User-Agent': 'server',
+                'Accept-Language': '*',
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(body),
-                'Authorization': authorization,
-                'X-Forwarded-For': client_ip
+                'Authorization': authorization
+            }
+            //host: 'localhost',
+            options = {
+                method: method,
+                timeout: timeout,
+                headers : headers,
+                path: path,
+                
+                rejectUnauthorized: false
             };
-
-        
+        }
+        else{
+            if (method == 'GET')
+                headers = {
+                    'User-Agent': headers_user_agent,
+                    'Accept-Language': headers_accept_language,
+                    'Authorization': authorization,
+                    'X-Forwarded-For': client_ip
+                };
+            else
+                headers = {
+                    'User-Agent': headers_user_agent,
+                    'Accept-Language': headers_accept_language,
+                    'Content-Type': 'application/json',
+                    'Content-Length': Buffer.byteLength(body),
+                    'Authorization': authorization,
+                    'X-Forwarded-For': client_ip
+                };
+            options = {
+                method: method,
+                timeout: timeout,
+                headers : headers,
+                path: path,
+                host: hostname,
+                rejectUnauthorized: false
+            };
+        }
         let request;
-        const options = {
-            method: method,
-            timeout: timeout,
-            headers : headers,
-            path: path,
-            host: hostname,
-            rejectUnauthorized: false
-        };
         request = https.request(options, res =>{
             let responseBody = '';
             //for REPORT statucode 301 is returned, resolve the redirected path

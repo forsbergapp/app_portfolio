@@ -148,38 +148,39 @@ const db_limit_rows = (sql, limit_type = null) => {
 			return sql;
 }
 
-const db_execute = (app_id, sql, parameters, system_admin, callBack) =>{
-	import(`file://${process.cwd()}/service/db/db.service.js`).then(({db_query}) => {
-		db_query(app_id, ConfigGet(1, 'SERVICE_DB', 'USE'), sql, parameters, system_admin, (err, result) => {
-			if (err){
-				const database_error = 'DATABASE ERROR';
-				import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-					createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, null, null, err + 'SQL:' + sql).then(() => {
-						import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({ get_app_code }) => {
-							let app_code = get_app_code(err.errorNum, 
-								err.message, 
-								err.code, 
-								err.errno, 
-								err.sqlMessage);
-							if (app_code != null)
-								return callBack(err, null);
-							else{
-								//return full error to system admin
-								if (system_admin==1)
-									return callBack(err, null);
-								else
-									return callBack(database_error, null);
-							}
-						})
+const db_execute = (app_id, sql, parameters, dba, callBack) =>{
+	//authorization for microservice access
+	let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
+	import(`file://${process.cwd()}/apps/apps.service.js`).then(({BFF}) => {
+		let json_data = {pool_id: app_id, db_use: ConfigGet(1, 'SERVICE_DB', 'USE'), sql: Buffer.from(sql, 'utf-8').toString('base64'), parameters: Buffer.from(JSON.stringify(parameters), 'utf-8').toString('base64'), dba:dba};
+		//send sql and parameters as base64 coded to avoid server errors sending complex json and for security
+		BFF(app_id, 'DB', '/query?', null, null, 'POST', authorization, null, null, json_data).then((result)=>{
+			if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
+				db_log(app_id, sql, parameters);
+			}	
+			return callBack(null, JSON.parse(result))})
+		.catch(error=>{
+			const database_error = 'DATABASE ERROR';
+			import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
+				createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, null, null, error + 'SQL:' + sql).then(() => {
+					import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({ get_app_code }) => {
+						let app_code = get_app_code(error.errorNum, 
+							error.message, 
+							error.code, 
+							error.errno, 
+							error.sqlMessage);
+						if (app_code != null)
+							return callBack(error, null);
+						else{
+							//return full error to system admin
+							if (dba==1)
+								return callBack(error, null);
+							else
+								return callBack(database_error, null);
+						}
 					})
-				});
-			}
-			else{
-				if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
-					db_log(app_id, sql, parameters);
-				}	
-				return callBack(null, result);
-			}
+				})
+			})
 		})
 	})
 }
