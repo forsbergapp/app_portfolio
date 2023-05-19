@@ -60,7 +60,9 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 geodata_cache = geodata_cache.split('\r\n');
                 for (let row of geodata_cache){
                     let row_obj = JSON.parse(row);
-                    if (row_obj.geoplugin_request==ip)
+                    if (row_obj.geoplugin_request==ip || 
+                        ((row_obj.geoplugin_request == '::1' || row_obj.geoplugin_request == '::ffff:127.0.0.1' ) &&
+                         (ip == '::1' || ip == '::ffff:127.0.0.1' )))
                         return row;
                 }
                 return null;
