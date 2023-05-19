@@ -274,6 +274,14 @@ const check_app_subdomain = (app_id, host) => {
     }
 }
 //APP functions
+const apps_start_ok = ()=>{
+    if (ConfigGet(0, null, 'MAINTENANCE')=='0' && ConfigGet(1, 'SERVICE_DB', 'START')=='1' && ConfigGet(1, 'SERVER', 'APP_START')=='1' &&
+        ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+        return true;
+    else
+    return false;
+}
+
 const client_locale = (accept_language) =>{
     let locale;
     if (accept_language.startsWith('text') || accept_language=='*')
@@ -585,6 +593,13 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         break;
                     }
                     case 'DB':{
+                        //no ip, hostname, user agent or accept-language used
+                        //called from functions from DB_API or from server
+                        //needs CLIENT_ID and CLIENT_SECRET and not available from app clients
+                        path = `${rest_resource_service}/db${parameters}&app_id=${app_id}`
+                        break;
+                    }
+                    case 'DB_API':{
                         const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
                         switch (method){
                             // parameters ex:
@@ -662,7 +677,7 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo, check_app_subdomain,
         /*APP functions */
-        client_locale, read_app_files, get_module_with_init,
+        apps_start_ok, client_locale, read_app_files, get_module_with_init,
         getMaintenance, getUserPreferences,
         AppsStart,
         /*APP BFF functions*/

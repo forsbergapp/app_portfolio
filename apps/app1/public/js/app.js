@@ -148,7 +148,7 @@ const app_theme_switch = () => {
 const get_apps = () => {
     let json;
     let old_button = document.getElementById('apps').innerHTML;
-    common.FFB ('DB', `/apps?id=${common.COMMON_GLOBAL['common_app_id']}`, 'GET', 0, null, (err, result) => {
+    common.FFB ('DB_API', `/apps?id=${common.COMMON_GLOBAL['common_app_id']}`, 'GET', 0, null, (err, result) => {
         if (err)
             document.getElementById('apps').innerHTML = old_button;
         else{
