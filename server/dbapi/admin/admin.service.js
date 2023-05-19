@@ -10,10 +10,11 @@ const DBStart = async () => {
          let password;
          let dba = 0;
          let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+         let init = 1;
          const pool_db = (dba, user, password, pool_id) =>{
             let dbparameters = `{
                "use":                     "${ConfigGet(1, 'SERVICE_DB', 'USE')}",
-               "init":                    1,
+               "init":                    ${init},
                "pool_id":                 ${pool_id},
                "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
                "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
@@ -38,6 +39,8 @@ const DBStart = async () => {
                "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)}
             }`;
             pool_start(dbparameters);
+            //only one init=1
+            init = 0;
          }
          if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
             user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
@@ -288,6 +291,8 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 	const {likeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like/user_account_app_setting_like.service.js`);
 	const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.service.js`);
 	const fs = await import('node:fs');
+   let install_result = [];
+   install_result.push({"start": new Date().toISOString()});
 	try {
 		/*  Demo script format:
 			{"demo_users":[
@@ -582,15 +587,16 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				}
 			}
 		}
-      return callBack(null, {"info":[{"user_account": records_user_account},
-                                      {"user_account_app": records_user_account_app},
-                                      {"user_account_app_setting": records_user_account_app_setting},
-                                      {"user_account_like": records_user_account_like},
-                                      {"user_account_view": records_user_account_view},
-                                      {"user_account_follow": records_user_account_follow},
-                                      {"user_account_setting_like": records_user_account_setting_like},
-                                      {"user_account_setting_view": records_user_account_setting_view}
-                                    ]});
+      install_result.push({"user_account": records_user_account});
+      install_result.push({"user_account_app": records_user_account_app});
+      install_result.push({"user_account_app_setting": records_user_account_app_setting});
+      install_result.push({"user_account_like": records_user_account_like});
+      install_result.push({"user_account_view": records_user_account_view});
+      install_result.push({"user_account_follow": records_user_account_follow});
+      install_result.push({"user_account_setting_like": records_user_account_setting_like});
+      install_result.push({"user_account_setting_view": records_user_account_setting_view});
+      install_result.push({"finished": new Date().toISOString()});
+      return callBack(null, {"info": install_result});
 	} catch (error) {
 		return callBack(error, null);
 	}	
