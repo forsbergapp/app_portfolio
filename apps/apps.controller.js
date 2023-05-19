@@ -4,6 +4,7 @@ const service = await import('./apps.service.js')
 const getApp = async (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
+    let stack = new Error().stack;
     if (service.apps_start_ok() ==true || app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){  
         //Data token
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);

@@ -1,9 +1,12 @@
+import { json } from "express";
+import { resolve } from "node:path";
+
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const DBA=1;
 
 const DBStart = async () => {
-   const {pool_start} = await import(`file://${process.cwd()}/service/db/db.service.js`);
+   const {BFF} = await import(`file://${process.cwd()}/apps/apps.service.js`);
    return await new Promise((resolve, reject) => {
       if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){    
          let user;
@@ -11,36 +14,46 @@ const DBStart = async () => {
          let dba = 0;
          let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
          let init = 1;
-         const pool_db = (dba, user, password, pool_id) =>{
-            let dbparameters = `{
-               "use":                     "${ConfigGet(1, 'SERVICE_DB', 'USE')}",
-               "init":                    ${init},
-               "pool_id":                 ${pool_id},
-               "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
-               "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
-               "dba":                     ${dba},
-               "user":                    "${user}",
-               "password":                "${password}",
-               "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",`;
-               //db 1 + 2 parameters
-               dbparameters +=
-               `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
-               "connnectionLimit":        "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)}",`;
-               // db 3 parameters
-               dbparameters +=
-               `"connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
-               "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
-               "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}",`;
-               //db 4 parameters
-               dbparameters +=
-               `"connectString":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`)}",
-               "poolMin":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`)},
-               "poolMax":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`)},
-               "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)}
-            }`;
-            pool_start(dbparameters);
-            //only one init=1
-            init = 0;
+         let authorization = `Basic ${btoa(ConfigGet(7, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 'CLIENT_ID') + ':' + ConfigGet(7, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 'CLIENT_SECRET'))}`;
+         const pool_db = async (dba, user, password, pool_id) =>{
+            return new Promise ((resolve, reject)=>{
+               let dbparameters = `{
+                  "use":                     "${db_use}",
+                  "init":                    ${init},
+                  "pool_id":                 ${pool_id},
+                  "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
+                  "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+                  "dba":                     ${dba},
+                  "user":                    "${user}",
+                  "password":                "${password}",
+                  "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",`;
+                  //db 1 + 2 parameters
+                  dbparameters +=
+                  `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
+                  "connnectionLimit":        "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)}",`;
+                  // db 3 parameters
+                  dbparameters +=
+                  `"connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
+                  "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
+                  "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}",`;
+                  //db 4 parameters
+                  dbparameters +=
+                  `"connectString":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`)}",
+                  "poolMin":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`)},
+                  "poolMax":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`)},
+                  "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)}
+               }`;
+               dbparameters = JSON.parse(dbparameters);
+               //only one init=1
+               init = 0;
+               BFF(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, dbparameters)
+               .then(result=>{
+                  resolve(result);
+               })
+               .catch(error=>{
+                  reject(error);
+               })
+            })
          }
          if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
             user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
@@ -52,20 +65,22 @@ const DBStart = async () => {
             user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
             password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
             dba = 0;
-            pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'));
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
-               //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
-                  if (err)
-                     reject(err);
-                  else {
-                     //get app id, db username and db password
-                     for (let app  of result_apps){
-                        if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-                           pool_db(dba, app.db_user, app.db_password, app.id);
+            pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+            .then(result=>{
+               import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
+                  //app_id inparameter for log, all apps will be returned
+                  getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
+                     if (err)
+                        reject(err);
+                     else {
+                        //get app id, db username and db password
+                        for (let app  of result_apps){
+                           if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+                              pool_db(dba, app.db_user, app.db_password, app.id);
+                        }
+                        resolve()
                      }
-                     resolve()
-                  }
+                  })
                })
             })
          }
@@ -74,6 +89,9 @@ const DBStart = async () => {
       }
       else
          resolve()
+   })
+   .catch(error=>{
+      reject(error);
    })
 }
 const DBStop = async () => {
@@ -745,6 +763,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
    const {db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    const {createLogAppS} = await import(`file://${process.cwd()}/server/log/log.service.js`);
    const {COMMON, CreateRandomString} = await import(`file://${process.cwd()}/server/server.service.js`);
+   const {BFF} = await import(`file://${process.cwd()}/apps/apps.service.js`);
    let {createHash} = await import('node:crypto');
    const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
    let fs = await import('node:fs');
@@ -755,7 +774,9 @@ const install_db = async (app_id, optional=null, callBack)=> {
    let result_statement;
    let change_system_admin_pool=true;
    let stack = new Error().stack;
+   let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
    install_result.push({"start": new Date().toISOString()});
+   let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
    const sql_with_password = (username, sql) =>{
       let password;
       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
@@ -817,60 +838,69 @@ const install_db = async (app_id, optional=null, callBack)=> {
                      return true;
                }
                if (check_sql(sql)){
-                  try {
-                     if (file[0] == 0 && sql.includes(password_tag)){
-                           let sql_and_pw;
-                           if (sql.toUpperCase().includes('INSERT INTO'))
-                              sql_and_pw = sql_with_password("admin", sql);
-                           else
-                              sql_and_pw = sql_with_password("app_portfolio", sql);
-                           sql = sql_and_pw[0];
+                  if (file[0] == 0 && sql.includes(password_tag)){
+                        let sql_and_pw;
+                        if (sql.toUpperCase().includes('INSERT INTO'))
+                           sql_and_pw = sql_with_password("admin", sql);
+                        else
+                           sql_and_pw = sql_with_password("app_portfolio", sql);
+                        sql = sql_and_pw[0];
+                  }
+                  //if ; must be in wrong place then set tag in import script and convert it
+                  if (sql.includes('<SEMICOLON/>'))
+                     sql = sql.replace('<SEMICOLON/>', ';')
+                  if (db_use=='3')
+                     if (sql.toUpperCase().includes('CREATE DATABASE')){
+                           //remove database name in dba pool
+                           let json_data = {pool_id: null, db_use: db_use, dba: DBA};
+                           await BFF(app_id, 'DB', '/pool_close?', null, null, 'POST', authorization, null, null, json_data);
+                           json_data = `{
+                                 "use":                     "${db_use}",
+                                 "init":                    0,
+                                 "pool_id":                 "",
+                                 "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
+                                 "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+                                 "dba":                     ${DBA},
+                                 "user":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
+                                 "password":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
+                                 "database":                "",
+                                 "connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
+                                 "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
+                                 "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
+                              }`;
+                           json_data = JSON.parse(json_data);
+                           await BFF(app_id, 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, json_data);                              
                      }
-                     //if ; must be in wrong place then set tag in import script and convert it
-                     if (sql.includes('<SEMICOLON/>'))
-                        sql = sql.replace('<SEMICOLON/>', ';')
-                     if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
-                        if (sql.toUpperCase().includes('CREATE DATABASE')){
-                           POOL_DB3_APP[0][2].end()
-                           POOL_DB3_APP[0][2] = new PG.Pool({
-                              user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
-                              password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
-                              host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
-                              database: null,
-                              port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
-                              connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
-                              idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
-                              max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
-                           });
+                     else{
+                        if (change_system_admin_pool == true){
+                           //add database name in dba pool
+                           let json_data = {pool_id: null, db_use: db_use, dba: DBA};
+                           await BFF(app_id, 'DB', '/pool_close?', null, null, 'POST', authorization, null, null, json_data);
+                           json_data = `{
+                                 "use":                     "${db_use}",
+                                 "init":                    0,
+                                 "pool_id":                 "",
+                                 "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
+                                 "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+                                 "dba":                     ${DBA},
+                                 "user":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
+                                 "password":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
+                                 "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",
+                                 "connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
+                                 "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
+                                 "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
+                              }`;
+                           json_data = JSON.parse(json_data);
+                           await BFF(app_id, 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, json_data);
+                           //change to database value for the rest of the function
+                           change_system_admin_pool = false;
                         }
-                        else{
-                           if (change_system_admin_pool == true){
-                              POOL_DB3_APP[0][2].end();
-                              POOL_DB3_APP[0][2] = new PG.Pool({
-                                 user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
-                                 password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
-                                 host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
-                                 database: ConfigGet(1, 'SERVICE_DB', 'DB3_NAME'),
-                                 port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
-                                 connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
-                                 idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
-                                 max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
-                              });
-                              //change to database value for the rest of the function
-                              change_system_admin_pool = false;
-                           }
-                        }
-                     result_statement = await install_db_execute_statement(app_id, sql, {});
-                     if (install_row.hasOwnProperty('optional')==true && install_row.optional==optional)
-                        count_statements_optional += 1;
-                     else
-                        count_statements += 1;
-                  } catch (error) {
-                     createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                   `install_db ${file[0]}: ` + sql + ' ' + error).then(() => {
-                        throw error;
-                     })
-                  } 
+                     }
+                  result_statement = await install_db_execute_statement(app_id, sql, {});
+                  if (install_row.hasOwnProperty('optional')==true && install_row.optional==optional)
+                     count_statements_optional += 1;
+                  else
+                     count_statements += 1;
                }
             }  
          }
@@ -878,56 +908,33 @@ const install_db = async (app_id, optional=null, callBack)=> {
             for (let users_row of install_json.users.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null)){
                switch (file[0]){
                   case 1:{
-                     try {
                         if (users_row.sql.includes(password_tag)){
                            let sql_and_pw = sql_with_password("app_admin", users_row.sql);
                            users_row.sql = sql_and_pw[0];
-                           //update server parameter
                         }   
-                     } catch (error) {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                      `install_db ${file[0]}: ` + users_row.sql + ' ' + error).then(() => {
-                           throw error;
-                        })
-                     }           
                      break;
                   }
                   default:{
-                     try {
-                        if (users_row.sql.includes(password_tag)){
-                           let sql_and_pw = sql_with_password('app' + file[2], users_row.sql);
-                           users_row.sql = sql_and_pw[0];
-                           result_statement = await install_db_execute_statement(
-                              app_id, 
-                              `UPDATE ${db_schema()}.app_parameter 
-                                    SET parameter_value = :password
-                                 WHERE app_id = :app_id
-                                    AND parameter_name = :parameter_name`, 
-                              {	
-                                 app_id: file[2],
-                                 password: sql_and_pw[1],
-                                 parameter_name: 'SERVICE_DB_APP_PASSWORD'
-                              });            
-                           count_statements += 1;
-                        }
-                     } catch (error) {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                      `install_db ${file[0]}: ` + users_row.sql + ' ' + error).then(() => {
-                           throw error;
-                        })
-                     } 
+                     if (users_row.sql.includes(password_tag)){
+                        let sql_and_pw = sql_with_password('app' + file[2], users_row.sql);
+                        users_row.sql = sql_and_pw[0];
+                        result_statement = await install_db_execute_statement(
+                           app_id, 
+                           `UPDATE ${db_schema()}.app_parameter 
+                                 SET parameter_value = :password
+                              WHERE app_id = :app_id
+                                 AND parameter_name = :parameter_name`, 
+                           {	
+                              app_id: file[2],
+                              password: sql_and_pw[1],
+                              parameter_name: 'SERVICE_DB_APP_PASSWORD'
+                           });            
+                        count_statements += 1;
+                     }
                      break;
                   }
                }
-               try {
-                  result_statement = await install_db_execute_statement(app_id, users_row.sql, {});
-                  count_statements += 1;
-               } catch (error) {
-                  createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                `install_db ${file[0]}: ` + users_row.sql + ' ' + error).then(() => {
-                     throw error;
-                  })
-               }           
+               result_statement = await install_db_execute_statement(app_id, users_row.sql, {});
                count_statements += 1;
             }
       }
@@ -957,31 +964,43 @@ const install_db_check = async (app_id, callBack)=> {
    }
 }
 const install_db_delete = async (app_id, callBack)=> {
+   const {BFF} = await import(`file://${process.cwd()}/apps/apps.service.js`);
    let count_statements = 0;
    let count_statements_fail = 0;
    let fs = await import('node:fs');
    let files = await install_db_get_files('uninstall');
    let skip_error = true;
+   let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+   let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
    for (let file of  files){
       let uninstall_sql = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
       uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE'));
       for (let sql_row of uninstall_sql){
          try {
-            if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
+            if (db_use=='3')
                if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
-                  POOL_DB3_APP[0][2].end()
-                  POOL_DB3_APP[0][2] = new PG.Pool({
-                                          user: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_USER'),
-                                          password: ConfigGet(1, 'SERVICE_DB', 'DB3_SYSTEM_ADMIN_PASS'),
-                                          host: ConfigGet(1, 'SERVICE_DB', 'DB3_HOST'),
-                                          database: null,
-                                          port: ConfigGet(1, 'SERVICE_DB', 'DB3_PORT'),
-                                          connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_CONNECTION'),
-                                          idleTimeoutMillis: ConfigGet(1, 'SERVICE_DB', 'DB3_TIMEOUT_IDLE'),
-                                          max: ConfigGet(1, 'SERVICE_DB', 'DB3_MAX')
-                                       });
+                  //add database name in dba pool
+                  let json_data = {pool_id: null, db_use: db_use, dba: DBA};
+                  await BFF(app_id, 'DB', '/pool_close?', null, null, 'POST', authorization, null, null, json_data);
+                  json_data = `{
+                        "use":                     "${db_use}",
+                        "init":                    0,
+                        "pool_id":                 "",
+                        "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
+                        "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+                        "dba":                     ${DBA},
+                        "user":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
+                        "password":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
+                        "database":                "",
+                        "connectionTimeoutMillis": "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
+                        "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
+                        "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
+                     }`;
+                  json_data = JSON.parse(json_data);
+                  await new Promise(resolve => setTimeout(resolve, 2000));
+                  await BFF(app_id, 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, json_data);
                }
-            let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});
+               let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});   
             count_statements += 1;
          } catch (error) {
             count_statements_fail += 1;
@@ -990,7 +1009,7 @@ const install_db_delete = async (app_id, callBack)=> {
             else
                return callBack(error, null);
          }
-      }
+      }      
       /*update parameters in config.json
             DB[USE]_SYSTEM_ADMIN_USER = null
             DB[USE]_SYSTEM_ADMIN_PASS = null
@@ -1002,7 +1021,7 @@ const install_db_delete = async (app_id, callBack)=> {
                                    {"count_fail": count_statements_fail}
                                  ]});
 }
-export{DBStart, DBStop,
+export{DBStart, 
        DBInfo, DBInfoSpace, DBInfoSpaceSum,
        demo_add, demo_get, demo_delete, 
        install_db, install_db_check, install_db_delete}

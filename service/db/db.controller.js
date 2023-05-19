@@ -3,9 +3,7 @@ const service = await import('./db.service.js');
 const DBInit = (req, res) => {
 	service.DBInit(req.body.db)
 	.then((result)=>{
-		return res.status(200).json({
-			data: result
-		});
+		return res.status(200).send(result);
 	})
 	.catch(error=>{
 		return res.status(500).send({
@@ -16,9 +14,7 @@ const DBInit = (req, res) => {
 const DBShutdown = (req, res) => {
 	service.DBShutdown(req.body.db)
 	.then((result)=>{
-		return res.status(200).json({
-			data: result
-		});
+		return res.status(200).send(result);
 	})
 	.catch(error=>{
 		return res.status(500).send({
@@ -27,11 +23,9 @@ const DBShutdown = (req, res) => {
 	})
 }
 const pool_start = (req, res) => {
-	service.DBShutdown(req.body)
+	service.pool_start(req.body)
 	.then((result)=>{
-		return res.status(200).json({
-			data: result
-		});
+		return res.status(200).send(result);
 	})
 	.catch(error=>{
 		return res.status(500).send({
@@ -42,9 +36,7 @@ const pool_start = (req, res) => {
 const pool_close = (req, res) => {
 	service.pool_close(req.body.pool_id, req.body.db_use, req.body.dba)
 	.then((result)=>{
-		return res.status(200).json({
-			data: result
-		});
+		return res.status(200).send(result);
 	})
 	.catch(error=>{
 		return res.status(500).send({
@@ -53,17 +45,15 @@ const pool_close = (req, res) => {
 	})
 }
 const pool_get = (req, res) => {
-	service.pool_get(req.body.pool_id, req.body.db_use, req.body.dba)
-	.then((result)=>{
-		return res.status(200).json({
-			data: result
-		});
-	})
-	.catch(error=>{
+	let result;
+	try {
+		result = service.pool_get(req.body.pool_id, req.body.db_use, req.body.dba);
+		return res.status(200).send(result);
+	} catch (error) {
 		return res.status(500).send({
 			data: error
 		});
-	})
+	}
 }
 const db_query = (req, res) => {
 	service.db_query(req.body.pool_id, req.body.db_use, req.body.sql, req.body.parameters, req.body.dba)

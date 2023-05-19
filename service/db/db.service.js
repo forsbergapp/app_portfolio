@@ -74,14 +74,12 @@ const pool_start = async (dbparameters) =>{
       "poolMax":                 pool max
       "poolIncrement":           pool increment
    */
-   dbparameters = JSON.parse(dbparameters);
    if (dbparameters.init == 1)
       await DBInit(dbparameters.use);
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case '1':
          case '2':{
-            let test = POOL_DB.filter(db=>db[0]==parseInt(dbparameters.use));
             if (dbparameters.dba==1)
                POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use)) 
                                     db[1]=MYSQL.createPool({
@@ -93,6 +91,7 @@ const pool_start = async (dbparameters) =>{
                                           charset: dbparameters.charset,
                                           connnectionLimit: dbparameters.connnectionLimit
                })
+               resolve();
             })
             else
                POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use))
@@ -106,70 +105,78 @@ const pool_start = async (dbparameters) =>{
                                        charset: dbparameters.charset,
                                        connnectionLimit: dbparameters.connnectionLimit
                                        }))
-                                 });
-            resolve();
+                                 })
+               resolve();
+
             break;
          }
          case '3':{
-            if (dbparameters.dba==1)
-               POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use)) 
-                  db[1]=new PG.Pool({
-                           user: dbparameters.user,
-                           password: dbparameters.password,
-                           host: dbparameters.host,
-                           port: dbparameters.port,
-                           database: dbparameters.database,
-                           connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
-                           idleTimeoutMillis: dbparameters.idleTimeoutMillis,
-                           max: dbparameters.max
+            const createpoolPostgreSQL = () =>{
+               return new Promise(resolve=>{
+                  resolve(new PG.Pool({
+                     user: dbparameters.user,
+                     password: dbparameters.password,
+                     host: dbparameters.host,
+                     port: dbparameters.port,
+                     database: dbparameters.database,
+                     connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
+                     idleTimeoutMillis: dbparameters.idleTimeoutMillis,
+                     max: dbparameters.max
+                  }))
                })
-            })
+            }
+            if (dbparameters.dba==1)
+               createpoolPostgreSQL()
+               .then(pool=>{
+                  POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use))    
+                     db[1]=pool;
+                  })
+                  resolve();
+               })
             else
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use))
-                                    db[2].push(new PG.Pool({
-                                    user: dbparameters.user,
-                                    password: dbparameters.password,
-                                    host: dbparameters.host,
-                                    port: dbparameters.port,
-                                    database: dbparameters.database,
-                                    connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
-                                    idleTimeoutMillis: dbparameters.idleTimeoutMillis,
-                                    max: dbparameters.max
-                                    }))
-                                 });
-            resolve();
+               createpoolPostgreSQL()
+               .then(pool=>{
+                  POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use))    
+                     db[2].push(pool);
+                  })
+                  resolve();
+               })
             break;
          }
          case '4':{
             let pool_id;
+            const createpoolOracle= ()=>{
+               ORACLEDB.createPool({	
+                  user: dbparameters.user,
+                  password: dbparameters.password,
+                  connectString: dbparameters.connectString,
+                  poolMin: dbparameters.poolMin,
+                  poolMax: dbparameters.poolMax,
+                  poolIncrement: dbparameters.poolIncrement,
+                  poolAlias: pool_id
+               }, (err,result) => {
+                  if (err)
+                     reject(err);
+                  else
+                     resolve();
+               });
+            }
             if (dbparameters.dba==1){
                pool_id = 'DBA';
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[1]=pool_id});
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[1]=pool_id})
+               createpoolOracle();
             }
             else{
                pool_id = dbparameters.pool_id;
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id)});
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id)})
+               createpoolOracle();
             }
-            ORACLEDB.createPool({	
-               user: dbparameters.user,
-               password: dbparameters.password,
-               connectString: dbparameters.connectString,
-               poolMin: dbparameters.poolMin,
-               poolMax: dbparameters.poolMax,
-               poolIncrement: dbparameters.poolIncrement,
-               poolAlias: pool_id
-            }, (err,result) => {
-               if (err)
-                  reject(err);
-               else
-                  resolve();
-            });
             break;
          }
       }
    })
 }
-const pool_close = (pool_id, db_use, dba) =>{
+const pool_close = async (pool_id, db_use, dba) =>{
    try {
       if (dba==1)
          POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1] = null;
@@ -182,12 +189,16 @@ const pool_close = (pool_id, db_use, dba) =>{
 
 }
 const pool_get = (pool_id, db_use, dba) => {
-   let test = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0];
    try {
-      if (dba==1)
-         return POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1];
-      else
-         return POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)];
+      let pool;
+      if (dba==1){
+         pool = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1];
+         return pool;
+      }
+      else{
+         pool = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)];
+         return pool;
+      }
    } catch (error) {
       return null;
    }  
