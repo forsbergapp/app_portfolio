@@ -358,7 +358,7 @@ const common_translate_ui_app = async (lang_code, callBack) => {
             select_second_locale.value = current_second_locale;   
             
             //country
-            common.FFB ('DB', `/country/${lang_code}?`, 'GET', 0, null, (err, result) => {
+            common.FFB ('DB_API', `/country/${lang_code}?`, 'GET', 0, null, (err, result) => {
                 if (err)
                     callBack(err,null);
                 else{
@@ -406,7 +406,7 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.FFB ('DB', `/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
+        await common.FFB ('DB_API', `/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
             if (err)
                 null;
             else{
@@ -1212,7 +1212,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 const user_settings_get = async (user_setting_id = '') => {
     let select = document.getElementById("setting_select_user_setting");
     let result_obj;
-    await common.FFB ('DB', `/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 'GET', 0, null, (err, result) => {
+    await common.FFB ('DB_API', `/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1636,7 +1636,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             break;
         }
     }
-    await common.FFB ('DB', path, method, 1, json_data, (err, result) => {
+    await common.FFB ('DB_API', path, method, 1, json_data, (err, result) => {
         if (err){
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
@@ -1686,7 +1686,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err, result) => {
+                common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err, result) => {
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -1888,7 +1888,7 @@ const set_settings_select = () => {
 
 const profile_user_setting_stat = (id) => {
     let json;
-    common.FFB ('DB', `/user_account_app_setting/profile/${id}?`, 'GET', 0, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_app_setting/profile/${id}?`, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1937,7 +1937,7 @@ const profile_show_user_setting = () => {
     let json;
     document.getElementById('profile_user_settings_row').style.display = 'block';
 
-    common.FFB ('DB', `/user_account_app_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
+    common.FFB ('DB_API', `/user_account_app_setting/profile/all/${document.getElementById('common_profile_id').innerHTML}` + 
                       '?id=' + common.COMMON_GLOBAL['user_account_id'], 'GET', 0, null, (err, result) => {
         if (err)
             null;
@@ -1967,7 +1967,7 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     let profile_id = document.getElementById('common_profile_id').innerHTML;
     let json;
-    common.FFB ('DB', `/user_account_app_setting/profile/all/${profile_id}` +
+    common.FFB ('DB_API', `/user_account_app_setting/profile/all/${profile_id}` +
                       '?id=' + common.COMMON_GLOBAL['user_account_id'], 'GET', 0, null, (err, result) => {
         if (err)
             null;
@@ -2006,7 +2006,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.FFB ('DB', `/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
+        common.FFB ('DB_API', `/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
             if (err)
                 null;
             else{

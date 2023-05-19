@@ -192,178 +192,175 @@ const pool_get = (pool_id, db_use, dba) => {
       return null;
    }  
 }
-const pool_check_started = (pool_id, db_use, dba=null) =>{
-   let pool = pool_get(pool_id, db_use, dba);
-   if (pool==null)
-      return 0;
-   else
-      return 1;
-}
-
-const db_query = async (pool_id, db_use, sql, parameters, dba, callBack) => {
-	switch (db_use){
-		case '1':
-		case '2':{
-			//Both MySQL and MariaDB use MySQL npm module
-			const config_connection = (conn, query, values) => {
-				//change json parameters to [] syntax with bind variable names
-				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
-				//mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
-				conn.config.queryFormat = (query, values) => {
-					if (!values) return query;
-					return query.replace(/\:(\w+)/g, (txt, key) => {
-						if (values.hasOwnProperty(key)) {
-						return conn.escape(values[key]);
-						}
-						return txt;
-					});
-				};
-			}
-			try {
-				pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
-					conn.release();
-					if (err)
-                  return callBack(err, null);
-					else{
-						config_connection(conn, sql, parameters);
-						conn.query(sql, parameters, (err, result, fields) => {
-							if (err){
-								return callBack(err, null);
-							}
-							else{
-								//convert blob buffer to string if any column is a BLOB type
-								if (result.length>0){
-									for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
-										if (fields[dbcolumn].type == 252) { //BLOB
-											for (let i=0;i<result.length;i++){
-												if (fields[dbcolumn]['name'] == Object.keys(result[i])[dbcolumn])
-													if (result[i][Object.keys(result[i])[dbcolumn]]!=null && result[i][Object.keys(result[i])[dbcolumn]]!='')
-														result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
-											}
-										}
-									};
-								}
-								return callBack(null, result);
-							}
-						})
-					}
-				});					
-			} catch (error) {
-            return callBack(error, null);
-			}
-			break;
-		}
-		case '3':{
-			const queryConvert = (parameterizedSql, params) => {
-				//change json parameters to $ syntax
-				//use unique index with $1, $2 etc, parameter can be used several times
-				//example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
-				//use indexorder received from parameters
-				//common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
-				//postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
-			    const [text, values] = Object.entries(params).reduce(
-			        ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, (txt, key) => {
-																						if (params.hasOwnProperty(key)){
-																							return `$${Object.keys(params).indexOf(key) + 1}`;
-																						}
-																						else
-																							return txt;
-																					}), 
-														   [...array, value], index + 1],
-				        								   [parameterizedSql, [], 1]
-			    );
-			    return { text, values };
-			}	
-			let parsed_result = queryConvert(sql, parameters);
-			let pool3;
-			try {
-				pool3 = await pool_get(pool_id, db_use, dba).connect();
-				pool3.query(parsed_result.text, parsed_result.values)
-					.then((result) => {
-					//add common attributes
-					if (result.command == 'INSERT' && result.rows.length>0)
-						result.insertId = result.rows[0].id;
-					if (result.command == 'INSERT' ||
-						result.command == 'DELETE' ||
-						result.command == 'UPDATE'){
-						result.affectedRows = result.rowCount;
-					}
-					//convert blob buffer to string if any column is a BYTEA type
-					if (result.rows.length>0){
-						for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
-							if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
-								for (let i=0;i<result.rows.length;i++){
-									if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
-										if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
-											result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
-								}
-							}
-						};
-					}
-					if (result.command == 'SELECT')
-						return callBack(null, result.rows);
-					else
-						return callBack(null, result);
-					})
-					.catch((error) => {
-						return callBack(error, null);
-							
-					})
-			} catch (error) {
-				return callBack(error, null);
-			}
-			finally{
-				if (pool3)
-					pool3.release();
-			}
-			break;
-		}
-		case '4':{
-			let pool4;
-			try{
-				pool4 = await ORACLEDB.getConnection(pool_get(pool_id, db_use, dba));
-				/*
-				Fix CLOB column syntax to avoid ORA-01461 for these columns:
-					APP_ACCOUNT.SCREENSHOT
-					USER_ACCOUNT.AVATAR
-					USER_ACCOUNT.PROVIDER_IMAGE
-					USER_ACCOUNT_APP_SETTING.SETTINGS_JSON
-					use same parameter name as column name
-				*/
-				Object.keys(parameters).forEach((key, index) => {
-					if (key.toLowerCase() == 'screenshot' ||
-					    key.toLowerCase() == 'avatar' ||
-						key.toLowerCase() == 'provider_image' ||
-						key.toLowerCase() == 'settings_json')
-						parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
-				});
-				const result = await pool4.execute(sql, parameters, (err,result) => {
-														if (err) {
-															return callBack(err, null);
-														}
-														else{
-															if (result.rowsAffected)
-																result.affectedRows = result.rowsAffected;
-															if (result.rows)
-																return callBack(null, result.rows);
-															else
-																return callBack(null, result);
-														}
-															
-																
-													});
-			}catch (error) {
-				return callBack(error, null);
-			} finally {
-				if (pool4) {
-					pool4.close(); 
-				}
-			}
-			break;
-		}
-	}
+const db_query = async (pool_id, db_use, sql, parameters, dba) => {
+   return new Promise((resolve,reject)=>{
+      sql = Buffer.from(sql, 'base64').toString('utf-8');
+      parameters = Buffer.from(parameters, 'base64').toString('utf-8');
+      parameters = JSON.parse(parameters);
+      switch (db_use){
+         case '1':
+         case '2':{
+            //Both MySQL and MariaDB use MySQL npm module
+            const config_connection = (conn, query, values) => {
+               //change json parameters to [] syntax with bind variable names
+               //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
+               //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
+               conn.config.queryFormat = (query, values) => {
+                  if (!values) return query;
+                  return query.replace(/\:(\w+)/g, (txt, key) => {
+                     if (values.hasOwnProperty(key)) {
+                     return conn.escape(values[key]);
+                     }
+                     return txt;
+                  });
+               };
+            }
+            try {
+               pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
+                  conn.release();
+                  if (err)
+                     reject (err);
+                  else{
+                     config_connection(conn, sql, parameters);
+                     conn.query(sql, parameters, (err, result, fields) => {
+                        if (err){
+                           reject (err);
+                        }
+                        else{
+                           //convert blob buffer to string if any column is a BLOB type
+                           if (result.length>0){
+                              for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
+                                 if (fields[dbcolumn].type == 252) { //BLOB
+                                    for (let i=0;i<result.length;i++){
+                                       if (fields[dbcolumn]['name'] == Object.keys(result[i])[dbcolumn])
+                                          if (result[i][Object.keys(result[i])[dbcolumn]]!=null && result[i][Object.keys(result[i])[dbcolumn]]!='')
+                                             result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
+                                    }
+                                 }
+                              };
+                           }
+                           resolve(result);
+                        }
+                     })
+                  }
+               });					
+            } catch (error) {
+               reject (err);
+            }
+            break;
+         }
+         case '3':{
+            const queryConvert = (parameterizedSql, params) => {
+               //change json parameters to $ syntax
+               //use unique index with $1, $2 etc, parameter can be used several times
+               //example: sql with parameters :id, :id, :id and :id2, will get $1, $1, $1 and $2
+               //use indexorder received from parameters
+               //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
+               //postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
+                const [text, values] = Object.entries(params).reduce(
+                    ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, (txt, key) => {
+                                                                     if (params.hasOwnProperty(key)){
+                                                                        return `$${Object.keys(params).indexOf(key) + 1}`;
+                                                                     }
+                                                                     else
+                                                                        return txt;
+                                                                  }), 
+                                                [...array, value], index + 1],
+                                                  [parameterizedSql, [], 1]
+                );
+                return { text, values };
+            }	
+            let parsed_result = queryConvert(sql, parameters);
+            let pool3;
+            try {
+               pool_get(pool_id, db_use, dba).connect().then((pool3)=>{
+                  pool3.query(parsed_result.text, parsed_result.values)
+                  .then((result) => {
+                  //add common attributes
+                  if (result.command == 'INSERT' && result.rows.length>0)
+                     result.insertId = result.rows[0].id;
+                  if (result.command == 'INSERT' ||
+                     result.command == 'DELETE' ||
+                     result.command == 'UPDATE'){
+                     result.affectedRows = result.rowCount;
+                  }
+                  //convert blob buffer to string if any column is a BYTEA type
+                  if (result.rows.length>0){
+                     for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
+                        if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+                           for (let i=0;i<result.rows.length;i++){
+                              if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
+                                 if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+                                    result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+                           }
+                        }
+                     };
+                  }
+                  if (result.command == 'SELECT')
+                     resolve(result.rows);
+                  else
+                     resolve(result);
+                  })
+                  .catch((error) => {
+                     reject(error);
+                        
+                  })
+               });
+            } catch (error) {
+               reject(error);
+            }
+            finally{
+               if (pool3)
+                  pool3.release();
+            }
+            break;
+         }
+         case '4':{
+            let pool4;
+            try{
+               ORACLEDB.getConnection(pool_get(pool_id, db_use, dba)).then((pool4)=>{
+                  /*
+                  Fix CLOB column syntax to avoid ORA-01461 for these columns:
+                     APP_ACCOUNT.SCREENSHOT
+                     USER_ACCOUNT.AVATAR
+                     USER_ACCOUNT.PROVIDER_IMAGE
+                     USER_ACCOUNT_APP_SETTING.SETTINGS_JSON
+                     use same parameter name as column name
+                  */
+                  Object.keys(parameters).forEach((key, index) => {
+                     if (key.toLowerCase() == 'screenshot' ||
+                        key.toLowerCase() == 'avatar' ||
+                        key.toLowerCase() == 'provider_image' ||
+                        key.toLowerCase() == 'settings_json')
+                        parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
+                  });
+                  pool4.execute(sql, parameters, (err,result) => {
+                     if (err) {
+                        reject(error);
+                     }
+                     else{
+                        if (result.rowsAffected)
+                           result.affectedRows = result.rowsAffected;
+                        if (result.rows)
+                           resolve(result.rows);
+                        else
+                           resolve(result);
+                     }
+                  });
+               });
+            }catch (error) {
+               reject(error);
+            } finally {
+               if (pool4) {
+                  pool4.close(); 
+               }
+            }
+            break;
+         }
+      }
+   })
 }
 
 export{DBInit, DBShutdown, 
-       pool_start, pool_close, pool_get, pool_check_started,
+       pool_start, pool_close, pool_get,
        db_query}

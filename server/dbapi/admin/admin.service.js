@@ -3,7 +3,7 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 const DBA=1;
 
 const DBStart = async () => {
-   const {DBInit, pool_start} = await import(`file://${process.cwd()}/service/db/db.service.js`);
+   const {pool_start} = await import(`file://${process.cwd()}/service/db/db.service.js`);
    return await new Promise((resolve, reject) => {
       if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){    
          let user;
