@@ -404,33 +404,33 @@ const AppsStart = async (app) => {
     });
     app.get("/info/:info",(req, res, next) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
-        if (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0')
-            getMaintenance(app_id)
-            .then((app_result) => {
-                res.send(app_result);
-            })
-        else
+        if (apps_start_ok()==true)
             if (ConfigGet(7, app_id, 'SHOWINFO')==1)
                 switch (req.params.info){
                     case 'about':
                     case 'disclaimer':
                     case 'privacy_policy':
                     case 'terms':{
-                      if (typeof req.query.lang_code !='undefined'){
+                    if (typeof req.query.lang_code !='undefined'){
                         req.query.lang_code = 'en';
-                      }
-                      getInfo(app_id, req.params.info, req.query.lang_code, (err, info_result)=>{
+                    }
+                    getInfo(app_id, req.params.info, req.query.lang_code, (err, info_result)=>{
                         res.send(info_result);
-                      })
-                      break;
+                    })
+                    break;
                     }
                     default:{
-                      res.send(null);
-                      break;
+                    res.send(null);
+                    break;
                     }
-                  }
+                }
             else
-                  next();
+                next();
+        else
+            getMaintenance(app_id)
+            .then((app_result) => {
+                res.send(app_result);
+            })
     });
     app.get("/reports",(req, res) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
@@ -663,7 +663,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         reject(`service ${service} does not exist`);
                     }
                 }
-                resolve(microservice_circuitbreak.callService(hostname,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data));
+                resolve(microservice_circuitbreak.callService(app_id, hostname,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data));
             } catch (error) {
                 reject(error);
             }

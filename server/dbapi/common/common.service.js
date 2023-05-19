@@ -172,8 +172,8 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 						if (app_code != null)
 							return callBack(error, null);
 						else{
-							//return full error to system admin
-							if (dba==1)
+							//return full error to admin
+							if (app_id==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
 								return callBack(error, null);
 							else
 								return callBack(database_error, null);
