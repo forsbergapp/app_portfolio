@@ -153,7 +153,7 @@ const pool_start = async (dbparameters) =>{
                   poolMin: dbparameters.poolMin,
                   poolMax: dbparameters.poolMax,
                   poolIncrement: dbparameters.poolIncrement,
-                  poolAlias: pool_id
+                  poolAlias: pool_id.toString()
                }, (err,result) => {
                   if (err)
                      reject(err);
