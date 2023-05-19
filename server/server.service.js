@@ -655,7 +655,7 @@ const serverExpressRoutes = async (app) => {
     //log
     const {getLogParameters, getLogs, getFiles, getPM2Logs} = await import(`file://${process.cwd()}/server/log/log.controller.js`);    
     //server db api admin
-    const { DBStart, DBStop, DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
+    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
     //server db api app_portfolio app
     const { getApp, getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.controller.js`);
     //server db api app_portfolio app category
