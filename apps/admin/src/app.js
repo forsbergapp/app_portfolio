@@ -1,4 +1,4 @@
-const { pool_check_started } = await import(`file://${process.cwd()}/service/db/db.service.js`);
+const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
@@ -21,7 +21,7 @@ const createAdmin = (app_id, locale) => {
             ['<AppCommonProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], //Profile tag in common body
             ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html']            
             ];
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && pool_check_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE'))==1){
+        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
             getUserPreferences(app_id, locale).then((user_preferences) => {
                 read_app_files('', files, (err, app)=>{
                     if (err)

@@ -720,13 +720,6 @@ const serverExpressRoutes = async (app) => {
     const { likeUser, unlikeUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like/user_account_like.controller.js`);
     //server db api app_portfolio user account logon
     const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.controller.js`);
-
-    //service db
-    const { DBInit, DBShutdown, pool_start, pool_close, pool_get, pool_check_started, db_query} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
-    //service geolocation
-    const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE')}/geolocation/geolocation.controller.js`);
-    //service worldcities
-    const { getCities} = await import(`file://${process.cwd()}/service/worldcities/worldcities.controller.js`);
     
     //ConfigGet function in service.js used to get parameter values
     const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
@@ -858,12 +851,19 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/log/files`).get                                    (serverRouterLog, checkSystemAdmin, getFiles);
     app.route(`${rest_resouce_server}/log/pm2logs`).get                                  (serverRouterLog, checkSystemAdmin, getPM2Logs);
 
+    //microservices
+    //service db
+    const { DBInit, DBShutdown, pool_start, pool_close, pool_get, db_query} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
+    //service geolocation
+    const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`);
+    //service worldcities
+    const { getCities} = await import(`file://${process.cwd()}/service/worldcities/worldcities.controller.js`);
+    
     app.route(`${rest_resource_service}/db/init`).post(serverRouterLog, checkClientAccess, DBInit);
     app.route(`${rest_resource_service}/db/shutdown`).post(serverRouterLog, checkClientAccess, DBShutdown);
     app.route(`${rest_resource_service}/db/pool_start`).post(serverRouterLog, checkClientAccess, pool_start);
     app.route(`${rest_resource_service}/db/pool_close`).post(serverRouterLog, checkClientAccess, pool_close);
     app.route(`${rest_resource_service}/db/pool`).get(serverRouterLog, checkClientAccess, pool_get);
-    app.route(`${rest_resource_service}/db/pool/check`).get(serverRouterLog, checkClientAccess, pool_check_started);
     app.route(`${rest_resource_service}/db/query`).post(serverRouterLog, checkClientAccess, db_query);
 
     app.route(`${rest_resource_service}/geolocation/place`).get(serverRouterLog, checkDataToken, getPlace);
@@ -1043,40 +1043,39 @@ const serverStart = async () =>{
     process.env.TZ = 'UTC';
     InitConfig().then(() => {
         import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogServerI})=>{
-            DBStart().then((result) => {
-                //Get express app with all configurations
-                serverExpress().then((app)=>{
-                    import(`file://${process.cwd()}/apps/apps.service.js`).then(({AppsStart})=>{
-                        AppsStart(app).then(() => {
-                            serverExpressLogError(app);
-                            BroadcastCheckMaintenance();
-                            //START HTTP SERVER
-                            app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
-                                createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(() => {
-                                    null;
+            
+            //Get express app with all configurations
+            serverExpress().then((app)=>{
+                import(`file://${process.cwd()}/apps/apps.service.js`).then(({AppsStart})=>{
+                    AppsStart(app).then(() => {
+                        serverExpressLogError(app);
+                        BroadcastCheckMaintenance();
+                        //START HTTP SERVER
+                        app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
+                            createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(() => {
+                                null;
+                            });
+                        });
+                        if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
+                            //START HTTPS SERVER
+                            //SSL files for HTTPS
+                            let options;
+                            fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_KEY'), 'utf8', (error, fileBuffer) => {
+                                let env_key = fileBuffer.toString();
+                                fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_CERT'), 'utf8', (error, fileBuffer) => {
+                                    let env_cert = fileBuffer.toString();
+                                    options = {
+                                        key: env_key,
+                                        cert: env_cert
+                                    };
+                                    https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
+                                        createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
+                                            DBStart();
+                                        });
+                                    })
                                 });
                             });
-                            if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
-                                //START HTTPS SERVER
-                                //SSL files for HTTPS
-                                let options;
-                                fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_KEY'), 'utf8', (error, fileBuffer) => {
-                                    let env_key = fileBuffer.toString();
-                                    fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_CERT'), 'utf8', (error, fileBuffer) => {
-                                        let env_cert = fileBuffer.toString();
-                                        options = {
-                                            key: env_key,
-                                            cert: env_cert
-                                        };
-                                        https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
-                                            createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
-                                                null;
-                                            });
-                                        })
-                                    });
-                                });
-                            }
-                        })
+                        }
                     })
                 })
             })
