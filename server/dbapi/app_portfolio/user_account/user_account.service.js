@@ -962,7 +962,7 @@ const getEmailUser = (app_id, email, callBack) => {
 const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
 		let sql;
 		let parameters;
-		if (user_account_id =='')
+		if (user_account_id =='' || typeof user_account_id == 'undefined')
 			user_account_id = null;
 		sql = `SELECT app_role_id "app_role_id",
 					  COALESCE(ar.icon,ar_user.icon) "icon"

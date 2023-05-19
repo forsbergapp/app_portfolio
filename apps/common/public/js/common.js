@@ -323,7 +323,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
         path = `/app_object/${lang_code}?${object_parameter}`;
     }
     //translate objects
-    await FFB ('DB', path, 'GET', 0, null, (err, result) => {
+    await FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -415,7 +415,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
             else{
                 path = `/language/locale/${lang_code}?`;
             }
-            FFB ('DB', path, 'GET', 0, null, (err, result) => {
+            FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
                 if (err)
                     null;
                 else{
@@ -806,7 +806,7 @@ const show_message = (message_type, code, function_event, message_text='', data_
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            FFB ('DB', `/message_translation/${code}?data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
+            FFB ('DB_API', `/message_translation/${code}?data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
@@ -1005,7 +1005,7 @@ const lov_show = (lov, function_event) => {
             document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_settings']  + ' ' + ICONS['app_type'];
             lov_column_value = 'parameter_type_text';            
             path = `/parameter_type/admin?`;
-            service = 'DB';
+            service = 'DB_API';
             token_type = 1;
             break;
         }
@@ -1021,7 +1021,7 @@ const lov_show = (lov, function_event) => {
             document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_type'];
             lov_column_value = 'app_category_text';
             path = `/app_category/admin?`;
-            service = 'DB';
+            service = 'DB_API';
             token_type = 1;
             break;
         }
@@ -1029,7 +1029,7 @@ const lov_show = (lov, function_event) => {
             document.getElementById('common_lov_title').innerHTML = ICONS['app_role'];
             lov_column_value = 'icon';
             path = `/app_role/admin?`;
-            service = 'DB';
+            service = 'DB_API';
             token_type = 1;
             break;
         }
@@ -1284,7 +1284,7 @@ const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
         path = `${app_rest_url}/${statschoice}?`;
     }
     //TOP
-    FFB ('DB', path, 'GET', 0, null, (err, result) => {
+    FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1409,7 +1409,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                 }
         }
         if (fetch_detail){
-            FFB ('DB', path, 'GET', 1, null, (err, result) => {
+            FFB ('DB_API', path, 'GET', 1, null, (err, result) => {
                 if (err)
                     null;
                 else{
@@ -1533,7 +1533,7 @@ const search_profile = (click_function) => {
                         "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
                         }`;
         }
-        FFB ('DB', path, 'POST', token, json_data, (err, result) => {
+        FFB ('DB_API', path, 'POST', token, json_data, (err, result) => {
             if (err)
                 null;
             else{
@@ -1602,7 +1602,7 @@ const profile_show = async (user_account_id_other = null, username = null, callB
             "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
             "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
             }`;
-        FFB ('DB', path, 'POST', 0, json_data, (err, result) => {
+        FFB ('DB_API', path, 'POST', 0, json_data, (err, result) => {
             if (err)
                 return callBack(err,null);
             else{
@@ -1675,7 +1675,7 @@ const profile_update_stat = async (callBack) => {
     }`;
     //get updated stat for given user
     //to avoid update in stat set searched by same user
-    FFB ('DB', `/user_account/profile/id/${profile_id.innerHTML}?id=${profile_id.innerHTML}`, 'POST', 0, json_data, (err, result) => {
+    FFB ('DB_API', `/user_account/profile/id/${profile_id.innerHTML}?id=${profile_id.innerHTML}`, 'POST', 0, json_data, (err, result) => {
         if (err)
             return callBack(err,null);
         else{
@@ -1799,7 +1799,7 @@ const user_login = async (username, password, callBack) => {
                     ${get_uservariables()}
                  }`;
 
-    FFB ('DB', `/user_account/login?`, 'PUT', 0, json_data, (err, result) => {
+    FFB ('DB_API', `/user_account/login?`, 'PUT', 0, json_data, (err, result) => {
         if (err)
             return callBack(err, null);
         else{
@@ -1864,7 +1864,7 @@ const user_logoff = async () => {
 const user_edit = async () => {
     let json;
     //get user from REST API
-    FFB ('DB', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
+    FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1997,7 +1997,7 @@ const user_update = async () => {
     let json;
     document.getElementById('common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
     //update user using REST API
-    FFB ('DB', path, 'PUT', 1, json_data, (err, result) => {
+    FFB ('DB_API', path, 'PUT', 1, json_data, (err, result) => {
         document.getElementById('common_user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
             return null;
@@ -2056,7 +2056,7 @@ const user_signup = () => {
 
     let old_button = document.getElementById('common_signup_button').innerHTML;
     document.getElementById('common_signup_button').innerHTML = APP_SPINNER;
-    FFB ('DB', `/user_account/signup?`, 'POST', 0, json_data, (err, result) => {
+    FFB ('DB_API', `/user_account/signup?`, 'POST', 0, json_data, (err, result) => {
         document.getElementById('common_signup_button').innerHTML = old_button;
         if (err){    
             null;
@@ -2106,7 +2106,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                           "verification_type": ${verification_type},
                           ${get_uservariables()}
                          }`;
-            FFB ('DB', `/user_account/activate/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 0, json_data, (err, result) => {
+            FFB ('DB_API', `/user_account/activate/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 0, json_data, (err, result) => {
                 document.getElementById('common_user_verify_email').innerHTML = old_button;
                 if (err){    
                     return callBack(err, null);
@@ -2196,7 +2196,7 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             let json_data = `{"password":"${password}"}`;
 
-            FFB ('DB', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err, result) => {
+            FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err, result) => {
                 document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
@@ -2242,7 +2242,7 @@ const user_function = (user_function, callBack) => {
         } else {
             method = 'DELETE';
         }
-        FFB ('DB', `${path}/${COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
+        FFB ('DB_API', `${path}/${COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -2290,7 +2290,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.getElementById('common_dialogue_message').style.visibility = "hidden";
-            FFB ('DB', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 1, null, (err, result) => {
+            FFB ('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 1, null, (err, result) => {
                 if (err)
                     null;
                 else{
@@ -2315,7 +2315,7 @@ const user_forgot = async () => {
     else{
         let old_button = document.getElementById('common_forgot_button').innerHTML;
         document.getElementById('common_forgot_button').innerHTML = APP_SPINNER;
-        FFB ('DB', `/user_account/forgot?`, 'PUT', 0, json_data, (err, result) => {
+        FFB ('DB_API', `/user_account/forgot?`, 'PUT', 0, json_data, (err, result) => {
             document.getElementById('common_forgot_button').innerHTML = old_button;
             if (err)
                 null;
@@ -2356,7 +2356,7 @@ const updatePassword = () => {
         }
         let old_button = document.getElementById('common_user_new_password_icon').innerHTML;
         document.getElementById('common_user_new_password_icon').innerHTML = APP_SPINNER;
-        FFB ('DB', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err, result) => {
+        FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err, result) => {
             document.getElementById('common_user_new_password_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -2376,7 +2376,7 @@ const user_preference_save = async () => {
         "setting_preference_direction_id": "${document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id}",
         "setting_preference_arabic_script_id": "${document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id}"
         }`;
-        await FFB ('DB', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err, result) => {
+        await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err, result) => {
             if (err)
                 null;
             else{
@@ -2387,7 +2387,7 @@ const user_preference_save = async () => {
     
 }
 const user_preference_get = async (callBack) => {
-    await FFB ('DB', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
+    await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{
@@ -2460,7 +2460,7 @@ const Providers_init = async (function_event) => {
     let div = document.getElementById('identity_provider_login');
     let json;
     div.innerHTML = APP_SPINNER;
-    FFB ('DB', `/identityprovider?`, 'GET', 0, null, (err, result) => {
+    FFB ('DB_API', `/identityprovider?`, 'GET', 0, null, (err, result) => {
         if (err)
             div.innerHTML = '';
         else{
@@ -2498,7 +2498,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                             "provider_email":"${profile_email}",
                             ${get_uservariables()}
                         }`;
-        FFB ('DB', `/user_account/provider/${profile_id}?`, 'PUT', 0, json_data, (err, result) => {
+        FFB ('DB_API', `/user_account/provider/${profile_id}?`, 'PUT', 0, json_data, (err, result) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -3502,7 +3502,7 @@ const normal_start = async (ui) => {
             path = `/app_parameter/${COMMON_GLOBAL['app_id']}?`;
         }
         //get parameters
-        FFB ('DB', path, 'GET', 0, null, (err, result) => {
+        FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
             if (err)
                 null;
             else{

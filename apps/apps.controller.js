@@ -1,17 +1,10 @@
 const {ConfigGet, COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service = await import('./apps.service.js')
-const {pool_check_started} = await import(`file://${process.cwd()}/service/db/db.service.js`);
+
 const getApp = async (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
-    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0' ||
-                        pool_check_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE')) ==false ))
-        service.getMaintenance(app_id).then((result_maintenance) => {
-            return callBack(null, result_maintenance);
-        });
-    else{
-        //authorization for microservice access
-        let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
+    if (service.apps_start_ok() ==true || app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){        
         //Data token
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
         CreateDataToken(app_id, (err, result_datatoken)=>{
@@ -32,61 +25,59 @@ const getApp = async (req, res, app_id, params, callBack) => {
                         createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app) => {
                             //get app with parameters
                             let system_admin_only;
-                            import(`file://${process.cwd()}/service/db/db.service.js`).then(({ pool_check_started })=>{
-                                if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && pool_check_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE') )==1){
-                                    system_admin_only = 0;
-                                }
-                                else{
-                                    system_admin_only = 1;
-                                }
-                                    
-                                service.get_module_with_init(app_id, 
-                                                            service.client_locale(req.headers['accept-language']),
-                                                            system_admin_only,
-                                                            'app.admin_exception',
-                                                            true,  //ui
-                                                            result_datatoken,
-                                                            result_geodata.latitude,
-                                                            result_geodata.longitude,
-                                                            result_geodata.place,
-                                                            app, (err, app_with_init) =>{
-                                    if (ConfigGet(1, 'SERVICE_DB', 'START')=='1')
-                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
-                                            createLog(req.query.app_id,
-                                                    { app_id : app_id,
-                                                        app_module : 'APPS',
-                                                        app_module_type : 'ADMIN',
-                                                        app_module_request : null,
-                                                        app_module_result : result_geodata.place,
-                                                        app_user_id : null,
-                                                        user_language : null,
-                                                        user_timezone : null,
-                                                        user_number_system : null,
-                                                        user_platform : null,
-                                                        server_remote_addr : req.ip,
-                                                        server_user_agent : req.headers["user-agent"],
-                                                        server_http_host : req.headers["host"],
-                                                        server_http_accept_language : req.headers["accept-language"],
-                                                        client_latitude : result_geodata.latitude,
-                                                        client_longitude : result_geodata.longitude
-                                                    }, (err,results)  => {
-                                                        return callBack(null, app_with_init);
-                                            })
-                                        })
-                                    else
-                                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                            'SYSTEM ADMIN APPS Admin',
-                                                            req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                            res.statusCode, 
-                                                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && service.apps_start_ok()==true){
+                                system_admin_only = 0;
+                            }
+                            else{
+                                system_admin_only = 1;
+                            }
+                            service.get_module_with_init(app_id, 
+                                                        service.client_locale(req.headers['accept-language']),
+                                                        system_admin_only,
+                                                        'app.admin_exception',
+                                                        true,  //ui
+                                                        result_datatoken,
+                                                        result_geodata.latitude,
+                                                        result_geodata.longitude,
+                                                        result_geodata.place,
+                                                        app, (err, app_with_init) =>{
+                                //if app admin then log, system does not log in database
+                                if (ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
+                                        createLog(req.query.app_id,
+                                                { app_id : app_id,
+                                                    app_module : 'APPS',
+                                                    app_module_type : 'ADMIN',
+                                                    app_module_request : null,
+                                                    app_module_result : result_geodata.place,
+                                                    app_user_id : null,
+                                                    user_language : null,
+                                                    user_timezone : null,
+                                                    user_number_system : null,
+                                                    user_platform : null,
+                                                    server_remote_addr : req.ip,
+                                                    server_user_agent : req.headers["user-agent"],
+                                                    server_http_host : req.headers["host"],
+                                                    server_http_accept_language : req.headers["accept-language"],
+                                                    client_latitude : result_geodata.latitude,
+                                                    client_longitude : result_geodata.longitude
+                                                }, (err,results)  => {
                                                     return callBack(null, app_with_init);
-                                                })
-                                            });
                                         })
-                                })
-                            });
+                                    })
+                                else
+                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                        'SYSTEM ADMIN APPS Admin',
+                                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                        res.statusCode, 
+                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                                                return callBack(null, app_with_init);
+                                            })
+                                        });
+                                    })
+                            })
                         })
                     })
                 }
@@ -143,15 +134,14 @@ const getApp = async (req, res, app_id, params, callBack) => {
             })
         })
     }
+    else
+        service.getMaintenance(app_id).then((result_maintenance) => {
+            return callBack(null, result_maintenance);
+        });
 }
 const getReport = async (req, res, app_id, callBack) => {
 
-    if (app_id != 0 && (ConfigGet(0, null, 'MAINTENANCE')=='1' || ConfigGet(1, 'SERVICE_DB', 'START')=='0' || ConfigGet(1, 'SERVER', 'APP_START')=='0'||
-                        pool_check_started(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), ConfigGet(1, 'SERVICE_DB', 'USE')) ==false ))
-        service.getMaintenance(app_id).then((result_maintenance) => {
-            callBack(null, result_maintenance);
-        });
-    else{
+    if (service.apps_start_ok() ==true){
         let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
         //example string:
         //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
@@ -192,8 +182,8 @@ const getReport = async (req, res, app_id, callBack) => {
                     result_geodata.latitude = result_geodata.geoplugin_latitude;
                     result_geodata.longitude = result_geodata.geoplugin_longitude;
                     result_geodata.place = result_geodata.geoplugin_city + ', ' +
-                                           result_geodata.geoplugin_regionName + ', ' +
-                                           result_geodata.geoplugin_countryName;
+                                            result_geodata.geoplugin_regionName + ', ' +
+                                            result_geodata.geoplugin_countryName;
                     import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
                         createReport(app_id, query_parameters.module, service.client_locale(req.headers['accept-language'])).then((report) => {
                             service.get_module_with_init(   app_id, 
@@ -243,6 +233,10 @@ const getReport = async (req, res, app_id, callBack) => {
             })
         }
     }
+    else
+        service.getMaintenance(app_id).then((result_maintenance) => {
+            callBack(null, result_maintenance);
+        });
 }		
 //backend for frontend
 //returns status 401 (parameter errors), 503(ANY error in called service) or 200 if ok
