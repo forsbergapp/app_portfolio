@@ -62,7 +62,7 @@ const DBStart = async () => {
                //app_id inparameter for log, all apps will be returned
                getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
                   if (err)
-                     reject(err);
+                     throw err;
                   else {
                      //get app id, db username and db password
                      for (let app  of result_apps){
@@ -755,15 +755,12 @@ const install_db = async (app_id, optional=null, callBack)=> {
       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
       //Database users use SHA256
       password = createHash('sha256').update(CreateRandomString()).digest('hex');
-      install_result.push({[`${username}`]: password});
-      if (sql.toUpperCase().includes('INSERT INTO'))
-         password = hashSync(password, genSaltSync(10));
       if (ConfigGet(1, 'SERVICE_DB', 'USE')=='4'){
          // max 30 characters for passwords and without double quotes
          // also fix ORA-28219: password verification failed for mandatory profile
          // ! + random A-Z character
          let random_characters = '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
-         password= password.substring(0,28) + random_characters;
+         password = password.substring(0,28) + random_characters;
          //use singlequote for INSERT, else doublequote for CREATE USER
          if (sql.toUpperCase().includes('INSERT INTO'))
             sql = sql.replace(password_tag, `'${password}'`);
@@ -771,7 +768,11 @@ const install_db = async (app_id, optional=null, callBack)=> {
             sql = sql.replace(password_tag, `"${password}"`);
       }   
       else
-         sql = sql.replace(password_tag, `'${password}'`);
+         if (sql.toUpperCase().includes('INSERT INTO'))
+            sql = sql.replace(password_tag, `'${hashSync(password, genSaltSync(10))}'`);
+         else
+            sql = sql.replace(password_tag, `'${password}'`);
+      install_result.push({[`${username}`]: password});         
       return [sql, password];
    }
    try {

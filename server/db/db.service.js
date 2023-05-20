@@ -147,7 +147,7 @@ const pool_start = async (dbparameters) =>{
                   poolMin: dbparameters.poolMin,
                   poolMax: dbparameters.poolMax,
                   poolIncrement: dbparameters.poolIncrement,
-                  poolAlias: pool_id.toString()
+                  poolAlias: pool_id
                }, (err,result) => {
                   if (err)
                      reject(err);
@@ -161,7 +161,7 @@ const pool_start = async (dbparameters) =>{
                createpoolOracle();
             }
             else{
-               pool_id = dbparameters.pool_id;
+               pool_id = `'${dbparameters.pool_id}'`;
                POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id)})
                createpoolOracle();
             }
@@ -183,8 +183,9 @@ const pool_close = async (pool_id, db_use, dba) =>{
 
 }
 const pool_get = (pool_id, db_use, dba) => {
+   let pool;
    try {
-      let pool;
+      
       if (dba==1){
          pool = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1];
          return pool;
@@ -315,7 +316,6 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             break;
          }
          case '4':{
-            let pool4;
             try{
                ORACLEDB.getConnection(pool_get(pool_id, db_use, dba)).then((pool4)=>{
                   /*
