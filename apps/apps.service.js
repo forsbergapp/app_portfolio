@@ -610,7 +610,7 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                                 break;
                             }
                             default:{
-                                reject('service DB GET, POST, PUT, PATCH or DELETE only');
+                                return reject('service DB GET, POST, PUT, PATCH or DELETE only');
                             }
                         }
                         break;
@@ -639,8 +639,10 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                                 path = `${rest_resource_service}/geolocation${parameters}&app_id=${app_id}`
                             }
                             else
-                                reject('service GEOLOCATION GET only');
+                                return reject('service GEOLOCATION GET only');
                         }
+                        else
+                            return resolve();
                         break;
                     }
                     case 'WORLDCITIES':{
@@ -649,20 +651,20 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         if (method=='GET')
                             path = `${rest_resource_service}/worldcities${parameters}&app_id=${app_id}`
                         else
-                            reject('service WORLDCITIES GET only')
+                            return reject('service WORLDCITIES GET only')
                         break;
                     }
                     default:{
-                        reject(`service ${service} does not exist`);
+                        return reject(`service ${service} does not exist`);
                     }
                 }
-                resolve(microservice_circuitbreak.callService(app_id, hostname,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data));
+                return resolve(microservice_circuitbreak.callService(app_id, hostname,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data));
             } catch (error) {
-                reject(error);
+                return reject(error);
             }
         }
         else
-            reject('no internet');
+            return reject('no internet');
     })
 }
 export {/*APP EMAIL functions*/
