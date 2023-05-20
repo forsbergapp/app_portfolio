@@ -39,8 +39,6 @@ const COMMON_GLOBAL = {
     "rest_dt":"",
     "rest_admin_at":"",
     "rest_resource_server":"",
-    "rest_resource_service":"",
-    "rest_resource_service_db_schema":"",
     "image_file_allowed_type1":"",
     "image_file_allowed_type2":"",
     "image_file_allowed_type3":"",
