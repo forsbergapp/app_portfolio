@@ -763,7 +763,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
          password = password.substring(0,28) + random_characters;
          //use singlequote for INSERT, else doublequote for CREATE USER
          if (sql.toUpperCase().includes('INSERT INTO'))
-            sql = sql.replace(password_tag, `'${password}'`);
+            sql = sql.replace(password_tag, `'${hashSync(password, genSaltSync(10))}'`);
          else
             sql = sql.replace(password_tag, `"${password}"`);
       }   
