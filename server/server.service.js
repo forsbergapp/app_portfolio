@@ -79,17 +79,17 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
         }
         case 1:{
             //SERVER
-            let json = JSON.parse(CONFIG);
+            let config = JSON.parse(CONFIG);
             if (config_group ==null && parameter==null)
-                return json;
+                return config;
             else{
-                for (let config_parameter_row of json[config_group]){
+                for (let config_parameter_row of config[config_group]){
                     for (let i=0; i < Object.keys(config_parameter_row).length;i++){
                         if (Object.keys(config_parameter_row)[i]==parameter){
                             return Object.values(config_parameter_row)[i];
                         }
                     }
-                }   
+                }                
                 return null;
             }
         }
