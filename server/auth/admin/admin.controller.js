@@ -45,11 +45,11 @@ const checkSystemAdmin = (req, res, next) => {
     }
 }
 const authSystemAdmin = (req, res) => {
-    const check_user = (username, password) => {
+    const check_user = async (username, password) => {
+        const { default: {compareSync} } = await import("bcryptjs");
         let config_username = ConfigGet(6)['username'];
         let config_password = ConfigGet(6)['password'];
-        if (username == config_username &&
-            password == config_password) {
+        if (username == config_username && compareSync(password, config_password)) {
             let jsontoken_at;
             jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
                                 expiresIn: ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
