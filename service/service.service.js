@@ -1,3 +1,4 @@
+const http = await import('node:http');
 const https = await import('node:https');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const service_request = async (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
@@ -49,7 +50,13 @@ const service_request = async (hostname, path, method, timeout, client_ip, autho
             };
         }
         let request;
-        request = https.request(options, res =>{
+        let request_protocol;
+        if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
+            request_protocol = https;
+        else
+            request_protocol = http;
+
+        request = request_protocol.request(options, res =>{
             let responseBody = '';
             //for REPORT statucode 301 is returned, resolve the redirected path
             if (res.statusCode==301)
