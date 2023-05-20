@@ -193,7 +193,7 @@ const DefaultConfig = async () => {
                     throw error;
                 })
             }
-            for (let dir of ['/config', '/service/logs','/logs', '/service/db/config', '/service/pdf/config']){
+            for (let dir of ['/config', '/service/logs','/logs', '/service/pdf/config']){
                 let check_dir = await fs.promises.access(process.cwd() + dir)
                 .catch(()=>{
                     mkdir(dir);  
@@ -211,8 +211,7 @@ const DefaultConfig = async () => {
                                     [4, `default_auth_policy.json`],
                                     [6, `default_auth_user.json`],
                                     [7, `default_apps.json`],
-                                    [8, `default_service_pdf_config.json`],
-                                    [9, `default_service_db_config.json`]
+                                    [8, `default_service_pdf_config.json`]
                                 ];
             let config_json = [];
             //ES2020 import() with ES6 promises, object destructuring
@@ -281,9 +280,9 @@ const DefaultConfig = async () => {
                                     CONFIG_INIT = config_init;
                                     let config_created=0;
                                     for (let config_no=0;config_no<config_json.length;config_no++){;
-                                        if (config_no == 6 || config_no == 7){
-                                            //create default service pdf and db config, not part of server parameter management
-                                            fs.writeFile(process.cwd() + `${SLASH}service${SLASH}${config_no==6?'pdf':'db'}${SLASH}config${SLASH}config.json`, JSON.stringify(JSON.parse(config_json[config_no]), undefined,2),  'utf8', (err) => {
+                                        if (config_no == 6){
+                                            //create default service pdf config not part of server parameter management
+                                            fs.writeFile(process.cwd() + `${SLASH}service${SLASH}pdf${SLASH}config${SLASH}config.json`, JSON.stringify(JSON.parse(config_json[config_no]), undefined,2),  'utf8', (err) => {
                                                 if (err)
                                                     reject(err);
                                                 else
@@ -852,20 +851,11 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/log/pm2logs`).get                                  (serverRouterLog, checkSystemAdmin, getPM2Logs);
 
     //microservices
-    //service db
-    const { DBInit, DBShutdown, pool_start, pool_close, pool_get, db_query} = await import(`file://${process.cwd()}/service/db/db.controller.js`);
     //service geolocation
     const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`);
     //service worldcities
     const { getCities} = await import(`file://${process.cwd()}/service/worldcities/worldcities.controller.js`);
     
-    app.route(`${rest_resource_service}/db/init`).post(serverRouterLog, checkClientAccess, DBInit);
-    app.route(`${rest_resource_service}/db/shutdown`).post(serverRouterLog, checkClientAccess, DBShutdown);
-    app.route(`${rest_resource_service}/db/pool_start`).post(serverRouterLog, checkClientAccess, pool_start);
-    app.route(`${rest_resource_service}/db/pool_close`).post(serverRouterLog, checkClientAccess, pool_close);
-    app.route(`${rest_resource_service}/db/pool`).get(serverRouterLog, checkClientAccess, pool_get);
-    app.route(`${rest_resource_service}/db/query`).post(serverRouterLog, checkClientAccess, db_query);
-
     app.route(`${rest_resource_service}/geolocation/place`).get(serverRouterLog, checkDataToken, getPlace);
     app.route(`${rest_resource_service}/geolocation/place/admin`).get(serverRouterLog, checkAccessTokenAdmin, getPlace);
     app.route(`${rest_resource_service}/geolocation/place/systemadmin`).get(serverRouterLog, checkSystemAdmin, getPlace);

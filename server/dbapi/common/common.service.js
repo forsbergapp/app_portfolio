@@ -149,16 +149,12 @@ const db_limit_rows = (sql, limit_type = null) => {
 }
 
 const db_execute = (app_id, sql, parameters, dba, callBack) =>{
-	//authorization for microservice access
-	let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
-	import(`file://${process.cwd()}/apps/apps.service.js`).then(({BFF}) => {
-		let json_data = {pool_id: app_id, db_use: ConfigGet(1, 'SERVICE_DB', 'USE'), sql: Buffer.from(sql, 'utf-8').toString('base64'), parameters: Buffer.from(JSON.stringify(parameters), 'utf-8').toString('base64'), dba:dba};
-		//send sql and parameters as base64 coded to avoid server errors sending complex json and for security
-		BFF(app_id, 'DB', '/query?', null, null, 'POST', authorization, null, null, json_data).then((result)=>{
+	import(`file://${process.cwd()}/server/db/db.service.js`).then(({db_query}) => {
+		db_query(app_id, ConfigGet(1, 'SERVICE_DB', 'USE'), sql, parameters, dba).then((result)=> {
 			if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
 				db_log(app_id, sql, parameters);
 			}	
-			return callBack(null, JSON.parse(result))})
+			return callBack(null, result)})
 		.catch(error=>{
 			const database_error = 'DATABASE ERROR';
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
