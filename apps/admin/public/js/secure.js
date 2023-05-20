@@ -2753,7 +2753,7 @@ const show_installation = () =>{
                         document.getElementById('common_dialogue_message').style.visibility = 'hidden';
                         let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
                         document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
-                        let path = `/admin/install?optional=${common.checkbox_value(document.querySelector('#install_db_country_language_translations'))}`;
+                        let path = `/admin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
                         common.FFB ('DB_API', path, 'POST', 2, null, (err, result) => {
                             document.querySelector(`#install_db_button_install`).innerHTML = old_html;
                             if (err == null){

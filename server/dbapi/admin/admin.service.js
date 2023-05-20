@@ -781,10 +781,10 @@ const install_db = async (app_id, optional=null, callBack)=> {
          let install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
          install_json = JSON.parse(install_json);
          //filter for current database or for all databases and optional rows
-         for (let install_row of install_json.install.filter((row) => (row.hasOwnProperty('optional')==false ||
-                                                                       (row.hasOwnProperty('optional')==true &&
-                                                                        row.optional==optional)) && 
-                                                             (row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null))){
+         install_json.install = install_json.install.filter((row) => 
+               (row.hasOwnProperty('optional')==false || (row.hasOwnProperty('optional')==1 && row.optional==optional)) && 
+               (row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null));
+         for (let install_row of install_json.install){
             let install_sql;
             switch (file[0]){
                case 0:{
