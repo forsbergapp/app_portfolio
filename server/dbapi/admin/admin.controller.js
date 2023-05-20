@@ -10,7 +10,7 @@ const DBInfo = (req, res) => {
 		return res.status(200).json({
 			data: results
 		});
-	});
+	});	
 }
 const DBInfoSpace = (req, res) => {
 	service.DBInfoSpace(req.query.app_id, (err, results) =>{

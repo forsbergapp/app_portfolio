@@ -1,104 +1,80 @@
-import { json } from "express";
-import { resolve } from "node:path";
-
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const DBA=1;
 
 const DBStart = async () => {
-   const {BFF} = await import(`file://${process.cwd()}/apps/apps.service.js`);
-   return await new Promise((resolve, reject) => {
-      if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){    
-         let user;
-         let password;
-         let dba = 0;
-         let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
-         let init = 1;
-         let authorization = `Basic ${btoa(ConfigGet(7, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 'CLIENT_ID') + ':' + ConfigGet(7, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 'CLIENT_SECRET'))}`;
-         const pool_db = async (dba, user, password, pool_id) =>{
-            return new Promise ((resolve, reject)=>{
-               let dbparameters = `{
-                  "use":                     "${db_use}",
-                  "init":                    ${init},
-                  "pool_id":                 ${pool_id},
-                  "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
-                  "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
-                  "dba":                     ${dba},
-                  "user":                    "${user}",
-                  "password":                "${password}",
-                  "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",`;
-                  //db 1 + 2 parameters
-                  dbparameters +=
-                  `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
-                  "connnectionLimit":        "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)}",`;
-                  // db 3 parameters
-                  dbparameters +=
-                  `"connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
-                  "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
-                  "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}",`;
-                  //db 4 parameters
-                  dbparameters +=
-                  `"connectString":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`)}",
-                  "poolMin":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`)},
-                  "poolMax":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`)},
-                  "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)}
-               }`;
-               dbparameters = JSON.parse(dbparameters);
-               //only one init=1
-               init = 0;
-               BFF(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, dbparameters)
-               .then(result=>{
-                  resolve(result);
-               })
-               .catch(error=>{
-                  reject(error);
-               })
-            })
-         }
-         if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
-            user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
-            password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
-            dba = 1;
-            pool_db(dba, user, password, null);
-         }
-         if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)){
-            user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
-            password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
-            dba = 0;
-            pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+   const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+   if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){    
+      let user;
+      let password;
+      let dba = 0;
+      let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+      const pool_db = async (dba, user, password, pool_id) =>{
+         return new Promise ((resolve, reject)=>{
+            let dbparameters = `{
+               "use":                     "${db_use}",
+               "pool_id":                 ${pool_id},
+               "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
+               "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+               "dba":                     ${dba},
+               "user":                    "${user}",
+               "password":                "${password}",
+               "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",`;
+               //db 1 + 2 parameters
+               dbparameters +=
+               `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
+               "connnectionLimit":        "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)}",`;
+               // db 3 parameters
+               dbparameters +=
+               `"connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
+               "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
+               "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}",`;
+               //db 4 parameters
+               dbparameters +=
+               `"connectString":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`)}",
+               "poolMin":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`)},
+               "poolMax":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`)},
+               "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)}
+            }`;
+            dbparameters = JSON.parse(dbparameters);
+            pool_start(dbparameters)
             .then(result=>{
-               import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
-                  //app_id inparameter for log, all apps will be returned
-                  getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
-                     if (err)
-                        reject(err);
-                     else {
-                        //get app id, db username and db password
-                        for (let app  of result_apps){
-                           if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-                              pool_db(dba, app.db_user, app.db_password, app.id);
-                        }
-                        resolve()
+               resolve(result);
+            })
+            .catch(error=>{
+               reject(error);
+            })
+         })
+      }
+      if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
+         user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
+         password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
+         dba = 1;
+         await pool_db(dba, user, password, null);
+      }
+      if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)){
+         user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
+         password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
+         dba = 0;
+         pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+         .then(result=>{
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
+               //app_id inparameter for log, all apps will be returned
+               getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
+                  if (err)
+                     reject(err);
+                  else {
+                     //get app id, db username and db password
+                     for (let app  of result_apps){
+                        if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+                           pool_db(dba, app.db_user, app.db_password, app.id);
                      }
-                  })
+                  }
                })
             })
-         }
-         else
-            resolve();
-      }
-      else
-         resolve()
-   })
-   .catch(error=>{
-      reject(error);
-   })
-}
-const DBStop = async () => {
-   const {stop} = await import(`file://${process.cwd()}/service/db/db.service.js`);
-   return await new Promise((resolve, reject) => {
-      resolve(stop());
-   })
+         })
+      }  
+   }
 }
 const DBInfo = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
@@ -761,9 +737,8 @@ const install_db_get_files = async (json_type) =>{
 const install_db = async (app_id, optional=null, callBack)=> {
    
    const {db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-   const {createLogAppS} = await import(`file://${process.cwd()}/server/log/log.service.js`);
-   const {COMMON, CreateRandomString} = await import(`file://${process.cwd()}/server/server.service.js`);
-   const {BFF} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+   const {CreateRandomString} = await import(`file://${process.cwd()}/server/server.service.js`);
+   const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
    let {createHash} = await import('node:crypto');
    const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
    let fs = await import('node:fs');
@@ -773,10 +748,8 @@ const install_db = async (app_id, optional=null, callBack)=> {
    let password_tag = '<APP_PASSWORD/>';
    let result_statement;
    let change_system_admin_pool=true;
-   let stack = new Error().stack;
    let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
    install_result.push({"start": new Date().toISOString()});
-   let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
    const sql_with_password = (username, sql) =>{
       let password;
       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
@@ -852,11 +825,9 @@ const install_db = async (app_id, optional=null, callBack)=> {
                   if (db_use=='3')
                      if (sql.toUpperCase().includes('CREATE DATABASE')){
                            //remove database name in dba pool
-                           let json_data = {pool_id: null, db_use: db_use, dba: DBA};
-                           await BFF(app_id, 'DB', '/pool_close?', null, null, 'POST', authorization, null, null, json_data);
-                           json_data = `{
+                           await pool_close(null, db_use, DBA);
+                           let json_data = `{
                                  "use":                     "${db_use}",
-                                 "init":                    0,
                                  "pool_id":                 "",
                                  "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
                                  "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
@@ -869,16 +840,14 @@ const install_db = async (app_id, optional=null, callBack)=> {
                                  "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
                               }`;
                            json_data = JSON.parse(json_data);
-                           await BFF(app_id, 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, json_data);                              
+                           await pool_start(json_data);
                      }
                      else{
                         if (change_system_admin_pool == true){
                            //add database name in dba pool
-                           let json_data = {pool_id: null, db_use: db_use, dba: DBA};
-                           await BFF(app_id, 'DB', '/pool_close?', null, null, 'POST', authorization, null, null, json_data);
-                           json_data = `{
+                           await pool_close(null, db_use, DBA);
+                           let json_data = `{
                                  "use":                     "${db_use}",
-                                 "init":                    0,
                                  "pool_id":                 "",
                                  "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
                                  "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
@@ -891,7 +860,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
                                  "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
                               }`;
                            json_data = JSON.parse(json_data);
-                           await BFF(app_id, 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, json_data);
+                           await pool_start(json_data);
                            //change to database value for the rest of the function
                            change_system_admin_pool = false;
                         }
@@ -944,10 +913,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
       return callBack(null, {"info": install_result});
    } 
       catch (error) {
-         createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                       'catch:' +  error).then(() => {
             return callBack(error, null);
-         })
    }
 }
 const install_db_check = async (app_id, callBack)=> {
@@ -964,27 +930,23 @@ const install_db_check = async (app_id, callBack)=> {
    }
 }
 const install_db_delete = async (app_id, callBack)=> {
-   const {BFF} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+   const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
    let count_statements = 0;
    let count_statements_fail = 0;
    let fs = await import('node:fs');
    let files = await install_db_get_files('uninstall');
-   let skip_error = true;
    let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
-   let authorization = `Basic ${btoa(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))}`;
-   for (let file of  files){
-      let uninstall_sql = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-      uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE'));
-      for (let sql_row of uninstall_sql){
-         try {
+   try {
+      for (let file of  files){
+         let uninstall_sql = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
+         uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE'));
+         for (let sql_row of uninstall_sql){
             if (db_use=='3')
                if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                   //add database name in dba pool
-                  let json_data = {pool_id: null, db_use: db_use, dba: DBA};
-                  await BFF(app_id, 'DB', '/pool_close?', null, null, 'POST', authorization, null, null, json_data);
-                  json_data = `{
+                  await pool_close(null, db_use, DBA);
+                  let json_data = `{
                         "use":                     "${db_use}",
-                        "init":                    0,
                         "pool_id":                 "",
                         "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
                         "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
@@ -997,29 +959,25 @@ const install_db_delete = async (app_id, callBack)=> {
                         "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
                      }`;
                   json_data = JSON.parse(json_data);
-                  await new Promise(resolve => setTimeout(resolve, 2000));
-                  await BFF(app_id, 'DB', '/pool_start?', null, null, 'POST', authorization, null, null, json_data);
+                  await pool_start(json_data);
                }
                let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});   
             count_statements += 1;
-         } catch (error) {
-            count_statements_fail += 1;
-            if (skip_error == true)
-               continue;
-            else
-               return callBack(error, null);
-         }
-      }      
-      /*update parameters in config.json
-            DB[USE]_SYSTEM_ADMIN_USER = null
-            DB[USE]_SYSTEM_ADMIN_PASS = null
-            DB[USE]_APP_ADMIN_USER = null
-            DB[USE]_APP_ADMIN_PASS = null
-      */
+         }      
+         /*update parameters in config.json
+               DB[USE]_SYSTEM_ADMIN_USER = null
+               DB[USE]_SYSTEM_ADMIN_PASS = null
+               DB[USE]_APP_ADMIN_USER = null
+               DB[USE]_APP_ADMIN_PASS = null
+         */
+      }
+      return callBack(null, {"info":[{"count"     : count_statements},
+                                    {"count_fail": count_statements_fail}
+                                    ]});
+   } 
+   catch (error) {
+         return callBack(error, null);
    }
-   return callBack(null, {"info":[{"count"     : count_statements},
-                                   {"count_fail": count_statements_fail}
-                                 ]});
 }
 export{DBStart, 
        DBInfo, DBInfoSpace, DBInfoSpaceSum,
