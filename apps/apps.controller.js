@@ -13,12 +13,21 @@ const getApp = async (req, res, app_id, params, callBack) => {
             let parameters = `/ip?ip=${req.ip}`;
             service.BFF(app_id, 'GEOLOCATION', parameters, 
                         req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
-                result_geodata = JSON.parse(result_geodata);
-                result_geodata.latitude = result_geodata.geoplugin_latitude;
-                result_geodata.longitude = result_geodata.geoplugin_longitude;
-                result_geodata.place = result_geodata.geoplugin_city + ', ' +
-                                       result_geodata.geoplugin_regionName + ', ' +
-                                       result_geodata.geoplugin_countryName;
+                if (result_geodata){
+                    result_geodata = JSON.parse(result_geodata);
+                    result_geodata.latitude = result_geodata.geoplugin_latitude;
+                    result_geodata.longitude = result_geodata.geoplugin_longitude;
+                    result_geodata.place = result_geodata.geoplugin_city + ', ' +
+                                           result_geodata.geoplugin_regionName + ', ' +
+                                           result_geodata.geoplugin_countryName;
+                }
+                else{
+                    result_geodata = {};
+                    result_geodata.latitude = null;
+                    result_geodata.longitude = null;
+                    result_geodata.place = null;
+                }
+                    
                 //get app
                 if (app_id == 0){
                     //get app admin

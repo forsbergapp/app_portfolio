@@ -564,10 +564,11 @@ const CheckFirstTime = () => {
     else
         return false;
 }
-const CreateSystemAdmin = (admin_name, admin_password, callBack) => {
+const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
+    const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
     let json = JSON.parse(CONFIG_USER);
     json['username'] = admin_name;
-    json['password'] = admin_password;
+    json['password'] = hashSync(admin_password, genSaltSync(10));
     json['modified'] = new Date().toISOString();
     json = JSON.stringify(json, undefined, 2);
     import('node:fs').then((fs) => {
@@ -620,6 +621,8 @@ const Info = async (callBack) => {
 }
 const serverRouterLog = ((req,res,next)=>{
     let stack = new Error().stack;
+    next();
+    /*
     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppRI}) => {
         createLogAppRI(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), req.body,
                     req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
@@ -627,6 +630,7 @@ const serverRouterLog = ((req,res,next)=>{
             next();
         })
     })
+    */
 })
 const serverExpressLogError = (app) =>{
     import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogServerE}) => {
@@ -998,8 +1002,8 @@ const serverExpress = async () => {
                 //change all requests from http to https and naked domains with prefix https://www. except localhost
                 app.get('*', (req,res, next) => {
                   //if first time, when no system admin exists, then redirect everything to admin
-                  if (CheckFirstTime() && req.originalUrl !='/admin' && req.headers.referer==undefined)
-                    return res.redirect('http://' + req.headers.host + '/admin');
+                  if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+                    return res.redirect(`http://admin.${req.headers.host.lastIndexOf('.')==-1?req.headers.host:req.headers.host.lastIndexOf('.')}`);
                   else{
                     //redirect naked domain to www except for localhost
                     if (((req.headers.host.split('.').length - 1) == 1) &&
