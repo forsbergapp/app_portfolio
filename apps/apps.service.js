@@ -592,13 +592,6 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
                         break;
                     }
-                    case 'DB':{
-                        //no ip, hostname, user agent or accept-language used
-                        //called from functions from DB_API or from server
-                        //needs CLIENT_ID and CLIENT_SECRET and not available from app clients
-                        path = `${rest_resource_service}/db${parameters}&app_id=${app_id}`
-                        break;
-                    }
                     case 'DB_API':{
                         const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
                         switch (method){

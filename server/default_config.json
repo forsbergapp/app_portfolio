@@ -79,7 +79,9 @@
     {"DB4_CONNECTSTRING": "", "COMMENT": ""},
     {"DB4_POOL_MIN": "1", "COMMENT": ""},
     {"DB4_POOL_MAX": "1", "COMMENT": ""},
-    {"DB4_POOL_INCREMENT": "0", "COMMENT": ""}
+    {"DB4_POOL_INCREMENT": "0", "COMMENT": ""},
+    {"DB4_LIBDIR": "", "COMMENT": "Oracle Instant Client path"},
+    {"DB4_CONFIGDIR": "", "COMMENT": "Oracle tnsnames, sqlnet or wallet file content path"}
 ],
 "SERVICE_LOG":[
     {"SCOPE_SERVER": "SERVER", "COMMENT": ""},

@@ -1,3 +1,4 @@
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 //mysql module used for both MariaDB and MySQL
 let MYSQL               = await import("mysql");
 let {default: PG}       = await import('pg');
@@ -10,19 +11,15 @@ const POOL_DB =[
                   [4, null, []]  //Oracle pools       [db number, dba, apps in array]
                ];                     
 
-const DBInit = async (DB_USE) => {
-   const fs = await import('node:fs');
-   const fileBuffer = await fs.promises.readFile(`${process.cwd()}/service/db/config/config.json`, 'utf8');
-   const DBCONFIG = JSON.parse(fileBuffer.toString());
-   if (DB_USE=='4'){
-      ORACLEDB.autoCommit = true;
-      ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
-      ORACLEDB.initOracleClient({ libDir: DBCONFIG.DB4.filter(row=>Object.keys(row).includes('LIBRARY_DIR'))[0].LIBRARY_DIR,
-                                  configDir:DBCONFIG.DB4.filter(row=>Object.keys(row).includes('CONFIG_DIR'))[0].CONFIG_DIR});
-      ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
-   }
+if (ConfigGet(1, 'SERVICE_DB', 'USE')=='4'){
+   ORACLEDB.autoCommit = true;
+   ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
+   ORACLEDB.initOracleClient({ libDir: ConfigGet(1, 'SERVICE_DB', 'DB4_LIBDIR'),
+                                 configDir: ConfigGet(1, 'SERVICE_DB', 'DB4_CONFIGDIR')});
+   ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
 }
-const DBShutdown = async (db)=>{
+
+const pool_close_all = async (db)=>{
       //relase db pools from memory, not shutting down db
       for (let dbnumber in POOL_DB_EMPTY){
          if (dbnumber[0]==parseInt(db)){
@@ -50,7 +47,6 @@ const DBShutdown = async (db)=>{
 const pool_start = async (dbparameters) =>{
    /* dbparameters in JSON format:
       "use":                     1-4
-      "init":                    1/0,
       "pool_id":                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
       "port":                    port,
       "host":                    host,
@@ -74,8 +70,6 @@ const pool_start = async (dbparameters) =>{
       "poolMax":                 pool max
       "poolIncrement":           pool increment
    */
-   if (dbparameters.init == 1)
-      await DBInit(dbparameters.use);
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case '1':
@@ -205,9 +199,6 @@ const pool_get = (pool_id, db_use, dba) => {
 }
 const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    return new Promise((resolve,reject)=>{
-      sql = Buffer.from(sql, 'base64').toString('utf-8');
-      parameters = Buffer.from(parameters, 'base64').toString('utf-8');
-      parameters = JSON.parse(parameters);
       switch (db_use){
          case '1':
          case '2':{
@@ -282,11 +273,11 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                 return { text, values };
             }	
             let parsed_result = queryConvert(sql, parameters);
-            let pool3;
             try {
                pool_get(pool_id, db_use, dba).connect().then((pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
                   .then((result) => {
+                  pool3.release();
                   //add common attributes
                   if (result.command == 'INSERT' && result.rows.length>0)
                      result.insertId = result.rows[0].id;
@@ -312,17 +303,14 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                   else
                      resolve(result);
                   })
-                  .catch((error) => {
+                  .catch(error => {
                      reject(error);
-                        
                   })
+               }).catch(error=>{
+                  reject(error);   
                });
             } catch (error) {
                reject(error);
-            }
-            finally{
-               if (pool3)
-                  pool3.release();
             }
             break;
          }
@@ -346,8 +334,9 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
                   });
                   pool4.execute(sql, parameters, (err,result) => {
+                     pool4.close();
                      if (err) {
-                        reject(error);
+                        reject(err);
                      }
                      else{
                         if (result.rowsAffected)
@@ -358,13 +347,12 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                            resolve(result);
                      }
                   });
+               })
+               .catch(error=>{
+                  reject(error);   
                });
             }catch (error) {
                reject(error);
-            } finally {
-               if (pool4) {
-                  pool4.close(); 
-               }
             }
             break;
          }
@@ -372,6 +360,6 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    })
 }
 
-export{DBInit, DBShutdown, 
+export{pool_close_all, 
        pool_start, pool_close, pool_get,
        db_query}
