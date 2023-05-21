@@ -4,17 +4,8 @@
 	With most necessary technology configured to get started and with less
 	third party libraries and module dependencies for performance and better maintainability
 	with code you have control over.
-	Microservice REST API architecture with optional monitoring of each microservice activity.
-	Services included are authentication, database, forms, report, geolocation, log, mail
-	and worldcities. 
-	These services are based on ideas from 
-		- Angular (UI)
-		- Vue (UI)
-		- React (JSX, server component creation, analysis of eventlistener usage, debug and runtime execution) 
-	    - existing log monitor and security solutions using SHA256, Bcrypt, json webtoken, 
-		  Content-Security-Policy, access control of IP and suspicious activity
-		- Oracle Forms and Reports and Oracle Apex.
-
+	Microservice architecture using circuitbreaker and message queue.
+	Services included are geolocation, mail, PDF and worldcities. 
 	Runs in Node.js using Express framework.
 
 	Apps are component structured and server-side rendered with database data popluation.
@@ -73,9 +64,8 @@
 	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
 	  should be converted from CommonJS to ECMScript modules if necessary.
 	- report PDF with QR codes pixel perfect design using css pt font size measurement and full unicode support
-	- forms server with client component server generation
+	- apps created using server side rendering
 	- database and file logging
-	- apps are component server generated with database data population
 	- microservice arquitecture
 	- MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
 	  and sql logging stratified per app
