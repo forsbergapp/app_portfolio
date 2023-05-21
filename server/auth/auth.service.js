@@ -74,89 +74,6 @@ const safe_user_agents = async (user_agent, callBack) => {
     else
         return callBack(null, false);
 }
-const policy_directives = (callBack) => {
-    /* format json with directives:
-        {"directives":
-            [
-                { "type": "script",
-                "domain": "'self', 'unsafe-inline', 'unsafe-eval', domain1, domain2"
-                },
-                { "type": "style",
-                "domain": "'self', 'unsafe-inline', domain1, domain2"
-                },
-                { "type": "font",
-                "domain": "self, domain1, domain2"
-                },
-                { "type": "frame",
-                "domain": "'self', data:, domain1, domain2"
-                }
-            ]
-        }
-    */
-    import('node:fs').then((fs) =>{
-        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_POLICY') == '1'){
-            let json;
-            let script_src = '';
-            let style_src = '';
-            let font_src = '';
-            let frame_src = '';
-            fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_POLICY'), 'utf8', (err, fileBuffer) => {
-                if (err){
-                    let stack = new Error().stack;
-                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                return callBack(err, null);
-                            })
-                        });
-                    })
-                }
-                else{
-                    json = JSON.parse(fileBuffer.toString());
-                    for (let i = 0; i < json.directives.length; i++){
-                        json.directives[i].domain = json.directives[i].domain.replace(' ','');
-                        let arr = json.directives[i].domain.split(",");
-                        for (let i=0;i<=arr.length-1;i++){
-                            arr[i] = arr[i].replace(' ','');
-                        }
-                        switch (json.directives[i].type){
-                            case 'script':{
-                                script_src = arr;
-                                break;
-                            }
-                            case 'style':{
-                                style_src = arr;
-                                break;
-                            }
-                            case 'font':{
-                                font_src = arr;
-                                break;
-                            }
-                            case 'frame':{
-                                frame_src = arr;
-                                break;
-                            }
-                        }
-                    }
-                    return callBack(null, {
-                                            "default-src": ["'self'"], 
-                                            "script-src": script_src,
-                                            "script-src-attr": ["'self'", "'unsafe-inline'"],
-                                            "style-src": style_src,
-                                            "font-src": font_src,
-                                            "img-src": ["*", 'data:', 'blob:'],
-                                            connectSrc: ["*"],
-                                            childSrc: ["'self'", 'blob:'],
-                                            "object-src": ["'self'", 'data:'],
-                                            frameSrc: frame_src
-                                            } );
-                }
-            })
-        }
-        else
-            return callBack(null, null);
-    });
-}
 const check_internet = async () => {
     return new Promise(resolve =>{
         //test connection with localhost
@@ -209,4 +126,4 @@ const checkClientAccess = async (app_id, authorization) =>{
     else
         return 0;
 }
-export {block_ip_control, safe_user_agents, policy_directives, check_internet, CreateDataToken, checkClientAccess}
+export {block_ip_control, safe_user_agents, check_internet, CreateDataToken, checkClientAccess}
