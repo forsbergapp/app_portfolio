@@ -6,7 +6,6 @@
     "bcryptjs": "^2.4.3",
     "compression": "^1.7.4",
     "express": "^4.18.2",
-    "helmet": "^6.1.5",
     "jsonwebtoken": "^9.0.0",
     "mysql": "^2.18.1",
     "nodemailer": "^6.9.1",
