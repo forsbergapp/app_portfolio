@@ -103,7 +103,7 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
         } 
         case 4:{
             //POLICY json
-            return JSON.parse(CONFIG_POLICY);
+            return JSON.parse(CONFIG_POLICY)['content-security-policy'];
         } 
         case 5:{
             //LOGS path
@@ -874,11 +874,10 @@ const serverExpressRoutes = async (app) => {
 const serverExpress = async () => {
     const {default: express} = await import('express');
     const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-    const {policy_directives} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     const {default: compression} = await import('compression');
-    const {default: helmet} = await import('helmet');
     const { check_request, access_control} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
-    const {createLogServerI, createLogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);    
+    const {createLogServerI, createLogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+    const ContentSecurityPolicy = ConfigGet(4);
     return new Promise((resolve, reject) =>{
         const app = express();
         //
@@ -895,137 +894,131 @@ const serverExpress = async () => {
             }
         app.set('trust proxy', true);
         app.use(compression({ filter: shouldCompress }));
-        //configuration of Content Security Policies    
-        policy_directives((err, result_directives)=>{
-            if (err)
-                createLogServerI('Content Security Policies error :' + err).then(() => {
-                    reject(err);
-                })
+        app.use((req, res, next) => {
+            res.setHeader('Access-Control-Max-Age','5');
+            res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
+            res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
+            if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_CONTENT_SECURITY_POLICY') == '1')
+                res.setHeader('content-security-policy', ContentSecurityPolicy);
+            res.setHeader('cross-origin-opener-policy','same-origin');
+            res.setHeader('cross-origin-resource-policy',	'same-origin');
+            res.setHeader('referrer-policy', 'strict-origin-when-cross-origin');
+            res.setHeader('strict-transport-security', `max-age=${180 * 24 * 60 * 60}; includeSubDomains`);
+            res.setHeader('x-content-type-options', 'nosniff');
+            res.setHeader('x-dns-prefetch-control', 'off');
+            res.setHeader('x-download-options', 'noopen');
+            res.setHeader('x-frame-options', 'SAMEORIGIN');
+            res.setHeader('x-permitted-cross-domain-policies', 'none');
+            res.setHeader('x-xss-protection', '0');
+            res.removeHeader('X-Powered-By');
+            next();
+        });
+        // set JSON maximum size
+        app.use(express.json({ limit: ConfigGet(1, 'SERVER', 'JSON_LIMIT') }));
+        //access control with log of stopped requests
+        //logs only if error
+        app.use((req,res,next) => {                
+            access_control(req, res, (err, result)=>{
+                if(err){
+                null;
+                }
+                else{
+                if (result)
+                    res.end;
+                else
+                    next();
+                }
+            });
+        })
+        //check request
+        //logs only if error
+        app.use((req, res, next) => {
+            check_request(req, (err, result) =>{
+                if (err){
+                res.statusCode = 400;
+                createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
+                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
+                    res.send('⛔');
+                    res.end;
+                });
+                }
+                else{
+                next();
+                }
+            })
+        });
+        //convert query id parameters from string to integer
+        //and logs after response is finished
+        app.use((req, res, next) => { 
+            //req.params can be modified in controller
+            if (req.query.app_id)
+            req.query.app_id = parseInt(req.query.app_id);
+            if (req.query.id)
+            req.query.id = parseInt(req.query.id);
+            if (req.query.user_account_logon_user_account_id)
+            req.query.user_account_logon_user_account_id = parseInt(req.query.user_account_logon_user_account_id);
+            if (req.query.user_account_id)
+            req.query.user_account_id = parseInt(req.query.user_account_id);
+            if (req.query.app_user_id)
+            req.query.app_user_id = parseInt(req.query.app_user_id);
+            if (req.query.client_id)
+            req.query.client_id = parseInt(req.query.client_id);
+            res.on('finish',()=>{
+            //logs the result after REST API has modified req and res
+            createLogServerI(null,
+                req,
+                req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                res.statusCode, res.statusMessage, 
+                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                res.end;
+            });
+            })
+            next();
+        });
+        //check if SSL verification using letsencrypt should be enabled when validating domains
+        if (ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
+            let ssl_verification_path = ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
+            app.use(ssl_verification_path,express.static(process.cwd() + ssl_verification_path));
+            app.use(express.static(process.cwd(), { dotfiles: 'allow' }));
+        };
+        //
+        //ROUTES
+        //
+        //get before apps code
+        //info for search bots
+        app.get('/robots.txt',  (req, res) => {
+            res.type('text/plain');
+            res.send('User-agent: *\nDisallow: /');
+        });
+        //browser favorite icon to ignore
+        app.get('/favicon.ico', (req, res) => {
+            res.send('');
+        });
+        //change all requests from http to https and naked domains with prefix https://www. except localhost
+        app.get('*', (req,res, next) => {
+            //if first time, when no system admin exists, then redirect everything to admin
+            if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
+            return res.redirect(`http://admin.${req.headers.host.lastIndexOf('.')==-1?req.headers.host:req.headers.host.lastIndexOf('.')}`);
             else{
-                app.use(
-                    helmet({
-                      crossOriginEmbedderPolicy: false,
-                      contentSecurityPolicy: {
-                        directives: result_directives
-                      }
-                    })
-                );
-                // Helmet referrer policy
-                app.use(helmet.referrerPolicy({ policy: 'strict-origin-when-cross-origin' }));
-                //define what headers are allowed
-                app.use((req, res, next) => {
-                  res.header('Access-Control-Allow-Headers', 'Authorization, Origin, X-Requested-With, Content-Type, Accept, Service-Worker-Allowed');
-                  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-                  next();
-                });
-                // set JSON maximum size
-                app.use(express.json({ limit: ConfigGet(1, 'SERVER', 'JSON_LIMIT') }));
-                //access control with log of stopped requests
-                //logs only if error
-                app.use((req,res,next) => {                
-                    access_control(req, res, (err, result)=>{
-                      if(err){
-                        null;
-                      }
-                      else{
-                        if (result)
-                          res.end;
-                        else
-                          next();
-                      }
-                    });
-                })
-                //check request
-                //logs only if error
-                app.use((req, res, next) => {
-                    check_request(req, (err, result) =>{
-                      if (err){
-                        res.statusCode = 400;
-                        createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
-                            res.send('⛔');
-                            res.end;
-                        });
-                      }
-                      else{
-                        next();
-                      }
-                    })
-                });
-                //convert query id parameters from string to integer
-                //and logs after response is finished
-                app.use((req, res, next) => { 
-                  //req.params can be modified in controller
-                  if (req.query.app_id)
-                    req.query.app_id = parseInt(req.query.app_id);
-                  if (req.query.id)
-                    req.query.id = parseInt(req.query.id);
-                  if (req.query.user_account_logon_user_account_id)
-                    req.query.user_account_logon_user_account_id = parseInt(req.query.user_account_logon_user_account_id);
-                  if (req.query.user_account_id)
-                    req.query.user_account_id = parseInt(req.query.user_account_id);
-                  if (req.query.app_user_id)
-                    req.query.app_user_id = parseInt(req.query.app_user_id);
-                  if (req.query.client_id)
-                    req.query.client_id = parseInt(req.query.client_id);
-                  res.on('finish',()=>{
-                    //logs the result after REST API has modified req and res
-                    createLogServerI(null,
-                        req,
-                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                        res.statusCode, res.statusMessage, 
-                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                        res.end;
-                    });
-                  })
-                  next();
-                });
-                //check if SSL verification using letsencrypt should be enabled when validating domains
-                if (ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
-                  let ssl_verification_path = ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
-                  app.use(ssl_verification_path,express.static(process.cwd() + ssl_verification_path));
-                  app.use(express.static(process.cwd(), { dotfiles: 'allow' }));
-                };
-                //
-                //ROUTES
-                //
-                //get before apps code
-                //info for search bots
-                app.get('/robots.txt',  (req, res) => {
-                  res.type('text/plain');
-                  res.send('User-agent: *\nDisallow: /');
-                });
-                //browser favorite icon to ignore
-                app.get('/favicon.ico', (req, res) => {
-                  res.send('');
-                });
-                //change all requests from http to https and naked domains with prefix https://www. except localhost
-                app.get('*', (req,res, next) => {
-                  //if first time, when no system admin exists, then redirect everything to admin
-                  if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-                    return res.redirect(`http://admin.${req.headers.host.lastIndexOf('.')==-1?req.headers.host:req.headers.host.lastIndexOf('.')}`);
-                  else{
-                    //redirect naked domain to www except for localhost
-                    if (((req.headers.host.split('.').length - 1) == 1) &&
-                      req.headers.host.indexOf('localhost')==-1)
-                      if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
-                        return res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
-                      else
-                        return res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
-                    else{
-                      //redirect from http to https if https enabled
-                      if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
-                        return res.redirect('https://' + req.headers.host + req.originalUrl);
-                      else{
-                        return next();
-                      }
-                    }
-                  }
-                })
-                serverExpressRoutes(app).then(() =>{
-                    resolve(app);
-                })
+            //redirect naked domain to www except for localhost
+            if (((req.headers.host.split('.').length - 1) == 1) &&
+                req.headers.host.indexOf('localhost')==-1)
+                if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
+                return res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
+                else
+                return res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
+            else{
+                //redirect from http to https if https enabled
+                if (req.protocol=='http' && ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
+                return res.redirect('https://' + req.headers.host + req.originalUrl);
+                else{
+                return next();
+                }
             }
+            }
+        })
+        serverExpressRoutes(app).then(() =>{
+            resolve(app);
         })
     })
 }

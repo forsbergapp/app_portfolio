@@ -135,11 +135,6 @@ const access_control = (req, res, callBack) => {
     else
         return callBack(null,null);
 }
-const policy_directives = (callBack) => {
-    service.policy_directives((err, result)=>{
-        callBack(null, result);
-    })
-}
 const check_request = (req, callBack) =>{
     let err = null;
     try {
@@ -322,7 +317,7 @@ const checkClientAccess = (req, res, next) => {
             res.status(401).send('⛔');
     })
 }
-export {access_control, policy_directives, check_request, 
+export {access_control, check_request, 
         checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
         checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, accessToken, 
         checkClientAccess}
