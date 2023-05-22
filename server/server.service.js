@@ -1060,8 +1060,8 @@ const serverStart = async () =>{
                                             DBStart();
                                         });
                                     })
-                                });
-                            });
+                                })
+                            })
                         }
                     })
                 })

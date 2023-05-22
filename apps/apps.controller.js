@@ -8,57 +8,117 @@ const getApp = async (req, res, app_id, params, callBack) => {
     if (service.apps_start_ok() ==true || app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){  
         //Data token
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-        CreateDataToken(app_id, (err, result_datatoken)=>{
-            //get GPS from IP
-            let parameters = `/ip?ip=${req.ip}`;
-            service.BFF(app_id, 'GEOLOCATION', parameters, 
-                        req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
-                if (result_geodata){
-                    result_geodata = JSON.parse(result_geodata);
-                    result_geodata.latitude = result_geodata.geoplugin_latitude;
-                    result_geodata.longitude = result_geodata.geoplugin_longitude;
-                    result_geodata.place = result_geodata.geoplugin_city + ', ' +
-                                           result_geodata.geoplugin_regionName + ', ' +
-                                           result_geodata.geoplugin_countryName;
-                }
-                else{
-                    result_geodata = {};
-                    result_geodata.latitude = null;
-                    result_geodata.longitude = null;
-                    result_geodata.place = null;
-                }
-                    
-                //get app
-                if (app_id == 0){
-                    //get app admin
-                    import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
-                        createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app) => {
-                            //get app with parameters
-                            let system_admin_only;
-                            if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && service.apps_start_ok()==true){
-                                system_admin_only = 0;
-                            }
-                            else{
-                                system_admin_only = 1;
-                            }
-                            service.get_module_with_init(app_id, 
-                                                        service.client_locale(req.headers['accept-language']),
-                                                        system_admin_only,
-                                                        'app.admin_exception',
-                                                        true,  //ui
-                                                        result_datatoken,
-                                                        result_geodata.latitude,
-                                                        result_geodata.longitude,
-                                                        result_geodata.place,
-                                                        app, (err, app_with_init) =>{
-                                //if app admin then log, system does not log in database
-                                if (ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+        let datatoken = CreateDataToken(app_id);
+        //get GPS from IP
+        let parameters = `/ip?ip=${req.ip}`;
+        service.BFF(app_id, 'GEOLOCATION', parameters, 
+                    req.ip, req.hostname, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+            if (result_geodata){
+                result_geodata = JSON.parse(result_geodata);
+                result_geodata.latitude = result_geodata.geoplugin_latitude;
+                result_geodata.longitude = result_geodata.geoplugin_longitude;
+                result_geodata.place = result_geodata.geoplugin_city + ', ' +
+                                        result_geodata.geoplugin_regionName + ', ' +
+                                        result_geodata.geoplugin_countryName;
+            }
+            else{
+                result_geodata = {};
+                result_geodata.latitude = null;
+                result_geodata.longitude = null;
+                result_geodata.place = null;
+            }
+                
+            //get app
+            if (app_id == 0){
+                //get app admin
+                import(`file://${process.cwd()}/apps/admin/src/app.js`).then(({ createAdmin }) => {
+                    createAdmin(app_id,service.client_locale(req.headers['accept-language'])).then((app) => {
+                        //get app with parameters
+                        let system_admin_only;
+                        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && service.apps_start_ok()==true){
+                            system_admin_only = 0;
+                        }
+                        else{
+                            system_admin_only = 1;
+                        }
+                        service.get_module_with_init(app_id, 
+                                                    service.client_locale(req.headers['accept-language']),
+                                                    system_admin_only,
+                                                    'app.admin_exception',
+                                                    true,  //ui
+                                                    datatoken,
+                                                    result_geodata.latitude,
+                                                    result_geodata.longitude,
+                                                    result_geodata.place,
+                                                    app, (err, app_with_init) =>{
+                            //if app admin then log, system does not log in database
+                            if (ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
+                                    createLog(req.query.app_id,
+                                            { app_id : app_id,
+                                                app_module : 'APPS',
+                                                app_module_type : 'ADMIN',
+                                                app_module_request : null,
+                                                app_module_result : result_geodata.place,
+                                                app_user_id : null,
+                                                user_language : null,
+                                                user_timezone : null,
+                                                user_number_system : null,
+                                                user_platform : null,
+                                                server_remote_addr : req.ip,
+                                                server_user_agent : req.headers["user-agent"],
+                                                server_http_host : req.headers["host"],
+                                                server_http_accept_language : req.headers["accept-language"],
+                                                client_latitude : result_geodata.latitude,
+                                                client_longitude : result_geodata.longitude
+                                            }, (err,results)  => {
+                                                return callBack(null, app_with_init);
+                                    })
+                                })
+                            else
+                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
+                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
+                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
+                                                    'SYSTEM ADMIN APPS Admin',
+                                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
+                                                    res.statusCode, 
+                                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
+                                            return callBack(null, app_with_init);
+                                        })
+                                    });
+                                })
+                        })
+                    })
+                })
+            }
+            else{
+                import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
+                    createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app) => {
+                        //get translation data
+                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`).then(({getObjects}) => {
+                            getObjects(app_id, service.client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
+                                for (let row of result_objects){
+                                    app = app.replaceAll(
+                                        `<CommonTranslation${row.object_item_name.toUpperCase()}/>`,
+                                        `${row.text}`);
+                                }
+                                //get app with parameters
+                                service.get_module_with_init(app_id, 
+                                    service.client_locale(req.headers['accept-language']),
+                                    0,  //system_admin_only
+                                    'app.app_exception',
+                                    true,  //ui
+                                    datatoken,
+                                    result_geodata.latitude,
+                                    result_geodata.longitude,
+                                    result_geodata.place,
+                                    app, (err, app_with_init) =>{
                                     import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                                         createLog(req.query.app_id,
-                                                { app_id : app_id,
+                                                    { app_id : app_id,
                                                     app_module : 'APPS',
-                                                    app_module_type : 'ADMIN',
-                                                    app_module_request : null,
+                                                    app_module_type : 'APP',
+                                                    app_module_request : params,
                                                     app_module_result : result_geodata.place,
                                                     app_user_id : null,
                                                     user_language : null,
@@ -71,77 +131,16 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                     server_http_accept_language : req.headers["accept-language"],
                                                     client_latitude : result_geodata.latitude,
                                                     client_longitude : result_geodata.longitude
-                                                }, (err,results)  => {
-                                                    return callBack(null, app_with_init);
-                                        })
-                                    })
-                                else
-                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                        'SYSTEM ADMIN APPS Admin',
-                                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                        res.statusCode, 
-                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                                return callBack(null, app_with_init);
-                                            })
-                                        });
-                                    })
-                            })
-                        })
-                    })
-                }
-                else{
-                    import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
-                        createApp(app_id, params,service.client_locale(req.headers['accept-language'])).then((app) => {
-                            //get translation data
-                            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`).then(({getObjects}) => {
-                                getObjects(app_id, service.client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
-                                    for (let row of result_objects){
-                                        app = app.replaceAll(
-                                            `<CommonTranslation${row.object_item_name.toUpperCase()}/>`,
-                                            `${row.text}`);
-                                    }
-                                    //get app with parameters
-                                    service.get_module_with_init(app_id, 
-                                        service.client_locale(req.headers['accept-language']),
-                                        0,  //system_admin_only
-                                        'app.app_exception',
-                                        true,  //ui
-                                        result_datatoken,
-                                        result_geodata.latitude,
-                                        result_geodata.longitude,
-                                        result_geodata.place,
-                                        app, (err, app_with_init) =>{
-                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
-                                            createLog(req.query.app_id,
-                                                        { app_id : app_id,
-                                                        app_module : 'APPS',
-                                                        app_module_type : 'APP',
-                                                        app_module_request : params,
-                                                        app_module_result : result_geodata.place,
-                                                        app_user_id : null,
-                                                        user_language : null,
-                                                        user_timezone : null,
-                                                        user_number_system : null,
-                                                        user_platform : null,
-                                                        server_remote_addr : req.ip,
-                                                        server_user_agent : req.headers["user-agent"],
-                                                        server_http_host : req.headers["host"],
-                                                        server_http_accept_language : req.headers["accept-language"],
-                                                        client_latitude : result_geodata.latitude,
-                                                        client_longitude : result_geodata.longitude
-                                                        }, (err,results)  => {
-                                                            return callBack(null, app_with_init);
-                                            })
+                                                    }, (err,results)  => {
+                                                        return callBack(null, app_with_init);
                                         })
                                     })
                                 })
                             })
                         })
                     })
-                }
-            })
+                })
+            }
         })
     }
     else
@@ -184,61 +183,60 @@ const getReport = async (req, res, app_id, callBack) => {
         else{
             //data token
             const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-            CreateDataToken(app_id, (err, result_datatoken)=>{
-                let parameters = `/ip?ip=${req.ip}`;
-                service.BFF(app_id, 'GEOLOCATION', parameters, 
-                            req.ip, req.hostname, req.method, `Bearer ${result_datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
-                    result_geodata = JSON.parse(result_geodata);
-                    result_geodata.latitude = result_geodata.geoplugin_latitude;
-                    result_geodata.longitude = result_geodata.geoplugin_longitude;
-                    result_geodata.place = result_geodata.geoplugin_city + ', ' +
-                                            result_geodata.geoplugin_regionName + ', ' +
-                                            result_geodata.geoplugin_countryName;
-                    import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
-                        createReport(app_id, query_parameters.module, service.client_locale(req.headers['accept-language'])).then((report) => {
-                            service.get_module_with_init(   app_id, 
-                                                            service.client_locale(req.headers['accept-language']),
-                                                            0,  //system_admin_only
-                                                            'report.report_exception',
-                                                            false,
-                                                            result_datatoken,
-                                                            result_geodata.latitude,
-                                                            result_geodata.longitude,
-                                                            result_geodata.place,
-                                                            report, (err, report_with_init) =>{
-                                                                if (err)
-                                                                    callBack(err, null);
-                                                                else{
-                                                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
-                                                                        createLog(req.query.app_id,
-                                                                                    { app_id : app_id,
-                                                                                    app_module : 'APPS',
-                                                                                    app_module_type : 'REPORT',
-                                                                                    app_module_request : query_parameters.format,
-                                                                                    app_module_result : result_geodata.place,
-                                                                                    app_user_id : null,
-                                                                                    user_language : null,
-                                                                                    user_timezone : null,
-                                                                                    user_number_system : null,
-                                                                                    user_platform : null,
-                                                                                    server_remote_addr : req.ip,
-                                                                                    server_user_agent : req.headers["user-agent"],
-                                                                                    server_http_host : req.headers["host"],
-                                                                                    server_http_accept_language : req.headers["accept-language"],
-                                                                                    client_latitude : result_geodata.latitude,
-                                                                                    client_longitude : result_geodata.longitude
-                                                                                    }, (err,results)  => {
-                                                                            callBack(null,report_with_init)
-                                                                        });
-                                                                    })
-                                                                    
-                                                            }
-                            })
+            let datatoken = CreateDataToken(app_id);
+            let parameters = `/ip?ip=${req.ip}`;
+            service.BFF(app_id, 'GEOLOCATION', parameters, 
+                        req.ip, req.hostname, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                result_geodata = JSON.parse(result_geodata);
+                result_geodata.latitude = result_geodata.geoplugin_latitude;
+                result_geodata.longitude = result_geodata.geoplugin_longitude;
+                result_geodata.place = result_geodata.geoplugin_city + ', ' +
+                                        result_geodata.geoplugin_regionName + ', ' +
+                                        result_geodata.geoplugin_countryName;
+                import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
+                    createReport(app_id, query_parameters.module, service.client_locale(req.headers['accept-language'])).then((report) => {
+                        service.get_module_with_init(   app_id, 
+                                                        service.client_locale(req.headers['accept-language']),
+                                                        0,  //system_admin_only
+                                                        'report.report_exception',
+                                                        false,
+                                                        datatoken,
+                                                        result_geodata.latitude,
+                                                        result_geodata.longitude,
+                                                        result_geodata.place,
+                                                        report, (err, report_with_init) =>{
+                                                            if (err)
+                                                                callBack(err, null);
+                                                            else{
+                                                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
+                                                                    createLog(req.query.app_id,
+                                                                                { app_id : app_id,
+                                                                                app_module : 'APPS',
+                                                                                app_module_type : 'REPORT',
+                                                                                app_module_request : query_parameters.format,
+                                                                                app_module_result : result_geodata.place,
+                                                                                app_user_id : null,
+                                                                                user_language : null,
+                                                                                user_timezone : null,
+                                                                                user_number_system : null,
+                                                                                user_platform : null,
+                                                                                server_remote_addr : req.ip,
+                                                                                server_user_agent : req.headers["user-agent"],
+                                                                                server_http_host : req.headers["host"],
+                                                                                server_http_accept_language : req.headers["accept-language"],
+                                                                                client_latitude : result_geodata.latitude,
+                                                                                client_longitude : result_geodata.longitude
+                                                                                }, (err,results)  => {
+                                                                        callBack(null,report_with_init)
+                                                                    });
+                                                                })
+                                                                
+                                                        }
                         })
                     })
-                    .catch(error=>{
-                        callBack(error,null)
-                    })
+                })
+                .catch(error=>{
+                    callBack(error,null)
                 })
             })
         }
