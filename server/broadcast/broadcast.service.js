@@ -2,11 +2,8 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 let CONNECTED_CLIENTS = [];
 
 const ClientConnect = (res) => {
-    const headers = {
-        "Content-Type": "text/event-stream",
-        "Connection": "keep-alive",
-        };
-    res.writeHead(200, headers);
+    res.setHeader("Content-Type", "text/event-stream");
+    res.setHeader("Connection", "keep-alive");
 }
 const ClientOnClose = (res, client_id) => {
     res.on('close', ()=>{
@@ -20,6 +17,7 @@ const ClientAdd = (newClient) => {
 const ClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
                                "broadcast_message": "${ message }"}`)}\n\n`);
+    res.flush();
 }
 const BroadcastCheckMaintenance = () => {
     //start interval if apps are started

@@ -2764,8 +2764,8 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             break;
         }
         case 4:{
-            //broadcast connect no authorization get
-            authorization = null;
+            //broadcast connect authorization
+            authorization = `Bearer ${COMMON_GLOBAL['rest_dt']}`;
             json_data = null;
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/noauth`;
             break;
@@ -2792,11 +2792,9 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
     url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
     if (service=='BROADCAST' && authorization_type==4){
-        let method = 'DIRECT';
-        if (method== 'DIRECT'){
-            //direct until bff path working
-            url = `${COMMON_GLOBAL['rest_resource_server']}${path}&app_id=${COMMON_GLOBAL['app_id']}&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
-        }
+        url = `${COMMON_GLOBAL['rest_resource_server']}${path}&app_id=${COMMON_GLOBAL['app_id']}&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
+        //use query to send authorization since EventSource does not support headers
+        url += `&authorization=${authorization}`;
         callBack(null, new EventSource(url));
     }
     else
@@ -2969,7 +2967,6 @@ const connectOnline = async () => {
         if (err)
             reconnect();
         else{
-            //return broadcast stream
             COMMON_GLOBAL['service_broadcast_eventsource'] = result_eventsource;
             COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
                 show_broadcast(event.data);
