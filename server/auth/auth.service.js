@@ -1,5 +1,5 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-
+const {default:{sign, verify}} = await import("jsonwebtoken");
 const IPtoNum = (ip) => {
     return Number(
         ip.split(".")
@@ -109,21 +109,81 @@ const check_internet = async () => {
         })
     })
 }
-const CreateDataToken = async (app_id, callBack)=>{
-    const {default:{sign}} = await import("jsonwebtoken");
+
+//ENDPOINT MIDDLEWARE
+const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
+    return new Promise((resolve, reject)=>{
+        if (authorization){
+            let token = authorization.slice(7);
+            verify(token, ConfigGet(7, app_id, 'ACCESS_SECRET'), (err, decoded) => {
+                if (err)
+                   resolve(false);
+                else {
+                    //check access token belongs to user_account.id, app_id and ip saved when logged in
+                    //and if app_id=0 then check user is admin
+                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
+                        checkLogin(app_id, user_account_id, authorization.replace('Bearer ',''), ip, (err, result)=>{
+                            if (err)
+                                reject(err)
+                            else{
+                                if (result.length==1)
+                                    resolve(true);
+                                else
+                                    resolve(false);
+                            }
+                        })
+                    })
+                }
+            })
+        }
+        else
+            resolve(false);
+    })
+}
+const checkDataToken = async (app_id, token) =>{
+    return new Promise(resolve =>{
+        if (token){
+            token = token.slice(7);
+            verify(token, ConfigGet(7, app_id, 'DATA_SECRET'), (err, decoded) => {
+                if (err){
+                    resolve(false);
+                } else {
+                    resolve(true);
+                }
+            });    
+        }
+        else{
+            resolve(false);
+        }    
+    })
+    
+}
+const accessToken = (app_id)=>{
+    let jsontoken_at;                    
+    jsontoken_at = sign ({tokentimstamp: Date.now()}, 
+                          ConfigGet(7, app_id, 'ACCESS_SECRET'), 
+                         {
+                          expiresIn: ConfigGet(7, app_id, 'ACCESS_EXPIRE')
+                         });
+    return jsontoken_at;
+}
+const CreateDataToken = (app_id)=>{
     let jsontoken_dt;
     jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
                             ConfigGet(7, app_id, 'DATA_SECRET'), 
                             {
                             expiresIn: ConfigGet(7, app_id, 'DATA_EXPIRE')
                             });
-    callBack(null, jsontoken_dt);
+    return jsontoken_dt;
 }
-const checkClientAccess = async (app_id, authorization) =>{
+const checkClientAccess = (app_id, authorization) =>{
     let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
     if (userpass == ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))
         return 1;
     else
         return 0;
 }
-export {block_ip_control, safe_user_agents, check_internet, CreateDataToken, checkClientAccess}
+export {block_ip_control, safe_user_agents, check_internet, 
+        checkAccessToken,checkDataToken, 
+        accessToken,CreateDataToken,
+        checkClientAccess}

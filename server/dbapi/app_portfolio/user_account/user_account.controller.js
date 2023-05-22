@@ -7,7 +7,7 @@ const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd
 const { insertUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`);
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
 
-const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
+const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
 
 const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, 
                              ip, authorization, headers_user_agent, headers_accept_language, callBack) => {
@@ -150,23 +150,19 @@ const userSignup = (req, res) => {
                                 );
                             } 
                             else
-                                accessToken(req, (err, Token)=>{
-                                    return res.status(200).json({
-                                        accessToken: Token,
-                                        id: results.insertId,
-                                        data: results
-                                    });
+                                return res.status(200).json({
+                                    accessToken: accessToken(req.query.app_id),
+                                    id: results.insertId,
+                                    data: results
                                 });
                         });  
                     })
                 }
                 else
-                    accessToken(req, (err, Token)=>{
-                        return res.status(200).json({
-                            accessToken: Token,
-                            id: results.insertId,
-                            data: results
-                        });
+                    return res.status(200).json({
+                        accessToken: accessToken(req.query.app_id),
+                        id: results.insertId,
+                        data: results
                     });
             }
         });
@@ -226,13 +222,11 @@ const activateUser = (req, res) => {
                 //return accessToken since PASSWORD_RESET is in progress
                 //email was verified and activated with data token, but now the password will be updated
                 //using accessToken and authentication code
-                accessToken(req, (err, Token)=>{
-                    return res.status(200).json({
-                        count: results.changedRows,
-                        auth: auth_new_password,
-                        accessToken: Token,
-                        items: Array(results)
-                    });
+                return res.status(200).json({
+                    count: results.changedRows,
+                    auth: auth_new_password,
+                    accessToken: accessToken(req.query.app_id),
+                    items: Array(results)
                 });
             }
     });
@@ -901,20 +895,18 @@ const userLogin = (req, res) => {
                                                         );
                                                     }
                                                     else{
-                                                        accessToken(req, (err, Token)=>{
-                                                            req.body.access_token = Token;
-                                                            insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                                                if (err)
-                                                                    return res.status(500).send(
-                                                                        err
-                                                                    );
-                                                                else
-                                                                    return res.status(200).json({
-                                                                        count: Array(results.items).length,
-                                                                        accessToken: Token,
-                                                                        items: Array(results)
-                                                                    });
-                                                            });
+                                                        req.body.access_token = accessToken(req.query.app_id);
+                                                        insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                                            if (err)
+                                                                return res.status(500).send(
+                                                                    err
+                                                                );
+                                                            else
+                                                                return res.status(200).json({
+                                                                    count: Array(results.items).length,
+                                                                    accessToken: req.body.access_token,
+                                                                    items: Array(results)
+                                                                });
                                                         });
                                                     }
                                                 })
@@ -923,21 +915,19 @@ const userLogin = (req, res) => {
                                     })
                                 }
                                 else{
-                                    accessToken(req, (err, Token)=>{
-                                        req.body.access_token = Token;
-                                        insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
-                                            if (err)
-                                                return res.status(500).send(
-                                                    err
-                                                );
-                                            else
-                                                return res.status(200).json({
-                                                    count: Array(results.items).length,
-                                                    accessToken: Token,
-                                                    items: Array(results)
-                                                });
-                                        })
-                                    });
+                                    req.body.access_token = accessToken(req.query.app_id);
+                                    insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                        if (err)
+                                            return res.status(500).send(
+                                                err
+                                            );
+                                        else
+                                            return res.status(200).json({
+                                                count: Array(results.items).length,
+                                                accessToken: req.body.access_token,
+                                                items: Array(results)
+                                            });
+                                    })
                                 }
                             }
                         });
@@ -1041,22 +1031,20 @@ const providerSignIn = (req, res) => {
                                 );
                             }
                             else{
-                                accessToken(req, (err, Token)=>{
-                                    req.body.access_token = Token;
-                                    insertUserAccountLogon(req.query.app_id, req.body, (err, results_insert_user_account_logon) => {
-                                        if (err) {
-                                            return res.status(500).send(
-                                                err
-                                            );
-                                        }
-                                        else
-                                            return res.status(200).json({
-                                                count: results.length,
-                                                accessToken: Token,
-                                                items: results,
-                                                userCreated: 0
-                                            });
-                                    });
+                                req.body.access_token = accessToken(req.query.app_id);
+                                insertUserAccountLogon(req.query.app_id, req.body, (err, results_insert_user_account_logon) => {
+                                    if (err) {
+                                        return res.status(500).send(
+                                            err
+                                        );
+                                    }
+                                    else
+                                        return res.status(200).json({
+                                            count: results.length,
+                                            accessToken: accessToken(req.query.app_id),
+                                            items: results,
+                                            userCreated: 0
+                                        });
                                 });
                             }
                         });        
@@ -1094,8 +1082,7 @@ const providerSignIn = (req, res) => {
                                         );
                                     }
                                     else{
-                                        accessToken(req, (err, Token)=>{
-                                            req.body.access_token = Token;
+                                            req.body.access_token = accessToken(req.query.app_id);
                                             insertUserAccountLogon(req.query.app_id, req.body, (err, results_user_account_logon) => {
                                                 if (err) {
                                                     return res.status(500).send(
@@ -1105,12 +1092,11 @@ const providerSignIn = (req, res) => {
                                                 else
                                                     return res.status(200).json({
                                                         count: results.length,
-                                                        accessToken: Token,
+                                                        accessToken: req.body.access_token,
                                                         items: results,
                                                         userCreated: 1
                                                     });
                                             })
-                                        });
                                     }
                                 });
                             }
