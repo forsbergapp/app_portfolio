@@ -26,11 +26,11 @@ const APP_GLOBAL = {
     "module_leaflet_map_container":"",
     "module_leaflet_map_zoom":"",
     "module_leaflet_map_marker_div_gps":"",
+    "service_log_scope_request":"",
     "service_log_scope_server":"",
+    "service_log_scope_app":"",
     "service_log_scope_service":"",
     "service_log_scope_db":"",
-    "service_log_scope_router":"",
-    "service_log_scope_controller":"",
     "service_log_level_verbose":"",
     "service_log_level_error":"",
     "service_log_level_info":"",
@@ -50,11 +50,11 @@ const delete_globals = () => {
     APP_GLOBAL['module_leaflet_map_zoom'] = null;
     APP_GLOBAL['module_leaflet_map_marker_div_gps'] = null;
     APP_GLOBAL['module_leaflet_map_container'] = null;
+    APP_GLOBAL['service_log_scope_request'] = null;
     APP_GLOBAL['service_log_scope_server'] = null;
+    APP_GLOBAL['service_log_scope_app'] = null;
     APP_GLOBAL['service_log_scope_service'] = null;
     APP_GLOBAL['service_log_scope_db'] = null;
-    APP_GLOBAL['service_log_scope_router'] = null;
-    APP_GLOBAL['service_log_scope_controller'] = null;
     APP_GLOBAL['service_log_level_verbose'] = null;
     APP_GLOBAL['service_log_level_error'] = null;
     APP_GLOBAL['service_log_level_info'] = null;
@@ -77,6 +77,10 @@ const delete_globals = () => {
 /*----------------------- */
 /* MISC                   */
 /*----------------------- */
+const roundOff = (num) => {
+    const x = Math.pow(10,2);
+    return Math.round(num * x) / x;
+  }
 const list_generate = (amount)=>{
     let html = '';
     for (let i=1; i<=amount;i++){
@@ -1384,7 +1388,7 @@ const show_monitor = async (yearvalues) =>{
             <ul id='list_monitor_nav' class='list_nav'>
                 <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']}</button></li>
                 <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS['app_apps'] + ' ' + common.ICONS['app_log']}</button></li>
-                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
+                <li id='list_monitor_nav_3'><button id='list_request_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
                 <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button' >${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log']}</button></li>
             </ul>
             <div id='list_connected_form'>
@@ -1409,7 +1413,7 @@ const show_monitor = async (yearvalues) =>{
                     <div id='list_app_log_last' ></div>
                 </div>
             </div>
-            <div id='list_server_log_form'>
+            <div id='list_request_log_form'>
                 <div id='menu5_row_sample1' >
                     <select id='select_logscope5'></select>
                     <select id='select_app_menu5'></select>
@@ -1422,12 +1426,12 @@ const show_monitor = async (yearvalues) =>{
                 </div>
                 <div id='menu5_row_parameters'>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col1'>${common.ICONS['app_server'] + ' info'}</div>
+                        <div id='menu5_row_parameters_col1'>${common.ICONS['app_server'] + ' REQUEST'}</div>
                         <div id='menu5_row_parameters_col1_1'>${common.ICONS['app_checkbox_checked']}</div>
                         <div id='menu5_row_parameters_col1_0'>${common.ICONS['app_checkbox_empty']}</div>
                     </div>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col2'>${common.ICONS['app_server'] + ' verbose'}</div>
+                        <div id='menu5_row_parameters_col2'>${common.ICONS['app_server'] + ' SERVICE'}</div>
                         <div id='menu5_row_parameters_col2_1'>${common.ICONS['app_checkbox_checked']}</div>
                         <div id='menu5_row_parameters_col2_0'>${common.ICONS['app_checkbox_empty']}</div>
                     </div>
@@ -1437,17 +1441,12 @@ const show_monitor = async (yearvalues) =>{
                         <div id='menu5_row_parameters_col3_0'>${common.ICONS['app_checkbox_empty']}</div>
                     </div>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col4'>${common.ICONS['app_route']}</div>
+                        <div id='menu5_row_parameters_col4'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' JSON'}</div>
                         <div id='menu5_row_parameters_col4_1'>${common.ICONS['app_checkbox_checked']}</div>
                         <div id='menu5_row_parameters_col4_0'>${common.ICONS['app_checkbox_empty']}</div>
                     </div>
-                    <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col5'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' JSON'}</div>
-                        <div id='menu5_row_parameters_col5_1'>${common.ICONS['app_checkbox_checked']}</div>
-                        <div id='menu5_row_parameters_col5_0'>${common.ICONS['app_checkbox_empty']}</div>
-                    </div>
                 </div>
-                <div id='list_server_log' class='common_list_scrollbar'></div>
+                <div id='list_request_log' class='common_list_scrollbar'></div>
             </div>
             <div id='list_pm2_log_form'>
                 <div id='list_pm2_log_path_info'>
@@ -1506,11 +1505,11 @@ const show_monitor = async (yearvalues) =>{
     document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
     document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
 
-    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
 
     document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
 
@@ -1639,7 +1638,7 @@ const nav_click = (item) => {
             reset_monitor();
             document.getElementById('list_connected_form').style.display='flex';
             document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_server_log_form').style.display='none';
+            document.getElementById('list_request_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_1').classList= 'list_nav_selected_tab';
             show_connected();
@@ -1649,28 +1648,28 @@ const nav_click = (item) => {
             reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='flex';
-            document.getElementById('list_server_log_form').style.display='none';
+            document.getElementById('list_request_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_2').classList= 'list_nav_selected_tab';
             APP_GLOBAL['page'] = 0;
             show_app_log();
             break;
         }
-        case 'list_server_log_title':{
+        case 'list_request_log_title':{
             reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_server_log_form').style.display='block';
+            document.getElementById('list_request_log_form').style.display='block';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_3').classList= 'list_nav_selected_tab';
-            show_server_logs();
+            show_request_logs();
             break;
         }
         case 'list_pm2_log_title':{
             reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_server_log_form').style.display='none';
+            document.getElementById('list_request_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='block';
             document.getElementById('list_monitor_nav_4').classList= 'list_nav_selected_tab';
             show_pm2_logs();
@@ -1738,7 +1737,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
-            case 'list_server_log':{
+            case 'list_request_log':{
                 path = `/log/logs?${url_parameters}`;
                 service = 'LOG';
                 token_type = 2;
@@ -1881,51 +1880,57 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                 </div>`;
                         break;
                     }
-                    case 'list_server_log':{
-                        html =`<div id='list_server_log_row_title' class='list_server_log_row'>
-                                    <div id='list_server_log_col_title1' class='list_server_log_col list_sort_click list_title'>
+                    case 'list_request_log':{
+                        html =`<div id='list_request_log_row_title' class='list_request_log_row'>
+                                    <div id='list_request_log_col_title0' class='list_request_log_col list_sort_click list_title'>
                                         <div>LOGDATE</div>
                                     </div>
-                                    <div id='list_server_log_col_title3' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title1' class='list_request_log_col list_sort_click list_title'>
                                         <div>HOST</div>
                                     </div>
-                                    <div id='list_server_log_col_title11' class='list_server_log_col list_sort_click list_title'>
-                                        <div>APP ID</div>
-                                    </div>
-                                    <div id='list_server_log_col_title2' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title2' class='list_request_log_col list_sort_click list_title'>
                                         <div>IP</div>
                                     </div>
-                                    <div id='list_server_log_col_title4' class='list_server_log_col list_sort_click list_title'>
-                                        <div>PROTOCOL</div>
+                                    <div id='list_request_log_col_title3' class='list_request_log_col list_sort_click list_title'>
+                                        <div>REQUEST_ID</div>
                                     </div>
-                                    <div id='list_server_log_col_title5' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title4' class='list_request_log_col list_sort_click list_title'>
+                                        <div>CORRELATION_ID</div>
+                                    </div>
+                                    <div id='list_request_log_col_title5' class='list_request_log_col list_sort_click list_title'>
                                         <div>URL</div>
                                     </div>
-                                    <div id='list_server_log_col_title6' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title6' class='list_request_log_col list_sort_click list_title'>
+                                        <div>HTTP INFO</div>
+                                    </div>
+                                    <div id='list_request_log_col_title7' class='list_request_log_col list_sort_click list_title'>
                                         <div>METHOD</div>
                                     </div>
-                                    <div id='list_server_log_col_title7' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title8' class='list_request_log_col list_sort_click list_title'>
                                         <div>STATUSCODE</div>
                                     </div>
-                                    <div id='list_server_log_col_title8' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title9' class='list_request_log_col list_sort_click list_title'>
+                                        <div>STATUSMESSAGE</div>
+                                    </div>
+                                    <div id='list_request_log_col_title10' class='list_request_log_col list_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_server_log_col_title9' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title11' class='list_request_log_col list_sort_click list_title'>
                                         <div>ACCEPT LANGUAGE</div>
                                     </div>
-                                    <div id='list_server_log_col_title10' class='list_server_log_col list_sort_click list_title'>
-                                        <div>HTTP REFERER</div>
+                                    <div id='list_request_log_col_title12' class='list_request_log_col list_sort_click list_title'>
+                                        <div>REFERER</div>
                                     </div>
-                                    <div id='list_server_log_col_title12' class='list_server_log_col list_sort_click list_title'>
-                                        <div>APP FILENAME</div>
+                                    <div id='list_request_log_col_title13' class='list_request_log_col list_sort_click list_title'>
+                                        <div>SIZE_RECEIVED</div>
                                     </div>
-                                    <div id='list_server_log_col_title13' class='list_server_log_col list_sort_click list_title'>
-                                        <div>APP FUNCTION NAME</div>
+                                    <div id='list_request_log_col_title14' class='list_request_log_col list_sort_click list_title'>
+                                        <div>SIZE_SENT</div>
                                     </div>
-                                    <div id='list_server_log_col_title14' class='list_server_log_col list_sort_click list_title'>
-                                        <div>APP APP LINE</div>
+                                    <div id='list_request_log_col_title15' class='list_request_log_col list_sort_click list_title'>
+                                        <div>RESPONSE_TIME</div>
                                     </div>
-                                    <div id='list_server_log_col_title15' class='list_server_log_col list_sort_click list_title'>
+                                    <div id='list_request_log_col_title16' class='list_request_log_col list_sort_click list_title'>
                                         <div>LOG TEXT</div>
                                     </div>
                                 </div>`;
@@ -2100,55 +2105,61 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         </div>`;
                                 break;
                             }
-                            case 'list_server_log':{
+                            case 'list_request_log':{
                                 //test if JSON in logtext
                                 if (typeof json.data[i].logtext === 'object')
                                     json.data[i].logtext = JSON.stringify(json.data[i].logtext);
                                 html += 
-                                `<div class='list_server_log_row'>
-                                    <div class='list_server_log_col'>
+                                `<div class='list_request_log_row'>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i].logdate}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i].host}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
-                                        <div>${json.data[i].app_id}</div>
-                                    </div>
-                                    <div class='list_server_log_col list_gps_click gps_click'>
+                                    <div class='list_request_log_col list_gps_click gps_click'>
                                         <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
-                                        <div>${json.data[i].protocol}</div>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].requestid}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].correlationid}</div>
+                                    </div>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i].url}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].http_info}</div>
+                                    </div>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i].method}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i].statusCode}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].statusMessage}</div>
+                                    </div>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i]['user-agent']}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i]['accept-language']}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
-                                        <div>${json.data[i].http_referer}</div>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].referer}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
-                                        <div>${json.data[i].app_filename}</div>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].size_received}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
-                                        <div>${json.data[i].app_function_name}</div>
+                                    <div class='list_request_log_col'>
+                                        <div>${json.data[i].size_sent}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
-                                        <div>${json.data[i].app_app_line}</div>
+                                    <div class='list_request_log_col'>
+                                        <div>${roundOff(json.data[i].responsetime)}</div>
                                     </div>
-                                    <div class='list_server_log_col'>
+                                    <div class='list_request_log_col'>
                                         <div>${json.data[i].logtext}</div>
                                     </div>
                                 </div>`;
@@ -2235,12 +2246,12 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             set_list_eventlisteners('app_log', 'gps');
                             break;
                         }
-                        case 'list_server_log':{
+                        case 'list_request_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
                             //add events on some columns searching in all rows
-                            set_list_eventlisteners('server_log', 'sort', true);
-                            set_list_eventlisteners('server_log', 'gps');
+                            set_list_eventlisteners('request_log', 'sort', true);
+                            set_list_eventlisteners('request_log', 'gps');
                             break;
                         }
                         case 'list_pm2_log':{
@@ -2336,8 +2347,8 @@ const list_sort_click = (item) => {
             show_connected(item.id.substr(item.id.length - 1), get_order(item));    
             break;
         }
-        case 'list_server_log':{
-            show_server_logs(item.id.substr(item.id.length - 1), get_order(item));
+        case 'list_request_log':{
+            show_request_logs([...item.parentElement.children].indexOf(item), get_order(item));
             break;
         }
         case 'list_user_account':{
@@ -2386,7 +2397,7 @@ const list_item_click = (item) => {
     let path;
     let tokentype;
     if (item.className.indexOf('gps_click')>0){
-        if (item.parentNode.parentNode.id =='list_server_log'){
+        if (item.parentNode.parentNode.id =='list_request_log'){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
             //if localhost show default position
@@ -2468,12 +2479,12 @@ const get_server_log_parameters = async () => {
             null;
         else{
             json = JSON.parse(result);
+            APP_GLOBAL['service_log_scope_request'] = json.data.SERVICE_LOG_SCOPE_REQUEST;
             APP_GLOBAL['service_log_scope_server'] = json.data.SERVICE_LOG_SCOPE_SERVER;
+            APP_GLOBAL['service_log_scope_app'] = json.data.SERVICE_LOG_SCOPE_APP;
             APP_GLOBAL['service_log_scope_service'] = json.data.SERVICE_LOG_SCOPE_SERVICE;
             APP_GLOBAL['service_log_scope_db'] = json.data.SERVICE_LOG_SCOPE_DB;
-            APP_GLOBAL['service_log_scope_router'] = json.data.SERVICE_LOG_SCOPE_ROUTER;
-            APP_GLOBAL['service_log_scope_controller'] = json.data.SERVICE_LOG_SCOPE_CONTROLLER;
-
+            
             document.getElementById('menu5_row_parameters_col1_1').style.display = 'none';
             document.getElementById('menu5_row_parameters_col1_0').style.display = 'none';
             document.getElementById('menu5_row_parameters_col2_1').style.display = 'none';
@@ -2482,29 +2493,23 @@ const get_server_log_parameters = async () => {
             document.getElementById('menu5_row_parameters_col3_0').style.display = 'none';
             document.getElementById('menu5_row_parameters_col4_1').style.display = 'none';
             document.getElementById('menu5_row_parameters_col4_0').style.display = 'none';
-            document.getElementById('menu5_row_parameters_col5_1').style.display = 'none';
-            document.getElementById('menu5_row_parameters_col5_0').style.display = 'none';
 
-            if (json.data.SERVICE_LOG_ENABLE_SERVER_INFO==1)
+            if (json.data.SERVICE_LOG_REQUEST_LEVEL==1 ||json.data.SERVICE_LOG_REQUEST_LEVEL==2)
                 document.getElementById('menu5_row_parameters_col1_1').style.display = 'inline-block';
             else
                 document.getElementById('menu5_row_parameters_col1_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_ENABLE_SERVER_VERBOSE==1)
+            if (json.data.SERVICE_LOG_SERVICE_LEVEL==1 || json.data.SERVICE_LOG_SERVICE_LEVEL==2)
                 document.getElementById('menu5_row_parameters_col2_1').style.display = 'inline-block';
             else
                 document.getElementById('menu5_row_parameters_col2_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_ENABLE_DB==1)
+            if (json.data.SERVICE_LOG_DB_LEVEL==1 || json.data.SERVICE_LOG_DB_LEVEL==2)
                 document.getElementById('menu5_row_parameters_col3_1').style.display = 'inline-block';
             else
                 document.getElementById('menu5_row_parameters_col3_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_ENABLE_ROUTER==1)
+            if (json.data.SERVICE_LOG_PM2_FILE && json.data.SERVICE_LOG_PM2_FILE!=null)
                 document.getElementById('menu5_row_parameters_col4_1').style.display = 'inline-block';
             else
                 document.getElementById('menu5_row_parameters_col4_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_PM2_FILE && json.data.SERVICE_LOG_PM2_FILE!=null)
-                document.getElementById('menu5_row_parameters_col5_1').style.display = 'inline-block';
-            else
-                document.getElementById('menu5_row_parameters_col5_0').style.display = 'inline-block';
 
             APP_GLOBAL['service_log_level_verbose'] = json.data.SERVICE_LOG_LEVEL_VERBOSE;
             APP_GLOBAL['service_log_level_error'] = json.data.SERVICE_LOG_LEVEL_ERROR;
@@ -2513,15 +2518,18 @@ const get_server_log_parameters = async () => {
             APP_GLOBAL['service_log_file_interval'] = json.data.SERVICE_LOG_FILE_INTERVAL;
 
             let html = '';
-            html +=`<option value=0 log_scope='${APP_GLOBAL['service_log_scope_server']}'       log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=1 log_scope='${APP_GLOBAL['service_log_scope_server']}'       log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
-            html +=`<option value=2 log_scope='${APP_GLOBAL['service_log_scope_server']}'       log_level='${APP_GLOBAL['service_log_level_verbose']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_verbose']}</option>`;
-            html +=`<option value=3 log_scope='${APP_GLOBAL['service_log_scope_service']}'      log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=4 log_scope='${APP_GLOBAL['service_log_scope_service']}'      log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
-            html +=`<option value=5 log_scope='${APP_GLOBAL['service_log_scope_db']}'           log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_db']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=6 log_scope='${APP_GLOBAL['service_log_scope_router']}'       log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_router']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=7 log_scope='${APP_GLOBAL['service_log_scope_controller']}'   log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_controller']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=8 log_scope='${APP_GLOBAL['service_log_scope_controller']}'   log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_controller']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=0 log_scope='${APP_GLOBAL['service_log_scope_request']}'  log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_request']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=1 log_scope='${APP_GLOBAL['service_log_scope_request']}'  log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_request']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=2 log_scope='${APP_GLOBAL['service_log_scope_request']}'  log_level='${APP_GLOBAL['service_log_level_verbose']}'>${APP_GLOBAL['service_log_scope_request']} - ${APP_GLOBAL['service_log_level_verbose']}</option>`;
+            html +=`<option value=3 log_scope='${APP_GLOBAL['service_log_scope_server']}'   log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=4 log_scope='${APP_GLOBAL['service_log_scope_server']}'   log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=5 log_scope='${APP_GLOBAL['service_log_scope_app']}'      log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_app']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=6 log_scope='${APP_GLOBAL['service_log_scope_app']}'      log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_app']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=7 log_scope='${APP_GLOBAL['service_log_scope_service']}'  log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=8 log_scope='${APP_GLOBAL['service_log_scope_service']}'  log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=9 log_scope='${APP_GLOBAL['service_log_scope_db']}'       log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_db']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
+            html +=`<option value=10 log_scope='${APP_GLOBAL['service_log_scope_db']}'      log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_db']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+
             
             document.getElementById('select_logscope5').innerHTML = html;
 
@@ -2532,15 +2540,15 @@ const get_server_log_parameters = async () => {
         }
     })
 }
-const show_server_logs = (sort=1, order_by='desc') => {
+const show_request_logs = (sort=1, order_by='desc') => {
     let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
     let loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
     let year = document.getElementById('select_year_menu5').value;
     let month= document.getElementById('select_month_menu5').value;
     let day  = document.getElementById('select_day_menu5').value;
     let app_id_filter='';
-    if (logscope=='SERVER'){
-        //no app filter for server, since this is a server log
+    if (logscope=='REQUEST'){
+        //no app filter for request
         document.getElementById('select_app_menu5').style.display = 'none';
         app_id_filter = `select_app_id=&`;
     }
@@ -2554,11 +2562,11 @@ const show_server_logs = (sort=1, order_by='desc') => {
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
     else
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-    show_list('list_server_log', 
-                'list_server_log_col_title', 
-                `${url_parameters}&sort=${sort}&order_by=${order_by}`,
-                sort,
-                order_by);
+    show_list('list_request_log', 
+              'list_request_log_col_title', 
+              `${url_parameters}&sort=${sort}&order_by=${order_by}`,
+              sort,
+              order_by);
 }
 const show_existing_logfiles = () => {
     if (admin_token_has_value()){
@@ -2835,10 +2843,6 @@ const show_db_info = async () => {
     if (admin_token_has_value()){
         let json;
         let size = '(Mb)';
-        let roundOff = (num) => {
-            const x = Math.pow(10,2);
-            return Math.round(num * x) / x;
-          }
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
         await common.FFB ('DB_API', `/admin/DBInfo?`, 'GET', 2, null, (err, result) => {
@@ -2946,10 +2950,6 @@ const show_server_info = async () => {
     if (admin_token_has_value()){
         let json;
         let size = '(Mb)';
-        let roundOff = (num) => {
-            const x = Math.pow(10,2);
-            return Math.round(num * x) / x;
-          }
         await common.FFB ('SERVER', `/info?`, 'GET', 2, null, (err, result) => {
             if (err)
                 null;
@@ -3029,11 +3029,11 @@ const init = () => {
     APP_GLOBAL['module_leaflet_map_zoom']           = 14;
     APP_GLOBAL['module_leaflet_map_marker_div_gps'] = 'map_marker_gps';
 
+    APP_GLOBAL['service_log_scope_request']= '';
     APP_GLOBAL['service_log_scope_server']= '';
+    APP_GLOBAL['service_log_scope_app']= '';
     APP_GLOBAL['service_log_scope_service']= '';
     APP_GLOBAL['service_log_scope_db']= '';
-    APP_GLOBAL['service_log_scope_router']= '';
-    APP_GLOBAL['service_log_scope_controller']= '';
     APP_GLOBAL['service_log_level_verbose']= '';
     APP_GLOBAL['service_log_level_error']= '';
     APP_GLOBAL['service_log_level_info']= '';                

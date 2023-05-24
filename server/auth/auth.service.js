@@ -7,7 +7,76 @@ const IPtoNum = (ip) => {
         .join("")
     );
 }
+const access_control = (ip, host, user_agent, accept_language, callBack) => {
 
+    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
+        let ip_v4 = ip.replace('::ffff:','');
+        block_ip_control(ip_v4, (err, result_range) =>{
+            if (err){
+                callBack(err, null);
+            }
+            else{
+                if (result_range){
+                    return callBack(null,{statusCode:result_range.statusCode,
+                                          statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
+                }
+                else{
+                    //check if host exists
+                    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')=='1' &&
+                        typeof host=='undefined'){
+                        //406 Not Acceptable
+                        return callBack(null, {statusCode: 406, 
+                                               statusMessage: `ip ${ip_v4} blocked, no host`});
+                    }
+                    else{
+                        //check if accessed from domain and not os hostname
+                        import('node:os').then(({hostname}) =>{
+                            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')=='1' &&
+                                host==hostname()){
+                                //406 Not Acceptable
+                                return callBack(null, {statusCode: 406, 
+                                                       statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain`});
+                            }
+                            else{
+                                safe_user_agents(user_agent, (err, safe)=>{
+                                    if (err){
+                                        return callBack(err, null);
+                                    }
+                                    else{
+                                        if (safe==true)
+                                            return callBack(null,null);
+                                        else{
+                                            //check if user-agent exists
+                                            if(ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT_EXIST')==1 &&
+                                                typeof user_agent=='undefined'){
+                                                //406 Not Acceptable
+                                                return callBack(null, {statusCode: 406, 
+                                                                       statusMessage: `ip ${ip_v4} blocked, no user-agent`});
+                                            }
+                                            else{
+                                                //check if accept-language exists
+                                                if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')=='1' &&
+                                                    typeof accept_language=='undefined'){
+                                                    //406 Not Acceptable
+                                                    return callBack(null, {statusCode: 406, 
+                                                                           statusMessage: `ip ${ip_v4} blocked, no accept-language`});
+                                                }
+                                                else
+                                                    return callBack(null,null);
+                                            }
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                }
+            }
+        })
+    }
+    else
+        return callBack(null,null);
+}
 const block_ip_control = async (ip_v4, callBack) => {
     if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
         let ranges;
@@ -51,14 +120,7 @@ const safe_user_agents = async (user_agent, callBack) => {
         import('node:fs').then((fs) =>{
             fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (err, fileBuffer) => {
                 if (err){
-                    let stack = new Error().stack;
-                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                return callBack(err, null);
-                            })
-                        });
-                    })
+                    return callBack(err, null);
                 }
                 else{
                     json = JSON.parse(fileBuffer.toString());
@@ -74,6 +136,21 @@ const safe_user_agents = async (user_agent, callBack) => {
     else
         return callBack(null, false);
 }
+const check_request = (req_path, callBack) =>{
+    let err = null;
+    try {
+        decodeURIComponent(req_path)
+    }
+    catch(e) {
+        err = e;
+    }
+    if (err){
+        callBack(err, null)
+    }
+    else
+        callBack(null, null)
+}
+
 const check_internet = async () => {
     return new Promise(resolve =>{
         //test connection with localhost
@@ -183,7 +260,7 @@ const checkClientAccess = (app_id, authorization) =>{
     else
         return 0;
 }
-export {block_ip_control, safe_user_agents, check_internet, 
+export {access_control, block_ip_control, safe_user_agents, check_request, check_internet, 
         checkAccessToken,checkDataToken, 
         accessToken,CreateDataToken,
         checkClientAccess}

@@ -771,7 +771,7 @@ ul#admin_login_nav li{
 	flex-direction: column;
 	height: 85%;
 }
-#list_server_log_form{
+#list_request_log_form{
 	display:none;
 	height: 75%;
 }
@@ -927,64 +927,68 @@ ul#admin_login_nav li{
 .menu5_row_parameters_col{
 	margin-inline-end: 20px;
 }
-#list_server_log{
+#list_request_log{
 	height:70%;
 	overflow-y: auto;
 	overflow-x: auto;
 	margin-bottom: 10px;
 	border-radius: 4px;
 }
-.list_server_log_col:nth-child(1){
+.list_request_log_col:nth-child(1){
 	width:120px;
 }
-.list_server_log_col:nth-child(2){
+.list_request_log_col:nth-child(2){
 	width:90px;
 }
-.list_server_log_col:nth-child(3){
-	width:50px;
-}
-.list_server_log_col:nth-child(4){
+.list_request_log_col:nth-child(3){
 	width:90px;
 }
-.list_server_log_col:nth-child(5){
-	width:50px;
+.list_request_log_col:nth-child(4){
+	width:190px;
 }
-.list_server_log_col:nth-child(6){
+.list_request_log_col:nth-child(5){
+	width:330px;
+}
+.list_request_log_col:nth-child(6){
 	width:650px;
 }
-.list_server_log_col:nth-child(7){
+.list_request_log_col:nth-child(7){
 	width:70px;
 }
-.list_server_log_col:nth-child(8){
+.list_request_log_col:nth-child(8){
 	width:70px;
 }
-.list_server_log_col:nth-child(9){
-	width: 600px;
+.list_request_log_col:nth-child(9){
+	width: 60px;
 }
-.list_server_log_col:nth-child(10){
-	width:400px;
+.list_request_log_col:nth-child(10){
+	width:150px;
 }
-.list_server_log_col:nth-child(11){
+.list_request_log_col:nth-child(11){
 	width:250px;
 }
-.list_server_log_col:nth-child(12){
-	width:390px;
+.list_request_log_col:nth-child(12){
+	width:350px;
 }
-.list_server_log_col:nth-child(13){
-	width:100px;
+.list_request_log_col:nth-child(13){
+	width:150px;
 }
-.list_server_log_col:nth-child(14){
-	width:70px;
+.list_request_log_col:nth-child(14){
+	width:80px;
 }
-.list_server_log_col:nth-child(15){
-	width:500px;
+.list_request_log_col:nth-child(15){
+	width:80px;
 }
-.list_server_log_row{
+.list_request_log_col:nth-child(16){
+	width:80px;
+}
+
+.list_request_log_row{
 	padding-top:4px;
 	padding-inline-start: 5px;
 	text-align: start;
 }   
-.list_server_log_col{
+.list_request_log_col{
 	display:inline-block;
 	width:auto;
 	margin-inline-end: 10px;
@@ -1437,7 +1441,7 @@ a:hover, a:active {
 .list_lov_row:nth-child(odd),
 .list_app_log_row:nth-child(odd),
 .list_connected_row:nth-child(odd),
-.list_server_log_row:nth-of-type(odd),
+.list_request_log_row:nth-of-type(odd),
 #list_pm2_log_out .list_pm2_log_row:nth-child(odd),
 #list_pm2_log_err .list_pm2_log_row:nth-child(odd),
 #list_pm2_log_process_event .list_pm2_log_row:nth-child(odd){
@@ -1450,7 +1454,7 @@ a:hover, a:active {
 .list_lov_row:nth-child(even),
 .list_app_log_row:nth-child(even),
 .list_connected_row:nth-child(even),
-.list_server_log_row:nth-of-type(even),
+.list_request_log_row:nth-of-type(even),
 #list_pm2_log_out .list_pm2_log_row:nth-child(even),
 #list_pm2_log_err .list_pm2_log_row:nth-child(even),
 #list_pm2_log_process_event .list_pm2_log_row:nth-child(even){
@@ -1471,7 +1475,7 @@ a:hover, a:active {
 .list_app_parameter_row,
 .list_app_log_row,
 .list_connected_row,
-.list_server_log_row,
+.list_request_log_row,
 .list_pm2_log_row,
 .list_pm2_log_process_event_row,
 .list_config_row{
@@ -1495,7 +1499,7 @@ a:hover, a:active {
 #lov_list,
 #list_app_log,
 #list_connected,
-#list_server_log,
+#list_request_log,
 #list_pm2_log_out,
 #list_pm2_log_err,
 #list_pm2_log_process_event,
