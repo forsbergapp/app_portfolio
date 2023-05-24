@@ -3,7 +3,6 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
 const createUserSetting = (app_id, initial, data, callBack) => {
 		let sql;
 		let parameters;
-		let stack = new Error().stack;
 		//insert user settings if first time and no user settings exists already
 		sql = `INSERT INTO ${db_schema()}.user_account_app_setting(
 				description, 

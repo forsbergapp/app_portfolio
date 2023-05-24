@@ -83,32 +83,6 @@ const get_locale = (lang_code, part) => {
 			}
 		}
 }
-const db_log = (app_id, sql, parameters) => {
-	return new Promise((resolve)=>{
-		let parsed_sql = sql;
-		//ES7 Object.entries
-		Object.entries(parameters).forEach((parameter) => {
-			//replace bind parameters with values in log
-			parsed_sql = parsed_sql.replace(/\:(\w+)/g, (txt, key) => {
-				if (key == parameter[0])
-					if (parameter[1] == null)
-						return parameter[1];
-					else 
-						return `'${parameter[1]}'`;
-				else
-					return txt;
-			})
-		});
-		import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogDB}) => {
-			createLogDB(app_id, `DB:${ConfigGet(1, 'SERVICE_DB', 'USE')} Pool: ${app_id} SQL: ${parsed_sql}`)
-			.then(()=>{
-				resolve();
-			});
-		})
-	})
-	
-}
-
 const db_schema = () => ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_NAME`);
 
 const db_limit_rows = (sql, limit_type = null) => {
@@ -150,32 +124,34 @@ const db_limit_rows = (sql, limit_type = null) => {
 
 const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 	import(`file://${process.cwd()}/server/db/db.service.js`).then(({db_query}) => {
-		db_query(app_id, ConfigGet(1, 'SERVICE_DB', 'USE'), sql, parameters, dba).then((result)=> {
-			if (ConfigGet(1, 'SERVICE_LOG', 'ENABLE_DB')=='1'){
-				db_log(app_id, sql, parameters);
-			}	
-			return callBack(null, result)})
+		db_query(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, dba)
+		.then((result)=> {
+			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBI}) => {
+				LogDBI(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, result)
+				.then((result_info_log)=>{
+					return callBack(null, result)})
+				});
+			})
 		.catch(error=>{
 			const database_error = 'DATABASE ERROR';
-			import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-				createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), null, null, null, error + 'SQL:' + sql).then(() => {
-					import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({ get_app_code }) => {
-						let app_code = get_app_code(error.errorNum, 
-							error.message, 
-							error.code, 
-							error.errno, 
-							error.sqlMessage);
-						if (app_code != null)
+			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBE}) => {
+				LogDBE(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, error)
+				.then((result_error_log)=>{
+					let app_code = get_app_code(error.errorNum, 
+						error.message, 
+						error.code, 
+						error.errno, 
+						error.sqlMessage);
+					if (app_code != null)
+						return callBack(error, null);
+					else{
+						//return full error to admin
+						if (app_id==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
 							return callBack(error, null);
-						else{
-							//return full error to admin
-							if (app_id==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-								return callBack(error, null);
-							else
-								return callBack(database_error, null);
-						}
-					})
-				})
+						else
+							return callBack(database_error, null);
+					}
+				})	
 			})
 		})
 	})
