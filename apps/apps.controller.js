@@ -4,7 +4,6 @@ const service = await import('./apps.service.js')
 const getApp = async (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
     req.query.app_user_id = null;
-    let stack = new Error().stack;
     if (service.apps_start_ok() ==true || app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){  
         //Data token
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
@@ -74,18 +73,6 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                             }, (err,results)  => {
                                                 return callBack(null, app_with_init);
                                     })
-                                })
-                            else
-                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                        createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                                                    'SYSTEM ADMIN APPS Admin',
-                                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                    res.statusCode, 
-                                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                            return callBack(null, app_with_init);
-                                        })
-                                    });
                                 })
                         })
                     })
@@ -260,13 +247,12 @@ const BFF = async (req, res) =>{
             message: '⛔'
         });
     else{
-        const {createLogAppC} = await import(`file://${process.cwd()}/server/log/log.service.js`);
         let stack = new Error().stack;
         let decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
-        let log_result=false;
+        let message_queue=false;
         const service_called = req.query.service.toUpperCase();
         if (service_called=='MAIL')
-            log_result=true;
+            message_queue=true;
         let parameters;
         if (req.query.user_account_logon_user_account_id)
             parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`
@@ -286,40 +272,31 @@ const BFF = async (req, res) =>{
             delete req.query.service;
             const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
             BroadcastConnect(req,res);
-            createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                        `SERVICE ${service_called} ${log_result==true?log_result:''}`,
-                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                        res.statusCode, 
-                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-            })
         }
         else
             service.BFF(req.query.app_id, service_called, parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], req.body)
             .then(result_service => {
-                //log INFO to module log and to files
-                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                            `SERVICE ${service_called} ${log_result==true?log_result:''}`,
-                            req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                            res.statusCode, 
-                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                    if (log_result)
-                        return res.status(200).send('✅');
-                    else
-                        return res.status(200).send(result_service);
+                import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
+                    let log_text = message_queue==true?null:result_service;
+                    LogServiceI(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), log_text).then(result_log=>{
+                        //message queue saves result there
+                        if (message_queue)
+                            return res.status(200).send('✅');
+                        else
+                            return res.status(200).send(result_service);
+                    })
                 })
             })
             .catch(error => {
-                //log ERROR to module log and to files
-                createLogAppC(req.query.app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), 
-                            `SERVICE ${service_called} error: ${error}`,
-                            req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                            res.statusCode, 
-                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                    //return service unavailable and error message
-                    return res.status(503).json({
-                        message: error
-                    });
-                })
+                import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
+                    //log ERROR to module log and to files
+                    LogServiceE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(() => {
+                        //return service unavailable and error message
+                        return res.status(503).json({
+                            message: error
+                        });
+                    })
+                });
             })
     }
 }

@@ -16,7 +16,6 @@ const createUserAccountApp = (app_id, user_account_id, callBack) => {
 						app_id: app_id,
 						user_account_id: user_account_id
 					};
-		let stack = new Error().stack;
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);

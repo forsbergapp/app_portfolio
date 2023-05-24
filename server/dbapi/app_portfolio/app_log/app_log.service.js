@@ -2,7 +2,6 @@ const { ConfigGet } = await import(`file://${process.cwd()}/server/server.servic
 const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const createLog = (app_id, data, callBack) => {
-	let stack = new Error().stack;
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
 		let sql;
 		let parameters;

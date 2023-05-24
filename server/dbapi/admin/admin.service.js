@@ -4,22 +4,26 @@ const DBA=1;
 
 const DBStart = async () => {
    const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+   const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
    if (ConfigGet(1, 'SERVICE_DB', 'START')=='1'){    
       let user;
       let password;
       let dba = 0;
-      let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+      let db_use = parseInt(ConfigGet(1, 'SERVICE_DB', 'USE'));
+      let host = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`);
+      let port = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`);
+      let database = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`);
       const pool_db = async (dba, user, password, pool_id) =>{
          return new Promise ((resolve, reject)=>{
             let dbparameters = `{
-               "use":                     "${db_use}",
+               "use":                     ${db_use},
                "pool_id":                 ${pool_id},
-               "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
-               "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
+               "host":                    "${host}",
+               "port":                    "${port}",
                "dba":                     ${dba},
                "user":                    "${user}",
                "password":                "${password}",
-               "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",`;
+               "database":                "${database}",`;
                //db 1 + 2 parameters
                dbparameters +=
                `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
@@ -39,9 +43,11 @@ const DBStart = async () => {
             dbparameters = JSON.parse(dbparameters);
             pool_start(dbparameters)
             .then(result=>{
+               LogServerI(`Started pool ${pool_id}, db ${db_use}, host ${host}, port ${port}, dba ${dba}, user ${user}, database ${database}`);
                resolve(result);
             })
             .catch(error=>{
+               LogServerE('Starting pool error: ' + error);
                reject(error);
             })
          })
@@ -56,7 +62,7 @@ const DBStart = async () => {
          user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
          password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
          dba = 0;
-         pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+         await pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
          .then(result=>{
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
                //app_id inparameter for log, all apps will be returned

@@ -122,16 +122,8 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                         let db_info_link_disclaimer_url;
                         let db_info_link_terms_url;
                         let db_info_link_about_url;            
-                        if (err) {
-                            let stack = new Error().stack;
-                            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                                        callBack(err, null);
-                                    })
-                                });
-                            })
-                        }
+                        if (err)
+                            callBack(err, null);
                         else{
                             let json = JSON.parse(JSON.stringify(result));
                             for (let i = 0; i < json.length; i++){
@@ -304,7 +296,6 @@ const client_locale = (accept_language) =>{
 }
 const read_app_files = async (app_id, files, callBack) => {
     let i = 0;
-    let stack = new Error().stack;
     //ES2020 import() with ES6 promises, object destructuring
     import('node:fs').then(({promises: {readFile}}) => {
         Promise.all(files.map(file => {
@@ -323,13 +314,7 @@ const read_app_files = async (app_id, files, callBack) => {
             callBack(null, app);
         })
         .catch(err => {
-            import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                    createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                        callBack(err, null);
-                    })
-                });
-            })
+            callBack(err, null);
         });
     })
 }
@@ -382,7 +367,7 @@ const get_module_with_init = async (app_id,
 
 const AppsStart = async (app) => {
     const {default:express} = await import('express');
-    
+
     app.use('/common',express.static(process.cwd() + '/apps/common/public'));
 
     for (let app_config of ConfigGet(7, null, 'APPS'))
@@ -393,8 +378,12 @@ const AppsStart = async (app) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         import('node:fs').then((fs) =>{
             fs.readFile(process.cwd() + `${ConfigGet(7, app_id, 'PATH')}/sw.js`, 'utf8', (error, fileBuffer) => {
-                if (error)
+                //show empty if any error for this file
+                if (error){
+                    res.statusCode = 500;
+                    res.statusMessage = error;
                     next();
+                }
                 else{
                     res.type('text/javascript');
                     res.send(fileBuffer.toString());
@@ -411,17 +400,24 @@ const AppsStart = async (app) => {
                     case 'disclaimer':
                     case 'privacy_policy':
                     case 'terms':{
-                    if (typeof req.query.lang_code !='undefined'){
-                        req.query.lang_code = 'en';
-                    }
-                    getInfo(app_id, req.params.info, req.query.lang_code, (err, info_result)=>{
-                        res.send(info_result);
-                    })
-                    break;
+                        if (typeof req.query.lang_code !='undefined'){
+                            req.query.lang_code = 'en';
+                        }
+                        getInfo(app_id, req.params.info, req.query.lang_code, (err, info_result)=>{
+                            //show empty if any error
+                            if (err){
+                                res.statusCode = 500;
+                                res.statusMessage = err;
+                                next();
+                            }
+                            else
+                                res.send(info_result);
+                        })
+                        break;
                     }
                     default:{
-                    res.send(null);
-                    break;
+                        res.send(null);
+                        break;
                     }
                 }
             else
@@ -441,8 +437,12 @@ const AppsStart = async (app) => {
         else
             import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getReport}) => {
                 getReport(req, res, app_id, (err, report_result)=>{
-                    if (err)
+                    //redirect if any error
+                    if (err){
+                        res.statusCode = 500;
+                        res.statusMessage = err;
                         res.redirect('/');
+                    }
                     else{
                         if (req.query.service==='PDF'){
                             res.type('application/pdf');
@@ -460,7 +460,14 @@ const AppsStart = async (app) => {
         let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
                 getApp(req, res, app_id, null,(err, app_result)=>{
-                    return res.send(app_result);
+                    //show empty if any error
+                    if (err){
+                        res.statusCode = 500;
+                        res.statusMessage = err;
+                        res.end();
+                    }
+                    else
+                        return res.send(app_result);
                 })
             })
     });
@@ -472,13 +479,21 @@ const AppsStart = async (app) => {
             if (ConfigGet(7, app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
                 import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
                     getApp(req, res, app_id, req.params.sub, (err, app_result)=>{
-                        //if app_result=0 means here redirect to /
-                        if (app_result==0)
-                            return res.redirect('/');
-                        else
-                            return res.send(app_result);
+                        //show empty if any error
+                        if (err){
+                            res.statusCode = 500;
+                            res.statusMessage = err;
+                            res.end();
+                        }
+                        else{
+                            //if app_result=0 means here redirect to /
+                            if (app_result==0)
+                                return res.redirect('/');
+                            else
+                                return res.send(app_result);
+                        }
                     })
-                });
+                })
             else
                 next();
     });

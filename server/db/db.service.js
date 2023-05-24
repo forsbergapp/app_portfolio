@@ -72,8 +72,8 @@ const pool_start = async (dbparameters) =>{
    */
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
-         case '1':
-         case '2':{
+         case 1:
+         case 2:{
             if (dbparameters.dba==1)
                POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use)) 
                                     db[1]=MYSQL.createPool({
@@ -104,7 +104,7 @@ const pool_start = async (dbparameters) =>{
 
             break;
          }
-         case '3':{
+         case 3:{
             const createpoolPostgreSQL = () =>{
                return new Promise(resolve=>{
                   resolve(new PG.Pool({
@@ -137,7 +137,7 @@ const pool_start = async (dbparameters) =>{
                })
             break;
          }
-         case '4':{
+         case 4:{
             let pool_id;
             const createpoolOracle= ()=>{
                ORACLEDB.createPool({	
@@ -176,7 +176,7 @@ const pool_close = async (pool_id, db_use, dba) =>{
          POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1] = null;
       else
          POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)] = null;
-   } catch (error) {
+   } catch (err) {
       return null;   
    }
    return null;
@@ -194,15 +194,15 @@ const pool_get = (pool_id, db_use, dba) => {
          pool = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)];
          return pool;
       }
-   } catch (error) {
+   } catch (err) {
       return null;
    }  
 }
 const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    return new Promise((resolve,reject)=>{
       switch (db_use){
-         case '1':
-         case '2':{
+         case 1:
+         case 2:{
             //Both MySQL and MariaDB use MySQL npm module
             const config_connection = (conn, query, values) => {
                //change json parameters to [] syntax with bind variable names
@@ -222,12 +222,12 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
                   conn.release();
                   if (err)
-                     reject (err);
+                     return reject (err);
                   else{
                      config_connection(conn, sql, parameters);
                      conn.query(sql, parameters, (err, result, fields) => {
                         if (err){
-                           reject (err);
+                           return reject (err);
                         }
                         else{
                            //convert blob buffer to string if any column is a BLOB type
@@ -242,17 +242,17 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                                  }
                               };
                            }
-                           resolve(result);
+                           return resolve(result);
                         }
                      })
                   }
                });					
-            } catch (error) {
-               reject (err);
+            } catch (err) {
+               return reject (err);
             }
             break;
          }
-         case '3':{
+         case 3:{
             const queryConvert = (parameterizedSql, params) => {
                //change json parameters to $ syntax
                //use unique index with $1, $2 etc, parameter can be used several times
@@ -300,22 +300,22 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      };
                   }
                   if (result.command == 'SELECT')
-                     resolve(result.rows);
+                     return resolve(result.rows);
                   else
-                     resolve(result);
+                     return resolve(result);
                   })
-                  .catch(error => {
-                     reject(error);
+                  .catch(err => {
+                     return reject(err);
                   })
-               }).catch(error=>{
-                  reject(error);   
+               }).catch(err=>{
+                  return reject(err);   
                });
-            } catch (error) {
-               reject(error);
+            } catch (err) {
+               return reject(err);
             }
             break;
          }
-         case '4':{
+         case 4:{
             try{
                ORACLEDB.getConnection(pool_get(pool_id, db_use, dba)).then((pool4)=>{
                   /*
@@ -336,25 +336,28 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                   pool4.execute(sql, parameters, (err,result) => {
                      pool4.close();
                      if (err) {
-                        reject(err);
+                        return reject(err);
                      }
                      else{
                         if (result.rowsAffected)
                            result.affectedRows = result.rowsAffected;
                         if (result.rows)
-                           resolve(result.rows);
+                           return resolve(result.rows);
                         else
-                           resolve(result);
+                           return resolve(result);
                      }
                   });
                })
-               .catch(error=>{
-                  reject(error);   
+               .catch(err=>{
+                  return reject(err);
                });
-            }catch (error) {
-               reject(error);
+            }catch (err) {
+               return reject(err);
             }
             break;
+         }
+         default:{
+            return reject();
          }
       }
    })
