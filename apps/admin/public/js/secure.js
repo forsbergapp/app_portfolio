@@ -1710,7 +1710,7 @@ const nav_click = (item) => {
 }
 const show_list = async (list_div, list_div_col_title, url_parameters, sort, order_by) => {
     if (admin_token_has_value()){
-        let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
+        let logscope;
         let json;
         let token_type;
         let path;
@@ -1739,6 +1739,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 break;
             }
             case 'list_server_log':{
+                logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
                 path = `/log/logs?${url_parameters}`;
                 service = 'LOG';
                 token_type = 2;
