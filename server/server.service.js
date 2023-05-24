@@ -19,6 +19,12 @@ let SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 
 const app_portfolio_title = 'App Portfolio';
 
+//calculate responsetime
+const responsetime = (res) => {
+    let diff = process.hrtime(res.getHeader('X-Response-Time'))
+    return diff[0] * 1e3 + diff[1] * 1e-6;
+}    
+
 const CreateRandomString =()=>{
     let randomstring = "";
     let chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
@@ -550,12 +556,7 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
             }
         }
     } catch (error) {
-        let stack = new Error().stack;
-        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-            createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                callBack(err, null);
-            })
-        });
+        callBack(error, null);
     }
 }
 const CheckFirstTime = () => {
@@ -619,25 +620,11 @@ const Info = async (callBack) => {
                     process: process_json
                     });
 }
-const serverRouterLog = ((req,res,next)=>{
-    let stack = new Error().stack;
-    next();
-    /*
-    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppRI}) => {
-        createLogAppRI(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), req.body,
-                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-            next();
-        })
-    })
-    */
-})
 const serverExpressLogError = (app) =>{
-    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogServerE}) => {
+    import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogRequestE}) => {
         //ERROR LOGGING
         app.use((err,req,res,next) => {
-            createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
+            LogRequestE(req, res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
                 next();
             });
         })    
@@ -729,130 +716,130 @@ const serverExpressRoutes = async (app) => {
     const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
     const rest_resouce_server = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER');
     
-    app.route('/apps/bff').delete               (serverRouterLog, checkDataToken, BFF);
-    app.route('/apps/bff').get                  (serverRouterLog, checkDataToken, BFF);
-    app.route('/apps/bff').patch                (serverRouterLog, checkDataToken, BFF);
-    app.route('/apps/bff').post                 (serverRouterLog, checkDataToken, BFF);
-    app.route('/apps/bff').put                  (serverRouterLog, checkDataToken, BFF);
-    app.route('/apps/bff/access').delete        (serverRouterLog, checkAccessToken, BFF);
-    app.route('/apps/bff/access').get           (serverRouterLog, checkAccessToken, BFF);
-    app.route('/apps/bff/access').patch         (serverRouterLog, checkAccessToken, BFF);
-    app.route('/apps/bff/access').post          (serverRouterLog, checkAccessToken, BFF);
-    app.route('/apps/bff/access').put           (serverRouterLog, checkAccessToken, BFF);
-    app.route('/apps/bff/admin').delete         (serverRouterLog, checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').get            (serverRouterLog, checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').patch          (serverRouterLog, checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').post           (serverRouterLog, checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').put            (serverRouterLog, checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/systemadmin').delete   (serverRouterLog, checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').get      (serverRouterLog, checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').patch    (serverRouterLog, checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').post     (serverRouterLog, checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').put      (serverRouterLog, checkSystemAdmin, BFF);    
-    app.route('/apps/bff/noauth').get           (serverRouterLog, BFF_noauth);
-    app.route('/apps/bff/auth').post            (serverRouterLog, BFF_auth);
+    app.route('/apps/bff').delete               (checkDataToken, BFF);
+    app.route('/apps/bff').get                  (checkDataToken, BFF);
+    app.route('/apps/bff').patch                (checkDataToken, BFF);
+    app.route('/apps/bff').post                 (checkDataToken, BFF);
+    app.route('/apps/bff').put                  (checkDataToken, BFF);
+    app.route('/apps/bff/access').delete        (checkAccessToken, BFF);
+    app.route('/apps/bff/access').get           (checkAccessToken, BFF);
+    app.route('/apps/bff/access').patch         (checkAccessToken, BFF);
+    app.route('/apps/bff/access').post          (checkAccessToken, BFF);
+    app.route('/apps/bff/access').put           (checkAccessToken, BFF);
+    app.route('/apps/bff/admin').delete         (checkAccessTokenAdmin, BFF);
+    app.route('/apps/bff/admin').get            (checkAccessTokenAdmin, BFF);
+    app.route('/apps/bff/admin').patch          (checkAccessTokenAdmin, BFF);
+    app.route('/apps/bff/admin').post           (checkAccessTokenAdmin, BFF);
+    app.route('/apps/bff/admin').put            (checkAccessTokenAdmin, BFF);
+    app.route('/apps/bff/systemadmin').delete   (checkSystemAdmin, BFF);
+    app.route('/apps/bff/systemadmin').get      (checkSystemAdmin, BFF);
+    app.route('/apps/bff/systemadmin').patch    (checkSystemAdmin, BFF);
+    app.route('/apps/bff/systemadmin').post     (checkSystemAdmin, BFF);
+    app.route('/apps/bff/systemadmin').put      (checkSystemAdmin, BFF);    
+    app.route('/apps/bff/noauth').get           (BFF_noauth);
+    app.route('/apps/bff/auth').post            (BFF_auth);
 
-    app.route(`${rest_resouce_server}/auth/admin`).post                                  (serverRouterLog, authSystemAdmin);
+    app.route(`${rest_resouce_server}/auth/admin`).post                                  (authSystemAdmin);
 
-    app.route(`${rest_resouce_server}/config/systemadmin`).put                           (serverRouterLog, checkSystemAdmin, ConfigSave);
-    app.route(`${rest_resouce_server}/config/systemadmin`).get                           (serverRouterLog, checkSystemAdmin, ConfigGetController);
-    app.route(`${rest_resouce_server}/config/systemadmin/saved`).get                     (serverRouterLog, checkSystemAdmin, ConfigGetSaved);
-    app.route(`${rest_resouce_server}/config/systemadmin/maintenance`).get               (serverRouterLog, checkSystemAdmin, ConfigMaintenanceGet);
-    app.route(`${rest_resouce_server}/config/systemadmin/maintenance`).patch             (serverRouterLog, checkSystemAdmin, ConfigMaintenanceSet);
-    app.route(`${rest_resouce_server}/config/info`).get                                  (serverRouterLog, checkSystemAdmin, ConfigInfo);
-    app.route(`${rest_resouce_server}/info`).get                                         (serverRouterLog, checkSystemAdmin, Info);
-    app.route(`${rest_resouce_server}/config/admin`).get                                 (serverRouterLog, checkAccessTokenAdmin, ConfigGetController);
+    app.route(`${rest_resouce_server}/config/systemadmin`).put                           (checkSystemAdmin, ConfigSave);
+    app.route(`${rest_resouce_server}/config/systemadmin`).get                           (checkSystemAdmin, ConfigGetController);
+    app.route(`${rest_resouce_server}/config/systemadmin/saved`).get                     (checkSystemAdmin, ConfigGetSaved);
+    app.route(`${rest_resouce_server}/config/systemadmin/maintenance`).get               (checkSystemAdmin, ConfigMaintenanceGet);
+    app.route(`${rest_resouce_server}/config/systemadmin/maintenance`).patch             (checkSystemAdmin, ConfigMaintenanceSet);
+    app.route(`${rest_resouce_server}/config/info`).get                                  (checkSystemAdmin, ConfigInfo);
+    app.route(`${rest_resouce_server}/info`).get                                         (checkSystemAdmin, Info);
+    app.route(`${rest_resouce_server}/config/admin`).get                                 (checkAccessTokenAdmin, ConfigGetController);
 
-    app.route(`${rest_resouce_server}/broadcast/message/SystemAdmin`).post               (serverRouterLog, checkSystemAdmin, BroadcastSendSystemAdmin);
-    app.route(`${rest_resouce_server}/broadcast/message/Admin`).post                     (serverRouterLog, checkAccessTokenAdmin, BroadcastSendAdmin);
-    app.route(`${rest_resouce_server}/broadcast/connection/SystemAdmin`).get             (serverRouterLog, checkSystemAdmin, ConnectedListSystemAdmin);
-    app.route(`${rest_resouce_server}/broadcast/connection/SystemAdmin`).patch           (serverRouterLog, checkSystemAdmin, ConnectedUpdate);
-    app.route(`${rest_resouce_server}/broadcast/connection/Admin`).get                   (serverRouterLog, checkAccessTokenAdmin, ConnectedList);
-    app.route(`${rest_resouce_server}/broadcast/connection/Admin/count`).get             (serverRouterLog, checkAccessTokenAdmin, ConnectedCount);
-    app.route(`${rest_resouce_server}/broadcast/connection/connect`).get                 (serverRouterLog, BroadcastConnect);
-    app.route(`${rest_resouce_server}/broadcast/connection`).patch                       (serverRouterLog, checkDataToken, ConnectedUpdate);
-    app.route(`${rest_resouce_server}/broadcast/connection/check/:user_account_id`).get  (serverRouterLog, checkDataToken, ConnectedCheck);
+    app.route(`${rest_resouce_server}/broadcast/message/SystemAdmin`).post               (checkSystemAdmin, BroadcastSendSystemAdmin);
+    app.route(`${rest_resouce_server}/broadcast/message/Admin`).post                     (checkAccessTokenAdmin, BroadcastSendAdmin);
+    app.route(`${rest_resouce_server}/broadcast/connection/SystemAdmin`).get             (checkSystemAdmin, ConnectedListSystemAdmin);
+    app.route(`${rest_resouce_server}/broadcast/connection/SystemAdmin`).patch           (checkSystemAdmin, ConnectedUpdate);
+    app.route(`${rest_resouce_server}/broadcast/connection/Admin`).get                   (checkAccessTokenAdmin, ConnectedList);
+    app.route(`${rest_resouce_server}/broadcast/connection/Admin/count`).get             (checkAccessTokenAdmin, ConnectedCount);
+    app.route(`${rest_resouce_server}/broadcast/connection/connect`).get                 (BroadcastConnect);
+    app.route(`${rest_resouce_server}/broadcast/connection`).patch                       (checkDataToken, ConnectedUpdate);
+    app.route(`${rest_resouce_server}/broadcast/connection/check/:user_account_id`).get  (checkDataToken, ConnectedCheck);
 
-    app.route(`${rest_resouce_server}/dbapi/admin/DBInfo`).get(serverRouterLog, checkSystemAdmin, DBInfo);
-    app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpace`).get(serverRouterLog, checkSystemAdmin, DBInfoSpace);
-    app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpaceSum`).get(serverRouterLog, checkSystemAdmin, DBInfoSpaceSum);
-    app.route(`${rest_resouce_server}/dbapi/admin/demo`).post(serverRouterLog, checkSystemAdmin, demo_add);
-    app.route(`${rest_resouce_server}/dbapi/admin/demo`).get(serverRouterLog, checkSystemAdmin, demo_get);
-    app.route(`${rest_resouce_server}/dbapi/admin/demo`).delete(serverRouterLog, checkSystemAdmin, demo_delete);
-    app.route(`${rest_resouce_server}/dbapi/admin/install`).post(serverRouterLog, checkSystemAdmin, install_db);
-    app.route(`${rest_resouce_server}/dbapi/admin/install`).get(serverRouterLog, checkSystemAdmin, install_db_check);
-    app.route(`${rest_resouce_server}/dbapi/admin/install`).delete(serverRouterLog, checkSystemAdmin, install_db_delete);
+    app.route(`${rest_resouce_server}/dbapi/admin/DBInfo`).get(checkSystemAdmin, DBInfo);
+    app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpace`).get(checkSystemAdmin, DBInfoSpace);
+    app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpaceSum`).get(checkSystemAdmin, DBInfoSpaceSum);
+    app.route(`${rest_resouce_server}/dbapi/admin/demo`).post(checkSystemAdmin, demo_add);
+    app.route(`${rest_resouce_server}/dbapi/admin/demo`).get(checkSystemAdmin, demo_get);
+    app.route(`${rest_resouce_server}/dbapi/admin/demo`).delete(checkSystemAdmin, demo_delete);
+    app.route(`${rest_resouce_server}/dbapi/admin/install`).post(checkSystemAdmin, install_db);
+    app.route(`${rest_resouce_server}/dbapi/admin/install`).get(checkSystemAdmin, install_db_check);
+    app.route(`${rest_resouce_server}/dbapi/admin/install`).delete(checkSystemAdmin, install_db_delete);
 
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps`).get(serverRouterLog, checkDataToken, getApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps/admin`).get(serverRouterLog, checkAccessTokenAdmin, getAppsAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps/admin/:id`).put(serverRouterLog, checkAccessTokenAdmin, updateAppAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_category/admin`).get(serverRouterLog, checkAccessTokenAdmin, getAppCategoryAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin`).get(serverRouterLog, checkAccessTokenAdmin, getLogsAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin/stat/uniquevisitor`).get(serverRouterLog, checkAccessTokenAdmin, getStatUniqueVisitorAdmin);    
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_object/:lang_code`).get(serverRouterLog, checkDataToken, getObjects);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_object/admin/:lang_code`).get(serverRouterLog, checkDataToken, getObjects);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/all/:app_id`).get(serverRouterLog, checkAccessTokenAdmin, getParametersAllAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin`).put(serverRouterLog, checkAccessTokenAdmin, setParameter_admin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/value`).patch(serverRouterLog, checkAccessTokenAdmin, setParameterValue_admin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/:app_id`).get(serverRouterLog, checkDataToken, getParametersAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/:app_id`).get(serverRouterLog, checkDataToken, getParameters);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_role/admin`).get(serverRouterLog, checkAccessTokenAdmin, getAppRoleAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/country/:lang_code`).get(serverRouterLog,  checkDataToken, getCountries);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/identityprovider`).get(serverRouterLog,  checkDataToken, getIdentityProviders);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/:lang_code`).get(serverRouterLog,  checkDataToken, getLocales);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/admin/:lang_code`).get(serverRouterLog,  checkDataToken, getLocales);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/message_translation/:code`).get(serverRouterLog,  checkDataToken, getMessage);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/parameter_type/admin`).get(serverRouterLog, checkAccessTokenAdmin, getParameterTypeAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings`).get(serverRouterLog, checkDataToken, getSettings);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings/admin`).get(serverRouterLog, checkDataToken, getSettings);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps`).get(checkDataToken, getApp);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps/admin`).get(checkAccessTokenAdmin, getAppsAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps/admin/:id`).put(checkAccessTokenAdmin, updateAppAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_category/admin`).get(checkAccessTokenAdmin, getAppCategoryAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin`).get(checkAccessTokenAdmin, getLogsAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin/stat/uniquevisitor`).get(checkAccessTokenAdmin, getStatUniqueVisitorAdmin);    
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_object/:lang_code`).get(checkDataToken, getObjects);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_object/admin/:lang_code`).get(checkDataToken, getObjects);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/all/:app_id`).get(checkAccessTokenAdmin, getParametersAllAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin`).put(checkAccessTokenAdmin, setParameter_admin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/value`).patch(checkAccessTokenAdmin, setParameterValue_admin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/:app_id`).get(checkDataToken, getParametersAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/:app_id`).get(checkDataToken, getParameters);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_role/admin`).get(checkAccessTokenAdmin, getAppRoleAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/country/:lang_code`).get( checkDataToken, getCountries);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/identityprovider`).get( checkDataToken, getIdentityProviders);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/:lang_code`).get( checkDataToken, getLocales);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/admin/:lang_code`).get( checkDataToken, getLocales);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/message_translation/:code`).get( checkDataToken, getMessage);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/parameter_type/admin`).get(checkAccessTokenAdmin, getParameterTypeAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings`).get(checkDataToken, getSettings);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings/admin`).get(checkDataToken, getSettings);
 
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/count`).get(serverRouterLog, checkAccessTokenAdmin, getStatCountAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin`).get(serverRouterLog, checkAccessTokenAdmin, getUsersAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/:id`).put(serverRouterLog, checkAccessTokenSuperAdmin, updateUserSuperAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/login`).put(serverRouterLog, checkDataTokenLogin, userLogin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/signup`).post(serverRouterLog, checkDataTokenRegistration, userSignup);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/activate/:id`).put(serverRouterLog, checkDataToken, activateUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/forgot`).put(serverRouterLog, checkDataToken, passwordResetUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/password/:id`).put(serverRouterLog, checkAccessToken, updatePassword);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).put(serverRouterLog, checkAccessToken, updateUserLocal);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/provider/:id`).put(serverRouterLog, checkDataTokenLogin, providerSignIn);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).get(serverRouterLog, checkAccessToken, getUserByUserId);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/common/:id`).put(serverRouterLog, checkAccessToken, updateUserCommon);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).delete(serverRouterLog, checkAccessToken, deleteUser);    
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail:id`).get(serverRouterLog, checkAccessToken, getProfileDetail);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/top/:statchoice`).get(serverRouterLog, checkDataToken, getProfileTop);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/id/:id`).post(serverRouterLog, checkDataToken, getProfileUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username`).post(serverRouterLog, checkDataToken, getProfileUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchD`).post(serverRouterLog, checkDataToken, searchProfileUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchA`).post(serverRouterLog, checkAccessToken, searchProfileUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/count`).get(checkAccessTokenAdmin, getStatCountAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin`).get(checkAccessTokenAdmin, getUsersAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/:id`).put(checkAccessTokenSuperAdmin, updateUserSuperAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/login`).put(checkDataTokenLogin, userLogin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/signup`).post(checkDataTokenRegistration, userSignup);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/activate/:id`).put(checkDataToken, activateUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/forgot`).put(checkDataToken, passwordResetUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/password/:id`).put(checkAccessToken, updatePassword);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).put(checkAccessToken, updateUserLocal);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/provider/:id`).put(checkDataTokenLogin, providerSignIn);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).get(checkAccessToken, getUserByUserId);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/common/:id`).put(checkAccessToken, updateUserCommon);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).delete(checkAccessToken, deleteUser);    
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail:id`).get(checkAccessToken, getProfileDetail);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/top/:statchoice`).get(checkDataToken, getProfileTop);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/id/:id`).post(checkDataToken, getProfileUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username`).post(checkDataToken, getProfileUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchD`).post(checkDataToken, searchProfileUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchA`).post(checkAccessToken, searchProfileUser);
 
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/`).post(serverRouterLog, checkAccessToken, createUserAccountApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).get(serverRouterLog, checkAccessToken, getUserAccountApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/apps/:user_account_id`).get(serverRouterLog, checkAccessToken, getUserAccountApps);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).patch(serverRouterLog, checkAccessToken, updateUserAccountApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id/:app_id`).delete(serverRouterLog, checkAccessToken, deleteUserAccountApps);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).get(serverRouterLog, checkDataToken, getUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/user_account_id/:id`).get(serverRouterLog, checkDataToken, getUserSettingsByUserId);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/:id`).get(serverRouterLog, checkDataToken, getProfileUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/all/:id`).get(serverRouterLog, checkDataToken, getProfileUserSettings);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/detail/:id`).get(serverRouterLog, checkDataToken, getProfileUserSettingDetail);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/top//:statchoice`).get(serverRouterLog, checkDataToken, getProfileTopSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting`).post(serverRouterLog, checkAccessToken, createUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).put(serverRouterLog, checkAccessToken, updateUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).delete(serverRouterLog, checkAccessToken, deleteUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).post(serverRouterLog, checkAccessToken, likeUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).delete(serverRouterLog, checkAccessToken, unlikeUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_view`).post(serverRouterLog, checkDataToken, insertUserSettingView);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).post(serverRouterLog, checkAccessToken, followUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).delete(serverRouterLog, checkAccessToken, unfollowUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).post(serverRouterLog, checkAccessToken, likeUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).delete(serverRouterLog, checkAccessToken, unlikeUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_logon/admin/:user_account_id/:app_id`).get(serverRouterLog, checkAccessTokenAdmin, getUserAccountLogonAdmin);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/`).post(checkAccessToken, createUserAccountApp);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).get(checkAccessToken, getUserAccountApp);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/apps/:user_account_id`).get(checkAccessToken, getUserAccountApps);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).patch(checkAccessToken, updateUserAccountApp);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id/:app_id`).delete(checkAccessToken, deleteUserAccountApps);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).get(checkDataToken, getUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/user_account_id/:id`).get(checkDataToken, getUserSettingsByUserId);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/:id`).get(checkDataToken, getProfileUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/all/:id`).get(checkDataToken, getProfileUserSettings);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/detail/:id`).get(checkDataToken, getProfileUserSettingDetail);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/top//:statchoice`).get(checkDataToken, getProfileTopSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting`).post(checkAccessToken, createUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).put(checkAccessToken, updateUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).delete(checkAccessToken, deleteUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).post(checkAccessToken, likeUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).delete(checkAccessToken, unlikeUserSetting);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_view`).post(checkDataToken, insertUserSettingView);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).post(checkAccessToken, followUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).delete(checkAccessToken, unfollowUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).post(checkAccessToken, likeUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).delete(checkAccessToken, unlikeUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_logon/admin/:user_account_id/:app_id`).get(checkAccessTokenAdmin, getUserAccountLogonAdmin);
 
-    app.route(`${rest_resouce_server}/log/parameters`).get                               (serverRouterLog, checkSystemAdmin, getLogParameters);
-    app.route(`${rest_resouce_server}/log/logs`).get                                     (serverRouterLog, checkSystemAdmin, getLogs);
-    app.route(`${rest_resouce_server}/log/files`).get                                    (serverRouterLog, checkSystemAdmin, getFiles);
-    app.route(`${rest_resouce_server}/log/pm2logs`).get                                  (serverRouterLog, checkSystemAdmin, getPM2Logs);
+    app.route(`${rest_resouce_server}/log/parameters`).get                               (checkSystemAdmin, getLogParameters);
+    app.route(`${rest_resouce_server}/log/logs`).get                                     (checkSystemAdmin, getLogs);
+    app.route(`${rest_resouce_server}/log/files`).get                                    (checkSystemAdmin, getFiles);
+    app.route(`${rest_resouce_server}/log/pm2logs`).get                                  (checkSystemAdmin, getPM2Logs);
 
     //microservices
     //service geolocation
@@ -860,24 +847,25 @@ const serverExpressRoutes = async (app) => {
     //service worldcities
     const { getCities} = await import(`file://${process.cwd()}/service/worldcities/worldcities.controller.js`);
     
-    app.route(`${rest_resource_service}/geolocation/place`).get(serverRouterLog, checkDataToken, getPlace);
-    app.route(`${rest_resource_service}/geolocation/place/admin`).get(serverRouterLog, checkAccessTokenAdmin, getPlace);
-    app.route(`${rest_resource_service}/geolocation/place/systemadmin`).get(serverRouterLog, checkSystemAdmin, getPlace);
-    app.route(`${rest_resource_service}/geolocation/ip`).get(serverRouterLog, checkDataToken, getIp);
-    app.route(`${rest_resource_service}/geolocation/ip/admin`).get(serverRouterLog, checkAccessTokenAdmin, getIp);
-    app.route(`${rest_resource_service}/geolocation/ip/systemadmin`).get(serverRouterLog, checkSystemAdmin, getIp);
-    app.route(`${rest_resource_service}/geolocation/timezone`).get(serverRouterLog, checkDataToken, getTimezone);
-    app.route(`${rest_resource_service}/geolocation/timezone/admin`).get(serverRouterLog, checkAccessTokenAdmin, getTimezoneAdmin);
-    app.route(`${rest_resource_service}/geolocation/timezone/systemadmin`).get(serverRouterLog, checkSystemAdmin, getTimezoneSystemAdmin);
-    app.route(`${rest_resource_service}/worldcities/:country`).get(serverRouterLog, checkDataToken, getCities);
+    app.route(`${rest_resource_service}/geolocation/place`).get(checkDataToken, getPlace);
+    app.route(`${rest_resource_service}/geolocation/place/admin`).get(checkAccessTokenAdmin, getPlace);
+    app.route(`${rest_resource_service}/geolocation/place/systemadmin`).get(checkSystemAdmin, getPlace);
+    app.route(`${rest_resource_service}/geolocation/ip`).get(checkDataToken, getIp);
+    app.route(`${rest_resource_service}/geolocation/ip/admin`).get(checkAccessTokenAdmin, getIp);
+    app.route(`${rest_resource_service}/geolocation/ip/systemadmin`).get(checkSystemAdmin, getIp);
+    app.route(`${rest_resource_service}/geolocation/timezone`).get(checkDataToken, getTimezone);
+    app.route(`${rest_resource_service}/geolocation/timezone/admin`).get(checkAccessTokenAdmin, getTimezoneAdmin);
+    app.route(`${rest_resource_service}/geolocation/timezone/systemadmin`).get(checkSystemAdmin, getTimezoneSystemAdmin);
+    app.route(`${rest_resource_service}/worldcities/:country`).get(checkDataToken, getCities);
 }
 const serverExpress = async () => {
     const {default: express} = await import('express');
     const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
     const {default: compression} = await import('compression');
-    const { check_request, access_control} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
-    const {createLogServerI, createLogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+    const { check_request, access_control} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+    const {LogRequestI} = await import(`file://${process.cwd()}/server/log/log.service.js`);
     const ContentSecurityPolicy = ConfigGet(4);
+    const {randomUUID, createHash} = await import('node:crypto');
     return new Promise((resolve, reject) =>{
         const app = express();
         //
@@ -895,6 +883,12 @@ const serverExpress = async () => {
         app.set('trust proxy', true);
         app.use(compression({ filter: shouldCompress }));
         app.use((req, res, next) => {
+            res.setHeader('X-Response-Time', process.hrtime())
+            req.headers['X-Request-Id'] =  randomUUID();
+            if (req.headers.authorization)
+                req.headers['X-Correlation-Id'] =  createHash('sha256').update(req.headers.authorization).digest('hex');
+            else
+                req.headers['X-Correlation-Id'] =  createHash('sha256').update(req.hostname +  req.ip + req.method).digest('hex');
             res.setHeader('Access-Control-Max-Age','5');
             res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
@@ -915,63 +909,67 @@ const serverExpress = async () => {
         });
         // set JSON maximum size
         app.use(express.json({ limit: ConfigGet(1, 'SERVER', 'JSON_LIMIT') }));
-        //access control with log of stopped requests
-        //logs only if error
+        
         app.use((req,res,next) => {                
-            access_control(req, res, (err, result)=>{
-                if(err){
-                null;
-                }
-                else{
-                if (result)
-                    res.end;
-                else
-                    next();
-                }
-            });
+            //access control that stops request if not passing controls
+            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
+                access_control(req.ip, req.headers.host, req.headers["user-agent"], req.headers["accept-language"], (err, result)=>{
+                    if (err){
+                        //access control caused unknown error continue, will be logged when response closed
+                        res.statusCode = 500;
+                        res.statusMessage = err;
+                        next();
+                    }
+                    else
+                        if (result == null){
+                            //access control ok
+                            //check request characters in path
+                            check_request(req.path, (err, result) =>{
+                                if (err){
+                                    res.statusCode = 400;
+                                    res.statusMessage = 'check_request ⛔';
+                                    res.send('⛔');
+                                    res.end();
+                                }
+                                else
+                                    next();
+                            })
+                        }
+                        else{
+                            //update response, will be logged in request log
+                            res.statusCode = result.statusCode;
+                            res.statusMessage = 'access control: ' + result.statusMessage;
+                            res.send('⛔');
+                            res.end();
+                        }
+                })
+            }
         })
-        //check request
-        //logs only if error
-        app.use((req, res, next) => {
-            check_request(req, (err, result) =>{
-                if (err){
-                res.statusCode = 400;
-                createLogServerE(req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, res.statusCode, 
-                                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer'], err).then(() => {
-                    res.send('⛔');
-                    res.end;
-                });
-                }
-                else{
-                next();
-                }
-            })
-        });
         //convert query id parameters from string to integer
         //and logs after response is finished
         app.use((req, res, next) => { 
             //req.params can be modified in controller
             if (req.query.app_id)
-            req.query.app_id = parseInt(req.query.app_id);
+                req.query.app_id = parseInt(req.query.app_id);
             if (req.query.id)
-            req.query.id = parseInt(req.query.id);
+                req.query.id = parseInt(req.query.id);
             if (req.query.user_account_logon_user_account_id)
-            req.query.user_account_logon_user_account_id = parseInt(req.query.user_account_logon_user_account_id);
+                req.query.user_account_logon_user_account_id = parseInt(req.query.user_account_logon_user_account_id);
             if (req.query.user_account_id)
-            req.query.user_account_id = parseInt(req.query.user_account_id);
+                req.query.user_account_id = parseInt(req.query.user_account_id);
             if (req.query.app_user_id)
-            req.query.app_user_id = parseInt(req.query.app_user_id);
+                req.query.app_user_id = parseInt(req.query.app_user_id);
             if (req.query.client_id)
-            req.query.client_id = parseInt(req.query.client_id);
-            res.on('finish',()=>{
-            //logs the result after REST API has modified req and res
-            createLogServerI(null,
-                req,
-                req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                res.statusCode, res.statusMessage, 
-                req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                res.end;
-            });
+                req.query.client_id = parseInt(req.query.client_id);
+            if (req.headers.accept == 'text/event-stream'){
+                //Eventsource, log since response is open and log again when closing
+                LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res));
+            }
+            res.on('close',()=>{
+                //eventsource response time will be time connected until disconnected
+                LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res)).then(() => {
+                    res.end();
+                });
             })
             next();
         });
@@ -1029,8 +1027,7 @@ const serverStart = async () =>{
     const https = await import('node:https');
     process.env.TZ = 'UTC';
     InitConfig().then(() => {
-        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogServerI})=>{
-            
+        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServerI})=>{
             //Get express app with all configurations
             serverExpress().then((app)=>{
                 import(`file://${process.cwd()}/apps/apps.service.js`).then(({AppsStart})=>{
@@ -1039,7 +1036,7 @@ const serverStart = async () =>{
                         BroadcastCheckMaintenance();
                         //START HTTP SERVER
                         app.listen(ConfigGet(1, 'SERVER', 'PORT'), () => {
-                            createLogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(() => {
+                            LogServerI('HTTP Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'PORT')).then(() => {
                                 null;
                             });
                         });
@@ -1055,11 +1052,16 @@ const serverStart = async () =>{
                                         key: env_key,
                                         cert: env_cert
                                     };
-                                    https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
-                                        createLogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
+                                    const server = https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
+                                        LogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
                                             DBStart();
                                         });
                                     })
+                                    process.on('uncaughtException', (err) =>{
+                                        
+                                        console.log(err)
+                                    })
+                                    
                                 })
                             })
                         }
@@ -1070,6 +1072,7 @@ const serverStart = async () =>{
     })
 }
 
-export {COMMON, ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
+export {COMMON, CreateRandomString,
+        ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, ConfigInfo, Info, 
-        ConfigGet, InitConfig, serverStart, CreateRandomString};
+        ConfigGet, InitConfig, serverStart };

@@ -1,171 +1,14 @@
 const service = await import('./auth.service.js')
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-//SERVER MIDDLEWARE
-const access_control = (req, res, callBack) => {
-    let app_id = null;
-    if (req.query.app_id)
-        app_id =  req.query.app_id;
-    let stack = new Error().stack;
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
-        let ip_v4 = req.ip.replace('::ffff:','');
-        service.block_ip_control(ip_v4, (err, result_range) =>{
-            if (err){
-                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                        createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), err).then(() => {
-                            res.status(500).send(
-                                err
-                            );
-                        })
-                    });
-                })
-            }
-            else{
-                if (result_range){
-                    res.statusCode = result_range.statusCode;
-                    res.statusMessage = `ip ${ip_v4} blocked, range: ${result_range.statusMessage}, tried URL: ${req.originalUrl}`;
-                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                            createLogAppC(app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
-										  req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-										  res.statusCode, 
-										  req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                return callBack(null,result_range);
-                            })
-                        });
-                    })
-                }
-                else{
-                    //check if host exists
-                    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')=='1' &&
-                        typeof req.headers.host=='undefined'){
-                        res.statusCode = 406;
-                        res.statusMessage = `ip ${ip_v4} blocked, no host, tried URL: ${req.originalUrl}`;
-                        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                createLogAppC(app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
-                                            req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                            res.statusCode, 
-                                            req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                    //406 Not Acceptable
-                                    return callBack(null, 406);
-                                })
-                            });
-                        })
-                    }
-                    else{
-                        //check if accessed from domain and not os hostname
-                        import('node:os').then(({hostname}) =>{
-                            let this_hostname = hostname();
-                            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')=='1' &&
-                                req.headers.host==this_hostname){
-                                res.statusCode = 406;
-                                res.statusMessage = `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain, tried URL: ${req.originalUrl}`;
-                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                        createLogAppC(app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
-                                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                    res.statusCode, 
-                                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                            //406 Not Acceptable
-                                            return callBack(null, 406);
-                                        })
-                                    });
-                                })
-                            }
-                            else{
-                                service.safe_user_agents(req.headers["user-agent"], (err, safe)=>{
-                                    if (err){
-                                        return callBack(err, null);
-                                    }
-                                    else{
-                                        if (safe==true)
-                                            return callBack(null,null);
-                                        else{
-                                            //check if user-agent exists
-                                            if(ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT_EXIST')==1 &&
-                                                typeof req.headers["user-agent"]=='undefined'){
-                                                res.statusCode = 406;
-                                                res.statusMessage = `ip ${ip_v4} blocked, no user-agent, tried URL: ${req.originalUrl}`;
-                                                import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                                    import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                        createLogAppC(app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
-                                                                    req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                                    res.statusCode, 
-                                                                    req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                                            //406 Not Acceptable
-                                                            return callBack(null, 406);
-                                                        })
-                                                    });
-                                                })
-                                            }
-                                            else{
-                                                //check if accept-language exists
-                                                if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')=='1' &&
-                                                    typeof req.headers["accept-language"]=='undefined'){
-                                                    res.statusCode = 406;
-                                                    res.statusMessage = `ip ${ip_v4} blocked, no accept-language, tried URL: ${req.originalUrl}`;
-                                                    import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-                                                        import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppC}) => {
-                                                            createLogAppC(app_id, ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), res.statusMessage,
-                                                                        req.ip, req.get('host'), req.protocol, req.originalUrl, req.method, 
-                                                                        res.statusCode, 
-                                                                        req.headers['user-agent'], req.headers['accept-language'], req.headers['referer']).then(() => {
-                                                                //406 Not Acceptable
-                                                                return callBack(null, 406);
-                                                            })
-                                                        });
-                                                    })
-                                                }
-                                                else
-                                                    return callBack(null,null);
-                                            }
-                                        }
-                                    }
-                                })
-                            }
-                        })
-                    }
-                }
-            }
-        })
-    }
-    else
-        return callBack(null,null);
-}
-const check_request = (req, callBack) =>{
-    let err = null;
-    try {
-        decodeURIComponent(req.path)
-    }
-    catch(e) {
-        err = e;
-    }
-    if (err){
-        callBack(err, null)
-    }
-    else
-        callBack(null, null)
-}
 //ENDPOINT MIDDLEWARE
 const checkAccessTokenCommon = (req, res, next) => {
-    let stack = new Error().stack;
     service.checkAccessToken(req.query.app_id, req.query.user_account_logon_user_account_id, req.ip, req.get("authorization"))
     .then(result=>{
         if (result==true)
             next()
         else
             res.status(401).send('⛔');
-    })
-    .catch(error=>{
-        import(`file://${process.cwd()}/server/server.service.js`).then(({COMMON}) => {
-            import(`file://${process.cwd()}/server/log/log.service.js`).then(({createLogAppS}) => {
-                createLogAppS(ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(() => {
-                    res.status(500).send(error);
-                })
-            });
-        })
     })
 }
 const checkAccessTokenSuperAdmin = (req, res, next) => {
@@ -237,7 +80,6 @@ const checkClientAccess = (req, res, next) => {
             res.status(401).send('⛔');
     })
 }
-export {access_control, check_request, 
-        checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
+export {checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
         checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, 
         checkClientAccess}
