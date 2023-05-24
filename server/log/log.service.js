@@ -179,8 +179,8 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
                                 app_id:         app_id,
                                 db:             db,
                                 sql:            sql,
-                                parameter:      parameters,
-                                result:         `Rows:${result.rows==undefined?result.length:result.rows.length}`
+                                parameters:     JSON.stringify(parameters),
+                                logtext:        `Rows:${result.rows==undefined?result.length:result.rows.length}`
                                 };
                 break;
             }
@@ -191,8 +191,8 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
                                 app_id:         app_id,
                                 db:             db,
                                 sql:            sql,
-                                parameter:      parameters,
-                                result:         result
+                                parameters:     JSON.stringify(parameters),
+                                logtext:        result
                                 };
                 break;
             }
@@ -213,36 +213,34 @@ const LogDBE = async (app_id, db, sql, parameters, result) => {
             app_id:         app_id,
             db:             db,
             sql:            sql,
-            parameter:      parameters,
-            result:         result
+            parameters:     JSON.stringify(parameters),
+            logtext:        result
             };
         resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
     })
 }
-const LogServiceI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
+const LogServiceI = async (app_id, service, parameters, logtext) => {
     return await new Promise((resolve) => {         
         let log_json;
         let level_info;
         switch (ConfigGet(1, 'SERVICE_LOG', 'SERVICE_LEVEL')){
             case '1':{
                 level_info = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO')
-                log_json = {logdate:                logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')),
-                            app_id:                 app_id,
-                            app_filename:           app_filename,
-                            app_function_name:      app_function_name,
-                            app_app_line:           app_line,
-                            logtext:                null
+                log_json = {logdate:    logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')),
+                            app_id:     app_id,
+                            service:    service,
+                            parameters: parameters,
+                            logtext:    logtext.length
                             };    
                 break;
             }
             case '2':{
                 level_info = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_VERBOSE')
-                log_json = {logdate:                logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')),
-                            app_id:                 app_id,
-                            app_filename:           app_filename,
-                            app_function_name:      app_function_name,
-                            app_app_line:           app_line,
-                            logtext:                logtext
+                log_json = {logdate:    logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')),
+                            app_id:     app_id,
+                            service:    service,
+                            parameters: parameters,
+                            logtext:    logtext
                             };    
                 break;
             }
@@ -255,15 +253,14 @@ const LogServiceI = async (app_id, app_filename, app_function_name, app_line, lo
         return resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
     })
 }
-const LogServiceE = async (app_id, app_filename, app_function_name, app_line, logtext) => {
+const LogServiceE = async (app_id, service, parameters, logtext) => {
     return await new Promise((resolve) => {    
         let log_json = {
-                        logdate:            logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')),
-                        app_id:             app_id,
-                        app_filename:       app_filename,
-                        app_function_name:  app_function_name,
-                        app_app_line:       app_line,
-                        logtext:            logtext
+                        logdate:    logdate(ConfigGet(1, 'SERVICE_LOG', 'DATE_FORMAT')),
+                        app_id:     app_id,
+                        service:    service,
+                        parameters: parameters,
+                        logtext:    logtext
                        };
         return resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE'), ConfigGet(1, 'SERVICE_LOG', 'LEVEL_ERROR'), log_json));
     })
@@ -357,79 +354,189 @@ const getLogs = (app_id, data, callBack) => {
                     order_by = 1;
                 else   
                     order_by = -1;
-                switch (parseInt(data.sort)){
-                    case 0:{
-                        column_sort = 'logdate';
+                switch (data.logscope){
+                    case 'REQUEST':{
+                        switch (parseInt(data.sort)){
+                            case 0:{
+                                column_sort = 'logdate';
+                                break;
+                            }
+                            case 1:{
+                                column_sort = 'host';
+                                break;
+                            }
+                            case 2:{
+                                column_sort = 'ip';
+                                break;
+                            }
+                            case 3:{
+                                column_sort = 'requestid';
+                                break;
+                            }
+                            case 4:{
+                                column_sort = 'correlationid';
+                                break;
+                            }
+                            case 5:{
+                                column_sort = 'url';
+                                break;
+                            }
+                            case 6:{
+                                column_sort = 'http_info';
+                                break;
+                            }
+                            case 7:{
+                                column_sort = 'method';
+                                break;
+                            }
+                            case 8:{
+                                column_sort = 'statusCode';
+                                break;
+                            }
+                            case 9:{
+                                column_sort = 'statusMessage';
+                                break;
+                            }
+                            case 10:{
+                                column_sort = '["user-agent"]';
+                                break;
+                            }
+                            case 11:{
+                                column_sort = '["accept-language"]';
+                                break;
+                            }
+                            case 12:{
+                                column_sort = 'referer';
+                                break;
+                            }
+                            case 13:{
+                                column_sort = 'size_received';
+                                break;
+                            }
+                            case 14:{
+                                column_sort = 'size_sent';
+                                break;
+                            }
+                            case 15:{
+                                column_sort = 'responsetime';
+                                break;
+                            }
+                            case 16:{
+                                column_sort = 'logtext';
+                                break;
+                            }
+                            default:{
+                                column_sort = 'logdate';
+                            }
+                        }
+                        break;
+                    } 
+                    case 'SERVER':{
+                        switch (parseInt(data.sort)){
+                            case 0:{
+                                column_sort = 'logdate';
+                                break;
+                            }
+                            case 1:{
+                                column_sort = 'logtext';
+                                break;
+                            }
+                            default:{
+                                column_sort = 'logdate';
+                            }
+                        }
                         break;
                     }
-                    case 1:{
-                        column_sort = 'host';
+                    case 'APP':{
+                        switch (parseInt(data.sort)){
+                            case 0:{
+                                column_sort = 'logdate';
+                                break;
+                            }
+                            case 1:{
+                                column_sort = 'app_id';
+                                break;
+                            }
+                            case 2:{
+                                column_sort = 'app_filename';
+                                break;
+                            }
+                            case 3:{
+                                column_sort = 'app_function_name';
+                                break;
+                            }
+                            case 4:{
+                                column_sort = 'app_app_line';
+                                break;
+                            }
+                            case 5:{
+                                column_sort = 'logtext';
+                                break;
+                            }
+                            default:{
+                                column_sort = 'logdate';
+                            }
+                        }
                         break;
                     }
-                    case 2:{
-                        column_sort = 'ip';
+                    case 'SERVICE':{
+                        switch (parseInt(data.sort)){
+                            case 0:{
+                                column_sort = 'logdate';
+                                break;
+                            }
+                            case 1:{
+                                column_sort = 'app_id';
+                                break;
+                            }
+                            case 2:{
+                                column_sort = 'service';
+                                break;
+                            }
+                            case 3:{
+                                column_sort = 'parameters';
+                                break;
+                            }
+                            case 4:{
+                                column_sort = 'logtext';
+                                break;
+                            }
+                            default:{
+                                column_sort = 'logdate';
+                            }
+                        }
                         break;
                     }
-                    case 3:{
-                        column_sort = 'requestid';
+                    case 'DB':{
+                        switch (parseInt(data.sort)){
+                            case 0:{
+                                column_sort = 'logdate';
+                                break;
+                            }
+                            case 1:{
+                                column_sort = 'app_id';
+                                break;
+                            }
+                            case 2:{
+                                column_sort = 'db';
+                                break;
+                            }
+                            case 3:{
+                                column_sort = 'sql';
+                                break;
+                            }
+                            case 4:{
+                                column_sort = 'parameters';
+                                break;
+                            }
+                            default:{
+                                column_sort = 'logdate';
+                            }
+                        }
                         break;
-                    }
-                    case 4:{
-                        column_sort = 'correlationid';
-                        break;
-                    }
-                    case 5:{
-                        column_sort = 'url';
-                        break;
-                    }
-                    case 6:{
-                        column_sort = 'http_info';
-                        break;
-                    }
-                    case 7:{
-                        column_sort = 'method';
-                        break;
-                    }
-                    case 8:{
-                        column_sort = 'statusCode';
-                        break;
-                    }
-                    case 9:{
-                        column_sort = 'statusMessage';
-                        break;
-                    }
-                    case 10:{
-                        column_sort = '["user-agent"]';
-                        break;
-                    }
-                    case 11:{
-                        column_sort = '["accept-language"]';
-                        break;
-                    }
-                    case 12:{
-                        column_sort = 'referer';
-                        break;
-                    }
-                    case 13:{
-                        column_sort = 'size_received';
-                        break;
-                    }
-                    case 14:{
-                        column_sort = 'size_sent';
-                        break;
-                    }
-                    case 15:{
-                        column_sort = 'responsetime';
-                        break;
-                    }
-                    case 16:{
-                        column_sort = 'logtext';
-                        break;
-                    }
-                    default:{
-                        column_sort = 'logdate';
                     }
                 }
+                
                 fixed_log.sort(sortByProperty(column_sort, order_by))
                 return callBack(null, fixed_log);
             });
