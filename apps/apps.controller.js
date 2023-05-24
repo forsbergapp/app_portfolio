@@ -278,7 +278,7 @@ const BFF = async (req, res) =>{
             .then(result_service => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
                     let log_text = message_queue==true?null:result_service;
-                    LogServiceI(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), log_text).then(result_log=>{
+                    LogServiceI(req.query.app_id, service_called, parameters, log_text).then(result_log=>{
                         //message queue saves result there
                         if (message_queue)
                             return res.status(200).send('✅');
@@ -290,7 +290,7 @@ const BFF = async (req, res) =>{
             .catch(error => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
                     //log ERROR to module log and to files
-                    LogServiceE(req.query.app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(stack), COMMON.app_line(), error).then(() => {
+                    LogServiceE(req.query.app_id, service_called, parameters, error).then(() => {
                         //return service unavailable and error message
                         return res.status(503).json({
                             message: error
