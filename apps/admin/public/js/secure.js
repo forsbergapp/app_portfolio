@@ -1388,7 +1388,7 @@ const show_monitor = async (yearvalues) =>{
             <ul id='list_monitor_nav' class='list_nav'>
                 <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']}</button></li>
                 <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS['app_apps'] + ' ' + common.ICONS['app_log']}</button></li>
-                <li id='list_monitor_nav_3'><button id='list_request_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
+                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
                 <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button' >${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log']}</button></li>
             </ul>
             <div id='list_connected_form'>
@@ -1413,7 +1413,7 @@ const show_monitor = async (yearvalues) =>{
                     <div id='list_app_log_last' ></div>
                 </div>
             </div>
-            <div id='list_request_log_form'>
+            <div id='list_server_log_form'>
                 <div id='menu5_row_sample1' >
                     <select id='select_logscope5'></select>
                     <select id='select_app_menu5'></select>
@@ -1446,7 +1446,7 @@ const show_monitor = async (yearvalues) =>{
                         <div id='menu5_row_parameters_col4_0'>${common.ICONS['app_checkbox_empty']}</div>
                     </div>
                 </div>
-                <div id='list_request_log' class='common_list_scrollbar'></div>
+                <div id='list_server_log' class='common_list_scrollbar'></div>
             </div>
             <div id='list_pm2_log_form'>
                 <div id='list_pm2_log_path_info'>
@@ -1505,11 +1505,11 @@ const show_monitor = async (yearvalues) =>{
     document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
     document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
 
-    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_request_log_title'))}, false);
+    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
 
     document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
 
@@ -1638,7 +1638,7 @@ const nav_click = (item) => {
             reset_monitor();
             document.getElementById('list_connected_form').style.display='flex';
             document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_request_log_form').style.display='none';
+            document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_1').classList= 'list_nav_selected_tab';
             show_connected();
@@ -1648,28 +1648,28 @@ const nav_click = (item) => {
             reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='flex';
-            document.getElementById('list_request_log_form').style.display='none';
+            document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_2').classList= 'list_nav_selected_tab';
             APP_GLOBAL['page'] = 0;
             show_app_log();
             break;
         }
-        case 'list_request_log_title':{
+        case 'list_server_log_title':{
             reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_request_log_form').style.display='block';
+            document.getElementById('list_server_log_form').style.display='block';
             document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_3').classList= 'list_nav_selected_tab';
-            show_request_logs();
+            show_server_logs();
             break;
         }
         case 'list_pm2_log_title':{
             reset_monitor();
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_request_log_form').style.display='none';
+            document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_pm2_log_form').style.display='block';
             document.getElementById('list_monitor_nav_4').classList= 'list_nav_selected_tab';
             show_pm2_logs();
@@ -1710,6 +1710,7 @@ const nav_click = (item) => {
 }
 const show_list = async (list_div, list_div_col_title, url_parameters, sort, order_by) => {
     if (admin_token_has_value()){
+        let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
         let json;
         let token_type;
         let path;
@@ -1737,7 +1738,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
-            case 'list_request_log':{
+            case 'list_server_log':{
                 path = `/log/logs?${url_parameters}`;
                 service = 'LOG';
                 token_type = 2;
@@ -1880,60 +1881,142 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                 </div>`;
                         break;
                     }
-                    case 'list_request_log':{
-                        html =`<div id='list_request_log_row_title' class='list_request_log_row'>
-                                    <div id='list_request_log_col_title0' class='list_request_log_col list_sort_click list_title'>
+                    case 'list_server_log':{
+                        switch (logscope){
+                            case 'REQUEST':{
+                                html =`<div id='list_server_log_row_title' class='list_server_log_row'>
+                                    <div id='list_server_log_col_title0' class='list_request_log_col list_sort_click list_title'>
                                         <div>LOGDATE</div>
                                     </div>
-                                    <div id='list_request_log_col_title1' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title1' class='list_request_log_col list_sort_click list_title'>
                                         <div>HOST</div>
                                     </div>
-                                    <div id='list_request_log_col_title2' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title2' class='list_request_log_col list_sort_click list_title'>
                                         <div>IP</div>
                                     </div>
-                                    <div id='list_request_log_col_title3' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title3' class='list_request_log_col list_sort_click list_title'>
                                         <div>REQUEST_ID</div>
                                     </div>
-                                    <div id='list_request_log_col_title4' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title4' class='list_request_log_col list_sort_click list_title'>
                                         <div>CORRELATION_ID</div>
                                     </div>
-                                    <div id='list_request_log_col_title5' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title5' class='list_request_log_col list_sort_click list_title'>
                                         <div>URL</div>
                                     </div>
-                                    <div id='list_request_log_col_title6' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title6' class='list_request_log_col list_sort_click list_title'>
                                         <div>HTTP INFO</div>
                                     </div>
-                                    <div id='list_request_log_col_title7' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title7' class='list_request_log_col list_sort_click list_title'>
                                         <div>METHOD</div>
                                     </div>
-                                    <div id='list_request_log_col_title8' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title8' class='list_request_log_col list_sort_click list_title'>
                                         <div>STATUSCODE</div>
                                     </div>
-                                    <div id='list_request_log_col_title9' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title9' class='list_request_log_col list_sort_click list_title'>
                                         <div>STATUSMESSAGE</div>
                                     </div>
-                                    <div id='list_request_log_col_title10' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title10' class='list_request_log_col list_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_request_log_col_title11' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title11' class='list_request_log_col list_sort_click list_title'>
                                         <div>ACCEPT LANGUAGE</div>
                                     </div>
-                                    <div id='list_request_log_col_title12' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title12' class='list_request_log_col list_sort_click list_title'>
                                         <div>REFERER</div>
                                     </div>
-                                    <div id='list_request_log_col_title13' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title13' class='list_request_log_col list_sort_click list_title'>
                                         <div>SIZE_RECEIVED</div>
                                     </div>
-                                    <div id='list_request_log_col_title14' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title14' class='list_request_log_col list_sort_click list_title'>
                                         <div>SIZE_SENT</div>
                                     </div>
-                                    <div id='list_request_log_col_title15' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title15' class='list_request_log_col list_sort_click list_title'>
                                         <div>RESPONSE_TIME</div>
                                     </div>
-                                    <div id='list_request_log_col_title16' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title16' class='list_request_log_col list_sort_click list_title'>
                                         <div>LOG TEXT</div>
                                     </div>
                                 </div>`;
+                                break;
+                            }
+                            case 'SERVER':{
+                                html = `<div id='list_server_log_row_title' class='list_server_log_row'>
+                                            <div id='list_server_log_col_title0' class='list_server_log_col list_sort_click list_title'>
+                                                <div>LOGDATE</div>
+                                            </div>
+                                            <div id='list_server_log_col_title1' class='list_server_log_col list_sort_click list_title'>
+                                                <div>LOGTEXT</div>
+                                            </div>
+                                        </div>`;
+                                break;
+                            }
+                            case 'APP':{
+                                html = `<div id='list_server_app_log_row_title' class='list_server_log_row'>
+                                            <div id='list_server_log_col_title0' class='list_server_app_log_col list_sort_click list_title'>
+                                                <div>LOGDATE</div>
+                                            </div>
+                                            <div id='list_server_log_col_title1' class='list_server_app_log_col list_sort_click list_title'>
+                                                <div>APP ID</div>
+                                            </div>
+                                            <div id='list_server_log_col_title2' class='list_server_app_log_col list_sort_click list_title'>
+                                                <div>FILENAME</div>
+                                            </div>
+                                            <div id='list_server_log_col_title3' class='list_server_app_log_col list_sort_click list_title'>
+                                                <div>FUNCTION</div>
+                                            </div>
+                                            <div id='list_server_log_col_title4' class='list_server_app_log_col list_sort_click list_title'>
+                                                <div>LINE</div>
+                                            </div>
+                                            <div id='list_server_log_col_title5' class='list_server_app_log_col list_sort_click list_title'>
+                                                <div>LOG TEXT</div>
+                                            </div>
+                                        </div>`;
+                                break;
+                            }
+                            case 'SERVICE':{
+                                html = `<div id='list_service_log_row_title' class='list_server_log_row'>
+                                            <div id='list_server_log_col_title0' class='list_service_log_col list_sort_click list_title'>
+                                                <div>LOGDATE</div>
+                                            </div>
+                                            <div id='list_server_log_col_title1' class='list_service_log_col list_sort_click list_title'>
+                                                <div>APP ID</div>
+                                            </div>
+                                            <div id='list_server_log_col_title2' class='list_service_log_col list_sort_click list_title'>
+                                                <div>SERVICE</div>
+                                            </div>
+                                            <div id='list_server_log_col_title3' class='list_service_log_col list_sort_click list_title'>
+                                                <div>PARAMETERS</div>
+                                            </div>
+                                            <div id='list_server_log_col_title4' class='list_service_log_col list_sort_click list_title'>
+                                                <div>LOG TEXT</div>
+                                            </div>
+                                        </div>`;
+                                break;
+                            }
+                            case 'DB':{
+                                html = `<div id='list_service_log_row_title' class='list_server_log_row'>
+                                            <div id='list_server_log_col_title0' class='list_db_log_col list_sort_click list_title'>
+                                                <div>LOGDATE</div>
+                                            </div>
+                                            <div id='list_server_log_col_title1' class='list_db_log_col list_sort_click list_title'>
+                                                <div>APP ID</div>
+                                            </div>
+                                            <div id='list_server_log_col_title2' class='list_db_log_col list_sort_click list_title'>
+                                                <div>DB</div>
+                                            </div>
+                                            <div id='list_server_log_col_title3' class='list_db_log_col list_sort_click list_title'>
+                                                <div>SQL</div>
+                                            </div>
+                                            <div id='list_server_log_col_title4' class='list_db_log_col list_sort_click list_title'>
+                                                <div>PARAMETERS</div>
+                                            </div>
+                                            <div id='list_server_log_col_title5' class='list_db_log_col list_sort_click list_title'>
+                                                <div>LOG TEXT</div>
+                                            </div>
+                                        </div>`;
+                                break;
+                            }
+                        }
                         break;
                     }
                     case 'list_pm2_log':{
@@ -2105,64 +2188,150 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         </div>`;
                                 break;
                             }
-                            case 'list_request_log':{
+                            case 'list_server_log':{
                                 //test if JSON in logtext
                                 if (typeof json.data[i].logtext === 'object')
                                     json.data[i].logtext = JSON.stringify(json.data[i].logtext);
-                                html += 
-                                `<div class='list_request_log_row'>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].logdate}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].host}</div>
-                                    </div>
-                                    <div class='list_request_log_col list_gps_click gps_click'>
-                                        <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].requestid}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].correlationid}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].url}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].http_info}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].method}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].statusCode}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].statusMessage}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i]['user-agent']}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i]['accept-language']}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].referer}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].size_received}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].size_sent}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${roundOff(json.data[i].responsetime)}</div>
-                                    </div>
-                                    <div class='list_request_log_col'>
-                                        <div>${json.data[i].logtext}</div>
-                                    </div>
-                                </div>`;
+                                switch (logscope){
+                                    case 'REQUEST':{
+                                        html += 
+                                                `<div class='list_server_log_row'>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].logdate}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].host}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col list_gps_click gps_click'>
+                                                        <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].requestid}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].correlationid}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].url}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].http_info}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].method}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].statusCode}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].statusMessage}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i]['user-agent']}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i]['accept-language']}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].referer}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].size_received}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].size_sent}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${roundOff(json.data[i].responsetime)}</div>
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        <div>${json.data[i].logtext}</div>
+                                                    </div>
+                                                </div>`;
+                                        break;
+                                    }
+                                    case 'SERVER':{
+                                        html += 
+                                                `<div class='list_server_log_row'>
+                                                    <div class='list_server_log_col'>
+                                                        <div>${json.data[i].logdate}</div>
+                                                    </div>
+                                                    <div class='list_server_log_col'>
+                                                        <div>${json.data[i].logtext}</div>
+                                                    </div>
+                                                </div>`;
+                                        break;
+                                    }
+                                    case 'APP':{
+                                        html += 
+                                                `<div class='list_server_log_row'>
+                                                    <div class='list_server_app_log_col'>
+                                                        <div>${json.data[i].logdate}</div>
+                                                    </div>
+                                                    <div class='list_server_app_log_col'>
+                                                        <div>${json.data[i].app_id}</div>
+                                                    </div>
+                                                    <div class='list_server_app_log_col'>
+                                                        <div>${json.data[i].app_filename}</div>
+                                                    </div>
+                                                    <div class='list_server_app_log_col'>
+                                                        <div>${json.data[i].app_function_name}</div>
+                                                    </div>
+                                                    <div class='list_server_app_log_col'>
+                                                        <div>${json.data[i].app_app_line}</div>
+                                                    </div>
+                                                    <div class='list_server_app_log_col'>
+                                                        <div>${json.data[i].logtext}</div>
+                                                    </div>
+                                                </div>`;
+                                        break;
+                                    }
+                                    case 'SERVICE':{
+                                        html += 
+                                                `<div class='list_server_log_row'>
+                                                    <div class='list_service_log_col'>
+                                                        <div>${json.data[i].logdate}</div>
+                                                    </div>
+                                                    <div class='list_service_log_col'>
+                                                        <div>${json.data[i].app_id}</div>
+                                                    </div>
+                                                    <div class='list_service_log_col'>
+                                                        <div>${json.data[i].service}</div>
+                                                    </div>
+                                                    <div class='list_service_log_col'>
+                                                        <div>${json.data[i].parameters}</div>
+                                                    </div>
+                                                    <div class='list_service_log_col'>
+                                                        <div>${json.data[i].logtext}</div>
+                                                    </div>
+                                                </div>`;
+                                        break;
+                                    }
+                                    case 'DB':{
+                                        html += 
+                                                `<div class='list_server_log_row'>
+                                                    <div class='list_db_log_col'>
+                                                        <div>${json.data[i].logdate}</div>
+                                                    </div>
+                                                    <div class='list_db_log_col'>
+                                                        <div>${json.data[i].app_id}</div>
+                                                    </div>
+                                                    <div class='list_db_log_col'>
+                                                        <div>${json.data[i].db}</div>
+                                                    </div>
+                                                    <div class='list_db_log_col'>
+                                                        <div>${json.data[i].sql}</div>
+                                                    </div>
+                                                    <div class='list_db_log_col'>
+                                                        <div>${json.data[i].parameters}</div>
+                                                    </div>
+                                                    <div class='list_db_log_col'>
+                                                        <div>${json.data[i].logtext}</div>
+                                                    </div>
+                                                </div>`;
+                                        break;
+                                    }
+                                }
                                 break;
                             }
                             case 'list_pm2_log':{
@@ -2246,12 +2415,12 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             set_list_eventlisteners('app_log', 'gps');
                             break;
                         }
-                        case 'list_request_log':{
+                        case 'list_server_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
                             //add events on some columns searching in all rows
-                            set_list_eventlisteners('request_log', 'sort', true);
-                            set_list_eventlisteners('request_log', 'gps');
+                            set_list_eventlisteners('server_log', 'sort', true);
+                            set_list_eventlisteners('server_log', 'gps');
                             break;
                         }
                         case 'list_pm2_log':{
@@ -2347,8 +2516,8 @@ const list_sort_click = (item) => {
             show_connected(item.id.substr(item.id.length - 1), get_order(item));    
             break;
         }
-        case 'list_request_log':{
-            show_request_logs([...item.parentElement.children].indexOf(item), get_order(item));
+        case 'list_server_log':{
+            show_server_logs([...item.parentElement.children].indexOf(item), get_order(item));
             break;
         }
         case 'list_user_account':{
@@ -2397,7 +2566,7 @@ const list_item_click = (item) => {
     let path;
     let tokentype;
     if (item.className.indexOf('gps_click')>0){
-        if (item.parentNode.parentNode.id =='list_request_log'){
+        if (item.parentNode.parentNode.id =='list_server_log'){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
             //if localhost show default position
@@ -2540,7 +2709,7 @@ const get_server_log_parameters = async () => {
         }
     })
 }
-const show_request_logs = (sort=1, order_by='desc') => {
+const show_server_logs = (sort=0, order_by='desc') => {
     let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
     let loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
     let year = document.getElementById('select_year_menu5').value;
@@ -2562,8 +2731,8 @@ const show_request_logs = (sort=1, order_by='desc') => {
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
     else
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
-    show_list('list_request_log', 
-              'list_request_log_col_title', 
+    show_list('list_server_log', 
+              'list_server_log_col_title', 
               `${url_parameters}&sort=${sort}&order_by=${order_by}`,
               sort,
               order_by);

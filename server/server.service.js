@@ -884,11 +884,11 @@ const serverExpress = async () => {
         app.use(compression({ filter: shouldCompress }));
         app.use((req, res, next) => {
             res.setHeader('X-Response-Time', process.hrtime())
-            req.headers['X-Request-Id'] =  randomUUID();
+            req.headers['X-Request-Id'] =  randomUUID().replaceAll('-','');
             if (req.headers.authorization)
-                req.headers['X-Correlation-Id'] =  createHash('sha256').update(req.headers.authorization).digest('hex');
+                req.headers['X-Correlation-Id'] = createHash('md5').update(req.headers.authorization).digest('hex');
             else
-                req.headers['X-Correlation-Id'] =  createHash('sha256').update(req.hostname +  req.ip + req.method).digest('hex');
+                req.headers['X-Correlation-Id'] = createHash('md5').update(req.hostname +  req.ip + req.method).digest('hex');
             res.setHeader('Access-Control-Max-Age','5');
             res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
@@ -1027,7 +1027,7 @@ const serverStart = async () =>{
     const https = await import('node:https');
     process.env.TZ = 'UTC';
     InitConfig().then(() => {
-        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServerI})=>{
+        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServerI, LogServerE})=>{
             //Get express app with all configurations
             serverExpress().then((app)=>{
                 import(`file://${process.cwd()}/apps/apps.service.js`).then(({AppsStart})=>{
@@ -1058,10 +1058,9 @@ const serverStart = async () =>{
                                         });
                                     })
                                     process.on('uncaughtException', (err) =>{
-                                        
-                                        console.log(err)
+                                        console.log(err);
+                                        LogServerE('Process uncaughtException: ' + err);
                                     })
-                                    
                                 })
                             })
                         }
