@@ -598,9 +598,9 @@ const show_users = () =>{
     document.querySelector('#menu_3_content').innerHTML = 
             `<div id='menu_3_content_widget1' class='widget'>
                 <div id='list_user_account_title'>${common.ICONS['app_users']}</div>
-                <div id='list_user_account_search'>
-                    <input id='list_user_account_search_input' type='text' />
-                    <div id='list_user_account_search_icon'>${common.ICONS['app_search']}</div>
+                <div class='list_search'>
+                    <input class='list_search_input' id='list_user_account_search_input' type='text' />
+                    <div class='list_search_icon'>${common.ICONS['app_search']}</div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
             </div>
@@ -611,8 +611,8 @@ const show_users = () =>{
                     <button id='users_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
                 </div>
             </div>`;
-    document.getElementById('list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
-    document.getElementById('list_user_account_search_icon').addEventListener('click', () => { document.getElementById('list_user_account_search_input').focus();document.getElementById('list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+    document.querySelector('#list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
+    document.querySelector('#menu_3_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_user_account_search_input').focus();document.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     document.getElementById('users_save').addEventListener('click', () => { button_save('users_save')}, false); 
     search_users();
 
@@ -628,7 +628,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
     let search_user='*';
     //show all records if no search criteria
     if (document.getElementById('list_user_account_search_input').value!='')
-        search_user = document.getElementById('list_user_account_search_input').value;
+        search_user = encodeURI(document.getElementById('list_user_account_search_input').value);
     common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 1, null, (err, result) => {
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
@@ -1389,10 +1389,9 @@ const show_monitor = async (yearvalues) =>{
                 <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']}</button></li>
                 <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS['app_apps'] + ' ' + common.ICONS['app_log']}</button></li>
                 <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
-                <li id='list_monitor_nav_4'><button id='list_pm2_log_title' class='list_button' >${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log']}</button></li>
             </ul>
             <div id='list_connected_form'>
-                <div id='menu5_row_sample_list_connected'>
+                <div class='list_row_sample'>
                     <select id='select_app_menu5_list_connected'></select>
                     <select id='select_year_menu5_list_connected'></select>
                     <select id='select_month_menu5_list_connected'>${list_generate(12)}</select>
@@ -1400,7 +1399,7 @@ const show_monitor = async (yearvalues) =>{
                 <div id='list_connected' class='common_list_scrollbar'></div>
             </div>
             <div id='list_app_log_form'>
-                <div id='menu5_row_sample_app_log'>
+                <div class='list_row_sample'>
                     <select id='select_app_menu5_app_log'></select>
                     <select id='select_year_menu5_app_log'></select>
                     <select id='select_month_menu5_app_log'>${list_generate(12)}</select>
@@ -1414,11 +1413,9 @@ const show_monitor = async (yearvalues) =>{
                 </div>
             </div>
             <div id='list_server_log_form'>
-                <div id='menu5_row_sample1' >
+                <div class='list_row_sample'>
                     <select id='select_logscope5'></select>
                     <select id='select_app_menu5'></select>
-                </div>
-                <div id='menu5_row_sample2'>
                     <select id='select_year_menu5'></select>
                     <select id='select_month_menu5'>${list_generate(12)}</select>
                     <select id='select_day_menu5'>${list_generate(31)}</select>
@@ -1440,27 +1437,12 @@ const show_monitor = async (yearvalues) =>{
                         <div id='menu5_row_parameters_col3_1'>${common.ICONS['app_checkbox_checked']}</div>
                         <div id='menu5_row_parameters_col3_0'>${common.ICONS['app_checkbox_empty']}</div>
                     </div>
-                    <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col4'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' JSON'}</div>
-                        <div id='menu5_row_parameters_col4_1'>${common.ICONS['app_checkbox_checked']}</div>
-                        <div id='menu5_row_parameters_col4_0'>${common.ICONS['app_checkbox_empty']}</div>
-                    </div>
+                </div>
+                <div class='list_search'>
+                    <input class='list_search_input' id='list_server_log_search_input' type='text' />
+                    <div class='list_search_icon'>${common.ICONS['app_search']}</div>
                 </div>
                 <div id='list_server_log' class='common_list_scrollbar'></div>
-            </div>
-            <div id='list_pm2_log_form'>
-                <div id='list_pm2_log_path_info'>
-                    <div id='list_pm2_log_path_title'>${common.ICONS['app_file_path']}</div>
-                    <div id='list_pm2_log_path'></div>
-                </div>
-                <div id='list_pm2_log' >
-                    <div id='list_pm2_log_title_out'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Out'}</div>
-                    <div id='list_pm2_log_out' class='common_list_scrollbar'></div>
-                    <div id='list_pm2_log_title_err'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Error'}</div>
-                    <div id='list_pm2_log_err' class='common_list_scrollbar'></div>
-                    <div id='list_pm2_log_title_process_event'>${common.ICONS['app_server'] + '2 ' + common.ICONS['app_log'] + ' Process event'}</div>
-                    <div id='list_pm2_log_process_event' class='common_list_scrollbar'></div>
-                </div>
             </div>
         </div>
         <div id='menu_5_content_widget2' class='widget'>
@@ -1476,10 +1458,8 @@ const show_monitor = async (yearvalues) =>{
         document.getElementById('list_monitor_nav_2').style.display='none';
     }
     else{
-        //hide PM2LOG in MONITOR
-        document.getElementById('list_monitor_nav_3').style.display='none';
         //hide SERVER LOG in MONITOR
-        document.getElementById('list_monitor_nav_4').style.display='none';
+        document.getElementById('list_monitor_nav_3').style.display='none';
     }
     //server log
     document.getElementById('select_app_menu5').innerHTML = await get_apps();
@@ -1488,8 +1468,17 @@ const show_monitor = async (yearvalues) =>{
     //connected
     document.getElementById('select_app_menu5_list_connected').innerHTML = document.getElementById('select_app_menu5').innerHTML;
 
+    document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 0, 'DESC', document.querySelector('#list_server_log_search_input').value); }, false);
+    document.querySelector('#menu_5_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_server_log_search_input').focus();document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
+    
     document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
-        nav_click(event.target.id==''?event.target.parentNode:event.target)
+        if(event.target.id=='')
+            if (event.target.parentNode.id=='')
+                nav_click(event.target.parentNode.parentNode);
+            else
+                nav_click(event.target.parentNode);
+        else
+            nav_click(event.target);
       }, true);
 
     document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
@@ -1622,7 +1611,6 @@ const nav_click = (item) => {
         document.getElementById('list_monitor_nav_1').classList='';
         document.getElementById('list_monitor_nav_2').classList='';
         document.getElementById('list_monitor_nav_3').classList='';
-        document.getElementById('list_monitor_nav_4').classList='';
     }
     const reset_config = () => {
         document.getElementById('list_config_nav_1').classList='';
@@ -1639,7 +1627,6 @@ const nav_click = (item) => {
             document.getElementById('list_connected_form').style.display='flex';
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='none';
-            document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_1').classList= 'list_nav_selected_tab';
             show_connected();
             break;
@@ -1649,7 +1636,6 @@ const nav_click = (item) => {
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='flex';
             document.getElementById('list_server_log_form').style.display='none';
-            document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_2').classList= 'list_nav_selected_tab';
             APP_GLOBAL['page'] = 0;
             show_app_log();
@@ -1660,19 +1646,8 @@ const nav_click = (item) => {
             document.getElementById('list_connected_form').style.display='none';
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='block';
-            document.getElementById('list_pm2_log_form').style.display='none';
             document.getElementById('list_monitor_nav_3').classList= 'list_nav_selected_tab';
             show_server_logs();
-            break;
-        }
-        case 'list_pm2_log_title':{
-            reset_monitor();
-            document.getElementById('list_connected_form').style.display='none';
-            document.getElementById('list_app_log_form').style.display='none';
-            document.getElementById('list_server_log_form').style.display='none';
-            document.getElementById('list_pm2_log_form').style.display='block';
-            document.getElementById('list_monitor_nav_4').classList= 'list_nav_selected_tab';
-            show_pm2_logs();
             break;
         }
         //SERVER CONFIG
@@ -1746,32 +1721,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 document.getElementById(list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
-            case 'list_pm2_log':{
-                path = `/log/pm2logs?`;
-                service = 'LOG';
-                token_type = 2;
-                document.getElementById(list_div + '_out').innerHTML = common.APP_SPINNER;
-                document.getElementById(list_div + '_err').innerHTML = common.APP_SPINNER;
-                document.getElementById(list_div + '_process_event').innerHTML = common.APP_SPINNER;
-                //sort not implemented for pm2 with different content in one json file
-                break;
-            }
         }
         common.FFB (service, path, 'GET', token_type, null, (err, result) => {
             if (err){
-                switch (list_div){
-                    case 'list_pm2_log':{
-                        document.getElementById(list_div + '_path').innerHTML = '';
-                        document.getElementById(list_div + '_out').innerHTML = '';
-                        document.getElementById(list_div + '_err').innerHTML = '';
-                        document.getElementById(list_div + '_process_event').innerHTML = '';
-                        break;
-                    }
-                    default:{
-                        document.getElementById(list_div).innerHTML = '';
-                        break;
-                    }
-                }
+                document.getElementById(list_div).innerHTML = '';
             }
             else{
                 json = JSON.parse(result);
@@ -2018,49 +1971,6 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                 break;
                             }
                         }
-                        break;
-                    }
-                    case 'list_pm2_log':{
-                        document.getElementById(list_div + '_path').innerHTML = json.path + json.file;
-                        html_out = `<div id='list_pm2_log_out_row_title' class='list_pm2_log_row'>
-                                        <div id='list_pm2_log_out_col_title1' class='list_pm2_log_col list_title'>
-                                            <div>TIMESTAMP</div>
-                                        </div>
-                                        <div id='list_pm2_log_out_col_title2' class='list_pm2_log_col list_title'>
-                                            <div>APP_NAME</div>
-                                        </div>
-                                        <div id='list_pm2_log_out_col_title3' class='list_pm2_log_col list_title'>
-                                            <div>PROCESS_ID</div>
-                                        </div>
-                                        <div id='list_pm2_log_out_col_title4' class='list_pm2_log_col list_title'>
-                                            <div>MESSAGE</div>
-                                        </div>
-                                    </div>`;
-                        html_err = `<div id='list_pm2_log_err_row_title' class='list_pm2_log_row'>
-                                        <div id='list_pm2_log_err_col_title1' class='list_pm2_log_col list_title'>
-                                            <div>TIMESTAMP</div>
-                                        </div>
-                                        <div id='list_pm2_log_err_col_title2' class='list_pm2_log_col list_title'>
-                                            <div>APP_NAME</div>
-                                        </div>
-                                        <div id='list_pm2_log_err_col_title3' class='list_pm2_log_col list_title'>
-                                            <div>PROCESS_ID</div>
-                                        </div>
-                                        <div id='list_pm2_log_err_col_title4' class='list_pm2_log_col list_title'>
-                                            <div>MESSAGE</div>
-                                        </div>
-                                    </div>`;
-                        html_process_event = `<div id='list_pm2_log_process_event_row_title' class='list_pm2_log_row'>
-                                                <div id='list_pm2_log_process_event_col_title2' class='list_pm2_log_process_event_col list_title'>
-                                                    <div>TIMESTAMP</div>
-                                                </div>
-                                                <div id='list_pm2_log_process_event_col_title5' class='list_pm2_log_process_event_col list_title'>
-                                                    <div>APP_NAME</div>
-                                                </div>
-                                                <div id='list_pm2_log_process_event_col_title4' class='list_pm2_log_process_event_col list_title'>
-                                                    <div>STATUS</div>
-                                                </div>
-                                            </div>`;
                         break;
                     }
                 }
@@ -2335,66 +2245,6 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                 }
                                 break;
                             }
-                            case 'list_pm2_log':{
-                                //original pm2 attributes:
-                                //out               message, timestamp, type, process_id, app_name
-                                //err               message, timestamp, type, process_id, app_name
-                                //process event,    timestamp, type, status, app_name
-                                switch (json.data[i].type){
-                                    case 'out':{
-                                        html_out += 
-                                        `<div class='list_pm2_log_row'>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].timestamp}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].app_name}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].process_id}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].message}</div>
-                                            </div>
-                                        </div>`;        
-                                        break;
-                                    }
-                                    case 'err':{
-                                        html_err += 
-                                        `<div class='list_pm2_log_row'>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].timestamp}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].app_name}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].process_id}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].message}</div>
-                                            </div>
-                                        </div>`;
-                                        break;
-                                    }
-                                    case 'process_event':{
-                                        html_process_event += 
-                                        `<div class='list_pm2_log_row'>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].timestamp}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].app_name}</div>
-                                            </div>
-                                            <div class='list_pm2_log_col'>
-                                                <div>${json.data[i].status}</div>
-                                            </div>
-                                        </div>`;
-                                        break;
-                                    }
-                                }
-                                break;
-                            }
                         }
                     }
                     switch (list_div){
@@ -2422,12 +2272,6 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             //add events on some columns searching in all rows
                             set_list_eventlisteners('server_log', 'sort', true);
                             set_list_eventlisteners('server_log', 'gps');
-                            break;
-                        }
-                        case 'list_pm2_log':{
-                            document.getElementById(list_div + '_out').innerHTML = html_out;
-                            document.getElementById(list_div + '_err').innerHTML = html_err;
-                            document.getElementById(list_div + '_process_event').innerHTML = html_process_event;
                             break;
                         }
                     }
@@ -2518,7 +2362,7 @@ const list_sort_click = (item) => {
             break;
         }
         case 'list_server_log':{
-            show_server_logs([...item.parentElement.children].indexOf(item), get_order(item));
+            show_server_logs([...item.parentElement.children].indexOf(item), get_order(item), document.querySelector('#list_server_log_search_input').value);
             break;
         }
         case 'list_user_account':{
@@ -2661,8 +2505,7 @@ const get_server_log_parameters = async () => {
             document.getElementById('menu5_row_parameters_col2_0').style.display = 'none';
             document.getElementById('menu5_row_parameters_col3_1').style.display = 'none';
             document.getElementById('menu5_row_parameters_col3_0').style.display = 'none';
-            document.getElementById('menu5_row_parameters_col4_1').style.display = 'none';
-            document.getElementById('menu5_row_parameters_col4_0').style.display = 'none';
+
 
             if (json.data.SERVICE_LOG_REQUEST_LEVEL==1 ||json.data.SERVICE_LOG_REQUEST_LEVEL==2)
                 document.getElementById('menu5_row_parameters_col1_1').style.display = 'inline-block';
@@ -2676,10 +2519,6 @@ const get_server_log_parameters = async () => {
                 document.getElementById('menu5_row_parameters_col3_1').style.display = 'inline-block';
             else
                 document.getElementById('menu5_row_parameters_col3_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_PM2_FILE && json.data.SERVICE_LOG_PM2_FILE!=null)
-                document.getElementById('menu5_row_parameters_col4_1').style.display = 'inline-block';
-            else
-                document.getElementById('menu5_row_parameters_col4_0').style.display = 'inline-block';
 
             APP_GLOBAL['service_log_level_verbose'] = json.data.SERVICE_LOG_LEVEL_VERBOSE;
             APP_GLOBAL['service_log_level_error'] = json.data.SERVICE_LOG_LEVEL_ERROR;
@@ -2710,28 +2549,33 @@ const get_server_log_parameters = async () => {
         }
     })
 }
-const show_server_logs = (sort=0, order_by='desc') => {
+const show_server_logs = (sort=0, order_by='desc', search=null) => {
+    if (search != null){
+        if (common.check_input(document.querySelector('#list_server_log_search_input').value, 100, false) == false)
+            return null;
+    }
     let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
     let loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
     let year = document.getElementById('select_year_menu5').value;
     let month= document.getElementById('select_month_menu5').value;
     let day  = document.getElementById('select_day_menu5').value;
     let app_id_filter='';
-    if (logscope=='REQUEST'){
-        //no app filter for request
-        document.getElementById('select_app_menu5').style.display = 'none';
-        app_id_filter = `select_app_id=&`;
-    }
-    else{
+    if (logscope=='APP' || logscope=='SERVICE' || logscope=='DB'){
         //show app filter and use it
         document.getElementById('select_app_menu5').style.display = 'inline-block';
         app_id_filter = `select_app_id=${document.getElementById('select_app_menu5').options[document.getElementById('select_app_menu5').selectedIndex].value}&`;
     }
+    else{
+        //no app filter for request
+        document.getElementById('select_app_menu5').style.display = 'none';
+        app_id_filter = `select_app_id=&`;
+    }
     let url_parameters;
+    search=encodeURI(search);
     if (APP_GLOBAL['service_log_file_interval']=='1M')
-        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}`;
+        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&search=${search}`;
     else
-        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}`;
+        url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}&search=${search}`;
     show_list('list_server_log', 
               'list_server_log_col_title', 
               `${url_parameters}&sort=${sort}&order_by=${order_by}`,
@@ -2780,15 +2624,6 @@ const show_existing_logfiles = () => {
                             };
         common.lov_show('SERVER_LOG_FILES', function_event);
     }
-}
-const show_pm2_logs = () => {
-    let sort = '';
-    let order_by = '';
-    show_list('list_pm2_log', 
-              'list_pm2_log_XXX_row_title', //list_pm2_log_out, list_pm2_log_err, list_pm2_log_process_event
-              null,
-              sort,
-              order_by);
 }
 /*----------------------- */
 /* SERVER CONFIG          */
@@ -3237,7 +3072,7 @@ const init = () => {
             `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
                 <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
         
-        //show MONITOR (only SERVER LOG and PM2LOG)
+        //show MONITOR (only SERVER LOG)
         document.getElementById('menu_5').style.display='block';
         //show PARAMETER
         document.getElementById('menu_6').style.display='block';
