@@ -174,6 +174,31 @@ ul#admin_login_nav li{
 	margin:0px;
 	margin-top:-20px;
 }
+
+.list_search{
+	margin-bottom: 10px;
+	border-radius: 4px;
+}
+.list_search_input{
+	border: none;
+	width: 50%;
+	display: inline-block;
+	padding-left: 3px;
+	padding-right: 3px;
+	margin: 5px;
+	box-sizing: border-box;
+	border-radius: 4px;
+}
+.list_search_icon{
+	display: inline-block;
+	cursor: pointer;
+}
+.list_row_sample{
+	margin-top:5px;
+	margin-bottom:5px;
+}
+
+
 /*MENU 1 DASHBOARD*/
 #menu_1_content_widget1{
 	height:calc(80% - 10px);
@@ -343,24 +368,6 @@ ul#admin_login_nav li{
 	height: calc(50% - 10px);
 	display: flex;
 	flex-direction: column;
-}
-#list_user_account_search{
-	margin-bottom: 10px;
-	border-radius: 4px;
-}
-#list_user_account_search_input{
-	border: none;
-	width: 50%;
-	display: inline-block;
-	padding-left: 3px;
-	padding-right: 3px;
-	margin: 5px;
-	box-sizing: border-box;
-	border-radius: 4px;
-}
-#list_user_account_search_icon{
-	display: inline-block;
-	cursor: pointer;
 }
 
 #list_user_account_title, #list_user_account_logon_title{
@@ -775,10 +782,6 @@ ul#admin_login_nav li{
 	display:none;
 	height: 75%;
 }
-#list_pm2_log_form{
-	display:none;
-	height: 100%;
-}
 /*CONNECTED*/
 .app_role_superadmin, .app_role_admin, .app_role_user, .app_role_system_admin{
 	transform: translate(5px,-1px) scale(1.5);
@@ -814,12 +817,6 @@ ul#admin_login_nav li{
 	width:70px;
 }
 /*APP LOG*/
-#menu5_row_sample_app_log, #menu5_row_sample_list_connected{
-	margin-top:10px;
-	margin-bottom:10px;
-}
-
-
 #list_app_log, #list_connected{
 	overflow-y: auto;
 	overflow-x: auto;
@@ -912,15 +909,8 @@ ul#admin_login_nav li{
 #filesearch_menu5{
 	font-size: 1.4em;
 	height: auto;
+	vertical-align: middle;
 }
-#menu5_row_sample1, #menu5_row_sample2{
-	margin-top:10px;
-	margin-bottom:10px;
-}
-#menu5_row_parameters{
-	margin-top: 10px;
-	margin-bottom: 10px;
-}    
 .menu5_row_parameters_col, .menu5_row_parameters_col div{
 	display: inline-block;
 }
@@ -1032,60 +1022,6 @@ ul#admin_login_nav li{
 	width:500px;
 }
 
-
-/*PM2 LOG*/
-#list_pm2_log{
-	text-align: start;
-	height: 100%;
-}
-#list_pm2_log_path_info{
-	display: block;
-	text-align: center;
-	font-size: 0.7em;
-}
-#list_pm2_log_path_info div{
-	display: inline-block;
-}
-#list_pm2_log_path_info div:nth-child(2){
-	margin-inline-start: 10px;
-}
-#list_pm2_log_title_out, #list_pm2_log_title_err, #list_pm2_log_title_process_event{
-	text-align: center;
-	margin-top: 10px;
-	font-size: 9px;
-	font-weight: bold;
-}
-#list_pm2_log_out, #list_pm2_log_err, #list_pm2_log_process_event{
-	height: 19%;
-	overflow-y: auto;
-	overflow-x: auto;
-	margin-bottom: 10px;
-	border-radius: 4px;
-}
-.list_pm2_log_row, .list_pm2_log_process_event_row{
-	padding-top:4px;
-	padding-inline-start: 5px;
-	text-align: start;
-	display: inline-block;
-}
-.list_pm2_log_col, .list_pm2_log_process_event_col{
-	display:inline-block;
-}
-.list_pm2_log_col:nth-child(1), .list_pm2_log_process_event_col:nth-child(1){
-	width:120px;
-}
-.list_pm2_log_col:nth-child(2), .list_pm2_log_process_event_col:nth-child(2){
-	width:100px;
-}
-.list_pm2_log_col:nth-child(3), .list_pm2_log_col:nth-child(3){
-	width:60px;
-}
-.list_pm2_log_col:nth-child(4), .list_pm2_log_col:nth-child(4){
-	width:auto;
-}
-.list_pm2_log_process_event_col:nth-child(3){
-	width:50px;
-}
 /*MAP*/
 #mapid{
 	width: 100%;
@@ -1480,10 +1416,7 @@ a:hover, a:active {
 .list_lov_row:nth-child(odd),
 .list_app_log_row:nth-child(odd),
 .list_connected_row:nth-child(odd),
-.list_server_log_row:nth-of-type(odd),
-#list_pm2_log_out .list_pm2_log_row:nth-child(odd),
-#list_pm2_log_err .list_pm2_log_row:nth-child(odd),
-#list_pm2_log_process_event .list_pm2_log_row:nth-child(odd){
+.list_server_log_row:nth-of-type(odd){
 	color: var(--app_theme_list_odd_color);
 	background-color: var(--app_theme_list_odd_background_color);
 }
@@ -1493,10 +1426,7 @@ a:hover, a:active {
 .list_lov_row:nth-child(even),
 .list_app_log_row:nth-child(even),
 .list_connected_row:nth-child(even),
-.list_server_log_row:nth-of-type(even),
-#list_pm2_log_out .list_pm2_log_row:nth-child(even),
-#list_pm2_log_err .list_pm2_log_row:nth-child(even),
-#list_pm2_log_process_event .list_pm2_log_row:nth-child(even){
+.list_server_log_row:nth-of-type(even){
 	color: var(--app_theme_list_even_color);
 	background-color: var(--app_theme_list_even_background_color);
 }
@@ -1515,8 +1445,6 @@ a:hover, a:active {
 .list_app_log_row,
 .list_connected_row,
 .list_server_log_row,
-.list_pm2_log_row,
-.list_pm2_log_process_event_row,
 .list_config_row{
 	font-size: 9px;
 }
@@ -1526,7 +1454,7 @@ a:hover, a:active {
 .list_app_parameter_row input{
 	font-size: 9px;
 }
-#list_user_account_search,
+.list_search,
 #list_user_account,
 #list_user_account_logon,
 #list_apps,
@@ -1539,9 +1467,6 @@ a:hover, a:active {
 #list_app_log,
 #list_connected,
 #list_server_log,
-#list_pm2_log_out,
-#list_pm2_log_err,
-#list_pm2_log_process_event,
 #list_config_edit{
 	border: var(--app_theme_list_border_color) solid 0.5px;
 }
@@ -1550,18 +1475,14 @@ a:hover, a:active {
 	font-size: 24px;
 }
 
-#menu4_row_parameters_col1_1,
-#menu4_row_parameters_col2_1,
-#menu4_row_parameters_col3_1,
-#menu4_row_parameters_col4_1,
-#menu4_row_parameters_col5_1{
+#menu5_row_parameters_col1_1,
+#menu5_row_parameters_col2_1,
+#menu5_row_parameters_col3_1{
 	color:var(--app_theme_checkbox-checked_color);
 }
-#menu4_row_parameters_col1_0,
-#menu4_row_parameters_col2_0,
-#menu4_row_parameters_col3_0,
-#menu4_row_parameters_col4_0,
-#menu4_row_parameters_col5_0{
+#menu5_row_parameters_col1_0,
+#menu5_row_parameters_col2_0,
+#menu5_row_parameters_col3_0{
 	color:var(--app_theme_checkbox-unchecked_color);
 }
 .dialogue{
