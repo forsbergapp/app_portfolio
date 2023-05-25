@@ -305,7 +305,6 @@ const getLogParameters = (app_id, callBack) => {
     results.SERVICE_LOG_LEVEL_INFO = ConfigGet(1, 'SERVICE_LOG', 'LEVEL_INFO');
     
     results.SERVICE_LOG_FILE_INTERVAL = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL');
-    results.SERVICE_LOG_PM2_FILE = ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE');
     return callBack(null, results);
 }
 const getLogs = (app_id, data, callBack) => {
@@ -323,18 +322,25 @@ const getLogs = (app_id, data, callBack) => {
         else
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
     let fixed_log = [];
-    let loggerror = 0;
     try {
-        loggerror = 1;
         import('node:fs').then((fs) =>{
             fs.readFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, 'utf8', (error, fileBuffer) => {
-                loggerror = 2;
                 if (error)
                     return callBack(null, fixed_log);
                 else{
                     fileBuffer.toString().split('\r\n').forEach((record) => {
                         if (record.length>0){
-                            fixed_log.push(JSON.parse(record));
+                            let record_parse = JSON.parse(record);
+                            if (data.search==null || data.search=='null')
+                                fixed_log.push(record_parse);
+                            else
+                                for (let value of Object.values(record_parse)){
+                                    if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
+                                        !value.toString().toLowerCase().startsWith('/log/logs'))
+                                        if (value.toString().toLowerCase().includes(data.search.toLowerCase()))
+                                            fixed_log.push(record_parse);
+                                }
+                                    
                         }
                     })
                 }
@@ -536,14 +542,13 @@ const getLogs = (app_id, data, callBack) => {
                         break;
                     }
                 }
-                
                 fixed_log.sort(sortByProperty(column_sort, order_by))
                 return callBack(null, fixed_log);
             });
         })
-    } catch (error) {
-        if (loggerror == 2)
-            return callBack(error.message);
+    } 
+    catch (error) {
+        return callBack(error);
     }
 }
 const getFiles = (app_id, callBack) => {
@@ -572,20 +577,4 @@ const getFiles = (app_id, callBack) => {
         });
     })
 }
-const getPM2Logs = (app_id, callBack) => {
-    try {
-        let fixed_log = [];
-        import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + ConfigGet(1, 'SERVICE_LOG', 'PM2_FILE'), 'utf8', (error, fileBuffer) => {
-                fileBuffer.split('\n').forEach((record) => {
-                    if (record.length>0)
-                        fixed_log.push(JSON.parse(record));
-                })
-                return callBack(null, fixed_log);
-            });
-        })
-    } catch (error) {
-        return callBack(error.message);
-    }
-}
-export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogParameters, getLogs, getFiles, getPM2Logs}
+export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogParameters, getLogs, getFiles}
