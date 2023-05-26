@@ -2792,7 +2792,6 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
     url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
     if (service=='BROADCAST' && authorization_type==4){
-        url = `${COMMON_GLOBAL['rest_resource_server']}${path}&app_id=${COMMON_GLOBAL['app_id']}&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
         //use query to send authorization since EventSource does not support headers
         url += `&authorization=${authorization}`;
         callBack(null, new EventSource(url));
