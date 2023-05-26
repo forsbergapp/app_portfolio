@@ -1647,7 +1647,7 @@ const nav_click = (item) => {
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='block';
             document.getElementById('list_monitor_nav_3').classList= 'list_nav_selected_tab';
-            show_server_logs();
+            show_server_logs(0, 'DESC', document.querySelector('#list_server_log_search_input').value);
             break;
         }
         //SERVER CONFIG
