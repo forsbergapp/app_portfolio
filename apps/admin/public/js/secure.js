@@ -332,25 +332,36 @@ const show_user_agent = (user_agent) => {
 const get_apps = async () => {
     return new Promise((resolve, reject)=>{
         let json;
-        let html=`<option value="">${common.ICONS['infinite']}</option>`;
+        let html = `<option value="">${common.ICONS['infinite']}</option>`;
+        let url;
+        let authorization_type;
+        let service;
         if (common.COMMON_GLOBAL['system_admin']==1){
-            //system admin cant select app will show/use all
-            resolve (html);
+            service = 'SERVER';
+            url = '/config/systemadmin?config_type_no=7&config_group=&parameter=APPS';
+            authorization_type = 2;
         }
         else{
-            common.FFB ('DB_API', `/apps/admin?`, 'GET', 1, null, (err, result) => {
-                if (err)
-                    resolve();
-                else{
-                    json = JSON.parse(result);
-                    for (let i = 0; i < json.data.length; i++) {
-                            html +=
-                            `<option value='${json.data[i].id}'>${json.data[i].id} - ${json.data[i].app_name}</option>`;
-                    }
-                    resolve(html);
-                }
-            })
+            service = 'DB_API';
+            url = '/apps/admin?';
+            authorization_type = 1;
         }
+        common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
+            if (err)
+                resolve();
+            else{
+                json = JSON.parse(result);
+                if (common.COMMON_GLOBAL['system_admin']==1)
+                    for (let app of json.data) {
+                        html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
+                    }
+                else
+                    for (let app of json.data) {
+                        html += `<option value='${app.id}'>${app.id} - ${app.app_name}</option>`;
+                    }
+                resolve(html);
+            }
+        })
     })
 }
 

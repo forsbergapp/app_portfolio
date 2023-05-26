@@ -78,6 +78,8 @@ const config_files = () => {
            ];
 }
 const ConfigGet = (config_no, config_group = null, parameter = null) => {
+    if (config_group==='')
+        config_group=null;
     switch (parseInt(config_no)){
         case 0:{
             //CONFIG INIT
