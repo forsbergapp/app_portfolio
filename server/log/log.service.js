@@ -331,16 +331,22 @@ const getLogs = (app_id, data, callBack) => {
                     fileBuffer.toString().split('\r\n').forEach((record) => {
                         if (record.length>0){
                             let record_parse = JSON.parse(record);
-                            if (data.search==null || data.search=='null')
-                                fixed_log.push(record_parse);
-                            else
-                                for (let value of Object.values(record_parse)){
-                                    if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
-                                        !value.toString().toLowerCase().startsWith('/log/logs'))
-                                        if (value.toString().toLowerCase().includes(data.search.toLowerCase()))
-                                            fixed_log.push(record_parse);
-                                }
-                                    
+                            //filter app id
+                            if (data.select_app_id==='')
+                                data.select_app_id = null;
+                            if ( ((data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (record_parse.app_id == parseInt(data.select_app_id) ||data.select_app_id ==null)) ||
+                                 (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')){
+                                    //filter search
+                                    if (data.search==null || data.search=='null')
+                                        fixed_log.push(record_parse);
+                                    else
+                                        for (let value of Object.values(record_parse)){
+                                            if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
+                                                !value.toString().toLowerCase().startsWith('/log/logs'))
+                                                if (value.toString().toLowerCase().includes(data.search.toLowerCase()))
+                                                    fixed_log.push(record_parse);
+                                        }
+                            }
                         }
                     })
                 }
