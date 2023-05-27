@@ -639,7 +639,7 @@ const serverExpressRoutes = async (app) => {
     const { BFF, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //auth
     const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
-            checkAccessTokenAdmin, checkAccessTokenSuperAdmin, checkClientAccess} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
+            checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
     const { authSystemAdmin, checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
     //broadcast
@@ -841,23 +841,7 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/log/parameters`).get                               (checkSystemAdmin, getLogParameters);
     app.route(`${rest_resouce_server}/log/logs`).get                                     (checkSystemAdmin, getLogs);
     app.route(`${rest_resouce_server}/log/files`).get                                    (checkSystemAdmin, getFiles);
-
-    //microservices
-    //service geolocation
-    const { getPlace, getIp, getTimezone, getTimezoneAdmin, getTimezoneSystemAdmin} = await import(`file://${process.cwd()}/service/geolocation/geolocation.controller.js`);
-    //service worldcities
-    const { getCities} = await import(`file://${process.cwd()}/service/worldcities/worldcities.controller.js`);
     
-    app.route(`${rest_resource_service}/geolocation/place`).get(checkDataToken, getPlace);
-    app.route(`${rest_resource_service}/geolocation/place/admin`).get(checkAccessTokenAdmin, getPlace);
-    app.route(`${rest_resource_service}/geolocation/place/systemadmin`).get(checkSystemAdmin, getPlace);
-    app.route(`${rest_resource_service}/geolocation/ip`).get(checkDataToken, getIp);
-    app.route(`${rest_resource_service}/geolocation/ip/admin`).get(checkAccessTokenAdmin, getIp);
-    app.route(`${rest_resource_service}/geolocation/ip/systemadmin`).get(checkSystemAdmin, getIp);
-    app.route(`${rest_resource_service}/geolocation/timezone`).get(checkDataToken, getTimezone);
-    app.route(`${rest_resource_service}/geolocation/timezone/admin`).get(checkAccessTokenAdmin, getTimezoneAdmin);
-    app.route(`${rest_resource_service}/geolocation/timezone/systemadmin`).get(checkSystemAdmin, getTimezoneSystemAdmin);
-    app.route(`${rest_resource_service}/worldcities/:country`).get(checkDataToken, getCities);
 }
 const serverExpress = async () => {
     const {default: express} = await import('express');

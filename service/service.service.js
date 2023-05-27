@@ -1,11 +1,69 @@
 const http = await import('node:http');
 const https = await import('node:https');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const service_request = async (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
+
+const ServiceConfig = async (parameter) =>{
+    const fs = await import('node:fs');
+    let config = await fs.promises.readFile(`${process.cwd()}/config/config.json`, 'utf8');
+    let rows =  JSON.parse(config).SERVER;
+    let value = rows.filter(row=>row.hasOwnProperty(parameter))[0][parameter];
+    return value;
+}
+
+const MICROSERVICE = [
+                        {'SERVICE':'GEOLOCATION', 'PORT':3001, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')},
+                        {'SERVICE':'WORLDCITIES', 'PORT':3002, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')}
+                     ];
+
+const IAM = async (app_id, authorization) =>{
+    const fs = await import('node:fs');
+    let apps = await fs.promises.readFile(`${process.cwd()}/config/apps.json`, 'utf8');
+    let rows =  await  JSON.parse(apps).APPS;
+    let CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
+    let CLIENT_SECRET = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_SECRET;
+
+    let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+    if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
+        return 1;
+    else
+        return 0;
+}
+                    
+const service_request = async (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
         let headers;
         let options;
-        if (hostname == null && client_ip == null && headers_user_agent == null && headers_accept_language == null){    
+        let request;
+        let request_protocol;
+        let hostname = 'localhost';
+        let port;
+        switch (service){
+            case 'GEOLOCATION':{
+                //always call microservices with https
+                request_protocol = https;
+                port = MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].PORT;
+                break;
+            }
+            case 'WORLDCITIES':{
+                //always call microservices with https
+                request_protocol = https;
+                port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT;;
+                break;
+            }
+            default:{
+                if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
+                    request_protocol = https;
+                    port = ConfigGet(1, 'SERVER', 'HTTPS_PORT')
+                }
+                else{
+                    request_protocol = http;
+                    port = ConfigGet(1, 'SERVER', 'PORT')
+                }   
+                break;
+            }
+        }
+
+        if (client_ip == null && headers_user_agent == null && headers_accept_language == null){    
             headers = {
                 'User-Agent': 'server',
                 'Accept-Language': '*',
@@ -18,8 +76,8 @@ const service_request = async (hostname, path, method, timeout, client_ip, autho
                 method: method,
                 timeout: timeout,
                 headers : headers,
+                port: port,
                 path: path,
-                
                 rejectUnauthorized: false
             };
         }
@@ -44,18 +102,12 @@ const service_request = async (hostname, path, method, timeout, client_ip, autho
                 method: method,
                 timeout: timeout,
                 headers : headers,
-                path: path,
                 host: hostname,
+                port: port,
+                path: path,
                 rejectUnauthorized: false
             };
         }
-        let request;
-        let request_protocol;
-        if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1')
-            request_protocol = https;
-        else
-            request_protocol = http;
-
         request = request_protocol.request(options, res =>{
             let responseBody = '';
             //for REPORT statucode 301 is returned, resolve the redirected path
@@ -90,7 +142,7 @@ class CircuitBreaker {
         this.cooldownPeriod = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD');
         this.requestTimetout = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT');
     }
-    async callService(app_id, hostname, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
+    async callService(app_id, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
         if (!this.canRequest(service))
             return false;
         try {
@@ -99,7 +151,7 @@ class CircuitBreaker {
                 timeout = 60 * 1000 * ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
             else
                 timeout = this.requestTimetout * 1000
-            const response = await service_request (hostname, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
+            const response = await service_request (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {
@@ -293,6 +345,5 @@ const MessageQueue = async (service, message_type, message, message_id) => {
             })
         }
     })
-};
-
-export {CircuitBreaker, MessageQueue}
+}
+export {IAM, MICROSERVICE, CircuitBreaker, MessageQueue}

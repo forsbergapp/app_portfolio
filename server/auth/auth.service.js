@@ -253,14 +253,6 @@ const CreateDataToken = (app_id)=>{
                             });
     return jsontoken_dt;
 }
-const checkClientAccess = (app_id, authorization) =>{
-    let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-    if (userpass == ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'))
-        return 1;
-    else
-        return 0;
-}
 export {access_control, block_ip_control, safe_user_agents, check_request, check_internet, 
         checkAccessToken,checkDataToken, 
-        accessToken,CreateDataToken,
-        checkClientAccess}
+        accessToken,CreateDataToken}
