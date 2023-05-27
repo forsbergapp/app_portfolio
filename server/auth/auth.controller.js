@@ -72,14 +72,5 @@ const checkDataTokenLogin = (req, res, next) => {
     }
 }
 
-const checkClientAccess = (req, res, next) => {
-    service.checkClientAccess(req.query.app_id, req.headers.authorization).then((result)=>{
-        if (result == 1)
-            next();
-        else
-            res.status(401).send('⛔');
-    })
-}
 export {checkAccessTokenCommon, checkAccessTokenSuperAdmin, checkAccessTokenAdmin, checkAccessToken,
-        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, 
-        checkClientAccess}
+        checkDataToken, checkDataTokenRegistration, checkDataTokenLogin}

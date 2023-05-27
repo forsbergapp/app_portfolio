@@ -572,7 +572,7 @@ const getUserPreferences = (app_id, locale) => {
     })
 }
 //APP BFF functions
-const BFF = async (app_id, service, parameters, ip, hostname, method, authorization, headers_user_agent, headers_accept_language, data) => {
+const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data) => {
     const { check_internet } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
     let result_internet = await check_internet();
@@ -651,7 +651,9 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                                     }
                                     parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                                 }
-                                path = `${rest_resource_service}/geolocation${parameters}&app_id=${app_id}`
+                                //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
+                                authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`
+                                path = `/geolocation${parameters}&app_id=${app_id}`
                             }
                             else
                                 return reject('service GEOLOCATION GET only');
@@ -663,8 +665,12 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                     case 'WORLDCITIES':{
                         // parameters ex:
                         // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
-                        if (method=='GET')
-                            path = `${rest_resource_service}/worldcities${parameters}&app_id=${app_id}`
+                        if (method=='GET'){
+                            //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
+                            authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`
+                            path = `/worldcities${parameters}&app_id=${app_id}`
+                        }
+                            
                         else
                             return reject('service WORLDCITIES GET only')
                         break;
@@ -673,7 +679,9 @@ const BFF = async (app_id, service, parameters, ip, hostname, method, authorizat
                         return reject(`service ${service} does not exist`);
                     }
                 }
-                return resolve(microservice_circuitbreak.callService(app_id, hostname,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data));
+                microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language,data)
+                .then(result=>resolve(result))
+                .catch(error=>reject(error));
             } catch (error) {
                 return reject(error);
             }
