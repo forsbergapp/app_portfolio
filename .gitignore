@@ -1,5 +1,4 @@
 .well-known/
-.vscode/
 config/
 logs/
 node_modules/
