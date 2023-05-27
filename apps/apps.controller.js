@@ -11,7 +11,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
         //get GPS from IP
         let parameters = `/ip?ip=${req.ip}`;
         service.BFF(app_id, 'GEOLOCATION', parameters, 
-                    req.ip, req.hostname, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                    req.ip, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
             if (result_geodata){
                 result_geodata = JSON.parse(result_geodata);
                 result_geodata.latitude = result_geodata.geoplugin_latitude;
@@ -129,6 +129,9 @@ const getApp = async (req, res, app_id, params, callBack) => {
                 })
             }
         })
+        .catch(error=>
+            callBack(error, null)
+        )
     }
     else
         service.getMaintenance(app_id).then((result_maintenance) => {
@@ -173,7 +176,7 @@ const getReport = async (req, res, app_id, callBack) => {
             let datatoken = CreateDataToken(app_id);
             let parameters = `/ip?ip=${req.ip}`;
             service.BFF(app_id, 'GEOLOCATION', parameters, 
-                        req.ip, req.hostname, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                        req.ip, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
                 result_geodata = JSON.parse(result_geodata);
                 result_geodata.latitude = result_geodata.geoplugin_latitude;
                 result_geodata.longitude = result_geodata.geoplugin_longitude;
@@ -222,9 +225,10 @@ const getReport = async (req, res, app_id, callBack) => {
                         })
                     })
                 })
-                .catch(error=>{
-                    callBack(error,null)
-                })
+                
+            })
+            .catch(error=>{
+                callBack(error,null)
             })
         }
     }
@@ -247,7 +251,6 @@ const BFF = async (req, res) =>{
             message: '⛔'
         });
     else{
-        let stack = new Error().stack;
         let decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
         let message_queue=false;
         const service_called = req.query.service.toUpperCase();
@@ -274,7 +277,7 @@ const BFF = async (req, res) =>{
             BroadcastConnect(req,res);
         }
         else
-            service.BFF(req.query.app_id, service_called, parameters, req.ip, req.hostname, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], req.body)
+            service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], req.body)
             .then(result_service => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
                     let log_text = message_queue==true?null:result_service;
