@@ -1525,18 +1525,20 @@ const show_monitor = async (yearvalues) =>{
                         APP_GLOBAL['module_leaflet_map_marker_div_gps'],
                         APP_GLOBAL['module_leaflet_map_zoom']).then(() => {
             common.map_setevent('dblclick', (e) => {
-                let lng = e.latlng['lng'];
-                let lat = e.latlng['lat'];
-                //Update GPS position
-                common.get_place_from_gps(lng, lat).then((gps_place) => {
-                    common.map_update(lng,
-                                        lat,
-                                        '', //do not change zoom 
-                                        gps_place,
-                                        null,
-                                        APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                })
+                if (e.originalEvent.target.id == 'mapid'){
+                    let lng = e.latlng['lng'];
+                    let lat = e.latlng['lat'];
+                    //Update GPS position
+                    common.get_place_from_gps(lng, lat).then((gps_place) => {
+                        common.map_update(lng,
+                                            lat,
+                                            '', //do not change zoom 
+                                            gps_place,
+                                            null,
+                                            APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                                            common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                    })
+                }
             })
             common.map_update(common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
@@ -2427,15 +2429,12 @@ const list_item_click = (item) => {
             let ip_filter='';
             //if localhost show default position
             if (item.children[0].innerHTML != '::1')
-                ip_filter = `&ip=${item.children[0].innerHTML}`;
-            if (common.COMMON_GLOBAL['system_admin']==1){    
-                path = `/ip/systemadmin?app_user_id=${ip_filter}`;
+                ip_filter = `ip=${item.children[0].innerHTML}`;
+            path = `/ip?${ip_filter}`;
+            if (common.COMMON_GLOBAL['system_admin']==1)
                 tokentype = 2;
-            }
-            else{
-                path = `/ip/admin?app_user_id=${ip_filter}`;
+            else
                 tokentype = 1;
-            }
             common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                 if (err)
                     null;
@@ -2465,14 +2464,11 @@ const list_item_click = (item) => {
                     break;
                 }       
             }
-            if (common.COMMON_GLOBAL['system_admin']==1){
-                path = `/place/systemadmin?app_user_id=&latitude=${lat}&longitude=${long}`;
+            path = `/place?latitude=${lat}&longitude=${long}`;
+            if (common.COMMON_GLOBAL['system_admin']==1)
                 tokentype = 2;
-            }
-            else{
-                path = `/place/admin?app_user_id=&latitude=${lat}&longitude=${long}`;
+            else
                 tokentype = 1;
-            }
             common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                     if (err)
                         null;
