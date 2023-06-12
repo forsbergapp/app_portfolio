@@ -2400,10 +2400,12 @@ const init_map = async () => {
         app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
         app_common.APP_GLOBAL['gps_module_leaflet_zoom']).then(() => {
             common.map_setevent('dblclick', (e) => {
-                document.getElementById('setting_input_lat').value = e.latlng['lat'];
-                document.getElementById('setting_input_long').value = e.latlng['lng'];
-                //Update GPS position
-                update_ui(9);
+                if (e.originalEvent.target.id == 'mapid'){
+                    document.getElementById('setting_input_lat').value = e.latlng['lat'];
+                    document.getElementById('setting_input_long').value = e.latlng['lng'];
+                    //Update GPS position
+                    update_ui(9);
+                }   
             })
             resolve();
         })

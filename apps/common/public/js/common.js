@@ -2575,8 +2575,13 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                         document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
                     }
                     //add events to the buttons
-                    document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', 
-                                            () => { 
+                    document.querySelector('.leaflet-control-zoom-in').addEventListener('click', () => {
+                        COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() + 1);
+                    });
+                    document.querySelector('.leaflet-control-zoom-out').addEventListener('click', () => {
+                        COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() - 1);
+                    });
+                    document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', () => { 
                                                     if (document.fullscreenElement)
                                                         document.exitFullscreen();
                                                     else
@@ -2991,19 +2996,19 @@ const checkOnline = (div_icon_online, user_account_id) => {
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
         let tokentype;
-        let path;
+        let path = `/place?longitude=${longitude}&latitude=${latitude}`;
 
         if (COMMON_GLOBAL['system_admin']==1){
-            path = `/place/systemadmin?longitude=${longitude}&latitude=${latitude}`;
+            //system admin
             tokentype = 2;
         }
         else 
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                path = `/place/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`;
+                //admin
                 tokentype = 1;
             }
             else{
-                path = `/place?app_user_id=${COMMON_GLOBAL['user_account_id']}&longitude=${longitude}&latitude=${latitude}`;             
+                //not logged in or a user use this token
                 tokentype = 0;
             }
         FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
@@ -3025,22 +3030,19 @@ const get_gps_from_ip = async () => {
 
     return new Promise((resolve)=>{
         let tokentype;
-        let path;
+        let path = `/ip?`;
         
         if (COMMON_GLOBAL['system_admin']==1 && COMMON_GLOBAL['rest_admin_at']){
-            //system admin logged in use this token and path
-            path = `/ip/systemadmin?`;
+            //system admin
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'] && COMMON_GLOBAL['rest_at']){
-                //system admin logged in use this token and path
-                path = `/ip/admin?app_user_id=${COMMON_GLOBAL['user_account_id']}`;
+                //admin
                 tokentype = 1;
             }
             else{
-                //not logged in or a user use this token and path
-                path = `/ip?app_user_id=${COMMON_GLOBAL['user_account_id']}`;
+                //not logged in or a user use this token
                 tokentype = 0;
             }
         FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
@@ -3064,19 +3066,19 @@ const get_gps_from_ip = async () => {
 }
 const tzlookup = async (latitude, longitude) => {
     return new Promise((resolve, reject)=>{
-        let path;
+        let path = `/timezone?latitude=${latitude}&longitude=${longitude}`;
         let tokentype;
         if (COMMON_GLOBAL['system_admin']==1){
-            path = `/timezone/systemadmin?latitude=${latitude}&longitude=${longitude}`;
+            //system admin
             tokentype = 2;
         }
         else
             if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                path = `/timezone/admin?latitude=${latitude}&longitude=${longitude}`;
+                //admin
                 tokentype = 1;
             }
             else{
-                path = `/timezone?latitude=${latitude}&longitude=${longitude}`;
+                //not logged in or a user use this token
                 tokentype = 0;
             }
         FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, text_timezone) => {
@@ -3088,7 +3090,7 @@ const tzlookup = async (latitude, longitude) => {
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
-    await FFB ('WORLDCITIES', `/${countrycode}?app_user_id=${COMMON_GLOBAL['user_account_id']}`, 'GET', 0, null, (err, result) => {
+    await FFB ('WORLDCITIES', `/${countrycode}?`, 'GET', 0, null, (err, result) => {
         if (err)
             callBack(err, null);
         else{
