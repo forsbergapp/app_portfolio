@@ -337,7 +337,7 @@ const getLogs = (app_id, data, callBack) => {
                             if ( ((data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (record_parse.app_id == parseInt(data.select_app_id) ||data.select_app_id ==null)) ||
                                  (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')){
                                     //filter search
-                                    if (data.search==null || data.search=='null')
+                                    if (data.search==null || data.search=='null' || data.search=='')
                                         fixed_log.push(record_parse);
                                     else
                                         for (let value of Object.values(record_parse)){
