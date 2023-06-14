@@ -589,7 +589,7 @@ const ConfigInfo = (callBack) => {
     callBack(null, null);
 }
 const Info = async (callBack) => {
-    let os = await import('os');
+    const os = await import('node:os');
     let os_json = {
                     "hostname": os.hostname(),
                     "platform": os.platform(),
