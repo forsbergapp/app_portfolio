@@ -14,6 +14,15 @@
             "type": "node"
         },
         {
+            "name": "Microservice Batch",
+            "program": "${workspaceFolder}/service/batch/server.js",
+            "request": "launch",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "type": "node"
+        },
+        {
             "name": "Microservice Geolocation",
             "program": "${workspaceFolder}/service/geolocation/server.js",
             "request": "launch",

@@ -12,7 +12,7 @@ const sendLog = async (logscope, loglevel, log) => {
         }
         let month = logdate.toLocaleString("en-US", { month: "2-digit"});
         let day   = logdate.toLocaleString("en-US", { day: "2-digit"});
-        let config_file_interval = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')
+        let config_file_interval = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL');
         if (config_file_interval=='1D')
             filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
         else{
