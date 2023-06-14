@@ -12,7 +12,8 @@ const ServiceConfig = async (parameter) =>{
 
 const MICROSERVICE = [
                         {'SERVICE':'GEOLOCATION', 'PORT':3001, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')},
-                        {'SERVICE':'WORLDCITIES', 'PORT':3002, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')}
+                        {'SERVICE':'WORLDCITIES', 'PORT':3002, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')},
+                        {'SERVICE':'BATCH',       'PORT':3003, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')}
                      ];
 
 const IAM = async (app_id, authorization) =>{
