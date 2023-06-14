@@ -638,7 +638,6 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                             if (method=='GET'){
                                 //set ip from client in case ip query parameter is missing
                                 let basepath = parameters.split('?')[0];
-                                // /ip, /ip/admin or /systemadmin
                                 if (parameters.startsWith('/ip')){    
                                     let params = parameters.split('?')[1].split('&');
                                     //if ip parameter does not exist
