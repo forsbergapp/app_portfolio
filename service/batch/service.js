@@ -113,7 +113,7 @@ const scheduled_milliseconds = (cron_expression) =>{
         cron_expression = cron_expression.split(' ');
         let new_date;
         /*
-        not supported: L (last), ?, - (range), / (increments), W(weekday), # (N-th occurrence), second, year, day of week names, ~ (random)
+        not supported: L (last), ?, - (range), / (increments), W(weekday), # (N-th occurrence), second, year, ~ (random)
                                          supported:
         cron_expression[0] minutes       *, 0-59
         cron_expression[1] hours         *, 0-23
