@@ -1,5 +1,4 @@
 const JOBS = [];
-const file_path_batch   = '/service/batch/';
 const file_batch        = 'batch.json';
 const log_path          = '/service/logs/';
 const file_batchlog     = 'batch_log.json';
@@ -248,7 +247,7 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
 const start_jobs = async () =>{
     const fs = await import('node:fs');
     const os = await import('node:os');
-    let jobs = await fs.promises.readFile(`${process.cwd()}${file_path_batch}${file_batch}`, 'utf8');
+    let jobs = await fs.promises.readFile(`${process.cwd()}${log_path}${file_batch}`, 'utf8');
     jobs = JSON.parse(jobs);
     //cancel any pending job that was not finished after server restarted
     await joblog_cancel_pending();
