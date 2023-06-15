@@ -7,7 +7,9 @@
 	third party libraries and module dependencies for performance and better maintainability
 	with code you have control over.
 	Microservice architecture using circuitbreaker and message queue.
-	Services included are geolocation, mail, PDF and worldcities. 
+	Services included are batch, geolocation, mail, PDF and worldcities.
+	Continuous deployment implemented using batch server with scheduled git pull requests and automatic restart 
+	of Node.js using pm2 managed processes.
 	Runs in Node.js using Express framework.
 
 	Apps are component structured and server-side rendered with database data population and single page apps.
@@ -114,7 +116,6 @@
 	  - Load balancer with for example popular NGINX for performance
 	  - Reverse Proxy server with for example popular NGINX for multiple application servers on the same host
 	  - Containers like Kubernetes and Docker
-	  - Continuos Delivery (CD) and Continuos Integration (CI)
 	  - Automatic IP control integration with for example iptables
     - Social media monitoring
 
