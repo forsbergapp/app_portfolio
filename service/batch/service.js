@@ -54,10 +54,10 @@ const get_batchlog_filename = () => {
     let day     = logdate.toLocaleString("en-US", { day: "2-digit"});
     return `${log_path}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
 }
-const joblog_add = async (jobid, start, end, status, result)=>{
+const joblog_add = async (jobid, scheduled_start, start, end, status, result)=>{
     let fs = await import('node:fs');
     let log_id = Date.now();
-    let log = JSON.stringify({log_id: log_id, jobid:jobid, start:start, end:end, status:status, result:result});
+    let log = JSON.stringify({log_id: log_id, jobid:jobid, scheduled_start: scheduled_start, start:start, end:end, status:status, result:result});
     let filename = get_batchlog_filename();
     let joblog_add = await fs.promises.appendFile(`${process.cwd()}${filename}`, log + '\r\n', 'utf8');
     //return log_id and the filename where the log_id is found
@@ -129,7 +129,7 @@ const scheduled_milliseconds = (cron_expression) =>{
         }
         else
             if (cron_expression[0]!='*'){
-                if (new Date().getMinutes()>cron_expression[0]){
+                if (new Date().getMinutes()>=cron_expression[0]){
                     //next specific minute is next hour
                     //set next hour 
                     new_date = new Date().setHours(new Date().getHours()+1);
@@ -142,7 +142,7 @@ const scheduled_milliseconds = (cron_expression) =>{
             else
                 new_date = new Date().getTime() + (60*1000);
             if (cron_expression[1]!='*'){
-                if (new Date(new_date).getHours()>cron_expression[1]){
+                if (new Date(new_date).getHours()>=cron_expression[1]){
                     //next specific hour is next day
                     if (cron_expression[3] == '*'){
                         //every month is specified
@@ -201,8 +201,8 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
     const os = await import('node:os');
     switch (command_type){
         case 'OS':{
-            let batchlog = await joblog_add(jobid, null,null, 'PENDING', null);
             let milliseconds = scheduled_milliseconds(cron_expression);
+            let batchlog = await joblog_add(jobid, new Date(new Date().getTime() + milliseconds), null,null, 'PENDING', null);
             let timeId = setTimeout(async () =>{
                     let start = new Date().toISOString();
                     await joblog_update(batchlog.log_id, start, null, 'RUNNING', null)
