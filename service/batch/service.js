@@ -55,6 +55,8 @@ const get_batchlog_filename = () => {
 }
 const joblog_add = async (jobid, scheduled_start, start, end, status, result)=>{
     let fs = await import('node:fs');
+    //add 10ms wait so log_id will be guaranteed unique on a fast server
+    let delay = await new Promise ((resolve)=>{setTimeout(()=> resolve(), 10)});
     let log_id = Date.now();
     let log = JSON.stringify({log_id: log_id, jobid:jobid, scheduled_start: scheduled_start, start:start, end:end, status:status, result:result});
     let filename = get_batchlog_filename();
