@@ -201,7 +201,7 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
         case 'OS':{
             let milliseconds = scheduled_milliseconds(cron_expression);
             let batchlog = await joblog_add(jobid, new Date(new Date().getTime() + milliseconds), null,null, 'PENDING', null);
-            let timeId = setTimeout(async (batchlog, command_type, path, command, argument, cron_expression) =>{
+            let timeId = setTimeout(async () =>{
                     let start = new Date().toISOString();
                     await joblog_update(batchlog.log_id, start, null, 'RUNNING', null)
                     try{
