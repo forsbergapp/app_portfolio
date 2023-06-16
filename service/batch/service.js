@@ -228,6 +228,7 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
                                                     if (job.timeId == timeId)
                                                         JOBS.splice(index,1);
                                                 })
+                                                clearTimeout(timeId);
                                                 timeId = null;
                                                 //schedule job again, recursive call
                                                 schedule_job(jobid, command_type, path, command, argument,cron_expression); 
