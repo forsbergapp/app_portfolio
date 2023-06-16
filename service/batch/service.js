@@ -197,12 +197,11 @@ const scheduled_milliseconds = (cron_expression) =>{
 
 const schedule_job = async (jobid, command_type, path, command, argument, cron_expression) =>{
     const {exec} = await import('node:child_process');
-    const os = await import('node:os');
     switch (command_type){
         case 'OS':{
             let milliseconds = scheduled_milliseconds(cron_expression);
             let batchlog = await joblog_add(jobid, new Date(new Date().getTime() + milliseconds), null,null, 'PENDING', null);
-            let timeId = setTimeout(async () =>{
+            let timeId = setTimeout(async (batchlog, command_type, path, command, argument, cron_expression) =>{
                     let start = new Date().toISOString();
                     await joblog_update(batchlog.log_id, start, null, 'RUNNING', null)
                     try{
@@ -256,7 +255,7 @@ const start_jobs = async () =>{
     for (let job of jobs){
         if (job.enabled == true && job.platform == os.platform()){
             if (validate_cron_expression(job.cron_expression))
-                schedule_job(job.jobid, job.command_type, job.path, job.command, job.argument, job.cron_expression);
+                await schedule_job(job.jobid, job.command_type, job.path, job.command, job.argument, job.cron_expression);
             else
                 console.log('Not supported cron expression'); 
         }
