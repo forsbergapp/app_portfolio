@@ -1,11 +1,11 @@
-self.addEventListener('install', ( event ) => {
+self.addEventListener('install', () => {
     return null;
 });
 
-self.addEventListener('activate', (event) => {
+self.addEventListener('activate', () => {
     return null;
 });
 
-self.addEventListener('fetch', (event) => {
+self.addEventListener('fetch', () => {
     return null;
 });

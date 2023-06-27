@@ -1,29 +1,29 @@
 const common = await import('/common/js/common.js');
 
 const APP_GLOBAL = {
-    "app_copyright":"",
-    "app_email":"",
-    "img_diagram_img":"/app1/images/app_portfolio.webp",
-    "img_diagram_img_small":"/app1/images/app_portfolio_small.webp",
-    "img_datamodel_img":"/app1/images/data_model.webp",
-    "img_datamodel_img_small":"/app1/images/data_model_small.webp",
-    "info_social_link1_url":"",
-    "info_social_link2_url":"",
-    "info_social_link3_url":"",
-    "info_social_link4_url":"",
-    "info_social_link1_icon":"",
-    "info_social_link2_icon":"",
-    "info_social_link3_icon":"",
-    "info_social_link4_icon":"",
-    "info_link_policy_name":"",
-    "info_link_policy_url":"",
-    "info_link_disclaimer_name":"",
-    "info_link_disclaimer_url":"",
-    "info_link_terms_name":"",
-    "info_link_terms_url":"",
-    "info_link_about_name":"",
-    "info_link_about_url":""
-}
+    'app_copyright':'',
+    'app_email':'',
+    'img_diagram_img':'/app1/images/app_portfolio.webp',
+    'img_diagram_img_small':'/app1/images/app_portfolio_small.webp',
+    'img_datamodel_img':'/app1/images/data_model.webp',
+    'img_datamodel_img_small':'/app1/images/data_model_small.webp',
+    'info_social_link1_url':'',
+    'info_social_link2_url':'',
+    'info_social_link3_url':'',
+    'info_social_link4_url':'',
+    'info_social_link1_icon':'',
+    'info_social_link2_icon':'',
+    'info_social_link3_icon':'',
+    'info_social_link4_icon':'',
+    'info_link_policy_name':'',
+    'info_link_policy_url':'',
+    'info_link_disclaimer_name':'',
+    'info_link_disclaimer_url':'',
+    'info_link_terms_name':'',
+    'info_link_terms_url':'',
+    'info_link_about_name':'',
+    'info_link_about_url':''
+};
 const show_hide_apps_dialogue = () => {
     if (document.getElementById('dialogue_start_content').style.visibility=='visible' ||
         document.getElementById('dialogue_start_content').style.visibility==''){
@@ -36,11 +36,11 @@ const show_hide_apps_dialogue = () => {
         document.getElementById('dialogue_info_content').style.visibility='visible';
         document.getElementById('common_profile_btn_top').style.visibility='visible';
     }
-}
+};
 const setEvents = () => {
 
     //app
-    document.getElementById('theme_background').addEventListener('click', () => { show_hide_apps_dialogue()  }, false);
+    document.getElementById('theme_background').addEventListener('click', () => { show_hide_apps_dialogue();  }, false);
     //start page
     document.getElementById( 'start_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
@@ -48,8 +48,8 @@ const setEvents = () => {
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_diagram_img'])}, false);
-    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_datamodel_img'])}, false);
+    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_diagram_img']);}, false);
+    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_datamodel_img']);}, false);
     
     document.getElementById( 'info_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
@@ -57,31 +57,31 @@ const setEvents = () => {
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
     }, false );
     //common
-    document.getElementById('common_profile_btn_top').addEventListener('click', () => {common.profile_top(1)}, false);
+    document.getElementById('common_profile_btn_top').addEventListener('click', () => {common.profile_top(1);}, false);
     //user menu
-    document.getElementById('common_user_menu_username').addEventListener('click', (event) => { user_menu_item_click(event.target) }, false);
-    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', (event) => { user_menu_item_click(event.target) }, false);
+    document.getElementById('common_user_menu_username').addEventListener('click', (event) => { user_menu_item_click(event.target); }, false);
+    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', (event) => { user_menu_item_click(event.target); }, false);
     //user preferences
-    document.getElementById('app_theme_checkbox').addEventListener('click', () => { app_theme_switch() }, false);
-    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, null, (err, result)=>{get_apps()});}, false);
-    document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { app_theme_switch()}, false);
+    document.getElementById('app_theme_checkbox').addEventListener('click', () => { app_theme_switch(); }, false);
+    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, null, (err, result)=>{get_apps();});}, false);
+    document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { app_theme_switch();}, false);
     //common with app specific settings
     //dialogue profile
     document.getElementById('common_profile_home').addEventListener('click', () => {common.profile_top(1);}, false);
-    document.getElementById('common_profile_close').addEventListener('click', () => {common.profile_close()}, false);
+    document.getElementById('common_profile_close').addEventListener('click', () => {common.profile_close();}, false);
     document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, null);}, false);
-    document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1)}, false);
-    document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2)}, false);
-    document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3)}, false);
-    document.getElementById('common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW') }, false);
-    document.getElementById('common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE') }, false);
-    document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null) }, false);
-    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps', true, common.ICONS['sky_cloud'], null) }, false);
+    document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1);}, false);
+    document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2);}, false);
+    document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3);}, false);
+    document.getElementById('common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW'); }, false);
+    document.getElementById('common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE'); }, false);
+    document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null); }, false);
+    document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null); }, false);
+    document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null); }, false);
+    document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null); }, false);
+    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps', true, common.ICONS['sky_cloud'], null); }, false);
     //dialogue login/signup/forgot
-    let input_username_login = document.getElementById('common_login_username');
+    const input_username_login = document.getElementById('common_login_username');
     input_username_login.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault();
@@ -91,7 +91,7 @@ const setEvents = () => {
             });
         }
     });
-    let input_password_login = document.getElementById('common_login_password');
+    const input_password_login = document.getElementById('common_login_password');
     input_password_login.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault();
@@ -101,40 +101,40 @@ const setEvents = () => {
             });
         }
     });
-    document.getElementById('common_login_button').addEventListener('click', () => { user_login_app() }, false);    
-    document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup() }, false);
+    document.getElementById('common_login_button').addEventListener('click', () => { user_login_app(); }, false);    
+    document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup(); }, false);
     //dialogue user edit    
     document.getElementById('common_user_edit_btn_user_delete_account').addEventListener('click', () => { user_delete_app(); }, false);
     //dialogue verify
     document.getElementById('common_user_verify_verification_container').addEventListener('keyup', (event) => {
         switch (event.target.id){
             case 'common_user_verify_verification_char1':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2')
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
                 break;
             }
             case 'common_user_verify_verification_char2':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3')
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
                 break;
             }
             case 'common_user_verify_verification_char3':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4')
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
                 break;
             }
             case 'common_user_verify_verification_char4':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5')
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
                 break;
             }
             case 'common_user_verify_verification_char5':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6')
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
                 break;
             }
             case 'common_user_verify_verification_char6':{
-                user_verify_check_input_app(event.target, '')
+                user_verify_check_input_app(event.target, '');
                 break;
             }
         }
     }, false);
-}
+};
 const app_theme_switch = () => {
     if(document.getElementById('app_theme_checkbox').checked){
         document.body.className = 'app_theme_' + 'sun ' + document.getElementById('common_user_arabic_script_select').value;
@@ -143,11 +143,11 @@ const app_theme_switch = () => {
         document.body.className = 'app_theme_' + 'moon ' + document.getElementById('common_user_arabic_script_select').value;
     }
     return null;
-}
+};
 
 const get_apps = () => {
     let json;
-    let old_button = document.getElementById('apps').innerHTML;
+    const old_button = document.getElementById('apps').innerHTML;
     common.FFB ('DB_API', `/apps?id=${common.COMMON_GLOBAL['common_app_id']}`, 'GET', 0, null, (err, result) => {
         if (err)
             document.getElementById('apps').innerHTML = old_button;
@@ -172,15 +172,15 @@ const get_apps = () => {
                             </div>
                         </div>`;
             }
-            let clickappevent = (event) => { 
+            const clickappevent = (event) => { 
                 window.open(event.target.parentNode.parentNode.children[1].children[0].innerHTML);};
 
             document.querySelectorAll('.app_logo').forEach(e => e.removeEventListener('click', clickappevent));
             document.getElementById('apps').innerHTML = html;
             document.querySelectorAll('.app_logo').forEach(e => e.addEventListener('click', clickappevent));
         }
-    })
-}
+    });
+};
 
 const user_menu_item_click = (item) => {
     switch (item.id==''?item.parentNode.id:item.id){
@@ -201,11 +201,11 @@ const user_menu_item_click = (item) => {
             break;
     }
     document.getElementById('common_user_menu_dropdown').style='none';
-}
+};
 const user_login_app = async () => {
-    let username = document.getElementById('common_login_username');
-    let password = document.getElementById('common_login_password');
-    let old_button = document.getElementById('common_login_button').innerHTML;
+    const username = document.getElementById('common_login_username');
+    const password = document.getElementById('common_login_password');
+    const old_button = document.getElementById('common_login_button').innerHTML;
     document.getElementById('common_login_button').innerHTML = common.APP_SPINNER;
             
     await common.user_login(username.value, password.value, (err, result)=>{
@@ -226,11 +226,11 @@ const user_login_app = async () => {
             common.dialogue_signup_clear();
         }
         
-    })
-}
+    });
+};
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
-}
+};
 const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField, (err, result) => {
         if ((err==null && result==null)==false)
@@ -240,8 +240,8 @@ const user_verify_check_input_app = async (item, nextField) => {
                     result.verification_type==2)
                     user_login_app();
             }
-    })
-}
+    });
+};
 
 const user_delete_app = async () => {
     let user_local;
@@ -255,14 +255,14 @@ const user_delete_app = async () => {
                                                 if (err==null){
                                                     common.user_logoff();
                                                 }
-                                            }) 
+                                            }); 
                                         };
     await common.user_delete(null, user_local, function_delete_user_account, (err, result) =>{
         if (err==null){
             common.user_logoff();
         }
-    })
-}
+    });
+};
 const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
@@ -276,8 +276,8 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
             document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'inline-block';
             document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'none';
         }
-    })
-}
+    });
+};
 const ProviderSignIn_app = async (provider_button) => {
     await common.ProviderSignIn(provider_button, (err, result)=>{
         if (err==null){
@@ -288,8 +288,8 @@ const ProviderSignIn_app = async (provider_button) => {
                                     result.profile_image_url, 
                                     result.profile_email);
         }
-    })
-}
+    });
+};
 const init_app = async () => {
     //start
     document.getElementById('about_name').innerHTML = common.COMMON_GLOBAL['app_name'];
@@ -302,7 +302,7 @@ const init_app = async () => {
     document.getElementById('title1').innerHTML = common.COMMON_GLOBAL['app_name'] + ' Diagram';
     document.getElementById('title2').innerHTML = common.COMMON_GLOBAL['app_name'] + ' Data model';
     document.getElementById('info_message').innerHTML = common.ICONS['app_home'];
-    document.getElementById('contact_text').innerHTML = 'Contact'    
+    document.getElementById('contact_text').innerHTML = 'Contact';    
     document.querySelector('#app_copyright').innerHTML = APP_GLOBAL['app_copyright'];
     document.getElementById('app_email').href='mailto:' + APP_GLOBAL['app_email'];
     document.getElementById('app_email').innerHTML=APP_GLOBAL['app_email'];
@@ -338,19 +338,19 @@ const init_app = async () => {
     }, false);
     
     if (APP_GLOBAL['info_social_link1_url']==null)
-        document.getElementById('social_link1').style.display = 'none'
+        document.getElementById('social_link1').style.display = 'none';
     else
         document.getElementById('social_link1').innerHTML = APP_GLOBAL['info_social_link1_icon'];
     if (APP_GLOBAL['info_social_link2_url']==null)
-        document.getElementById('social_link2').style.display = 'none'
+        document.getElementById('social_link2').style.display = 'none';
     else
         document.getElementById('social_link2').innerHTML = APP_GLOBAL['info_social_link2_icon'];
     if (APP_GLOBAL['info_social_link3_url']==null)
-        document.getElementById('social_link3').style.display = 'none'
+        document.getElementById('social_link3').style.display = 'none';
     else
         document.getElementById('social_link3').innerHTML = APP_GLOBAL['info_social_link3_icon'];
     if (APP_GLOBAL['info_social_link4_url']==null)
-        document.getElementById('social_link4').style.display = 'none'
+        document.getElementById('social_link4').style.display = 'none';
     else
         document.getElementById('social_link4').innerHTML = APP_GLOBAL['info_social_link4_icon'];
     document.getElementById('info_link1').innerHTML = APP_GLOBAL['info_link_policy_name'];
@@ -364,7 +364,7 @@ const init_app = async () => {
     setEvents();
     common.zoom_info('');
     common.move_info(null,null);
-}
+};
 
 const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
@@ -430,11 +430,11 @@ const init = (parameters) => {
                 if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
                     common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
                             get_apps();
-                    })
+                    });
                 else
                     get_apps();
                 const show_start = async () => {
-                    let user = window.location.pathname.substring(1);
+                    const user = window.location.pathname.substring(1);
                     if (user !='') {
                         //show profile for user entered in url
                         document.getElementById('common_dialogue_profile').style.visibility = 'visible';
@@ -444,20 +444,20 @@ const init = (parameters) => {
                                         null;
                                         });
                     }
-                }
+                };
                 show_start().then(()=>{
                     common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
                     //use transition from now and not when starting app
                     document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
                         dialogue.style.transition = 'all 1s';
-                    })
+                    });
                     //show app themes from now to avoid startup css render issues
                     document.querySelector('#app_themes').style.display = 'block';
-                })
-            })
+                });
+            });
         }
-    })
-}
+    });
+};
 export{show_hide_apps_dialogue, setEvents, app_theme_switch, get_apps, user_menu_item_click, user_login_app,
        app_exception, user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
-       init_app, init}
+       init_app, init};

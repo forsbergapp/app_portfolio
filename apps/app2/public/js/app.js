@@ -19,11 +19,8 @@ const app_common = await import('/app2/js/app_common.js');
 
 const printTable = () => {
     dialogue_loading(1);
-    let whatToPrint = document.getElementById('paper');
-    
-	let html;
-	
-	html = `<!DOCTYPE html>
+    const whatToPrint = document.getElementById('paper');
+	const html = `<!DOCTYPE html>
 			<html>
 			<head>
 				<meta charset='UTF-8'>
@@ -40,7 +37,7 @@ const printTable = () => {
     document.getElementById('common_window_info_content').contentWindow.document.open();
     document.getElementById('common_window_info_content').contentWindow.document.write(html);
     document.getElementById('common_window_info_content').classList = document.getElementById('paper').classList;
-    window.frames['common_window_info_content'].focus()
+    window.frames['common_window_info_content'].focus();
     setTimeout(() => {document.getElementById('common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
     if (common.mobile())
         null;
@@ -48,8 +45,8 @@ const printTable = () => {
         document.getElementById('common_window_info_content').contentWindow.onafterprint = () => {
             document.getElementById('common_window_info_content').src='';
             document.getElementById('common_window_info_content').classList ='';
-        }
-}
+        };
+};
 
 const getReportSettings = () => {
     return {    locale              	: document.getElementById('setting_select_locale').value,  
@@ -120,7 +117,7 @@ const getReportSettings = () => {
                 ui_timetable_day_id     : 'timetable_day',
                 ui_timetable_month_id   : 'timetable_month',
                 ui_timetable_year_id    : 'timetable_year'};
-}
+};
 // update timetable
 const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
     return await new Promise((resolve) => {
@@ -131,23 +128,23 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 case 0:{
                     //update user settings to current select option 
                     set_settings_select();
-                    let select_user_settings = document.getElementById('setting_select_user_setting');
-                    let current_user_settings =[];
+                    const select_user_settings = document.getElementById('setting_select_user_setting');
+                    const current_user_settings =[];
                     for (let i=0;i<=select_user_settings.options.length-1;i++){
                         current_user_settings.push(
                         {
-                        "description" : select_user_settings[i].getAttribute('description'),
-                        "regional_language_locale" : select_user_settings[i].getAttribute('regional_language_locale'),
-                        "regional_timezone" : select_user_settings[i].getAttribute('regional_timezone'),
-                        "regional_number_system" : select_user_settings[i].getAttribute('regional_number_system'),
-                        "regional_calendar_hijri_type" : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
-                        "gps_lat_text" : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
-                        "gps_long_text" : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
-                        "prayer_method" : select_user_settings[i].getAttribute('prayer_method'),
-                        "prayer_asr_method" : select_user_settings[i].getAttribute('prayer_asr_method'),
-                        "prayer_high_latitude_adjustment" : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
-                        "prayer_time_format" : select_user_settings[i].getAttribute('prayer_time_format'),
-                        "prayer_hijri_date_adjustment" : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
+                        'description' : select_user_settings[i].getAttribute('description'),
+                        'regional_language_locale' : select_user_settings[i].getAttribute('regional_language_locale'),
+                        'regional_timezone' : select_user_settings[i].getAttribute('regional_timezone'),
+                        'regional_number_system' : select_user_settings[i].getAttribute('regional_number_system'),
+                        'regional_calendar_hijri_type' : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
+                        'gps_lat_text' : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
+                        'gps_long_text' : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
+                        'prayer_method' : select_user_settings[i].getAttribute('prayer_method'),
+                        'prayer_asr_method' : select_user_settings[i].getAttribute('prayer_asr_method'),
+                        'prayer_high_latitude_adjustment' : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
+                        'prayer_time_format' : select_user_settings[i].getAttribute('prayer_time_format'),
+                        'prayer_hijri_date_adjustment' : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
                         });
                     }
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
@@ -156,7 +153,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                         document.getElementById('paper').innerHTML = timetable.outerHTML;
                         common.create_qr('timetable_qr_code', common.getHostname());
                         resolve();
-                    })
+                    });
                     break;
                 }
                 //1=create timetable month
@@ -167,7 +164,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                         document.getElementById('paper').innerHTML = timetable.outerHTML;
                         common.create_qr('timetable_qr_code', common.getHostname());
                         resolve();
-                    })
+                    });
                     break;
                 }
                 //2=create timetable year
@@ -178,36 +175,36 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                         document.getElementById('paper').innerHTML = timetable.outerHTML;
                         common.create_qr('timetable_qr_code', common.getHostname());
                         resolve();
-                    })
+                    });
                     break;
                 }
                 default:{
                     break;
                 }
             }
-        })
-    })
-}
+        });
+    });
+};
 const get_report_url = (id, sid, papersize, item, format) => {
-    let app_parameters = `app_id=${common.COMMON_GLOBAL['app_id']}`;
-    let report_module = `&module=${app_common.APP_GLOBAL['app_report_timetable']}`;
-    let module_parameters = `&id=${id}&sid=${sid}`
+    const app_parameters = `app_id=${common.COMMON_GLOBAL['app_id']}`;
+    const report_module = `&module=${app_common.APP_GLOBAL['app_report_timetable']}`;
+    let module_parameters = `&id=${id}&sid=${sid}`;
     if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
         module_parameters += '&type=0';
     if (item =='profile_user_settings_month' || item.substr(0,10)=='user_month')
         module_parameters += '&type=1';
     if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
         module_parameters += '&type=2';
-    let language_parameter = `&lang_code=${common.COMMON_GLOBAL['user_locale']}`;
-    let service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
-    let encodedurl = common.toBase64(app_parameters +
+    const language_parameter = `&lang_code=${common.COMMON_GLOBAL['user_locale']}`;
+    const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
+    const encodedurl = common.toBase64(app_parameters +
                                      report_module +
                                      module_parameters + 
                                      language_parameter +
                                      service_parameter);
     //url query parameters are decoded in report module and in report service
     return common.getHostname() + `/reports?reportid=${encodedurl}`;
-}
+};
 const updateViewStat_app = (user_setting_id, user_setting_user_account_id) => {
     if (parseInt(user_setting_user_account_id) == parseInt(common.COMMON_GLOBAL['user_account_id']))
         //do not update viewed stat if logged in user is the same as the user account in user setting
@@ -220,7 +217,7 @@ const updateViewStat_app = (user_setting_id, user_setting_user_account_id) => {
             app2_report.updateReportViewStat(user_setting_id, parseInt(common.COMMON_GLOBAL['user_account_id']));
     }
         
-}
+};
 /*----------------------- */
 /* THEME                  */
 /*----------------------- */
@@ -228,38 +225,38 @@ const update_all_theme_thumbnails = async () => {
     await update_timetable_report(0, null, getReportSettings()).then(() => {
         document.querySelectorAll('#slides_day .slide').forEach(e => {
             update_theme_thumbnail(e, 'day', 1);
-        })
+        });
     });
     
     await update_timetable_report(1, null, getReportSettings()).then(() => {
         document.querySelectorAll('#slides_month .slide').forEach(e => {
             update_theme_thumbnail(e, 'month', 2);
-        })
+        });
     });
     await update_timetable_report(2, null, getReportSettings()).then(() => {
         document.querySelectorAll('#slides_year .slide').forEach(e => {
             update_theme_thumbnail(e, 'year', 1);
-        })
+        });
     });
-}
+};
 const update_theme_thumbnail = (e, theme_type, classlist_pos) => {
     e.children[0].innerHTML = document.getElementById('timetable_' + theme_type).outerHTML;
-    let new_theme_id = e.children[0].getAttribute('data-theme_id');
+    const new_theme_id = e.children[0].getAttribute('data-theme_id');
     //theme always second class in classList
-    let old_theme = e.children[0].children[0].classList[classlist_pos];
+    const old_theme = e.children[0].children[0].classList[classlist_pos];
     e.children[0].children[0].classList.remove(old_theme);
     e.children[0].children[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
-}
+};
 
 const get_theme_id = (type) => {
-    let select_user_setting = document.getElementById('setting_select_user_setting');
+    const select_user_setting = document.getElementById('setting_select_user_setting');
     if (document.getElementsByClassName('slider_active_' + type)[0])
         return document.getElementsByClassName('slider_active_' + type)[0].getAttribute('data-theme_id');
     else
         return select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_' + type + '_id');
-}
+};
 const set_theme_id = (type, theme_id) => {
-    let slides = document.getElementById('setting_themes_' + type + '_slider').children[0].children[0]
+    const slides = document.getElementById('setting_themes_' + type + '_slider').children[0].children[0];
     for (let i = 0; i < slides.childElementCount; i++) {
         if (slides.children[i].children[0].getAttribute('data-theme_id') == theme_id) {
             //remove active class from current theme
@@ -273,12 +270,12 @@ const set_theme_id = (type, theme_id) => {
         }
     }
     return null;
-}
+};
 const set_theme_title = (type) => {
     document.getElementById(`slider_theme_${type}_id`).innerHTML =
         document.getElementById(`theme_${type}_${get_theme_id(type)}`).getAttribute('data-theme_id');
     return null;
-}
+};
 const load_themes = () => {
     slide(document.getElementById('slides_day'),
         document.getElementById('slider_prev_day'),
@@ -293,14 +290,14 @@ const load_themes = () => {
         document.getElementById('slider_next_year'),
         'year');
     return null;
-}
+};
 const slide = (items, prev, next, type) => {
     document.getElementById(items.children[0].children[0].id).classList.add(`slider_active_${type}`);
     set_theme_title(type);
 
     // Click events
-    prev.addEventListener('click', () => { theme_nav(-1) });
-    next.addEventListener('click', () => { theme_nav(1) });
+    prev.addEventListener('click', () => { theme_nav(-1); });
+    next.addEventListener('click', () => { theme_nav(1); });
 
     const theme_nav = async (dir) => {
         let theme_index;
@@ -308,7 +305,7 @@ const slide = (items, prev, next, type) => {
         document.querySelectorAll(`#slides_${type} .slide_${type}`).forEach((e, index) => {
             if (e.children[0].classList.contains(`slider_active_${type}`))
                 theme_index = index;
-        })
+        });
         //set next index
         if (dir == 1)
             if ((theme_index + 1) == items.getElementsByClassName(`slide_${type}`).length)
@@ -333,12 +330,12 @@ const slide = (items, prev, next, type) => {
             await update_timetable_report(2, null, getReportSettings()).then(() => {
                 document.querySelectorAll('#slides_year .slide').forEach(e => {
                     update_theme_thumbnail(e, 'year', 1);
-                })
+                });
             });
         }
 
-    }
-}
+    };
+};
 /*----------------------- */
 /* UI                     */
 /*----------------------- */
@@ -348,10 +345,10 @@ const common_translate_ui_app = async (lang_code, callBack) => {
             callBack(err,null);
         else{
             //translate locale in this app
-            let select_locale = document.getElementById('setting_select_locale');
-            let select_second_locale = document.getElementById('setting_select_report_locale_second'); 
-            let current_locale = select_locale.value;
-            let current_second_locale = select_second_locale.value;
+            const select_locale = document.getElementById('setting_select_locale');
+            const select_second_locale = document.getElementById('setting_select_report_locale_second'); 
+            const current_locale = select_locale.value;
+            const current_second_locale = select_second_locale.value;
             select_locale.innerHTML = document.getElementById('common_user_locale_select').innerHTML;
             select_locale.value = current_locale;
             select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + document.getElementById('common_user_locale_select').innerHTML;
@@ -362,10 +359,10 @@ const common_translate_ui_app = async (lang_code, callBack) => {
                 if (err)
                     callBack(err,null);
                 else{
-                    let json = JSON.parse(result);
-                    let select_country = document.getElementById('setting_select_country');
-                    let html=`<option value='' id='' label='…' selected='selected'>…</option>`;
-                    let current_country = document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].id;
+                    const json = JSON.parse(result);
+                    const select_country = document.getElementById('setting_select_country');
+                    let html='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+                    const current_country = document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].id;
                     let current_group_name;
                     for (let i = 0; i < json.countries.length; i++){
                         if (i === 0){
@@ -383,26 +380,26 @@ const common_translate_ui_app = async (lang_code, callBack) => {
                                     country_code=${json.countries[i].country_code} 
                                     flag_emoji=${json.countries[i].flag_emoji} 
                                     group_name=${json.countries[i].group_name}>${json.countries[i].flag_emoji} ${json.countries[i].text}
-                            </option>`
+                            </option>`;
                         }
                     }
                     select_country.innerHTML = html;
                     common.SearchAndSetSelectedIndex(current_country, document.getElementById('setting_select_country'),0);
                     callBack(null,null);
                 }
-            })
+            });
         }
     });
-}
+};
 const settings_translate = async (first=true) => {
 	let json;
     let locale;
     if (first ==true){
-        locale = document.getElementById('setting_select_locale').value
+        locale = document.getElementById('setting_select_locale').value;
         common.COMMON_GLOBAL['user_locale'] = locale;
     }
     else
-        locale = document.getElementById('setting_select_report_locale_second').value
+        locale = document.getElementById('setting_select_report_locale_second').value;
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
@@ -443,10 +440,10 @@ const settings_translate = async (first=true) => {
                     app2_report.REPORT_GLOBAL['second_language']['coltitle_notes']= '';
                 }
             }
-        })
+        });
     }
 	return null;
-}
+};
 const get_align = (al,ac,ar) => {
 	if (al==true)
 		return 'left';
@@ -455,9 +452,9 @@ const get_align = (al,ac,ar) => {
 	if (ar==true)
 		return 'right';
 	return '';
-}
+};
 const showcurrenttime = () => {
-    let options = {
+    const options = {
         timeZone: common.COMMON_GLOBAL['user_timezone'],
         weekday: 'long',
         year: 'numeric',
@@ -470,11 +467,11 @@ const showcurrenttime = () => {
     };
     document.getElementById('setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL['user_locale'], options);
     return null;
-}
+};
 
 const showreporttime = () => {
 
-    let options = {
+    const options = {
         timeZone: document.getElementById('setting_select_report_timezone')[document.getElementById('setting_select_report_timezone').selectedIndex].value,
         weekday: 'long',
         year: 'numeric',
@@ -491,8 +488,8 @@ const showreporttime = () => {
         document.getElementById('timetable_day_time').innerHTML = document.getElementById('setting_report_date_time_display').innerHTML;
     }
     if (document.getElementsByClassName('timetable_day_current_time').length > 0) {
-        let user_current_time = document.getElementsByClassName('timetable_day_current_time');
-        let select_user_settings = document.getElementById('setting_select_user_setting');
+        const user_current_time = document.getElementsByClassName('timetable_day_current_time');
+        const select_user_settings = document.getElementById('setting_select_user_setting');
         let user_locale;
         let user_options;
         //loop user settings
@@ -515,17 +512,17 @@ const showreporttime = () => {
         }
     }
     return null;
-}
+};
 const toolbar_button = async (choice) => {
-    let paper = document.getElementById('paper');
-    let settings = document.getElementById('settings');
+    const paper = document.getElementById('paper');
+    const settings = document.getElementById('settings');
 
     switch (choice) {
         //print
         case 1:
             {
                 if (common.mobile())
-                    paper.style.display = "block";
+                    paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 document.getElementById('common_profile_btn_top').style.visibility='visible';
                 printTable();
@@ -535,7 +532,7 @@ const toolbar_button = async (choice) => {
         case 2:
             {
                 if (common.mobile())
-                    paper.style.display = "block";
+                    paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 document.getElementById('common_profile_btn_top').style.visibility='visible';
                 update_timetable_report(0, null, getReportSettings());
@@ -545,7 +542,7 @@ const toolbar_button = async (choice) => {
         case 3:
             {
                 if (common.mobile())
-                    paper.style.display = "block";
+                    paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 document.getElementById('common_profile_btn_top').style.visibility='visible';
                 update_timetable_report(1, null, getReportSettings());
@@ -555,7 +552,7 @@ const toolbar_button = async (choice) => {
         case 4:
             {
                 if (common.mobile())
-                    paper.style.display = "block";
+                    paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
                 document.getElementById('common_profile_btn_top').style.visibility='visible';
                 update_timetable_report(2, null, getReportSettings());
@@ -566,7 +563,7 @@ const toolbar_button = async (choice) => {
             {
                 //Hide paper on mobile device when showing settings, scrollbug in background
                 if (common.mobile())
-                    paper.style.display = "none";
+                    paper.style.display = 'none';
                 document.getElementById('common_profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
                 if (document.getElementById('tab_nav_3').classList.contains('tab_nav_selected'))
@@ -590,23 +587,23 @@ const toolbar_button = async (choice) => {
                 break;
             }
     }
-}
+};
 
 
 const openTab = async (tab_selected) => {
     for (let i = 1; i < 8; i++) {
         //hide all tab content
-        document.getElementById("tab" + i).style.display = 'none';
+        document.getElementById('tab' + i).style.display = 'none';
         //remove mark for all tabs
-        document.getElementById("tab_nav_" + i).className = '';
+        document.getElementById('tab_nav_' + i).className = '';
     }
     //show active tab content
     document.getElementById('tab' + tab_selected).style.display = 'block';
     //mark active tab
-    document.getElementById("tab_nav_" + tab_selected).classList.add("tab_nav_selected");
+    document.getElementById('tab_nav_' + tab_selected).classList.add('tab_nav_selected');
     
     if (tab_selected==2){
-        document.querySelector('#mapid').outerHTML = `<div id='mapid'></div>`;
+        document.querySelector('#mapid').outerHTML = '<div id=\'mapid\'></div>';
         //init map thirdparty module
         init_map().then(()=>{
             update_ui(4);
@@ -620,7 +617,7 @@ const openTab = async (tab_selected) => {
     if (tab_selected==5){
         document.getElementById('setting_icon_text_theme_row').dispatchEvent(new Event('click'));
     }
-}
+};
 
 
 const align_button_value = (report_align_where) => {
@@ -632,7 +629,7 @@ const align_button_value = (report_align_where) => {
     if (document.getElementById('setting_icon_text_' + report_align_where + '_aright').classList.contains('setting_button_active'))
         return 'right';
     return '';
-}
+};
 
 const dialogue_loading = (visible) => {
     if (visible==1){
@@ -643,12 +640,12 @@ const dialogue_loading = (visible) => {
         document.getElementById('dialogue_loading').innerHTML = '';
         document.getElementById('dialogue_loading').style.visibility='hidden';
     }
-}
+};
 
 const zoom_paper = (zoomvalue = '') => {
     let old;
     let old_scale;
-    let div = document.getElementById('paper');
+    const div = document.getElementById('paper');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == '') {
@@ -658,11 +655,11 @@ const zoom_paper = (zoomvalue = '') => {
             div.style.transform = 'scale(0.7)';
     } else {
         old = document.getElementById('paper').style.transform;
-        old_scale = parseFloat(old.substr(old.indexOf("(") + 1, old.indexOf(")") - 1));
+        old_scale = parseFloat(old.substr(old.indexOf('(') + 1, old.indexOf(')') - 1));
         div.style.transform = 'scale(' + (old_scale + (zoomvalue / 10)) + ')';
     }
     return null;
-}
+};
 const select_get_selectindex = (select, id) => {
     if (id == 0)
         return 0;
@@ -673,22 +670,22 @@ const select_get_selectindex = (select, id) => {
         }
     }
     return null;
-}
+};
 const select_get_id = (select, selectindex) => {
     if (selectindex == 0)
         return 'null';
     else {
         return document.getElementById(select)[selectindex].getAttribute('id');
     }
-}
+};
 const set_null_or_value = (value) => {
     if (value == null || value == '')
         return 'null';
     else
         return value;
-}
+};
 
-const show_dialogue = (dialogue, file = '') => {
+const show_dialogue = (dialogue) => {
     switch (dialogue) {
         case 'SCAN':
             {
@@ -705,7 +702,7 @@ const show_dialogue = (dialogue, file = '') => {
 };
 
 const update_ui = async (option, item_id=null) => {
-    let settings = {
+    const settings = {
         paper                   : document.getElementById('paper'),
         timezone_report         : document.getElementById('setting_select_report_timezone'),
         maptype                 : document.getElementById('setting_select_maptype'),
@@ -749,14 +746,14 @@ const update_ui = async (option, item_id=null) => {
                         null,
                         app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
                         common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                })
+                });
                 break;
             }
         //GPS, update cities from country
         case 5:
             {
                 //set default option
-                settings.city.innerHTML=`<option value='' id='' label='…' selected='selected'>…</option>`;
+                settings.city.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=null){
                     await common.get_cities(settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase(), (err, cities)=>{
@@ -766,7 +763,7 @@ const update_ui = async (option, item_id=null) => {
                             //fetch list including default option
                             settings.city.innerHTML = cities;
                         }
-                    })
+                    });
                 }
                 break;
             }
@@ -774,8 +771,8 @@ const update_ui = async (option, item_id=null) => {
         case 6:
             {                    
                 //set GPS and timezone
-                let longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
-                let latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
+                const longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
+                const latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
                 
                 settings.gps_long_input.value = longitude_selected;
                 settings.gps_lat_input.value = latitude_selected;
@@ -804,9 +801,9 @@ const update_ui = async (option, item_id=null) => {
         case 7:
             {
                 //set GPS and timezone
-                let longitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('longitude');
-                let latitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('latitude');
-                let timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
+                const longitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('longitude');
+                const latitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('latitude');
+                const timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
                 settings.gps_long_input.value = longitude_selected;
                 settings.gps_lat_input.value = latitude_selected;
                 if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
@@ -824,19 +821,19 @@ const update_ui = async (option, item_id=null) => {
                 //display empty country
                 common.SearchAndSetSelectedIndex('', settings.country,0);
                 //remove old city list:            
-                let old_groups = settings.city.getElementsByTagName('optgroup');
+                const old_groups = settings.city.getElementsByTagName('optgroup');
                 for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                    settings.city.removeChild(old_groups[old_index])
+                    settings.city.removeChild(old_groups[old_index]);
                 //display first empty city
                 common.SearchAndSetSelectedIndex('', settings.city,0);
-                let title = settings.select_place.options[settings.select_place.selectedIndex].text;
+                const title = settings.select_place.options[settings.select_place.selectedIndex].text;
                 document.getElementById('setting_input_place').value = title;
                 break;
             }
         //GPS, updating place
         case 8:
             {
-                map_update_popup(document.getElementById('setting_input_place').value)
+                common.map_update_popup(document.getElementById('setting_input_place').value);
                 break;
             }
         //GPS, position
@@ -860,12 +857,12 @@ const update_ui = async (option, item_id=null) => {
                     //display empty country
                     common.SearchAndSetSelectedIndex('', settings.country,0);
                     //remove old city list:            
-                    let old_groups = settings.city.getElementsByTagName('optgroup');
+                    const old_groups = settings.city.getElementsByTagName('optgroup');
                     for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                        settings.city.removeChild(old_groups[old_index])
+                        settings.city.removeChild(old_groups[old_index]);
                         //display first empty city
                     common.SearchAndSetSelectedIndex('', settings.city,0);
-                })
+                });
                 break;
             }
         //Design, paper size
@@ -888,13 +885,13 @@ const update_ui = async (option, item_id=null) => {
                 break;
             }
         //11=Image, Report header image load
-	    case 11:
+        case 11:
             {
-                let resheader = common.show_image(settings.header_preview_img_item, item_id, app_common.APP_GLOBAL['image_header_footer_width'], app_common.APP_GLOBAL['image_header_footer_height']);
+                common.show_image(settings.header_preview_img_item, item_id, app_common.APP_GLOBAL['image_header_footer_width'], app_common.APP_GLOBAL['image_header_footer_height']);
                 break;
             }
         //12=Image, Report header image clear
-	    case 12:
+        case 12:
             {
                 common.recreate_img(settings.header_preview_img_item);
                 //doesnt work:
@@ -903,9 +900,9 @@ const update_ui = async (option, item_id=null) => {
                 break;
             }
         //13=Image, Report footer image load
-	    case 13:
+        case 13:
             {
-                let resfooter = common.show_image(settings.footer_preview_img_item, item_id, app_common.APP_GLOBAL['image_header_footer_width'], app_common.APP_GLOBAL['image_header_footer_height']);
+                common.show_image(settings.footer_preview_img_item, item_id, app_common.APP_GLOBAL['image_header_footer_width'], app_common.APP_GLOBAL['image_header_footer_height']);
                 break;
             }
         //14=Image, Report footer image clear
@@ -918,11 +915,11 @@ const update_ui = async (option, item_id=null) => {
                 break;
             }
         //15=Texts, Report header align
-	    case 15:
+        case 15:
             {
                 //check if clicking on button that is already active then deactivate so no alignment
                 if (document.getElementById(item_id).classList.contains(settings.button_active_class)){
-                    document.getElementById(item_id).classList.remove(settings.button_active_class)
+                    document.getElementById(item_id).classList.remove(settings.button_active_class);
                 }
                 else{	
                     settings.reportheader_aleft.classList.remove(settings.button_active_class);
@@ -930,7 +927,7 @@ const update_ui = async (option, item_id=null) => {
                     settings.reportheader_aright.classList.remove(settings.button_active_class);
                     document.getElementById(item_id).classList.add(settings.button_active_class);
                 }
-                let header_align = get_align(document.getElementById('setting_icon_text_header_aleft').classList.contains('setting_button_active'),
+                const header_align = get_align(document.getElementById('setting_icon_text_header_aleft').classList.contains('setting_button_active'),
                                              document.getElementById('setting_icon_text_header_acenter').classList.contains('setting_button_active'),
                                              document.getElementById('setting_icon_text_header_aright').classList.contains('setting_button_active'));
                 document.getElementById('setting_input_reportheader1').style.textAlign= header_align;
@@ -943,7 +940,7 @@ const update_ui = async (option, item_id=null) => {
             {
                 //check if clicking on button that is already active then deactivate so no alignment
                 if (document.getElementById(item_id).classList.contains(settings.button_active_class)){
-                    document.getElementById(item_id).classList.remove(settings.button_active_class)
+                    document.getElementById(item_id).classList.remove(settings.button_active_class);
                 }
                 else{
                     settings.reportfooter_aleft.classList.remove(settings.button_active_class);
@@ -951,7 +948,7 @@ const update_ui = async (option, item_id=null) => {
                     settings.reportfooter_aright.classList.remove(settings.button_active_class);
                     document.getElementById(item_id).classList.add(settings.button_active_class);
                 }
-                let footer_align = get_align(document.getElementById('setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
+                const footer_align = get_align(document.getElementById('setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
                                                  document.getElementById('setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
                                                  document.getElementById('setting_icon_text_footer_aright').classList.contains('setting_button_active'));
                 document.getElementById('setting_input_reportfooter1').style.textAlign= footer_align;
@@ -962,7 +959,7 @@ const update_ui = async (option, item_id=null) => {
         //Prayer, method
         case 17:
             {
-                let method = document.getElementById('setting_select_method').value;
+                const method = document.getElementById('setting_select_method').value;
                 let suffix;
 
                 document.getElementById('setting_method_param_fajr').innerHTML = '';
@@ -980,20 +977,20 @@ const update_ui = async (option, item_id=null) => {
                 break;
             }
     }
-}
+};
 /*----------------------- */
 /* USER                   */
 /*----------------------- */
 //function sent as parameter, set the argument passed and convert result to integer with unary plus syntax
 //and ES6 arrow function and without function keyword
-let show_profile_function = (profile_id) => {
+const show_profile_function = (profile_id) => {
                                 profile_show_app(+profile_id);
                             };
 
 const user_login_app = async () => {
-    let username = document.getElementById('common_login_username');
-    let password = document.getElementById('common_login_password');
-    let old_button = document.getElementById('common_login_button').innerHTML;
+    const username = document.getElementById('common_login_username');
+    const password = document.getElementById('common_login_password');
+    const old_button = document.getElementById('common_login_button').innerHTML;
     document.getElementById('common_login_button').innerHTML = common.APP_SPINNER;
     await common.user_login(username.value, password.value, (err, result)=>{
         document.getElementById('common_login_button').innerHTML = old_button;
@@ -1004,7 +1001,7 @@ const user_login_app = async () => {
                     null;
                 else{
                     common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img')); 
-                    document.getElementById('tab_nav_btn_7').innerHTML = `<img id='user_setting_avatar_img' >`
+                    document.getElementById('tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
                     common.set_avatar(result.avatar, document.getElementById('user_setting_avatar_img')); 
 
                     document.getElementById('common_user_menu_username').innerHTML = result.username;
@@ -1032,16 +1029,16 @@ const user_login_app = async () => {
                                     //show default startup
                                     toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
                                     dialogue_loading(0);
-                                })
-                            })
-                        })
+                                });
+                            });
+                        });
                     }); 
                 }         
-            })
+            });
         }
         
-    })
-}
+    });
+};
 const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField, (err, result) => {
         if ((err==null && result==null)==false)
@@ -1051,23 +1048,23 @@ const user_verify_check_input_app = async (item, nextField) => {
                     result.verification_type==2)
                     user_login_app();
             }
-    })
-}
+    });
+};
 const user_function_app = async (function_name) => {
     await common.user_function(function_name, (err, result) => {
         if (err==null){
             profile_update_stat_app();
         }
-    })
-}
+    });
+};
 const profile_close_app = () => {
     common.profile_close();
     profile_clear_app;
-}
+};
 const profile_clear_app = () => {
 
-    document.getElementById('common_profile_public').style.display = "none";
-    document.getElementById('common_profile_private').style.display = "none";
+    document.getElementById('common_profile_public').style.display = 'none';
+    document.getElementById('common_profile_private').style.display = 'none';
     
     document.getElementById('profile_info_user_setting_likes_count').innerHTML='';
     document.getElementById('profile_info_user_setting_liked_count').innerHTML='';
@@ -1075,14 +1072,14 @@ const profile_clear_app = () => {
 
     document.getElementById('profile_user_settings_info_like_count').innerHTML='';
     document.getElementById('profile_user_settings_info_view_count').innerHTML='';
-}
+};
 const user_logoff_app = () => {
-    let select = document.getElementById("setting_select_user_setting");
+    const select = document.getElementById('setting_select_user_setting');
     let option;
     //get new data token to avoid endless loop and invalid token
     common.user_logoff().then(() => {
         document.getElementById('tab_nav_btn_7').innerHTML = common.ICONS['user'];
-        document.getElementById('user_settings').style.display = "none";
+        document.getElementById('user_settings').style.display = 'none';
         
         profile_clear_app();
         //empty user settings
@@ -1096,11 +1093,11 @@ const user_logoff_app = () => {
                 settings_translate(false).then(() => {
                     //show default startup
                     toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
-                })
-            })
+                });
+            });
         });
-    })    
-}
+    });    
+};
 const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
@@ -1110,7 +1107,7 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
                     null;
                 else{       
                     common.set_avatar(result.avatar, document.getElementById('common_user_menu_avatar_img')); 
-                    document.getElementById('tab_nav_btn_7').innerHTML = `<img id='user_setting_avatar_img' >`
+                    document.getElementById('tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
                     common.set_avatar(result.avatar, document.getElementById('user_setting_avatar_img')); 
                     document.getElementById('common_user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
         
@@ -1130,15 +1127,15 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
                                     //show default startup
                                     toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
                                     dialogue_loading(0);
-                                })
-                            })
-                        })
+                                });
+                            });
+                        });
                     });
                 }
             });
         }
-    })
-}
+    });
+};
 const ProviderSignIn_app = async (provider_button) => {
     await common.ProviderSignIn(provider_button, (err, result)=>{
         if (err==null){
@@ -1149,25 +1146,25 @@ const ProviderSignIn_app = async (provider_button) => {
                                     result.profile_image_url, 
                                     result.profile_email);
         }
-    })
-}
+    });
+};
 const profile_update_stat_app = async () => {
     await common.profile_update_stat((err, result) =>{
         if (err==null){
             profile_user_setting_stat(result.id);
         }
-    })
-}
+    });
+};
 const profile_show_app = async (user_account_id_other = null, username = null) => {
-    document.getElementById('common_dialogue_profile').style.visibility = "visible";
-    document.getElementById('common_profile_top').style.display = "none";
-    document.getElementById('profile_main_stat_row2').style.display = "none";
-    document.getElementById('profile_user_settings_row').style.display = "none";
+    document.getElementById('common_dialogue_profile').style.visibility = 'visible';
+    document.getElementById('common_profile_top').style.display = 'none';
+    document.getElementById('profile_main_stat_row2').style.display = 'none';
+    document.getElementById('profile_user_settings_row').style.display = 'none';
     
     profile_clear_app();
 
     if (user_account_id_other == null && common.COMMON_GLOBAL['user_account_id'] == '' && username == null) {
-        document.getElementById('common_profile_info').style.display = "none";
+        document.getElementById('common_profile_info').style.display = 'none';
     }
     else
         await common.profile_show(user_account_id_other, username, (err, result)=>{
@@ -1179,13 +1176,13 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
                     } else {
                         //public
                         profile_show_user_setting();
-                        document.getElementById('profile_main_stat_row2').style.display = "block";
+                        document.getElementById('profile_main_stat_row2').style.display = 'block';
                         profile_user_setting_stat(result.profile_id);
                     }    
                 }
             }
         });
-}
+};
 const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app, click_function) => {
     if (parseInt(common.COMMON_GLOBAL['user_account_id']) || 0 !== 0) {
         if (detailchoice == 0){
@@ -1204,13 +1201,13 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
     else
         common.show_common_dialogue('LOGIN');
                 
-}
+};
 
 /*----------------------- */
 /* USER SETTINGS          */
 /*----------------------- */
-const user_settings_get = async (user_setting_id = '') => {
-    let select = document.getElementById("setting_select_user_setting");
+const user_settings_get = async () => {
+    const select = document.getElementById('setting_select_user_setting');
     let result_obj;
     await common.FFB ('DB_API', `/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL['user_account_id']}?`, 'GET', 0, null, (err, result) => {
         if (err)
@@ -1221,8 +1218,7 @@ const user_settings_get = async (user_setting_id = '') => {
             //fill select
             let option_html = '';
             for (let i = 0; i < result_obj.count; i++) {
-                let settings;
-                settings = JSON.parse(result_obj.items[i].settings_json);
+                const settings = JSON.parse(result_obj.items[i].settings_json);
                 
                 option_html += `<option value=${i} id=${result_obj.items[i].id} description='${settings.description}'
                                     regional_language_locale=${settings.regional_language_locale}
@@ -1235,9 +1231,9 @@ const user_settings_get = async (user_setting_id = '') => {
                                     regional_calendar_type=${settings.regional_calendar_type}
                                     regional_calendar_hijri_type=${settings.regional_calendar_hijri_type}
                                     gps_map_type=${settings.gps_map_type}
-                                    ${settings.gps_country_id==null?`gps_country_id `:'gps_country_id=' + settings.gps_country_id}
-                                    ${settings.gps_city_id==null?`gps_city_id `:'gps_city_id=' + settings.gps_city_id}
-                                    ${settings.gps_popular_place_id==null?`gps_popular_place_id `:'gps_popular_place_id=' + settings.gps_popular_place_id}
+                                    ${settings.gps_country_id==null?'gps_country_id ':'gps_country_id=' + settings.gps_country_id}
+                                    ${settings.gps_city_id==null?'gps_city_id ':'gps_city_id=' + settings.gps_city_id}
+                                    ${settings.gps_popular_place_id==null?'gps_popular_place_id ':'gps_popular_place_id=' + settings.gps_popular_place_id}
                                     gps_lat_text=${settings.gps_lat_text}
                                     gps_long_text=${settings.gps_long_text}
                                     design_theme_day_id=${settings.design_theme_day_id}
@@ -1276,25 +1272,25 @@ const user_settings_get = async (user_setting_id = '') => {
                                     prayer_column_fast_start_end=${settings.prayer_column_fast_start_end}
                                     user_account_id=${result_obj.items[i].user_account_app_user_account_id}
                                     >${settings.description}
-                                </option>`
+                                </option>`;
             }
             select.innerHTML += option_html;
             //show user setting select
-            document.getElementById('user_settings').style.display = "block";
+            document.getElementById('user_settings').style.display = 'block';
         }
-    })
-}
+    });
+};
 const user_setting_link = (item) => {
-    let paper_size_select = document.getElementById('setting_select_report_papersize');
-    let select_user_setting = document.getElementById('setting_select_user_setting');
-    let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
-    let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+    const paper_size_select = document.getElementById('setting_select_report_papersize');
+    const select_user_setting = document.getElementById('setting_select_user_setting');
+    const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
+    const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
     document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
         case 'user_year_html':{
-            let url = get_report_url(user_account_id, 
+            const url = get_report_url(user_account_id, 
                                      sid, 
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
@@ -1305,7 +1301,7 @@ const user_setting_link = (item) => {
         case 'user_day_html_copy':
         case 'user_month_html_copy':
         case 'user_year_html_copy':{
-            let text_copy = get_report_url(user_account_id, 
+            const text_copy = get_report_url(user_account_id, 
                                            sid, 
                                            paper_size_select.options[paper_size_select.selectedIndex].value,
                                            item.id,
@@ -1318,7 +1314,7 @@ const user_setting_link = (item) => {
         case 'user_day_pdf':
         case 'user_month_pdf':
         case 'user_year_pdf':{
-            let url = get_report_url(user_account_id, 
+            const url = get_report_url(user_account_id, 
                                      sid, 
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
@@ -1329,7 +1325,7 @@ const user_setting_link = (item) => {
         case 'user_day_pdf_copy':
         case 'user_month_pdf_copy':
         case 'user_year_pdf_copy':{
-            let text_copy = get_report_url(user_account_id, 
+            const text_copy = get_report_url(user_account_id, 
                                            sid, 
                                            paper_size_select.options[paper_size_select.selectedIndex].value,
                                            item.id,
@@ -1340,21 +1336,21 @@ const user_setting_link = (item) => {
             break;
         }
     }
-}
+};
 const user_settings_load = async () => {
 
-    let select_user_setting = document.getElementById('setting_select_user_setting');
+    const select_user_setting = document.getElementById('setting_select_user_setting');
     //Regional
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_language_locale'),
         document.getElementById('setting_select_locale'), 1);
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_timezone'),
-        document.getElementById('setting_select_report_timezone'), 1)
+        document.getElementById('setting_select_report_timezone'), 1);
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_number_system'),
-        document.getElementById('setting_select_report_numbersystem'), 1)
+        document.getElementById('setting_select_report_numbersystem'), 1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_layout_direction'),
-        document.getElementById('setting_select_report_direction'), 1)
+        document.getElementById('setting_select_report_direction'), 1);
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_second_language_locale'),
         document.getElementById('setting_select_report_locale_second'),1);
@@ -1382,7 +1378,7 @@ const user_settings_load = async () => {
                 //set GPS for chosen city
                 update_ui(6);
             }
-        })
+        });
     }        
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id'),
         document.getElementById('setting_select_popular_place'),0);
@@ -1523,13 +1519,13 @@ const user_settings_load = async () => {
         document.getElementById('setting_select_report_show_fast_start_end'),1);
 
     return null;
-}
+};
 
 const user_settings_function = async (function_name, initial_user_setting, callBack) => {
-    let description = document.getElementById('setting_input_place').value;
-    let select_setting_country = document.getElementById('setting_select_country');
-    let select_setting_city = document.getElementById('setting_select_city');
-    let select_setting_popular_place = document.getElementById('setting_select_popular_place');
+    const description = document.getElementById('setting_input_place').value;
+    const select_setting_country = document.getElementById('setting_select_country');
+    const select_setting_city = document.getElementById('setting_select_city');
+    const select_setting_popular_place = document.getElementById('setting_select_popular_place');
     if (common.check_input(description) == false ||
         common.check_input(document.getElementById('setting_input_lat').value) == false ||
         common.check_input(document.getElementById('setting_input_long').value) == false ||
@@ -1543,7 +1539,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
         return;
     //boolean use common.boolean_to_number()
     //store 0/1 for checked value for checkboxes
-    let json_settings =
+    const json_settings =
         `{"description": "${description}",
           "regional_language_locale": "${document.getElementById('setting_select_locale').value}",
           "regional_timezone": "${document.getElementById('setting_select_report_timezone').value}",
@@ -1600,7 +1596,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
           "prayer_column_midnight_checked": ${common.boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked)},
           "prayer_column_fast_start_end": "${document.getElementById('setting_select_report_show_fast_start_end').value}"
          }`;
-    let json_data = `{
+    const json_data = `{
                         "description": "${description}",
                         "settings_json": ${json_settings},
                         "user_account_id": ${common.COMMON_GLOBAL['user_account_id']}
@@ -1614,7 +1610,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
         case 'ADD_LOGIN':
         case 'ADD':{
             if (function_name=='ADD'){
-                spinner_item = document.getElementById('setting_btn_user_add')
+                spinner_item = document.getElementById('setting_btn_user_add');
                 old_button = spinner_item.innerHTML;
                 spinner_item.innerHTML = common.APP_SPINNER;    
             }
@@ -1623,12 +1619,12 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             break;
         }
         case 'SAVE':{
-            spinner_item = document.getElementById('setting_btn_user_save')
+            spinner_item = document.getElementById('setting_btn_user_save');
             old_button = spinner_item.innerHTML;
             spinner_item.innerHTML = common.APP_SPINNER;
             method = 'PUT';
-            let select_user_setting = document.getElementById('setting_select_user_setting');
-            let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+            const select_user_setting = document.getElementById('setting_select_user_setting');
+            const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
             path = `/user_account_app_setting/${user_setting_id}?`;
             break;
         }
@@ -1645,13 +1641,13 @@ const user_settings_function = async (function_name, initial_user_setting, callB
         else{
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
-            let json = JSON.parse(result);
+            const json = JSON.parse(result);
             switch (function_name){
                 case 'ADD':{
                     //update user settings select with saved data
                     //save current settings to new option with 
                     //returned user_setting_id + common.COMMON_GLOBAL['user_account_id'] (then call set_settings_select)
-                    let select = document.getElementById("setting_select_user_setting");
+                    const select = document.getElementById('setting_select_user_setting');
                     select.innerHTML += `<option id=${json.id} user_account_id=${common.COMMON_GLOBAL['user_account_id']} >${description}</option>`;
                     select.selectedIndex = select.options[select.options.length - 1].index;
                     select.options[select.options.length - 1].value = select.selectedIndex;
@@ -1669,13 +1665,13 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             }
             callBack(null, null);
         }
-    })
-}
+    });
+};
 
 const user_settings_delete = (choice=null) => {
-    let select_user_setting = document.getElementById('setting_select_user_setting');
-    let user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    const function_delete_user_setting = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden';user_settings_delete(1) };
+    const select_user_setting = document.getElementById('setting_select_user_setting');
+    const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+    const function_delete_user_setting = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden';user_settings_delete(1); };
     
     switch (choice){
         case null:{
@@ -1684,14 +1680,14 @@ const user_settings_delete = (choice=null) => {
         }
         case 1:{
             if (select_user_setting.length > 1) {
-                let old_button = document.getElementById('setting_btn_user_delete').innerHTML;
+                const old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = common.APP_SPINNER;
                 common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err, result) => {
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                     }
                     else{
-                        let select = document.getElementById("setting_select_user_setting");
+                        const select = document.getElementById('setting_select_user_setting');
                         //delete current option
                         select.remove(select.selectedIndex);
                         //load next available
@@ -1699,11 +1695,11 @@ const user_settings_delete = (choice=null) => {
                             settings_translate(true).then(() => {
                                 settings_translate(false).then(() => {
                                     document.getElementById('setting_btn_user_delete').innerHTML = old_button;
-                                })
-                            })
-                        })
+                                });
+                            });
+                        });
                     }
-                })       
+                });       
             } else {
                 //You can't delete last user setting
                 common.show_message('ERROR', 20302, null, null, common.COMMON_GLOBAL['app_id']);
@@ -1711,10 +1707,10 @@ const user_settings_delete = (choice=null) => {
         }
     }
     return null;
-}
+};
 
 const set_default_settings = async () => {
-    let current_number_system = Intl.NumberFormat().resolvedOptions().numberingSystem;
+    const current_number_system = Intl.NumberFormat().resolvedOptions().numberingSystem;
 
     //Regional
     //set default language
@@ -1749,7 +1745,7 @@ const set_default_settings = async () => {
         document.getElementById('setting_input_place').value = common.COMMON_GLOBAL['client_place'];
     } else {
         //Set Makkah as default
-        let select_place = document.getElementById('setting_select_popular_place');
+        const select_place = document.getElementById('setting_select_popular_place');
         select_place.selectedIndex = select_get_selectindex(select_place.id, app_common.APP_GLOBAL['gps_default_place_id']);
         //Update popular places
         update_ui(7);
@@ -1822,10 +1818,10 @@ const set_default_settings = async () => {
     document.getElementById('tab_nav_7').style.display = 'none';
     //open regional tab in settings
     openTab('1');
-}
+};
 
 const set_settings_select = () => {
-    let option = document.getElementById("setting_select_user_setting").options[document.getElementById("setting_select_user_setting").selectedIndex];
+    const option = document.getElementById('setting_select_user_setting').options[document.getElementById('setting_select_user_setting').selectedIndex];
     option.text = document.getElementById('setting_input_place').value;
     
     option.setAttribute('description', document.getElementById('setting_input_place').value);
@@ -1884,7 +1880,7 @@ const set_settings_select = () => {
     option.setAttribute('prayer_column_sunset_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked));
     option.setAttribute('prayer_column_midnight_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked));
     option.setAttribute('prayer_column_fast_start_end', document.getElementById('setting_select_report_show_fast_start_end').value);
-}
+};
 
 const profile_user_setting_stat = (id) => {
     let json;
@@ -1896,22 +1892,22 @@ const profile_user_setting_stat = (id) => {
             document.getElementById('profile_info_user_setting_likes_count').innerHTML = json.items.count_user_setting_likes;
             document.getElementById('profile_info_user_setting_liked_count').innerHTML = json.items.count_user_setting_liked;
         }
-    })
-}
+    });
+};
 
 const profile_user_setting_link = (item) => {
-    let paper_size_select = document.getElementById('setting_select_report_papersize');
+    const paper_size_select = document.getElementById('setting_select_report_papersize');
     
-    let select_user_setting = document.getElementById('profile_select_user_settings');
-    let user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
-    let sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
+    const select_user_setting = document.getElementById('profile_select_user_settings');
+    const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
+    const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
     document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':{
             updateViewStat_app(sid,user_account_id);
-            let url = get_report_url(user_account_id, 
+            const url = get_report_url(user_account_id, 
                                      sid, 
                                      paper_size_select.options[paper_size_select.selectedIndex].value,
                                      item.id,
@@ -1924,7 +1920,7 @@ const profile_user_setting_link = (item) => {
             break;
         }
     }
-}
+};
 const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
     
     document.getElementById('profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
@@ -1932,7 +1928,7 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
 
     document.getElementById('profile_user_settings_info_like_count').innerHTML = count_likes;
     document.getElementById('profile_user_settings_info_view_count').innerHTML = count_views;
-}
+};
 const profile_show_user_setting = () => {
     let json;
     document.getElementById('profile_user_settings_row').style.display = 'block';
@@ -1943,7 +1939,7 @@ const profile_show_user_setting = () => {
             null;
         else{
             json = JSON.parse(result);
-            let profile_select_user_settings = document.getElementById('profile_select_user_settings');
+            const profile_select_user_settings = document.getElementById('profile_select_user_settings');
             profile_select_user_settings.innerHTML='';
             let html = '';
             for (let i = 0; i < json.count; i++) {
@@ -1962,10 +1958,10 @@ const profile_show_user_setting = () => {
                                              profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
                                              profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
         }
-    })
-}
+    });
+};
 const profile_user_setting_update_stat = () => {
-    let profile_id = document.getElementById('common_profile_id').innerHTML;
+    const profile_id = document.getElementById('common_profile_id').innerHTML;
     let json;
     common.FFB ('DB_API', `/user_account_app_setting/profile/all/${profile_id}` +
                       '?id=' + common.COMMON_GLOBAL['user_account_id'], 'GET', 0, null, (err, result) => {
@@ -1973,7 +1969,7 @@ const profile_user_setting_update_stat = () => {
             null;
         else{
             json = JSON.parse(result);
-            let profile_select_user_settings = document.getElementById('profile_select_user_settings');
+            const profile_select_user_settings = document.getElementById('profile_select_user_settings');
             for (let i = 0; i < json.count; i++) {
                 if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==json.items[i].id){
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', json.items[i].user_account_id);
@@ -1988,14 +1984,12 @@ const profile_user_setting_update_stat = () => {
             }
             profile_user_setting_stat(profile_id);
         }
-    })
-}
+    });
+};
 const user_settings_like = (user_setting_id) => {
-    let json;
-    let json_data;
     let method;
 
-    json_data = '{"user_setting_id":' + user_setting_id + '}';
+    const json_data = '{"user_setting_id":' + user_setting_id + '}';
 
     if (common.COMMON_GLOBAL['user_account_id'] == '')
         common.show_common_dialogue('LOGIN');
@@ -2010,12 +2004,11 @@ const user_settings_like = (user_setting_id) => {
             if (err)
                 null;
             else{
-                    json = JSON.parse(result);
                     profile_user_setting_update_stat();
                 } 
-        })
+        });
     }
-}
+};
 /*----------------------- */
 /* EVENTS                 */
 /*----------------------- */
@@ -2039,11 +2032,11 @@ const setEvents = () => {
             }
         switch (event_target_id){
             case 'toolbar_btn_zoomout':{
-                zoom_paper(-1)
+                zoom_paper(-1);
                 break;
             }
             case 'toolbar_btn_zoomin':{
-                zoom_paper(1)
+                zoom_paper(1);
                 break;
             }
             case 'toolbar_btn_left':{
@@ -2051,11 +2044,11 @@ const setEvents = () => {
                 break;
             }
             case 'toolbar_btn_right':{
-                update_timetable_report(app_common.APP_GLOBAL['timetable_type'], event_target_id, getReportSettings())
+                update_timetable_report(app_common.APP_GLOBAL['timetable_type'], event_target_id, getReportSettings());
                 break;
             }
             case 'toolbar_btn_search':{
-                let x = document.getElementById('common_profile_input_row'); 
+                const x = document.getElementById('common_profile_input_row'); 
                 if (x.style.visibility == 'visible') {
                     x.style.visibility = 'hidden';
                     document.getElementById('common_profile_search_list_wrap').style.visibility = 'hidden';
@@ -2117,9 +2110,9 @@ const setEvents = () => {
         }
     }, false);
     //settings regional    
-    document.getElementById('setting_select_locale').addEventListener('change', () => { settings_translate(true) }, false);
+    document.getElementById('setting_select_locale').addEventListener('change', () => { settings_translate(true); }, false);
     document.getElementById('setting_select_report_timezone').addEventListener('change', () => { update_ui(2); }, false);
-    document.getElementById('setting_select_report_locale_second').addEventListener('change', () => { settings_translate(false) }, false);                                                        
+    document.getElementById('setting_select_report_locale_second').addEventListener('change', () => { settings_translate(false); }, false);                                                        
 
     //settings gps    
     document.getElementById('setting_select_maptype').addEventListener('change', () => { update_ui(4); }, false);
@@ -2132,12 +2125,12 @@ const setEvents = () => {
     //settings design
     document.getElementById('setting_select_report_papersize').addEventListener('change', () => { update_ui(10); }, false);
     //settings image
-    document.getElementById('setting_icon_image_header_img').addEventListener('click', () => { document.getElementById('setting_input_reportheader_img').click() }, false);
-    document.getElementById('setting_icon_image_header_clear').addEventListener('click', () => { update_ui(12) }, false);
-    document.getElementById('setting_input_reportheader_img').addEventListener('change', (event) => { update_ui(11, event.target.id) }, false);
-    document.getElementById('setting_icon_image_footer_img').addEventListener('click', () => { document.getElementById('setting_input_reportfooter_img').click() }, false);
-    document.getElementById('setting_icon_image_footer_clear').addEventListener('click', () => { update_ui(14) }, false);
-    document.getElementById('setting_input_reportfooter_img').addEventListener('change', (event) => { update_ui(13, event.target.id) }, false);
+    document.getElementById('setting_icon_image_header_img').addEventListener('click', () => { document.getElementById('setting_input_reportheader_img').click(); }, false);
+    document.getElementById('setting_icon_image_header_clear').addEventListener('click', () => { update_ui(12); }, false);
+    document.getElementById('setting_input_reportheader_img').addEventListener('change', (event) => { update_ui(11, event.target.id); }, false);
+    document.getElementById('setting_icon_image_footer_img').addEventListener('click', () => { document.getElementById('setting_input_reportfooter_img').click(); }, false);
+    document.getElementById('setting_icon_image_footer_clear').addEventListener('click', () => { update_ui(14); }, false);
+    document.getElementById('setting_input_reportfooter_img').addEventListener('change', (event) => { update_ui(13, event.target.id); }, false);
     //settings text
     document.getElementById('setting_icon_text_theme_row').addEventListener('click', (event) => {  
                                                                                                 document.getElementById('setting_icon_text_theme_day').classList.remove('common_dialogue_button');
@@ -2163,16 +2156,16 @@ const setEvents = () => {
                                                                                                                                                                         `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
                                                                                                                                                                         document.getElementById('setting_select_report_arabic_script').value;
                                                                                                 }}, false);
-    document.getElementById('setting_icon_text_header_aleft').addEventListener('click', (event) => { update_ui(15, event.target.id ==''?event.target.parentElement.id:event.target.id) }, false);
-    document.getElementById('setting_icon_text_header_acenter').addEventListener('click', (event) => { update_ui(15, event.target.id==''?event.target.parentElement.id:event.target.id) }, false);
-    document.getElementById('setting_icon_text_header_aright').addEventListener('click', (event) => { update_ui(15, event.target.id==''?event.target.parentElement.id:event.target.id) }, false);
-    document.getElementById('setting_icon_text_footer_aleft').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id) }, false);
-    document.getElementById('setting_icon_text_footer_acenter').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id) }, false);
-    document.getElementById('setting_icon_text_footer_aright').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id) }, false);
+    document.getElementById('setting_icon_text_header_aleft').addEventListener('click', (event) => { update_ui(15, event.target.id ==''?event.target.parentElement.id:event.target.id); }, false);
+    document.getElementById('setting_icon_text_header_acenter').addEventListener('click', (event) => { update_ui(15, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
+    document.getElementById('setting_icon_text_header_aright').addEventListener('click', (event) => { update_ui(15, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
+    document.getElementById('setting_icon_text_footer_aleft').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
+    document.getElementById('setting_icon_text_footer_acenter').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
+    document.getElementById('setting_icon_text_footer_aright').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
     //settings prayer                 
     document.getElementById('setting_select_method').addEventListener('change', () => { update_ui(17);}, false);
     //settings user
-    document.getElementById('setting_select_user_setting').addEventListener('change', () => {user_settings_load().then(() => {settings_translate(true).then(() => {settings_translate(false);})}) }, false);
+    document.getElementById('setting_select_user_setting').addEventListener('change', () => {user_settings_load().then(() => {settings_translate(true).then(() => {settings_translate(false);});}); }, false);
 
     document.getElementById('user_settings').addEventListener('click', (event) => { 
         let event_target_id;
@@ -2209,7 +2202,7 @@ const setEvents = () => {
                     //'user_day_html', 'user_day_html_copy', 'user_day_pdf', 'user_day_pdf_copy'
                     //'user_month_html', 'user_month_html_copy', 'user_month_pdf', 'user_month_pdf_copy'
                     //'user_year_html', 'user_year_html_copy', 'user_year_pdf', 'user_year_pdf_copy'
-                    user_setting_link(document.getElementById(event_target_id))
+                    user_setting_link(document.getElementById(event_target_id));
                     break;
                 }
             }
@@ -2217,39 +2210,39 @@ const setEvents = () => {
     }, false);
     
     //profile
-    document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/user_account_app_setting/profile/detail', false) }, false);
+    document.getElementById('profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/user_account_app_setting/profile/detail', false); }, false);
     document.getElementById('profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/user_account_app_setting/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
-                  common.ICONS['user_follows']}</div>`, show_profile_function) }, false);
+                  common.ICONS['user_follows']}</div>`, show_profile_function); }, false);
     document.getElementById('profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/user_account_app_setting/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS['user_like']}</div>
          <div > ${common.ICONS['regional_day'] +
                   common.ICONS['regional_month'] +
                   common.ICONS['regional_year'] +
-                  common.ICONS['user_followed']}</div>`, show_profile_function) }, false);
-    document.getElementById('profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/user_account_app_setting/profile/top', show_profile_function) }, false);
-    document.getElementById('profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/user_account_app_setting/profile/top', show_profile_function) }, false);
-    document.getElementById('profile_user_settings_day').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
-    document.getElementById('profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
-    document.getElementById('profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
-    document.getElementById('profile_user_settings_like').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target) }, false);
+                  common.ICONS['user_followed']}</div>`, show_profile_function); }, false);
+    document.getElementById('profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/user_account_app_setting/profile/top', show_profile_function); }, false);
+    document.getElementById('profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/user_account_app_setting/profile/top', show_profile_function); }, false);
+    document.getElementById('profile_user_settings_day').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
+    document.getElementById('profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
+    document.getElementById('profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
+    document.getElementById('profile_user_settings_like').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
     document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, show_profile_function);}, false);
     document.getElementById('profile_select_user_settings').addEventListener('change', 
         (event) => { profile_show_user_setting_detail(event.target.options[event.target.selectedIndex].getAttribute('liked'), 
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
-                                                      event.target.options[event.target.selectedIndex].getAttribute('count_views')) }, false);
+                                                      event.target.options[event.target.selectedIndex].getAttribute('count_views')); }, false);
     //dialogue info
     document.getElementById('info_link1').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_policy_url']);}, false);
     document.getElementById('info_link2').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_disclaimer_url']);}, false);
     document.getElementById('info_link3').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_terms_url']);}, false);
     document.getElementById('info_link4').addEventListener('click', () => { common.show_window_info(1, app_common.APP_GLOBAL['info_link_about_url']);}, false);
-    document.getElementById('info_close').addEventListener('click', () => { document.getElementById('dialogue_info').style.visibility = 'hidden'}, false);
+    document.getElementById('info_close').addEventListener('click', () => { document.getElementById('dialogue_info').style.visibility = 'hidden';}, false);
     
     //dialogue scan mobile
-    document.getElementById('scan_open_mobile_close').addEventListener('click', () => { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden' }, false);
+    document.getElementById('scan_open_mobile_close').addEventListener('click', () => { document.getElementById('dialogue_scan_open_mobile').style.visibility = 'hidden'; }, false);
     //toolbar bottom
     document.getElementById('toolbar_bottom').addEventListener('click', (event) => {
         let event_target_id;
@@ -2296,82 +2289,82 @@ const setEvents = () => {
     //common
 
     //user menu dropdown
-    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', () => { user_logoff_app() }, false);
-    document.getElementById('common_user_menu_username').addEventListener('click', () => { toolbar_button(6) }, false);
+    document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', () => { user_logoff_app(); }, false);
+    document.getElementById('common_user_menu_username').addEventListener('click', () => { toolbar_button(6); }, false);
     
     //user preferences    
     document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + 
                                                                                                                          document.getElementById('common_app_select_theme').value + ' ' + 
                                                                                                                          document.getElementById('common_user_arabic_script_select').value;}, false);
-    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { common_translate_ui_app(event.target.value, (err, result)=>{null});}, false);    
+    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { common_translate_ui_app(event.target.value, (err, result)=>{null;});}, false);    
     document.getElementById('common_user_timezone_select').addEventListener('change', (event) => { document.getElementById('setting_timezone_current').innerHTML = event.target.value;}, false);
     document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
     
     //profile button top
-    document.getElementById('common_profile_btn_top').addEventListener('click', () => { toolbar_button(7) }, false);
+    document.getElementById('common_profile_btn_top').addEventListener('click', () => { toolbar_button(7); }, false);
 
     //dialogue login/signup/forgot
-    let input_username_login = document.getElementById("common_login_username");
-    input_username_login.addEventListener("keyup", (event) => {
+    const input_username_login = document.getElementById('common_login_username');
+    input_username_login.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault();
             user_login_app().then(() => {
                 //unfocus
-                document.getElementById("common_login_username").blur();
+                document.getElementById('common_login_username').blur();
             });
         }
     });
-    let input_password_login = document.getElementById("common_login_password");
-    input_password_login.addEventListener("keyup", (event) => {
+    const input_password_login = document.getElementById('common_login_password');
+    input_password_login.addEventListener('keyup', (event) => {
         if (event.code === 'Enter') {
             event.preventDefault();
             user_login_app().then(() => {
                 //unfocus
-                document.getElementById("common_login_password").blur();
+                document.getElementById('common_login_password').blur();
             });
         }
     });
-    document.getElementById('common_login_button').addEventListener('click', () => { user_login_app() }, false);
-    document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup() }, false);
+    document.getElementById('common_login_button').addEventListener('click', () => { user_login_app(); }, false);
+    document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup(); }, false);
     
     
     //dialogue profile
-    document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { profile_detail_app(1, null, true, null, show_profile_function) }, false);
-    document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { profile_detail_app(2, null, true, null, show_profile_function) }, false);
-    document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { profile_detail_app(3, null, true, null, show_profile_function) }, false);
-    document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { profile_detail_app(4, null, true, null, show_profile_function) }, false);
-    document.getElementById('common_profile_follow').addEventListener('click', () => { user_function_app('FOLLOW') }, false);
-    document.getElementById('common_profile_like').addEventListener('click', () => { user_function_app('LIKE') }, false);
-    document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1, null, show_profile_function) }, false);
-    document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2, null, show_profile_function) }, false);
-    document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3, null, show_profile_function) }, false);
-    document.getElementById('common_profile_home').addEventListener('click', () => {toolbar_button(7)}, false);
-    document.getElementById('common_profile_close').addEventListener('click', () => {profile_close_app()}, false);
+    document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { profile_detail_app(1, null, true, null, show_profile_function); }, false);
+    document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { profile_detail_app(2, null, true, null, show_profile_function); }, false);
+    document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { profile_detail_app(3, null, true, null, show_profile_function); }, false);
+    document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { profile_detail_app(4, null, true, null, show_profile_function); }, false);
+    document.getElementById('common_profile_follow').addEventListener('click', () => { user_function_app('FOLLOW'); }, false);
+    document.getElementById('common_profile_like').addEventListener('click', () => { user_function_app('LIKE'); }, false);
+    document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1, null, show_profile_function); }, false);
+    document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2, null, show_profile_function); }, false);
+    document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3, null, show_profile_function); }, false);
+    document.getElementById('common_profile_home').addEventListener('click', () => {toolbar_button(7);}, false);
+    document.getElementById('common_profile_close').addEventListener('click', () => {profile_close_app();}, false);
     //dialogue verify
     document.getElementById('common_user_verify_verification_container').addEventListener('keyup', (event) => {
         switch (event.target.id){
             case 'common_user_verify_verification_char1':{
-                user_verify_check_input_app(event.target, "common_user_verify_verification_char2")
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
                 break;
             }
             case 'common_user_verify_verification_char2':{
-                user_verify_check_input_app(event.target, "common_user_verify_verification_char3")
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
                 break;
             }
             case 'common_user_verify_verification_char3':{
-                user_verify_check_input_app(event.target, "common_user_verify_verification_char4")
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
                 break;
             }
             case 'common_user_verify_verification_char4':{
-                user_verify_check_input_app(event.target, "common_user_verify_verification_char5")
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
                 break;
             }
             case 'common_user_verify_verification_char5':{
-                user_verify_check_input_app(event.target, "common_user_verify_verification_char6")
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
                 break;
             }
             case 'common_user_verify_verification_char6':{
-                user_verify_check_input_app(event.target, "")
+                user_verify_check_input_app(event.target, '');
                 break;
             }
         }
@@ -2387,7 +2380,7 @@ const serviceworker = () => {
     if('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js', {scope: '/'});
     }
-}
+};
 /*----------------------- */
 /* MODULE LEAFLET         */
 /*----------------------- */
@@ -2406,11 +2399,11 @@ const init_map = async () => {
                     //Update GPS position
                     update_ui(9);
                 }   
-            })
+            });
             resolve();
-        })
-    })
-}
+        });
+    });
+};
 
 const map_show_qibbla = () => {
     common.map_line_removeall();
@@ -2435,7 +2428,7 @@ const map_show_qibbla = () => {
                     app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_width'], 
                     app_common.APP_GLOBAL['gps_module_leaflet_qibbla_old_opacity']);
     return null;
-}
+};
 
 const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id, to_method) => {
     return new Promise((resolve) => {
@@ -2443,14 +2436,14 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
         common.map_update(longitude, latitude, zoom, text1, text2, marker_id, to_method).then((timezonetext)=> {
             resolve(timezonetext);
         });
-    })
-}
+    });
+};
 /*----------------------- */
 /* EXCEPTION              */
 /*----------------------- */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
-}
+};
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
@@ -2464,10 +2457,10 @@ const init_app = () => {
         //get Hijri date from initial Gregorian date
         app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = parseInt(new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),
             app_common.APP_GLOBAL['session_currentDate'].getMonth(),
-            app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString("en-us-u-ca-islamic", { month: "numeric" }));
+            app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
         app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = parseInt(new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),
             app_common.APP_GLOBAL['session_currentDate'].getMonth(),
-            app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString("en-us-u-ca-islamic", { year: "numeric" }));
+            app_common.APP_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
             app_common.APP_GLOBAL['timetable_type'] = '';
     
         //set initial default language from clients settings
@@ -2669,7 +2662,7 @@ const init_app = () => {
         clearInterval(showreporttime);
         setInterval(showreporttime, 1000);
         //show dialogue about using mobile and scan QR code after 5 seconds
-        setTimeout(() => {show_dialogue('SCAN')}, 5000);
+        setTimeout(() => {show_dialogue('SCAN');}, 5000);
         
         //Start of app:
         //1.set_prayer_method
@@ -2686,13 +2679,13 @@ const init_app = () => {
                         const show_start = async () => {
                             //show default startup
                             toolbar_button(app_common.APP_GLOBAL['app_default_startup_page']);
-                            let user = window.location.pathname.substring(1);
+                            const user = window.location.pathname.substring(1);
                             if (user !='') {
                                 //show profile for user entered in url
-                                document.getElementById('common_dialogue_profile').style.visibility = "visible";
+                                document.getElementById('common_dialogue_profile').style.visibility = 'visible';
                                 profile_show_app(null, user);
                             }
-                        }
+                        };
                         show_start().then(() => {
                             dialogue_loading(0);
                             common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); }).then(() => {
@@ -2703,14 +2696,14 @@ const init_app = () => {
                                     });
                                 else
                                     resolve();
-                            })
-                        })
-                    })
-                })
-            })
-        })
-    })    
-}
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });    
+};
 const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
         if (err)
@@ -2924,8 +2917,8 @@ const init = (parameters) => {
             }
             init_app();   
         }
-    })
-}
+    });
+};
 export{/*REPORT*/
        printTable, getReportSettings, update_timetable_report, get_report_url, updateViewStat_app,
        /*MAP*/
@@ -2953,4 +2946,4 @@ export{/*REPORT*/
        /*EXCEPTION*/
        app_exception,
        /*INIT*/
-       init_app, init}
+       init_app, init};

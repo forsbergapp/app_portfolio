@@ -385,11 +385,17 @@ const InitConfig = async () => {
             if (result==true)
                 setVariables().then(() => {
                     resolve();
+                })
+                .catch(error=>{
+                    reject (error);
                 });
             else{
                 DefaultConfig().then(() => {
                     setVariables().then(() => {
                         resolve();
+                    })
+                    .catch(error=>{
+                        reject (error);
                     });
                 });
             }
@@ -850,7 +856,7 @@ const serverExpress = async () => {
     const {LogRequestI} = await import(`file://${process.cwd()}/server/log/log.service.js`);
     const ContentSecurityPolicy = ConfigGet(4);
     const {randomUUID, createHash} = await import('node:crypto');
-    return new Promise((resolve, reject) =>{
+    return new Promise((resolve) =>{
         const app = express();
         //
         //MIDDLEWARES
