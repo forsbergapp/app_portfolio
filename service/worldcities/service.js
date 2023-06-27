@@ -7,6 +7,6 @@ const getService = async (country,callBack) => {
                 callBack(null,JSON.parse(fileBuffer.toString()).filter((item) => item.iso2 == country));
             }
         });
-    })
-}
+    });
+};
 export{getService};

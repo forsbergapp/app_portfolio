@@ -15,53 +15,53 @@ if (process.platform == 'win32')
 else
     SLASH = '/';
 //initial config with file paths and maintenance parameter
-let SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
+const SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 
 const app_portfolio_title = 'App Portfolio';
 
 //calculate responsetime
 const responsetime = (res) => {
-    let diff = process.hrtime(res.getHeader('X-Response-Time'))
+    const diff = process.hrtime(res.getHeader('X-Response-Time'));
     return diff[0] * 1e3 + diff[1] * 1e-6;
-}    
+};    
 
 const CreateRandomString =()=>{
-    let randomstring = "";
-    let chars = "ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz";
+    let randomstring = '';
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXTZabcdefghiklmnopqrstuvwxyz';
     for (let i = 0; i < 256; i++) {
         randomstring += chars[Math.floor(Math.random() * chars.length)] + Math.floor(1 + Math.random() * 10);
     }
     return randomstring;
-}
+};
 
 //ES6 object with properties using concise method syntax
 const COMMON = {
     app_filename(module){
-        let from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
+        const from_app_root = ('file:///' + process.cwd().replace(/\\/g, '/')).length;
         return module.substring(from_app_root);
     },
     app_function(stack){
-        let e = stack.split("at ");
+        const e = stack.split('at ');
         let functionName;
         //loop from last to first
         //ES6 rest parameter to avoid mutating array
-        for (let line of [...e].reverse()) {
+        for (const line of [...e].reverse()) {
             //ES6 startsWith and includes
             if ((line.startsWith('file')==false && 
                 line.includes('node_modules')==false &&
                 line.includes('node:internal')==false &&
                 line.startsWith('Query')==false)||
                 line.startsWith('router')){
-                    functionName = line.split(" ")[0];
+                    functionName = line.split(' ')[0];
                     break;
             }
         }
         return functionName;
     },
     app_line(){
-        let e = new Error();
-        let frame = e.stack.split("\n")[2];
-        let lineNumber = frame.split(":").reverse()[1];
+        const e = new Error();
+        const frame = e.stack.split('\n')[2];
+        const lineNumber = frame.split(':').reverse()[1];
         return lineNumber;
     }
 };
@@ -76,7 +76,7 @@ const config_files = () => {
             [6, JSON.parse(CONFIG_INIT)['FILE_CONFIG_AUTH_USER']],
             [7, JSON.parse(CONFIG_INIT)['FILE_CONFIG_APPS']]
            ];
-}
+};
 const ConfigGet = (config_no, config_group = null, parameter = null) => {
     if (config_group==='')
         config_group=null;
@@ -87,11 +87,11 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
         }
         case 1:{
             //SERVER
-            let config = JSON.parse(CONFIG);
+            const config = JSON.parse(CONFIG);
             if (config_group ==null && parameter==null)
                 return config;
             else{
-                for (let config_parameter_row of config[config_group]){
+                for (const config_parameter_row of config[config_group]){
                     for (let i=0; i < Object.keys(config_parameter_row).length;i++){
                         if (Object.keys(config_parameter_row)[i]==parameter){
                             return Object.values(config_parameter_row)[i];
@@ -130,10 +130,10 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                         case 'localhost':
                         case 'www':{
                             //localhost
-                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.SUBDOMAIN == 'www'})[0].APP_ID;
+                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
                         }
                         default:{
-                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return config_group.split('.')[0] == app.SUBDOMAIN})[0].APP_ID;
+                            return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return config_group.split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;
                         }
                     }
                     break;
@@ -149,15 +149,15 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                 case 'DATA_EXPIRE':
                 case 'ACCESS_SECRET':
                 case 'ACCESS_EXPIRE':{
-                    return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.APP_ID == config_group})[0][parameter];
+                    return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.APP_ID == config_group;})[0][parameter];
                     break;
                 }
                 //config_group = app id or null, return all apps or given app id without secret
                 case 'APPS':{
                     let apps_no_secrets = JSON.parse(CONFIG_APPS)['APPS'];
                     apps_no_secrets = apps_no_secrets.filter((app)=>{ 
-                                                            return app.APP_ID == config_group || config_group == null}
-                                                            )
+                                                            return app.APP_ID == config_group || config_group == null;}
+                                                            );
                     
                     apps_no_secrets.map((app)=>{
                         delete app.CLIENT_ID;
@@ -166,14 +166,14 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                         delete app.DATA_EXPIRE;
                         delete app.ACCESS_SECRET;
                         delete app.ACCESS_EXPIRE;
-                    })                    
+                    });                    
                     return apps_no_secrets;
                 }
             }
             return JSON.parse(CONFIG_USER);
         } 
     }
-}
+};
 const ConfigExists = async () => {
     return await new Promise((resolve) => {
         //load  initial config_init.json file if exists
@@ -187,41 +187,40 @@ const ConfigExists = async () => {
                     resolve(true);
                 }
             });    
-        })
+        });
 
-    })
-}
+    });
+};
 const DefaultConfig = async () => {
     return new Promise((resolve, reject) => {
         const create_config_and_logs_dir = async () => {
             const fs = await import('node:fs');
             const mkdir = async (dir) =>{
-                let result_mkdir = await fs.promises.mkdir(process.cwd() + dir)
+                await fs.promises.mkdir(process.cwd() + dir)
                 .catch((error)=>{
                     throw error;
-                })
-            }
-            for (let dir of ['/config', '/service/logs','/logs', '/service/pdf/config']){
-                let check_dir = await fs.promises.access(process.cwd() + dir)
+                });
+            };
+            for (const dir of ['/config', '/service/logs','/logs', '/service/pdf/config']){
+                await fs.promises.access(process.cwd() + dir)
                 .catch(()=>{
                     mkdir(dir);  
                 });
             }
-        }
+        };
         create_config_and_logs_dir()
         .then(() => {
-            let i = 0;
+            const i = 0;
             //read all default files
-            let default_files = [
-                                    [1, `default_config.json`],
-                                    [2, `default_auth_blockip.json`],
-                                    [3, `default_auth_useragent.json`],
-                                    [4, `default_auth_policy.json`],
-                                    [6, `default_auth_user.json`],
-                                    [7, `default_apps.json`],
-                                    [8, `default_service_pdf_config.json`]
+            const default_files = [
+                                    [1, 'default_config.json'],
+                                    [2, 'default_auth_blockip.json'],
+                                    [3, 'default_auth_useragent.json'],
+                                    [4, 'default_auth_policy.json'],
+                                    [6, 'default_auth_user.json'],
+                                    [7, 'default_apps.json'],
+                                    [8, 'default_service_pdf_config.json']
                                 ];
-            let config_json = [];
             //ES2020 import() with ES6 promises, object destructuring
             import('node:fs').then(({promises: {readFile}}) => {
                 Promise.all(default_files.map(file => {
@@ -232,7 +231,7 @@ const DefaultConfig = async () => {
                         config_json[0] = JSON.parse(config_json[0]);
                         //update path
                         config_json[0]['SERVER'].map(row=>{
-                            for (let key of Object.keys(row)){
+                            for (const key of Object.keys(row)){
                                 if (key=='HTTPS_KEY'){
                                     row.HTTPS_KEY = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                                 }
@@ -240,14 +239,14 @@ const DefaultConfig = async () => {
                                     row.HTTPS_CERT = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
                                 }
                             } 
-                        })
+                        });
                         //generate hash
                         config_json[0]['SERVICE_AUTH'].map(row=>{
-                            for (let key of Object.keys(row))
+                            for (const key of Object.keys(row))
                                 if (key== 'ADMIN_TOKEN_SECRET'){
                                     row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                                 }
-                        })
+                        });
                         config_json[0] = JSON.stringify(config_json[0]);
         
                         config_json[4] = JSON.parse(config_json[4]);
@@ -261,21 +260,21 @@ const DefaultConfig = async () => {
                             row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                             row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
                             row.ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-                        })
+                        });
                         config_json[5] = JSON.stringify(config_json[5], undefined, 2);
                         //default server metadata
                         let config_init = {
-                                            "CONFIGURATION": app_portfolio_title,
-                                            "CREATED": `${new Date().toISOString()}`,
-                                            "MODIFIED": "",
-                                            "MAINTENANCE": "0",
-                                            "FILE_CONFIG_SERVER": `${SLASH}config${SLASH}config.json`,
-                                            "FILE_CONFIG_AUTH_BLOCKIP":`${SLASH}config${SLASH}auth_blockip.json`,
-                                            "FILE_CONFIG_AUTH_USERAGENT":`${SLASH}config${SLASH}auth_useragent.json`,
-                                            "FILE_CONFIG_AUTH_POLICY":`${SLASH}config${SLASH}auth_policy.json`,
-                                            "PATH_LOG":`${SLASH}logs${SLASH}`,
-                                            "FILE_CONFIG_AUTH_USER":`${SLASH}config${SLASH}auth_user.json`,
-                                            "FILE_CONFIG_APPS":`${SLASH}config${SLASH}apps.json`
+                                            'CONFIGURATION': app_portfolio_title,
+                                            'CREATED': `${new Date().toISOString()}`,
+                                            'MODIFIED': '',
+                                            'MAINTENANCE': '0',
+                                            'FILE_CONFIG_SERVER': `${SLASH}config${SLASH}config.json`,
+                                            'FILE_CONFIG_AUTH_BLOCKIP':`${SLASH}config${SLASH}auth_blockip.json`,
+                                            'FILE_CONFIG_AUTH_USERAGENT':`${SLASH}config${SLASH}auth_useragent.json`,
+                                            'FILE_CONFIG_AUTH_POLICY':`${SLASH}config${SLASH}auth_policy.json`,
+                                            'PATH_LOG':`${SLASH}logs${SLASH}`,
+                                            'FILE_CONFIG_AUTH_USER':`${SLASH}config${SLASH}auth_user.json`,
+                                            'FILE_CONFIG_APPS':`${SLASH}config${SLASH}apps.json`
                                             };
                         config_init = JSON.stringify(config_init, undefined, 2);
                         //save initial config files with metadata including path to config files
@@ -287,7 +286,7 @@ const DefaultConfig = async () => {
                                     //save json in variable
                                     CONFIG_INIT = config_init;
                                     let config_created=0;
-                                    for (let config_no=0;config_no<config_json.length;config_no++){;
+                                    for (let config_no=0;config_no<config_json.length;config_no++){
                                         if (config_no == 6){
                                             //create default service pdf config not part of server parameter management
                                             fs.writeFile(process.cwd() + `${SLASH}service${SLASH}pdf${SLASH}config${SLASH}config.json`, JSON.stringify(JSON.parse(config_json[config_no]), undefined,2),  'utf8', (err) => {
@@ -298,7 +297,7 @@ const DefaultConfig = async () => {
                                                         resolve();
                                                     else
                                                         config_created++;
-                                            })
+                                            });
                                         }
                                         else{
                                             //send fileno in file array
@@ -311,26 +310,26 @@ const DefaultConfig = async () => {
                                                     else
                                                         config_created++;
                                                 }
-                                            })
+                                            });
                                         }
                                     }
                                 }
-                            })
-                        })
-                    })
-                })  
-            })
+                            });
+                        });
+                    });
+                });  
+            });
         })
         .catch((err) => {
             reject(err);
          });  
-    })
-}
+    });
+};
 const InitConfig = async () => {
     return await new Promise((resolve, reject) => {
         const setVariables = async () => {
             return await new Promise((resolve, reject) => {
-                let files = config_files();
+                const files = config_files();
                 let i=0;                
                 for (const file of files){
                     //skip log path
@@ -343,6 +342,7 @@ const InitConfig = async () => {
                                     switch (file[0]){
                                         case 0:{
                                             CONFIG_INIT = fileBuffer.toString();
+                                            break;
                                         }
                                         case 1:{
                                             CONFIG = fileBuffer.toString();
@@ -375,31 +375,31 @@ const InitConfig = async () => {
                                     else
                                         i++;
                                 }
-                            })
-                        })
+                            });
+                        });
                     }
                 }
-            })
-        }
+            });
+        };
         ConfigExists().then((result) => {
             if (result==true)
                 setVariables().then(() => {
                     resolve();
-                })
+                });
             else{
                 DefaultConfig().then(() => {
                     setVariables().then(() => {
                         resolve();
-                    })
-                })
+                    });
+                });
             }
-        })
-    })
-}
+        });
+    });
+};
 
 const ConfigGetCallBack = (config_no, config_group, parameter, callBack) => {
         callBack(null, ConfigGet(config_no, config_group, parameter));
-    }
+    };
 const ConfigMaintenanceSet = (value, callBack) => {
     import('node:fs').then((fs) => {
         fs.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
@@ -418,11 +418,11 @@ const ConfigMaintenanceSet = (value, callBack) => {
                         CONFIG_INIT = config_init_json;
                         callBack(null, null);
                     }
-                })
+                });
             }
-        })
-    })
-}
+        });
+    });
+};
 const ConfigMaintenanceGet = (callBack) => {
     import('node:fs').then((fs) => {
         fs.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, 'utf8', (err, fileBuffer) => {
@@ -430,9 +430,9 @@ const ConfigMaintenanceGet = (callBack) => {
                 callBack(err, null);
             else
                 callBack(null, JSON.parse(fileBuffer.toString())['MAINTENANCE']);
-        })
-    })
-}
+        });
+    });
+};
     
 const ConfigGetSaved = (config_type_no, callBack) => {
     /*
@@ -447,7 +447,7 @@ const ConfigGetSaved = (config_type_no, callBack) => {
     7 = apps            path + file
     */
     
-    let config_file = config_files().filter((file) => {
+    const config_file = config_files().filter((file) => {
         return (parseInt(file[0]) == config_type_no);
     })[0][1];
     import('node:fs').then((fs) => {
@@ -456,9 +456,9 @@ const ConfigGetSaved = (config_type_no, callBack) => {
                 callBack(err, null);
             else
                 callBack(null, JSON.parse(fileBuffer.toString()));
-        })
-    })
-}
+        });
+    });
+};
 const ConfigSave = async (config_no, config_json, first_time, callBack) => {
     try {
         const write_config = async (config_no, config_file, config_json) => {
@@ -499,9 +499,9 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                             resolve();
                         }
                     });
-                })
-            })
-        }
+                });
+            });
+        };
         let config_file;
         if (config_no){
             config_file = config_files().filter((file) => {
@@ -532,7 +532,7 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                             if (err)
                                 callBack(err, null);
                             else{
-                                let old_config = result_read.toString();
+                                const old_config = result_read.toString();
                                 //write backup of old file
                                 fs.writeFile(process.cwd() + `${config_file}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, old_config,  'utf8', (err) => {
                                     if (err)
@@ -553,22 +553,22 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                                 });
                             }
                         });
-                    })
+                    });
                 }
             }
         }
     } catch (error) {
         callBack(error, null);
     }
-}
+};
 const CheckFirstTime = () => {
     if (JSON.parse(CONFIG_USER)['username']=='')
         return true;
     else
         return false;
-}
+};
 const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
-    const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
+    const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
     let json = JSON.parse(CONFIG_USER);
     json['username'] = admin_name;
     json['password'] = hashSync(admin_password, genSaltSync(10));
@@ -582,46 +582,46 @@ const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
                 CONFIG_USER = json;
                 callBack(null, null);
             }
-        })
-    })
-}
+        });
+    });
+};
 const ConfigInfo = (callBack) => {
     callBack(null, null);
-}
+};
 const Info = async (callBack) => {
     const os = await import('node:os');
-    let os_json = {
-                    "hostname": os.hostname(),
-                    "platform": os.platform(),
-                    "type": os.type(),
-                    "release": os.release(),
-                    "cpus": os.cpus(),
-                    "arch": os.arch(),
-                    "freemem": os.freemem(),
-                    "totalmem": os.totalmem(),
-                    "homedir": os.homedir(),
-                    "tmpdir": os.tmpdir(),
-                    "uptime": os.uptime(),
-                    "userinfo": os.userInfo(),
-                    "version": os.version()
+    const os_json = {
+                    'hostname': os.hostname(),
+                    'platform': os.platform(),
+                    'type': os.type(),
+                    'release': os.release(),
+                    'cpus': os.cpus(),
+                    'arch': os.arch(),
+                    'freemem': os.freemem(),
+                    'totalmem': os.totalmem(),
+                    'homedir': os.homedir(),
+                    'tmpdir': os.tmpdir(),
+                    'uptime': os.uptime(),
+                    'userinfo': os.userInfo(),
+                    'version': os.version()
                     };
-    let process_json = { 
-                            "memoryusage_rss" : process.memoryUsage()['rss'],
-                            "memoryusage_heaptotal" : process.memoryUsage()['heapTotal'],
-                            "memoryusage_heapused" : process.memoryUsage()['heapUsed'],
-                            "memoryusage_external" : process.memoryUsage()['external'],
-                            "memoryusage_arraybuffers" : process.memoryUsage()['arrayBuffers'],
-                            "uptime" : process.uptime(),
-                            "version" : process.version,
-                            "path" : process.cwd(),
-                            "start_arg_0" : process.argv[0],
-                            "start_arg_1" : process.argv[1]
-                        }
+    const process_json = { 
+                            'memoryusage_rss' : process.memoryUsage()['rss'],
+                            'memoryusage_heaptotal' : process.memoryUsage()['heapTotal'],
+                            'memoryusage_heapused' : process.memoryUsage()['heapUsed'],
+                            'memoryusage_external' : process.memoryUsage()['external'],
+                            'memoryusage_arraybuffers' : process.memoryUsage()['arrayBuffers'],
+                            'uptime' : process.uptime(),
+                            'version' : process.version,
+                            'path' : process.cwd(),
+                            'start_arg_0' : process.argv[0],
+                            'start_arg_1' : process.argv[1]
+                        };
     callBack(null, {
                     os: os_json,
                     process: process_json
                     });
-}
+};
 const serverExpressLogError = (app) =>{
     import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogRequestE}) => {
         //ERROR LOGGING
@@ -629,9 +629,9 @@ const serverExpressLogError = (app) =>{
             LogRequestE(req, res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
                 next();
             });
-        })    
-    })
-}
+        });    
+    });
+};
 const serverExpressRoutes = async (app) => {
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
@@ -714,7 +714,6 @@ const serverExpressRoutes = async (app) => {
     const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.controller.js`);
     
     //ConfigGet function in service.js used to get parameter values
-    const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
     const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
     const rest_resouce_server = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER');
     
@@ -842,7 +841,7 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/log/logs`).get                                     (checkSystemAdmin, getLogs);
     app.route(`${rest_resouce_server}/log/files`).get                                    (checkSystemAdmin, getFiles);
     
-}
+};
 const serverExpress = async () => {
     const {default: express} = await import('express');
     const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -864,11 +863,11 @@ const serverExpress = async () => {
                 return false;
             else
                 return true;
-            }
+            };
         app.set('trust proxy', true);
         app.use(compression({ filter: shouldCompress }));
         app.use((req, res, next) => {
-            res.setHeader('X-Response-Time', process.hrtime())
+            res.setHeader('X-Response-Time', process.hrtime());
             req.headers['X-Request-Id'] =  randomUUID().replaceAll('-','');
             if (req.headers.authorization)
                 req.headers['X-Correlation-Id'] = createHash('md5').update(req.headers.authorization).digest('hex');
@@ -898,7 +897,7 @@ const serverExpress = async () => {
         app.use((req,res,next) => {                
             //access control that stops request if not passing controls
             if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
-                access_control(req.ip, req.headers.host, req.headers["user-agent"], req.headers["accept-language"], (err, result)=>{
+                access_control(req.ip, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], (err, result)=>{
                     if (err){
                         //access control caused unknown error continue, will be logged when response closed
                         res.statusCode = 500;
@@ -918,7 +917,7 @@ const serverExpress = async () => {
                                 }
                                 else
                                     next();
-                            })
+                            });
                         }
                         else{
                             //update response, will be logged in request log
@@ -927,9 +926,9 @@ const serverExpress = async () => {
                             res.send('⛔');
                             res.end();
                         }
-                })
+                });
             }
-        })
+        });
         //convert query id parameters from string to integer
         //and logs after response is finished
         app.use((req, res, next) => { 
@@ -955,15 +954,15 @@ const serverExpress = async () => {
                 LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res)).then(() => {
                     res.end();
                 });
-            })
+            });
             next();
         });
         //check if SSL verification using letsencrypt should be enabled when validating domains
         if (ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
-            let ssl_verification_path = ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
+            const ssl_verification_path = ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
             app.use(ssl_verification_path,express.static(process.cwd() + ssl_verification_path));
             app.use(express.static(process.cwd(), { dotfiles: 'allow' }));
-        };
+        }
         //
         //ROUTES
         //
@@ -999,12 +998,12 @@ const serverExpress = async () => {
                 }
             }
             }
-        })
+        });
         serverExpressRoutes(app).then(() =>{
             resolve(app);
-        })
-    })
-}
+        });
+    });
+};
 const serverStart = async () =>{
     const {DBStart} = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
@@ -1030,31 +1029,31 @@ const serverStart = async () =>{
                             //SSL files for HTTPS
                             let options;
                             fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_KEY'), 'utf8', (error, fileBuffer) => {
-                                let env_key = fileBuffer.toString();
+                                const env_key = fileBuffer.toString();
                                 fs.readFile(process.cwd() + ConfigGet(1, 'SERVER', 'HTTPS_CERT'), 'utf8', (error, fileBuffer) => {
-                                    let env_cert = fileBuffer.toString();
+                                    const env_cert = fileBuffer.toString();
                                     options = {
                                         key: env_key,
                                         cert: env_cert
                                     };
-                                    const server = https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
+                                    https.createServer(options, app).listen(ConfigGet(1, 'SERVER', 'HTTPS_PORT'), () => {
                                         LogServerI('HTTPS Server up and running on PORT: ' + ConfigGet(1, 'SERVER', 'HTTPS_PORT')).then(() => {
                                             DBStart();
                                         });
-                                    })
+                                    });
                                     process.on('uncaughtException', (err) =>{
                                         console.log(err);
                                         LogServerE('Process uncaughtException: ' + err);
-                                    })
-                                })
-                            })
+                                    });
+                                });
+                            });
                         }
-                    })
-                })
-            })
-        })
-    })
-}
+                    });
+                });
+            });
+        });
+    });
+};
 
 export {COMMON, CreateRandomString,
         ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,

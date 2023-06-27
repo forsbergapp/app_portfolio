@@ -11,7 +11,7 @@ const DBInfo = (req, res) => {
 			data: results
 		});
 	});	
-}
+};
 const DBInfoSpace = (req, res) => {
 	service.DBInfoSpace(req.query.app_id, (err, results) =>{
 		if (err) {
@@ -23,7 +23,7 @@ const DBInfoSpace = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 const DBInfoSpaceSum = (req, res) => {
 	service.DBInfoSpaceSum(req.query.app_id, (err, results) =>{
 		if (err) {
@@ -35,7 +35,7 @@ const DBInfoSpaceSum = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 const demo_add = async (req, res)=> {
 	service.demo_add(req.query.app_id, req.body.demo_password, req.query.lang_code, (err, results) =>{
 		if (err) {
@@ -45,7 +45,7 @@ const demo_add = async (req, res)=> {
 		}
 		return res.status(200).json(results);
 	});
-}
+};
 const demo_delete = async (req, res)=> {
 	service.demo_delete(req.query.app_id, (err, result_demo_users_length) =>{
 		if (err) {
@@ -57,7 +57,7 @@ const demo_delete = async (req, res)=> {
 			count_deleted: result_demo_users_length
 		});
 	});
-}
+};
 const demo_get = async (req, res)=> {
 	service.demo_get(req.query.app_id, (err, results) =>{
 		if (err) {
@@ -69,7 +69,7 @@ const demo_get = async (req, res)=> {
 			data: results
 		});
 	});
-}
+};
 const install_db = (req, res) =>{
 	service.install_db(req.query.app_id,req.query.optional, (err, results) =>{
 		if (err)
@@ -79,7 +79,7 @@ const install_db = (req, res) =>{
 		else
 			return res.status(200).json(results);
 	});
-}
+};
 const install_db_check = (req, res) =>{
 	service.install_db_check(req.query.app_id, (err, results) =>{
 		if (err)
@@ -89,7 +89,7 @@ const install_db_check = (req, res) =>{
 		else
 			return res.status(200).json(results);
 	});
-}
+};
 const install_db_delete = (req, res) =>{
 	service.install_db_delete(req.query.app_id, (err, results) =>{
 		if (err)
@@ -99,9 +99,11 @@ const install_db_delete = (req, res) =>{
 		else
 			return res.status(200).json(results);
 	});
-}
+};
 
 
-export{DBInfo, DBInfoSpace, DBInfoSpaceSum, 
-	   demo_add, demo_delete, demo_get, 
-	   install_db, install_db_check, install_db_delete}
+export{
+	DBInfo, DBInfoSpace, DBInfoSpaceSum, 
+	demo_add, demo_delete, demo_get, 
+	install_db, install_db_check, install_db_delete
+};

@@ -1,8 +1,8 @@
-const service = await import("./user_account_app_setting_view.service.js");
+const service = await import('./user_account_app_setting_view.service.js');
 
 const insertUserSettingView = (req, res) => {
     req.body.client_ip = req.ip;
-    req.body.client_user_agent = req.headers["user-agent"];
+    req.body.client_user_agent = req.headers['user-agent'];
     service.insertUserSettingView(req.query.app_id, req.body, (err,results) => {
         if (err) {
             return res.status(500).send(
@@ -14,5 +14,5 @@ const insertUserSettingView = (req, res) => {
             items: Array(results)
         });
     });
-}
+};
 export{insertUserSettingView};

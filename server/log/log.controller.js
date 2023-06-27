@@ -1,5 +1,4 @@
-const service = await import('./log.service.js')
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const service = await import('./log.service.js');
 const getLogParameters = (req, res) => {
 	service.getLogParameters(req.query_app_id, (err, results) =>{
 		if (err)
@@ -11,7 +10,7 @@ const getLogParameters = (req, res) => {
 				data: results
 			});
 	});
-}
+};
 const getLogs = (req, res) => {
 	service.getLogs(req.query_app_id, req.query, (err, results) =>{
 		if (err)
@@ -30,7 +29,7 @@ const getLogs = (req, res) => {
 			}
 		}
 	});
-}
+};
 const getFiles = (req, res) => {
 	service.getFiles(req.query_app_id, (err, results) =>{
 		if (err)
@@ -49,5 +48,5 @@ const getFiles = (req, res) => {
 			}
 		}
 	});
-}
+};
 export {getLogParameters,getLogs, getFiles};

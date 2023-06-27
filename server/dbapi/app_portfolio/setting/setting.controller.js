@@ -1,4 +1,4 @@
-const service = await import("./setting.service.js");
+const service = await import('./setting.service.js');
 
 const getSettings = (req, res) => {
 	service.getSettings(req.query.app_id, req.query.lang_code, req.query.setting_type, (err, results) =>{
@@ -11,5 +11,5 @@ const getSettings = (req, res) => {
 			settings: results
 		});
 	});
-}
+};
 export{getSettings};

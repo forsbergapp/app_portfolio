@@ -1,4 +1,4 @@
-const service = await import("./user_account_like.service.js");
+const service = await import('./user_account_like.service.js');
 
 const likeUser = (req, res) => {
 	req.params.id = parseInt(req.params.id);
@@ -14,7 +14,7 @@ const likeUser = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 const unlikeUser = (req, res) => {
 	req.params.id   = parseInt(req.params.id);
 	const id_unlike = parseInt(req.body.user_account_id);
@@ -29,5 +29,5 @@ const unlikeUser = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 export{likeUser, unlikeUser};

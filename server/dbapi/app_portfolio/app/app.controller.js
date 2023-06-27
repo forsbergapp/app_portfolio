@@ -11,7 +11,7 @@ const getApp = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 const getAppsAdmin = (req, res) => {
 	service.getAppsAdmin(req.query.app_id, req.query.lang_code, (err, results) =>{
 		if (err) {
@@ -23,7 +23,7 @@ const getAppsAdmin = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 const updateAppAdmin = (req, res) => {
 	req.params.id = parseInt(req.params.id);
 	service.updateAppAdmin(req.query.app_id, req.params.id, req.body, (err, results) =>{
@@ -36,5 +36,5 @@ const updateAppAdmin = (req, res) => {
 			data: results
 		});
 	});
-}
-export{getApp, getAppsAdmin, updateAppAdmin}
+};
+export{getApp, getAppsAdmin, updateAppAdmin};

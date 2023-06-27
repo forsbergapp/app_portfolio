@@ -1,4 +1,4 @@
-const service = await import("./user_account_logon.service.js");
+const service = await import('./user_account_logon.service.js');
 
 const getUserAccountLogonAdmin = (req, res) => {
 	req.params.user_account_id = parseInt(req.params.user_account_id);
@@ -12,5 +12,5 @@ const getUserAccountLogonAdmin = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 export{getUserAccountLogonAdmin};

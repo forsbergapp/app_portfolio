@@ -2,9 +2,7 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getObjects = (app_id, lang_code, object, object_name, callBack) => {
-		let sql;
-		let parameters;
-		sql = ` SELECT 	object "object", 
+		const sql = ` SELECT 	object "object", 
 						app_id "app_id", 
 						object_name "object_name", 
 						object_item_name "object_item_name", 
@@ -87,20 +85,20 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 					AND   t.object = COALESCE(:object, t.object)
 					AND   t.object_name = COALESCE(:Xobject_Xname, t.object_name)
 			ORDER BY 1, 2, 3, 4, 5, 6`;
-		parameters = {
+		const parameters = {
 						common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
 						app_id: app_id,
 						lang_code1: get_locale(lang_code, 1),
-					  	lang_code2: get_locale(lang_code, 2),
-					  	lang_code3: get_locale(lang_code, 3),
+						lang_code2: get_locale(lang_code, 2),
+						lang_code3: get_locale(lang_code, 3),
 						object : object,
 						Xobject_Xname: object_name
-					 };
+						};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 export{getObjects};

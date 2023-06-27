@@ -9,8 +9,8 @@ const DBInit = (req, res) => {
 		return res.status(500).send({
 			data: error
 		});
-	})
-}
+	});
+};
 const DBShutdown = (req, res) => {
 	service.DBShutdown(req.body.db)
 	.then((result)=>{
@@ -20,8 +20,8 @@ const DBShutdown = (req, res) => {
 		return res.status(500).send({
 			data: error
 		});
-	})
-}
+	});
+};
 const pool_start = (req, res) => {
 	service.pool_start(req.body)
 	.then((result)=>{
@@ -31,8 +31,8 @@ const pool_start = (req, res) => {
 		return res.status(500).send({
 			data: error
 		});
-	})
-}
+	});
+};
 const pool_close = (req, res) => {
 	service.pool_close(req.body.pool_id, req.body.db_use, req.body.dba)
 	.then((result)=>{
@@ -42,8 +42,8 @@ const pool_close = (req, res) => {
 		return res.status(500).send({
 			data: error
 		});
-	})
-}
+	});
+};
 const pool_get = (req, res) => {
 	let result;
 	try {
@@ -54,7 +54,7 @@ const pool_get = (req, res) => {
 			data: error
 		});
 	}
-}
+};
 const db_query = (req, res) => {
 	service.db_query(req.body.pool_id, req.body.db_use, req.body.sql, req.body.parameters, req.body.dba)
 	.then(result=>{
@@ -64,6 +64,6 @@ const db_query = (req, res) => {
 		return res.status(500).send({
 			data: error
 		});
-	})
-}
-export {DBInit, DBShutdown, pool_start, pool_close, pool_get, db_query}
+	});
+};
+export {DBInit, DBShutdown, pool_start, pool_close, pool_get, db_query};

@@ -3,12 +3,10 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
 
 const createLog = (app_id, data, callBack) => {
 	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
-		let sql;
-		let parameters;
 		//max 4000 characters can be saved
 		if (data.app_module_result!=null)
 			data.app_module_result = data.app_module_result.substr(0,3999);
-		sql = `INSERT INTO ${db_schema()}.app_log(
+		const sql = `INSERT INTO ${db_schema()}.app_log(
 					app_id,
 					app_module,
 					app_module_type,
@@ -43,7 +41,7 @@ const createLog = (app_id, data, callBack) => {
 					:server_http_host,
 					:server_http_accept_language,
 					CURRENT_TIMESTAMP)`;
-		parameters = {
+		const parameters = {
 						app_id: data.app_id,
 						app_module: data.app_module,
 						app_Xmodule_type: data.app_module_type,
@@ -70,7 +68,7 @@ const createLog = (app_id, data, callBack) => {
 	}
 	else
 		return callBack(null, null);
-}
+};
 
 const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
 		/* 	sort in UI:
@@ -84,23 +82,22 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 			8=DATE
 		*/
 		let sql;
-		let parameters;
 		switch (sort){
 			case 5:{
 				sort=14;
-				break
+				break;
 			}
 			case 6:{
 				sort=12;
-				break
+				break;
 			}
 			case 7:{
 				sort=13;
-				break
+				break;
 			}
 			case 8:{
 				sort=18;
-				break
+				break;
 			}
 		}
 		if (data_app_id=='')
@@ -130,23 +127,21 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 				  AND EXTRACT(month from date_created) = :month
 				ORDER BY ${sort} ${order_by} `;
 		sql = db_limit_rows(sql, null);
-		parameters = {	app_id:data_app_id,
-						year:year,
-						month:month,
-						offset:offset,
-						limit:limit};
+		const parameters = {app_id:data_app_id,
+							year:year,
+							month:month,
+							offset:offset,
+							limit:limit};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getStatUniqueVisitorAdmin = (app_id, data_app_id, year, month, callBack) => {
-		let sql;
-		let parameters;
 		
-		sql = `SELECT t.chart "chart",
+		const sql = `SELECT t.chart "chart",
 		              t.app_id "app_id",
 					  t.year_log "year",
 					  t.month_log "month",
@@ -178,14 +173,14 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, year, month, callBack) =
 						 t.month_log,
 						 t.day_log
 				ORDER BY 1, 5`;
-		parameters = {	app_id_log: data_app_id,
-						year_log: year,
-						month_log: month};
+		const parameters = {app_id_log: data_app_id,
+							year_log: year,
+							month_log: month};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
-export{createLog, getLogsAdmin, getStatUniqueVisitorAdmin}
+	};
+export{createLog, getLogsAdmin, getStatUniqueVisitorAdmin};

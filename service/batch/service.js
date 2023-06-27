@@ -4,19 +4,19 @@ const log_path          = '/service/logs/';
 const file_batchlog     = 'batch_log.json';
 
 const get_month = (month) => {
-    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+    const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec'];
     if (isNaN(month))
-        return months.findIndex(String(month).toLowerCase())
+        return months.findIndex(String(month).toLowerCase());
     else
         return  Number(month);  
-}
+};
 const get_day_of_week = (weekday) => {
     const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
     if (isNaN(weekday))
-        return weekdays.findIndex(String(weekday).toLowerCase())
+        return weekdays.findIndex(String(weekday).toLowerCase());
     else
         return  Number(weekday);      
-}
+};
 const validate_cron_expression = (expression) =>{
     expression = expression.split(' ');
     if (expression.length!=5)
@@ -43,35 +43,35 @@ const validate_cron_expression = (expression) =>{
         return true;
     }
     catch(error){
-        return false
+        return false;
     }
-}	
+};	
 const get_batchlog_filename = () => {
     //new log every day, format YYYY-MM-DD_[file_batchlog]
-    let logdate = new Date();
-    let month   = logdate.toLocaleString("en-US", { month: "2-digit"});
-    let day     = logdate.toLocaleString("en-US", { day: "2-digit"});
+    const logdate = new Date();
+    const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
+    const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
     return `${log_path}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
-}
+};
 const joblog_add = async (jobid, scheduled_start, start, end, status, result)=>{
-    let fs = await import('node:fs');
+    const fs = await import('node:fs');
     //add 10ms wait so log_id will be guaranteed unique on a fast server
-    let delay = await new Promise ((resolve)=>{setTimeout(()=> resolve(), 10)});
-    let log_id = Date.now();
-    let log = JSON.stringify({log_id: log_id, jobid:jobid, scheduled_start: scheduled_start, start:start, end:end, status:status, result:result});
-    let filename = get_batchlog_filename();
-    let joblog_add = await fs.promises.appendFile(`${process.cwd()}${filename}`, log + '\r\n', 'utf8');
+    await new Promise ((resolve)=>{setTimeout(()=> resolve(), 10);});
+    const log_id = Date.now();
+    const log = JSON.stringify({log_id: log_id, jobid:jobid, scheduled_start: scheduled_start, start:start, end:end, status:status, result:result});
+    const filename = get_batchlog_filename();
+    await fs.promises.appendFile(`${process.cwd()}${filename}`, log + '\r\n', 'utf8');
     //return log_id and the filename where the log_id is found
     return {log_id: log_id, filename: filename};
-}
+};
 const joblog_update = async (log_id, start, end, status, result)=>{
-    let fs = await import('node:fs');
-    let joblog_filename = JOBS.filter(row=>row.log_id==log_id)[0].filename;
-    let joblog = await fs.promises.readFile(`${process.cwd()}${joblog_filename}`, 'utf8');
+    const fs = await import('node:fs');
+    const joblog_filename = JOBS.filter(row=>row.log_id==log_id)[0].filename;
+    const joblog = await fs.promises.readFile(`${process.cwd()}${joblog_filename}`, 'utf8');
     let joblog_updated = '';
     joblog.split('\r\n').forEach(row=>{
         if (row!=''){
-            let rowobj = JSON.parse(row);
+            const rowobj = JSON.parse(row);
             if (rowobj.log_id == log_id){
                 rowobj.start = start;
                 rowobj.end = end;
@@ -80,19 +80,19 @@ const joblog_update = async (log_id, start, end, status, result)=>{
             }
             joblog_updated += JSON.stringify(rowobj) + '\r\n';
         }
-    })
-    let joblog_save = await fs.promises.writeFile(`${process.cwd()}${joblog_filename}`, joblog_updated, 'utf8');
-}
+    });
+    await fs.promises.writeFile(`${process.cwd()}${joblog_filename}`, joblog_updated, 'utf8');
+};
 const joblog_cancel_pending = async ()=>{
-    let fs = await import('node:fs');
-    let files = await fs.promises.readdir(`${process.cwd()}${log_path}`);
-    for (let file of files){
+    const fs = await import('node:fs');
+    const files = await fs.promises.readdir(`${process.cwd()}${log_path}`);
+    for (const file of files){
         if (file.endsWith(file_batchlog)){
-            let joblog = await fs.promises.readFile(`${process.cwd()}${log_path}${file}`, 'utf8');
+            const joblog = await fs.promises.readFile(`${process.cwd()}${log_path}${file}`, 'utf8');
             let joblog_updated = '';
             joblog.split('\r\n').forEach(row=>{
                 if (row!=''){
-                    let rowobj = JSON.parse(row);
+                    const rowobj = JSON.parse(row);
                     if (rowobj.status == 'PENDING' || rowobj.status == 'RUNNING'){
                         rowobj.end    = new Date().toISOString();
                         rowobj.status = 'CANCELED';
@@ -100,11 +100,11 @@ const joblog_cancel_pending = async ()=>{
                     }
                     joblog_updated += JSON.stringify(rowobj) + '\r\n';
                 }
-            })
-            let joblog_save = await fs.promises.writeFile(`${process.cwd()}${log_path}${file}`, joblog_updated, 'utf8');
+            });
+            await fs.promises.writeFile(`${process.cwd()}${log_path}${file}`, joblog_updated, 'utf8');
         }
-    };
-}
+    }
+};
 
 const scheduled_milliseconds = (cron_expression) =>{
     if (cron_expression== '* * * * *'){
@@ -178,12 +178,12 @@ const scheduled_milliseconds = (cron_expression) =>{
             }
             else{
                 //set specific weekday
-                let day_of_week = get_day_of_week(cron_expression[4])
+                const day_of_week = get_day_of_week(cron_expression[4]);
                 new_date = new Date(new_date).setDate(new Date(new_date).getDate() + (7 + day_of_week - new Date(new_date).getDay()) % 7);
             }
         //calculate month
         if (cron_expression[3]!='*'){
-            let month = get_month(cron_expression[3])-1;
+            const month = get_month(cron_expression[3])-1;
             if (new Date().getFullYear() == new Date(new_date).getFullYear() && new Date(new_date).getMonth()>month){
                 //next specific month next year
                 //set next year
@@ -195,25 +195,25 @@ const scheduled_milliseconds = (cron_expression) =>{
         new_date = new Date(new_date).setSeconds(0);
         return new_date - Date.now();
     }
-}
+};
 
 const schedule_job = async (jobid, command_type, path, command, argument, cron_expression) =>{
     const {exec} = await import('node:child_process');
     switch (command_type){
         case 'OS':{
-            let milliseconds = scheduled_milliseconds(cron_expression);
-            let batchlog = await joblog_add(jobid, new Date(new Date().getTime() + milliseconds), null,null, 'PENDING', null);
+            const milliseconds = scheduled_milliseconds(cron_expression);
+            const batchlog = await joblog_add(jobid, new Date(new Date().getTime() + milliseconds), null,null, 'PENDING', null);
             let timeId = setTimeout(async () =>{
-                    let start = new Date().toISOString();
-                    await joblog_update(batchlog.log_id, start, null, 'RUNNING', null)
+                    const start = new Date().toISOString();
+                    await joblog_update(batchlog.log_id, start, null, 'RUNNING', null);
                     try{
                         let command_path;
                         if (path.includes('%HOMEPATH%'))
                             command_path = path.replace('%HOMEPATH%', process.env.HOMEPATH);
                         if (path.includes('$HOME'))
-                            command_path = path.replace('$HOME', process.env.HOME)
+                            command_path = path.replace('$HOME', process.env.HOME);
 
-                        let job_command = exec(`${command} ${argument}`, {cwd: command_path}, (err, stdout, stderr) => {
+                        exec(`${command} ${argument}`, {cwd: command_path}, (err, stdout, stderr) => {
                                             let new_status;
                                             let message;
                                             if (err){
@@ -229,22 +229,22 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
                                                 JOBS.forEach((job,index)=>{
                                                     if (job.timeId == timeId)
                                                         JOBS.splice(index,1);
-                                                })
+                                                });
                                                 clearTimeout(timeId);
                                                 timeId = null;
                                                 //schedule job again, recursive call
                                                 schedule_job(jobid, command_type, path, command, argument,cron_expression); 
-                                            })
+                                            });
                                         });
                     }
                     catch(error){
-                        await joblog_update(batchlog.log_id, start, new Date().toISOString(), 'FAILED', error)
+                        await joblog_update(batchlog.log_id, start, new Date().toISOString(), 'FAILED', error);
                     }
                 }, milliseconds);
-            JOBS.push({jobid:jobid, log_id: batchlog.log_id, filename: batchlog.filename, timeId:timeId, command:command, cron_expression:cron_expression, milliseconds: milliseconds})
+            JOBS.push({jobid:jobid, log_id: batchlog.log_id, filename: batchlog.filename, timeId:timeId, command:command, cron_expression:cron_expression, milliseconds: milliseconds});
         }
     }		
-}
+};
     
 const start_jobs = async () =>{
     const fs = await import('node:fs');
@@ -255,7 +255,7 @@ const start_jobs = async () =>{
     await joblog_cancel_pending();
     //schedule enabled jobs and for current platform
     //use cron expression syntax
-    for (let job of jobs){
+    for (const job of jobs){
         if (job.enabled == true && job.platform == os.platform()){
             if (validate_cron_expression(job.cron_expression))
                 await schedule_job(job.jobid, job.command_type, job.path, job.command, job.argument, job.cron_expression);
@@ -263,6 +263,6 @@ const start_jobs = async () =>{
                 console.log('Not supported cron expression'); 
         }
     }
-}
-export {start_jobs}
+};
+export {start_jobs};
 	
