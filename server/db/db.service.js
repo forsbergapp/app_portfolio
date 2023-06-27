@@ -207,27 +207,24 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          case 1:
          case 2:{
             //Both MySQL and MariaDB use MySQL npm module
-            const config_connection = (conn, query, values) => {
-               //change json parameters to [] syntax with bind variable names
-               //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
-               //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
-               conn.config.queryFormat = (query, values) => {
-                  if (!values) return query;
-                  return query.replace(/\:(\w+)/g, (txt, key) => {
-                     if (Object.prototype.hasOwnProperty.call(values, key)) {
-                     return conn.escape(values[key]);
-                     }
-                     return txt;
-                  });
-               };
-            };
             try {
                pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
                   conn.release();
                   if (err)
                      return reject (err);
                   else{
-                     config_connection(conn, sql, parameters);
+                     //change json parameters to [] syntax with bind variable names
+                     //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
+                     //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
+                     conn.config.queryFormat = (sql, parameters) => {
+                        if (!parameters) return sql;
+                        return sql.replace(/:(\w+)/g, (txt, key) => {
+                           if (Object.prototype.hasOwnProperty.call(parameters, key)) {
+                           return conn.escape(parameters[key]);
+                           }
+                           return txt;
+                        });
+                     };
                      conn.query(sql, parameters, (err, result, fields) => {
                         if (err){
                            return reject (err);
@@ -264,7 +261,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
                //postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
                 const [text, values] = Object.entries(params).reduce(
-                    ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, (txt, key) => {
+                    ([sql, array, index], [key, value]) => [sql.replace(/:(\w+)/g, (txt, key) => {
                                                                      if (Object.prototype.hasOwnProperty.call(params, key)){
                                                                         return `$${Object.keys(params).indexOf(key) + 1}`;
                                                                      }

@@ -19,29 +19,29 @@ const common = await import('/common/js/common.js');
 /* GLOBALS                */
 /*----------------------- */
 const APP_GLOBAL = {
-    "page":"",
-    "page_last":"",
-    "limit":"",
-    "previous_row":"",
-    "module_leaflet_map_container":"",
-    "module_leaflet_map_zoom":"",
-    "module_leaflet_map_marker_div_gps":"",
-    "service_log_scope_request":"",
-    "service_log_scope_server":"",
-    "service_log_scope_app":"",
-    "service_log_scope_service":"",
-    "service_log_scope_db":"",
-    "service_log_level_verbose":"",
-    "service_log_level_error":"",
-    "service_log_level_info":"",
-    "service_log_file_interval":"",
-    "service_log_file_path_server":"",
-    "service_log_destination":"",
-    "service_log_url_destination":"",
-    "service_log_url_destination_username":"",
-    "service_log_url_destination_password":"",
-    "service_log_date_format":""
-}
+    'page':'',
+    'page_last':'',
+    'limit':'',
+    'previous_row':'',
+    'module_leaflet_map_container':'',
+    'module_leaflet_map_zoom':'',
+    'module_leaflet_map_marker_div_gps':'',
+    'service_log_scope_request':'',
+    'service_log_scope_server':'',
+    'service_log_scope_app':'',
+    'service_log_scope_service':'',
+    'service_log_scope_db':'',
+    'service_log_level_verbose':'',
+    'service_log_level_error':'',
+    'service_log_level_info':'',
+    'service_log_file_interval':'',
+    'service_log_file_path_server':'',
+    'service_log_destination':'',
+    'service_log_url_destination':'',
+    'service_log_url_destination_username':'',
+    'service_log_url_destination_password':'',
+    'service_log_date_format':''
+};
 const delete_globals = () => {
     APP_GLOBAL['page'] = null;
     APP_GLOBAL['page_last'] = null;
@@ -72,7 +72,7 @@ const delete_globals = () => {
     common.COMMON_GLOBAL['module_leaflet_style'] = null;
     common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
     common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
-}
+};
 
 /*----------------------- */
 /* MISC                   */
@@ -80,39 +80,39 @@ const delete_globals = () => {
 const roundOff = (num) => {
     const x = Math.pow(10,2);
     return Math.round(num * x) / x;
-  }
+  };
 const list_generate = (amount)=>{
     let html = '';
     for (let i=1; i<=amount;i++){
         html += `<option value='${i}'>${i}</option>`;
     }
     return html;
-}
+};
 const show_menu = (menu) => {
     document.getElementById('menu_1_content').style.display='none';
-    document.getElementById(`menu_1`).classList.remove('menuitem_selected');
+    document.getElementById('menu_1').classList.remove('menuitem_selected');
     document.getElementById('menu_2_content').style.display='none';
-    document.getElementById(`menu_2`).classList.remove('menuitem_selected');
+    document.getElementById('menu_2').classList.remove('menuitem_selected');
     document.getElementById('menu_3_content').style.display='none';
-    document.getElementById(`menu_3`).classList.remove('menuitem_selected');
+    document.getElementById('menu_3').classList.remove('menuitem_selected');
     document.getElementById('menu_4_content').style.display='none';
-    document.getElementById(`menu_4`).classList.remove('menuitem_selected');
+    document.getElementById('menu_4').classList.remove('menuitem_selected');
     document.getElementById('menu_5_content').style.display='none';
-    document.getElementById(`menu_5`).classList.remove('menuitem_selected');
+    document.getElementById('menu_5').classList.remove('menuitem_selected');
     document.getElementById('menu_6_content').style.display='none';
-    document.getElementById(`menu_6`).classList.remove('menuitem_selected');
+    document.getElementById('menu_6').classList.remove('menuitem_selected');
     document.getElementById('menu_7_content').style.display='none';
-    document.getElementById(`menu_7`).classList.remove('menuitem_selected');
+    document.getElementById('menu_7').classList.remove('menuitem_selected');
     document.getElementById('menu_8_content').style.display='none';
-    document.getElementById(`menu_8`).classList.remove('menuitem_selected');
+    document.getElementById('menu_8').classList.remove('menuitem_selected');
     document.getElementById('menu_9_content').style.display='none';
-    document.getElementById(`menu_9`).classList.remove('menuitem_selected');
+    document.getElementById('menu_9').classList.remove('menuitem_selected');
     document.getElementById('menu_10_content').style.display='none';
-    document.getElementById(`menu_10`).classList.remove('menuitem_selected');
+    document.getElementById('menu_10').classList.remove('menuitem_selected');
     document.getElementById(`menu_${menu}_content`).style.display='block';
     document.getElementById(`menu_${menu}`).classList.add('menuitem_selected');
-    let current_year = new Date().getFullYear();
-    let yearvalues =   `<option value="${current_year}">${current_year}</option>
+    const current_year = new Date().getFullYear();
+    const yearvalues =   `<option value="${current_year}">${current_year}</option>
                         <option value="${current_year -1}">${current_year-1}</option>
                         <option value="${current_year -2}">${current_year-2}</option>
                         <option value="${current_year -3}">${current_year-3}</option>
@@ -170,15 +170,15 @@ const show_menu = (menu) => {
             break;
         }
     }            
-}
+};
 
 const show_start = async (yearvalues) =>{
     const show_charts = async () => {
         if (admin_token_has_value()){
             //chart 1 shows for all apps, app id used for chart 2
-            let app_id = document.getElementById('select_app_menu1').value; 
-            let year = document.getElementById('select_year_menu1').value;
-            let month = document.getElementById('select_month_menu1').value;
+            const app_id = document.getElementById('select_app_menu1').value; 
+            const year = document.getElementById('select_year_menu1').value;
+            const month = document.getElementById('select_month_menu1').value;
             let result_obj;
             document.getElementById('box1_chart').innerHTML = common.APP_SPINNER;
             document.getElementById('box1_legend').innerHTML = common.APP_SPINNER;
@@ -200,13 +200,13 @@ const show_start = async (yearvalues) =>{
                     const SearchAndGetText = (item, search) => {
                         for (let i=1;i<item.options.length;i++){
                             if (item.options[i].value == search)
-                                return item.options[i].text
+                                return item.options[i].text;
                         }
                         return null;
-                    }
+                    };
                     let sum_amount =0;
-                    let chart_1 = result_obj.data.filter((row)=> row.chart==1);
-                    for (let stat of chart_1) {
+                    const chart_1 = result_obj.data.filter((row)=> row.chart==1);
+                    for (const stat of chart_1) {
                         sum_amount += +stat.amount;
                     }
                     let apps_color = '';
@@ -228,18 +228,18 @@ const show_start = async (yearvalues) =>{
                                     <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id)}</div>
                                 </div>`;
                         degree_start = degree_start + stat.amount/sum_amount*360;
-                    })
+                    });
                     //display pie chart
-                    document.getElementById('box1_chart').innerHTML = `<div id='box1_pie'></div>`;
-                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${apps_color})`
+                    document.getElementById('box1_chart').innerHTML = '<div id=\'box1_pie\'></div>';
+                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${apps_color})`;
                     //show legend below chart
                     document.getElementById('box1_legend').innerHTML = html;
 
                     //CHART 2
                     html = '';
                     let max_amount =0;
-                    let chart_2 = result_obj.data.filter((row)=> row.chart==2);
-                    for (let stat of chart_2) {
+                    const chart_2 = result_obj.data.filter((row)=> row.chart==2);
+                    for (const stat of chart_2) {
                         if (+stat.amount>max_amount)
                             max_amount = +stat.amount;
                     }
@@ -250,7 +250,7 @@ const show_start = async (yearvalues) =>{
                     else
                         bar_color = 'rgb(197 227 255)';
 
-                    for (let stat of chart_2) {
+                    for (const stat of chart_2) {
                         html += `<div class='box2_barcol box2_barcol_display' style='width:${100/chart_2.length}%'>
                                     <div class='box2_barcol_color' style='background-color:${bar_color};height:${+stat.amount/max_amount*100}%'></div>
                                     <div class='box2_barcol_legendX'>${stat.day}</div>
@@ -269,9 +269,9 @@ const show_start = async (yearvalues) =>{
                                                                             <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text}</div>
                                                                         </div>` ;
                 }
-            })
+            });
         }
-    }
+    };
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
@@ -313,7 +313,7 @@ const show_start = async (yearvalues) =>{
         document.getElementById('menu_1_maintenance').style.display = 'none';
 
     document.getElementById('menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
-    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance() }, false);
+    document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance(); }, false);
         
     document.getElementById('select_year_menu1').selectedIndex = 0;
     document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
@@ -325,12 +325,12 @@ const show_start = async (yearvalues) =>{
         check_maintenance();
     else
         show_charts();
-}
+};
 const show_user_agent = (user_agent) => {
     return null;
-}
+};
 const get_apps = async () => {
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve)=>{
         let json;
         let html = `<option value="">${common.ICONS['infinite']}</option>`;
         let url;
@@ -352,18 +352,18 @@ const get_apps = async () => {
             else{
                 json = JSON.parse(result);
                 if (common.COMMON_GLOBAL['system_admin']==1)
-                    for (let app of json.data) {
+                    for (const app of json.data) {
                         html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
                     }
                 else
-                    for (let app of json.data) {
+                    for (const app of json.data) {
                         html += `<option value='${app.id}'>${app.id} - ${app.app_name}</option>`;
                     }
                 resolve(html);
             }
-        })
-    })
-}
+        });
+    });
+};
 
 /*----------------------- */
 /* BROADCAST              */
@@ -372,7 +372,7 @@ const sendBroadcast = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
-    let broadcast_message = document.getElementById('send_broadcast_message').value;
+    const broadcast_message = document.getElementById('send_broadcast_message').value;
 
     if (broadcast_message==''){
         common.show_message('INFO', null, null, `${common.ICONS['message_text']}!`, common.COMMON_GLOBAL['app_id']);
@@ -390,7 +390,7 @@ const sendBroadcast = () => {
         broadcast_type = 'CHAT';
     }
         
-    let json_data =`{"app_id": ${app_id==''?null:app_id},
+    const json_data =`{"app_id": ${app_id==''?null:app_id},
                      "client_id": ${client_id==''?null:client_id},
                      "client_id_current": ${common.COMMON_GLOBAL['service_broadcast_client_ID']},
                      "broadcast_type" :"${broadcast_type}", 
@@ -398,11 +398,11 @@ const sendBroadcast = () => {
     let path='';
     let token_type;
     if (common.COMMON_GLOBAL['system_admin']==1){
-        path = `/broadcast/message/SystemAdmin?`;
+        path = '/broadcast/message/SystemAdmin?';
         token_type = 2;
     }
     else{
-        path = `/broadcast/message/Admin?`;
+        path = '/broadcast/message/Admin?';
         token_type = 1;
     }
     common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err, result) => {
@@ -412,7 +412,7 @@ const sendBroadcast = () => {
             common.show_message('INFO', null, null, `${common.ICONS['app_send']}!`, common.COMMON_GLOBAL['app_id']);
         }
     });
-}    
+};    
 const closeBroadcast = () => {
     document.getElementById('dialogue_send_broadcast').style.visibility='hidden'; 
     document.getElementById('client_id_label').style.display='inline-block';
@@ -420,7 +420,7 @@ const closeBroadcast = () => {
     document.getElementById('select_app_broadcast').style.display='inline-block';
     document.getElementById('client_id').innerHTML='';
     document.getElementById('send_broadcast_message').value='';
-}
+};
 const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
     document.getElementById('select_app_broadcast').innerHTML = await get_apps();
     switch (dialogue_type){
@@ -462,7 +462,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
         }
     }
     document.getElementById('dialogue_send_broadcast').style.visibility='visible';
-}
+};
 const set_broadcast_type = () => {
     switch (document.getElementById('select_broadcast_type').value){
         case 'INFO':{
@@ -484,7 +484,7 @@ const set_broadcast_type = () => {
             break;
         }
     }
-}
+};
 const check_maintenance = async () => {
     if (admin_token_has_value()){
         let json;
@@ -498,9 +498,9 @@ const check_maintenance = async () => {
                 else
                     document.getElementById('menu_1_checkbox_maintenance').checked =false;
             }
-        })
+        });
 }
-}
+};
 const set_maintenance = () => {
     if (admin_token_has_value()){
         let check_value;
@@ -508,14 +508,14 @@ const set_maintenance = () => {
             check_value = 1;
         else
             check_value = 0;
-        let json_data = `{
+        const json_data = `{
                             "value": ${check_value}
                          }`;
-        common.FFB ('SERVER', `/config/systemadmin/maintenance?`, 'PATCH', 2, json_data, (err, result) => {
+        common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 2, json_data, (err, result) => {
             null;
-        })
+        });
     }
-}
+};
 /*----------------------- */
 /* USER STAT              */
 /*----------------------- */
@@ -531,11 +531,11 @@ const count_users = async () => {
                 }
             });
         }
-    }    
+    };    
     if (admin_token_has_value()){
         let json;
         document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB_API', `/user_account/admin/count?`, 'GET', 1, null, (err, result) => {
+        await common.FFB ('DB_API', '/user_account/admin/count?', 'GET', 1, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_2_content').innerHTML = '';
             else{
@@ -590,17 +590,17 @@ const count_users = async () => {
                         if (e.id=='list_user_stat_row_not_connected')
                             count_connected(e.children[0].children[0].innerHTML,0, (err, result)=>{
                                 e.children[3].children[0].innerHTML = JSON.parse(result).data;
-                            })
+                            });
                         else
                             count_connected(e.children[0].children[0].innerHTML,1, (err, result)=>{
                                     e.children[3].children[0].innerHTML = JSON.parse(result).data;
-                            })
+                            });
                     }
-                })
+                });
             }
         });
     }
-}
+};
 /*----------------------- */
 /* USERS                  */
 /*----------------------- */
@@ -624,14 +624,14 @@ const show_users = () =>{
             </div>`;
     document.querySelector('#list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
     document.querySelector('#menu_3_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_user_account_search_input').focus();document.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
-    document.getElementById('users_save').addEventListener('click', () => { button_save('users_save')}, false); 
+    document.getElementById('users_save').addEventListener('click', () => { button_save('users_save');}, false); 
     search_users();
 
-}
+};
 const search_users = (sort=8, order_by='ASC', focus=true) => {
     let json;
 
-    if (common.check_input(document.getElementById("list_user_account_search_input").value, 100, false) == false)
+    if (common.check_input(document.getElementById('list_user_account_search_input').value, 100, false) == false)
         return null;
 
     document.getElementById('list_user_account').innerHTML = common.APP_SPINNER;
@@ -724,11 +724,11 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             let lov_class = '';
             //superadmin can edit
             if (common.COMMON_GLOBAL['user_app_role_id']==0){
-                lov_div = `<div class='common_lov_button common_list_lov_click'></div>`;
+                lov_div = '<div class=\'common_lov_button common_list_lov_click\'></div>';
                 lov_class = 'common_input_lov';
             }
             else
-                input_readonly = `readonly='true'`;
+                input_readonly = 'readonly=\'true\'';
             for (let i = 0; i < json.data.length; i++) {
                 let list_user_account_current_user_row='';
                 if (json.data[i].id==common.COMMON_GLOBAL['user_account_id'])
@@ -821,7 +821,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
         
             if (common.COMMON_GLOBAL['user_app_role_id']==0){
                 //add lov icon for super admin
-                document.querySelectorAll(`#list_user_account .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
+                document.querySelectorAll('#list_user_account .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
             }
             set_list_eventlisteners('user_account', 'sort', true);
             list_events('list_user_account', 'list_user_account_row', ' .list_edit');
@@ -844,8 +844,8 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
                 document.getElementById('list_user_account_search_input').focus();
             }   
         }
-    })
-}
+    });
+};
 const show_user_account_logon = async (user_account_id) => {
     let json;
     document.getElementById('list_user_account_logon').innerHTML = common.APP_SPINNER;
@@ -917,15 +917,15 @@ const show_user_account_logon = async (user_account_id) => {
             }
             document.getElementById('list_user_account_logon').innerHTML = html;
         }
-    })
-}
+    });
+};
 /*----------------------- */
 /* APP ADMIN              */
 /*----------------------- */
 const show_apps = async () => {
     let json;
     document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
-    await common.FFB ('DB_API', `/apps/admin?`, 'GET', 1, null, (err, result) => {
+    await common.FFB ('DB_API', '/apps/admin?', 'GET', 1, null, (err, result) => {
         if (err)
             document.querySelector('#menu_4_content').innerHTML = '';
         else{
@@ -992,9 +992,9 @@ const show_apps = async () => {
                             <button id='apps_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
                         </div>
                     </div>`;
-            document.getElementById('apps_save').addEventListener('click', () => { button_save('apps_save')}, false); 
+            document.getElementById('apps_save').addEventListener('click', () => { button_save('apps_save');}, false); 
             //add lov icon
-            document.querySelectorAll(`#list_apps .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
+            document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
             list_events('list_apps', 'list_apps_row', ' .list_edit');
             //disable enabled checkbox for app 0 common
             document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
@@ -1002,8 +1002,8 @@ const show_apps = async () => {
             //this will trigger to show detail records
             document.querySelectorAll('#list_apps .list_edit')[0].focus();
         }
-    })
-}
+    });
+};
 const show_app_parameter = (app_id) => {
     let json;
     document.getElementById('list_app_parameter').innerHTML = common.APP_SPINNER;
@@ -1058,11 +1058,11 @@ const show_app_parameter = (app_id) => {
             }
             document.getElementById('list_app_parameter').innerHTML = html;
             //add lov icon
-            document.querySelectorAll(`#list_app_parameter .common_lov_button`).forEach(e => e.innerHTML = common.ICONS['app_lov']);
+            document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
             list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit');
         }
-    })
-}
+    });
+};
 const button_save = async (item) => {
     if (item=='apps_save'){
         //save changes in list_apps
@@ -1078,7 +1078,7 @@ const button_save = async (item) => {
                                      logo: x[i].children[3].children[0].value,
                                      enabled: x[i].children[4].children[0].checked});
             }
-        };
+        }
         //save changes in list_app_parameter
         x = document.querySelectorAll('.list_app_parameter_row');
         for (let i=0;i<x.length;i++){
@@ -1093,12 +1093,12 @@ const button_save = async (item) => {
                                      parameter_comment: x[i].children[5].children[0].value
                                     });
             }
-        };
+        }
     }
     else 
         if (item == 'users_save'){
             //save changes in list_user_account
-            let x = document.querySelectorAll('.list_user_account_row');
+            const x = document.querySelectorAll('.list_user_account_row');
             for (let i=0;i<x.length;i++){
                 if (x[i].getAttribute('data-changed-record')=='1'){
                     await update_record('user_account',
@@ -1118,14 +1118,13 @@ const button_save = async (item) => {
                                          verification_code: x[i].children[13].children[0].value
                                         });
                 }
-            };
+            }
         }
         else
             if (item == 'config_save'){
-                let config_no;
                 let json_data;
                 const config_create_server_json = () => {
-                    let config_json = [];
+                    const config_json = [];
                     document.querySelectorAll('#list_config .list_config_group').forEach(e_group => 
                         {
                             let config_group='';
@@ -1136,7 +1135,7 @@ const button_save = async (item) => {
                                         if (e_group.lastChild != e_row)
                                             config_group += ',';
                                     }
-                            )
+                            );
                             config_json.push(JSON.stringify(JSON.parse(`[${config_group}]`), undefined, 2));
                         }
                     );
@@ -1147,9 +1146,9 @@ const button_save = async (item) => {
                                 "SERVICE_DB":${config_json[3]},
                                 "SERVICE_LOG":${config_json[4]}
                             }`;
-                }
+                };
                 //no fetched from end of item name list_config_nav_X
-                config_no = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16);
+                const config_no = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16);
                 if (config_no == 0){
                     //no action, just display info of config_init.json
                     null;
@@ -1161,17 +1160,17 @@ const button_save = async (item) => {
                     else
                         json_data = `{"config_no":   ${config_no},
                                       "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
-                    let json_object = JSON.parse(json_data);
+                    const json_object = JSON.parse(json_data);
                     json_data = JSON.stringify(json_object, undefined, 2);
-                    let old_button = document.getElementById(item).innerHTML;
+                    const old_button = document.getElementById(item).innerHTML;
                     document.getElementById(item).innerHTML = common.APP_SPINNER;
-                    common.FFB ('SERVER', `/config/systemadmin?`, 'PUT', 2, json_data, (err, result) => {
+                    common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 2, json_data, (err, result) => {
                         document.getElementById(item).innerHTML = old_button;
-                    })
+                    });
                 }
             }
     
-}
+};
 const update_record = async (table, 
                              row_element,
                              button,
@@ -1179,7 +1178,7 @@ const update_record = async (table,
     if (admin_token_has_value()){
         let path;
         let json_data;
-        let old_button = document.getElementById(button).innerHTML;
+        const old_button = document.getElementById(button).innerHTML;
         document.getElementById(button).innerHTML = common.APP_SPINNER;
         switch (table){
             case 'user_account':{
@@ -1202,7 +1201,7 @@ const update_record = async (table,
                     if (row_element.children[4].children[0].checked == false){
                         //app common.COMMON_GLOBAL['common_app_id'] should always be enabled
                         row_element.children[4].children[0].checked = true;
-                        enabled=true;
+                        parameters.enabled=true;
                     }
                 }
                 json_data = `{"app_name": "${parameters.app_name}",
@@ -1218,7 +1217,7 @@ const update_record = async (table,
                               "parameter_type_id":"${parameters.parameter_type_id}",
                               "parameter_value":"${parameters.parameter_value}",
                               "parameter_comment":"${parameters.parameter_comment}"}`;
-                path = `/app_parameter/admin?`;
+                path = '/app_parameter/admin?';
                 break;
             }
         }
@@ -1229,9 +1228,9 @@ const update_record = async (table,
             else{
                 row_element.setAttribute('data-changed-record', '0');
             }
-        })
+        });
     }
-}
+};
 const list_events = (list_item, item_row, item_edit) => {
 
     //on change on all editable fields
@@ -1251,7 +1250,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     item.nextElementSibling.dispatchEvent(new Event('click'));
                 }
                 else{
-                    let json = JSON.parse(result);
+                    const json = JSON.parse(result);
                     if (json.data.length == 1){
                         //set new value from 3 column JSON result
                         document.getElementById(event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
@@ -1262,10 +1261,10 @@ const list_events = (list_item, item_row, item_edit) => {
                         //set old value
                         item.value = event.target.defaultValue;
                         item.focus();    
-                        item.nextElementSibling.children[0].dispatchEvent(new Event('click', {"bubbles": true}));
+                        item.nextElementSibling.children[0].dispatchEvent(new Event('click', {'bubbles': true}));
                     }
                 }
-            }
+            };
             //app category LOV
             if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
                 if (event.target.value=='')
@@ -1287,7 +1286,7 @@ const list_events = (list_item, item_row, item_edit) => {
             //app role LOV
             if (item_row == 'list_user_account_row' && event.target.parentNode.parentNode.children[2].children[0] == event.target){
                 let app_role_id_lookup='';
-                let old_value =event.target.value;
+                const old_value =event.target.value;
                 //if empty then lookup default
                 if (event.target.value=='')
                     app_role_id_lookup=2;
@@ -1301,14 +1300,14 @@ const list_events = (list_item, item_row, item_edit) => {
                 });
             }
         }
-    })
+    });
     //keydown event
     document.getElementById(list_item).addEventListener('keydown', (event) => {
         if (event.target.classList.contains('list_edit')){
             if (event.code=='ArrowUp') {
                 APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                 event.preventDefault();
-                let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
+                const index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
                 //focus on first list_edit item in the row
                 if (index>0)
                     document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
@@ -1316,7 +1315,7 @@ const list_events = (list_item, item_row, item_edit) => {
             if (event.code=='ArrowDown') {
                 APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
                 event.preventDefault();
-                let index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
+                const index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
                 //focus on first list_edit item in the row
                 if (document.getElementById(`${item_row}_${index}`)!= null)
                     document.querySelectorAll(`#${item_row}_${index} ${item_edit}`)[0].focus();
@@ -1356,12 +1355,12 @@ const list_events = (list_item, item_row, item_edit) => {
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[6].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
-                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
+                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'));
                 };
                 common.lov_show('APP_CATEGORY', function_event);
             }
                 
-        })
+        });
     if (list_item == 'list_app_parameter')
         document.getElementById(list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
@@ -1370,11 +1369,11 @@ const list_events = (list_item, item_row, item_edit) => {
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
-                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
+                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'));
                 };
                 common.lov_show('PARAMETER_TYPE', function_event);
             }
-        })
+        });
     
     if (list_item == 'list_user_account')
         document.getElementById(list_item).addEventListener('click', (event) => {   
@@ -1384,12 +1383,12 @@ const list_events = (list_item, item_row, item_edit) => {
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[3].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
-                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'))
+                    document.getElementById('common_lov_close').dispatchEvent(new Event('click'));
                 };
                 common.lov_show('APP_ROLE', function_event);
             }
-        })    
-}
+        });    
+};
 /*----------------------- */
 /* MONITOR                */
 /*----------------------- */
@@ -1492,28 +1491,28 @@ const show_monitor = async (yearvalues) =>{
             nav_click(event.target);
       }, true);
 
-    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
-    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'))}, false);
+    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
+    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
+    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
 
-    document.getElementById('list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    document.getElementById('list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    document.getElementById('list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target)}, false);
-    document.getElementById('list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target)}, false);
+    document.getElementById('list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target);}, false);
+    document.getElementById('list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target);}, false);
+    document.getElementById('list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target);}, false);
+    document.getElementById('list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target);}, false);
 
-    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
-    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'))}, false);
+    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'));}, false);
+    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'));}, false);
+    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'));}, false);
 
-    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'))}, false);
+    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
 
     document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
 
-    document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}) }, false);
+    document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}); }, false);
 
     const init_monitor = () =>{
         let path;
@@ -1526,8 +1525,8 @@ const show_monitor = async (yearvalues) =>{
                         APP_GLOBAL['module_leaflet_map_zoom']).then(() => {
             common.map_setevent('dblclick', (e) => {
                 if (e.originalEvent.target.id == 'mapid'){
-                    let lng = e.latlng['lng'];
-                    let lat = e.latlng['lat'];
+                    const lng = e.latlng['lng'];
+                    const lat = e.latlng['lat'];
                     //Update GPS position
                     common.get_place_from_gps(lng, lat).then((gps_place) => {
                         common.map_update(lng,
@@ -1537,9 +1536,9 @@ const show_monitor = async (yearvalues) =>{
                                             null,
                                             APP_GLOBAL['module_leaflet_map_marker_div_gps'],
                                             common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                    })
+                    });
                 }
-            })
+            });
             common.map_update(common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
                                 APP_GLOBAL['module_leaflet_map_zoom'],
@@ -1549,11 +1548,11 @@ const show_monitor = async (yearvalues) =>{
                                 common.COMMON_GLOBAL['module_leaflet_jumpto']);
             
             if (common.COMMON_GLOBAL['system_admin']==1){
-                path  = `/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                path  = '/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
                 token_type = 2;
             }
             else{
-                path  = `/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH`;
+                path  = '/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
                 token_type = 1;
             }      
             common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {
@@ -1574,7 +1573,7 @@ const show_monitor = async (yearvalues) =>{
                         get_server_log_parameters().then(() => {
                             common.map_resize();
                             nav_click(document.getElementById('list_connected_title'));
-                        })
+                        });
                     }
                     else{
                         APP_GLOBAL['page'] = 0;
@@ -1588,17 +1587,17 @@ const show_monitor = async (yearvalues) =>{
                     }    
                 }
                 
-            })
-        })
-    }
+            });
+        });
+    };
     //fetch geolocation once
     if (common.COMMON_GLOBAL['client_longitude'] && common.COMMON_GLOBAL['client_latitude'])
         init_monitor();
     else
         common.get_gps_from_ip().then(() =>{
             init_monitor();
-        })
-}
+        });
+};
 const fix_pagination_buttons = () => {
     //function triggered by change in user preference before innerHTML loaded html
     //function called again when choosing app log monitor check if exist first
@@ -1618,20 +1617,20 @@ const fix_pagination_buttons = () => {
             document.getElementById('list_app_log_last').innerHTML = common.ICONS['app_first'];
         }
     }
-}
+};
 const nav_click = (item) => {
     const reset_monitor = () => {
         document.getElementById('list_monitor_nav_1').classList='';
         document.getElementById('list_monitor_nav_2').classList='';
         document.getElementById('list_monitor_nav_3').classList='';
-    }
+    };
     const reset_config = () => {
         document.getElementById('list_config_nav_1').classList='';
         document.getElementById('list_config_nav_2').classList='';
         document.getElementById('list_config_nav_3').classList='';
         document.getElementById('list_config_nav_4').classList='';
         document.getElementById('list_config_nav_0').classList='';
-    }
+    };
     
     switch (item.id){
         //MONITOR
@@ -1695,7 +1694,7 @@ const nav_click = (item) => {
             break;
         }
     }
-}
+};
 const show_list = async (list_div, list_div_col_title, url_parameters, sort, order_by) => {
     if (admin_token_has_value()){
         let logscope;
@@ -1742,9 +1741,6 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
             else{
                 json = JSON.parse(result);
                 let html = '';
-                let html_out = '';
-                let html_err = '';
-                let html_process_event = '';
                 switch (list_div){
                     /*
                     use this grouping to decide column orders
@@ -2127,7 +2123,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                         <div>${json.data[i].host}</div>
                                                     </div>
                                                     <div class='list_request_log_col list_gps_click gps_click'>
-                                                        <div>${json.data[i].ip==""?"":json.data[i].ip.replace('::ffff:','')}</div>
+                                                        <div>${json.data[i].ip==''?'':json.data[i].ip.replace('::ffff:','')}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
                                                         <div>${json.data[i].requestid}</div>
@@ -2290,41 +2286,41 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     }
                 }   
             }
-        })        
+        });        
     }
-}
+};
 const show_connected = async (sort=1, order_by='desc') => {
-    let app_id = document.getElementById('select_app_menu5_list_connected').options[document.getElementById('select_app_menu5_list_connected').selectedIndex].value;
-    let year = document.getElementById('select_year_menu5_list_connected').value;
-    let month = document.getElementById('select_month_menu5_list_connected').value;
+    const app_id = document.getElementById('select_app_menu5_list_connected').options[document.getElementById('select_app_menu5_list_connected').selectedIndex].value;
+    const year = document.getElementById('select_year_menu5_list_connected').value;
+    const month = document.getElementById('select_month_menu5_list_connected').value;
     show_list('list_connected', 
               'list_connected_col_title', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL['limit']}`, 
               sort,
               order_by);
-}    
+};    
 
 const show_app_log = async (sort=1, order_by='desc', offset=0, limit=APP_GLOBAL['limit']) => {
-    let app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
-    let year = document.getElementById('select_year_menu5_app_log').value;
-    let month = document.getElementById('select_month_menu5_app_log').value;
+    const app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
+    const year = document.getElementById('select_year_menu5_app_log').value;
+    const month = document.getElementById('select_month_menu5_app_log').value;
     show_list('list_app_log', 
               'list_app_log_col_title', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
               sort,
               order_by);
-} 
+}; 
 const set_list_eventlisteners = (list_type, list_function, remove_events) => {
-    let click_function_title = (event) => { 
+    const click_function_title = (event) => { 
                                     if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
-                                        list_sort_click(event.target.parentNode)
+                                        list_sort_click(event.target.parentNode);
                                 };
-    let click_function_rowcolumn = (event) => { 
+    const click_function_rowcolumn = (event) => { 
                                         if (event.target.parentNode.parentNode.classList.contains(`list_${list_function}_click`))
-                                            list_item_click(event.target.parentNode.parentNode)
+                                            list_item_click(event.target.parentNode.parentNode);
                                         else
                                             if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
-                                                list_item_click(event.target.parentNode)
+                                                list_item_click(event.target.parentNode);
                                     };
     
     let element = document.getElementById(`list_${list_type}`);
@@ -2334,10 +2330,10 @@ const set_list_eventlisteners = (list_type, list_function, remove_events) => {
         element = document.getElementById(`list_${list_type}`);
     }
     if (list_function=='sort')
-        element.addEventListener("click", click_function_title);
+        element.addEventListener('click', click_function_title);
     else
-        element.addEventListener("click", click_function_rowcolumn);
-}
+        element.addEventListener('click', click_function_rowcolumn);
+};
 const get_sort = (order_by=0) => {
     let sort = '';
     for (let i=1;i <=8;i++){
@@ -2353,7 +2349,7 @@ const get_sort = (order_by=0) => {
                 sort = 'desc';
     }
     return sort;
-}
+};
 const get_order = (item) => {
     let order_by = '';
     if (document.getElementById(item.id).classList.contains('asc'))
@@ -2363,7 +2359,7 @@ const get_order = (item) => {
     if (order_by=='')
         order_by = 'desc';
     return order_by;
-}
+};
 const list_sort_click = (item) => {
     switch (item.id.substring(0, item.id.indexOf('_col_title'))){
         case 'list_app_log':{
@@ -2383,11 +2379,11 @@ const list_sort_click = (item) => {
             break;
         }
     }
-}
+};
 const page_navigation = (item) => {
     
     let sort = get_sort();
-    let order_by = get_sort(1);
+    const order_by = get_sort(1);
     if (sort =='')
         sort = 8;
     switch (item.id){
@@ -2419,7 +2415,7 @@ const page_navigation = (item) => {
             break;
         }
     }
-}
+};
 const list_item_click = (item) => {
     let path;
     let tokentype;
@@ -2439,7 +2435,7 @@ const list_item_click = (item) => {
                 if (err)
                     null;
                 else{
-                    let json = JSON.parse(result);
+                    const json = JSON.parse(result);
                     common.map_update(json.geoplugin_longitude,
                                 json.geoplugin_latitude,
                                 APP_GLOBAL['module_leaflet_map_zoom'],
@@ -2450,7 +2446,7 @@ const list_item_click = (item) => {
                                 APP_GLOBAL['module_leaflet_map_marker_div_gps'],
                                 common.COMMON_GLOBAL['module_leaflet_jumpto']);
                 }
-            })
+            });
         }
         else{
             //clicking on GPS, show on map
@@ -2473,7 +2469,7 @@ const list_item_click = (item) => {
                     if (err)
                         null;
                     else{
-                        let json = JSON.parse(result);
+                        const json = JSON.parse(result);
                         common.map_update(long,
                                    lat,
                                    APP_GLOBAL['module_leaflet_map_zoom'],
@@ -2484,7 +2480,7 @@ const list_item_click = (item) => {
                                    APP_GLOBAL['module_leaflet_map_marker_div_gps'],
                                    common.COMMON_GLOBAL['module_leaflet_jumpto']);
                     }
-            })
+            });
         }
     }
     else
@@ -2492,10 +2488,10 @@ const list_item_click = (item) => {
             show_broadcast_dialogue('CHAT', item.parentNode.children[0].children[0].innerHTML);
         }
     
-}
+};
 const get_server_log_parameters = async () => {
     let json;
-    await common.FFB ('LOG', `/log/parameters?`, 'GET', 2, null, (err, result) => {
+    await common.FFB ('LOG', '/log/parameters?', 'GET', 2, null, (err, result) => {
         if (err)
             null;
         else{
@@ -2554,18 +2550,18 @@ const get_server_log_parameters = async () => {
             else
                 document.getElementById('select_day_menu5').style.display = 'inline-block';
         }
-    })
-}
+    });
+};
 const show_server_logs = (sort=0, order_by='desc', search=null) => {
     if (search != null){
         if (common.check_input(document.querySelector('#list_server_log_search_input').value, 100, false) == false)
             return null;
     }
-    let logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
-    let loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
-    let year = document.getElementById('select_year_menu5').value;
-    let month= document.getElementById('select_month_menu5').value;
-    let day  = document.getElementById('select_day_menu5').value;
+    const logscope = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_scope');
+    const loglevel = document.getElementById('select_logscope5')[document.getElementById('select_logscope5').selectedIndex].getAttribute('log_level');
+    const year = document.getElementById('select_year_menu5').value;
+    const month= document.getElementById('select_month_menu5').value;
+    const day  = document.getElementById('select_day_menu5').value;
     let app_id_filter='';
     if (logscope=='APP' || logscope=='SERVICE' || logscope=='DB'){
         //show app filter and use it
@@ -2575,7 +2571,7 @@ const show_server_logs = (sort=0, order_by='desc', search=null) => {
     else{
         //no app filter for request
         document.getElementById('select_app_menu5').style.display = 'none';
-        app_id_filter = `select_app_id=&`;
+        app_id_filter = 'select_app_id=&';
     }
     let url_parameters;
     search=encodeURI(search);
@@ -2588,7 +2584,7 @@ const show_server_logs = (sort=0, order_by='desc', search=null) => {
               `${url_parameters}&sort=${sort}&order_by=${order_by}`,
               sort,
               order_by);
-}
+};
 const show_existing_logfiles = () => {
     if (admin_token_has_value()){
         const function_event = (event) => {                    
@@ -2599,13 +2595,13 @@ const show_existing_logfiles = () => {
                                     filename = event.target.children[1].children[0].innerHTML;
                                 else
                                     filename = event.target.parentNode.parentNode.children[1].children[0].innerHTML;
-                                let logscope = filename.substring(0,filename.indexOf('_'));
+                                const logscope = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
-                                let loglevel = filename.substring(0,filename.indexOf('_'));
+                                const loglevel = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
-                                let year     = parseInt(filename.substring(0, 4));
-                                let month    = parseInt(filename.substring(4, 6));
-                                let day      = parseInt(filename.substring(6, 8));
+                                const year     = parseInt(filename.substring(0, 4));
+                                const month    = parseInt(filename.substring(4, 6));
+                                const day      = parseInt(filename.substring(6, 8));
                                 const setlogscopelevel = (select, logscope, loglevel) =>{
                                     for (let i = 0; i < select.options.length; i++) {
                                         if (select[i].getAttribute('log_scope') == logscope &&
@@ -2614,7 +2610,7 @@ const show_existing_logfiles = () => {
                                             return null;
                                         }
                                     }
-                                }
+                                };
                                 setlogscopelevel(document.getElementById('select_logscope5'),
                                                 logscope, 
                                                 loglevel);
@@ -2631,7 +2627,7 @@ const show_existing_logfiles = () => {
                             };
         common.lov_show('SERVER_LOG_FILES', function_event);
     }
-}
+};
 /*----------------------- */
 /* SERVER CONFIG          */
 /*----------------------- */
@@ -2651,20 +2647,20 @@ const show_server_config = () =>{
                 <button id='config_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
             </div>
         </div>`;
-    document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save')}, false); 
+    document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save');}, false); 
     document.querySelector('#list_config_nav').addEventListener('click', (event) => {
-        nav_click(event.target.id==''?event.target.parentNode:event.target)
+        nav_click(event.target.id==''?event.target.parentNode:event.target);
      }, true);
 
     nav_click(document.getElementById('list_config_server_title'));
-}
+};
 const show_config = async (config_nav=1) => {
-    document.getElementById(`list_config`).innerHTML = common.APP_SPINNER;
+    document.getElementById('list_config').innerHTML = common.APP_SPINNER;
     await common.FFB ('SERVER', `/config/systemadmin/saved?config_type_no=${config_nav}`, 'GET', 2, null, (err, result) => {
         if (err)
-            document.getElementById(`list_config`).innerHTML = '';
+            document.getElementById('list_config').innerHTML = '';
         else{
-            let json = JSON.parse(result);
+            const json = JSON.parse(result);
             let i = 0;
             if (config_nav==0)
                 document.getElementById('list_config_edit').contentEditable = false;
@@ -2707,7 +2703,7 @@ const show_config = async (config_nav=1) => {
                                     </div>
                                 </div>`;
                             }    
-                        html += `</div>`;
+                        html += '</div>';
                         
                     }
                     document.getElementById('list_config_edit').innerHTML = '';
@@ -2729,18 +2725,18 @@ const show_config = async (config_nav=1) => {
                 }
             }
         }
-    })
-}
+    });
+};
 /*----------------------- */
 /* INSTALLATION           */
 /*----------------------- */
 const show_installation = () =>{
-    document.querySelector(`#menu_7_content`).innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/admin/install?`, 'GET', 2, null, (err, result) => {
+    document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;
+    common.FFB ('DB_API', '/admin/install?', 'GET', 2, null, (err, result) => {
         if (err)
-            document.querySelector(`#menu_7_content`).innerHTML = '';
+            document.querySelector('#menu_7_content').innerHTML = '';
         else{
-            document.querySelector(`#menu_7_content`).innerHTML =
+            document.querySelector('#menu_7_content').innerHTML =
                 `<div id='menu_7_content_widget1' class='widget'>
                     <div id='install_db'>
                         <div id='install_db_icon'>${common.ICONS['app_database']}</div>
@@ -2771,31 +2767,31 @@ const show_installation = () =>{
                 document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
                     const install_function = () =>{
                         document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-                        let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
-                        document.querySelector(`#install_db_button_install`).innerHTML = common.APP_SPINNER;
-                        let path = `/admin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
+                        const old_html = document.querySelector('#install_demo_button_install').innerHTML;
+                        document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
+                        const path = `/admin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
                         common.FFB ('DB_API', path, 'POST', 2, null, (err, result) => {
-                            document.querySelector(`#install_db_button_install`).innerHTML = old_html;
+                            document.querySelector('#install_db_button_install').innerHTML = old_html;
                             if (err == null){
-                                document.querySelector(`#install_db_icon`).classList.add('installed');
-                                let result_obj = JSON.parse(result);
+                                document.querySelector('#install_db_icon').classList.add('installed');
+                                const result_obj = JSON.parse(result);
                                 common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                             }
-                        })
-                    }
+                        });
+                    };
                     const uninstall_function = () =>{
                         document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-                        let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
-                        document.querySelector(`#install_db_button_uninstall`).innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', `/admin/install?`, 'DELETE', 2, null, (err, result) => {
-                            document.querySelector(`#install_db_button_uninstall`).innerHTML = old_html;
+                        const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
+                        document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
+                        common.FFB ('DB_API', '/admin/install?', 'DELETE', 2, null, (err, result) => {
+                            document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
                             if (err == null){
-                                document.querySelector(`#install_db_icon`).classList.remove('installed');
-                                let result_obj = JSON.parse(result);
+                                document.querySelector('#install_db_icon').classList.remove('installed');
+                                const result_obj = JSON.parse(result);
                                 common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                             }
-                        })
-                    }
+                        });
+                    };
                     switch(event.target.parentNode.id){
                         case 'install_db_button_install':{
                             common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL['app_id']);  
@@ -2810,54 +2806,53 @@ const show_installation = () =>{
             document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
                 switch(event.target.parentNode.id){
                     case 'install_demo_button_install':{
-                        if (document.getElementById("install_demo_password").value == '') {
+                        if (document.getElementById('install_demo_password').value == '') {
                             common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
-                            return callBack('ERROR', null);
                         }
                         else{
-                            let json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
-                            let old_html = document.querySelector(`#install_demo_button_install`).innerHTML;
-                            document.querySelector(`#install_demo_button_install`).innerHTML = common.APP_SPINNER;
-                            common.FFB ('DB_API', `/admin/demo?`, 'POST', 2, json_data, (err, result) => {
-                                document.querySelector(`#install_demo_button_install`).innerHTML = old_html;
+                            const json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
+                            const old_html = document.querySelector('#install_demo_button_install').innerHTML;
+                            document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
+                            common.FFB ('DB_API', '/admin/demo?', 'POST', 2, json_data, (err, result) => {
+                                document.querySelector('#install_demo_button_install').innerHTML = old_html;
                                 if (err == null){
-                                    let result_obj = JSON.parse(result);
+                                    const result_obj = JSON.parse(result);
                                     common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                                 }
-                            })
+                            });
                         }
                         break;
                     }
                     case 'install_demo_button_uninstall':{
-                        let old_html = document.querySelector(`#install_demo_button_uninstall`).innerHTML;
-                        document.querySelector(`#install_demo_button_uninstall`).innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', `/admin/demo?`, 'DELETE', 2, null, (err, result) => {
-                            document.querySelector(`#install_demo_button_uninstall`).innerHTML = old_html;
+                        const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
+                        document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
+                        common.FFB ('DB_API', '/admin/demo?', 'DELETE', 2, null, (err, result) => {
+                            document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
                             if (err == null){
-                                let result_obj = JSON.parse(result);
+                                const result_obj = JSON.parse(result);
                                 common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
                             }
-                        })
+                        });
                         break;
                     }
                 }
             }, false);
         }
-        document.querySelector(`#install_db_icon`).classList.remove('installed');
+        document.querySelector('#install_db_icon').classList.remove('installed');
         if (err==null && JSON.parse(result).installed == 1)
-            document.querySelector(`#install_db_icon`).classList.add('installed');
-    })
-}
+            document.querySelector('#install_db_icon').classList.add('installed');
+    });
+};
 /*----------------------- */
 /* DB INFO                */
 /*----------------------- */
 const show_db_info = async () => {
     if (admin_token_has_value()){
         let json;
-        let size = '(Mb)';
+        const size = '(Mb)';
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB_API', `/admin/DBInfo?`, 'GET', 2, null, (err, result) => {
+        await common.FFB ('DB_API', '/admin/DBInfo?', 'GET', 2, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_8_content').innerHTML = '';
             else{
@@ -2881,7 +2876,7 @@ const show_db_info = async () => {
                         <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
                     document.getElementById('menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', `/admin/DBInfoSpace?`, 'GET', 2, null, (err, result) => {
+                    common.FFB ('DB_API', '/admin/DBInfoSpace?', 'GET', 2, null, (err, result) => {
                         if (err)
                             document.getElementById('menu_8_db_info_space_detail').innerHTML = '';
                         else{
@@ -2924,7 +2919,7 @@ const show_db_info = async () => {
                                 </div>`;
                             }
                             document.getElementById('menu_8_db_info_space_detail').innerHTML = html;
-                            common.FFB ('DB_API', `/admin/DBInfoSpaceSum?`, 'GET', 2, null, (err, result) => {
+                            common.FFB ('DB_API', '/admin/DBInfoSpaceSum?', 'GET', 2, null, (err, result) => {
                                 if (err)
                                     null;
                                 else{
@@ -2948,21 +2943,20 @@ const show_db_info = async () => {
                                             </div>
                                         </div>`;
                                 }
-                            })
+                            });
                         }
-                    })
+                    });
             }
-        })
+        });
     }
-}
+};
 /*----------------------- */
 /* SERVER                 */
 /*----------------------- */
 const show_server_info = async () => {
     if (admin_token_has_value()){
         let json;
-        let size = '(Mb)';
-        await common.FFB ('SERVER', `/info?`, 'GET', 2, null, (err, result) => {
+        await common.FFB ('SERVER', '/info?', 'GET', 2, null, (err, result) => {
             if (err)
                 null;
             else{         
@@ -2979,7 +2973,7 @@ const show_server_info = async () => {
                     ut_min = ut_min%60;
                     ut_sec = ut_sec%60;
                     return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
-                }
+                };
                 json = JSON.parse(result);
                 document.querySelector('#menu_10_content').innerHTML = 
                     `<div id='menu_10_content_widget1' class='widget'>
@@ -3017,9 +3011,9 @@ const show_server_info = async () => {
                         </div>
                     </div>`;
             }
-        })
+        });
     }
-}
+};
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
@@ -3028,7 +3022,7 @@ const admin_token_has_value = () => {
         return false;
     else
         return true;
-}
+};
 
 const init = () => {
 
@@ -3110,8 +3104,8 @@ const init = () => {
         //start with DASHBOARD
         show_menu(1);
         common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
-            null
+            null;
         });
     }
-}
-export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, init}
+};
+export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, init};

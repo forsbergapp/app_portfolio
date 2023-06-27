@@ -50,8 +50,8 @@ const createAdmin = (app_id, locale) => {
                             '');
                         resolve(app);
                     }
-                })
-            })
+                });
+            });
         }
         else{
             read_app_files('', files, (err, app)=>{
@@ -81,9 +81,9 @@ const createAdmin = (app_id, locale) => {
                         '');
                     resolve(app);
                 }
-            })
+            });
         }
         
-    })
-}
-export {createAdmin}
+    });
+};
+export {createAdmin};
