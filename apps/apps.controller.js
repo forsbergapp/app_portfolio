@@ -1,5 +1,5 @@
-const {ConfigGet, COMMON} = await import(`file://${process.cwd()}/server/server.service.js`);
-const service = await import('./apps.service.js')
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const service = await import('./apps.service.js');
 
 const getApp = async (req, res, app_id, params, callBack) => {
     req.query.app_id = app_id;
@@ -7,11 +7,11 @@ const getApp = async (req, res, app_id, params, callBack) => {
     if (service.apps_start_ok() ==true || app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){  
         //Data token
         const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-        let datatoken = CreateDataToken(app_id);
+        const datatoken = CreateDataToken(app_id);
         //get GPS from IP
-        let parameters = `/ip?ip=${req.ip}`;
+        const parameters = `/ip?ip=${req.ip}`;
         service.BFF(app_id, 'GEOLOCATION', parameters, 
-                    req.ip, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                    req.ip, req.method, `Bearer ${datatoken}`, req.headers['user-agent'], req.headers['accept-language'], req.body).then((result_geodata)=>{
             if (result_geodata){
                 result_geodata = JSON.parse(result_geodata);
                 result_geodata.latitude = result_geodata.geoplugin_latitude;
@@ -65,18 +65,18 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                 user_number_system : null,
                                                 user_platform : null,
                                                 server_remote_addr : req.ip,
-                                                server_user_agent : req.headers["user-agent"],
-                                                server_http_host : req.headers["host"],
-                                                server_http_accept_language : req.headers["accept-language"],
+                                                server_user_agent : req.headers['user-agent'],
+                                                server_http_host : req.headers['host'],
+                                                server_http_accept_language : req.headers['accept-language'],
                                                 client_latitude : result_geodata.latitude,
                                                 client_longitude : result_geodata.longitude
                                             }, (err,results)  => {
                                                 return callBack(null, app_with_init);
-                                    })
-                                })
-                        })
-                    })
-                })
+                                    });
+                                });
+                        });
+                    });
+                });
             }
             else{
                 import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`).then(({ createApp }) => {
@@ -84,7 +84,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                         //get translation data
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`).then(({getObjects}) => {
                             getObjects(app_id, service.client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
-                                for (let row of result_objects){
+                                for (const row of result_objects){
                                     app = app.replaceAll(
                                         `<CommonTranslation${row.object_item_name.toUpperCase()}/>`,
                                         `${row.text}`);
@@ -113,35 +113,35 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                     user_number_system : null,
                                                     user_platform : null,
                                                     server_remote_addr : req.ip,
-                                                    server_user_agent : req.headers["user-agent"],
-                                                    server_http_host : req.headers["host"],
-                                                    server_http_accept_language : req.headers["accept-language"],
+                                                    server_user_agent : req.headers['user-agent'],
+                                                    server_http_host : req.headers['host'],
+                                                    server_http_accept_language : req.headers['accept-language'],
                                                     client_latitude : result_geodata.latitude,
                                                     client_longitude : result_geodata.longitude
                                                     }, (err,results)  => {
                                                         return callBack(null, app_with_init);
-                                        })
-                                    })
-                                })
-                            })
-                        })
-                    })
-                })
+                                        });
+                                    });
+                                });
+                            });
+                        });
+                    });
+                });
             }
         })
         .catch(error=>
             callBack(error, null)
-        )
+        );
     }
     else
         service.getMaintenance(app_id).then((result_maintenance) => {
             return callBack(null, result_maintenance);
         });
-}
+};
 const getReport = async (req, res, app_id, callBack) => {
 
     if (service.apps_start_ok() ==true){
-        let decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
+        const decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
         //example string:
         //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
         let query_parameters = '{';
@@ -156,27 +156,27 @@ const getReport = async (req, res, app_id, callBack) => {
         req.query.ps = query_parameters.ps; //papersize     A4/Letter
         req.query.hf = query_parameters.hf; //header/footer 1/0
     
-        if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == "undefined" ){
+        if (query_parameters.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == 'undefined' ){
             //PDF
             req.query.service ='PDF';
-            let url = `${req.protocol}://${req.get('host')}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
+            const url = `${req.protocol}://${req.get('host')}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
             //call message queue
             const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
-            MessageQueue('PDF', 'PUBLISH', {"url":url, "ps":req.query.ps, "hf":(req.query.hf==1)}, null)
+            MessageQueue('PDF', 'PUBLISH', {'url':url, 'ps':req.query.ps, 'hf':(req.query.hf==1)}, null)
                 .then((pdf)=>{
                     callBack(null, pdf);
                 })
                 .catch((error)=>{
                     callBack(error, null);
-                })
+                });
         }
         else{
             //data token
             const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-            let datatoken = CreateDataToken(app_id);
-            let parameters = `/ip?ip=${req.ip}`;
+            const datatoken = CreateDataToken(app_id);
+            const parameters = `/ip?ip=${req.ip}`;
             service.BFF(app_id, 'GEOLOCATION', parameters, 
-                        req.ip, req.method, `Bearer ${datatoken}`, req.headers["user-agent"], req.headers["accept-language"], req.body).then((result_geodata)=>{
+                        req.ip, req.method, `Bearer ${datatoken}`, req.headers['user-agent'], req.headers['accept-language'], req.body).then((result_geodata)=>{
                 result_geodata = JSON.parse(result_geodata);
                 result_geodata.latitude = result_geodata.geoplugin_latitude;
                 result_geodata.longitude = result_geodata.geoplugin_longitude;
@@ -211,32 +211,32 @@ const getReport = async (req, res, app_id, callBack) => {
                                                                                 user_number_system : null,
                                                                                 user_platform : null,
                                                                                 server_remote_addr : req.ip,
-                                                                                server_user_agent : req.headers["user-agent"],
-                                                                                server_http_host : req.headers["host"],
-                                                                                server_http_accept_language : req.headers["accept-language"],
+                                                                                server_user_agent : req.headers['user-agent'],
+                                                                                server_http_host : req.headers['host'],
+                                                                                server_http_accept_language : req.headers['accept-language'],
                                                                                 client_latitude : result_geodata.latitude,
                                                                                 client_longitude : result_geodata.longitude
                                                                                 }, (err,results)  => {
-                                                                        callBack(null,report_with_init)
+                                                                        callBack(null,report_with_init);
                                                                     });
-                                                                })
+                                                                });
                                                                 
                                                         }
-                        })
-                    })
-                })
+                        });
+                    });
+                });
                 
             })
             .catch(error=>{
-                callBack(error,null)
-            })
+                callBack(error,null);
+            });
         }
     }
     else
         service.getMaintenance(app_id).then((result_maintenance) => {
             callBack(null, result_maintenance);
         });
-}		
+};		
 //backend for frontend
 //returns status 401 (parameter errors), 503(ANY error in called service) or 200 if ok
 //together with error or result
@@ -251,25 +251,25 @@ const BFF = async (req, res) =>{
             message: '⛔'
         });
     else{
-        let decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
+        const decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
         let message_queue=false;
         const service_called = req.query.service.toUpperCase();
         if (service_called=='MAIL')
             message_queue=true;
         let parameters;
         if (req.query.user_account_logon_user_account_id)
-            parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`
+            parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`;
         else
             parameters = decodedparameters;
         if (service_called=='BROADCAST' && decodedparameters.startsWith('/broadcast/connection/connect')){
             // return broadcast stream
             // ex path and query parameters: /broadcast/connection/connect?identity_provider_id=&system_admin=null&lang_code=en
-            let query_parameters = parameters.toLowerCase().split('?')[1].split('&');
+            const query_parameters = parameters.toLowerCase().split('?')[1].split('&');
             req.query.system_admin = query_parameters.filter(query=>{ 
-                                                                return query.startsWith('system_admin')}
+                                                                return query.startsWith('system_admin');}
                                                             )[0].split('=')[1];
             req.query.identity_provider_id = query_parameters.filter(query=>{ 
-                                                                     return query.startsWith('identity_provider_id')}
+                                                                     return query.startsWith('identity_provider_id');}
                                                                      )[0].split('=')[1];
             delete req.query.parameters;
             delete req.query.service;
@@ -277,18 +277,18 @@ const BFF = async (req, res) =>{
             BroadcastConnect(req,res);
         }
         else
-            service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers["user-agent"], req.headers["accept-language"], req.body)
+            service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body)
             .then(result_service => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
-                    let log_text = message_queue==true?null:result_service;
+                    const log_text = message_queue==true?null:result_service;
                     LogServiceI(req.query.app_id, service_called, parameters, log_text).then(result_log=>{
                         //message queue saves result there
                         if (message_queue)
                             return res.status(200).send('✅');
                         else
                             return res.status(200).send(result_service);
-                    })
-                })
+                    });
+                });
             })
             .catch(error => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
@@ -298,19 +298,17 @@ const BFF = async (req, res) =>{
                         return res.status(503).json({
                             message: error
                         });
-                    })
+                    });
                 });
-            })
+            });
     }
-}
+};
 //backend for frontend without authorization
 const BFF_noauth = async (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='BROADCAST' && 
         Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-            import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`).then((broadcast)=>{
-                BFF(req,res);
-            })
+            BFF(req,res);
         }
     else{
         //required parameters not provided
@@ -319,7 +317,7 @@ const BFF_noauth = async (req, res) =>{
             message: '⛔'
         });
     }
-}
+};
 //backend for frontend auth with basic authorization and no middleware
 const BFF_auth = async (req, res) =>{
     //check inparameters
@@ -332,5 +330,5 @@ const BFF_auth = async (req, res) =>{
             message: '⛔'
         });
     }
-}
-export{getApp, getReport, BFF, BFF_noauth, BFF_auth}
+};
+export{getApp, getReport, BFF, BFF_noauth, BFF_auth};

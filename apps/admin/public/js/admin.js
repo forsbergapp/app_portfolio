@@ -15,8 +15,8 @@ const admin_login_nav = (target) => {
         document.getElementById('system_admin_login').style.display = 'block';
         document.getElementById('system_admin_login_title').classList.add('login_nav_button_selected');
     }
-}
-const clear_login = (app) => {
+};
+const clear_login = () => {
     document.getElementById('admin_login_username_input').value = '';
     document.getElementById('admin_login_password_input').value = '';
     document.getElementById('system_admin_login_username_input').value = '';
@@ -24,8 +24,8 @@ const clear_login = (app) => {
     document.getElementById('admin_first_time').style.display = 'none';
     document.getElementById('system_admin_login_password_confirm_input').value = '';
     document.getElementById('system_admin_login_password_confirm').style.display = 'none';
-}
-const admin_logoff_app = (error) => {
+};
+const admin_logoff_app = () => {
     common.COMMON_GLOBAL['rest_admin_at'] = '';
     document.getElementById('common_user_menu_default_avatar').innerHTML = '';
     const clear_common = () => {
@@ -37,7 +37,7 @@ const admin_logoff_app = (error) => {
         document.querySelector('#menu').style.visibility = 'hidden';
         document.querySelector('#menu_open').style.visibility = 'hidden';
         document.getElementById('admin_secure').style.visibility = 'hidden';
-    }
+    };
     if (common.COMMON_GLOBAL['system_admin'] == 1) {
         clear_common();
         common.COMMON_GLOBAL['system_admin'] = 0;
@@ -45,47 +45,47 @@ const admin_logoff_app = (error) => {
     else
         common.user_logoff().then(() => {
             clear_common();
-        })
-}
+        });
+};
 const admin_login = async () => {
-    let old_button = document.getElementById('admin_login_button').innerHTML;
+    const old_button = document.getElementById('admin_login_button').innerHTML;
     if (document.getElementById('system_admin_login').style.display == 'block') {
-        if (document.getElementById("system_admin_login_username_input").value == '') {
+        if (document.getElementById('system_admin_login_username_input').value == '') {
             common.show_message('INFO', null, null, common.ICONS['app_system_admin'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
             return;
         }
-        if (document.getElementById("system_admin_login_password_input").value == '') {
+        if (document.getElementById('system_admin_login_password_input').value == '') {
             common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
             return;
         }
-        if (common.check_input(document.getElementById("system_admin_login_username_input").value, 100, true) == false ||
-            common.check_input(document.getElementById("system_admin_login_password_input").value, 100, true) == false)
+        if (common.check_input(document.getElementById('system_admin_login_username_input').value, 100, true) == false ||
+            common.check_input(document.getElementById('system_admin_login_password_input').value, 100, true) == false)
             return;
         //no : in username
-        if (document.getElementById("system_admin_login_username_input").value.indexOf(':') > -1) {
+        if (document.getElementById('system_admin_login_username_input').value.indexOf(':') > -1) {
             common.show_message('INFO', null, null, common.ICONS['app_system_admin'] + ' ":" ' + common.ICONS['message_error'], common.COMMON_GLOBAL['common_app_id']);
             return;
         }
         //no : in username
-        if (document.getElementById("system_admin_login_password_input").value.indexOf(':') > -1) {
+        if (document.getElementById('system_admin_login_password_input').value.indexOf(':') > -1) {
             common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ":" ' + common.ICONS['message_error'], common.COMMON_GLOBAL['common_app_id']);
             return;
         }
         //if first time then password confirm is shown
-        if (document.getElementById("system_admin_login_password_confirm").style.display == 'block') {
-            if (document.getElementById("system_admin_login_password_confirm_input").value == '') {
+        if (document.getElementById('system_admin_login_password_confirm').style.display == 'block') {
+            if (document.getElementById('system_admin_login_password_confirm_input').value == '') {
                 common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
                 return;
             }
-            if (document.getElementById("system_admin_login_password_input").value !=
-                document.getElementById("system_admin_login_password_confirm_input").value) {
+            if (document.getElementById('system_admin_login_password_input').value !=
+                document.getElementById('system_admin_login_password_confirm_input').value) {
                 common.show_message('INFO', null, null, common.ICONS['user_password'] + ' <> ' + common.ICONS['user_password'], common.COMMON_GLOBAL['common_app_id']);
                 return;
             }
         }
         let json;
-        common.FFB ('AUTH', `/auth/admin?`, 'POST', 3, `{"username": "${document.getElementById("system_admin_login_username_input").value}",
-                                                        "password": "${document.getElementById("system_admin_login_password_input").value}"}`, (err, result_login) => {
+        common.FFB ('AUTH', '/auth/admin?', 'POST', 3, `{"username": "${document.getElementById('system_admin_login_username_input').value}",
+                                                        "password": "${document.getElementById('system_admin_login_password_input').value}"}`, (err, result_login) => {
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err)
                 common.show_message('EXCEPTION', null, null, result_login, common.COMMON_GLOBAL['app_id']);
@@ -106,9 +106,9 @@ const admin_login = async () => {
                     clear_login();
                     document.getElementById('admin_secure').style.visibility = 'visible';
                     app_secure.init();
-                })
+                });
             }
-        })
+        });
     }
     else {
         await common.user_login(document.getElementById('admin_login_username_input').value,
@@ -132,11 +132,11 @@ const admin_login = async () => {
                         clear_login();
                         document.getElementById('admin_secure').style.visibility = 'visible';
                         app_secure.init();
-                    })
+                    });
                 }
-            })
+            });
     }
-}
+};
 const setEvents = () => {
 
     document.getElementById('admin_login_form').addEventListener('keyup', (event) => {
@@ -151,9 +151,9 @@ const setEvents = () => {
                 //unfocus
                 document.getElementById(event.target.id).blur();
             }
-    })
-    document.getElementById('admin_login_button').addEventListener('click', () => { admin_login() }, false);
-    document.getElementById('admin_login_nav').addEventListener('click', (event) => { admin_login_nav(event.target) }, true);
+    });
+    document.getElementById('admin_login_button').addEventListener('click', () => { admin_login(); }, false);
+    document.getElementById('admin_login_nav').addEventListener('click', (event) => { admin_login_nav(event.target); }, true);
 
 
     if (common.COMMON_GLOBAL['system_admin_only'] == 1)
@@ -162,17 +162,17 @@ const setEvents = () => {
         //common
         //profile
         document.getElementById('common_profile_home').addEventListener('click', () => { common.profile_top(1); }, false);
-        document.getElementById('common_profile_close').addEventListener('click', () => { common.profile_close() }, false);
+        document.getElementById('common_profile_close').addEventListener('click', () => { common.profile_close(); }, false);
         document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, null); }, false);
-        document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1) }, false);
-        document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2) }, false);
-        document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3) }, false);
-        document.getElementById('common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW') }, false);
-        document.getElementById('common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE') }, false);
-        document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null) }, false);
-        document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null) }, false);
-        document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null) }, false);
-        document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null) }, false);
+        document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1); }, false);
+        document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2); }, false);
+        document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3); }, false);
+        document.getElementById('common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW'); }, false);
+        document.getElementById('common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE'); }, false);
+        document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null); }, false);
+        document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null); }, false);
+        document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null); }, false);
+        document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null); }, false);
         //user preferences
         document.getElementById('common_user_menu_username').addEventListener('click', () => {
             document.getElementById('common_dialogue_profile').style.visibility = 'visible';
@@ -186,18 +186,18 @@ const setEvents = () => {
 
         document.getElementById('common_user_locale_select').addEventListener('change', (event) => {
             common.common_translate_ui(event.target.value, null, (err, result) => {
-                null
+                null;
             });
         }, false);
         document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change')); }, false);
     }
     document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + document.getElementById('common_app_select_theme').value + ' ' + document.getElementById('common_user_arabic_script_select').value; }, false);
 
-}
+};
 
 const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
-}
+};
 const init_app = (system_admin_only) => {
     //SET ICONS
     document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
@@ -213,12 +213,12 @@ const init_app = (system_admin_only) => {
     document.getElementById('client_id_label').innerHTML = common.ICONS['user'];
 
     //SET EVENTLISTENERS
-    document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = "hidden"; }, false);
-    document.getElementById('menu_open').addEventListener('click', () => { document.getElementById('menu').style.display = 'block' }, false);
+    document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
+    document.getElementById('menu_open').addEventListener('click', () => { document.getElementById('menu').style.display = 'block'; }, false);
 
     document.getElementById('select_broadcast_type').addEventListener('change', () => { app_secure.set_broadcast_type(); }, false);
     document.getElementById('send_broadcast_send').addEventListener('click', () => { app_secure.sendBroadcast(); }, false);
-    document.getElementById('send_broadcast_close').addEventListener('click', () => { app_secure.closeBroadcast() }, false);
+    document.getElementById('send_broadcast_close').addEventListener('click', () => { app_secure.closeBroadcast(); }, false);
 
     //MENU ITEMS
     document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
@@ -271,18 +271,18 @@ const init_app = (system_admin_only) => {
                 break;
             }
             default: {
-                app_secure.show_menu(parseInt(target_id.substring(5)))
+                app_secure.show_menu(parseInt(target_id.substring(5)));
             }
         }
     }, false);
-    document.getElementById('common_user_direction_select').addEventListener('change', (event) => { app_secure.fix_pagination_buttons(event.target.value) }, false);
+    document.getElementById('common_user_direction_select').addEventListener('change', (event) => { app_secure.fix_pagination_buttons(event.target.value); }, false);
     setEvents();
     if (system_admin_only == 0)
         if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result) => {
-                null
+                null;
             });
-}
+};
 const init = (parameters) => {
     //show admin login as default
     admin_login_nav(document.getElementById('admin_login_title'));
@@ -331,6 +331,6 @@ const init = (parameters) => {
             }
         }
         init_app(parameters.system_admin_only);
-    })
-}
-export { init }
+    });
+};
+export { init };

@@ -7,9 +7,9 @@ const getMessage = (req, res) => {
 				data: err
 			});
 		}
-		return res.status(200).json({
-			data: results
-		});
+		return res.status(200).json(
+			results[0]
+		);
 	});
 };
 export{getMessage};

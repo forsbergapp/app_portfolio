@@ -1,10 +1,10 @@
 const common = await import('/common/js/common.js');
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
-}
+};
 const getdocs = (docid = null) => {
     document.querySelector('#doc_list').innerHTML = common.APP_SPINNER;
-    let result = `{"data":[{"id":1,
+    const result = `{"data":[{"id":1,
                             "doc_title":"Diagram",
                             "doc_url":"/app1/images/app_portfolio.webp",
                             "doc_url_small":"/app1/images/app_portfolio_small.webp"},
@@ -18,7 +18,7 @@ const getdocs = (docid = null) => {
                             "doc_url_small":"/app3/images/datamodel_pm_small.webp"}
                             ]}`;
     let html ='';
-    let json = JSON.parse(result);
+    const json = JSON.parse(result);
     for (let i = 0; i < json.data.length; i++) {
         if (docid== json.data[i].id || docid==null)
             html += `<div id='doc_list_item'>
@@ -33,15 +33,15 @@ const getdocs = (docid = null) => {
         if (event.target.parentNode.getAttribute('full_size'))
             common.show_window_info(0, event.target.parentNode.getAttribute('full_size'));
     });
-}
+};
 const init_app = async () => {
     document.querySelector('#app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
     getdocs();
     //event show start documents when closing document
-    document.querySelector('#common_window_info_btn_close').addEventListener('click',(event) => {
+    document.querySelector('#common_window_info_btn_close').addEventListener('click',() => {
         document.querySelector('#dialogue_documents').style.visibility = 'visible';
     });
-    let docid = window.location.pathname.substring(1);
+    const docid = window.location.pathname.substring(1);
     if (docid!=''){
         document.querySelector('#dialogue_documents').style.visibility = 'hidden';
         common.show_window_info(0, document.querySelector(`#doc_${docid}`).getAttribute('full_size'));
@@ -49,12 +49,12 @@ const init_app = async () => {
     else{
         document.querySelector('#dialogue_documents').style.visibility = 'visible';
     }
-}
+};
 const init = (parameters) => {
     common.init_common(parameters, (err, global_app_parameters)=>{
         init_app().then(() => {
             null;
-        })
-    })
-}
-export{app_exception, init}
+        });
+    });
+};
+export{app_exception, init};

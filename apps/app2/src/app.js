@@ -1,18 +1,16 @@
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { read_app_files} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const themes = async (app_id, locale) =>{
     return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
             getSettings(app_id, locale, 'REPORT_THEME%', (err, settings) => {
-                let html_themes='';
                 if (err){
-                    resolve ([null, null, null])
+                    resolve ([null, null, null]);
                 }
                 else{
                     let span_themes_day ='', span_themes_month='', span_themes_year='';
                     //get themes and save result in three theme variables
-                    for (let theme of settings){
+                    for (const theme of settings){
                         let theme_type;
                         switch (theme.setting_type_name){
                             case 'REPORT_THEME_BASIC_DAY':
@@ -31,7 +29,7 @@ const themes = async (app_id, locale) =>{
                                 break;
                             }
                         }
-                        let new_span = `<span class="slide slide_${theme_type}">
+                        const new_span = `<span class="slide slide_${theme_type}">
                                             <div id='theme_${theme_type}_${theme.data}'
                                                 data-theme_id='${theme.data}'> 
                                             </div>
@@ -66,11 +64,11 @@ const themes = async (app_id, locale) =>{
                     resolve ([span_themes_day, span_themes_month, span_themes_year]);
                 }
             });
-        })
-    })
-}
+        });
+    });
+};
 const places = async (app_id, locale) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
             getSettings(app_id, locale, 'PLACE', (err, settings) => {
                 let select_places;
@@ -78,13 +76,13 @@ const places = async (app_id, locale) => {
                     resolve (
                                 `<select id='setting_select_popular_place'>
                                 <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
-                            )
+                            );
                 }
                 else{
                     select_places  =`<select id='setting_select_popular_place'>
-                                    <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`
+                                    <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
                     let i = 0;
-                    for (let place of settings){
+                    for (const place of settings){
                         //data 2 = latitude
                         //data 3 = longitude
                         //data 4 = timezone
@@ -102,11 +100,11 @@ const places = async (app_id, locale) => {
                     resolve (select_places);
                 }
             });
-        })
-    })
-}
+        });
+    });
+};
 const countries = (app_id, locale) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
             getCountries(app_id, locale, (err, results)  => {
                 let select_countries;
@@ -115,7 +113,7 @@ const countries = (app_id, locale) => {
                                 `<select name='country' id='setting_select_country'>
                                 <option value='' id='' label='…' selected='selected'>…</option>
                                 </select>`
-                            )
+                            );
                 }     
                 else{
                     let current_group_name;
@@ -138,16 +136,16 @@ const countries = (app_id, locale) => {
                                 country_code=${countries_map.country_code} 
                                 flag_emoji=${countries_map.flag_emoji} 
                                 group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
-                        </option>`
+                        </option>`;
                         }
-                    })
+                    });
                     select_countries += '</select>';
                     resolve (select_countries);
                 }
             });
         });
-    })
-}
+    });
+};
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
@@ -192,12 +190,12 @@ const createApp = (app_id, username, locale) => {
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`).then(({getLocales}) => {
                             getLocales(app_id, locale, (err, locales) => {
                                 if (err)
-                                    resolve(err)
+                                    resolve(err);
                                 else{
                                     let AppLocales ='';
                                     locales.forEach( (locale,i) => {
                                         AppLocales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
-                                    })
+                                    });
                                     countries(app_id, locale).then((AppCountries) => {
                                         places(app_id, locale).then((AppPlaces) => {
                                             themes(app_id, locale).then((AppSettingsThemes) => {
@@ -205,7 +203,7 @@ const createApp = (app_id, username, locale) => {
                                                             AppCountries: AppCountries,
                                                             AppPlaces: AppPlaces,
                                                             AppSettingsThemes: AppSettingsThemes
-                                                        })
+                                                        });
                                             });
                                         });
                                     });
@@ -215,8 +213,8 @@ const createApp = (app_id, username, locale) => {
                     } catch (error) {
                         reject(error);
                     }
-                })                    
-            }
+                });                    
+            };
             getAppComponents(app_id).then((app_components) => {
                 let USER_TIMEZONE ='';
                 let USER_DIRECTION='';
@@ -409,11 +407,11 @@ const createApp = (app_id, username, locale) => {
                                         `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
                                 resolve(app);
                             } 
-                        }) 
-                    })  
-                })                    
+                        }); 
+                    });  
+                });                    
             });
-        }
+        };
         if (username!=null){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, username, null, (err,result)=>{
@@ -423,12 +421,12 @@ const createApp = (app_id, username, locale) => {
                         //return 0 meaning redirect to /
                         resolve (0);
                     }
-                })
-            })
+                });
+            });
         }
         else
             main(app_id);
 
-    })
-}
-export{createApp}
+    });
+};
+export{createApp};

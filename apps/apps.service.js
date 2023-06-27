@@ -15,10 +15,10 @@ const createMail = async (app_id, data) =>{
     const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
         let files= [];
-        let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
         let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
         let db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+        let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
         let db_SERVICE_MAIL_HOST;
         let db_SERVICE_MAIL_PORT;
         let db_SERVICE_MAIL_SECURE;
@@ -32,8 +32,8 @@ const createMail = async (app_id, data) =>{
 
             files = [
                 ['MAIL', process.cwd() + '/apps/common/src/mail.html'],
-                ['<MailHeader/>', process.cwd() + `/apps/common/src/mail_header_verification.html`],
-                ['<MailBody/>', process.cwd() + `/apps/common/src/mail_body_verification.html`]
+                ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
+                ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
             ];
             read_app_files(app_id, files, (err, email)=>{
                 if (err)
@@ -44,16 +44,17 @@ const createMail = async (app_id, data) =>{
                             reject(err);
                         }
                         else{
-                            let json = JSON.parse(JSON.stringify(result));
+                            const json = JSON.parse(JSON.stringify(result));
                             for (let i = 0; i < json.length; i++){
-                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
-                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = json[i].parameter_value;
                                 if (json[i].parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
                                     db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = json[i].parameter_value;
                                 if (json[i].parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
                                     db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = json[i].parameter_value;
+                                if (json[i].parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = json[i].parameter_value;
+
                                 if (json[i].parameter_name=='SERVICE_MAIL_HOST')
                                     db_SERVICE_MAIL_HOST = json[i].parameter_value;
                                 if (json[i].parameter_name=='SERVICE_MAIL_PORT')
@@ -72,41 +73,41 @@ const createMail = async (app_id, data) =>{
                                     break;
                                 }
                                 case 2:{
-                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
                                     break;
                                 }
                                 case 3:{
-                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
                                     break;
                                 }
                                 case 4:{
-                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
                                     break;
                                 }
                             }
-                            email = email.replace('<Logo/>',                `<img id='app_logo' src='/apps/common/images/logo.png'>`);
+                            email = email.replace('<Logo/>',                '<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>');
                             email = email.replace('<Verification_code/>',   data.verificationCode);
                             email = email.replace('<Footer/>',              `<a target='_blank' href='https://${data.host}'>${data.host}</a>`);
                             resolve ({
-                                "email_host":         db_SERVICE_MAIL_HOST,
-                                "email_port":         db_SERVICE_MAIL_PORT,
-                                "email_secure":       db_SERVICE_MAIL_SECURE,
-                                "email_auth_user":    db_SERVICE_MAIL_USERNAME,
-                                "email_auth_pass":    db_SERVICE_MAIL_PASSWORD,
-                                "from":               email_from,
-                                "to":                 data.to,
-                                "subject":            "❂❂❂❂❂❂",
-                                "html":               email
+                                'email_host':         db_SERVICE_MAIL_HOST,
+                                'email_port':         db_SERVICE_MAIL_PORT,
+                                'email_secure':       db_SERVICE_MAIL_SECURE,
+                                'email_auth_user':    db_SERVICE_MAIL_USERNAME,
+                                'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
+                                'from':               email_from,
+                                'to':                 data.to,
+                                'subject':            '❂❂❂❂❂❂',
+                                'html':               email
                             });
                         }
-                    })
+                    });
                 }
-            })
+            });
         }
         else
             reject ('not implemented');
-    })
-}
+    });
+};
 //APP ROUTER functions
 const getInfo = async (app_id, info, lang_code, callBack) => {
     const get_parameters = async (callBack) => {
@@ -125,7 +126,7 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                         if (err)
                             callBack(err, null);
                         else{
-                            let json = JSON.parse(JSON.stringify(result));
+                            const json = JSON.parse(JSON.stringify(result));
                             for (let i = 0; i < json.length; i++){
                                 if (json[i].parameter_name=='INFO_EMAIL_POLICY')
                                     db_info_email_policy = json[i].parameter_value;
@@ -151,14 +152,14 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                                             info_link_disclaimer_url: db_info_link_disclaimer_url,
                                             info_link_terms_url: db_info_link_terms_url,
                                             info_link_about_url: db_info_link_about_url
-                                            })
+                                            });
                         }
-                    })
+                    });
                 });
-            })
+            });
         });
-    }
-    let info_html1 = `<!DOCTYPE html>
+    };
+    const info_html1 = `<!DOCTYPE html>
                       <html>
                         <head>
                             <meta charset='UTF-8'>
@@ -166,7 +167,7 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                             <link rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
                         </head>	
                         <body >`;
-    let info_html2 = `  </body>
+    const info_html2 = `  </body>
                       </html>`;
     switch (info){
     case 'privacy_policy':{
@@ -181,9 +182,9 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                     infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_policy );
                     infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_policy );
                     callBack(null, info_html1 + infopage + info_html2);
-                })
+                });
             });
-        })
+        });
         break;
     }
     case 'disclaimer':{
@@ -197,9 +198,9 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                     infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_disclaimer );
                     infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_disclaimer );
                     callBack(null, info_html1 + infopage + info_html2);
-                })
-            })
-        })
+                });
+            });
+        });
         break;
     }
     case 'terms':{
@@ -213,9 +214,9 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                     infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_terms );
                     infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_terms );
                     callBack(null, info_html1 + infopage + info_html2);
-                })
-            })
-        })
+                });
+            });
+        });
         break;
     }
     case 'about':{
@@ -223,8 +224,8 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
             import('node:fs').then((fs) =>{
                 fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
                     callBack(null, info_html1 + fileBuffer.toString() + info_html2);
-                })
-            })
+                });
+            });
         });
         break;
     }
@@ -232,14 +233,14 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
         callBack(null, null);
         break;
     }
-}
+};
 const check_app_subdomain = (app_id, host) => {
     //if using test subdomains, dns will point to correct server
     switch (app_id){
         case parseInt(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')):{
             //app1, app1.test, test, www  or localhost
-            if (host.substring(0,host.indexOf('.')) == `admin` ||
-                host.startsWith(`admin.` + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')))
+            if (host.substring(0,host.indexOf('.')) == 'admin' ||
+                host.startsWith('admin.' + ConfigGet(1, 'SERVER', 'TEST_SUBDOMAIN')))
                 return true;
             else
                 return false;
@@ -264,7 +265,7 @@ const check_app_subdomain = (app_id, host) => {
                 return false;
         }
     }
-}
+};
 //APP functions
 const apps_start_ok = ()=>{
     if (ConfigGet(0, null, 'MAINTENANCE')=='0' && ConfigGet(1, 'SERVICE_DB', 'START')=='1' && ConfigGet(1, 'SERVER', 'APP_START')=='1' &&
@@ -272,7 +273,7 @@ const apps_start_ok = ()=>{
         return true;
     else
     return false;
-}
+};
 
 const client_locale = (accept_language) =>{
     let locale;
@@ -293,7 +294,7 @@ const client_locale = (accept_language) =>{
         }
     }
     return locale;
-}
+};
 const read_app_files = async (app_id, files, callBack) => {
     let i = 0;
     //ES2020 import() with ES6 promises, object destructuring
@@ -316,8 +317,8 @@ const read_app_files = async (app_id, files, callBack) => {
         .catch(err => {
             callBack(err, null);
         });
-    })
-}
+    });
+};
 const get_module_with_init = async (app_id,
                                     locale,
                                     system_admin_only,
@@ -329,7 +330,7 @@ const get_module_with_init = async (app_id,
                                     client_place,
                                     module, callBack) => {
     const return_with_parameters = (app_name, first_time)=>{
-        let parameters = {   
+        const parameters = {   
             app_id: app_id,
             app_name: app_name,
             app_datatoken: data_token,
@@ -349,7 +350,7 @@ const get_module_with_init = async (app_id,
                 '<ITEM_COMMON_PARAMETERS/>',
                 JSON.stringify(parameters));
         return module;
-    }
+    };
     if (system_admin_only==1){
         callBack(null, return_with_parameters('SYSTEM ADMIN', CheckFirstTime()==true?1:0));
     }
@@ -361,21 +362,21 @@ const get_module_with_init = async (app_id,
             else{
                 callBack(null, return_with_parameters(result[0].app_name, 0)); 
             }
-        })
+        });
     }        
-}
+};
 
 const AppsStart = async (app) => {
     const {default:express} = await import('express');
 
     app.use('/common',express.static(process.cwd() + '/apps/common/public'));
 
-    for (let app_config of ConfigGet(7, null, 'APPS'))
+    for (const app_config of ConfigGet(7, null, 'APPS'))
         app.use(app_config.ENDPOINT,express.static(process.cwd() + app_config.PATH));
     
     //routes
-    app.get("/sw.js",(req, res, next) => {
-        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+    app.get('/sw.js',(req, res, next) => {
+        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         import('node:fs').then((fs) =>{
             fs.readFile(process.cwd() + `${ConfigGet(7, app_id, 'PATH')}/sw.js`, 'utf8', (error, fileBuffer) => {
                 //show empty if any error for this file
@@ -388,11 +389,11 @@ const AppsStart = async (app) => {
                     res.type('text/javascript');
                     res.send(fileBuffer.toString());
                 }
-            })
-        })
+            });
+        });
     });
-    app.get("/info/:info",(req, res, next) => {
-        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+    app.get('/info/:info',(req, res, next) => {
+        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         if (apps_start_ok()==true)
             if (ConfigGet(7, app_id, 'SHOWINFO')==1)
                 switch (req.params.info){
@@ -412,7 +413,7 @@ const AppsStart = async (app) => {
                             }
                             else
                                 res.send(info_result);
-                        })
+                        });
                         break;
                     }
                     default:{
@@ -426,10 +427,10 @@ const AppsStart = async (app) => {
             getMaintenance(app_id)
             .then((app_result) => {
                 res.send(app_result);
-            })
+            });
     });
-    app.get("/reports",(req, res) => {
-        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+    app.get('/reports',(req, res) => {
+        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         //no app_id in reports url
         req.query.app_id = app_id;
         if (app_id == 0)
@@ -453,11 +454,11 @@ const AppsStart = async (app) => {
                             res.send(report_result);
                     }
                         
-                })                    
-            })
+                });                    
+            });
     });
-    app.get("/",(req, res) => {
-        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+    app.get('/',(req, res) => {
+        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         import(`file://${process.cwd()}/apps/apps.controller.js`).then(({ getApp}) => {
                 getApp(req, res, app_id, null,(err, app_result)=>{
                     //show empty if any error
@@ -468,11 +469,11 @@ const AppsStart = async (app) => {
                     }
                     else
                         return res.send(app_result);
-                })
-            })
+                });
+            });
     });
-    app.get("/:sub",(req, res, next) => {
-        let app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+    app.get('/:sub',(req, res, next) => {
+        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
         if (ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') == app_id)
             return res.redirect('/');
         else
@@ -492,12 +493,12 @@ const AppsStart = async (app) => {
                             else
                                 return res.send(app_result);
                         }
-                    })
-                })
+                    });
+                });
             else
                 next();
     });
-}
+};
     
 const getMaintenance = (app_id) => {
     return new Promise((resolve, reject) => {
@@ -512,7 +513,7 @@ const getMaintenance = (app_id) => {
                 reject(err);
             else{
                 //maintenance can be used from all app_id
-                let parameters = {   
+                const parameters = {   
                     app_id: app_id,
                     rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
                     rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF')
@@ -521,18 +522,18 @@ const getMaintenance = (app_id) => {
                                     JSON.stringify(parameters));
                 resolve(app);
             }
-        })
-    })
-}
+        });
+    });
+};
 
 const getUserPreferences = (app_id, locale) => {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
             //let user_locales =`<option value='en'>English</option>`;
             let user_locales ='';
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`).then(({getLocales}) => {
                 getLocales(app_id, locale, (err, result_user_locales) => {
-                    for (let user_locale of result_user_locales) {
+                    for (const user_locale of result_user_locales) {
                         user_locales +=`<option value='${user_locale.locale}'>${user_locale.text}</option>`;
                     }
                     getSettings(app_id, locale, null, (err, settings) => {
@@ -564,18 +565,17 @@ const getUserPreferences = (app_id, locale) => {
                                  user_timezones: user_timezones,
                                  user_directions: user_directions,
                                  user_arabic_scripts: user_arabic_scripts
-                                })
-                    })  
-                })
-            })        
-        })
-    })
-}
+                                });
+                    });  
+                });
+            });        
+        });
+    });
+};
 //APP BFF functions
 const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data) => {
     const { check_internet } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-    const rest_resource_service = ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVICE');
-    let result_internet = await check_internet();
+    const result_internet = await check_internet();
     if (data)
       data = JSON.stringify(data);
     return new Promise((resolve, reject) => {
@@ -586,25 +586,25 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                     case 'AUTH':{
                         // parameters ex:
                         // /auth /auth/admin
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'BROADCAST':{
                         // parameters ex:
                         // /broadcast...
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'LOG':{
                         // parameters ex:
                         // /log...
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'SERVER':{
                         // parameters ex:
                         // /config...  /info
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`
+                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'DB_API':{
@@ -637,9 +637,9 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1'){
                             if (method=='GET'){
                                 //set ip from client in case ip query parameter is missing
-                                let basepath = parameters.split('?')[0];
+                                const basepath = parameters.split('?')[0];
                                 if (parameters.startsWith('/ip')){    
-                                    let params = parameters.split('?')[1].split('&');
+                                    const params = parameters.split('?')[1].split('&');
                                     //if ip parameter does not exist
                                     if (params.filter(parm=>parm.includes('ip=')).length==0 )
                                         params.push(`ip=${ip}`);
@@ -651,8 +651,8 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                                     parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                                 }
                                 //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                                authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`
-                                path = `/geolocation${parameters}&app_id=${app_id}`
+                                authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
+                                path = `/geolocation${parameters}&app_id=${app_id}`;
                             }
                             else
                                 return reject('service GEOLOCATION GET only');
@@ -666,12 +666,12 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
                         if (method=='GET'){
                             //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                            authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`
-                            path = `/worldcities${parameters}&app_id=${app_id}`
+                            authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
+                            path = `/worldcities${parameters}&app_id=${app_id}`;
                         }
                             
                         else
-                            return reject('service WORLDCITIES GET only')
+                            return reject('service WORLDCITIES GET only');
                         break;
                     }
                     default:{
@@ -687,8 +687,8 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
         }
         else
             return reject('no internet');
-    })
-}
+    });
+};
 export {/*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */
@@ -698,4 +698,4 @@ export {/*APP EMAIL functions*/
         getMaintenance, getUserPreferences,
         AppsStart,
         /*APP BFF functions*/
-        BFF}
+        BFF};

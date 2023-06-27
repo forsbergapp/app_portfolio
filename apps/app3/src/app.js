@@ -1,6 +1,6 @@
 const { read_app_files } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
-const createApp = (app_id, params, locale) => {
+const createApp = (app_id, params) => {
     return new Promise((resolve, reject) => {
         const files = [ 
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
@@ -31,10 +31,10 @@ const createApp = (app_id, params, locale) => {
                         '');
                     resolve(app);
                 }
-            })
+            });
         }
         else
             resolve(0);        
-    })
-}
-export{createApp}
+    });
+};
+export{createApp};
