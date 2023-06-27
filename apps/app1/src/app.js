@@ -48,25 +48,23 @@ const createApp = (app_id, username, locale) => {
                                 '');   
                         resolve(app);
                     }
-                }) 
-            }) 
-        }
+                }); 
+            }); 
+        };
         if (username!=null){
-            import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
-                    getProfileUser(app_id, null, username, null, (err,result)=>{
-                        if (result)
-                            main(app_id);
-                        else{
-                            //return 0 meaning redirect to /
-                            resolve (0);
-                        }
-                    })
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
+                getProfileUser(app_id, null, username, null, (err,result)=>{
+                    if (result)
+                        main(app_id);
+                    else{
+                        //return 0 meaning redirect to /
+                        resolve (0);
+                    }
                 });
-            })
+            });
         }
         else
             main(app_id);          
-    })
-}
-export {createApp}
+    });
+};
+export {createApp};
