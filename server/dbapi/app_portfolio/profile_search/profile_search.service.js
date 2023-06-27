@@ -1,12 +1,10 @@
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const insertProfileSearch = (app_id, data, callBack) => {
-		let sql;
-    	let parameters;
-		sql = `INSERT INTO ${db_schema()}.profile_search(
-							user_account_id, search, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
-				VALUES(:user_account_id,:search,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP)`;
-		parameters = {
+		const sql = `INSERT INTO ${db_schema()}.profile_search(
+								user_account_id, search, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
+					VALUES(:user_account_id,:search,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP)`;
+		const parameters = {
 						user_account_id: data.user_account_id,
 						search: data.search,
 						client_ip: data.client_ip,
@@ -20,5 +18,5 @@ const insertProfileSearch = (app_id, data, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 export{insertProfileSearch};

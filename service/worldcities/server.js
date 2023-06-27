@@ -1,4 +1,4 @@
-const service = await import('./service.js')
+const service = await import('./service.js');
 const fs = await import('node:fs');
 const https = await import('node:https');
 const {MICROSERVICE, IAM} = await import(`file://${process.cwd()}/service/service.service.js`);
@@ -6,9 +6,9 @@ const {MICROSERVICE, IAM} = await import(`file://${process.cwd()}/service/servic
 const startserver = () =>{
 	let options;
 	fs.readFile(process.cwd() + MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].HTTPS_KEY, 'utf8', (error, fileBuffer) => {
-		let env_key = fileBuffer.toString();
+		const env_key = fileBuffer.toString();
 		fs.readFile(process.cwd() + MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].HTTPS_CERT, 'utf8', (error, fileBuffer) => {
-			let env_cert = fileBuffer.toString();
+			const env_cert = fileBuffer.toString();
 			options = {
 				key: env_key,
 				cert: env_cert
@@ -16,10 +16,10 @@ const startserver = () =>{
 			https.createServer(options, (req, res) => {
 				req.query = {};
 				req.params = {};
-            	res.setHeader('Access-Control-Allow-Methods', 'GET');
+				res.setHeader('Access-Control-Allow-Methods', 'GET');
 				res.setHeader('Access-Control-Allow-Origin', '*');
 				res.setHeader('Content-Type',  'application/json; charset=utf-8');
-				let params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
+				const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
 				req.query.app_id = params.get('app_id');
 				req.params.country = req.url.substring('/worldcities/'.length, req.url.indexOf('?'));
 				switch (req.url.substring(0, req.url.indexOf('?')).replace(req.params.country, ':country')){
@@ -30,10 +30,10 @@ const startserver = () =>{
 							else
 							{
 								res.statusCode = 401;
-								res.write('⛔', "utf-8");
+								res.write('⛔', 'utf-8');
 								res.end();
 							}
-						})
+						});
 						break;
 					}
 					default:{
@@ -46,22 +46,22 @@ const startserver = () =>{
 
 			process.on('uncaughtException', (err) =>{
 				console.log(err);
-			})
-		})
-	})
-}
+			});
+		});
+	});
+};
 const getCities = (req, res) => {
 	service.getService(req.params.country,(err, cities) => {
 		if (err){
 			res.statusCode = 500;
-			res.write(err, "utf8");
+			res.write(err, 'utf8');
 		}
 		else{
 			res.statusCode = 200;
-			res.write(JSON.stringify(cities), "utf8");
+			res.write(JSON.stringify(cities), 'utf8');
 		}
 		res.end();
-	})
-}
+	});
+};
 startserver();
 export{startserver, getCities};

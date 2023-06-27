@@ -9,10 +9,10 @@ const DBStart = async () => {
       let user;
       let password;
       let dba = 0;
-      let db_use = parseInt(ConfigGet(1, 'SERVICE_DB', 'USE'));
-      let host = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`);
-      let port = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`);
-      let database = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`);
+      const db_use = parseInt(ConfigGet(1, 'SERVICE_DB', 'USE'));
+      const host = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`);
+      const port = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`);
+      const database = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`);
       const pool_db = async (dba, user, password, pool_id) =>{
          return new Promise ((resolve, reject)=>{
             let dbparameters = `{
@@ -49,9 +49,9 @@ const DBStart = async () => {
             .catch(error=>{
                LogServerE('Starting pool error: ' + error);
                reject(error);
-            })
-         })
-      }
+            });
+         });
+      };
       if (ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
          user = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
          password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
@@ -71,21 +71,20 @@ const DBStart = async () => {
                      throw err;
                   else {
                      //get app id, db username and db password
-                     for (let app  of result_apps){
+                     for (const app  of result_apps){
                         if (app.id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
                            pool_db(dba, app.db_user, app.db_password, app.id);
                      }
                   }
-               })
-            })
-         })
+               });
+            });
+         });
       }  
    }
-}
+};
 const DBInfo = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
-   let parameters;
    const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
    switch (db_use){
       case '1':
@@ -147,7 +146,7 @@ const DBInfo = async (app_id, callBack) => {
          break;
       }
    }
-   parameters = {	
+   const parameters = {	
                   database: db_use,
                   Xdatabase_schema: db_schema()
                   };
@@ -156,7 +155,7 @@ const DBInfo = async (app_id, callBack) => {
          return callBack(err, null);
       else{
          if (db_use == 4){
-            let hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
+            const hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
                            ' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
             result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
             result[0].hostname = hostname;
@@ -164,11 +163,10 @@ const DBInfo = async (app_id, callBack) => {
          return callBack(null, result[0]);
       }
    });
-}
+};
 const DBInfoSpace = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
-   let parameters;
    switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
       case '1':
       case '2':{
@@ -216,18 +214,17 @@ const DBInfoSpace = async (app_id, callBack) => {
          break;
       }
    }
-   parameters = {db_schema: db_schema()};
+   const parameters = {db_schema: db_schema()};
    db_execute(app_id, sql, parameters, DBA, (err, result)=>{
       if (err)
          return callBack(err, null);
       else
          return callBack(null, result);
    });
-}
+};
 const DBInfoSpaceSum = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
-   let parameters;
    switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
       case '1':
       case '2':{
@@ -263,24 +260,23 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
                        DBA_SEGMENTS ds
                  WHERE dt.owner = UPPER(:db_schema)
                    AND ds.segment_name = dt.table_name
-                   AND ds.segment_type = 'TABLE'`
+                   AND ds.segment_type = 'TABLE'`;
          break;
       }
    }
-   parameters = {db_schema: db_schema()};
+   const parameters = {db_schema: db_schema()};
    db_execute(app_id, sql, parameters, DBA, (err, result)=>{
       if (err)
          return callBack(err, null);
       else
          return callBack(null, result[0]);
    });
-}
+};
 const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
    /* create demo users with user settings from /scripts/demo/demo.json
 	   and reading images in /scripts/demo/demo*.webp
 	*/
-	const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
-	const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+	const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
 	const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
 	const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
 	const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
@@ -291,8 +287,8 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 	const {likeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like/user_account_app_setting_like.service.js`);
 	const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.service.js`);
 	const fs = await import('node:fs');
-   let install_result = [];
-   install_result.push({"start": new Date().toISOString()});
+   const install_result = [];
+   install_result.push({'start': new Date().toISOString()});
 	try {
 		/*  Demo script format:
 			{"demo_users":[
@@ -308,17 +304,17 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 			]}
 		*/
 		const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
-		let demo_users = JSON.parse(fileBuffer.toString()).demo_users;
+		const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
 		let email_index = 1000;
 		let records_user_account = 0;
 		let records_user_account_app = 0;
 		let records_user_account_app_setting = 0;
-		let password_encrypted = hashSync(demo_password, genSaltSync(10));
+		const password_encrypted = hashSync(demo_password, genSaltSync(10));
 		const create_users = async (demo_user) =>{
 			return await new Promise((resolve, reject)=>{
 				const create_update_id = (demo_user)=>{
-					let email = `demo${++email_index}@localhost`;
-					let json_data_user = `{
+					const email = `demo${++email_index}@localhost`;
+					const json_data_user = `{
 											"username":"${demo_user.username}",
 											"bio":"${demo_user.bio}",
 											"avatar":"${demo_user.avatar}",
@@ -341,18 +337,18 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 						if (err)
 							reject(err);
 						else{
-							demo_user.id = results_create.insertId
+							demo_user.id = results_create.insertId;
 							records_user_account++;
 							if (records_user_account == demo_users.length)
 								resolve();
 						}
-					})
+					});
+				};
+				for (const demo_user of demo_users){
+					create_update_id(demo_user);
 				}
-				for (let demo_user of demo_users){
-					create_update_id(demo_user)
-				}
-			})
-		}
+			});
+		};
 		const create_user_account_app = async (app_id, user_account_id) =>{
 			return new Promise((resolve, reject) => {
 				createUserAccountApp(app_id, user_account_id,  (err,results) => {
@@ -363,17 +359,17 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							records_user_account_app++;
 						resolve(results);
 					}
-				})
-			})
-		}
+				});
+			});
+		};
 		const create_setting = async (user_setting_app_id, json_data, i) => {
 			return new Promise((resolve, reject) => {
-				  let initial;
-				  if (i==0)
-				  	initial = 1;
-				  else
-				  	initial = 0;
-				  createUserSetting(user_setting_app_id, initial, json_data, (err,results) => {
+            let initial;
+            if (i==0)
+               initial = 1;
+            else
+               initial = 0;
+            createUserSetting(user_setting_app_id, initial, json_data, (err,results) => {
 					if (err)
 						reject(err);
 					else{
@@ -381,27 +377,27 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							records_user_account_app_setting++;
 						resolve(results);
 					}
-				  })
+            });
 			});
-		}
+		};
 		//create all users first and update with id
-		let result_create_user = await create_users();
-		let apps = await getAppsAdminId(app_id);
+		await create_users();
+		const apps = await getAppsAdminId(app_id);
 		//create user settings
-		for (let demo_user of demo_users){
+		for (const demo_user of demo_users){
 			//create user_account_app record for all apps
-			for (let app of apps){
-				let result_createUserAccountApp = await create_user_account_app(app.id, demo_user.id);
+			for (const app of apps){
+				await create_user_account_app(app.id, demo_user.id);
 			}
 			for (let i = 0; i < demo_user.settings.length; i++){
-				let user_setting_app_id = demo_user.settings[i].app_id;
+				const user_setting_app_id = demo_user.settings[i].app_id;
 				let settings_header_image;
 				//use file in settings or if missing then use filename same as demo username
 				if (demo_user.settings[i].image_header_image_img)
 					settings_header_image = `${demo_user.settings[i].image_header_image_img}.webp`;
 				else
 					settings_header_image = `${demo_user.username}.webp`;
-				let image = await fs.promises.readFile(`${process.cwd()}/scripts/demo/${settings_header_image}`)
+				let image = await fs.promises.readFile(`${process.cwd()}/scripts/demo/${settings_header_image}`);
 				image = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
 				//update settings with loaded image into BASE64 format
 				demo_user.settings[i].image_header_image_img = image;
@@ -411,14 +407,14 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				//month 20001-20022
 				demo_user.settings[i].design_theme_month_id = Math.floor(20001 + Math.random() * 22);
 				demo_user.settings[i].design_theme_year_id = 30001;
-				let settings_no_app_id = JSON.parse(JSON.stringify(demo_user.settings[i]));
+				const settings_no_app_id = JSON.parse(JSON.stringify(demo_user.settings[i]));
 				delete settings_no_app_id.app_id;
-				let json_data_user_setting = `{
+				const json_data_user_setting = `{
 					"description": "${demo_user.settings[i].description}",
 					"settings_json": ${JSON.stringify(settings_no_app_id)},
 					"user_account_id": ${demo_user.id}
 					}`;	
-				let result_createUserSetting = await create_setting(user_setting_app_id, JSON.parse(json_data_user_setting), i);
+				await create_setting(user_setting_app_id, JSON.parse(json_data_user_setting), i);
 			}
 		}
 		let records_user_account_like = 0;
@@ -427,7 +423,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		let records_user_account_setting_like = 0;
 		let records_user_account_setting_view = 0;
 		//create social records
-		let social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'SETTINGS_LIKE', 'SETTINGS_VIEW', 'SETTINGS_VIEW_ANONYMOUS'];
+		const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'SETTINGS_LIKE', 'SETTINGS_VIEW', 'SETTINGS_VIEW_ANONYMOUS'];
 		const create_likeuser = async (app_id, id, id_like ) =>{
 			return new Promise((resolve, reject) => {
 				likeUser(app_id, id, id_like, (err,results) => {
@@ -438,9 +434,9 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							records_user_account_like++;
 						resolve(results);
 					}
-				})
-			})
-		}
+				});
+			});
+		};
 		const create_user_account_view = async (app_id, json_data ) =>{
 			return new Promise((resolve, reject) => {
 				insertUserAccountView(app_id, json_data, (err,results) => {
@@ -451,9 +447,9 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							records_user_account_view++;
 						resolve(results);
 					}
-				})
-			})
-		}
+				});
+			});
+		};
 		const create_user_account_follow = async (app_id, id, id_follow ) =>{
 			return new Promise((resolve, reject) => {
 				followUser(app_id, id, id_follow, (err,results) => {
@@ -464,16 +460,16 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							records_user_account_follow++;
 						resolve(results);
 					}
-				})
-			})
-		}
+				});
+			});
+		};
 		const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
 			return new Promise((resolve, reject) => {
 				getUserSettingsByUserId(app_id, user1, (err,results_settings) => {
 					if (err)
 						reject(err);
 					else{
-						let random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 )
+						const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
 						likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (err,results) => {
 							if (err)
 								reject(err);
@@ -482,11 +478,11 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 									records_user_account_setting_like++;
 								resolve(results);
 							}
-						})
+						});
 					}
-				})
-			})
-		}
+				});
+			});
+		};
 		const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
 			return new Promise((resolve, reject) => {
 				getUserSettingsByUserId(app_id, user1, (err,results_settings) => {
@@ -494,7 +490,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 						reject(err);
 					else{
 						//choose random setting from user
-						let random_index = Math.floor(1 + Math.random() * results_settings.length -1)
+						const random_index = Math.floor(1 + Math.random() * results_settings.length -1);
 						let user_account_id;
 						if (social_type == 'SETTINGS_VIEW')
 							user_account_id = user2;
@@ -515,35 +511,34 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 									records_user_account_setting_view++;
 								resolve(results);
 							}
-						})
+						});
 					}
-				})
-			})
-		}
-		for (let social_type of social_types){
+				});
+			});
+		};
+		for (const social_type of social_types){
 			//select new random sample for each social type
-			let random_users1 = [];
-			let random_users2 = [];
+			const random_users1 = [];
+			const random_users2 = [];
 			//loop until two groups both have 50% samples with unique users in each sample
-			let sample_amount = Math.floor(demo_users.length * 0.5);
+			const sample_amount = Math.floor(demo_users.length * 0.5);
 			while (random_users1.length < sample_amount || random_users2.length < sample_amount){
-				let random_array_index1 = Math.floor(1 + Math.random() * demo_users.length - 1 )
-				let random_array_index2 = Math.floor(1 + Math.random() * demo_users.length - 1 )
+				const random_array_index1 = Math.floor(1 + Math.random() * demo_users.length - 1 );
+				const random_array_index2 = Math.floor(1 + Math.random() * demo_users.length - 1 );
 				if (random_users1.length <sample_amount && !random_users1.includes(demo_users[random_array_index1].id) )
-					random_users1.push(demo_users[random_array_index1].id)
+					random_users1.push(demo_users[random_array_index1].id);
 				if (random_users2.length <sample_amount && !random_users2.includes(demo_users[random_array_index2].id))
-					random_users2.push(demo_users[random_array_index2].id)
+					random_users2.push(demo_users[random_array_index2].id);
 			}
-			let result_insert;
-			for (let user1 of random_users1){
-				for(let user2 of random_users2){
+			for (const user1 of random_users1){
+				for(const user2 of random_users2){
 					switch (social_type){
 						case 'LIKE':{
-							result_insert = await create_likeuser(app_id, user1, user2);
+							await create_likeuser(app_id, user1, user2);
 							break;
 						}
 						case 'VIEW':{
-							result_insert = await create_user_account_view(app_id, JSON.parse(
+							await create_user_account_view(app_id, JSON.parse(
 														`{  "user_account_id": ${user1},
 															"user_account_id_view": ${user2},
 															"client_ip": null,
@@ -554,7 +549,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							break;
 						}
 						case 'VIEW_ANONYMOUS':{
-							result_insert = await create_user_account_view(app_id, JSON.parse(
+							await create_user_account_view(app_id, JSON.parse(
 														`{  "user_account_id": null,
 															"user_account_id_view": ${user1},
 															"client_ip": null,
@@ -565,42 +560,42 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							break;
 						}
 						case 'FOLLOWER':{
-							result_insert = await create_user_account_follow(app_id, user1, user2);
+							await create_user_account_follow(app_id, user1, user2);
 							break;
 						}
 						case 'SETTINGS_LIKE':{
 							//pick a random user setting from the user and return the app_id
-							let user_settings = demo_users.filter(user=>user.id == user1)[0].settings;
-							let settings_app_id = user_settings[Math.floor(1 + Math.random() * user_settings.length - 1 )].app_id;
-							result_insert = await create_user_account_app_setting_like(settings_app_id, user1, user2);
+							const user_settings = demo_users.filter(user=>user.id == user1)[0].settings;
+							const settings_app_id = user_settings[Math.floor(1 + Math.random() * user_settings.length - 1 )].app_id;
+							await create_user_account_app_setting_like(settings_app_id, user1, user2);
 							break;
 						}
 						case 'SETTINGS_VIEW':
 						case 'SETTINGS_VIEW_ANONYMOUS':{
 							//pick a random user setting from the user and return the app_id
-							let user_settings = demo_users.filter(user=>user.id == user1)[0].settings;
-							let settings_app_id = user_settings[Math.floor(1 + Math.random() * user_settings.length - 1 )].app_id;
-							result_insert = await create_user_account_app_setting_view(settings_app_id, user1, user2 , social_type) ;
+							const user_settings = demo_users.filter(user=>user.id == user1)[0].settings;
+							const settings_app_id = user_settings[Math.floor(1 + Math.random() * user_settings.length - 1 )].app_id;
+							await create_user_account_app_setting_view(settings_app_id, user1, user2 , social_type) ;
 							break;
 						}
 					}						
 				}
 			}
 		}
-      install_result.push({"user_account": records_user_account});
-      install_result.push({"user_account_app": records_user_account_app});
-      install_result.push({"user_account_app_setting": records_user_account_app_setting});
-      install_result.push({"user_account_like": records_user_account_like});
-      install_result.push({"user_account_view": records_user_account_view});
-      install_result.push({"user_account_follow": records_user_account_follow});
-      install_result.push({"user_account_setting_like": records_user_account_setting_like});
-      install_result.push({"user_account_setting_view": records_user_account_setting_view});
-      install_result.push({"finished": new Date().toISOString()});
-      return callBack(null, {"info": install_result});
+      install_result.push({'user_account': records_user_account});
+      install_result.push({'user_account_app': records_user_account_app});
+      install_result.push({'user_account_app_setting': records_user_account_app_setting});
+      install_result.push({'user_account_like': records_user_account_like});
+      install_result.push({'user_account_view': records_user_account_view});
+      install_result.push({'user_account_follow': records_user_account_follow});
+      install_result.push({'user_account_setting_like': records_user_account_setting_like});
+      install_result.push({'user_account_setting_view': records_user_account_setting_view});
+      install_result.push({'finished': new Date().toISOString()});
+      return callBack(null, {'info': install_result});
 	} catch (error) {
 		return callBack(error, null);
 	}	
-}
+};
 const demo_delete = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers, deleteUser})=>{
 		getDemousers(app_id, (err, result_demo_users) =>{
@@ -612,7 +607,7 @@ const demo_delete = async (app_id, callBack)=> {
 				if (result_demo_users.length>0){
 					const delete_user = async () => {
 						return new Promise((resolve, reject)=>{
-							for (let user of result_demo_users){
+							for (const user of result_demo_users){
 								deleteUser(app_id, user.id,  (err, result_deleteUser) =>{
 									if (err) {
 										resolve(err);
@@ -622,23 +617,23 @@ const demo_delete = async (app_id, callBack)=> {
 										if (deleted_user == result_demo_users.length)
 											resolve();
 									}
-								})
+								});
 							}
-						})
-					}
+						});
+					};
 					delete_user().then(()=>{
                   if (err)
                      return callBack(err, null);
                   else
-                     return callBack(null, {"info": [{"count": deleted_user}]});
+                     return callBack(null, {'info': [{'count': deleted_user}]});
 					});
 				}
 				else
-               return callBack(null, {"info": [{"count": result_demo_users.length}]});
+               return callBack(null, {'info': [{'count': result_demo_users.length}]});
 			}
 		});
-	})
-}
+	});
+};
 const demo_get = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers})=>{
 		getDemousers(app_id, (err, result_demo_users) =>{
@@ -646,9 +641,9 @@ const demo_get = async (app_id, callBack)=> {
             return callBack(err, null);
          else
             return callBack(null, result_demo_users);
-		})
-	})
-}
+		});
+	});
+};
 const install_db_execute_statement = async (app_id, sql, parameters) => {
    const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    return new Promise((resolve, reject) =>{
@@ -658,12 +653,12 @@ const install_db_execute_statement = async (app_id, sql, parameters) => {
          else
             resolve(result);
       });
-   })
-}
+   });
+};
 const install_db_get_files = async (json_type) =>{
    let files;
    let app_installed = 1;
-   let fs = await import('node:fs');
+   const fs = await import('node:fs');
    if (json_type == 'install')
       files = [
       /*
@@ -732,30 +727,29 @@ const install_db_get_files = async (json_type) =>{
    ];
    while (true){
       try {
-         let check_access = await fs.promises.access(`${process.cwd()}/apps/app${app_installed}/scripts/${json_type}_database.json`);   
+         await fs.promises.access(`${process.cwd()}/apps/app${app_installed}/scripts/${json_type}_database.json`);   
          files.push([app_installed + 1, `/apps/app${app_installed}/scripts/${json_type}_database.json`, app_installed]);
          app_installed += 1; 
       } catch (error) {
          return files;
       }
    }
-}
+};
 const install_db = async (app_id, optional=null, callBack)=> {
    
    const {db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    const {CreateRandomString} = await import(`file://${process.cwd()}/server/server.service.js`);
    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-   let {createHash} = await import('node:crypto');
-   const { default: {genSaltSync, hashSync} } = await import("bcryptjs");
-   let fs = await import('node:fs');
+   const {createHash} = await import('node:crypto');
+   const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
+   const fs = await import('node:fs');
    let count_statements = 0;
    let count_statements_optional = 0;
-   let install_result = [];
-   let password_tag = '<APP_PASSWORD/>';
-   let result_statement;
+   const install_result = [];
+   const password_tag = '<APP_PASSWORD/>';
    let change_system_admin_pool=true;
-   let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
-   install_result.push({"start": new Date().toISOString()});
+   const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+   install_result.push({'start': new Date().toISOString()});
    const sql_with_password = (username, sql) =>{
       let password;
       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
@@ -765,7 +759,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
          // max 30 characters for passwords and without double quotes
          // also fix ORA-28219: password verification failed for mandatory profile
          // ! + random A-Z character
-         let random_characters = '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
+         const random_characters = '!' + String.fromCharCode(0|Math.random()*26+97).toUpperCase();
          password = password.substring(0,28) + random_characters;
          //use singlequote for INSERT, else doublequote for CREATE USER
          if (sql.toUpperCase().includes('INSERT INTO'))
@@ -780,17 +774,17 @@ const install_db = async (app_id, optional=null, callBack)=> {
             sql = sql.replace(password_tag, `'${password}'`);
       install_result.push({[`${username}`]: password});         
       return [sql, password];
-   }
+   };
    try {
-      let files = await install_db_get_files('install');
-      for (let file of files){
+      const files = await install_db_get_files('install');
+      for (const file of files){
          let install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
          install_json = JSON.parse(install_json);
          //filter for current database or for all databases and optional rows
          install_json.install = install_json.install.filter((row) => 
-               (row.hasOwnProperty('optional')==false || (row.hasOwnProperty('optional')==1 && row.optional==optional)) && 
+               (Object.prototype.hasOwnProperty.call(row, 'optional')==false || (Object.prototype.hasOwnProperty.call(row, 'optional')==1 && row.optional==optional)) && 
                (row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null));
-         for (let install_row of install_json.install){
+         for (const install_row of install_json.install){
             let install_sql;
             switch (file[0]){
                case 0:{
@@ -816,19 +810,19 @@ const install_db = async (app_id, optional=null, callBack)=> {
                      return false;
                   else
                      return true;
-               }
+               };
                if (check_sql(sql)){
                   if (file[0] == 0 && sql.includes(password_tag)){
                         let sql_and_pw;
                         if (sql.toUpperCase().includes('INSERT INTO'))
-                           sql_and_pw = sql_with_password("admin", sql);
+                           sql_and_pw = sql_with_password('admin', sql);
                         else
-                           sql_and_pw = sql_with_password("app_portfolio", sql);
+                           sql_and_pw = sql_with_password('app_portfolio', sql);
                         sql = sql_and_pw[0];
                   }
                   //if ; must be in wrong place then set tag in import script and convert it
                   if (sql.includes('<SEMICOLON/>'))
-                     sql = sql.replace('<SEMICOLON/>', ';')
+                     sql = sql.replace('<SEMICOLON/>', ';');
                   if (db_use=='3')
                      if (sql.toUpperCase().includes('CREATE DATABASE')){
                            //remove database name in dba pool
@@ -872,8 +866,8 @@ const install_db = async (app_id, optional=null, callBack)=> {
                            change_system_admin_pool = false;
                         }
                      }
-                  result_statement = await install_db_execute_statement(app_id, sql, {});
-                  if (install_row.hasOwnProperty('optional')==true && install_row.optional==optional)
+                  await install_db_execute_statement(app_id, sql, {});
+                  if (Object.prototype.hasOwnProperty.call(install_row, 'optional')==true && install_row.optional==optional)
                      count_statements_optional += 1;
                   else
                      count_statements += 1;
@@ -881,20 +875,20 @@ const install_db = async (app_id, optional=null, callBack)=> {
             }  
          }
          if (install_json.users)
-            for (let users_row of install_json.users.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null)){
+            for (const users_row of install_json.users.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE') || row.db == null)){
                switch (file[0]){
                   case 1:{
                         if (users_row.sql.includes(password_tag)){
-                           let sql_and_pw = sql_with_password("app_admin", users_row.sql);
+                           const sql_and_pw = sql_with_password('app_admin', users_row.sql);
                            users_row.sql = sql_and_pw[0];
                         }   
                      break;
                   }
                   default:{
                      if (users_row.sql.includes(password_tag)){
-                        let sql_and_pw = sql_with_password('app' + file[2], users_row.sql);
+                        const sql_and_pw = sql_with_password('app' + file[2], users_row.sql);
                         users_row.sql = sql_and_pw[0];
-                        result_statement = await install_db_execute_statement(
+                        await install_db_execute_statement(
                            app_id, 
                            `UPDATE ${db_schema()}.app_parameter 
                                  SET parameter_value = :password
@@ -910,44 +904,44 @@ const install_db = async (app_id, optional=null, callBack)=> {
                      break;
                   }
                }
-               result_statement = await install_db_execute_statement(app_id, users_row.sql, {});
+               await install_db_execute_statement(app_id, users_row.sql, {});
                count_statements += 1;
             }
       }
-      install_result.push({"SQL": count_statements});
-      install_result.push({"SQL optional": count_statements_optional});
-      install_result.push({"finished": new Date().toISOString()});
-      return callBack(null, {"info": install_result});
+      install_result.push({'SQL': count_statements});
+      install_result.push({'SQL optional': count_statements_optional});
+      install_result.push({'finished': new Date().toISOString()});
+      return callBack(null, {'info': install_result});
    } 
       catch (error) {
             return callBack(error, null);
    }
-}
+};
 const install_db_check = async (app_id, callBack)=> {
    const {db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    try {
-      let result_statement = await install_db_execute_statement(
+      await install_db_execute_statement(
          app_id, 
          `SELECT 1 FROM ${db_schema()}.app
             WHERE id = :app_id`, 
          {app_id: app_id});
-         return callBack(null, {"installed": 1});
+         return callBack(null, {'installed': 1});
    } catch (error) {
-      return callBack(null, {"installed": 0});
+      return callBack(null, {'installed': 0});
    }
-}
+};
 const install_db_delete = async (app_id, callBack)=> {
    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
    let count_statements = 0;
-   let count_statements_fail = 0;
-   let fs = await import('node:fs');
-   let files = await install_db_get_files('uninstall');
-   let db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+   const count_statements_fail = 0;
+   const fs = await import('node:fs');
+   const files = await install_db_get_files('uninstall');
+   const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
    try {
-      for (let file of  files){
+      for (const file of  files){
          let uninstall_sql = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
          uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet(1, 'SERVICE_DB', 'USE'));
-         for (let sql_row of uninstall_sql){
+         for (const sql_row of uninstall_sql){
             if (db_use=='3')
                if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                   //add database name in dba pool
@@ -968,7 +962,7 @@ const install_db_delete = async (app_id, callBack)=> {
                   json_data = JSON.parse(json_data);
                   await pool_start(json_data);
                }
-               let result_statement = await install_db_execute_statement(app_id, sql_row.sql, {});   
+               await install_db_execute_statement(app_id, sql_row.sql, {});   
             count_statements += 1;
          }      
          /*update parameters in config.json
@@ -978,15 +972,15 @@ const install_db_delete = async (app_id, callBack)=> {
                DB[USE]_APP_ADMIN_PASS = null
          */
       }
-      return callBack(null, {"info":[{"count"     : count_statements},
-                                    {"count_fail": count_statements_fail}
+      return callBack(null, {'info':[{'count'     : count_statements},
+                                    {'count_fail': count_statements_fail}
                                     ]});
    } 
    catch (error) {
          return callBack(error, null);
    }
-}
+};
 export{DBStart, 
        DBInfo, DBInfoSpace, DBInfoSpaceSum,
        demo_add, demo_get, demo_delete, 
-       install_db, install_db_check, install_db_delete}
+       install_db, install_db_check, install_db_delete};

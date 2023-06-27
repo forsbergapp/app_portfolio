@@ -1,11 +1,9 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
-    let sql;
-    let parameters;
     if (typeof setting_type_name=='undefined' ||setting_type_name=='' ||setting_type_name==null)
           setting_type_name = null;
-     sql = `SELECT st.setting_type_name "setting_type_name",
+     const sql = `SELECT st.setting_type_name "setting_type_name",
                    s.id "id",
                    s.data "data",
                    s.data2 "data2",
@@ -32,7 +30,7 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
             WHERE st.setting_type_name LIKE COALESCE(:setting_type_name, st.setting_type_name)
               AND s.setting_type_id = st.id  
           ORDER BY 1, 2`;
-     parameters = {
+     const parameters = {
                     lang_code1: get_locale(lang_code, 1),
                     lang_code2: get_locale(lang_code, 2),
                     lang_code3: get_locale(lang_code, 3),
@@ -44,5 +42,5 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
           else
                return callBack(null, result);
      });
-}
+};
 export{getSettings};

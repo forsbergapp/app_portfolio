@@ -1,11 +1,9 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getApp = (app_id, id,lang_code, callBack) => {
-		let sql;
-		let parameters;
 		if (typeof id=='undefined')
 			id=null;
-		sql = `SELECT	id "id",
+		const sql = `SELECT	id "id",
 						app_name "app_name",
 						url "url",
 						logo "logo",
@@ -43,7 +41,7 @@ const getApp = (app_id, id,lang_code, callBack) => {
 					:id = 0)
 				AND enabled = 1
 				ORDER BY 1`;
-		parameters = {	lang_code1: get_locale(lang_code, 1),
+		const parameters = {	lang_code1: get_locale(lang_code, 1),
 						lang_code2: get_locale(lang_code, 2),
 						lang_code3: get_locale(lang_code, 3),
 						id: id};
@@ -54,11 +52,9 @@ const getApp = (app_id, id,lang_code, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getAppsAdmin = (app_id, lang_code, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	a.id "id",
+		const sql = `SELECT	a.id "id",
 						a.app_name "app_name",
 						a.url "url",
 						a.logo "logo",
@@ -79,46 +75,42 @@ const getAppsAdmin = (app_id, lang_code, callBack) => {
 																	)
 												)
 				ORDER BY 1`;
-		parameters = {lang_code1: get_locale(lang_code, 1),
-					  lang_code2: get_locale(lang_code, 2),
-					  lang_code3: get_locale(lang_code, 3)
-					 };
+		const parameters = {lang_code1: get_locale(lang_code, 1),
+							lang_code2: get_locale(lang_code, 2),
+							lang_code3: get_locale(lang_code, 3)
+							};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getAppsAdminId = async (app_id) => {
 	return new Promise((resolve, reject) => {
-		let sql;
-		let parameters;
-		sql = `SELECT a.id "id"
+		const sql = `SELECT a.id "id"
 					FROM ${db_schema()}.app a
 				ORDER BY 1`;
-		parameters = {};
+		const parameters = {};
 
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
-				reject(err)
+				reject(err);
 			else
-				resolve(result)
+				resolve(result);
 		});
-	})
+	});
 
-}
+};
 
 const updateAppAdmin = (app_id, id, body, callBack) => {
-		let sql;
-		let parameters;
-		sql = `UPDATE ${db_schema()}.app
+		const sql = `UPDATE ${db_schema()}.app
 				  SET app_name = :app_name,
 					  url = :url,
 				 	  logo = :logo,
 					  enabled = :enabled
 				WHERE id = :id`;
-		parameters = {	app_name: body.app_name,
+		const parameters = {	app_name: body.app_name,
 						url: body.url,
 						logo: body.logo,
 						enabled: body.enabled,
@@ -129,5 +121,5 @@ const updateAppAdmin = (app_id, id, body, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
-export{getApp, getAppsAdmin, getAppsAdminId, updateAppAdmin}
+	};
+export{getApp, getAppsAdmin, getAppsAdminId, updateAppAdmin};

@@ -1,9 +1,7 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT ac.id "id",
+		const sql = `SELECT ac.id "id",
 					  ac.category_name "category_name",
 					  act.text "app_category_text"
 				 FROM ${db_schema()}.app_category ac
@@ -21,15 +19,15 @@ const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
 											)
 				WHERE ac.id = COALESCE(:id, ac.id)
 				ORDER BY 1`;
-		parameters = {lang_code1: get_locale(lang_code, 1),
-					  lang_code2: get_locale(lang_code, 2),
-					  lang_code3: get_locale(lang_code, 3),
-					  id: id};
+		const parameters = {lang_code1: get_locale(lang_code, 1),
+							lang_code2: get_locale(lang_code, 2),
+							lang_code3: get_locale(lang_code, 3),
+							id: id};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 export{getAppCategoryAdmin};

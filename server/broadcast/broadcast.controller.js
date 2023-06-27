@@ -3,7 +3,7 @@ const service = await import('./broadcast.service.js');
 const BroadcastConnect = async (req, res) => {
     const {checkDataToken} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     if (checkDataToken(req.query.authorization)){
-        let client_id = Date.now();
+        const client_id = Date.now();
         service.ClientConnect(res);
         service.ClientOnClose(res, client_id);
         const newClient = {
@@ -11,7 +11,7 @@ const BroadcastConnect = async (req, res) => {
             app_id: req.query.app_id,
             user_account_id: req.query.user_account_logon_user_account_id ?? null,
             system_admin: req.query.system_admin=='null'?'':req.query.system_admin,
-            user_agent: req.headers["user-agent"],
+            user_agent: req.headers['user-agent'],
             connection_date: new Date().toISOString(),
             ip: req.ip,
             gps_latitude: req.query.latitude,
@@ -24,7 +24,7 @@ const BroadcastConnect = async (req, res) => {
     }
     else
         return res.status(401).send('⛔');
-}
+};
 const BroadcastSendSystemAdmin = (req, res) => {
     if (req.body.app_id)
         req.body.app_id = parseInt(req.body.app_id);
@@ -37,7 +37,7 @@ const BroadcastSendSystemAdmin = (req, res) => {
             err ?? result
         );
     });
-}
+};
 const BroadcastSendAdmin = (req, res) => {
     if (req.body.app_id)
         req.body.app_id = parseInt(req.body.app_id);
@@ -50,7 +50,7 @@ const BroadcastSendAdmin = (req, res) => {
             err ?? result
         );
     });
-}
+};
 const ConnectedList = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                             req.query.order_by, req.query.sort, 0, (err, result) => {
@@ -67,11 +67,11 @@ const ConnectedList = (req, res) => {
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
-                })
+                });
             }
         }
-    })
-}
+    });
+};
 const ConnectedListSystemAdmin = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
                             req.query.order_by, req.query.sort,  1, (err, result) => {
@@ -91,15 +91,15 @@ const ConnectedListSystemAdmin = (req, res) => {
                 );
             }
         }
-    })
-}
+    });
+};
 const ConnectedCount = (req, res) => {
     service.ConnectedCount(req.query.identity_provider_id, req.query.count_logged_in, (err, count_connected) => {
         return res.status(200).json({
             data: count_connected
         });
-    })
-}
+    });
+};
 const ConnectedUpdate = (req, res) => {
     service.ConnectedUpdate(req.query.client_id, req.query.user_account_logon_user_account_id, req.query.system_admin, req.query.identity_provider_id, 
                             req.query.latitude, req.query.longitude,
@@ -107,15 +107,15 @@ const ConnectedUpdate = (req, res) => {
         return res.status(200).json(
             err ?? result
         );
-    })
-}
+    });
+};
 const ConnectedCheck = (req, res) => {
     req.params.user_account_id = parseInt(req.params.user_account_id);
     service.ConnectedCheck(req.params.user_account_id, (err, result_connected)=>{
         return res.status(200).json({
             online: result_connected
         });
-    })
-}
+    });
+};
 export {BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
-        ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck}
+        ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck};

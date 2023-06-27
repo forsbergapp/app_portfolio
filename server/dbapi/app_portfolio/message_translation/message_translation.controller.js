@@ -1,4 +1,4 @@
-const service = await import("./message_translation.service.js");
+const service = await import('./message_translation.service.js');
 
 const getMessage = (req, res) => {
 	service.getMessage(req.query.app_id, req.query.data_app_id, req.params.code, req.query.lang_code, (err, results) =>{
@@ -11,5 +11,5 @@ const getMessage = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 export{getMessage};

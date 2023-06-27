@@ -1,7 +1,7 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
-	var app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
+	const app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
     //check if user defined exception
     if (app_error_code >= 20000){
         return app_error_code;
@@ -18,7 +18,7 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 		//'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
 		const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
 		if ((db_use =='1' && code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
-		    (db_use =='2' && errorNum ==1) ||  		  //Oracle
+			(db_use =='2' && errorNum ==1) ||  		  //Oracle
 			(db_use =='3' && code=='23505')){ 		  //PostgreSQL
 			let text_check;
 			if (sqlMessage)
@@ -27,11 +27,11 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 				text_check = JSON.stringify(message);		//Oracle/PostgreSQL
 			let app_message_code = '';
 			//check constraints errors, must be same name in mySQL and Oracle
-			if (text_check.toUpperCase().includes("USER_ACCOUNT_EMAIL_UN"))
+			if (text_check.toUpperCase().includes('USER_ACCOUNT_EMAIL_UN'))
 				app_message_code = 20200;
-			if (text_check.toUpperCase().includes("USER_ACCOUNT_PROVIDER_ID_UN"))
+			if (text_check.toUpperCase().includes('USER_ACCOUNT_PROVIDER_ID_UN'))
 				app_message_code = 20201;
-			if (text_check.toUpperCase().includes("USER_ACCOUNT_USERNAME_UN"))
+			if (text_check.toUpperCase().includes('USER_ACCOUNT_USERNAME_UN'))
 				app_message_code = 20203;
 			if (app_message_code != '')
 				return app_message_code;
@@ -53,9 +53,9 @@ const record_not_found = (res, app_id, lang_code) => {
 								err ?? results_message.text
 							);
 						});
-		})
-	})
-}
+		});
+	});
+};
 const get_locale = (lang_code, part) => {
 	if (lang_code==null)
 		return null;
@@ -82,7 +82,7 @@ const get_locale = (lang_code, part) => {
 				break;
 			}
 		}
-}
+};
 const db_schema = () => ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_NAME`);
 
 const db_limit_rows = (sql, limit_type = null) => {
@@ -99,7 +99,7 @@ const db_limit_rows = (sql, limit_type = null) => {
 			}
 			case null:{
 				//use app function limit
-				return sql + ` LIMIT :limit OFFSET :offset`;	
+				return sql + ' LIMIT :limit OFFSET :offset';	
 			}
 		}
 	else 
@@ -115,12 +115,12 @@ const db_limit_rows = (sql, limit_type = null) => {
 				}
 				case null:{
 					//use app function limit
-					return sql + ` OFFSET :offset FETCH NEXT :limit ROWS ONLY`;
+					return sql + ' OFFSET :offset FETCH NEXT :limit ROWS ONLY';
 				}
 			}
 		else
 			return sql;
-}
+};
 
 const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 	import(`file://${process.cwd()}/server/db/db.service.js`).then(({db_query}) => {
@@ -129,7 +129,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBI}) => {
 				LogDBI(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, result)
 				.then((result_info_log)=>{
-					return callBack(null, result)})
+					return callBack(null, result);});
 				});
 			})
 		.catch(error=>{
@@ -137,7 +137,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBE}) => {
 				LogDBE(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, error)
 				.then((result_error_log)=>{
-					let app_code = get_app_code(error.errorNum, 
+					const app_code = get_app_code(error.errorNum, 
 						error.message, 
 						error.code, 
 						error.errno, 
@@ -151,10 +151,12 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 						else
 							return callBack(database_error, null);
 					}
-				})	
-			})
-		})
-	})
-}
-export{get_app_code, record_not_found, get_locale,
-	   db_schema,  db_limit_rows, db_execute}
+				});	
+			});
+		});
+	});
+};
+export{
+		get_app_code, record_not_found, get_locale,
+		db_schema,  db_limit_rows, db_execute
+};
