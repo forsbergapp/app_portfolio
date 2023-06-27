@@ -4,11 +4,12 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 
 const ServiceConfig = async (parameter) =>{
     const fs = await import('node:fs');
-    let config = await fs.promises.readFile(`${process.cwd()}/config/config.json`, 'utf8');
-    let rows =  JSON.parse(config).SERVER;
-    let value = rows.filter(row=>row.hasOwnProperty(parameter))[0][parameter];
+    const config = await fs.promises.readFile(`${process.cwd()}/config/config.json`, 'utf8');
+    const rows =  JSON.parse(config).SERVER;
+                                    
+    const value = rows.filter(row=>Object.prototype.hasOwnProperty.call(row, parameter))[0][parameter];
     return value;
-}
+};
 
 const MICROSERVICE = [
                         {'SERVICE':'GEOLOCATION', 'PORT':3001, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')},
@@ -18,25 +19,24 @@ const MICROSERVICE = [
 
 const IAM = async (app_id, authorization) =>{
     const fs = await import('node:fs');
-    let apps = await fs.promises.readFile(`${process.cwd()}/config/apps.json`, 'utf8');
-    let rows =  await  JSON.parse(apps).APPS;
-    let CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
-    let CLIENT_SECRET = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_SECRET;
+    const apps = await fs.promises.readFile(`${process.cwd()}/config/apps.json`, 'utf8');
+    const rows =  await  JSON.parse(apps).APPS;
+    const CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
+    const CLIENT_SECRET = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_SECRET;
 
-    let userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+    const userpass = new Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
     if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
         return 1;
     else
         return 0;
-}
+};
                     
 const service_request = async (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
         let headers;
         let options;
-        let request;
         let request_protocol;
-        let hostname = 'localhost';
+        const hostname = 'localhost';
         let port;
         switch (service){
             case 'GEOLOCATION':{
@@ -48,17 +48,17 @@ const service_request = async (service, path, method, timeout, client_ip, author
             case 'WORLDCITIES':{
                 //always call microservices with https
                 request_protocol = https;
-                port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT;;
+                port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT;
                 break;
             }
             default:{
                 if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
                     request_protocol = https;
-                    port = ConfigGet(1, 'SERVER', 'HTTPS_PORT')
+                    port = ConfigGet(1, 'SERVER', 'HTTPS_PORT');
                 }
                 else{
                     request_protocol = http;
-                    port = ConfigGet(1, 'SERVER', 'PORT')
+                    port = ConfigGet(1, 'SERVER', 'PORT');
                 }   
                 break;
             }
@@ -71,7 +71,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
                 'Content-Type': 'application/json',
                 'Content-Length': Buffer.byteLength(body),
                 'Authorization': authorization
-            }
+            };
             //host: 'localhost',
             options = {
                 method: method,
@@ -109,7 +109,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
                 rejectUnauthorized: false
             };
         }
-        request = request_protocol.request(options, res =>{
+        const request = request_protocol.request(options, res =>{
             let responseBody = '';
             //for REPORT statucode 301 is returned, resolve the redirected path
             if (res.statusCode==301)
@@ -118,7 +118,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
                 res.setEncoding('UTF8');
                 res.on('data', (chunk) =>{
                     responseBody += chunk;
-                })
+                });
                 res.on('end', ()=>{
                     if (res.statusCode == 200)
                         resolve (responseBody);
@@ -127,15 +127,15 @@ const service_request = async (service, path, method, timeout, client_ip, author
                 });
             }
             
-        })
+        });
         if (method !='GET')
             request.write(body);
         request.on('timeout', () => {
             reject('timeout');
         });
         request.end();
-    })
-}
+    });
+};
 class CircuitBreaker {
     constructor() {
         this.states = {};
@@ -151,7 +151,7 @@ class CircuitBreaker {
             if (app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
                 timeout = 60 * 1000 * ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
             else
-                timeout = this.requestTimetout * 1000
+                timeout = this.requestTimetout * 1000;
             const response = await service_request (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
@@ -188,7 +188,7 @@ class CircuitBreaker {
             cooldownPeriod: this.cooldownPeriod,
             circuit: 'CLOSED',
             nexttry: 0,
-        }
+        };
     }
 }
 
@@ -204,7 +204,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 switch (file){
                     case 0:{
                         filename = '/service/logs/message_queue_error.json';
-                        json_message = JSON.stringify({"message_id": new Date().toISOString(), "message":   message, "result":result});
+                        json_message = JSON.stringify({'message_id': new Date().toISOString(), 'message':   message, 'result':result});
                         break;
                     }
                     case 1:{
@@ -220,26 +220,26 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 }
                 fs.appendFile(process.cwd() + filename, json_message + '\r\n', 'utf8', (err) => {
                     if (err) {
-                        reject(err)
+                        reject(err);
                     }
                     else
                         resolve();
-                })
-            })
-        }
+                });
+            });
+        };
         try {
             switch (message_type) {
                 case 'PUBLISH': {
                     //message PUBLISH message in message_queue_publish.json
-                    let message_id = new Date().toISOString();
-                    let message_queue = {"message_id": message_id, service: service, message:   message};
+                    const message_id = new Date().toISOString();
+                    const message_queue = {'message_id': message_id, service: service, message:   message};
                     write_file(1, message_queue, null)
                     .then(()=>{
                         resolve (MessageQueue(service, 'CONSUME', null, message_id));
                     })
                     .catch(error=>{
                         reject(error);
-                    })
+                    });
                     break;
                 }
                 case 'CONSUME': {
@@ -248,8 +248,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     fs.promises.readFile(`${process.cwd()}/service/logs/message_queue_publish.json`, 'utf8')
                     .then((message_queue)=>{
                         let message_consume = null;
-                        for (let row of message_queue.split('\r\n')){
-                            let row_obj = JSON.parse(row);
+                        for (const row of message_queue.split('\r\n')){
+                            const row_obj = JSON.parse(row);
                             if (row_obj.message_id == message_id){
                                 message_consume = row_obj;
                                 break;
@@ -275,8 +275,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                             })
                                             .catch(error=>{
                                                 reject(error);
-                                            })
-                                        })
+                                            });
+                                        });
                                     })
                                     .catch((error)=>{
                                         write_file(0, message_consume, error)
@@ -285,10 +285,10 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                         })
                                         .catch(error=>{
                                             reject(error);
-                                        })
-                                    })
+                                        });
+                                    });
                                 });
-                                break
+                                break;
                             }
                             case 'PDF':{
                                 message_consume.start = new Date().toISOString();
@@ -308,8 +308,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                             })
                                             .catch(error=>{
                                                 reject(error);
-                                            })
-                                        })
+                                            });
+                                        });
                                         
                                     })
                                     .catch(error=>{
@@ -319,9 +319,9 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                         })
                                         .catch(error=>{
                                             reject(error);
-                                        })
+                                        });
                                     });
-                                })
+                                });
                                 break;
                             }
                         }
@@ -329,22 +329,22 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                     .catch((error)=>{
                         write_file(0, message, error).then(()=>{
                             reject(message);
-                        })
-                    })
+                        });
+                    });
                     break;
                 }
                 default: {
                     //unknown message, add record:
                     write_file(0, message, '?').then(()=>{
                         reject(message);
-                    })
+                    });
                 }
             }
         } catch (error) {
             write_file(0, message, error).then(()=>{
                 reject(message);
-            })
+            });
         }
-    })
-}
-export {IAM, MICROSERVICE, CircuitBreaker, MessageQueue}
+    });
+};
+export {IAM, MICROSERVICE, CircuitBreaker, MessageQueue};

@@ -1,13 +1,12 @@
-const service = await import("./app_log.service.js");
-const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const service = await import('./app_log.service.js');
 
 const getLogsAdmin = (req, res) => {
-	let year = parseInt(req.query.year);
-	let month = parseInt(req.query.month);
-	let sort = parseInt(req.query.sort);
-	let order_by = req.query.order_by;
-	let offset = parseInt(req.query.offset);
-	let limit = parseInt(req.query.limit);
+	const year = parseInt(req.query.year);
+	const month = parseInt(req.query.month);
+	const sort = parseInt(req.query.sort);
+	const order_by = req.query.order_by;
+	const offset = parseInt(req.query.offset);
+	const limit = parseInt(req.query.limit);
 	
 	service.getLogsAdmin(req.query.app_id, req.query.select_app_id, year, month, sort, order_by, offset, limit, (err, results) =>{
 		if (err) {
@@ -23,11 +22,11 @@ const getLogsAdmin = (req, res) => {
 			else{
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
-				})
+				});
 			}
 		}
 	});
-}
+};
 const getStatUniqueVisitorAdmin = (req, res) => {
 	if (req.query.select_app_id=='')
 		req.query.select_app_id = null;
@@ -49,9 +48,9 @@ const getStatUniqueVisitorAdmin = (req, res) => {
 			else{
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
 					return record_not_found(res, req.query.app_id, req.query.lang_code);
-				})
+				});
 			}
 		}
-	})
-}
-export{getLogsAdmin, getStatUniqueVisitorAdmin}
+	});
+};
+export{getLogsAdmin, getStatUniqueVisitorAdmin};

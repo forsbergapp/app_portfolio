@@ -1,4 +1,4 @@
-const service = await import("./locale.service.js");
+const service = await import('./locale.service.js');
 
 const getLocales = (req, res) => {
 	let lang_code;
@@ -16,5 +16,5 @@ const getLocales = (req, res) => {
 			locales: results
 		});
 	});
-}
+};
 export{getLocales};

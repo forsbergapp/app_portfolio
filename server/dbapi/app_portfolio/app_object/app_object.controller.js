@@ -1,4 +1,4 @@
-const service = await import("./app_object.service.js");
+const service = await import('./app_object.service.js');
 
 const getObjects = (req, res) => {
 	if (typeof req.query.object =='undefined')
@@ -15,5 +15,5 @@ const getObjects = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 export{getObjects};

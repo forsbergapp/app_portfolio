@@ -1,9 +1,7 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getCountries = (app_id, lang_code, callBack) => {
-     let sql;
-     let parameters;
-     sql = `SELECT c.id "id",
+     const sql = `SELECT c.id "id",
                    c.country_code "country_code",
                    c.flag_emoji "flag_emoji",
                    ct.text "text",
@@ -24,7 +22,7 @@ const getCountries = (app_id, lang_code, callBack) => {
                                                             )
                                         )
                ORDER BY 5, 4`;
-     parameters = {
+     const parameters = {
                     lang_code1: get_locale(lang_code, 1),
                     lang_code2: get_locale(lang_code, 2),
                     lang_code3: get_locale(lang_code, 3)
@@ -35,5 +33,5 @@ const getCountries = (app_id, lang_code, callBack) => {
           else
                return callBack(null, result);
      });
-}
+};
 export{getCountries};
