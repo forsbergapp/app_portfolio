@@ -42,6 +42,6 @@ const sendEmail = async (data) => {
                 resolve(result);
             }
         });
-    })
-}
+    });
+};
 export{sendEmail};

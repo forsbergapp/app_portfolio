@@ -5,13 +5,13 @@ const ConfigGet = async (parameter)=>{
     const fs = await import('node:fs');
     let CONFIG = await fs.promises.readFile(`${process.cwd()}/service/pdf/config/config.json`, 'utf8');
     CONFIG = JSON.parse(CONFIG)['PDF'];
-    for (let row of CONFIG){
-        for (let key in row)
+    for (const row of CONFIG){
+        for (const key in row)
             if (key == parameter)
                 return row[key];
     }
     return null;
-}
+};
 const initPDFService = async () => {
     if (!BROWSER)
         BROWSER = await puppeteer.launch({  pipe:true,
@@ -63,34 +63,34 @@ const initPDFService = async () => {
         }).catch(error=>{
             console.log(error);
             throw error;
-        })
-}
+        });
+};
 
 const getPDF = async (message) => {
     await initPDFService()
     .catch(error=>{
-        reject(error)
-    })
-    let user_agent = await ConfigGet('USER_AGENT');
-    let accept_language = await ConfigGet('ACCEPT_LANGUAGE');
-    let pdf_timeout = await ConfigGet('PDF_TIMEOUT');
-    let a4_width_viewport = await ConfigGet('A4_WIDTH_VIEWPORT');
-    let a4_height_viewport = await ConfigGet('A4_HEIGHT_VIEWPORT');
-    let letter_width_viewport = ConfigGet('LETTER_WIDTH_VIEWPORT');;
-    let letter_height_viewport = ConfigGet('LETTER_HEIGHT_VIEWPORT');
-    let device_scalefactor = await ConfigGet('DEVICE_SCALEFACTOR');
-    let margin_top = await ConfigGet('MARGIN_TOP');
-    let margin_bottom = await ConfigGet('MARGIN_BOTTOM');
-    let margin_left = await ConfigGet('MARGIN_LEFT');
-    let margin_right = await ConfigGet('MARGIN_RIGHT');
-    let pdf_empty_sizecheck = await ConfigGet('PDF_EMPTY_SIZE_CHECK');
-    let pdf_wait_attempts = await ConfigGet('PDF_WAIT_ATTEMPTS');
-    let pdf_wait_interval = await ConfigGet('PDF_WAIT_INTERVAL');
+        throw error;
+    });
+    const user_agent = await ConfigGet('USER_AGENT');
+    const accept_language = await ConfigGet('ACCEPT_LANGUAGE');
+    const pdf_timeout = await ConfigGet('PDF_TIMEOUT');
+    const a4_width_viewport = await ConfigGet('A4_WIDTH_VIEWPORT');
+    const a4_height_viewport = await ConfigGet('A4_HEIGHT_VIEWPORT');
+    const letter_width_viewport = ConfigGet('LETTER_WIDTH_VIEWPORT');
+    const letter_height_viewport = ConfigGet('LETTER_HEIGHT_VIEWPORT');
+    const device_scalefactor = await ConfigGet('DEVICE_SCALEFACTOR');
+    const margin_top = await ConfigGet('MARGIN_TOP');
+    const margin_bottom = await ConfigGet('MARGIN_BOTTOM');
+    const margin_left = await ConfigGet('MARGIN_LEFT');
+    const margin_right = await ConfigGet('MARGIN_RIGHT');
+    const pdf_empty_sizecheck = await ConfigGet('PDF_EMPTY_SIZE_CHECK');
+    const pdf_wait_attempts = await ConfigGet('PDF_WAIT_ATTEMPTS');
+    const pdf_wait_interval = await ConfigGet('PDF_WAIT_INTERVAL');
     return await new Promise((resolve, reject) => {
         BROWSER.newPage().then((webPage) => {
             webPage.setRequestInterception(true).then(()=>{
                 webPage.on('request', interceptedRequest => {
-                    let data = {
+                    const data = {
                         'headers': {
                             ...interceptedRequest.headers(),
                             'User-Agent': user_agent,
@@ -147,15 +147,15 @@ const getPDF = async (message) => {
                                                         });
                                                     });    
                         }, pdf_wait_interval);
-                    }
+                    };
                     waitpdf();
-                    })
+                    });
                 })
                 .catch(error=>{
-                    reject(error)
-                })
-            })
-        })
-    })
-}
+                    reject(error);
+                });
+            });
+        });
+    });
+};
 export{getPDF};

@@ -1,4 +1,4 @@
-const service = await import("./parameter_type.service.js");
+const service = await import('./parameter_type.service.js');
 
 const getParameterTypeAdmin = (req, res) => {
 	if (typeof req.query.id == 'undefined')
@@ -14,5 +14,5 @@ const getParameterTypeAdmin = (req, res) => {
 				data: results
 			});
 	});
-}
+};
 export{getParameterTypeAdmin};

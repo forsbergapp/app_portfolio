@@ -1,5 +1,5 @@
-const service = await import("./user_account.service.js");
-const { default: {genSaltSync, hashSync, compareSync} } = await import("bcryptjs");
+const service = await import('./user_account.service.js');
+const { default: {genSaltSync, hashSync, compareSync} } = await import('bcryptjs');
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`);
 const { createUserAccountApp } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
@@ -16,11 +16,11 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
     
     createMail(app_id, 
         {
-            "emailtype":        emailtype,
-            "host":             host,
-            "app_user_id":      userid,
-            "verificationCode": verification_code,
-            "to":               email,
+            'emailtype':        emailtype,
+            'host':             host,
+            'app_user_id':      userid,
+            'verificationCode': verification_code,
+            'to':               email,
         }).then((email)=>{
             MessageQueue('MAIL', 'PUBLISH', email, null)
             .then(()=>{
@@ -28,12 +28,12 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
             })
             .catch((error)=>{
                 callBack(error, null);
-            })
+            });
         })
         .catch((error)=>{
             callBack(error, null);
-        })
-}
+        });
+};
 const getUsersAdmin = (req, res) => {
     service.getUsersAdmin(req.query.app_id, req.query.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
         if (err) {
@@ -47,7 +47,7 @@ const getUsersAdmin = (req, res) => {
             });
         }
     });
-}
+};
 const getStatCountAdmin = (req, res) => {
     service.getStatCountAdmin(req.query.app_id, (err, results) => {
         if (err) {
@@ -61,10 +61,10 @@ const getStatCountAdmin = (req, res) => {
             });
         }
     });
-}
+};
 const checked_error = (app_id, lang_code, err, res) =>{
     import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({ get_app_code }) => {
-        let app_code = get_app_code(err.errorNum, 
+        const app_code = get_app_code(err.errorNum, 
             err.message, 
             err.code, 
             err.errno, 
@@ -83,8 +83,8 @@ const checked_error = (app_id, lang_code, err, res) =>{
             return res.status(500).send(
                 err
             );
-    })
-}
+    });
+};
 const updateUserSuperAdmin = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
@@ -104,15 +104,15 @@ const updateUserSuperAdmin = (req, res) => {
                             return res.status(200).json({
                                 data: results
                             });
-                    })
-                })
+                    });
+                });
             else
                 return res.status(200).json({
                     data: results
                 });
         }
     });
-}
+};
 const userSignup = (req, res) => {
     const salt = genSaltSync(10);
     if (typeof req.body.provider_id == 'undefined') {
@@ -141,7 +141,7 @@ const userSignup = (req, res) => {
                     //send email for local users only
                     getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                         //send email SIGNUP
-                        sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], results.insertId, req.body.verification_code, req.body.email, 
+                        sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.insertId, req.body.verification_code, req.body.email, 
                                       req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                             if (err) {
                                 //return res from userSignup
@@ -156,7 +156,7 @@ const userSignup = (req, res) => {
                                     data: results
                                 });
                         });  
-                    })
+                    });
                 }
                 else
                     return res.status(200).json({
@@ -167,7 +167,7 @@ const userSignup = (req, res) => {
             }
         });
     }
-}
+};
 const activateUser = (req, res) => {
     req.params.id = parseInt(req.params.id);
     const verification_code_to_check = req.body.verification_code;
@@ -194,12 +194,12 @@ const activateUser = (req, res) => {
                         user_number_system: req.body.user_number_system,
                         user_platform: req.body.user_platform,
                         server_remote_addr : req.ip,
-                        server_user_agent : req.headers["user-agent"],
-                        server_http_host : req.headers["host"],
-                        server_http_accept_language : req.headers["accept-language"],
+                        server_user_agent : req.headers['user-agent'],
+                        server_http_host : req.headers['host'],
+                        server_http_accept_language : req.headers['accept-language'],
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
-                    }
+                    };
                     insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                         if (err)
                             return res.status(500).send(
@@ -210,7 +210,7 @@ const activateUser = (req, res) => {
                                 count: results.changedRows,
                                 items: Array(results)
                             });
-                    })
+                    });
                 }
                 else
                     return res.status(200).json({
@@ -230,9 +230,9 @@ const activateUser = (req, res) => {
                 });
             }
     });
-}
+};
 const passwordResetUser = (req, res) => {
-    let email = req.body.email ?? '';
+    const email = req.body.email ?? '';
     if (email !='')
         service.getEmailUser(req.query.app_id, email, (err, results) => {
             if (err) {
@@ -265,28 +265,28 @@ const passwordResetUser = (req, res) => {
                                     user_number_system: req.body.user_number_system,
                                     user_platform: req.body.user_platform,
                                     server_remote_addr : req.ip,
-                                    server_user_agent : req.headers["user-agent"],
-                                    server_http_host : req.headers["host"],
-                                    server_http_accept_language : req.headers["accept-language"],
+                                    server_user_agent : req.headers['user-agent'],
+                                    server_http_host : req.headers['host'],
+                                    server_http_accept_language : req.headers['accept-language'],
                                     client_latitude : req.body.client_latitude,
                                     client_longitude : req.body.client_longitude
-                                }
+                                };
                                 insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                                     if (err)
                                         return res.status(200).json({
                                             sent: 0
                                         });
                                     else{
-                                        let new_code = service.verification_code();
+                                        const new_code = service.verification_code();
                                         service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
                                             if (err)
-                                                return res.status(500),send(
+                                                return res.status(500).send(
                                                     err
                                                 );
                                             else{
                                                 getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                     //send email PASSWORD_RESET
-                                                    sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], results.id, new_code, email, 
+                                                    sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, email, 
                                                                   req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                                                         if (err) {
                                                             return res.status(500).send(
@@ -298,26 +298,26 @@ const passwordResetUser = (req, res) => {
                                                                 sent: 1,
                                                                 id: results.id
                                                             });  
-                                                    })
-                                                })
+                                                    });
+                                                });
                                             }
-                                        })
+                                        });
                                     }
-                                })
+                                });
                             }    
-                    })
+                    });
                 }
                 else
                     return res.status(200).json({
                         sent: 0
                     });
-        })
+        });
     else
         return res.status(200).json({
             sent: 0
         });
     
-}
+};
 const getUserByUserId = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
@@ -336,10 +336,10 @@ const getUserByUserId = (req, res) => {
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
-                })
+                });
             }
     });
-}
+};
 const getProfileUser = (req, res) => {
     if (typeof req.params.id == 'undefined' || req.params.id=='' || req.params.id==null){
         //searching for username
@@ -366,9 +366,7 @@ const getProfileUser = (req, res) => {
             req.body.user_account_id_view = parseInt(req.params.id);
         }
     req.body.client_ip = req.ip;
-    req.body.client_user_agent = req.headers["user-agent"];
-    req.body.client_longitude = req.body.client_longitude;
-    req.body.client_latitude = req.body.client_latitude;
+    req.body.client_user_agent = req.headers['user-agent'];
 
     service.getProfileUser(req.query.app_id, req.params.id, req.query.search, req.query.id, (err, results) => {
         if (err) {
@@ -402,17 +400,17 @@ const getProfileUser = (req, res) => {
                                 );
                             }
                         });
-                    })
+                    });
                 }
             }
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
-                })
+                });
             }
         }            
     });
-}
+};
 const searchProfileUser = (req, res) => {
     const username = req.query.search;
     service.searchProfileUser(req.query.app_id, username, (err, results) => {
@@ -424,9 +422,7 @@ const searchProfileUser = (req, res) => {
         else{
             req.body.search = username;
             req.body.client_ip = req.ip;
-            req.body.client_user_agent = req.headers["user-agent"];
-            req.body.client_longitude = req.body.client_longitude;
-            req.body.client_latitude = req.body.client_latitude;
+            req.body.client_user_agent = req.headers['user-agent'];
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
                 insertProfileSearch(req.query.app_id, req.body, (err, results_insert) => {
                     if (err) {
@@ -443,14 +439,14 @@ const searchProfileUser = (req, res) => {
                         else {
                             import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                                 return record_not_found(res, req.query.app_id, req.query.lang_code);
-                            })
+                            });
                         }
                     }
                 });
-            })
+            });
         }
     });
-}
+};
 const getProfileDetail = (req, res) => {
     req.params.id = parseInt(req.params.id);
     let detailchoice;
@@ -470,11 +466,13 @@ const getProfileDetail = (req, res) => {
                     items: results
                 });
             else {
-                return record_not_found(res, req.query.app_id, req.query.lang_code);
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                });
             }
         }
     });
-}
+};
 const getProfileTop = (req, res) => {
     if (typeof req.params.statchoice !== 'undefined')
         req.params.statchoice = parseInt(req.params.statchoice);
@@ -491,11 +489,13 @@ const getProfileTop = (req, res) => {
                     items: results
                 });
             else {
-                return record_not_found(res, req.query.app_id, req.query.lang_code);
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                });
             }                    
         }
     });
-}
+};
 const updateUserLocal = (req, res) => {
     req.params.id = parseInt(req.params.id);
     const salt = genSaltSync(10);
@@ -537,7 +537,7 @@ const updateUserLocal = (req, res) => {
                                         if (send_email){
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                 //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                                sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], req.params.id, req.body.verification_code, req.body.new_email, 
+                                                sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], req.params.id, req.body.verification_code, req.body.new_email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                                                     if (err) {
                                                         return res.status(500).send(
@@ -548,8 +548,8 @@ const updateUserLocal = (req, res) => {
                                                         return res.status(200).json({
                                                             sent_change_email: 1
                                                         });
-                                                })
-                                            })
+                                                });
+                                            });
                                         }
                                         else    
                                             return res.status(200).json({
@@ -559,11 +559,11 @@ const updateUserLocal = (req, res) => {
                                     else{
                                         import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                                             return record_not_found(res, req.query.app_id, req.query.lang_code);
-                                        })
+                                        });
                                     }
                                 }
                             });
-                        }
+                        };
                         if (typeof req.body.new_email != 'undefined' && 
                             req.body.new_email!='' &&
                             req.body.new_email!= null)
@@ -586,12 +586,12 @@ const updateUserLocal = (req, res) => {
                                             user_number_system: req.body.user_number_system,
                                             user_platform: req.body.user_platform,
                                             server_remote_addr : req.ip,
-                                            server_user_agent : req.headers["user-agent"],
-                                            server_http_host : req.headers["host"],
-                                            server_http_accept_language : req.headers["accept-language"],
+                                            server_user_agent : req.headers['user-agent'],
+                                            server_http_host : req.headers['host'],
+                                            server_http_accept_language : req.headers['accept-language'],
                                             client_latitude : req.body.client_latitude,
                                             client_longitude : req.body.client_longitude
-                                        }
+                                        };
                                         insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
                                             if (err)
                                                 return res.status(500).json({
@@ -601,11 +601,11 @@ const updateUserLocal = (req, res) => {
                                                 req.body.verification_code = service.verification_code();
                                                 updateLocal(true);
                                             }
-                                        })
+                                        });
                                     }
                                     else
                                         updateLocal();
-                            })
+                            });
                         else
                             updateLocal();
                     }
@@ -636,7 +636,7 @@ const updateUserLocal = (req, res) => {
             }
         }
     });
-}
+};
 const updatePassword = (req, res) => {
     req.params.id = parseInt(req.params.id);
     if (service.password_length_wrong(req.body.new_password))
@@ -667,12 +667,12 @@ const updatePassword = (req, res) => {
                         user_number_system: req.body.user_number_system,
                         user_platform: req.body.user_platform,
                         server_remote_addr : req.ip,
-                        server_user_agent : req.headers["user-agent"],
-                        server_http_host : req.headers["host"],
-                        server_http_accept_language : req.headers["accept-language"],
+                        server_user_agent : req.headers['user-agent'],
+                        server_http_host : req.headers['host'],
+                        server_http_accept_language : req.headers['accept-language'],
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
-                    }
+                    };
                     insertUserEvent(req.query.app_id, eventData, (err, result_insert)=>{
                         if (err)
                             return res.status(200).json({
@@ -682,17 +682,17 @@ const updatePassword = (req, res) => {
                             return res.status(200).send(
                                 results
                             );
-                    })
+                    });
                 }
                 else{
                     import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                         return record_not_found(res, req.query.app_id, req.query.lang_code);
-                    })
+                    });
                 }
             }
         });
     }
-}
+};
 const updateUserCommon = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
@@ -708,11 +708,11 @@ const updateUserCommon = (req, res) => {
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     return record_not_found(res, req.query.app_id, req.query.lang_code);
-                })
+                });
             }
         }
     });
-}
+};
 const deleteUser = (req, res) => {
     req.params.id = parseInt(req.params.id);
     service.getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
@@ -739,13 +739,12 @@ const deleteUser = (req, res) => {
                             else{
                                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                                     return record_not_found(res, req.query.app_id, req.query.lang_code);
-                                })
+                                });
                             }
                         }
                     });
                 }
                 else{
-                    const salt = genSaltSync(10);
                     service.checkPassword(req.query.app_id, req.params.id, (err, results) => {
                         if (err) {
                             return res.status(500).send(
@@ -770,7 +769,7 @@ const deleteUser = (req, res) => {
                                             else{
                                                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                                                     return record_not_found(res, req.query.app_id, req.query.lang_code);
-                                                })
+                                                });
                                             }
                                         }
                                     });
@@ -785,7 +784,7 @@ const deleteUser = (req, res) => {
                                                 return res.status(400).send(
                                                     err ?? results_message.text
                                                 );
-                                        })
+                                        });
                                 } 
                             }
                             else{
@@ -815,9 +814,9 @@ const deleteUser = (req, res) => {
                             });
             }
         }
-    })
+    });
 
-}
+};
 const userLogin = (req, res) => {
     let result_pw;
     service.userLogin(req.query.app_id, req.body, (err, results) => {
@@ -828,7 +827,7 @@ const userLogin = (req, res) => {
         }
         else{
             req.body.client_ip = req.ip;
-            req.body.client_user_agent = req.headers["user-agent"];
+            req.body.client_user_agent = req.headers['user-agent'];
             if (typeof req.body.client_longitude == 'undefined')
                 req.body.client_longitude = '';
             if (typeof req.body.client_latitude == 'undefined')
@@ -857,17 +856,17 @@ const userLogin = (req, res) => {
                             }
                             else{
                                 //if user not activated then send email with new verification code
-                                let new_code = service.verification_code();
+                                const new_code = service.verification_code();
                                 if (results.active == 0){
                                     service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
                                         if (err)
-                                            return res.status(500),send(
+                                            return res.status(500).send(
                                                 err
                                             );
                                         else{
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
                                                 //send email UNVERIFIED
-                                                sendUserEmail(req.query.app_id, parameter_value, req.headers["host"], results.id, new_code, results.email, 
+                                                sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, results.email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
                                                     if (err) {
                                                         return res.status(500).send(
@@ -889,10 +888,10 @@ const userLogin = (req, res) => {
                                                                 });
                                                         });
                                                     }
-                                                })
-                                            })
+                                                });
+                                            });
                                         }
-                                    })
+                                    });
                                 }
                                 else{
                                     req.body.access_token = accessToken(req.query.app_id);
@@ -907,7 +906,7 @@ const userLogin = (req, res) => {
                                                 accessToken: req.body.access_token,
                                                 items: Array(results)
                                             });
-                                    })
+                                    });
                                 }
                             }
                         });
@@ -939,7 +938,7 @@ const userLogin = (req, res) => {
                                         );
                             });
                         }
-                    })
+                    });
                 }
             } else{
                 res.statusMessage = 'user not found:' + req.body.username;
@@ -955,13 +954,11 @@ const userLogin = (req, res) => {
             }
         }
     });
-}
+};
 const providerSignIn = (req, res) => {
     req.body.result = 1;
     req.body.client_ip = req.ip;
-    req.body.client_user_agent = req.headers["user-agent"];
-    req.body.client_longitude = req.body.client_longitude;
-    req.body.client_latitude = req.body.client_latitude;
+    req.body.client_user_agent = req.headers['user-agent'];
     req.params.id = parseInt(req.params.id);
     service.providerSignIn(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
         if (err) {
@@ -1049,7 +1046,7 @@ const providerSignIn = (req, res) => {
                                                         items: results,
                                                         userCreated: 1
                                                     });
-                                            })
+                                            });
                                     }
                                 });
                             }
@@ -1059,7 +1056,7 @@ const providerSignIn = (req, res) => {
             }
         }
     });
-}
+};
 export{getUsersAdmin, getStatCountAdmin, checked_error, updateUserSuperAdmin, userSignup, activateUser, 
        passwordResetUser, getUserByUserId, getProfileUser, searchProfileUser, getProfileDetail,
        getProfileTop, updateUserLocal, updatePassword, updateUserCommon,deleteUser, userLogin, providerSignIn};

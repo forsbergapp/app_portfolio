@@ -2,23 +2,23 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 let CONNECTED_CLIENTS = [];
 
 const ClientConnect = (res) => {
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Connection", "keep-alive");
-}
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Connection', 'keep-alive');
+};
 const ClientOnClose = (res, client_id) => {
     res.on('close', ()=>{
         CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
         res.end();
-    })
-}
+    });
+};
 const ClientAdd = (newClient) => {
     CONNECTED_CLIENTS.push(newClient);
-}
+};
 const ClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
                                "broadcast_message": "${ message }"}`)}\n\n`);
     res.flush();
-}
+};
 const BroadcastCheckMaintenance = () => {
     //start interval if apps are started
     if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
@@ -26,13 +26,13 @@ const BroadcastCheckMaintenance = () => {
             if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
                 CONNECTED_CLIENTS.forEach(client=>{
                     if (client.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-                        ClientSend(client.response, "", 'MAINTENANCE');
+                        ClientSend(client.response, '', 'MAINTENANCE');
                     }
-                })
+                });
             }
         }, ConfigGet(1, 'SERVICE_BROADCAST', 'CHECK_INTERVAL'));
     }
-}
+};
 const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
     if (app_id == '' || app_id == 'null')
         app_id = null;
@@ -47,7 +47,7 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
                     if (client.app_id == app_id || app_id == null){
                         ClientSend(client.response, broadcast_message, broadcast_type);
                     }
-        })
+        });
     }
     else
         if (broadcast_type=='CHAT'){
@@ -56,10 +56,10 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
                 if (client.id == client_id){
                     ClientSend(client.response, broadcast_message, broadcast_type);
                 }
-            })
+            });
         }
     callBack(null, null);
-}
+};
 const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
     if (app_id == '' || app_id == 'null')
         app_id = null;
@@ -71,7 +71,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
                     if (client.app_id == app_id || app_id == null){
                         ClientSend(client.response, broadcast_message, broadcast_type);
                     }
-            })
+            });
         }
         if (broadcast_type=='CHAT'){
             //broadcast CHAT to specific client
@@ -79,14 +79,14 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
                 if (client.id == client_id){
                     ClientSend(client.response, broadcast_message, broadcast_type);
                 }
-            })
+            });
         }
     }
     
     callBack(null, null);
-}
+};
 const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba, callBack) => {
-    let connected_clients_no_res = [];
+    const connected_clients_no_res = [];
     let i=0;
     CONNECTED_CLIENTS.forEach(client=>{
         if (client.app_id == app_id_select || app_id_select == ''){
@@ -115,7 +115,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
                     }
             }
         }
-    })
+    });
     const sortByProperty = (property, order_by) => {
         return (a,b) => {
             if(a[property] > b[property])  
@@ -123,8 +123,8 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             else if(a[property] < b[property])  
                 return -1 * order_by;
             return 0;  
-        }  
-    }        
+        };  
+    };        
     const sort_and_return = () => {
         let column_sort;
         let order_by_num;
@@ -178,7 +178,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             }
         }
         callBack(null, connected_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
-    }
+    };
     i=0;
     if (connected_clients_no_res.length>0)
         //update list using map with app role icons if database started
@@ -198,17 +198,16 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
                             else
                                 i++;
                         }
-                    })
-                })
-            })
+                    });
+                });
+            });
         }
         else
             sort_and_return();
     else
         callBack(null, null);
-}
+};
 const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
-    let i=0;
     let count_connected=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if ((count_logged_in==1 &&
@@ -230,9 +229,8 @@ const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
         }
     }
     return callBack(null, count_connected);
-}
+};
 const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, latitude, longitude, callBack) => {
-    let i=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].id==client_id){
             CONNECTED_CLIENTS[i].user_account_id = user_account_id;
@@ -245,15 +243,14 @@ const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_prov
         }
     }
     return callBack(null, null);
-}
+};
 const ConnectedCheck = (user_account_id, callBack) => {
-    let i=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].user_account_id == user_account_id){
             return callBack(null, 1);
         }
     }
-    return callBack(null, 0)
-}
+    return callBack(null, 0);
+};
 export {ClientConnect, ClientOnClose, ClientAdd, ClientSend, BroadcastCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
-        ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck}
+        ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck};

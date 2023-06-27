@@ -1,12 +1,10 @@
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const followUser = (app_id, id, id_follow, callBack) => {
-		let sql;
-		let parameters;
-		sql = `INSERT INTO ${db_schema()}.user_account_follow(
+		const sql = `INSERT INTO ${db_schema()}.user_account_follow(
 							user_account_id, user_account_id_follow, date_created)
-				VALUES(:user_account_id,:user_account_id_follow, CURRENT_TIMESTAMP)`;
-		parameters = {
+					VALUES(:user_account_id,:user_account_id_follow, CURRENT_TIMESTAMP)`;
+		const parameters = {
 						user_account_id: id,
 						user_account_id_follow: id_follow
 						};
@@ -16,14 +14,12 @@ const followUser = (app_id, id, id_follow, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const unfollowUser = (app_id, id, id_unfollow, callBack) => {
-		let sql;
-		let parameters;
-		sql = `DELETE FROM ${db_schema()}.user_account_follow
-				WHERE user_account_id = :user_account_id
-				  AND user_account_id_follow = :user_account_id_follow`;
-		parameters = {
+		const sql = `DELETE FROM ${db_schema()}.user_account_follow
+						WHERE user_account_id = :user_account_id
+						  AND user_account_id_follow = :user_account_id_follow`;
+		const parameters = {
 						user_account_id: id,
 						user_account_id_follow: id_unfollow
 						};
@@ -33,5 +29,5 @@ const unfollowUser = (app_id, id, id_unfollow, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 export{followUser, unfollowUser};

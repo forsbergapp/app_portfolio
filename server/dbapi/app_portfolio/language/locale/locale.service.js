@@ -1,9 +1,7 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getLocales = (app_id, lang_code, callBack) => {
-    let sql;
-    let parameters;
-    sql = `SELECT CONCAT(l2.lang_code, CASE 
+    const sql = `SELECT CONCAT(l2.lang_code, CASE 
                                         WHEN c.country_code IS NOT NULL THEN 
                                           CONCAT('-', c.country_code) 
                                         ELSE 
@@ -76,7 +74,7 @@ const getLocales = (app_id, lang_code, callBack) => {
                             FROM ${db_schema()}.locale loc
                            WHERE loc.language_id = lt.language_id)
           ORDER BY 2`;
-    parameters = {lang_code_default: 'en',
+    const parameters = {lang_code_default: 'en',
                   lang_code1: get_locale(lang_code, 1),
                   lang_code2: get_locale(lang_code, 2),
                   lang_code3: get_locale(lang_code, 3)
@@ -87,5 +85,5 @@ const getLocales = (app_id, lang_code, callBack) => {
       else
         return callBack(null, result);
     });
-}
+};
 export{getLocales};

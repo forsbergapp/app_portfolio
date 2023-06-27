@@ -1,4 +1,4 @@
-const service = await import("./user_account_app_setting_like.service.js");
+const service = await import('./user_account_app_setting_like.service.js');
 
 const likeUserSetting = (req, res) => {
 	req.params.id = parseInt(req.params.id);
@@ -14,7 +14,7 @@ const likeUserSetting = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 const unlikeUserSetting = (req, res) => {
 	req.params.id   = parseInt(req.params.id);
 	const id_unlike = parseInt(req.body.user_setting_id);
@@ -29,5 +29,5 @@ const unlikeUserSetting = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 export{likeUserSetting, unlikeUserSetting};

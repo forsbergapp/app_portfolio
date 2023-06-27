@@ -1,6 +1,6 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 //mysql module used for both MariaDB and MySQL
-let MYSQL               = await import("mysql");
+let MYSQL               = await import('mysql');
 let {default: PG}       = await import('pg');
 let {default: ORACLEDB} = await import('oracledb');
 
@@ -21,10 +21,10 @@ if (ConfigGet(1, 'SERVICE_DB', 'USE')=='4'){
 
 const pool_close_all = async (db)=>{
       //relase db pools from memory, not shutting down db
-      for (let dbnumber in POOL_DB_EMPTY){
+      for (const dbnumber in POOL_DB){
          if (dbnumber[0]==parseInt(db)){
             db[1] = null;
-            db[2] = []
+            db[2] = [];
          }
       }
       //reset db variables
@@ -33,17 +33,20 @@ const pool_close_all = async (db)=>{
          case 2:{
             MYSQL = null;
             MYSQL = await import('mysql');
+            break;
          }
          case 3:{
             PG = null;
             PG = await import('pg');
+            break;
          }
          case 4:{
             ORACLEDB = null;
             ORACLEDB = await import('oracledb');
+            break;
          }
       }
-}
+};
 const pool_start = async (dbparameters) =>{
    /* dbparameters in JSON format:
       "use":                     1-4
@@ -84,9 +87,9 @@ const pool_start = async (dbparameters) =>{
                                           database: dbparameters.database,
                                           charset: dbparameters.charset,
                                           connnectionLimit: dbparameters.connnectionLimit
-               })
+               });
                resolve();
-            })
+            });
             else
                POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use))
                                     db[2].push(
@@ -98,8 +101,8 @@ const pool_start = async (dbparameters) =>{
                                        database: dbparameters.database,
                                        charset: dbparameters.charset,
                                        connnectionLimit: dbparameters.connnectionLimit
-                                       }))
-                                 })
+                                       }));
+                                 });
                resolve();
 
             break;
@@ -116,25 +119,25 @@ const pool_start = async (dbparameters) =>{
                      connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
                      idleTimeoutMillis: dbparameters.idleTimeoutMillis,
                      max: dbparameters.max
-                  }))
-               })
-            }
+                  }));
+               });
+            };
             if (dbparameters.dba==1)
                createpoolPostgreSQL()
                .then(pool=>{
                   POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use))    
                      db[1]=pool;
-                  })
+                  });
                   resolve();
-               })
+               });
             else
                createpoolPostgreSQL()
                .then(pool=>{
                   POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use))    
                      db[2].push(pool);
-                  })
+                  });
                   resolve();
-               })
+               });
             break;
          }
          case 4:{
@@ -154,22 +157,22 @@ const pool_start = async (dbparameters) =>{
                   else
                      resolve();
                });
-            }
+            };
             if (dbparameters.dba==1){
                pool_id = 'DBA';
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[1]=pool_id})
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[1]=pool_id;});
                createpoolOracle();
             }
             else{
                pool_id = `'${dbparameters.pool_id}'`;
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id)})
+               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id);});
                createpoolOracle();
             }
             break;
          }
       }
-   })
-}
+   });
+};
 const pool_close = async (pool_id, db_use, dba) =>{
    try {
       if (dba==1)
@@ -181,7 +184,7 @@ const pool_close = async (pool_id, db_use, dba) =>{
    }
    return null;
 
-}
+};
 const pool_get = (pool_id, db_use, dba) => {
    let pool;
    try {
@@ -197,7 +200,7 @@ const pool_get = (pool_id, db_use, dba) => {
    } catch (err) {
       return null;
    }  
-}
+};
 const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    return new Promise((resolve,reject)=>{
       switch (db_use){
@@ -211,13 +214,13 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                conn.config.queryFormat = (query, values) => {
                   if (!values) return query;
                   return query.replace(/\:(\w+)/g, (txt, key) => {
-                     if (values.hasOwnProperty(key)) {
+                     if (Object.prototype.hasOwnProperty.call(values, key)) {
                      return conn.escape(values[key]);
                      }
                      return txt;
                   });
                };
-            }
+            };
             try {
                pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
                   conn.release();
@@ -240,11 +243,11 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                                              result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
                                     }
                                  }
-                              };
+                              }
                            }
                            return resolve(result);
                         }
-                     })
+                     });
                   }
                });					
             } catch (err) {
@@ -262,7 +265,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                //postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
                 const [text, values] = Object.entries(params).reduce(
                     ([sql, array, index], [key, value]) => [sql.replace(/\:(\w+)/g, (txt, key) => {
-                                                                     if (params.hasOwnProperty(key)){
+                                                                     if (Object.prototype.hasOwnProperty.call(params, key)){
                                                                         return `$${Object.keys(params).indexOf(key) + 1}`;
                                                                      }
                                                                      else
@@ -272,8 +275,8 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                                                   [parameterizedSql, [], 1]
                 );
                 return { text, values };
-            }	
-            let parsed_result = queryConvert(sql, parameters);
+            };	
+            const parsed_result = queryConvert(sql, parameters);
             try {
                pool_get(pool_id, db_use, dba).connect().then((pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
@@ -297,7 +300,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                                     result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
                            }
                         }
-                     };
+                     }
                   }
                   if (result.command == 'SELECT')
                      return resolve(result.rows);
@@ -306,7 +309,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                   })
                   .catch(err => {
                      return reject(err);
-                  })
+                  });
                }).catch(err=>{
                   return reject(err);   
                });
@@ -326,7 +329,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      USER_ACCOUNT_APP_SETTING.SETTINGS_JSON
                      use same parameter name as column name
                   */
-                  Object.keys(parameters).forEach((key, index) => {
+                  Object.keys(parameters).forEach(key => {
                      if (key.toLowerCase() == 'screenshot' ||
                         key.toLowerCase() == 'avatar' ||
                         key.toLowerCase() == 'provider_image' ||
@@ -360,9 +363,9 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             return reject();
          }
       }
-   })
-}
+   });
+};
 
 export{pool_close_all, 
        pool_start, pool_close, pool_get,
-       db_query}
+       db_query};
