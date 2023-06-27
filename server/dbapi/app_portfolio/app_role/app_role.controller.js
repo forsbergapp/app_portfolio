@@ -1,4 +1,4 @@
-const service = await import("./app_role.service.js");
+const service = await import('./app_role.service.js');
 
 const getAppRoleAdmin = (req, res) => {
 	service.getAppRoleAdmin(req.query.app_id, req.query.id, (err, results) =>{
@@ -11,5 +11,5 @@ const getAppRoleAdmin = (req, res) => {
 			data: results
 		});
 	});
-}
+};
 export{getAppRoleAdmin};

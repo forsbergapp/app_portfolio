@@ -1,4 +1,4 @@
-const service = await import("./user_account_app.service.js");
+const service = await import('./user_account_app.service.js');
 
 const createUserAccountApp = (req, res) => {
 	service.createUserAccountApp(req.query.app_id, req.body.user_account_id, (err,results) => {
@@ -12,7 +12,7 @@ const createUserAccountApp = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 const getUserAccountApps = (req, res) => {
 	req.params.user_account_id = parseInt(req.params.user_account_id);
 	service.getUserAccountApps(req.query.app_id, req.params.user_account_id, (err,results) => {
@@ -26,7 +26,7 @@ const getUserAccountApps = (req, res) => {
 			items: results
 		});
 	});
-}
+};
 const getUserAccountApp = (req, res) => {
 	req.params.user_account_id = parseInt(req.params.user_account_id);
 	service.getUserAccountApp(req.query.app_id, req.params.user_account_id, (err,results) => {
@@ -39,7 +39,7 @@ const getUserAccountApp = (req, res) => {
 			items: results
 		});
 	});
-}
+};
 const updateUserAccountApp = (req, res) => {
 	req.params.user_account_id = parseInt(req.params.user_account_id);
 	service.updateUserAccountApp(req.query.app_id, req.params.user_account_id, req.body, (err,results) => {
@@ -53,7 +53,7 @@ const updateUserAccountApp = (req, res) => {
 				items: results
 			});
 	});
-}
+};
 const deleteUserAccountApps = (req, res) => {
 	req.params.user_account_id = parseInt(req.params.user_account_id);
 	req.params.app_id = parseInt(req.params.app_id);
@@ -68,5 +68,5 @@ const deleteUserAccountApps = (req, res) => {
 				results
 			);
 	});
-}
+};
 export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps};

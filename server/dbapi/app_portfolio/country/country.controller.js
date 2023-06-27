@@ -1,4 +1,4 @@
-const service = await import("./country.service.js");
+const service = await import('./country.service.js');
 
 const getCountries = (req, res) => {
 	let lang_code;
@@ -16,5 +16,5 @@ const getCountries = (req, res) => {
 			countries: results
 		});
 	});
-}
+};
 export{getCountries};

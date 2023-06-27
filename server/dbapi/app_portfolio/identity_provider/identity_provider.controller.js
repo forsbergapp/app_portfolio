@@ -1,4 +1,4 @@
-const service = await import("./identity_provider.service.js");
+const service = await import('./identity_provider.service.js');
 
 const getIdentityProviders = (req, res) => {
 	service.getIdentityProviders(req.query.app_id, (err,results) => {
@@ -11,5 +11,5 @@ const getIdentityProviders = (req, res) => {
 			items: results
 		});
 	});
-}
+};
 export{getIdentityProviders};

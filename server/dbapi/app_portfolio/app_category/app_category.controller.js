@@ -11,5 +11,5 @@ const getAppCategoryAdmin = (req, res) => {
 			data: results
 		});
 	});
-}
-export{getAppCategoryAdmin}
+};
+export{getAppCategoryAdmin};

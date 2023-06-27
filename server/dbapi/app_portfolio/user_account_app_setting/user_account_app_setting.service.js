@@ -57,7 +57,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 								//sample output:
 								//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
 								//remove "" before and after
-								let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
+								const lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
 								sql = `SELECT id "insertId"
 										FROM ${db_schema()}.user_account_app_setting
 										WHERE rowid = :lastRowid`;
@@ -69,40 +69,34 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 										return callBack(err, null);
 									else
 										return callBack(null, result_id2[0]);
-								})
+								});
 							}
 							break;
 						}
 					}
-			})
-		})
-	}
+			});
+		});
+	};
 const getUserSetting = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	id "id",
-						description "description",
-						settings_json "settings_json",
-						date_created "date_created",
-						date_modified "date_modified",
-						user_account_app_user_account_id "user_account_app_user_account_id",
-						user_account_app_app_id "user_account_app_app_id"
-					FROM ${db_schema()}.user_account_app_setting 
-					WHERE id = :id `;
-		parameters = {
-						id: id
-					};
+		const sql = `SELECT	id "id",
+							description "description",
+							settings_json "settings_json",
+							date_created "date_created",
+							date_modified "date_modified",
+							user_account_app_user_account_id "user_account_app_user_account_id",
+							user_account_app_app_id "user_account_app_app_id"
+					   FROM ${db_schema()}.user_account_app_setting 
+					  WHERE id = :id `;
+		const parameters = {id: id};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getUserSettingsByUserId = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	id "id",
+		const sql = `SELECT	id "id",
 						description "description",
 						settings_json "settings_json",
 						date_created "date_created",
@@ -112,7 +106,7 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 				 FROM ${db_schema()}.user_account_app_setting
 				WHERE user_account_app_user_account_id = :user_account_id 
 				  AND user_account_app_app_id = :app_id`;
-		parameters = {
+		const parameters = {
 						user_account_id: id,
 						app_id: app_id
 					};
@@ -122,11 +116,9 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getProfileUserSetting = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
+		const sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
 						 FROM ${db_schema()}.user_account_app_setting_like u_like,
 						   	  ${db_schema()}.user_account_app_setting us
 						WHERE u_like.user_account_app_user_account_id = u.id
@@ -142,7 +134,7 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 						  AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_setting_liked"
 				 FROM ${db_schema()}.user_account u
 				WHERE u.id = :id`;
-		parameters ={
+		const parameters ={
 						id: id,
 						app_id: app_id
 					}; 
@@ -152,13 +144,11 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    };
 const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
-		let sql;
-		let parameters;
 		if (id_current_user=='')
 			id_current_user = null;
-		sql = `SELECT us.id "id",
+		const sql = `SELECT us.id "id",
 					  us.description "description",
 					  us.user_account_app_user_account_id "user_account_app_user_account_id",
 					  (SELECT COUNT(u_like.id)
@@ -177,7 +167,7 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 				 FROM ${db_schema()}.user_account_app_setting us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
-		parameters = {
+		const parameters = {
 						Xuser_Xaccount_id_current: id_current_user,
 						user_account_id: id,
 						app_id: app_id
@@ -188,10 +178,9 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 		let sql;
-		let parameters;
 		sql = `SELECT detail "detail", 
 					  id "id", 
 					  identity_provider_id "identity_provider_id", 
@@ -242,7 +231,7 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 						   AND  7 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
 		sql = db_limit_rows(sql,1);
-		parameters = {
+		const parameters = {
 						user_account_id: id,
 						app_id: app_id,
 						detailchoice: detailchoice
@@ -253,11 +242,9 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const getProfileTopSetting = (app_id, statchoice, callBack) => {
 		let sql;
-		let parameters;
-    
 		sql = `SELECT top "top", 
 					  id "id", 
 					  identity_provider_id "identity_provider_id", 
@@ -311,7 +298,7 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 						   AND  5 = :statchoice) t
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
 		sql = db_limit_rows(sql,2);
-		parameters = {
+		const parameters = {
 						app_id: app_id,
 						statchoice: statchoice,
 					};
@@ -321,18 +308,16 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const updateUserSetting = (app_id, data, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `UPDATE ${db_schema()}.user_account_app_setting
-				SET description = :description,
-				    settings_json = :settings_json,
-					user_account_app_user_account_id = :user_account_id,
-					user_account_app_app_id = :app_id,
-					date_modified = CURRENT_TIMESTAMP
-				WHERE id = :id `;
-		parameters = {
+		const sql = `UPDATE ${db_schema()}.user_account_app_setting
+						SET description = :description,
+							settings_json = :settings_json,
+							user_account_app_user_account_id = :user_account_id,
+							user_account_app_app_id = :app_id,
+							date_modified = CURRENT_TIMESTAMP
+					  WHERE id = :id `;
+		const parameters = {
 						description: data.description,
 						settings_json: JSON.stringify(data.settings_json),
 						user_account_id: data.user_account_id,
@@ -345,13 +330,11 @@ const updateUserSetting = (app_id, data, id, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const deleteUserSetting = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `DELETE FROM ${db_schema()}.user_account_app_setting
-				WHERE id = :id `;
-		parameters = {
+		const sql = `DELETE FROM ${db_schema()}.user_account_app_setting
+					WHERE id = :id `;
+		const parameters = {
 						id: id
 						};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
@@ -360,6 +343,6 @@ const deleteUserSetting = (app_id, id, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
-export{createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
-	   getProfileUserSettingDetail, getProfileTopSetting, updateUserSetting, deleteUserSetting};
+	};
+export{	createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
+		getProfileUserSettingDetail, getProfileTopSetting, updateUserSetting, deleteUserSetting};

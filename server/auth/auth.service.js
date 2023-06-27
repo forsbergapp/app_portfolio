@@ -1,16 +1,16 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {default:{sign, verify}} = await import("jsonwebtoken");
+const {default:{sign, verify}} = await import('jsonwebtoken');
 const IPtoNum = (ip) => {
     return Number(
-        ip.split(".")
-        .map(d => ("000"+d).substr(-3) )
-        .join("")
+        ip.split('.')
+        .map(d => ('000'+d).substr(-3) )
+        .join('')
     );
-}
+};
 const access_control = (ip, host, user_agent, accept_language, callBack) => {
 
     if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
-        let ip_v4 = ip.replace('::ffff:','');
+        const ip_v4 = ip.replace('::ffff:','');
         block_ip_control(ip_v4, (err, result_range) =>{
             if (err){
                 callBack(err, null);
@@ -35,7 +35,7 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                                 host==hostname()){
                                 //406 Not Acceptable
                                 return callBack(null, {statusCode: 406, 
-                                                       statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${this_hostname} not domain`});
+                                                       statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
                             }
                             else{
                                 safe_user_agents(user_agent, (err, safe)=>{
@@ -66,17 +66,17 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                                             }
                                         }
                                     }
-                                })
+                                });
                             }
-                        })
+                        });
                     }
                 }
             }
-        })
+        });
     }
     else
         return callBack(null,null);
-}
+};
 const block_ip_control = async (ip_v4, callBack) => {
     if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
         let ranges;
@@ -100,11 +100,11 @@ const block_ip_control = async (ip_v4, callBack) => {
                 }
                 return callBack(null, null);
             });
-        })
+        });
     }
     else
         return callBack(null, null);
-}
+};
 const safe_user_agents = async (user_agent, callBack) => {
     /*format file
         {"user_agent": [
@@ -130,26 +130,26 @@ const safe_user_agents = async (user_agent, callBack) => {
                     }
                     return callBack(null, false);
                 }
-            })
-        })
+            });
+        });
     }
     else
         return callBack(null, false);
-}
+};
 const check_request = (req_path, callBack) =>{
     let err = null;
     try {
-        decodeURIComponent(req_path)
+        decodeURIComponent(req_path);
     }
     catch(e) {
         err = e;
     }
     if (err){
-        callBack(err, null)
+        callBack(err, null);
     }
     else
-        callBack(null, null)
-}
+        callBack(null, null);
+};
 
 const check_internet = async () => {
     return new Promise(resolve =>{
@@ -182,16 +182,16 @@ const check_internet = async () => {
                     resolve(0);
                 else 
                     resolve(1);
-            })
-        })
-    })
-}
+            });
+        });
+    });
+};
 
 //ENDPOINT MIDDLEWARE
 const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
     return new Promise((resolve, reject)=>{
         if (authorization){
-            let token = authorization.slice(7);
+            const token = authorization.slice(7);
             verify(token, ConfigGet(7, app_id, 'ACCESS_SECRET'), (err, decoded) => {
                 if (err)
                    resolve(false);
@@ -201,22 +201,22 @@ const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
                     import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
                         checkLogin(app_id, user_account_id, authorization.replace('Bearer ',''), ip, (err, result)=>{
                             if (err)
-                                reject(err)
+                                reject(err);
                             else{
                                 if (result.length==1)
                                     resolve(true);
                                 else
                                     resolve(false);
                             }
-                        })
-                    })
+                        });
+                    });
                 }
-            })
+            });
         }
         else
             resolve(false);
-    })
-}
+    });
+};
 const checkDataToken = async (app_id, token) =>{
     return new Promise(resolve =>{
         if (token){
@@ -232,27 +232,25 @@ const checkDataToken = async (app_id, token) =>{
         else{
             resolve(false);
         }    
-    })
+    });
     
-}
+};
 const accessToken = (app_id)=>{
-    let jsontoken_at;                    
-    jsontoken_at = sign ({tokentimstamp: Date.now()}, 
+    const jsontoken_at = sign ({tokentimstamp: Date.now()}, 
                           ConfigGet(7, app_id, 'ACCESS_SECRET'), 
                          {
                           expiresIn: ConfigGet(7, app_id, 'ACCESS_EXPIRE')
                          });
     return jsontoken_at;
-}
+};
 const CreateDataToken = (app_id)=>{
-    let jsontoken_dt;
-    jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
+    const jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
                             ConfigGet(7, app_id, 'DATA_SECRET'), 
                             {
                             expiresIn: ConfigGet(7, app_id, 'DATA_EXPIRE')
                             });
     return jsontoken_dt;
-}
+};
 export {access_control, block_ip_control, safe_user_agents, check_request, check_internet, 
         checkAccessToken,checkDataToken, 
-        accessToken,CreateDataToken}
+        accessToken,CreateDataToken};

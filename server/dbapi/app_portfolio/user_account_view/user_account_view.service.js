@@ -1,12 +1,10 @@
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const insertUserAccountView = (app_id, data, callBack) => {
-		let sql;
-		let parameters;
-		sql = `INSERT INTO ${db_schema()}.user_account_view(
+		const sql = `INSERT INTO ${db_schema()}.user_account_view(
 							user_account_id, user_account_id_view, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
-				VALUES(:user_account_id,:user_Xaccount_id_view,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP) `;
-		parameters = {
+					VALUES(:user_account_id,:user_Xaccount_id_view,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP) `;
+		const parameters = {
 						user_account_id: data.user_account_id,
 						user_Xaccount_id_view: data.user_account_id_view,
 						client_ip: data.client_ip,
@@ -20,5 +18,5 @@ const insertUserAccountView = (app_id, data, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 export{insertUserAccountView};

@@ -1,4 +1,4 @@
-const service = await import("./user_account_follow.service.js");
+const service = await import('./user_account_follow.service.js');
 	
 const followUser = (req, res) => {
 	req.params.id   = parseInt(req.params.id);
@@ -14,7 +14,7 @@ const followUser = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 const unfollowUser = (req, res) => {
 	req.params.id     = parseInt(req.params.id);
 	const id_unfollow = parseInt(req.body.user_account_id);
@@ -29,5 +29,5 @@ const unfollowUser = (req, res) => {
 			items: Array(results)
 		});
 	});
-}
+};
 export{followUser, unfollowUser};

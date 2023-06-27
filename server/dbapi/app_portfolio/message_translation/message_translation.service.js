@@ -1,9 +1,7 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
-		let sql;
-    	let parameters;
-		sql = `SELECT m.code "code",
+		const sql = `SELECT m.code "code",
 					  m.message_level_id "message_level_id",
 					  m.message_type_id "message_type_id",
 					  mt.language_id "language_id",
@@ -26,12 +24,12 @@ const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 										AND l1.id = mt1.language_id
 										AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 									)`;
-		parameters = {
+		const parameters = {
 						app_id: data_app_id,
 						code: code,
 						lang_code1: get_locale(lang_code, 1),
-                  		lang_code2: get_locale(lang_code, 2),
-                  		lang_code3: get_locale(lang_code, 3)
+						lang_code2: get_locale(lang_code, 2),
+						lang_code3: get_locale(lang_code, 3)
 					};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
@@ -39,11 +37,9 @@ const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
-		let sql;
-    	let parameters;
-		sql = `SELECT m.code "code",
+		const sql = `SELECT m.code "code",
 					  m.message_level_id "message_level_id",
 					  m.message_type_id "message_type_id",
 					  mt.language_id "language_id",
@@ -66,12 +62,12 @@ const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
 										AND l1.id = mt1.language_id
 										AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 									)`;
-		parameters = {
+		const parameters = {
 						app_id: data_app_id,
 						code: code,
 						lang_code1: get_locale(lang_code, 1),
-                  		lang_code2: get_locale(lang_code, 2),
-                  		lang_code3: get_locale(lang_code, 3)
+						lang_code2: get_locale(lang_code, 2),
+						lang_code3: get_locale(lang_code, 3)
 					};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
@@ -79,5 +75,5 @@ const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 export{getMessage, getMessage_admin};

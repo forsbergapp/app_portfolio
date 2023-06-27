@@ -7,10 +7,10 @@ const password_length_wrong = (password) => {
     }
     else
         return false;
-}
+};
 const verification_code = () => {
     return Math.floor(100000 + Math.random() * 900000);
-}
+};
 const data_validation = (data) => {
 	data.username = data.username ?? null;
 	data.bio = data.bio ?? null;
@@ -34,11 +34,11 @@ const data_validation = (data) => {
 	else 
 		if (data.username != null &&
 			(data.username.indexOf(' ') > -1 || 
-		     data.username.indexOf('?') > -1 ||
-			 data.username.indexOf('/') > -1 ||
-			 data.username.indexOf('+') > -1 ||
-			 data.username.indexOf('"') > -1 ||
-			 data.username.indexOf('\'\'') > -1)){
+			data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1)){
 			//'not valid username'
 			return 20101;
 		}
@@ -74,25 +74,24 @@ const data_validation = (data) => {
 								}
 								else
 									return null;
-}
+};
 const validation_before_insert = (data) => {
-	let error_code = data_validation(data);
+	const error_code = data_validation(data);
 	if (error_code==null)
 		return null;
 	else
-		return {"errorNum" : error_code};
-}
+		return {'errorNum' : error_code};
+};
 const validation_before_update = (data) => {
-	let error_code = data_validation(data);
+	const error_code = data_validation(data);
 	if (error_code==null)
 		return null;
 	else
-		return {"errorNum" : error_code};
-}
+		return {'errorNum' : error_code};
+};
 
 const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) => {
 		let sql;
-		let parameters;
 		sql = `SELECT ua.avatar "avatar",
 		              ua.id "id",
 					  ua.app_role_id "app_role_id",
@@ -136,35 +135,31 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 		sql = db_limit_rows(sql, null);
 		if (search!='*')
 			search = '%' + search + '%';
-		parameters = {search: search,
-					  offset: offset ?? 0,
-					  limit: limit ?? parseInt(ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')),
-					 };
+		const parameters = {search: search,
+							offset: offset ?? 0,
+							limit: limit ?? parseInt(ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')),
+							};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const getUserAppRoleAdmin = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT app_role_id "app_role_id"
-				 FROM ${db_schema()}.user_account
-				WHERE id = :id`;
-		parameters = {id: id};
+		const sql = `SELECT app_role_id "app_role_id"
+					   FROM ${db_schema()}.user_account
+					  WHERE id = :id`;
+		const parameters = {id: id};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 const getStatCountAdmin = (app_id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT ua.identity_provider_id "identity_provider_id",
+		const sql = `SELECT ua.identity_provider_id "identity_provider_id",
 						CASE 
 						WHEN ip.provider_name IS NULL THEN 
 							NULL
@@ -177,14 +172,14 @@ const getStatCountAdmin = (app_id, callBack) => {
 						ON ip.id = ua.identity_provider_id
 				GROUP BY ua.identity_provider_id, ip.provider_name
 				ORDER BY ua.identity_provider_id`;
-		parameters = {};
+		const parameters = {};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const updateUserSuperAdmin = (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
@@ -202,7 +197,7 @@ const updateUserSuperAdmin = (app_id, id, data, callBack) => {
 			data.password_reminder = null;
 		if (data.verification_code=='')
 			data.verification_code = null;
-		let error_code = validation_before_update(data);
+		const error_code = validation_before_update(data);
 		if (error_code==null){
 			sql = `UPDATE ${db_schema()}.user_account
 					SET app_role_id = :app_role_id,
@@ -239,17 +234,17 @@ const updateUserSuperAdmin = (app_id, id, data, callBack) => {
 		}
 		else
 			callBack(error_code, null);
-    }
+    };
 const create = (app_id, data, callBack) => {
 		let sql;
-    	let parameters;
+		let parameters;
 		if (typeof data.provider_id != 'undefined' && 
-		    data.provider_id != '' && 
+			data.provider_id != '' && 
 			data.provider_id){
             //generate local username for provider 1
             data.username = `${data.provider_first_name}${Date.now()}`;
         }
-		let error_code = validation_before_insert(data);
+		const error_code = validation_before_insert(data);
 		if (error_code==null){
 			sql = `INSERT INTO ${db_schema()}.user_account(
 						bio,
@@ -311,7 +306,7 @@ const create = (app_id, data, callBack) => {
 							provider_image: data.provider_image,
 							provider_Ximage_url: data.provider_image_url,
 							provider_email: data.provider_email
-						 };
+						};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -328,7 +323,7 @@ const create = (app_id, data, callBack) => {
 							//sample output:
 							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
 							//remove "" before and after
-							let lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
+							const lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
 							sql = `SELECT id "insertId"
 									FROM ${db_schema()}.user_account
 									WHERE rowid = :lastRowid`;
@@ -349,12 +344,9 @@ const create = (app_id, data, callBack) => {
 		else
 			callBack(error_code, null);
         
-    }
+    };
 const activateUser = (app_id, id, verification_type, verification_code, auth, callBack) => {
-		let sql;
-    	let parameters;
-
-		sql = `UPDATE ${db_schema()}.user_account
+		let sql = `UPDATE ${db_schema()}.user_account
 					SET active = 1,
 						verification_code = :auth,
 						email = CASE 
@@ -375,7 +367,7 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3'){
 			sql = sql + ' RETURNING id';
 		}
-		parameters ={
+		const parameters ={
 						auth: auth,
 						verification_type: verification_type,
 						id: id,
@@ -387,10 +379,9 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const updateUserVerificationCode = (app_id, id, verification_code, callBack) => {
 		let sql;
-    	let parameters;
 		sql = `UPDATE ${db_schema()}.user_account
 				  SET verification_code = :verification_code,
 					  active = 0,
@@ -399,7 +390,7 @@ const updateUserVerificationCode = (app_id, id, verification_code, callBack) => 
 		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3'){
 			sql = sql + ' RETURNING id';
 		}
-		parameters ={
+		const parameters ={
 						verification_code: verification_code,
 						id: id   
 					}; 
@@ -409,11 +400,9 @@ const updateUserVerificationCode = (app_id, id, verification_code, callBack) => 
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const getUserByUserId = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	u.id "id",
+		const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
 							FROM ${db_schema()}.user_account_logon ul
@@ -440,20 +429,16 @@ const getUserByUserId = (app_id, id, callBack) => {
 						u.provider_email "provider_email"
 				 FROM   ${db_schema()}.user_account u
 				WHERE   u.id = :id `;
-		parameters = {
-					  id: id
-					 };
+		const parameters = {id: id};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    };
 const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	u.id "id",
+		const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT 1
 						   FROM ${db_schema()}.user_account ua_current
@@ -512,7 +497,7 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 							   FROM ${db_schema()}.user_account_app uap
 							  WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
-		parameters ={
+		const parameters ={
 			user_accound_id_current_user: id_current_user,
 			id: id,
 			username: username,
@@ -524,10 +509,9 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    };
 const searchProfileUser = (app_id, username, callBack) => {
 		let sql;
-		let parameters;
 		sql= `SELECT	u.id "id",
 						u.username "username",
 						u.avatar "avatar",
@@ -546,7 +530,7 @@ const searchProfileUser = (app_id, username, callBack) => {
 							WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
 		sql = db_limit_rows(sql, 1);
-		parameters = {
+		const parameters = {
 						username: '%' + username + '%',
 						provider_first_name: '%' + username + '%',
 						app_id: app_id
@@ -557,10 +541,9 @@ const searchProfileUser = (app_id, username, callBack) => {
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 		let sql;
-		let parameters;
 		sql = `SELECT detail "detail",
 		              id "id",
 					  provider_id "provider_id",
@@ -630,7 +613,7 @@ const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 						  AND 4 = :detailchoice) t
 					ORDER BY 1, COALESCE(username, provider_first_name) `;
 		sql = db_limit_rows(sql,1);
-		parameters ={
+		const parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
@@ -640,10 +623,9 @@ const getProfileDetail = (app_id, id, detailchoice, callBack) => {
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const getProfileTop = (app_id, statchoice, callBack) => {
 		let sql;
-		let parameters;
 		sql = `SELECT top "top", 
 					  id "id", 
 					  identity_provider_id "identity_provider_id", 
@@ -710,7 +692,7 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 								AND uap.app_id = :app_id)
 				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
 		sql = db_limit_rows(sql,2);
-		parameters = {
+		const parameters = {
 						statchoice: statchoice,
 						app_id: app_id
 					};
@@ -720,27 +702,23 @@ const getProfileTop = (app_id, statchoice, callBack) => {
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const checkPassword = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT password "password"
+		const sql = `SELECT password "password"
 				 FROM ${db_schema()}.user_account
 				WHERE id = :id `;
-		parameters = {
-						id: id
-					};
+		const parameters = {id: id};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    };
 const updatePassword = (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
-		let error_code = validation_before_update(data);
+		const error_code = validation_before_update(data);
 		if (error_code==null){
 			sql = `UPDATE ${db_schema()}.user_account
 					  SET password = :new_password,
@@ -762,11 +740,11 @@ const updatePassword = (app_id, id, data, callBack) => {
 		}
 		else
 			callBack(error_code, null);
-    }
+    };
 const updateUserLocal = (app_id, data, search_id, callBack) => {
 		let sql;
 		let parameters;
-		let error_code = validation_before_update(data);
+		const error_code = validation_before_update(data);
 		if (error_code==null){
 			sql = `UPDATE ${db_schema()}.user_account
 					  SET bio = :bio,
@@ -801,11 +779,11 @@ const updateUserLocal = (app_id, data, search_id, callBack) => {
 		}
 		else
 			callBack(error_code, null);
-    }
+    };
 const updateUserCommon = (app_id, data, id, callBack) => {
 		let sql;
 		let parameters;
-		let error_code = validation_before_update(data);
+		const error_code = validation_before_update(data);
 		if (error_code==null){
 			sql = `UPDATE ${db_schema()}.user_account
 					  SET username = :username,
@@ -827,26 +805,20 @@ const updateUserCommon = (app_id, data, id, callBack) => {
 		}
 		else
 			callBack(error_code, null);
-    }
+    };
 const deleteUser = (app_id, id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `DELETE FROM ${db_schema()}.user_account
-				WHERE id = :id `;
-		parameters = {
-						id: id
-					 };
+		const sql = `DELETE FROM ${db_schema()}.user_account
+					WHERE id = :id `;
+		const parameters = {id: id};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const userLogin = (app_id, data, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	id "id",
+		const sql = `SELECT	id "id",
 						bio "bio",
 						username "username",
 						password "password",
@@ -857,7 +829,7 @@ const userLogin = (app_id, data, callBack) => {
 					FROM ${db_schema()}.user_account
 				WHERE username = :username 
 					AND provider_id IS NULL`;
-		parameters ={
+		const parameters ={
 						username: data.username
 					};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
@@ -866,11 +838,11 @@ const userLogin = (app_id, data, callBack) => {
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    };
 const updateSigninProvider = (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
-		let error_code = validation_before_update(data);
+		const error_code = validation_before_update(data);
 		if (error_code==null){
 			sql = `UPDATE ${db_schema()}.user_account
 					  SET identity_provider_id = :identity_provider_id,
@@ -902,11 +874,9 @@ const updateSigninProvider = (app_id, id, data, callBack) => {
 		}
 		else
 			callBack(error_code, null);
-    }
+    };
 const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT	u.id "id",
+		const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
 							FROM ${db_schema()}.user_account_logon ul
@@ -931,7 +901,7 @@ const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
 					FROM ${db_schema()}.user_account u
 					WHERE u.provider_id = :provider_id
 					AND u.identity_provider_id = :identity_provider_id`;
-		parameters = {
+		const parameters = {
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id
 					};
@@ -941,15 +911,13 @@ const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
 			else
 				return callBack(null, result);
 		});
-    }
+    };
 const getEmailUser = (app_id, email, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT id "id",
+		const sql = `SELECT id "id",
 					  email "email"
 				 FROM ${db_schema()}.user_account
 				WHERE email = :email `;
-		parameters ={
+		const parameters ={
 						email: email
 					};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
@@ -958,13 +926,11 @@ const getEmailUser = (app_id, email, callBack) => {
 			else
 				return callBack(null, result[0]);
 		});
-    }
+    };
 const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
-		let sql;
-		let parameters;
 		if (user_account_id =='' || typeof user_account_id == 'undefined')
 			user_account_id = null;
-		sql = `SELECT app_role_id "app_role_id",
+		const sql = `SELECT app_role_id "app_role_id",
 					  COALESCE(ar.icon,ar_user.icon) "icon"
 				 FROM ${db_schema()}.user_account ua
 				      LEFT OUTER JOIN ${db_schema()}.app_role ar
@@ -979,7 +945,7 @@ const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
 				 FROM ${db_schema()}.app_role ar
 				WHERE ar.id = :id_user_icon
 				  AND :id IS NULL`;
-		parameters ={
+		const parameters ={
 						id: user_account_id,
 						id_user_icon: 2
 					};
@@ -990,14 +956,12 @@ const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
 			else
 				return callBack(null, result[0]);
 		});
-	}
+	};
 	const getDemousers = (app_id, callBack) => {
-		let sql;
-		let parameters;
-		sql = `SELECT id "id"
+		const sql = `SELECT id "id"
 				 FROM ${db_schema()}.user_account
 				WHERE user_level = :demo_level`;
-		parameters ={
+		const parameters ={
 						demo_level: 2
 					};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
@@ -1006,11 +970,11 @@ const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
 			else
 				return callBack(null, result);
 		});
-	}
+	};
 
-export{password_length_wrong, verification_code,
-	   getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
-	   activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
-	   searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
-	   updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
-	   getEmailUser, getUserRoleAdmin, getDemousers}
+export{	password_length_wrong, verification_code,
+		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
+		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
+		searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
+		updateUserLocal, updateUserCommon, deleteUser, userLogin, updateSigninProvider, providerSignIn,
+		getEmailUser, getUserRoleAdmin, getDemousers};
