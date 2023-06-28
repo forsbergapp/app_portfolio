@@ -70,7 +70,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                 server_http_accept_language : req.headers['accept-language'],
                                                 client_latitude : result_geodata.latitude,
                                                 client_longitude : result_geodata.longitude
-                                            }, (err,results)  => {
+                                            }, ()  => {
                                                 return callBack(null, app_with_init);
                                     });
                                 });
@@ -118,7 +118,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                     server_http_accept_language : req.headers['accept-language'],
                                                     client_latitude : result_geodata.latitude,
                                                     client_longitude : result_geodata.longitude
-                                                    }, (err,results)  => {
+                                                    }, ()  => {
                                                         return callBack(null, app_with_init);
                                         });
                                     });
@@ -216,7 +216,7 @@ const getReport = async (req, res, app_id, callBack) => {
                                                                                 server_http_accept_language : req.headers['accept-language'],
                                                                                 client_latitude : result_geodata.latitude,
                                                                                 client_longitude : result_geodata.longitude
-                                                                                }, (err,results)  => {
+                                                                                }, ()  => {
                                                                         callBack(null,report_with_init);
                                                                     });
                                                                 });
@@ -281,7 +281,7 @@ const BFF = async (req, res) =>{
             .then(result_service => {
                 import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
                     const log_text = message_queue==true?null:result_service;
-                    LogServiceI(req.query.app_id, service_called, parameters, log_text).then(result_log=>{
+                    LogServiceI(req.query.app_id, service_called, parameters, log_text).then(()=>{
                         //message queue saves result there
                         if (message_queue)
                             return res.status(200).send('✅');

@@ -63,7 +63,7 @@ const setEvents = () => {
     document.getElementById('common_user_menu_dropdown_log_out').addEventListener('click', (event) => { user_menu_item_click(event.target); }, false);
     //user preferences
     document.getElementById('app_theme_checkbox').addEventListener('click', () => { app_theme_switch(); }, false);
-    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, null, (err, result)=>{get_apps();});}, false);
+    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { document.getElementById('apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, null, ()=>{get_apps();});}, false);
     document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { app_theme_switch();}, false);
     //common with app specific settings
     //dialogue profile
@@ -186,11 +186,7 @@ const user_menu_item_click = (item) => {
     switch (item.id==''?item.parentNode.id:item.id){
         case 'common_user_menu_username':{
             document.getElementById('common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null,
-                            null,
-                        (err, result)=>{
-                            null;
-                        });
+            common.profile_show(null,null,()=>{});
             break;
         }
         case 'common_user_menu_dropdown_log_out':{
@@ -251,13 +247,13 @@ const user_delete_app = async () => {
         user_local = false;
     const function_delete_user_account = () => { 
                                             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-                                            common.user_delete(1, user_local, null, (err, result)=>{
+                                            common.user_delete(1, user_local, null, (err)=>{
                                                 if (err==null){
                                                     common.user_logoff();
                                                 }
                                             }); 
                                         };
-    await common.user_delete(null, user_local, function_delete_user_account, (err, result) =>{
+    await common.user_delete(null, user_local, function_delete_user_account, (err) =>{
         if (err==null){
             common.user_logoff();
         }
@@ -428,7 +424,7 @@ const init = (parameters) => {
             init_app().then(()=>{
                 document.getElementById('apps').innerHTML = common.APP_SPINNER;
                 if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-                    common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result)=>{
+                    common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, ()=>{
                             get_apps();
                     });
                 else
@@ -438,11 +434,7 @@ const init = (parameters) => {
                     if (user !='') {
                         //show profile for user entered in url
                         document.getElementById('common_dialogue_profile').style.visibility = 'visible';
-                        common.profile_show(null, 
-                                        user,
-                                        (err, result)=>{
-                                        null;
-                                        });
+                        common.profile_show(null, user,()=>{});
                     }
                 };
                 show_start().then(()=>{

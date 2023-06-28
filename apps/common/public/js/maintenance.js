@@ -1,5 +1,5 @@
 const common = await import('/common/js/common.js');
-const app_exception = (error) => {
+const app_exception = () => {
     null;
 };
 const init = (parameters) => {

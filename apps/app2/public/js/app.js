@@ -340,7 +340,7 @@ const slide = (items, prev, next, type) => {
 /* UI                     */
 /*----------------------- */
 const common_translate_ui_app = async (lang_code, callBack) => {
-    await common.common_translate_ui(lang_code, null, (err, result) => {
+    await common.common_translate_ui(lang_code, null, (err) => {
         if (err)
             callBack(err,null);
         else{
@@ -996,7 +996,7 @@ const user_login_app = async () => {
         document.getElementById('common_login_button').innerHTML = old_button;
         if (err==null){
             //create intitial user setting if not exist, send initial=true
-            user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
+            user_settings_function('ADD_LOGIN', true, (err) =>{
                 if (err)
                     null;
                 else{
@@ -1051,7 +1051,7 @@ const user_verify_check_input_app = async (item, nextField) => {
     });
 };
 const user_function_app = async (function_name) => {
-    await common.user_function(function_name, (err, result) => {
+    await common.user_function(function_name, (err) => {
         if (err==null){
             profile_update_stat_app();
         }
@@ -1102,7 +1102,7 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //create intitial user setting if not exist, send initial=true
-            user_settings_function('ADD_LOGIN', true, (err, result_settings) =>{
+            user_settings_function('ADD_LOGIN', true, (err) =>{
                 if (err)
                     null;
                 else{       
@@ -1682,7 +1682,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 const old_button = document.getElementById('setting_btn_user_delete').innerHTML;
                 document.getElementById('setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err, result) => {
+                common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err) => {
                     if (err){
                         document.getElementById('setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -2000,7 +2000,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.FFB ('DB_API', `/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
+        common.FFB ('DB_API', `/user_account_app_setting_like/${common.COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err) => {
             if (err)
                 null;
             else{
@@ -2187,11 +2187,11 @@ const setEvents = () => {
         if (event_target_id)
             switch (event_target_id){
                 case 'setting_btn_user_save':{
-                    user_settings_function('SAVE', false, (err, result)=>{null;});
+                    user_settings_function('SAVE', false, ()=>{});
                     break;
                 }
                 case 'setting_btn_user_add':{
-                    user_settings_function('ADD', false, (err, result)=>{null;});
+                    user_settings_function('ADD', false, ()=>{});
                     break;
                 }
                 case 'setting_btn_user_delete':{
@@ -2296,7 +2296,7 @@ const setEvents = () => {
     document.getElementById('common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + 
                                                                                                                          document.getElementById('common_app_select_theme').value + ' ' + 
                                                                                                                          document.getElementById('common_user_arabic_script_select').value;}, false);
-    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { common_translate_ui_app(event.target.value, (err, result)=>{null;});}, false);    
+    document.getElementById('common_user_locale_select').addEventListener('change', (event) => { common_translate_ui_app(event.target.value, ()=>{});}, false);    
     document.getElementById('common_user_timezone_select').addEventListener('change', (event) => { document.getElementById('setting_timezone_current').innerHTML = event.target.value;}, false);
     document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change'));}, false);
     
@@ -2691,7 +2691,7 @@ const init_app = () => {
                             common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); }).then(() => {
                                 serviceworker();
                                 if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-                                    common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], (err, result)=>{
+                                    common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], ()=>{
                                         resolve();
                                     });
                                 else

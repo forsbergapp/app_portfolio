@@ -301,7 +301,7 @@ const DefaultConfig = async () => {
                                         }
                                         else{
                                             //send fileno in file array
-                                            ConfigSave(default_files[config_no][0], JSON.parse(config_json[config_no]), true, (err, result)=>{
+                                            ConfigSave(default_files[config_no][0], JSON.parse(config_json[config_no]), true, (err)=>{
                                                 if (err)
                                                     reject(err);
                                                 else{
@@ -862,7 +862,7 @@ const serverExpress = async () => {
         //MIDDLEWARES
         //
         //use compression for better performance
-        const shouldCompress = (req, res) => {
+        const shouldCompress = (req) => {
             //exclude broadcast messages
             //check endpoint for broadcast
             if (req.baseUrl == `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/broadcast`)
@@ -914,7 +914,7 @@ const serverExpress = async () => {
                         if (result == null){
                             //access control ok
                             //check request characters in path
-                            check_request(req.path, (err, result) =>{
+                            check_request(req.path, (err) =>{
                                 if (err){
                                     res.statusCode = 400;
                                     res.statusMessage = 'check_request ⛔';
