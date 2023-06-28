@@ -128,7 +128,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 		.then((result)=> {
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBI}) => {
 				LogDBI(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, result)
-				.then((result_info_log)=>{
+				.then(()=>{
 					return callBack(null, result);});
 				});
 			})
@@ -136,7 +136,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 			const database_error = 'DATABASE ERROR';
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBE}) => {
 				LogDBE(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, error)
-				.then((result_error_log)=>{
+				.then(()=>{
 					const app_code = get_app_code(error.errorNum, 
 						error.message, 
 						error.code, 

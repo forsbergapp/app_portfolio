@@ -405,7 +405,7 @@ const sendBroadcast = () => {
         path = '/broadcast/message/Admin?';
         token_type = 1;
     }
-    common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err, result) => {
+    common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err) => {
         if (err)
             null;
         else{
@@ -511,9 +511,7 @@ const set_maintenance = () => {
         const json_data = `{
                             "value": ${check_value}
                          }`;
-        common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 2, json_data, (err, result) => {
-            null;
-        });
+        common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 2, json_data, () => {});
     }
 };
 /*----------------------- */
@@ -1164,7 +1162,7 @@ const button_save = async (item) => {
                     json_data = JSON.stringify(json_object, undefined, 2);
                     const old_button = document.getElementById(item).innerHTML;
                     document.getElementById(item).innerHTML = common.APP_SPINNER;
-                    common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 2, json_data, (err, result) => {
+                    common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 2, json_data, () => {
                         document.getElementById(item).innerHTML = old_button;
                     });
                 }
@@ -1221,7 +1219,7 @@ const update_record = async (table,
                 break;
             }
         }
-        await common.FFB ('DB_API', path, 'PUT', 1, json_data, (err, result) => {
+        await common.FFB ('DB_API', path, 'PUT', 1, json_data, (err) => {
             document.getElementById(button).innerHTML = old_button;
             if (err)
                 null;
@@ -3103,9 +3101,7 @@ const init = () => {
         document.getElementById('menu_5').style.display='block';
         //start with DASHBOARD
         show_menu(1);
-        common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', (err, result)=>{
-            null;
-        });
+        common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', ()=>{});
     }
 };
 export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, init};

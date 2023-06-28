@@ -95,7 +95,7 @@ const updateUserSuperAdmin = (req, res) => {
             if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
                 //delete admin app from user if user is not an admin anymore
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-                    deleteUserAccountApps(req.query.app_id, req.params.id, req.query.app_id, (err, result_delete_user_acccount_app) =>{
+                    deleteUserAccountApps(req.query.app_id, req.params.id, req.query.app_id, (err) =>{
                         if (err)
                             return res.status(500).send(
                                 err
@@ -142,7 +142,7 @@ const userSignup = (req, res) => {
                     getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                         //send email SIGNUP
                         sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.insertId, req.body.verification_code, req.body.email, 
-                                      req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
+                                      req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                             if (err) {
                                 //return res from userSignup
                                 return res.status(500).send(
@@ -200,7 +200,7 @@ const activateUser = (req, res) => {
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
                     };
-                    insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
+                    insertUserEvent(req.query.app_id, eventData, (err)=>{
                         if (err)
                             return res.status(500).send(
                                 err
@@ -271,14 +271,14 @@ const passwordResetUser = (req, res) => {
                                     client_latitude : req.body.client_latitude,
                                     client_longitude : req.body.client_longitude
                                 };
-                                insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
+                                insertUserEvent(req.query.app_id, eventData, (err)=>{
                                     if (err)
                                         return res.status(200).json({
                                             sent: 0
                                         });
                                     else{
                                         const new_code = service.verification_code();
-                                        service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
+                                        service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err) => {
                                             if (err)
                                                 return res.status(500).send(
                                                     err
@@ -287,7 +287,7 @@ const passwordResetUser = (req, res) => {
                                                 getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                     //send email PASSWORD_RESET
                                                     sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, email, 
-                                                                  req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
+                                                                  req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                                                         if (err) {
                                                             return res.status(500).send(
                                                                 err
@@ -387,7 +387,7 @@ const getProfileUser = (req, res) => {
                     if (req.body.user_account_id_view==null)
                         req.body.user_account_id_view = results.id;
                     import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
-                        insertUserAccountView(req.query.app_id, req.body, (err, results_insert) => {
+                        insertUserAccountView(req.query.app_id, req.body, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -424,7 +424,7 @@ const searchProfileUser = (req, res) => {
             req.body.client_ip = req.ip;
             req.body.client_user_agent = req.headers['user-agent'];
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
-                insertProfileSearch(req.query.app_id, req.body, (err, results_insert) => {
+                insertProfileSearch(req.query.app_id, req.body, (err) => {
                     if (err) {
                         return res.status(500).send(
                             err
@@ -538,7 +538,7 @@ const updateUserLocal = (req, res) => {
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                 //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                                 sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], req.params.id, req.body.verification_code, req.body.new_email, 
-                                                              req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
+                                                              req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                                                     if (err) {
                                                         return res.status(500).send(
                                                             err
@@ -592,7 +592,7 @@ const updateUserLocal = (req, res) => {
                                             client_latitude : req.body.client_latitude,
                                             client_longitude : req.body.client_longitude
                                         };
-                                        insertUserEvent(req.query.app_id, eventData, (err, result_new_user_event)=>{
+                                        insertUserEvent(req.query.app_id, eventData, (err)=>{
                                             if (err)
                                                 return res.status(500).json({
                                                     err
@@ -673,7 +673,7 @@ const updatePassword = (req, res) => {
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
                     };
-                    insertUserEvent(req.query.app_id, eventData, (err, result_insert)=>{
+                    insertUserEvent(req.query.app_id, eventData, (err)=>{
                         if (err)
                             return res.status(200).json({
                                 sent: 0
@@ -848,7 +848,7 @@ const userLogin = (req, res) => {
                 if (result_pw == 1) {
                     if ((req.query.app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') && (results.app_role_id == 0 || results.app_role_id == 1))||
                             req.query.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
-                        createUserAccountApp(req.query.app_id, results.id, (err, results_create) => {
+                        createUserAccountApp(req.query.app_id, results.id, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -858,7 +858,7 @@ const userLogin = (req, res) => {
                                 //if user not activated then send email with new verification code
                                 const new_code = service.verification_code();
                                 if (results.active == 0){
-                                    service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err,result_verification) => {
+                                    service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err) => {
                                         if (err)
                                             return res.status(500).send(
                                                 err
@@ -867,7 +867,7 @@ const userLogin = (req, res) => {
                                             getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
                                                 //send email UNVERIFIED
                                                 sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, results.email, 
-                                                              req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err, result_sendemail)=>{
+                                                              req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                                                     if (err) {
                                                         return res.status(500).send(
                                                             err
@@ -875,7 +875,7 @@ const userLogin = (req, res) => {
                                                     }
                                                     else{
                                                         req.body.access_token = accessToken(req.query.app_id);
-                                                        insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                                        insertUserAccountLogon(req.query.app_id, req.body, (err) => {
                                                             if (err)
                                                                 return res.status(500).send(
                                                                     err
@@ -895,7 +895,7 @@ const userLogin = (req, res) => {
                                 }
                                 else{
                                     req.body.access_token = accessToken(req.query.app_id);
-                                    insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                                    insertUserAccountLogon(req.query.app_id, req.body, (err) => {
                                         if (err)
                                             return res.status(500).send(
                                                 err
@@ -920,7 +920,7 @@ const userLogin = (req, res) => {
                     }
                     
                 } else {
-                    insertUserAccountLogon(req.query.app_id, req.body, (err, result_user_account_logon) => {
+                    insertUserAccountLogon(req.query.app_id, req.body, (err) => {
                         if (err) {
                             return res.status(500).send(
                                 err
@@ -968,13 +968,13 @@ const providerSignIn = (req, res) => {
         }
         else{
             if (results.length > 0) {
-                service.updateSigninProvider(req.query.app_id, results[0].id, req.body, (err, results_update) => {
+                service.updateSigninProvider(req.query.app_id, results[0].id, req.body, (err) => {
                     if (err) {
                         return checked_error(req.query.app_id, req.query.lang_code, err, res);
                     }
                     else{
                         req.body.user_account_id = results[0].id;
-                        createUserAccountApp(req.query.app_id, results[0].id, (err, results_create_useraccountapp) => {
+                        createUserAccountApp(req.query.app_id, results[0].id, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -982,7 +982,7 @@ const providerSignIn = (req, res) => {
                             }
                             else{
                                 req.body.access_token = accessToken(req.query.app_id);
-                                insertUserAccountLogon(req.query.app_id, req.body, (err, results_insert_user_account_logon) => {
+                                insertUserAccountLogon(req.query.app_id, req.body, (err) => {
                                     if (err) {
                                         return res.status(500).send(
                                             err
@@ -1018,7 +1018,7 @@ const providerSignIn = (req, res) => {
                     }
                     else{
                         req.body.user_account_id = results_create.insertId;
-                        createUserAccountApp(req.query.app_id, results_create.insertId, (err, results_create_useraccountapp) => {
+                        createUserAccountApp(req.query.app_id, results_create.insertId, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -1033,7 +1033,7 @@ const providerSignIn = (req, res) => {
                                     }
                                     else{
                                             req.body.access_token = accessToken(req.query.app_id);
-                                            insertUserAccountLogon(req.query.app_id, req.body, (err, results_user_account_logon) => {
+                                            insertUserAccountLogon(req.query.app_id, req.body, (err) => {
                                                 if (err) {
                                                     return res.status(500).send(
                                                         err
