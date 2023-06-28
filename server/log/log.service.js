@@ -141,7 +141,6 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
             default:{
                 //0 is default, other levels not implemented
                 return resolve();
-                break;
             }
         }   
         return resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
@@ -198,7 +197,6 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
             default:{
                 //0 is default, other levels not implemented
                 return resolve();
-                break;
             }
         }
         return resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_DB'), ConfigGet(1, 'SERVICE_LOG', level_info), log_json_db));
@@ -246,7 +244,6 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
             default:{
                 //0 is default, other levels not implemented
                 return resolve();
-                break;
             }
         }
         return resolve(sendLog(ConfigGet(1, 'SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));

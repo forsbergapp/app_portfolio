@@ -136,7 +136,6 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                             return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return config_group.split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;
                         }
                     }
-                    break;
                 }
                 //config_group = app id, return parameter value for given app id
                 case 'SHOWINFO':
@@ -150,7 +149,6 @@ const ConfigGet = (config_no, config_group = null, parameter = null) => {
                 case 'ACCESS_SECRET':
                 case 'ACCESS_EXPIRE':{
                     return JSON.parse(CONFIG_APPS)['APPS'].filter((app)=>{return app.APP_ID == config_group;})[0][parameter];
-                    break;
                 }
                 //config_group = app id or null, return all apps or given app id without secret
                 case 'APPS':{

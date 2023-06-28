@@ -29,7 +29,6 @@ const getGeodataEmpty = (geotype) => {
 				"geoplugin_currencySymbol_UTF8":"",
 				"geoplugin_currencyConverter":null
 			  }`;
-			break;
 		}
 		case 'PLACE':{
 			//http://www.geoplugin.net/extras/location.gp?format=json&lat=[latitude]&lon=[longitude]
@@ -45,7 +44,6 @@ const getGeodataEmpty = (geotype) => {
 				"geoplugin_distanceMiles":null,
 				"geoplugin_distanceKilometers":null
 			}`;
-			break;
 		}
 		default: return null;
 	}
@@ -66,7 +64,6 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                         return row;
                 }
                 return null;
-                break;
             }
             case 'PLACE':{
                 geodata_cache = await fs.promises.readFile(`${process.cwd()}/service/geolocation/geodata_cache_place.json`, 'utf8');
@@ -93,7 +90,6 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                         return row;
                 }
                 return null;
-                break;
             }
             default:{
                 return null;

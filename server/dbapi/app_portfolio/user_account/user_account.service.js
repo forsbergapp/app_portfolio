@@ -316,7 +316,6 @@ const create = (app_id, data, callBack) => {
 						case '2':
 						case '3':{
 							return callBack(null, result);
-							break;
 						}
 						case '4':{
 							//Fetch id from rowid returned from Oracle
