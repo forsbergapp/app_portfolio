@@ -2174,7 +2174,6 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             }
             show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL['app_id']);
             return callBack('CONFIRM',null);
-            break;
         }
         case 1:{
             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
