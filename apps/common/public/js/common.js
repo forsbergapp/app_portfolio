@@ -1244,11 +1244,9 @@ const show_window_info = (info, url, content_type, iframe_content) => {
 /* PROFILE                */
 /*----------------------- */
 const profile_follow_like = async (function_name) => {
-    await user_function(function_name, (err, result) => {
+    await user_function(function_name, (err) => {
         if (err==null){
-            profile_update_stat((err, result) =>{
-                null;
-            });
+            profile_update_stat(()=>{});
         }
     });
 };
@@ -1257,11 +1255,7 @@ const show_profile_click_events = (item, click_function) => {
         //execute function from inparameter or use default when not specified
         const profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
         if (click_function ==null){
-            profile_show(profile_id,
-                        null,
-                        (err, result)=>{
-                            null;
-                        });
+            profile_show(profile_id,null,()=>{});
         }
         else{
             click_function(profile_id);
@@ -1746,11 +1740,7 @@ const search_input = (event, event_function) => {
                     if (x[i].classList.contains('common_profile_search_list_selected')){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
-                            profile_show(x[i].children[0].children[0].innerHTML,
-                                         null,
-                                        (err, result)=>{
-                                            null;
-                                        });
+                            profile_show(x[i].children[0].children[0].innerHTML,null,()=>{});
                         }
                         else{
                             event_function(x[i].children[0].children[0].innerHTML);
@@ -1808,7 +1798,7 @@ const user_login = async (username, password, callBack) => {
             COMMON_GLOBAL['user_app_role_id'] = json.items[0].app_role_id;
             COMMON_GLOBAL['rest_at']	= json.accessToken;
             updateOnlineStatus();
-            user_preference_get((err, results) =>{
+            user_preference_get(() =>{
                 if (json.items[0].active==0){
                     const function_cancel_event = () => { dialogue_verify_clear();
                                                           exception(COMMON_GLOBAL['exception_app_function'], null);
@@ -2194,7 +2184,7 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             const json_data = `{"password":"${password}"}`;
 
-            FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err, result) => {
+            FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err) => {
                 document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
@@ -2240,7 +2230,7 @@ const user_function = (user_function, callBack) => {
         } else {
             method = 'DELETE';
         }
-        FFB ('DB_API', `${path}/${COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err, result) => {
+        FFB ('DB_API', `${path}/${COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -2287,7 +2277,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.getElementById('common_dialogue_message').style.visibility = 'hidden';
-            FFB ('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 1, null, (err, result) => {
+            FFB ('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 1, null, (err) => {
                 if (err)
                     null;
                 else{
@@ -2353,7 +2343,7 @@ const updatePassword = () => {
         }
         const old_button = document.getElementById('common_user_new_password_icon').innerHTML;
         document.getElementById('common_user_new_password_icon').innerHTML = APP_SPINNER;
-        FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err, result) => {
+        FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err) => {
             document.getElementById('common_user_new_password_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -2373,7 +2363,7 @@ const user_preference_save = async () => {
         "setting_preference_direction_id": "${document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id}",
         "setting_preference_arabic_script_id": "${document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id}"
         }`;
-        await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err, result) => {
+        await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err) => {
             if (err)
                 null;
             else{
@@ -2504,7 +2494,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                 COMMON_GLOBAL['user_account_id'] = json.items[0].id;
                 COMMON_GLOBAL['user_identity_provider_id'] = json.items[0].identity_provider_id;
                 updateOnlineStatus();
-                user_preference_get((err, results) =>{
+                user_preference_get(() =>{
                     dialogue_login_clear();
                     dialogue_signup_clear();
                     return callBack(null, {user_account_id: json.items[0].id,
@@ -2957,9 +2947,7 @@ const updateOnlineStatus = () => {
                 `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`;
         token_type=0;
     }
-    FFB ('BROADCAST', path, 'PATCH', token_type, null, (err, result) => {
-        null;
-    });
+    FFB ('BROADCAST', path, 'PATCH', token_type, null, () => {});
 };
 const connectOnline = async () => {
     FFB ('BROADCAST', '/broadcast/connection/connect' +
@@ -2973,7 +2961,7 @@ const connectOnline = async () => {
             COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
                 show_broadcast(event.data);
             };
-            COMMON_GLOBAL['service_broadcast_eventsource'].onerror = (err) => {
+            COMMON_GLOBAL['service_broadcast_eventsource'].onerror = () => {
                 COMMON_GLOBAL['service_broadcast_eventsource'].close();
                 reconnect();
             };

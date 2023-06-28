@@ -176,18 +176,12 @@ const setEvents = () => {
         //user preferences
         document.getElementById('common_user_menu_username').addEventListener('click', () => {
             document.getElementById('common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null,
-                null,
-                (err, result) => {
-                    null;
-                });
+            common.profile_show(null,null,()=>{});
             document.getElementById('common_user_menu_dropdown').style = 'none';
         }, false);
 
         document.getElementById('common_user_locale_select').addEventListener('change', (event) => {
-            common.common_translate_ui(event.target.value, null, (err, result) => {
-                null;
-            });
+            common.common_translate_ui(event.target.value, null, ()=>{});
         }, false);
         document.getElementById('common_user_arabic_script_select').addEventListener('change', () => { document.getElementById('common_app_select_theme').dispatchEvent(new Event('change')); }, false);
     }
@@ -279,9 +273,7 @@ const init_app = (system_admin_only) => {
     setEvents();
     if (system_admin_only == 0)
         if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-            common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, (err, result) => {
-                null;
-            });
+            common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, ()=>{});
 };
 const init = (parameters) => {
     //show admin login as default
