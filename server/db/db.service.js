@@ -261,15 +261,16 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
                //postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
                 const [text, values] = Object.entries(params).reduce(
-                    ([sql, array, index], [key, value]) => [sql.replace(/:(\w+)/g, (txt, key) => {
-                                                                     if (Object.prototype.hasOwnProperty.call(params, key)){
-                                                                        return `$${Object.keys(params).indexOf(key) + 1}`;
-                                                                     }
-                                                                     else
-                                                                        return txt;
-                                                                  }), 
-                                                [...array, value], index + 1],
-                                                  [parameterizedSql, [], 1]
+                    ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
+                                                               if (key in params)
+                                                                  return `$${Object.keys(params).indexOf(key) + 1}`;
+                                                               else
+                                                                  return txt;
+                                                               }),
+                                                      [...array, param[1]], 
+                                                      index + 1
+                                                    ],
+                                                    [parameterizedSql, [], 1]
                 );
                 return { text, values };
             };	
