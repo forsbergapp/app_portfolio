@@ -156,7 +156,7 @@ const check_internet = async () => {
         //test connection with localhost
         //no need to specify other domain to test internet
         import('node:dns').then(({resolve: dns_resolve}) => {
-            dns_resolve('localhost', 'A', (err, result) => {
+            dns_resolve('localhost', 'A', (err) => {
                 /*  error if disconnected internet:
                 code:       'ECONNREFUSED'
                 errno:      undefined
@@ -192,7 +192,7 @@ const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
     return new Promise((resolve, reject)=>{
         if (authorization){
             const token = authorization.slice(7);
-            verify(token, ConfigGet(7, app_id, 'ACCESS_SECRET'), (err, decoded) => {
+            verify(token, ConfigGet(7, app_id, 'ACCESS_SECRET'), (err) => {
                 if (err)
                    resolve(false);
                 else {
@@ -221,7 +221,7 @@ const checkDataToken = async (app_id, token) =>{
     return new Promise(resolve =>{
         if (token){
             token = token.slice(7);
-            verify(token, ConfigGet(7, app_id, 'DATA_SECRET'), (err, decoded) => {
+            verify(token, ConfigGet(7, app_id, 'DATA_SECRET'), (err) => {
                 if (err){
                     resolve(false);
                 } else {

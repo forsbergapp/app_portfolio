@@ -6,7 +6,7 @@ const checkSystemAdmin = (req, res, next) => {
     let token = req.get('authorization');
     if (token){
         token = token.slice(7);
-        verify(token, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), (err, decoded) => {
+        verify(token, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), (err) => {
             if (err){
                 res.status(401).send({
                     message: '⛔'
@@ -46,7 +46,7 @@ const authSystemAdmin = (req, res) => {
         const username = userpass.split(':')[0];
         const password = userpass.split(':')[1];
         if (CheckFirstTime())
-            CreateSystemAdmin(username, password, (err, result) =>{
+            CreateSystemAdmin(username, password, () =>{
                 check_user(username, password);
             });
         else
