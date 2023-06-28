@@ -51,10 +51,8 @@ const init_app = async () => {
     }
 };
 const init = (parameters) => {
-    common.init_common(parameters, (err, global_app_parameters)=>{
-        init_app().then(() => {
-            null;
-        });
+    common.init_common(parameters, ()=>{
+        init_app().then(() => {});
     });
 };
 export{app_exception, init};

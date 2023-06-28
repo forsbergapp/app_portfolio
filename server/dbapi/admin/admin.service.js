@@ -63,7 +63,7 @@ const DBStart = async () => {
          password = `${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
          dba = 0;
          await pool_db(dba, user, password, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-         .then(result=>{
+         .then(()=>{
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
                //app_id inparameter for log, all apps will be returned
                getAppDBParametersAdmin(ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),(err, result_apps) =>{
@@ -310,7 +310,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		let records_user_account_app = 0;
 		let records_user_account_app_setting = 0;
 		const password_encrypted = hashSync(demo_password, genSaltSync(10));
-		const create_users = async (demo_user) =>{
+		const create_users = async (demo_users) =>{
 			return await new Promise((resolve, reject)=>{
 				const create_update_id = (demo_user)=>{
 					const email = `demo${++email_index}@localhost`;
@@ -381,7 +381,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 			});
 		};
 		//create all users first and update with id
-		await create_users();
+		await create_users(demo_users);
 		const apps = await getAppsAdminId(app_id);
 		//create user settings
 		for (const demo_user of demo_users){
@@ -606,9 +606,9 @@ const demo_delete = async (app_id, callBack)=> {
 				let deleted_user = 0;
 				if (result_demo_users.length>0){
 					const delete_user = async () => {
-						return new Promise((resolve, reject)=>{
+						return new Promise((resolve)=>{
 							for (const user of result_demo_users){
-								deleteUser(app_id, user.id,  (err, result_deleteUser) =>{
+								deleteUser(app_id, user.id,  (err) =>{
 									if (err) {
 										resolve(err);
 									}
