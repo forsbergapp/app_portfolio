@@ -63,7 +63,6 @@ const get_locale = (lang_code, part) => {
 		switch (part){
 			case 1:{
 				return lang_code;
-				break;
 			}
 			case 2:{
 				if (lang_code.indexOf('-',lang_code.indexOf('-')+1) >-1)
@@ -71,7 +70,6 @@ const get_locale = (lang_code, part) => {
 					return lang_code.substring(0,lang_code.indexOf('-',lang_code.indexOf('-')+1));
 				else
 					return lang_code;
-				break;
 			}
 			case 3:{
 				if (lang_code.indexOf('-')>-1)
@@ -79,7 +77,6 @@ const get_locale = (lang_code, part) => {
 					return lang_code.substring(0,lang_code.indexOf('-'));
 				else
 					return lang_code;
-				break;
 			}
 		}
 };
