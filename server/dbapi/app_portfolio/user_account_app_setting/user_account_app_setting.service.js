@@ -44,7 +44,6 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 						case '2':
 						case '3':{
 							return callBack(null, result);
-							break;
 						}
 						case '4':{
 							if (initial==1){
