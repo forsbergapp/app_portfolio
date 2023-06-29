@@ -1447,6 +1447,7 @@ const init = async (parameters) => {
 	const user_setting_id = urlParams.get('sid');
 	const reporttype = urlParams.get('type');
 	return await new Promise((resolve) => {
+		common.COMMON_GLOBAL['exception_app_function'] = report_exception;
 		common.init_common(parameters, (err, global_app_parameters)=>{
 			if (err){
 				report_exception(err);
