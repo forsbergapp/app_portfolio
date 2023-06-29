@@ -148,8 +148,9 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 		if (id_current_user=='')
 			id_current_user = null;
 		const sql = `SELECT us.id "id",
-					  us.description "description",
-					  us.user_account_app_user_account_id "user_account_app_user_account_id",
+					  		us.description "description",
+					  		us.user_account_app_user_account_id "user_account_app_user_account_id",
+							us.settings_json "settings_json",
 					  (SELECT COUNT(u_like.id)
 						 FROM ${db_schema()}.user_account_app_setting_like u_like
 						WHERE u_like.user_account_app_setting_id = us.id

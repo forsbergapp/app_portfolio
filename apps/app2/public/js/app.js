@@ -1896,12 +1896,11 @@ const profile_user_setting_stat = (id) => {
 };
 
 const profile_user_setting_link = (item) => {
-    const paper_size_select = document.getElementById('setting_select_report_papersize');
-    
     const select_user_setting = document.getElementById('profile_select_user_settings');
     const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
-    document.getElementById('common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
+    const paper_size = select_user_setting[select_user_setting.selectedIndex].getAttribute('paper_size');
+    document.getElementById('common_window_info_content').className = paper_size;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
@@ -1909,7 +1908,7 @@ const profile_user_setting_link = (item) => {
             updateViewStat_app(sid,user_account_id);
             const url = get_report_url(user_account_id, 
                                      sid, 
-                                     paper_size_select.options[paper_size_select.selectedIndex].value,
+                                     paper_size,
                                      item.id,
                                      'HTML');
             common.show_window_info(2, null, 'HTML', url);
@@ -1950,6 +1949,7 @@ const profile_show_user_setting = () => {
                         liked=${json.items[i].liked}
                         count_likes=${json.items[i].count_likes}
                         count_views=${json.items[i].count_views}
+                        paper_size=${JSON.parse(json.items[i].settings_json).design_paper_size}
                         >${json.items[i].description}
                         </option>`;
             }
