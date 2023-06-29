@@ -2705,6 +2705,7 @@ const init_app = () => {
     });    
 };
 const init = (parameters) => {
+    common.COMMON_GLOBAL['exception_app_function'] = app_exception;
     common.init_common(parameters, (err, global_app_parameters)=>{
         if (err)
             null;

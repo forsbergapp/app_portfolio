@@ -278,7 +278,7 @@ const init_app = (system_admin_only) => {
 const init = (parameters) => {
     //show admin login as default
     admin_login_nav(document.getElementById('admin_login_title'));
-
+    common.COMMON_GLOBAL['exception_app_function'] = admin_exception;
     common.init_common(parameters, (err, global_app_parameters) => {
         document.getElementById('admin_login_title').innerHTML = common.ICONS['user'];
         document.getElementById('system_admin_login_title').innerHTML = common.ICONS['app_system_admin'];

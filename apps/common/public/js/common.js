@@ -3126,14 +3126,7 @@ const get_cities = async (countrycode, callBack) => {
 /* EXCEPTION              */
 /*----------------------- */
 const exception = (app_exception_function, error) => {
-    //app_exception_function should be with namespace for example like 
-    //"app.app_exception" or "report.report_exception"
-    const fnparams = [error];
-    const namespace = app_exception_function.substring(0,app_exception_function.indexOf('.'));
-    const function_name = app_exception_function.substring(app_exception_function.indexOf('.') + 1);
-    const fn = window[namespace][function_name];
-    if (typeof fn === 'function') 
-        fn.apply(null, fnparams);
+    app_exception_function(error);
 };
 /*----------------------- */
 /* INIT                   */
@@ -3143,9 +3136,6 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
     COMMON_GLOBAL['app_name'] = parameters.app_name;
-
-    //app exception function
-    COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
 
     //rest 
     COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;
@@ -3513,7 +3503,6 @@ const init_common = async (parameters, callBack) => {
     if (COMMON_GLOBAL['app_id'] ==null)
         set_globals(parameters);
     if (parameters.app_id == COMMON_GLOBAL['common_app_id']){
-        COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function;
         broadcast_init();
         if (parameters.system_admin_only==1){
             document.title = parameters.app_name;
