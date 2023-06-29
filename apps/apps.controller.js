@@ -292,9 +292,7 @@ const BFF = async (req, res) =>{
                     //log ERROR to module log and to files
                     LogServiceE(req.query.app_id, service_called, parameters, error).then(() => {
                         //return service unavailable and error message
-                        return res.status(503).json({
-                            message: error
-                        });
+                        return res.status(503).send(error);
                     });
                 });
             });
