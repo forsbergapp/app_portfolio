@@ -814,7 +814,7 @@ ul#admin_login_nav li{
 	width:70px;
 }
 .list_connected_col:nth-child(10){
-	width:70px;
+	width:540px;
 }
 /*APP LOG*/
 #list_app_log, #list_connected{
@@ -971,7 +971,7 @@ ul#admin_login_nav li{
 	width:150px;
 }
 .list_request_log_col:nth-child(11){
-	width:500px;
+	width:540px;
 }
 .list_request_log_col:nth-child(12){
 	width:350px;
