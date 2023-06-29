@@ -696,23 +696,29 @@ const show_message_info_list = (list_obj) =>{
     return html;
 };
 const dialogue_close = async (dialogue) => {
-    return new Promise((resolve)=>{
+    return new Promise(resolve=>{
         const animationDuration = 400;
-        /*
-        //add sound effect if needed
-        let meepmeep = document.createElement("audio");
-        meepmeep.src = '/common/audio/meepmeep.ogg';
-        meepmeep.play();
-        */
-        //setTimeout(()=>{
+        let soundDuration;
+        if (COMMON_GLOBAL['app_sound']==1){
+            //add sound effect if needed
+            const meepmeep = document.createElement('audio');
+            meepmeep.src = '/common/audio/meepmeep.ogg';
+            meepmeep.play();
+            soundDuration = 400;
+        }
+        else
+            soundDuration = 0;
+
+        setTimeout(()=>{
             document.getElementById(dialogue).classList.add('common_dialogue_close');
             setTimeout(()=>{
                 document.getElementById(dialogue).style.visibility = 'hidden';
                 document.getElementById(dialogue).classList.remove('common_dialogue_close');
                 resolve();
             }, animationDuration);
-        //}, animationDuration);
+        }, soundDuration);
     });
+    
 };
 const show_common_dialogue = (dialogue, user_verification_type, title=null, icon=null, click_cancel_event) => {
     switch (dialogue) {
@@ -2832,7 +2838,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
                 }
                 case 503:{
                     //Service unavailable or other error in microservice
-                    show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
+                    show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
                     callBack(result, null);
                     break;
                 }
@@ -3136,6 +3142,8 @@ const set_globals = async (parameters) => {
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
     COMMON_GLOBAL['app_name'] = parameters.app_name;
+    // app sound
+    COMMON_GLOBAL['app_sound']= parseInt(parameters.app_sound);
 
     //rest 
     COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;

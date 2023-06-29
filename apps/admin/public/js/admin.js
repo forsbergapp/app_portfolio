@@ -88,7 +88,7 @@ const admin_login = async () => {
                                                         "password": "${document.getElementById('system_admin_login_password_input').value}"}`, (err, result_login) => {
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err)
-                common.show_message('EXCEPTION', null, null, result_login, common.COMMON_GLOBAL['app_id']);
+                null;
             else{
                 json = JSON.parse(result_login);
                 common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
