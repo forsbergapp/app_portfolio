@@ -35,7 +35,7 @@ const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result);
+				return callBack(null, result[0]);
 		});
 	};
 const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
@@ -73,7 +73,7 @@ const getMessage_admin = (app_id, data_app_id, code, lang_code, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result);
+				return callBack(null, result[0]);
 		});
 	};
 export{getMessage, getMessage_admin};
