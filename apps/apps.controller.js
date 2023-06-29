@@ -43,7 +43,6 @@ const getApp = async (req, res, app_id, params, callBack) => {
                         service.get_module_with_init(app_id, 
                                                     service.client_locale(req.headers['accept-language']),
                                                     system_admin_only,
-                                                    'app.admin_exception',
                                                     true,  //ui
                                                     datatoken,
                                                     result_geodata.latitude,
@@ -93,7 +92,6 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                 service.get_module_with_init(app_id, 
                                     service.client_locale(req.headers['accept-language']),
                                     0,  //system_admin_only
-                                    'app.app_exception',
                                     true,  //ui
                                     datatoken,
                                     result_geodata.latitude,
@@ -188,7 +186,6 @@ const getReport = async (req, res, app_id, callBack) => {
                         service.get_module_with_init(   app_id, 
                                                         service.client_locale(req.headers['accept-language']),
                                                         0,  //system_admin_only
-                                                        'report.report_exception',
                                                         false,
                                                         datatoken,
                                                         result_geodata.latitude,

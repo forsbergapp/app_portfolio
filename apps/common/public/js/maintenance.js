@@ -12,7 +12,7 @@ const init = (parameters) => {
     
     common.COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     common.COMMON_GLOBAL['app_id'] = parameters.app_id;
-    common.COMMON_GLOBAL['exception_app_function'] = parameters.exception_app_function; 
+    common.COMMON_GLOBAL['exception_app_function'] = app_exception; 
     common.COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;
     common.COMMON_GLOBAL['rest_resource_bff'] = parameters.rest_resource_bff;
     common.COMMON_GLOBAL['user_account_id'] = '';
