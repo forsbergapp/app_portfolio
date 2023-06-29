@@ -36,9 +36,7 @@ const authSystemAdmin = (req, res) => {
             });
         }
         else{
-            return res.status(401).send({ 
-                message: '⛔'
-            });
+            return res.status(401).send('⛔');
         }            
     };
     if(req.headers.authorization){                
@@ -53,8 +51,6 @@ const authSystemAdmin = (req, res) => {
             check_user(username, password);
     }
     else
-        return res.status(401).send({ 
-            message: '⛔'
-        });
+        return res.status(401).send('⛔');
 };
 export {checkSystemAdmin, authSystemAdmin};
