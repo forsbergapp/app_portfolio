@@ -57,13 +57,15 @@ const data_validation = (data) => {
 						//'reminder max 100 characters'
 						return 20104;
 					}
-					else
-						if (data.email != null && data.email.slice(-10) != '@localhost' && data.email.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)==null){
+					else{
+						//Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
+						const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
+						if (data.email != null && data.email.slice(-10) != '@localhost' && data.email!=data.email.match(email_regexp)[0]){
 							//'not valid email' (ignore emails that ends with '@localhost')
 							return 20105;
 						}
 						else
-							if (data.email_unverified != null && data.email_unverified.match(/^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)==null){
+							if (data.email_unverified != null && data.email_unverified != data.email_unverified.match(email_regexp)[0]){
 								//'not valid email'
 								return 20105;
 							}
@@ -74,6 +76,9 @@ const data_validation = (data) => {
 								}
 								else
 									return null;
+					}
+																											
+						
 };
 const validation_before_insert = (data) => {
 	const error_code = data_validation(data);
