@@ -327,7 +327,7 @@ const show_start = async (yearvalues) =>{
         show_charts();
 };
 const show_user_agent = (user_agent) => {
-    return null;
+    return user_agent;
 };
 const get_apps = async () => {
     return new Promise((resolve)=>{
