@@ -179,13 +179,27 @@ const show_start = async (yearvalues) =>{
             const app_id = document.getElementById('select_app_menu1').value; 
             const year = document.getElementById('select_year_menu1').value;
             const month = document.getElementById('select_month_menu1').value;
+            const status_code = document.getElementById('select_status_codes').value;
             let result_obj;
             document.getElementById('box1_chart').innerHTML = common.APP_SPINNER;
             document.getElementById('box1_legend').innerHTML = common.APP_SPINNER;
             document.getElementById('box2_chart').innerHTML = common.APP_SPINNER;
             document.getElementById('box2_legend').innerHTML = common.APP_SPINNER;
+            let service;
+            let url;
+            let authorization_type;
+            if (common.COMMON_GLOBAL['system_admin']==1){
+                service = 'LOG';
+                url = `/log/logs_stat?select_app_id=${app_id}&code=${status_code}&year=${year}&month=${month}`;
+                authorization_type = 2;
+            }
+            else{
+                service = 'DB_API';
+                url = `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`;
+                authorization_type = 1;
+            }
             //return result for both charts
-            common.FFB ('DB_API', `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`, 'GET', 1, null, (err, result) => {
+            common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
                 if (err){
                     document.getElementById('box1_chart').innerHTML = '';
                     document.getElementById('box1_legend').innerHTML = '';
@@ -209,29 +223,35 @@ const show_start = async (yearvalues) =>{
                     for (const stat of chart_1) {
                         sum_amount += +stat.amount;
                     }
-                    let apps_color = '';
+                    let chart_colors = '';
                     let degree_start = 0;
                     let degree_stop = 0;
 
-                    let app_color;
+                    let chart_color;
+                    let legend_text;
                     chart_1.forEach((stat, i)=>{
                         //calculate colors and degree
                         degree_stop = degree_start + +stat.amount/sum_amount*360;
-                        app_color = `rgb(${i/chart_1.length*200},${i/chart_1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
+                        chart_color = `rgb(${i/chart_1.length*200},${i/chart_1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
                         if (i < chart_1.length - 1)
-                            apps_color += app_color + ',';
+                            chart_colors += chart_color + ',';
                         else
-                            apps_color += app_color;
+                            chart_colors += chart_color;
                         //add to legend below chart
+                        
+                        if (common.COMMON_GLOBAL['system_admin']==1)
+                            legend_text = SearchAndGetText(document.getElementById('select_status_codes'), stat.statusCode);
+                        else
+                            legend_text = SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id);
                         html += `<div id='box1_legend_row' class='box_legend_row'>
                                     <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
-                                    <div id='box1_legend_col2' class='box_legend_col'>${SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id)}</div>
+                                    <div id='box1_legend_col2' class='box_legend_col'>${legend_text}</div>
                                 </div>`;
                         degree_start = degree_start + stat.amount/sum_amount*360;
                     });
                     //display pie chart
                     document.getElementById('box1_chart').innerHTML = '<div id=\'box1_pie\'></div>';
-                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${apps_color})`;
+                    document.getElementById('box1_pie').style.backgroundImage = `conic-gradient(${chart_colors})`;
                     //show legend below chart
                     document.getElementById('box1_legend').innerHTML = html;
 
@@ -264,18 +284,39 @@ const show_start = async (yearvalues) =>{
                                                                     </div>
                                                                     <div id='box2_bar_data'>${html}</div>`;
                     //legend below chart
+                    if (common.COMMON_GLOBAL['system_admin']==1)
+                        legend_text = document.getElementById('select_status_codes').options[document.getElementById('select_status_codes').selectedIndex].text;
+                    else
+                        legend_text = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text;
                     document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
                                                                             <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                            <div id='box2_legend_col2' class='box_legend_col'>${document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text}</div>
+                                                                            <div id='box2_legend_col2' class='box_legend_col'>${legend_text}</div>
                                                                         </div>` ;
                 }
             });
         }
     };
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
+    const get_status_codes = async () =>{
+        return new Promise((resolve)=>{
+            common.FFB ('SERVER', '/log/statuscode?', 'GET', 2, null, (err, result) => {
+                if (err)
+                    resolve();
+                else{
+                    let html = `<option value="">${common.ICONS['infinite']}</option>`;
+                    const result_obj = JSON.parse(result);
+                    for (const status_code of Object.entries(result_obj.status_codes)){
+                        html += `<option value='${status_code[0]}'>${status_code[0]} - ${status_code[1]}</option>`;
+                    }
+                    resolve(html);
+                }
+            });
+        });
+    };
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
+                    <select id='select_status_codes'>${common.COMMON_GLOBAL['system_admin']==1?await get_status_codes():null}</select>
                     <select id='select_app_menu1'>${await get_apps()}</select>
                     <select id='select_year_menu1'>${yearvalues}</select>
                     <select id='select_month_menu1'>${list_generate(12)}</select>
@@ -307,24 +348,28 @@ const show_start = async (yearvalues) =>{
                 </div>
             </div>`;
             
-    if (common.COMMON_GLOBAL['system_admin']==1)
+    if (common.COMMON_GLOBAL['system_admin']==1){
         document.getElementById('menu_1_maintenance').style.display = 'inline-block';
-    else
+        document.getElementById('select_status_codes').style.display = 'inline-block';
+    }
+    else{
         document.getElementById('menu_1_maintenance').style.display = 'none';
+        document.getElementById('select_status_codes').style.display = 'none';
+    }
 
     document.getElementById('menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
     document.getElementById('menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance(); }, false);
         
     document.getElementById('select_year_menu1').selectedIndex = 0;
     document.getElementById('select_month_menu1').selectedIndex = new Date().getMonth();
+    document.getElementById('select_status_codes').addEventListener('change', () => { show_charts();}, false);
     document.getElementById('select_app_menu1').addEventListener('change', () => { show_charts();}, false);
     document.getElementById('select_year_menu1').addEventListener('change', () => { show_charts();}, false);
     document.getElementById('select_month_menu1').addEventListener('change', () => { show_charts();}, false);
 
     if (common.COMMON_GLOBAL['system_admin']==1)
         check_maintenance();
-    else
-        show_charts();
+    show_charts();
 };
 const show_user_agent = (user_agent) => {
     return user_agent;
