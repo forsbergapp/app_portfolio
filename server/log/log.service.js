@@ -553,6 +553,92 @@ const getLogs = (app_id, data, callBack) => {
         return callBack(error);
     }
 };
+const getStatusCodes = async () =>{
+    /*
+    Status codes
+    Informational responses (100 – 199)
+    Successful responses    (200 – 299)
+    Redirection messages    (300 – 399)
+    Client error responses  (400 – 499)
+    Server error responses  (500 – 599)
+    */
+    //nodejs codes:
+	//100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
+    //same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+
+    const {STATUS_CODES} = await import('node:http');
+    return STATUS_CODES;
+};
+const getLogsStats = async (app_id, data, callBack) => {
+    const logfiles =[];
+    const logstat = [];
+    
+    const fs = await import('node:fs');
+    if (parseInt(data.month) <10)
+        data.month = '0' + data.month;
+    const files = await fs.promises.readdir(`${process.cwd()}${ConfigGet(0, null, 'PATH_LOG')}`);
+    let sample;
+    let day = '';
+    //declare ES6 Set to save unique status codes and days
+    const log_status_codes = new Set();
+    const log_days = new Set();
+    for (const file of files){
+        if (file.startsWith(`REQUEST_INFO_${data.year}${data.month}`)){
+            //filename format: REQUEST_INFO_YYYMMDD.log
+            if (ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
+                day = file.substring(19,21);
+                sample = `${data.year}${data.month}${day}`;
+            }
+            else
+                sample = `${data.year}${data.month}`;
+            const fileBuffer = await fs.promises.readFile(`${process.cwd() + ConfigGet(0, null, 'PATH_LOG') + `REQUEST_INFO_${sample}.log`}`, 'utf8');
+            fileBuffer.toString().split('\r\n').forEach((record) => {
+                if (record != ''){
+                    const  record_obj = JSON.parse(record);
+                    //add for given status code or all status codes if all should be returned
+                    //save this as chart 2 with days
+                    if (data.code == '' || data.code == record_obj.statusCode){
+                        //add unique status codes to a set
+                        log_status_codes.add(record_obj.statusCode);
+                        log_days.add(day);
+                        logfiles.push({ 
+                            statusCode: record_obj.statusCode,
+                            year: data.year,
+                            month: data.month,
+                            day: day});
+                    }
+                        
+                }
+            });
+            //loop unique status codes used in log
+            //sort the set using ES6 spread operator
+            [...log_status_codes].sort().forEach(code=>{
+                //save chart 1 without days and sum amount per month
+                logstat.push({
+                    chart: 1,
+                    statusCode: code,
+                    year: data.year,
+                    month: data.month,
+                    day: null,
+                    amount: logfiles.filter(log=>log.statusCode==code).length
+                });
+            });
+            [...log_days].sort().forEach(day=>{
+                //save chart2 with days and sum amount per day
+                logstat.push({
+                    chart: 2,
+                    statusCode: null,
+                    year: data.year,
+                    month: data.month,
+                    day: day,
+                    amount: logfiles.filter(log=>log.day == day).length
+                });
+            });
+            return callBack(null, logstat);
+        }
+    }
+    return callBack(null, logstat);
+};
 const getFiles = (app_id, callBack) => {
     const logfiles =[];
     import('node:fs').then((fs) =>{
@@ -579,4 +665,4 @@ const getFiles = (app_id, callBack) => {
         });
     });
 };
-export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogParameters, getLogs, getFiles};
+export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles};

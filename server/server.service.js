@@ -649,7 +649,7 @@ const serverExpressRoutes = async (app) => {
     //broadcast
     const { BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //log
-    const {getLogParameters, getLogs, getFiles} = await import(`file://${process.cwd()}/server/log/log.controller.js`);    
+    const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.controller.js`);    
     //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
     //server db api app_portfolio app
@@ -843,6 +843,8 @@ const serverExpressRoutes = async (app) => {
 
     app.route(`${rest_resouce_server}/log/parameters`).get                               (checkSystemAdmin, getLogParameters);
     app.route(`${rest_resouce_server}/log/logs`).get                                     (checkSystemAdmin, getLogs);
+    app.route(`${rest_resouce_server}/log/statuscode`).get                               (checkSystemAdmin, getStatusCodes);
+    app.route(`${rest_resouce_server}/log/logs_stat`).get                                (checkSystemAdmin, getLogsStats);
     app.route(`${rest_resouce_server}/log/files`).get                                    (checkSystemAdmin, getFiles);
     
 };
