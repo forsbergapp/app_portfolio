@@ -264,6 +264,11 @@ ul#admin_login_nav li{
 .box_title{
 	margin:10px;
 }
+.box_title .common_icon{
+	height: 1.3em;
+	width: 1.2em;
+	vertical-align: middle;
+}
 .box_legend{
 	text-align: start;
 	display: inline-block;

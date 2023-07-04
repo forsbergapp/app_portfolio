@@ -610,33 +610,32 @@ const getLogsStats = async (app_id, data, callBack) => {
                         
                 }
             });
-            //loop unique status codes used in log
-            //sort the set using ES6 spread operator
-            [...log_status_codes].sort().forEach(code=>{
-                //save chart 1 without days and sum amount per month
-                logstat.push({
-                    chart: 1,
-                    statusCode: code,
-                    year: data.year,
-                    month: data.month,
-                    day: null,
-                    amount: logfiles.filter(log=>log.statusCode==code).length
-                });
-            });
-            [...log_days].sort().forEach(day=>{
-                //save chart2 with days and sum amount per day
-                logstat.push({
-                    chart: 2,
-                    statusCode: null,
-                    year: data.year,
-                    month: data.month,
-                    day: day,
-                    amount: logfiles.filter(log=>log.day == day).length
-                });
-            });
-            return callBack(null, logstat);
         }
     }
+    //loop unique status codes used in log
+    //sort the set using ES6 spread operator
+    [...log_status_codes].sort().forEach(code=>{
+        //save chart 1 without days and sum amount per month
+        logstat.push({
+            chart: 1,
+            statusCode: code,
+            year: data.year,
+            month: data.month,
+            day: null,
+            amount: logfiles.filter(log=>log.statusCode==code).length
+        });
+    });
+    [...log_days].sort().forEach(day=>{
+        //save chart2 with days and sum amount per day
+        logstat.push({
+            chart: 2,
+            statusCode: null,
+            year: data.year,
+            month: data.month,
+            day: day,
+            amount: logfiles.filter(log=>log.day == day).length
+        });
+    });
     return callBack(null, logstat);
 };
 const getFiles = (app_id, callBack) => {
