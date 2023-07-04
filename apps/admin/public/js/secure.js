@@ -313,6 +313,16 @@ const show_start = async (yearvalues) =>{
             });
         });
     };
+    let box_title1, box_title2;
+    if (common.COMMON_GLOBAL['system_admin']==1){
+        box_title1 = `${common.ICONS['app_internet']} ${common.ICONS['app_server']} ${common.ICONS['app_chart']}`;
+        box_title2 = `${common.ICONS['app_internet']} ${common.ICONS['app_server']} ${common.ICONS['regional_numbersystem']}`;
+    }
+    else{
+        box_title1 = `${common.ICONS['app_users']} ${common.ICONS['app_apps']} ${common.ICONS['app_chart']}`;
+        box_title2 = `${common.ICONS['app_users']} ${common.ICONS['app_apps']} ${common.ICONS['regional_numbersystem']}`;
+    }
+
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
@@ -323,12 +333,12 @@ const show_start = async (yearvalues) =>{
                 </div>
                 <div id='graphBox'>
                     <div id='box1'>
-                        <div id='box1_title' class='box_title'>${common.ICONS['app_users'] + ' ' + common.ICONS['app_chart']}</div>
+                        <div id='box1_title' class='box_title'>${box_title1}</div>
                         <div id='box1_chart' class='box_chart'></div>
                         <div id='box1_legend' class='box_legend'></div>
                     </div>
                     <div id='box2'>
-                        <div id='box2_title' class='box_title'>${common.ICONS['app_users'] + ' ' + common.ICONS['regional_numbersystem']}</div>
+                        <div id='box2_title' class='box_title'>${box_title2}</div>
                         <div id='box2_chart' class='box_chart'></div>
                         <div id='box2_legend' class='box_legend'></div>
                     </div>
