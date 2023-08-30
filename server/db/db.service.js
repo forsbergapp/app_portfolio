@@ -209,10 +209,10 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             //Both MySQL and MariaDB use MySQL npm module
             try {
                pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
-                  conn.release();
                   if (err)
                      return reject (err);
                   else{
+                     conn.release();
                      //change json parameters to [] syntax with bind variable names
                      //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
                      //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
@@ -335,11 +335,11 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
                   });
                   pool4.execute(sql, parameters, (err,result) => {
-                     pool4.close();
                      if (err) {
                         return reject(err);
                      }
                      else{
+                        pool4.close();
                         if (result.rowsAffected)
                            result.affectedRows = result.rowsAffected;
                         if (result.rows)
