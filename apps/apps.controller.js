@@ -73,6 +73,8 @@ const getApp = async (req, res, app_id, params, callBack) => {
                                                 return callBack(null, app_with_init);
                                     });
                                 });
+                            else
+                                return callBack(null, app_with_init);
                         });
                     });
                 });
