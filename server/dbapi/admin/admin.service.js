@@ -802,7 +802,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
             //split script file into separate sql statements
             for (let sql of install_sql.split(';')){
                const check_sql = (sql) =>{
-                  if (!sql || sql.endsWith('\r\n'))
+                  if (!sql || sql.endsWith('\r\n') || sql=='\n')
                      return false;
                   else
                      return true;
