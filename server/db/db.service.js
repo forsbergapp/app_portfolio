@@ -74,7 +74,7 @@ const pool_start = async (dbparameters) =>{
       "poolIncrement":           pool increment
    */
    return new Promise((resolve, reject) => {
-      switch(dbparameters.use){
+      switch(parseInt(dbparameters.use)){
          case 1:
          case 2:{
             if (dbparameters.dba==1)
