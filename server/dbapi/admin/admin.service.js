@@ -15,32 +15,28 @@ const DBStart = async () => {
       const database = ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`);
       const pool_db = async (dba, user, password, pool_id) =>{
          return new Promise ((resolve, reject)=>{
-            let dbparameters = `{
-               "use":                     ${db_use},
-               "pool_id":                 ${pool_id},
-               "host":                    "${host}",
-               "port":                    "${port}",
-               "dba":                     ${dba},
-               "user":                    "${user}",
-               "password":                "${password}",
-               "database":                "${database}",`;
+            const dbparameters = {
+               use:                       db_use,
+               pool_id:                   pool_id,
+               host:                      host,
+               port:                      port,
+               dba:                       dba,
+               user:                      user,
+               password:                  password,
+               database:                  database,
                //db 1 + 2 parameters
-               dbparameters +=
-               `"charset":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`)}",
-               "connnectionLimit":        "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)}",`;
+               charset:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+               connnectionLimit:          ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
                // db 3 parameters
-               dbparameters +=
-               `"connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
-               "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
-               "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}",`;
-               //db 4 parameters
-               dbparameters +=
-               `"connectString":          "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`)}",
-               "poolMin":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`)},
-               "poolMax":                  ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`)},
-               "poolIncrement":            ${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)}
-            }`;
-            dbparameters = JSON.parse(dbparameters);
+               connectionTimeoutMillis:   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+               idleTimeoutMillis:         ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+               max:                       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`),
+               // db 4 parameters
+               connectString:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+               poolMin:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`),
+               poolMax:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`),
+               poolIncrement:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
+            };
             pool_start(dbparameters)
             .then(result=>{
                LogServerI(`Started pool ${pool_id}, db ${db_use}, host ${host}, port ${port}, dba ${dba}, user ${user}, database ${database}`);
@@ -314,26 +310,26 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 			return await new Promise((resolve, reject)=>{
 				const create_update_id = (demo_user)=>{
 					const email = `demo${++email_index}@localhost`;
-					const json_data_user = `{
-											"username":"${demo_user.username}",
-											"bio":"${demo_user.bio}",
-											"avatar":"${demo_user.avatar}",
-											"password":"${password_encrypted}",
-											"password_reminder":"",
-											"email":"${email}",
-											"active":1,
-											"private":0,
-											"user_level":2,
-											"verification_code":null,
-											"identity_provider_id": null,
-											"provider_id":null,
-											"provider_first_name":null,
-											"provider_last_name":null,
-											"provider_image":null,
-											"provider_image_url":null,
-											"provider_email":null
-										}`;
-					create(app_id, JSON.parse(json_data_user), (err, results_create) => {
+					const json_data_user = {
+											username:               demo_user.username,
+											bio:                    demo_user.bio,
+											avatar:                 demo_user.avatar,
+											password:               password_encrypted,
+											password_reminder:      '',
+											email:                  email,
+											active:                 1,
+											private:                0,
+											user_level:             2,
+											verification_code:      null,
+											identity_provider_id:   null,
+											provider_id:            null,
+											provider_first_name:    null,
+											provider_last_name:     null,
+											provider_image:         null,
+											provider_image_url:     null,
+											provider_email:         null
+										};
+					create(app_id, json_data_user, (err, results_create) => {
 						if (err)
 							reject(err);
 						else{
@@ -409,12 +405,12 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				demo_user.settings[i].design_theme_year_id = 30001;
 				const settings_no_app_id = JSON.parse(JSON.stringify(demo_user.settings[i]));
 				delete settings_no_app_id.app_id;
-				const json_data_user_setting = `{
-					"description": "${demo_user.settings[i].description}",
-					"settings_json": ${JSON.stringify(settings_no_app_id)},
-					"user_account_id": ${demo_user.id}
-					}`;	
-				await create_setting(user_setting_app_id, JSON.parse(json_data_user_setting), i);
+				const json_data_user_setting = {
+                                             description: demo_user.settings[i].description,
+                                             settings_json: settings_no_app_id,
+                                             user_account_id: demo_user.id
+                                           };	
+				await create_setting(user_setting_app_id, json_data_user_setting, i);
 			}
 		}
 		let records_user_account_like = 0;
@@ -495,15 +491,14 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 						if (social_type == 'SETTINGS_VIEW')
 							user_account_id = user2;
 						else
-							user_account_id = 'null';
-						insertUserSettingView(app_id, JSON.parse(
-														'{  "user_account_id":' + user_account_id + ',' + 
-														`	"user_setting_id": ${results_settings[random_index].id},
-															"client_ip": null,
-															"client_user_agent": null,
-															"client_longitude": null,
-															"client_latitude": null
-															}`), (err,results) => {
+							user_account_id = null;
+						insertUserSettingView(app_id, {  user_account_id: user_account_id,
+                                                   user_setting_id: results_settings[random_index].id,
+                                                   client_ip: null,
+                                                   client_user_agent: null,
+                                                   client_longitude: null,
+                                                   client_latitude: null
+															}, (err,results) => {
 							if (err)
 								reject(err);
 							else{
@@ -538,25 +533,26 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 							break;
 						}
 						case 'VIEW':{
-							await create_user_account_view(app_id, JSON.parse(
-														`{  "user_account_id": ${user1},
-															"user_account_id_view": ${user2},
-															"client_ip": null,
-															"client_user_agent": null,
-															"client_longitude": null,
-															"client_latitude": null
-														}`));
+							await create_user_account_view(app_id, 
+                                                   {user_account_id: user1,
+                                                    user_account_id_view: user2,
+                                                    client_ip: null,
+                                                    client_user_agent: null,
+                                                    client_longitude: null,
+                                                    client_latitude: null
+                                                   });
 							break;
 						}
 						case 'VIEW_ANONYMOUS':{
-							await create_user_account_view(app_id, JSON.parse(
-														`{  "user_account_id": null,
-															"user_account_id_view": ${user1},
-															"client_ip": null,
-															"client_user_agent": null,
-															"client_longitude": null,
-															"client_latitude": null
-														}`));
+							await create_user_account_view(app_id, 
+                                                            {
+                                                            user_account_id: null,
+                                                            user_account_id_view: user1,
+                                                            client_ip: null,
+                                                            client_user_agent: null,
+                                                            client_longitude: null,
+                                                            client_latitude: null
+                                                            });
 							break;
 						}
 						case 'FOLLOWER':{
@@ -827,40 +823,38 @@ const install_db = async (app_id, optional=null, callBack)=> {
                      if (sql.toUpperCase().includes('CREATE DATABASE')){
                            //remove database name in dba pool
                            await pool_close(null, db_use, DBA);
-                           let json_data = `{
-                                 "use":                     "${db_use}",
-                                 "pool_id":                 "",
-                                 "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
-                                 "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
-                                 "dba":                     ${DBA},
-                                 "user":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
-                                 "password":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
-                                 "database":                "",
-                                 "connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
-                                 "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
-                                 "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
-                              }`;
-                           json_data = JSON.parse(json_data);
+                           const json_data = {
+                                 use:                     db_use,
+                                 pool_id:                 '',
+                                 port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
+                                 ost:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                                 dba:                     DBA,
+                                 user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                                 password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                                 database:                '',
+                                 connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+                                 idleTimeoutMillis:       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+                                 max:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)
+                              };
                            await pool_start(json_data);
                      }
                      else{
                         if (change_system_admin_pool == true){
                            //add database name in dba pool
                            await pool_close(null, db_use, DBA);
-                           let json_data = `{
-                                 "use":                     "${db_use}",
-                                 "pool_id":                 "",
-                                 "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
-                                 "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
-                                 "dba":                     ${DBA},
-                                 "user":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
-                                 "password":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
-                                 "database":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`)}",
-                                 "connectionTimeoutMillis":"${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
-                                 "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
-                                 "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
-                              }`;
-                           json_data = JSON.parse(json_data);
+                           const json_data = {
+                              use:                     db_use,
+                              pool_id:                 '',
+                              port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
+                              ost:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                              dba:                     DBA,
+                              user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                              password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                              database:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`),
+                              connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+                              idleTimeoutMillis:       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+                              max:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)
+                           };
                            await pool_start(json_data);
                            //change to database value for the rest of the function
                            change_system_admin_pool = false;
@@ -946,20 +940,19 @@ const install_db_delete = async (app_id, callBack)=> {
                if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                   //add database name in dba pool
                   await pool_close(null, db_use, DBA);
-                  let json_data = `{
-                        "use":                     "${db_use}",
-                        "pool_id":                 "",
-                        "port":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`)}",
-                        "host":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`)}",
-                        "dba":                     ${DBA},
-                        "user":                    "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}",
-                        "password":                "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}",
-                        "database":                "",
-                        "connectionTimeoutMillis": "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)}",
-                        "idleTimeoutMillis":       "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)}",
-                        "max":                     "${ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)}"
-                     }`;
-                  json_data = JSON.parse(json_data);
+                  const json_data = {
+                     use:                     db_use,
+                     pool_id:                 '',
+                     port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
+                     ost:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                     dba:                     DBA,
+                     user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                     password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                     database:                '',
+                     connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+                     idleTimeoutMillis:       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+                     max:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)
+                  };
                   await pool_start(json_data);
                }
                await install_db_execute_statement(app_id, sql_row.sql, {});   
