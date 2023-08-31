@@ -71,6 +71,7 @@
 	- microservice arquitecture
 	- MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
 	  and sql logging stratified per app
+	- MariaDB, MySQL and PostgreSQL installed as local installations and Docker as alternative
 	- database should support transactions with rollback and commit and be able to save images in the database
 	- database ER model and server datamodel using a database data model designer tool that can generate SQL from 
 	  the server data model
@@ -110,7 +111,7 @@
 	- Production features like
 	  - Load balancer with for example popular NGINX for performance
 	  - Reverse Proxy server with for example popular NGINX for multiple application servers on the same host
-	  - Containers like Kubernetes and Docker
+	  - Kubernetes
 	  - Automatic IP control integration with for example iptables
     - Social media monitoring
 
