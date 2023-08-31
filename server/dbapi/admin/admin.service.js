@@ -826,14 +826,23 @@ const install_db = async (app_id, optional=null, callBack)=> {
                               use:                     db_use,
                               pool_id:                 '',
                               port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
-                              ost:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                              host:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
                               dba:                     DBA,
                               user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
                               password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
                               database:                '',
-                              connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-                              idleTimeoutMillis:       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-                              max:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)
+                              //db 1 + 2 parameters
+                              charset:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                              connnectionLimit:          ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
+                              // db 3 parameters
+                              connectionTimeoutMillis:   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+                              idleTimeoutMillis:         ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+                              max:                       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`),
+                              // db 4 parameters
+                              connectString:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+                              poolMin:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`),
+                              poolMax:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`),
+                              poolIncrement:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
                            };
                         await pool_start(json_data);
                   }
@@ -845,14 +854,23 @@ const install_db = async (app_id, optional=null, callBack)=> {
                            use:                     db_use,
                            pool_id:                 '',
                            port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
-                           ost:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                           host:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
                            dba:                     DBA,
                            user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
                            password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
                            database:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`),
-                           connectionTimeoutMillis: ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-                           idleTimeoutMillis:       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-                           max:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`)
+                           //db 1 + 2 parameters
+                           charset:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                           connnectionLimit:          ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
+                           // db 3 parameters
+                           connectionTimeoutMillis:   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+                           idleTimeoutMillis:         ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+                           max:                       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`),
+                           // db 4 parameters
+                           connectString:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+                           poolMin:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`),
+                           poolMax:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`),
+                           poolIncrement:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
                         };
                         await pool_start(json_data);
                         //change to database value for the rest of the function
