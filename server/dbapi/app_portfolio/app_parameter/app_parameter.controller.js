@@ -50,30 +50,4 @@ const setParameterValue_admin = (req, res) => {
 		});
 	});
 };
-const getParametersAdmin = (req, res) => {
-	req.params.app_id = parseInt(req.params.app_id);
-	service.getParameters(req.query.app_id, req.params.app_id, (err, results) =>{
-		if (err) {
-			return res.status(500).send({
-				data: err
-			});
-		}
-		return res.status(200).json({
-			data: results
-		});
-	});
-};
-const getParameters = (req, res) => {
-	req.params.app_id = parseInt(req.params.app_id);
-	service.getParameters(req.query.app_id, req.params.app_id, (err, results) =>{
-		if (err) {
-			return res.status(500).send({
-				data: err
-			});
-		}
-		return res.status(200).json({
-			data: results
-		});
-	});
-};
-export{getParameters_server, getParametersAllAdmin, setParameter_admin, setParameterValue_admin, getParametersAdmin, getParameters};
+export{getParameters_server, getParametersAllAdmin, setParameter_admin, setParameterValue_admin};

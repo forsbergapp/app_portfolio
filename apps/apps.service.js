@@ -328,8 +328,8 @@ const get_module_with_init = async (app_id,
                                     client_longitude,
                                     client_place,
                                     module, callBack) => {
-    const return_with_parameters = (app_name, first_time)=>{
-        const parameters = {   
+    const return_with_parameters = (app_name, app_parameters, first_time)=>{
+        const app_service_parameters = {   
             app_id: app_id,
             app_name: app_name,
             app_datatoken: data_token,
@@ -347,19 +347,30 @@ const get_module_with_init = async (app_id,
         };
         module = module.replace(
                 '<ITEM_COMMON_PARAMETERS/>',
-                JSON.stringify(parameters));
+                JSON.stringify({
+                    app_service: app_service_parameters,
+                    app: app_parameters
+                }));
         return module;
     };
     if (system_admin_only==1){
-        callBack(null, return_with_parameters('SYSTEM ADMIN', CheckFirstTime()==true?1:0));
+        callBack(null, return_with_parameters('SYSTEM ADMIN', null, CheckFirstTime()==true?1:0));
     }
     else{
+        const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-        getAppStartParameters(app_id, (err,result) =>{
+        getAppName(app_id, (err,result_app_name) =>{
             if (err)
                 callBack(err, null);
             else{
-                callBack(null, return_with_parameters(result[0].app_name, 0)); 
+                //fetch parameters for common_app_id and current app_id
+                getAppStartParameters(app_id, (err,app_parameters) =>{
+                    if (err)
+                        callBack(err, null);
+                    else{
+                        callBack(null, return_with_parameters(result_app_name[0].app_name, app_parameters, 0)); 
+                    }
+                });
             }
         });
     }        
