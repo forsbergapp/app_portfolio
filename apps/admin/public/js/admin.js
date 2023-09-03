@@ -279,7 +279,7 @@ const init = (parameters) => {
     //show admin login as default
     admin_login_nav(document.getElementById('admin_login_title'));
     common.COMMON_GLOBAL['exception_app_function'] = admin_exception;
-    common.init_common(parameters, (err, global_app_parameters) => {
+    common.init_common(parameters).then(()=>{
         document.getElementById('admin_login_title').innerHTML = common.ICONS['user'];
         document.getElementById('system_admin_login_title').innerHTML = common.ICONS['app_system_admin'];
         document.getElementById('system_admin_login_username_icon').innerHTML = common.ICONS['app_system_admin'];
@@ -290,39 +290,39 @@ const init = (parameters) => {
         document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
         document.getElementById('admin_login_username_icon').innerHTML = common.ICONS['user'];
         document.getElementById('admin_login_password_icon').innerHTML = common.ICONS['user_password'];
-        if (parameters.first_time == 1) {
+        if (parameters.app_service.first_time == 1) {
             document.getElementById('admin_first_time').innerHTML = common.ICONS['init'];
             document.getElementById('admin_first_time').style.display = 'block';
             document.getElementById('system_admin_login_password_confirm').style.display = 'block';
             document.getElementById('system_admin_login_password_icon_confirm').innerHTML = common.ICONS['user_password'];
         }
 
-        if (parameters.system_admin_only == 1) {
+        if (parameters.app_service.system_admin_only == 1) {
             document.getElementById('admin_login_nav').style.display = 'none';
             document.getElementById('admin_login').style.display = 'none';
             document.getElementById('system_admin_login').style.display = 'block';
         }
         else {
-            for (let i = 0; i < global_app_parameters.length; i++) {
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_WIDTH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_HEIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_DARK')
-                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_LIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_FILE_PATH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_WIDTH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_HEIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
+            for (let i = 0; i < parameters.app.length; i++) {
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameters.app[i].parameter_value);
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameters.app[i].parameter_value);
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_DARK')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_LIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_FILE_PATH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = parameters.app[i].parameter_value;
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_WIDTH')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(parameters.app[i].parameter_value);
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_HEIGHT')
+                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(parameters.app[i].parameter_value);
+                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
             }
         }
-        init_app(parameters.system_admin_only);
+        init_app(parameters.app_service.system_admin_only);
     });
 };
 export { init };

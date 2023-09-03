@@ -3451,82 +3451,64 @@ const set_events = () => {
     document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']); }, false);
     document.getElementById('common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
 };
-const set_common_parameters = (app_id, parameter_name, parameter_value) => {
-    if (app_id == COMMON_GLOBAL['common_app_id']){
-        switch (parameter_name){
-            case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL['image_file_allowed_type1'] = parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL['image_file_allowed_type2'] = parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL['image_file_allowed_type3'] = parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL['image_file_allowed_type4'] = parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL['image_file_allowed_type5'] = parameter_value;break;}
-            case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL['image_file_mime_type'] = parameter_value;break;}
-            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL['image_file_max_size'] = parameter_value;break;}
-            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL['image_avatar_width'] = parameter_value;break;}
-            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL['image_avatar_height'] = parameter_value;break;}
-            case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL['module_leaflet_flyto'] = parseInt(parameter_value);break;}
-            case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL['module_leaflet_jumpto'] = parseInt(parameter_value);break;}
-            case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL['module_leaflet_popup_offset'] = parseInt(parameter_value);break;}
-            case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL['module_leaflet_style'] = parameter_value;break;}
+const set_common_parameters = (common_parameters) => {
+    //set parameters for common_app_id, each app set its own parameters in the app
+    for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL['common_app_id'])){
+        switch (parameter.parameter_name){
+            case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL['image_file_allowed_type1'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL['image_file_allowed_type2'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL['image_file_allowed_type3'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL['image_file_allowed_type4'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL['image_file_allowed_type5'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL['image_file_mime_type'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL['image_file_max_size'] = parameter.parameter_value;break;}
+            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL['image_avatar_width'] = parameter.parameter_value;break;}
+            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL['image_avatar_height'] = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL['module_leaflet_flyto'] = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL['module_leaflet_jumpto'] = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL['module_leaflet_popup_offset'] = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL['module_leaflet_style'] = parameter.parameter_value;break;}
         }
     }
 };
-const normal_start = async (ui) => {
-    return new Promise((resolve)=>{
-        document.title = COMMON_GLOBAL['app_name'];
-        let path= '';
-        if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
-            path = `/app_parameter/admin/${COMMON_GLOBAL['app_id']}?`;
-        }
-        else{
-            path = `/app_parameter/${COMMON_GLOBAL['app_id']}?`;
-        }
-        //get parameters
-        FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
-            if (err)
-                null;
+
+const init_common = async (parameters) => {
+    return new Promise((resolve) =>{
+        if (COMMON_GLOBAL['app_id'] ==null)
+            set_globals(parameters.app_service);
+        if (parameters.app_service.app_id == COMMON_GLOBAL['common_app_id']){
+            //admin app
+            broadcast_init();
+            if (parameters.app_service.system_admin_only==1){
+                document.title = parameters.app_service.app_name;
+                resolve();
+            }
             else{
-                const global_app_parameters = [];
-                const json = JSON.parse(result);
-                for (let i = 0; i < json.data.length; i++) {
-                    //set common parameters
-                    if (json.data[i].app_id == COMMON_GLOBAL['common_app_id'])
-                        set_common_parameters(json.data[i].app_id, json.data[i].parameter_name, json.data[i].parameter_value);
-                    //return all parameters for admin app and for other apps all except admin app id parameters
-                    if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id'] ||
-                        json.data[i].app_id != COMMON_GLOBAL['common_app_id'])
-                        global_app_parameters.push(JSON.parse(`{"app_id":${json.data[i].app_id}, 
-                                                                "parameter_name":"${json.data[i].parameter_name}",
-                                                                "parameter_value":${json.data[i].parameter_value==null?null:'"' + json.data[i].parameter_value + '"'}}`));
-                }
-                if (ui == true){
+                document.title = COMMON_GLOBAL['app_name']; 
+                set_common_parameters(parameters.app);
+                if (parameters.app_service.ui){
                     assign_icons();
                     set_events();
-                }            
-                resolve(global_app_parameters);
+                    resolve();
+                }
+                else
+                    resolve();
             }
-        });
-    });    
-};
-const init_common = async (parameters, callBack) => {
-    if (COMMON_GLOBAL['app_id'] ==null)
-        set_globals(parameters);
-    if (parameters.app_id == COMMON_GLOBAL['common_app_id']){
-        broadcast_init();
-        if (parameters.system_admin_only==1){
-            document.title = parameters.app_name;
-            callBack(null, null);
         }
-        else
-            normal_start(parameters.ui).then((global_app_parameters)=>{
-                callBack(null, global_app_parameters);
-            });
-    }
-    else{
-        broadcast_init();
-        normal_start(parameters.ui).then((global_app_parameters)=>{
-            callBack(null, global_app_parameters);
-        });
-    }
+        else{
+            //other apps
+            broadcast_init();
+            document.title = COMMON_GLOBAL['app_name']; 
+            set_common_parameters(parameters.app);
+            if (parameters.app_service.ui){
+                assign_icons();
+                set_events();
+                resolve();
+            }
+            else
+                resolve();
+        }
+    });
 };
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
@@ -3567,4 +3549,4 @@ export{/* GLOBALS*/
        /* EXCEPTION */
        exception,
        /* INIT */
-       set_globals, assign_icons, set_event_user_menu, set_events, set_common_parameters, normal_start, init_common};
+       set_globals, assign_icons, set_event_user_menu, set_events, set_common_parameters, init_common};

@@ -364,91 +364,87 @@ const init_app = async () => {
 
 const init = (parameters) => {
     common.COMMON_GLOBAL['exception_app_function'] = app_exception;
-    common.init_common(parameters, (err, global_app_parameters)=>{
-        if (err)
-            null;
-        else{
-            for (let i = 0; i < global_app_parameters.length; i++) {
-                if (global_app_parameters[i].parameter_name=='APP_COPYRIGHT')
-                    APP_GLOBAL['app_copyright'] =global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='APP_EMAIL')
-                    APP_GLOBAL['app_email'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
-                    APP_GLOBAL['info_social_link1_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
-                    APP_GLOBAL['info_social_link2_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
-                    APP_GLOBAL['info_social_link3_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
-                    APP_GLOBAL['info_social_link4_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                    APP_GLOBAL['info_social_link1_icon'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                    APP_GLOBAL['info_social_link2_icon'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                    APP_GLOBAL['info_social_link3_icon'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                    APP_GLOBAL['info_social_link4_icon'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_URL')
-                    APP_GLOBAL['info_link_policy_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                    APP_GLOBAL['info_link_disclaimer_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_TERMS_URL')
-                    APP_GLOBAL['info_link_terms_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                    APP_GLOBAL['info_link_about_url'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_POLICY_NAME')
-                    APP_GLOBAL['info_link_policy_name'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                    APP_GLOBAL['info_link_disclaimer_name'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_TERMS_NAME')
-                    APP_GLOBAL['info_link_terms_name'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='INFO_LINK_ABOUT_NAME')
-                    APP_GLOBAL['info_link_about_name'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
-                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = global_app_parameters[i].parameter_value;
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(global_app_parameters[i].parameter_value);
-                if (global_app_parameters[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = global_app_parameters[i].parameter_value;
-            }
-            init_app().then(()=>{
-                document.getElementById('apps').innerHTML = common.APP_SPINNER;
-                if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-                    common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, ()=>{
-                            get_apps();
-                    });
-                else
-                    get_apps();
-                const show_start = async () => {
-                    const user = window.location.pathname.substring(1);
-                    if (user !='') {
-                        //show profile for user entered in url
-                        document.getElementById('common_dialogue_profile').style.visibility = 'visible';
-                        common.profile_show(null, user,()=>{});
-                    }
-                };
-                show_start().then(()=>{
-                    common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
-                    //use transition from now and not when starting app
-                    document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
-                        dialogue.style.transition = 'all 1s';
-                    });
-                    //show app themes from now to avoid startup css render issues
-                    document.querySelector('#app_themes').style.display = 'block';
-                });
-            });
+    common.init_common(parameters).then(()=>{
+        for (let i = 0; i < parameters.app.length; i++) {
+            if (parameters.app[i].parameter_name=='APP_COPYRIGHT')
+                APP_GLOBAL['app_copyright'] =parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='APP_EMAIL')
+                APP_GLOBAL['app_email'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
+                APP_GLOBAL['info_social_link1_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
+                APP_GLOBAL['info_social_link2_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
+                APP_GLOBAL['info_social_link3_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
+                APP_GLOBAL['info_social_link4_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
+                APP_GLOBAL['info_social_link1_icon'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
+                APP_GLOBAL['info_social_link2_icon'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
+                APP_GLOBAL['info_social_link3_icon'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
+                APP_GLOBAL['info_social_link4_icon'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_POLICY_URL')
+                APP_GLOBAL['info_link_policy_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                APP_GLOBAL['info_link_disclaimer_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_TERMS_URL')
+                APP_GLOBAL['info_link_terms_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_URL')
+                APP_GLOBAL['info_link_about_url'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_POLICY_NAME')
+                APP_GLOBAL['info_link_policy_name'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
+                APP_GLOBAL['info_link_disclaimer_name'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_TERMS_NAME')
+                APP_GLOBAL['info_link_terms_name'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_NAME')
+                APP_GLOBAL['info_link_about_name'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameters.app[i].parameter_value);
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameters.app[i].parameter_value);
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
+                common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
+                common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(parameters.app[i].parameter_value);
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(parameters.app[i].parameter_value);
+            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
         }
+        init_app().then(()=>{
+            document.getElementById('apps').innerHTML = common.APP_SPINNER;
+            if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
+                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, ()=>{
+                        get_apps();
+                });
+            else
+                get_apps();
+            const show_start = async () => {
+                const user = window.location.pathname.substring(1);
+                if (user !='') {
+                    //show profile for user entered in url
+                    document.getElementById('common_dialogue_profile').style.visibility = 'visible';
+                    common.profile_show(null, user,()=>{});
+                }
+            };
+            show_start().then(()=>{
+                common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
+                //use transition from now and not when starting app
+                document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
+                    dialogue.style.transition = 'all 1s';
+                });
+                //show app themes from now to avoid startup css render issues
+                document.querySelector('#app_themes').style.display = 'block';
+            });
+        });
     });
 };
 export{show_hide_apps_dialogue, setEvents, app_theme_switch, get_apps, user_menu_item_click, user_login_app,

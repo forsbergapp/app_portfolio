@@ -52,7 +52,7 @@ const init_app = async () => {
 };
 const init = (parameters) => {
     common.COMMON_GLOBAL['exception_app_function'] = app_exception;
-    common.init_common(parameters, ()=>{
+    common.init_common(parameters).then(()=>{
         init_app().then(() => {});
     });
 };

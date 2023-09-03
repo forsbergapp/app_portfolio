@@ -12,15 +12,18 @@ const getParameters_server = (app_id, data_app_id, callBack) => {
 				FROM ${db_schema()}.app_parameter
 				WHERE (app_id = :app_id
 						OR 
-						app_id = 0)
+						app_id = :common_app_id)
 					AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1, 3`;
-		const parameters = {app_id: data_app_id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
+		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+			const parameters = {app_id: data_app_id,
+								common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')};
+			db_execute(app_id, sql, parameters, null, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
 		});
 	};
 const getParametersAllAdmin = (app_id, data_app_id, lang_code, callBack) => {
@@ -134,39 +137,30 @@ const getAppDBParametersAdmin = (app_id, callBack) => {
 		});
 	};
 const getAppStartParameters = (app_id, callBack) => {
-		const sql = `SELECT a.app_name "app_name"
-					   FROM ${db_schema()}.app a
-					  WHERE a.id = :app_id`;
-		const parameters = {  app_id: app_id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	};
-const getParameters = (app_id, data_app_id, callBack) => {
-		//returns parameters for app_id=0 and given app_id
-		//and only public and private shared
-		const sql = `SELECT	app_id "app_id",
-							parameter_type_id "parameter_type_id",
-							parameter_name "parameter_name",
-							parameter_value "parameter_value",
-							parameter_comment "parameter_comment"
-					   FROM ${db_schema()}.app_parameter
-					  WHERE (app_id = :app_id
-							OR 
-							app_id = 0)
-						AND parameter_type_id IN ('0','1')
-				ORDER BY 1`;
-		const parameters = {app_id: data_app_id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
+	//return parameters for given app_id or COMMON_APP_ID
+	//and only public and private shared parameter types
+	const sql = `SELECT	app_id "app_id",
+						parameter_type_id "parameter_type_id",
+						parameter_name "parameter_name",
+						parameter_value "parameter_value",
+						parameter_comment "parameter_comment"
+				   FROM ${db_schema()}.app_parameter
+				  WHERE (app_id = :app_id
+						OR 
+						app_id = :common_app_id)
+					AND parameter_type_id IN ('0','1')
+					ORDER BY 1`;
+		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+			const parameters = {app_id: app_id,
+								common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')};
+			db_execute(app_id, sql, parameters, null, (err, result)=>{
+				if (err)
+					return callBack(err, null);
+				else
+					return callBack(null, result);
+			});
 		});
 	};
 export{
 		getParameters_server, getParametersAllAdmin, getParameter, setParameter_admin, setParameterValue_admin, 
-		getAppDBParametersAdmin, getAppStartParameters, getParameters};
+		getAppDBParametersAdmin, getAppStartParameters};
