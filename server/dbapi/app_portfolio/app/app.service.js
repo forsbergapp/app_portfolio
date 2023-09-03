@@ -103,6 +103,18 @@ const getAppsAdminId = async (app_id) => {
 
 };
 
+const getAppName = (app_id, callBack) => {
+	const sql = `SELECT a.app_name "app_name"
+				   FROM ${db_schema()}.app a
+				  WHERE a.id = :app_id`;
+	const parameters = {  app_id: app_id};
+	db_execute(app_id, sql, parameters, null, (err, result)=>{
+		if (err)
+			return callBack(err, null);
+		else
+			return callBack(null, result);
+	});
+};
 const updateAppAdmin = (app_id, id, body, callBack) => {
 		const sql = `UPDATE ${db_schema()}.app
 				  SET app_name = :app_name,
@@ -122,4 +134,4 @@ const updateAppAdmin = (app_id, id, body, callBack) => {
 				return callBack(null, result);
 		});
 	};
-export{getApp, getAppsAdmin, getAppsAdminId, updateAppAdmin};
+export{getApp, getAppsAdmin, getAppsAdminId, getAppName, updateAppAdmin};
