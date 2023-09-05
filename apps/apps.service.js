@@ -35,7 +35,7 @@ const createMail = async (app_id, data) =>{
                 ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
                 ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
             ];
-            read_app_files(app_id, files, (err, email)=>{
+            read_app_files(files, (err, email)=>{
                 if (err)
                     reject(err);
                 else{                
@@ -295,7 +295,7 @@ const client_locale = (accept_language) =>{
     }
     return locale;
 };
-const read_app_files = async (app_id, files, callBack) => {
+const read_app_files = async (files, callBack) => {
     let i = 0;
     //ES2020 import() with ES6 promises, object destructuring
     import('node:fs').then(({promises: {readFile}}) => {
@@ -316,6 +316,64 @@ const read_app_files = async (app_id, files, callBack) => {
         })
         .catch(err => {
             callBack(err, null);
+        });
+    });
+};
+const read_common_files = async (module, files, callBack) => {
+    const fs = await import('node:fs');
+    for (const file of files){
+        const filecontent = await fs.promises.readFile(file[1]);
+        module = module.replace(
+            file[0],
+            `${filecontent.toString()}`);
+    }
+    callBack(null, module);
+};
+const render_common_html = (app_id, module, module_type='FORM', map=false, user_account_custom_tag, app_themes=true) =>{
+    return new Promise((resolve, reject)=>{
+        let common_files;
+        if (module_type == 'FORM'){
+            common_files = [
+				//HEAD
+				['<CommonHead/>', process.cwd() + '/apps/common/src/head.html'],
+				['<CommonHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
+				//BODY
+				['<CommonBody/>', process.cwd() + '/apps/common/src/body.html'],
+                ['<CommonBodyDialogues/>', process.cwd() + '/apps/common/src/body_dialogues.html'],
+                ['<CommonBodyWindowInfo/>', process.cwd() + '/apps/common/src/body_window_info.html'],
+				['<CommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
+				['<CommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],    
+				//Profile tag CommonBodyProfileDetail in common body
+				['<CommonBodyProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], 
+				['<CommonBodyProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
+				['<CommonBodyProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
+				[user_account_custom_tag==null?'<CommonBodyUserAccount/>':user_account_custom_tag, process.cwd() + '/apps/common/src/user_account.html']
+            ];
+            if (map==true)
+                common_files.push(['<CommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html']);
+            if (app_themes==true){
+                //CommonBodyThemes inside common User account div
+                common_files.push(['<CommonBodyThemes/>', process.cwd() + '/apps/common/src/app_themes.html']);
+            }
+        }
+        else
+            common_files = [
+                //HEAD
+                ['<CommonReportHead/>', process.cwd() + '/apps/common/src/report/head.html'],
+                ['<CommonReportHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
+                //BODY
+                ['<CommonReportBody/>', process.cwd() + '/apps/common/src/report/body.html'],
+                ['<CommonReportBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
+                ['<CommonReportBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html']
+            ];
+        read_common_files(module, common_files, (err, app)=>{
+            if (err)
+                reject(err);
+            else{
+                if (map==false)
+                    app = app.replace('<CommonHeadMap/>', '');
+                resolve(app);
+            }
         });
     });
 };
@@ -531,7 +589,7 @@ const getMaintenance = (app_id) => {
             ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
             ];
-        read_app_files(app_id, files, (err, app)=>{
+        read_app_files(files, (err, app)=>{
             if (err)
                 reject(err);
             else{
@@ -739,7 +797,7 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo, check_app_subdomain,
         /*APP functions */
-        apps_start_ok, client_locale, read_app_files, get_module_with_init,
+        apps_start_ok, client_locale, read_app_files, render_common_html, get_module_with_init,
         getMaintenance, getUserPreferences,
         AppsStart,
         /*APP BFF functions*/
