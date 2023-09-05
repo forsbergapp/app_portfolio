@@ -2448,31 +2448,6 @@ const user_preferences_update_select = () => {
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
-const Providers_init = async (function_event) => {
-    const div = document.getElementById('identity_provider_login');
-    let json;
-    div.innerHTML = APP_SPINNER;
-    FFB ('DB_API', '/identityprovider?', 'GET', 0, null, (err, result) => {
-        if (err)
-            div.innerHTML = '';
-        else{
-            div.innerHTML = '';
-            json = JSON.parse(result);
-            //load the buttons
-            //user provider should use REST API on server if used
-            let html = '';
-            for (let i=0;i <=json.items.length-1;i++){
-                html += `<button id='login_provider_${i}' class='common_login_button common_login_provider_button' >
-                            <div class='common_login_provider_id'>${json.items[i].id}</div>
-                            <div class='common_login_provider_name'>${json.items[i].provider_name}</div>
-                         </button>`;
-                
-            }
-            div.innerHTML = html;
-            document.querySelectorAll('.common_login_provider_button').forEach(e => e.addEventListener('click', function_event));
-        }
-    });
-};
 const ProviderUser_update = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) => {
     convert_image(profile_image_url, 
                   COMMON_GLOBAL['image_avatar_width'],
@@ -3531,7 +3506,7 @@ export{/* GLOBALS*/
        user_account_app_delete, user_forgot, updatePassword, user_preference_save, user_preference_get,
        user_preferences_set_default_globals, user_preferences_update_select,
        /* USER PROVIDER */
-       Providers_init, ProviderUser_update, ProviderSignIn,
+       ProviderUser_update, ProviderSignIn,
        /* MODULE LEAFLET  */
        map_init, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,

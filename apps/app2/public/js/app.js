@@ -2327,6 +2327,8 @@ const setEvents = () => {
     document.getElementById('common_login_button').addEventListener('click', () => { user_login_app(); }, false);
     document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup(); }, false);
     
+    if (document.querySelector('#identity_provider_login'))
+        document.querySelector('#identity_provider_login').addEventListener('click', (event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
     
     //dialogue profile
     document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { profile_detail_app(1, null, true, null, show_profile_function); }, false);
@@ -2688,15 +2690,13 @@ const init_app = () => {
                         };
                         show_start().then(() => {
                             dialogue_loading(0);
-                            common.Providers_init((event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); }).then(() => {
-                                serviceworker();
-                                if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-                                    common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], ()=>{
-                                        resolve();
-                                    });
-                                else
+                            serviceworker();
+                            if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
+                                common_translate_ui_app(common.COMMON_GLOBAL['user_locale'], ()=>{
                                     resolve();
-                            });
+                                });
+                            else
+                                resolve();
                         });
                     });
                 });
