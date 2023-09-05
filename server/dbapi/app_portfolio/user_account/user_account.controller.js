@@ -991,7 +991,7 @@ const providerSignIn = (req, res) => {
                                     else
                                         return res.status(200).json({
                                             count: results.length,
-                                            accessToken: accessToken(req.query.app_id),
+                                            accessToken: req.body.access_token,
                                             items: results,
                                             userCreated: 0
                                         });
