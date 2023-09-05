@@ -1,4 +1,4 @@
-const { read_app_files} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_common_html, read_app_files} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const themes = async (app_id, locale) =>{
     return new Promise((resolve) => {
@@ -149,25 +149,13 @@ const countries = (app_id, locale) => {
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
-        const main = (app_id) => {
+        const main = async (app_id) => {
             const files = [
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
-                ['<AppCommonHead/>', process.cwd() + '/apps/common/src/head.html'],
-                ['<AppCommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html'],
-                ['<AppCommonFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
-                ['<AppReportsFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],
-                ['<AppCommonBody/>', process.cwd() + '/apps/common/src/body.html'],
-                ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
-                ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],  
-                ['<AppCommonProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], //Profile tag in common body
-                
+                ['<AppReportsFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],                
                 ['<AppHead/>', process.cwd() + '/apps/app2/src/head.html'],
                 ['<AppToolbarTop/>', process.cwd() + '/apps/app2/src/toolbar_top.html'],
-
-                ['<AppCommonUserAccount/>', process.cwd() + '/apps/common/src/user_account.html'],
                 ['<AppThemes/>', process.cwd() + '/apps/common/src/app_themes.html'],
-                ['<AppCommonProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
-
                 ['<AppPaper/>', process.cwd() + '/apps/app2/src/paper.html'],
                 ['<AppSettingsTabNavigation/>', process.cwd() + '/apps/app2/src/settings_tab_navigation.html'],
                 ['<AppSettingsTabNavigationTab1/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab1.html'],
@@ -177,13 +165,14 @@ const createApp = (app_id, username, locale) => {
                 ['<AppSettingsTabNavigationTab5/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab5.html'],
                 ['<AppSettingsTabNavigationTab6/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab6.html'],
                 ['<AppSettingsTabNavigationTab7/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab7.html'],
-
-                ['<AppProfileInfo/>', process.cwd() + '/apps/app2/src/profile_info.html'], /*Profile tag in common body*/
-                ['<AppProfileTop/>', process.cwd() + '/apps/app2/src/profile_top.html'],   //Profile tag in common body
                 ['<AppDialogues/>', process.cwd() + '/apps/app2/src/dialogues.html'],
-                ['<AppToolbarBottom/>', process.cwd() + '/apps/app2/src/toolbar_bottom.html'],
-                ['<AppCommonProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html']
+                ['<AppToolbarBottom/>', process.cwd() + '/apps/app2/src/toolbar_bottom.html']
             ];
+            //render after COMMON rendered
+            const fs = await import('node:fs');
+            //Profile tag in common body
+            const profile_info = await fs.promises.readFile(`${process.cwd()}/apps/app2/src/profile_info.html`, 'utf8');
+            const profile_top = await fs.promises.readFile(`${process.cwd()}/apps/app2/src/profile_top.html`, 'utf8');
             const getAppComponents = async (app_id) => {
                 return new Promise((resolve, reject) => {
                     try {
@@ -313,101 +302,106 @@ const createApp = (app_id, username, locale) => {
                                 }
                             }
                         }
-                        read_app_files(app_id, files, (err, app)=>{
-                            if (err)
-                                reject(err);
-                            else{
-                                app = app.replace(
-                                        '<AppLocales/>',
-                                        `${app_components.AppLocales}`);
-                                //add extra option for second locale
-                                app = app.replace(
-                                        '<AppLocalessecond/>',
-                                        `<option id='' value='0' selected='selected'>None</option>${app_components.AppLocales}`);
-                                app = app.replace(
-                                        '<AppCountries/>',
-                                        `${app_components.AppCountries}`);
-                                app = app.replace(
-                                        '<AppPlaces/>',
-                                        `${app_components.AppPlaces}`);
-                                app = app.replace(
-                                        '<AppSettingsThemesDay/>',
-                                        `${app_components.AppSettingsThemes[0]}`);
-                                app = app.replace(
-                                        '<AppSettingsThemesMonth/>',
-                                        `${app_components.AppSettingsThemes[1]}`);
-                                app = app.replace(
-                                        '<AppSettingsThemesYear/>',
-                                        `${app_components.AppSettingsThemes[2]}`);
-                                //app SETTING
-                                app = app.replace(
-                                        '<AppTimezones/>',
-                                        `${USER_TIMEZONE}`);
-                                app = app.replace(
-                                        '<AppDirection/>',
-                                        `${USER_DIRECTION}`);
-                                app = app.replace(
-                                        '<AppNumbersystem/>',
-                                        `${APP_NUMBER_SYSTEM}`);
-                                app = app.replace(
-                                        '<AppColumntitle/>',
-                                        `${APP_COLUMN_TITLE}`);
-                                app = app.replace(
-                                        '<AppArabicscript/>',
-                                        `${USER_ARABIC_SCRIPT}`);
-                                app = app.replace(
-                                        '<AppCalendartype/>',
-                                        `${APP_CALENDAR_TYPE}`);
-                                app = app.replace(
-                                        '<AppCalendarhijritype/>',
-                                        `${APP_CALENDAR_HIJRI_TYPE}`);
-                                app = app.replace(
-                                        '<AppMaptype/>',
-                                        `${APP_MAP_TYPE}`);
-                                app = app.replace(
-                                        '<AppPapersize/>',
-                                        `${APP_PAPER_SIZE}`);
-                                app = app.replace(
-                                        '<AppHighlightrow/>',
-                                        `${APP_HIGHLIGHT_ROW}`);
-                                app = app.replace(
-                                        '<AppMethod/>',
-                                        `${APP_METHOD}`);
-                                app = app.replace(
-                                        '<AppMethodAsr/>',
-                                        `${APP_METHOD_ASR}`);
-                                app = app.replace(
-                                        '<AppHighlatitudeadjustment/>',
-                                        `${APP_HIGH_LATITUDE_ADJUSTMENT}`);
-                                app = app.replace(
-                                        '<AppTimeformat/>',
-                                        `${APP_TIMEFORMAT}`);
-                                app = app.replace(
-                                        '<AppHijridateadjustment/>',
-                                        `${APP_HIJRI_DATE_ADJUSTMENT}`);
-                                //used several times:
-                                app = app.replace(
-                                        new RegExp('<AppIqamat/>', 'g'),
-                                        `${APP_IQAMAT}`);
-                                app = app.replace(
-                                        '<AppFaststartend/>',
-                                        `${APP_FAST_START_END}`);
-                                //COMMON, set user preferences content
-                                app = app.replace(
-                                        '<USER_LOCALE/>',
-                                        `${app_components.AppLocales}`);
-                                app = app.replace(
-                                        '<USER_TIMEZONE/>',
-                                        `${USER_TIMEZONE}`);
-                                app = app.replace(
-                                        '<USER_DIRECTION/>',
-                                        `<option id='' value=''></option>${USER_DIRECTION}`);
-                                app = app.replace(
-                                        '<USER_ARABIC_SCRIPT/>',
-                                        `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
-                                resolve(app);
-                            } 
-                        }); 
+                        read_app_files(files, (err, app)=>{
+                            render_common_html(app_id, app,	'FORM', true, '<AppUserAccount/>', true).then((app)=>{
+                                if (err)
+                                    reject(err);
+                                else{
+                                    //render profile_info after COMMON:
+                                    app = app.replace('<AppProfileInfo/>', profile_info);
+                                    app = app.replace('<AppProfileTop/>', profile_top);
+                                    app = app.replace(
+                                            '<AppLocales/>',
+                                            `${app_components.AppLocales}`);
+                                    //add extra option for second locale
+                                    app = app.replace(
+                                            '<AppLocalessecond/>',
+                                            `<option id='' value='0' selected='selected'>None</option>${app_components.AppLocales}`);
+                                    app = app.replace(
+                                            '<AppCountries/>',
+                                            `${app_components.AppCountries}`);
+                                    app = app.replace(
+                                            '<AppPlaces/>',
+                                            `${app_components.AppPlaces}`);
+                                    app = app.replace(
+                                            '<AppSettingsThemesDay/>',
+                                            `${app_components.AppSettingsThemes[0]}`);
+                                    app = app.replace(
+                                            '<AppSettingsThemesMonth/>',
+                                            `${app_components.AppSettingsThemes[1]}`);
+                                    app = app.replace(
+                                            '<AppSettingsThemesYear/>',
+                                            `${app_components.AppSettingsThemes[2]}`);
+                                    //app SETTING
+                                    app = app.replace(
+                                            '<AppTimezones/>',
+                                            `${USER_TIMEZONE}`);
+                                    app = app.replace(
+                                            '<AppDirection/>',
+                                            `${USER_DIRECTION}`);
+                                    app = app.replace(
+                                            '<AppNumbersystem/>',
+                                            `${APP_NUMBER_SYSTEM}`);
+                                    app = app.replace(
+                                            '<AppColumntitle/>',
+                                            `${APP_COLUMN_TITLE}`);
+                                    app = app.replace(
+                                            '<AppArabicscript/>',
+                                            `${USER_ARABIC_SCRIPT}`);
+                                    app = app.replace(
+                                            '<AppCalendartype/>',
+                                            `${APP_CALENDAR_TYPE}`);
+                                    app = app.replace(
+                                            '<AppCalendarhijritype/>',
+                                            `${APP_CALENDAR_HIJRI_TYPE}`);
+                                    app = app.replace(
+                                            '<AppMaptype/>',
+                                            `${APP_MAP_TYPE}`);
+                                    app = app.replace(
+                                            '<AppPapersize/>',
+                                            `${APP_PAPER_SIZE}`);
+                                    app = app.replace(
+                                            '<AppHighlightrow/>',
+                                            `${APP_HIGHLIGHT_ROW}`);
+                                    app = app.replace(
+                                            '<AppMethod/>',
+                                            `${APP_METHOD}`);
+                                    app = app.replace(
+                                            '<AppMethodAsr/>',
+                                            `${APP_METHOD_ASR}`);
+                                    app = app.replace(
+                                            '<AppHighlatitudeadjustment/>',
+                                            `${APP_HIGH_LATITUDE_ADJUSTMENT}`);
+                                    app = app.replace(
+                                            '<AppTimeformat/>',
+                                            `${APP_TIMEFORMAT}`);
+                                    app = app.replace(
+                                            '<AppHijridateadjustment/>',
+                                            `${APP_HIJRI_DATE_ADJUSTMENT}`);
+                                    //used several times:
+                                    app = app.replace(
+                                            new RegExp('<AppIqamat/>', 'g'),
+                                            `${APP_IQAMAT}`);
+                                    app = app.replace(
+                                            '<AppFaststartend/>',
+                                            `${APP_FAST_START_END}`);
+                                    //COMMON, set user preferences content
+                                    app = app.replace(
+                                            '<USER_LOCALE/>',
+                                            `${app_components.AppLocales}`);
+                                    app = app.replace(
+                                            '<USER_TIMEZONE/>',
+                                            `${USER_TIMEZONE}`);
+                                    app = app.replace(
+                                            '<USER_DIRECTION/>',
+                                            `<option id='' value=''></option>${USER_DIRECTION}`);
+                                    app = app.replace(
+                                            '<USER_ARABIC_SCRIPT/>',
+                                            `<option id='' value=''></option>${USER_ARABIC_SCRIPT}`);
+                                    resolve(app);
+                                }
+                            });
+                        });
                     });  
                 });                    
             });
