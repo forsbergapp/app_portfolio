@@ -666,8 +666,6 @@ const serverExpressRoutes = async (app) => {
     const { getAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_role/app_role.controller.js`);
     //server db api app_portfolio country
     const { getCountries } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.controller.js`);
-    //server db api app_portfolio identity provider
-    const { getIdentityProviders} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.controller.js`);
     //server db api app_portfolio locale
     const { getLocales } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.controller.js`);
     //server db api app_portfolio message translation
@@ -788,7 +786,6 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/value`).patch(checkAccessTokenAdmin, setParameterValue_admin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_role/admin`).get(checkAccessTokenAdmin, getAppRoleAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/country/:lang_code`).get( checkDataToken, getCountries);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/identityprovider`).get( checkDataToken, getIdentityProviders);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/:lang_code`).get( checkDataToken, getLocales);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/admin/:lang_code`).get( checkDataToken, getLocales);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/message_translation/:code`).get( checkDataToken, getMessage);

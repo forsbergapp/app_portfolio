@@ -328,7 +328,7 @@ const get_module_with_init = async (app_id,
                                     client_longitude,
                                     client_place,
                                     module, callBack) => {
-    const return_with_parameters = (app_name, app_parameters, first_time)=>{
+    const return_with_parameters = (module, app_name, app_parameters, first_time)=>{
         const app_service_parameters = {   
             app_id: app_id,
             app_name: app_name,
@@ -368,7 +368,20 @@ const get_module_with_init = async (app_id,
                     if (err)
                         callBack(err, null);
                     else{
-                        callBack(null, return_with_parameters(result_app_name[0].app_name, app_parameters, 0)); 
+                        module = return_with_parameters(module, result_app_name[0].app_name, app_parameters, 0);
+                        if (ui==true){
+                            //forms
+                            providers_buttons(app_id).then((buttons)=>{
+                                module = module.replace(
+                                    '<COMMON_PROVIDER_BUTTONS/>',
+                                    buttons);
+                                callBack(null, module);
+                            });
+                        }
+                        else{
+                            //reports
+                            callBack(null, module);
+                        }
                     }
                 });
             }
@@ -581,6 +594,28 @@ const getUserPreferences = (app_id, locale) => {
             });        
         });
     });
+};
+const providers_buttons = async (app_id) =>{
+    const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
+    return new Promise((resolve, reject)=>{
+        getIdentityProviders(app_id, (err, result)=>{
+            if (err)
+                reject(err);
+            else{
+                let html = '';
+                for (const provider of result){
+                    html += `<button class='common_login_button common_login_provider_button' >
+                                <div class='common_login_provider_id'>${provider.id}</div>
+                                <div class='common_login_provider_name'>${provider.provider_name}</div>
+                            </button>`;
+                }
+                if (html)
+                    resolve(`<div id='identity_provider_login'>${html}</div>`);
+                else
+                    resolve(null);
+            }
+        });
+    });	
 };
 //APP BFF functions
 const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data) => {
