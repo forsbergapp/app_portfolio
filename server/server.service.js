@@ -806,7 +806,7 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).get(checkAccessToken, getUserByUserId);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/common/:id`).put(checkAccessToken, updateUserCommon);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).delete(checkAccessToken, deleteUser);    
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail:id`).get(checkAccessToken, getProfileDetail);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail/:id`).get(checkAccessToken, getProfileDetail);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/top/:statchoice`).get(checkDataToken, getProfileTop);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/id/:id`).post(checkDataToken, getProfileUser);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username`).post(checkDataToken, getProfileUser);
