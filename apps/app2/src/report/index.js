@@ -13,7 +13,7 @@ const createReport = (app_id, module) => {
                 if (err)
                     reject(err);
                 else{
-                    resolve(report);
+                    resolve(report.app);
                 }
             });
         });
