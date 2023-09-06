@@ -84,8 +84,8 @@ const admin_login = async () => {
             }
         }
         let json;
-        common.FFB ('AUTH', '/auth/admin?', 'POST', 3, `{"username": "${document.getElementById('system_admin_login_username_input').value}",
-                                                        "password": "${document.getElementById('system_admin_login_password_input').value}"}`, (err, result_login) => {
+        common.FFB ('AUTH', '/auth/admin?', 'POST', 3, `{"username": "${encodeURI(document.getElementById('system_admin_login_username_input').value)}",
+                                                        "password": "${encodeURI(document.getElementById('system_admin_login_password_input').value)}"}`, (err, result_login) => {
             document.getElementById('admin_login_button').innerHTML = old_button;
             if (err)
                 null;
@@ -111,8 +111,8 @@ const admin_login = async () => {
         });
     }
     else {
-        await common.user_login(document.getElementById('admin_login_username_input').value,
-            document.getElementById('admin_login_password_input').value, (err, result) => {
+        await common.user_login(encodeURI(document.getElementById('admin_login_username_input').value),
+                                encodeURI(document.getElementById('admin_login_password_input').value), (err, result) => {
                 document.getElementById('admin_login_button').innerHTML = old_button;
                 if (err == null) {
                     common.dialogue_close('dialogue_admin_login').then(() => {

@@ -1515,7 +1515,7 @@ const search_profile = (click_function) => {
             return;
         if (COMMON_GLOBAL['user_account_id']!=''){
             //search using access token with logged in user_account_id
-            path = `/user_account/profile/username/searchA?search=${searched_username}`;
+            path = `/user_account/profile/username/searchA?search=${encodeURI(searched_username)}`;
             token = 1;
             json_data = `{
                         "user_account_id":${COMMON_GLOBAL['user_account_id']},
@@ -1525,7 +1525,7 @@ const search_profile = (click_function) => {
         }
         else{
             //search using data token without logged in user_account_id
-            path = `/user_account/profile/username/searchD?search=${searched_username}`;
+            path = `/user_account/profile/username/searchD?search=${encodeURI(searched_username)}`;
             token = 0;
             json_data = `{
                         "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
@@ -1788,8 +1788,8 @@ const user_login = async (username, password, callBack) => {
 
     const json_data = `{
                     "app_id": ${COMMON_GLOBAL['app_id']},
-                    "username":"${username}",
-                    "password":"${password}",
+                    "username":"${encodeURI(username)}",
+                    "password":"${encodeURI(password)}",
                     ${get_uservariables()}
                  }`;
 
