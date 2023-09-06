@@ -1,4 +1,4 @@
-const { render_common_html, read_app_files, getUserPreferences } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_common_html, read_app_files } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
@@ -15,39 +15,24 @@ const createApp = (app_id, username, locale) => {
             const profile_info = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/profile_info.html`, 'utf8');
             const profile_info_cloud = await fs.promises.readFile(`${process.cwd()}/apps/common/src/profile_info_cloud.html`, 'utf8');
             const app_themes = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/app_themes.html`, 'utf8');
-            getUserPreferences(app_id, locale).then((user_preferences) => {
-                read_app_files(files, (err, app_files)=>{
-                    render_common_html(app_id, app_files, 'FORM', false, null, false).then((app)=>{
-                        if (err)
-                            reject(err);
-                        else{
-                            //render after COMMON:
-                            app = app.replace('<AppProfileInfo/>', profile_info);
-                            app = app.replace('<CommonBodyThemes/>', app_themes);
-                            //render CommonBodyProfileInfoCloud after above, this function only available for this app
-                            app = app.replace('<CommonBodyProfileInfoCloud/>', profile_info_cloud);
-                            //COMMON, set user preferences content
-                            app = app.replace(
-                                    '<USER_LOCALE/>',
-                                    `${user_preferences.user_locales}`);
-                            app = app.replace(
-                                    '<USER_TIMEZONE/>',
-                                    `${user_preferences.user_timezones}`);
-                            app = app.replace(
-                                    '<USER_DIRECTION/>',
-                                    `<option id='' value=''></option>${user_preferences.user_directions}`);
-                            app = app.replace(
-                                    '<USER_ARABIC_SCRIPT/>',
-                                    `<option id='' value=''></option>${user_preferences.user_arabic_scripts}`);
-                            //APP Profile tag not used in common body
-                            app = app.replace(
-                                    '<AppProfileTop/>',
-                                    '');   
-                            resolve(app);
-                        }
-                    });
-                }); 
-            }); 
+            read_app_files(files, (err, app_files)=>{
+                render_common_html(app_id, app_files, locale, 'FORM', false, null, false, true, true).then((app)=>{
+                    if (err)
+                        reject(err);
+                    else{
+                        //render after COMMON:
+                        app.app = app.app.replace('<AppProfileInfo/>', profile_info);
+                        app.app = app.app.replace('<CommonBodyThemes/>', app_themes);
+                        //render CommonBodyProfileInfoCloud after above, this function only available for this app
+                        app.app = app.app.replace('<CommonBodyProfileInfoCloud/>', profile_info_cloud);
+                        //APP Profile tag not used in common body
+                        app.app = app.app.replace(
+                                '<AppProfileTop/>',
+                                '');   
+                        resolve(app.app);
+                    }
+                });
+            });
         };
         if (username!=null){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
