@@ -822,7 +822,7 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/user_account_id/:id`).get(checkDataToken, getUserSettingsByUserId);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/:id`).get(checkDataToken, getProfileUserSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/all/:id`).get(checkDataToken, getProfileUserSettings);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/detail/:id`).get(checkDataToken, getProfileUserSettingDetail);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/detail/:id`).get(checkAccessToken, getProfileUserSettingDetail);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/top/:statchoice`).get(checkDataToken, getProfileTopSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting`).post(checkAccessToken, createUserSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).put(checkAccessToken, updateUserSetting);
