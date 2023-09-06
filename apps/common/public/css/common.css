@@ -165,7 +165,6 @@ body.font_arabic_nastaliq{
 body.font_arabic_nastaliq select,
 body.font_arabic_nastaliq input{
 	font-size:0.7em;
-	height:2em;
 }
 body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	margin-top:-15px;
