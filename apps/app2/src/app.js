@@ -164,7 +164,7 @@ const createApp = (app_id, username, locale) => {
             //Profile tag in common body
             const profile_info = await fs.promises.readFile(`${process.cwd()}/apps/app2/src/profile_info.html`, 'utf8');
             const profile_top = await fs.promises.readFile(`${process.cwd()}/apps/app2/src/profile_top.html`, 'utf8');
-            countries(app_id, locale).then((Countries) => {{
+            countries(app_id, locale).then((Countries) => {
                 let USER_TIMEZONE ='';
                 let USER_DIRECTION='';
                 let USER_ARABIC_SCRIPT='';
