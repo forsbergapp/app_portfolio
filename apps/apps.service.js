@@ -670,7 +670,7 @@ const providers_buttons = async (app_id) =>{
                 if (html)
                     resolve(`<div id='identity_provider_login'>${html}</div>`);
                 else
-                    resolve(null);
+                    resolve('');
             }
         });
     });	
