@@ -329,7 +329,61 @@ const read_common_files = async (module, files, callBack) => {
     }
     callBack(null, module);
 };
-const render_common_html = (app_id, module, module_type='FORM', map=false, user_account_custom_tag, app_themes=true) =>{
+const render_common_html = async (app_id, module, locale, module_type='FORM', map=false, user_account_custom_tag, app_themes=true, render_locales=true, render_settings=true) =>{
+    let user_locales;
+    let settings;
+    let user_timezones = '';
+    let user_directions = '';
+    let user_arabic_scripts = '';
+    if (render_locales){
+        const promisegetLocales = async () =>{
+            const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
+            return new Promise((resolve)=>{
+                let user_locales;
+                getLocales(app_id, locale, (err, result_user_locales) => {
+                    result_user_locales.forEach( (locale,i) => {
+                        user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
+                    });
+                resolve(user_locales);
+                });
+            });
+        };
+        user_locales = await promisegetLocales();
+    }
+    if (render_settings){
+        const promisegetSettings = async () =>{
+            const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
+            return new Promise((resolve)=>{
+                getSettings(app_id, locale, null, (err, settings) => {
+                    let option;
+                    for (let i = 0; i < settings.length; i++) {
+                        option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
+                        switch (settings[i].setting_type_name){
+                            //static content
+                            case 'TIMEZONE':{
+                                user_timezones += option;
+                                break;
+                            }
+                            //will be translated in app
+                            case 'DIRECTION':{
+                                user_directions += option;
+                                break;
+                            }
+                            //static content
+                            case 'ARABIC_SCRIPT':{
+                                user_arabic_scripts += option;
+                                break;
+                            }
+                        }
+                    }
+                    resolve ({settings: settings, user_timezones: user_timezones, user_directions: user_directions, user_arabic_scripts: user_arabic_scripts});
+                });
+            });
+        };
+        settings = await promisegetSettings();
+    }
+        
+                    
     return new Promise((resolve, reject)=>{
         let common_files;
         if (module_type == 'FORM'){
@@ -372,7 +426,27 @@ const render_common_html = (app_id, module, module_type='FORM', map=false, user_
             else{
                 if (map==false)
                     app = app.replace('<CommonHeadMap/>', '');
-                resolve(app);
+                //render locales
+                if (render_locales)
+                    app = app.replace('<USER_LOCALE/>',         user_locales);
+                //render settings
+                if (render_settings){
+                    app = app.replace('<USER_TIMEZONE/>',       user_timezones);
+                    app = app.replace('<USER_DIRECTION/>',      `<option id='' value=''></option>${user_directions}`);
+                    app = app.replace('<USER_ARABIC_SCRIPT/>',  `<option id='' value=''></option>${user_arabic_scripts}`);    
+                }
+                //render provider buttons
+                if (module_type=='FORM'){
+                    //forms
+                    providers_buttons(app_id).then((buttons)=>{
+                        app = app.replace('<COMMON_PROVIDER_BUTTONS/>',buttons);
+                        resolve({app:app, locales: user_locales, settings: settings});
+                    });
+                }
+                else{
+                    //reports
+                    resolve({app:app, locales: user_locales, settings: settings});
+                }
             }
         });
     });
@@ -426,20 +500,7 @@ const get_module_with_init = async (app_id,
                     if (err)
                         callBack(err, null);
                     else{
-                        module = return_with_parameters(module, result_app_name[0].app_name, app_parameters, 0);
-                        if (ui==true){
-                            //forms
-                            providers_buttons(app_id).then((buttons)=>{
-                                module = module.replace(
-                                    '<COMMON_PROVIDER_BUTTONS/>',
-                                    buttons);
-                                callBack(null, module);
-                            });
-                        }
-                        else{
-                            //reports
-                            callBack(null, module);
-                        }
+                        callBack(null, return_with_parameters(module, result_app_name[0].app_name, app_parameters, 0));
                     }
                 });
             }
@@ -607,52 +668,6 @@ const getMaintenance = (app_id) => {
     });
 };
 
-const getUserPreferences = (app_id, locale) => {
-    return new Promise((resolve) => {
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`).then(({getSettings}) => {
-            //let user_locales =`<option value='en'>English</option>`;
-            let user_locales ='';
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`).then(({getLocales}) => {
-                getLocales(app_id, locale, (err, result_user_locales) => {
-                    for (const user_locale of result_user_locales) {
-                        user_locales +=`<option value='${user_locale.locale}'>${user_locale.text}</option>`;
-                    }
-                    getSettings(app_id, locale, null, (err, settings) => {
-                        let option;
-                        let user_timezones = '';
-                        let user_directions = '';
-                        let user_arabic_scripts = '';
-                        for (let i = 0; i < settings.length; i++) {
-                            option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
-                            switch (settings[i].setting_type_name){
-                                //static content
-                                case 'TIMEZONE':{
-                                    user_timezones += option;
-                                    break;
-                                }
-                                //will be translated in app
-                                case 'DIRECTION':{
-                                    user_directions += option;
-                                    break;
-                                }
-                                //static content
-                                case 'ARABIC_SCRIPT':{
-                                    user_arabic_scripts += option;
-                                    break;
-                                }
-                            }
-                        }
-                        resolve({user_locales: user_locales,
-                                 user_timezones: user_timezones,
-                                 user_directions: user_directions,
-                                 user_arabic_scripts: user_arabic_scripts
-                                });
-                    });  
-                });
-            });        
-        });
-    });
-};
 const providers_buttons = async (app_id) =>{
     const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
     return new Promise((resolve, reject)=>{
@@ -798,7 +813,7 @@ export {/*APP EMAIL functions*/
         getInfo, check_app_subdomain,
         /*APP functions */
         apps_start_ok, client_locale, read_app_files, render_common_html, get_module_with_init,
-        getMaintenance, getUserPreferences,
+        getMaintenance,
         AppsStart,
         /*APP BFF functions*/
         BFF};

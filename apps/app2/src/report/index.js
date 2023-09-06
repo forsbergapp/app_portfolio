@@ -9,7 +9,7 @@ const createReport = (app_id, module) => {
             ['<ReportPaper/>', process.cwd() + '/apps/app2/src/report/paper.html']
         ];
         read_app_files(files, (err, report)=>{
-            render_common_html(app_id, report,	'REPORT', false, null, false).then((report)=>{
+            render_common_html(app_id, report,null, 'REPORT', false, null, false, false, false).then((report)=>{
                 if (err)
                     reject(err);
                 else{

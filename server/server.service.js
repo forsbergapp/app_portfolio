@@ -791,7 +791,6 @@ const serverExpressRoutes = async (app) => {
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/message_translation/:code`).get( checkDataToken, getMessage);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/parameter_type/admin`).get(checkAccessTokenAdmin, getParameterTypeAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings`).get(checkDataToken, getSettings);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings/admin`).get(checkDataToken, getSettings);
 
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/count`).get(checkAccessTokenAdmin, getStatCountAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin`).get(checkAccessTokenAdmin, getUsersAdmin);

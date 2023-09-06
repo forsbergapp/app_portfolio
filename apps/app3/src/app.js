@@ -8,20 +8,20 @@ const createApp = (app_id, params) => {
             ['<AppDialogues/>', process.cwd() + '/apps/app3/src/dialogues.html']
             ];
         if (params==null || params =='1' || params =='2' || params =='3' ){
-            read_app_files(files, (err, app)=>{
-                render_common_html(app_id, app,	'FORM', false, null, false).then((app)=>{
+            read_app_files(files, (err, app_files)=>{
+                render_common_html(app_id, app_files, null, 'FORM', false, null, false, false, false).then((app)=>{
                     if (err)
                         reject(err);
                     else{
                         //APP Profile tag not used in common body
-                        app = app.replace(
+                        app.app = app.app.replace(
                             '<AppProfileInfo/>',
                             '');
                         //APP Profile tag not used in common body
-                        app = app.replace(
+                        app.app = app.app.replace(
                             '<AppProfileTop/>',
                             '');
-                        resolve(app);
+                        resolve(app.app);
                     }
                 });
             });
