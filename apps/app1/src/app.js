@@ -16,7 +16,7 @@ const createApp = (app_id, username, locale) => {
             const profile_info_cloud = await fs.promises.readFile(`${process.cwd()}/apps/common/src/profile_info_cloud.html`, 'utf8');
             const app_themes = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/app_themes.html`, 'utf8');
             read_app_files(files, (err, app_files)=>{
-                render_common_html(app_id, app_files, locale, 'FORM', false, null, false, true, true).then((app)=>{
+                render_common_html(app_id, app_files, locale, 'FORM', false, null, false, true, true, true).then((app)=>{
                     if (err)
                         reject(err);
                     else{

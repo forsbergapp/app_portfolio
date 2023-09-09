@@ -13,7 +13,7 @@ const createAdmin = (app_id, locale) => {
             ];
         if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
             read_app_files(files, (err, app)=>{
-                render_common_html(app_id, app,	locale, 'FORM', true, '<AppUserAccount/>', true, true, true).then((app)=>{
+                render_common_html(app_id, app,	locale, 'FORM', true, '<AppUserAccount/>', true, true, true, true).then((app)=>{
                     if (err)
                         reject(err);
                     else{
@@ -32,7 +32,7 @@ const createAdmin = (app_id, locale) => {
         }
         else{
             read_app_files(files, (err, app_files)=>{
-                render_common_html(app_files, locale, 'FORM', true, '<AppUserAccount/>', true, true, true).then((app)=>{
+                render_common_html(app_id, app_files, locale, 'FORM', true, '<AppUserAccount/>', true, false, false, false).then((app)=>{
                     if (err)
                         reject(err);
                     else{

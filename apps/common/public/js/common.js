@@ -3188,15 +3188,16 @@ const set_app_service_parameters = async (parameters) => {
     //client info
     COMMON_GLOBAL['client_latitude']  = parameters.client_latitude;
     COMMON_GLOBAL['client_longitude'] = parameters.client_longitude;
-    COMMON_GLOBAL['client_place'] = parameters.client_place;
+    COMMON_GLOBAL['client_place']     = parameters.client_place;
     
-    if (parameters.system_admin==0){
+    if (COMMON_GLOBAL['system_admin_only']==0){
         user_preferences_set_default_globals('LOCALE');
         user_preferences_set_default_globals('TIMEZONE');
         user_preferences_set_default_globals('DIRECTION');
         user_preferences_set_default_globals('ARABIC_SCRIPT');
     }
-    if (parameters.ui==true){
+    COMMON_GLOBAL['ui'] = parameters.ui;
+    if (COMMON_GLOBAL['ui']==true){
         COMMON_GLOBAL['user_locale']         = parameters.locale;
         COMMON_GLOBAL['user_timezone']       = Intl.DateTimeFormat().resolvedOptions().timeZone;
         COMMON_GLOBAL['user_direction']      = '';
@@ -3501,17 +3502,17 @@ const init_common = async (parameters) => {
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL['app_id'] ==null)
             set_app_service_parameters(parameters.app_service);
-        if (parameters.app_service.app_id == COMMON_GLOBAL['common_app_id']){
+        if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
             //admin app
             broadcast_init();
-            if (parameters.app_service.system_admin_only==1){
-                document.title = parameters.app_service.app_name;
+            if (COMMON_GLOBAL['system_admin_only']==1){
+                document.title = COMMON_GLOBAL['app_name'];
                 resolve();
             }
             else{
-                document.title = COMMON_GLOBAL['app_name']; 
+                document.title = COMMON_GLOBAL['app_name'];
                 set_app_parameters(parameters.app);
-                if (parameters.app_service.ui){
+                if (COMMON_GLOBAL['ui']){
                     assign_icons();
                     set_events();
                     resolve();
@@ -3525,7 +3526,7 @@ const init_common = async (parameters) => {
             broadcast_init();
             document.title = COMMON_GLOBAL['app_name']; 
             set_app_parameters(parameters.app);
-            if (parameters.app_service.ui){
+            if (COMMON_GLOBAL['ui']){
                 assign_icons();
                 set_events();
                 resolve();
