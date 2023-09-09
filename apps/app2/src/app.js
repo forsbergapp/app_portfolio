@@ -183,7 +183,7 @@ const createApp = (app_id, username, locale) => {
                 let APP_FAST_START_END='';
                 let APP_MAP_TYPE='';
                 read_app_files(files, (err, app_files)=>{
-                    render_common_html(app_id, app_files,	locale, 'FORM', true, '<AppUserAccount/>', true, true, true).then((app)=>{
+                    render_common_html(app_id, app_files,	locale, 'FORM', true, '<AppUserAccount/>', true, true, true, true).then((app)=>{
                         if (err)
                             reject(err);
                         else{

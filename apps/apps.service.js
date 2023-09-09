@@ -329,7 +329,7 @@ const read_common_files = async (module, files, callBack) => {
     }
     callBack(null, module);
 };
-const render_common_html = async (app_id, module, locale, module_type='FORM', map=false, user_account_custom_tag, app_themes=true, render_locales=true, render_settings=true) =>{
+const render_common_html = async (app_id, module, locale, module_type='FORM', map=false, user_account_custom_tag, app_themes=true, render_locales=true, render_settings=true, render_provider_buttons=true) =>{
     let user_locales;
     let settings;
     let user_timezones = '';
@@ -429,22 +429,27 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
                 //render locales
                 if (render_locales)
                     app = app.replace('<USER_LOCALE/>',         user_locales);
+                else
+                    app = app.replace('<USER_LOCALE/>',         '');
                 //render settings
                 if (render_settings){
                     app = app.replace('<USER_TIMEZONE/>',       user_timezones);
                     app = app.replace('<USER_DIRECTION/>',      `<option id='' value=''></option>${user_directions}`);
                     app = app.replace('<USER_ARABIC_SCRIPT/>',  `<option id='' value=''></option>${user_arabic_scripts}`);    
                 }
-                //render provider buttons
-                if (module_type=='FORM'){
-                    //forms
+                else{
+                    app = app.replace('<USER_TIMEZONE/>',       '');
+                    app = app.replace('<USER_DIRECTION/>',      '');
+                    app = app.replace('<USER_ARABIC_SCRIPT/>',  '');
+                }
+                if (render_provider_buttons){
                     providers_buttons(app_id).then((buttons)=>{
                         app = app.replace('<COMMON_PROVIDER_BUTTONS/>',buttons);
                         resolve({app:app, locales: user_locales, settings: settings});
                     });
                 }
                 else{
-                    //reports
+                    app = app.replace('<COMMON_PROVIDER_BUTTONS/>','');
                     resolve({app:app, locales: user_locales, settings: settings});
                 }
             }
@@ -486,7 +491,7 @@ const get_module_with_init = async (app_id,
         return module;
     };
     if (system_admin_only==1){
-        callBack(null, return_with_parameters('SYSTEM ADMIN', null, CheckFirstTime()==true?1:0));
+        callBack(null, return_with_parameters(module, 'SYSTEM ADMIN', null, CheckFirstTime()==true?1:0));
     }
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
