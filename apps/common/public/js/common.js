@@ -15,9 +15,14 @@
     EXCEPTION
     INIT
  */
-/*----------------------- */
-/* GLOBALS                */
-/*----------------------- */
+/*-----------------------
+  GLOBALS               
+
+  local objects:
+  icon_string
+  icon_string_svg
+  
+  ----------------------- */
 
 //CONTINUE
 const COMMON_GLOBAL = {
@@ -260,9 +265,18 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
                                     <div></div>
                                     <div></div>
                     </div>`;
-/*----------------------- */
-/* MISC                   */
-/*----------------------- */
+/*-----------------------
+  MISC                   
+
+  local objects:
+  checkconnected
+  format_json_date
+  convert_image
+  get_uservariables
+  
+  ----------------------- */
+
+
 const getGregorian = (HijriDate, adjustment) =>{
     const DAY = 86400000; // a day in milliseconds
     const UNIX_EPOCH_JULIAN_DATE = 2440587.5; // January 1, 1970 GMT
@@ -482,14 +496,6 @@ const mobile = () =>{
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
    };
    
-const parseJwt = (token) => {
-    try {
-      return JSON.parse(window.atob(token.split('.')[1]));
-    } catch (e) {
-      return null;
-    }
-  };
-
 const checkbox_value = (checkbox) => {
     if (checkbox.checked)
         return 'YES';
@@ -676,9 +682,21 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     }
     return null;
 };
-/*----------------------- */
-/* MESSAGE & DIALOGUE     */
-/*----------------------- */
+/*----------------------- 
+  MESSAGE & DIALOGUE     
+
+  local objects: 
+  dialogue_verify_clear
+  dialogue_new_password_clear
+  dialogue_user_edit_clear
+  dialogue_forgot_clear
+  dialogue_profile_clear
+  dialogue_user_edit_remove_error
+  lov_keys
+  lov_filter
+
+ ----------------------- */
+ 
 const show_message_info_list = (list_obj) =>{
     let html = '';
     for (const item of list_obj){
@@ -1246,9 +1264,13 @@ const show_window_info = (info, url, content_type, iframe_content) => {
         }
     }
 };
-/*----------------------- */
-/* PROFILE                */
-/*----------------------- */
+/*-----------------------
+  PROFILE               
+
+  local objects:
+  show_profile_click_events
+  search_profile
+  ----------------------- */
 const profile_follow_like = async (function_name) => {
     await user_function(function_name, (err) => {
         if (err==null){
@@ -1765,9 +1787,18 @@ const search_input = (event, event_function) => {
         }            
     }
 };
-/*----------------------- */
-/* USER                   */
-/*----------------------- */
+/*-----------------------
+  USER                   
+  
+  local objects:
+  user_account_app_delete
+  user_forgot
+  user_preference_save
+  user_preference_get
+  user_preferences_set_default_globals
+  user_preferences_update_select
+
+  ----------------------- */
 const user_login = async (username, password, callBack) => {
     
     let json;
@@ -2823,9 +2854,16 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             callBack(error, null);
         });
 };
-/*----------------------- */
-/* SERVICE BROADCAST      */
-/*----------------------- */
+/*----------------------- 
+  SERVICE BROADCAST      
+
+  local objects:
+  broadcast_init
+  maintenance_countdown
+  show_broadcast_info
+  reconnect
+  checkOnline
+  ----------------------- */
 const broadcast_init = () => {
     //broadcast
     document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
@@ -2956,9 +2994,12 @@ const checkOnline = (div_icon_online, user_account_id) => {
             document.getElementById(div_icon_online).className= 'offline';
     });
 };
-/*----------------------- */
-/* SERVICE GEOLOCATION    */
-/*----------------------- */
+/*-----------------------
+  SERVICE GEOLOCATION    
+
+  local objects:
+  tzlookup
+  ----------------------- */
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
         let tokentype;
@@ -3103,16 +3144,25 @@ const get_cities = async (countrycode, callBack) => {
         }
     });
 };
-/*----------------------- */
-/* EXCEPTION              */
-/*----------------------- */
+/*-----------------------
+  EXCEPTION              
+  
+  local objects:
+  exception
+  ----------------------- */
 const exception = (app_exception_function, error) => {
     app_exception_function(error);
 };
-/*----------------------- */
-/* INIT                   */
-/*----------------------- */
-const set_globals = async (parameters) => {
+/*-----------------------
+  INIT                  
+
+  local objects:
+  set_app_service_parameters
+  assign_icons
+  set_events
+  set_app_parameters
+  ----------------------- */
+const set_app_service_parameters = async (parameters) => {
     //app info
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
@@ -3426,7 +3476,7 @@ const set_events = () => {
     document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']); }, false);
     document.getElementById('common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
 };
-const set_common_parameters = (common_parameters) => {
+const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
     for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL['common_app_id'])){
         switch (parameter.parameter_name){
@@ -3450,7 +3500,7 @@ const set_common_parameters = (common_parameters) => {
 const init_common = async (parameters) => {
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL['app_id'] ==null)
-            set_globals(parameters.app_service);
+            set_app_service_parameters(parameters.app_service);
         if (parameters.app_service.app_id == COMMON_GLOBAL['common_app_id']){
             //admin app
             broadcast_init();
@@ -3460,7 +3510,7 @@ const init_common = async (parameters) => {
             }
             else{
                 document.title = COMMON_GLOBAL['app_name']; 
-                set_common_parameters(parameters.app);
+                set_app_parameters(parameters.app);
                 if (parameters.app_service.ui){
                     assign_icons();
                     set_events();
@@ -3474,7 +3524,7 @@ const init_common = async (parameters) => {
             //other apps
             broadcast_init();
             document.title = COMMON_GLOBAL['app_name']; 
-            set_common_parameters(parameters.app);
+            set_app_parameters(parameters.app);
             if (parameters.app_service.ui){
                 assign_icons();
                 set_events();
@@ -3488,23 +3538,22 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       getGregorian, checkconnected, typewatch, toBase64, fromBase64, common_translate_ui,
-       get_null_or_value, format_json_date, mobile, parseJwt, checkbox_value, checkbox_checked,image_format,
-       list_image_format_src, recreate_img, convert_image, set_avatar, boolean_to_number, number_to_boolean,
-       inIframe, show_image, getHostname, check_input, get_uservariables, SearchAndSetSelectedIndex,
+       getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
+       get_null_or_value, mobile, checkbox_value, checkbox_checked, image_format,
+       list_image_format_src, recreate_img, set_avatar, boolean_to_number, number_to_boolean,
+       inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
-       show_message_info_list, dialogue_close, show_common_dialogue, show_message, dialogue_verify_clear, dialogue_new_password_clear,
-       dialogue_user_edit_clear, dialogue_login_clear, dialogue_signup_clear, dialogue_forgot_clear, dialogue_profile_clear,
-       dialogue_user_edit_remove_error, lov_close, lov_show, lov_keys, lov_filter,
+       show_message_info_list, dialogue_close, show_common_dialogue, show_message,
+       dialogue_login_clear, dialogue_signup_clear,
+       lov_close, lov_show,
        /* WINDOW INFO */
        zoom_info, move_info, show_window_info,
        /* PROFILE */
-       profile_follow_like, show_profile_click_events, profile_top, profile_detail, search_profile, profile_show,
+       profile_follow_like, profile_top, profile_detail, profile_show,
        profile_close, profile_update_stat, search_input,
        /* USER  */
        user_login, user_logoff, user_edit, user_update, user_signup, user_verify_check_input, user_delete, user_function,
-       user_account_app_delete, user_forgot, updatePassword, user_preference_save, user_preference_get,
-       user_preferences_set_default_globals, user_preferences_update_select,
+       updatePassword,
        /* USER PROVIDER */
        ProviderUser_update, ProviderSignIn,
        /* MODULE LEAFLET  */
@@ -3515,13 +3564,11 @@ export{/* GLOBALS*/
        /*FFB */
        FFB,
        /* SERVICE BROADCAST */
-       broadcast_init, maintenance_countdown, show_broadcast, show_broadcast_info, show_maintenance, reconnect,
-       updateOnlineStatus, connectOnline, checkOnline,
+       show_broadcast, show_maintenance,
+       updateOnlineStatus, connectOnline,
        /* SERVICE GEOLOCATION */
-       get_place_from_gps, get_gps_from_ip, tzlookup,
+       get_place_from_gps, get_gps_from_ip,
        /* SERVICE WORLDCITIES */
        get_cities,       
-       /* EXCEPTION */
-       exception,
        /* INIT */
-       set_globals, assign_icons, set_event_user_menu, set_events, set_common_parameters, init_common};
+       set_event_user_menu, init_common};
