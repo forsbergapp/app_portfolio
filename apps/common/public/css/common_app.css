@@ -21,6 +21,11 @@ a:hover {
 a:active {
 	text-decoration: none;
 }
+.common_icon svg{
+	font-size: 2em;
+	height: 0.6em;
+	vertical-align: sub;
+}
 .common_link:hover,
 .common_link:active{
 	cursor:pointer;
@@ -30,10 +35,6 @@ a:active {
 }
 .common_lov_button{
 	display: inline-block;
-}
-#common_lov_title svg{
-	height: 1em;
-    margin-bottom: -1px;
 }
 .common_lov_search_row{
 	width:100%;
@@ -140,9 +141,6 @@ a:active {
 #common_message_title .common_icon{
 	vertical-align: middle;
 	margin-bottom: 1px;
-}
-#common_message_title .common_icon svg{
-	height: 1em;
 }
 #common_message_title #common_message_info_list{
 	display: block;

@@ -129,11 +129,6 @@ ul#admin_login_nav li{
 	font-size: 1.2em;
 	text-transform:uppercase;
 }
-.menuitem svg{
-	font-size: 2em;
-	height: 0.6em;
-	vertical-align: sub;
-}
 #menu_open{
 	visibility:hidden;
 	margin-inline-start: 20px;
@@ -478,11 +473,6 @@ ul#admin_login_nav li{
 	width:100%;
 	font-size:1.2em;
 }
-#list_apps_title svg , #list_app_parameter_title svg {
-	font-size: 2em;
-	height: 0.6em;
-	vertical-align: sub;
-}
 #list_apps, #list_app_parameter{
 	overflow-y: auto;
 	overflow-x: auto;
@@ -717,11 +707,6 @@ ul#admin_login_nav li{
 #menu_10_content_widget1{
 	height:300px;
 }
-#menu_10_content_widget2 svg{
-	font-size: 2em;
-	height: 0.6em;
-	vertical-align: sub;
-}
 #menu_10_os_info div,
 #menu_10_process_info div{
 	text-align: start;
@@ -751,11 +736,6 @@ ul#admin_login_nav li{
 	margin-top:10px;
 	margin-bottom:10px;
 	width:80px;
-}
-.list_button svg{
-	font-size: 2em;
-	height: 0.6em;
-	vertical-align: sub;
 }
 
 .list_nav{
