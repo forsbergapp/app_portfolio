@@ -465,10 +465,9 @@ const get_module_with_init = async (app_id,
                                     client_longitude,
                                     client_place,
                                     module, callBack) => {
-    const return_with_parameters = (module, app_name, app_parameters, first_time)=>{
+    const return_with_parameters = (module, app_parameters, first_time)=>{
         const app_service_parameters = {   
             app_id: app_id,
-            app_name: app_name,
             app_datatoken: data_token,
             locale: locale,
             ui: ui,
@@ -491,7 +490,8 @@ const get_module_with_init = async (app_id,
         return module;
     };
     if (system_admin_only==1){
-        callBack(null, return_with_parameters(module, 'SYSTEM ADMIN', null, CheckFirstTime()==true?1:0));
+        module = module.replace('<APP_NAME/>','SYSTEM ADMIN');
+        callBack(null, return_with_parameters(module, null, CheckFirstTime()==true?1:0));
     }
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
@@ -500,12 +500,13 @@ const get_module_with_init = async (app_id,
             if (err)
                 callBack(err, null);
             else{
+                module = module.replace('<APP_NAME/>',result_app_name[0].app_name);
                 //fetch parameters for common_app_id and current app_id
                 getAppStartParameters(app_id, (err,app_parameters) =>{
                     if (err)
                         callBack(err, null);
                     else{
-                        callBack(null, return_with_parameters(module, result_app_name[0].app_name, app_parameters, 0));
+                        callBack(null, return_with_parameters(module, app_parameters, 0));
                     }
                 });
             }

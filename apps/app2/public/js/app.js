@@ -2627,7 +2627,6 @@ const init_app = () => {
         document.getElementById('slider_prev_year').innerHTML = common.ICONS['app_slider_left'];
         document.getElementById('slider_next_year').innerHTML = common.ICONS['app_slider_right'];
         
-        document.getElementById('app_name').innerHTML = common.COMMON_GLOBAL['app_name'];
         //set about info
         document.getElementById('app_copyright').innerHTML = app_common.APP_GLOBAL['app_copyright'];
         if (app_common.APP_GLOBAL['info_social_link1_url']!=null)

@@ -28,7 +28,6 @@
 const COMMON_GLOBAL = {
     'common_app_id':'',
     'app_id':null,
-    'app_name':'',
     'app_url':'',
     'app_logo':'',
     'ui':'',
@@ -3167,7 +3166,6 @@ const set_app_service_parameters = async (parameters) => {
     //app info
     COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
     COMMON_GLOBAL['app_id'] = parameters.app_id;
-    COMMON_GLOBAL['app_name'] = parameters.app_name;
     // app sound
     COMMON_GLOBAL['app_sound']= parseInt(parameters.app_sound);
 
@@ -3356,10 +3354,6 @@ const set_events = () => {
     });
     document.getElementById('common_forgot_button').addEventListener('click', () => { user_forgot();}, false);
     document.getElementById('common_forgot_close').addEventListener('click', () => { document.getElementById('common_dialogue_forgot').style.visibility = 'hidden'; }, false);
-    //set app info
-    document.getElementById('common_login_app_name').innerHTML = COMMON_GLOBAL['app_name'];
-    document.getElementById('common_signup_app_name').innerHTML = COMMON_GLOBAL['app_name'];
-    document.getElementById('common_forgot_app_name').innerHTML = COMMON_GLOBAL['app_name'];
 
     //dialogue message
     document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
@@ -3513,11 +3507,9 @@ const init_common = async (parameters) => {
             //admin app
             broadcast_init();
             if (COMMON_GLOBAL['system_admin_only']==1){
-                document.title = COMMON_GLOBAL['app_name'];
                 resolve();
             }
             else{
-                document.title = COMMON_GLOBAL['app_name'];
                 set_app_parameters(parameters.app);
                 if (COMMON_GLOBAL['ui']){
                     assign_icons();
@@ -3532,7 +3524,6 @@ const init_common = async (parameters) => {
         else{
             //other apps
             broadcast_init();
-            document.title = COMMON_GLOBAL['app_name']; 
             set_app_parameters(parameters.app);
             if (COMMON_GLOBAL['ui']){
                 assign_icons();
