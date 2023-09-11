@@ -31,6 +31,7 @@ const COMMON_GLOBAL = {
     'app_name':'',
     'app_url':'',
     'app_logo':'',
+    'ui':'',
     'exception_app_function':'',
     'user_app_role_id':'',
     'system_admin':'',
@@ -2462,11 +2463,7 @@ const user_preferences_set_default_globals = (preference) => {
     }
 };
 const user_preferences_update_select = () => {
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
-
+    set_user_account_app_settings();
     //don't save changes now, just execute other code
     //or it would save preferences 4 times
     COMMON_GLOBAL['user_preference_save'] = false;
@@ -3160,6 +3157,7 @@ const exception = (app_exception_function, error) => {
   set_app_service_parameters
   assign_icons
   set_events
+  set_user_account_app_settings
   set_app_parameters
   ----------------------- */
 const set_app_service_parameters = async (parameters) => {
@@ -3467,15 +3465,21 @@ const set_events = () => {
         document.getElementById('common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL['user_arabic_script'] = event.target.value;
                                                                                                     user_preference_save();
                                                                                                     }, false);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
+    
+    
+    set_user_account_app_settings();
+    
     //dialogue user edit
     document.getElementById('common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
     document.getElementById('common_user_edit_btn_avatar_img').addEventListener('click', () => { document.getElementById('common_user_edit_input_avatar_img').click(); }, false);
     document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']); }, false);
     document.getElementById('common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
+};
+const set_user_account_app_settings = () =>{
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
 };
 const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
@@ -3515,6 +3519,7 @@ const init_common = async (parameters) => {
                 if (COMMON_GLOBAL['ui']){
                     assign_icons();
                     set_events();
+                    set_user_account_app_settings();
                     resolve();
                 }
                 else
@@ -3529,6 +3534,7 @@ const init_common = async (parameters) => {
             if (COMMON_GLOBAL['ui']){
                 assign_icons();
                 set_events();
+                set_user_account_app_settings();
                 resolve();
             }
             else
