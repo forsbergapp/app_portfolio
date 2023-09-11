@@ -35,7 +35,6 @@ const getdocs = (docid = null) => {
     });
 };
 const init_app = async () => {
-    document.querySelector('#app_title').innerHTML = common.COMMON_GLOBAL['app_name'];
     getdocs();
     //event show start documents when closing document
     document.querySelector('#common_window_info_btn_close').addEventListener('click',() => {

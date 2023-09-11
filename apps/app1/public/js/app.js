@@ -292,7 +292,6 @@ const ProviderSignIn_app = async (provider_button) => {
 };
 const init_app = async () => {
     //start
-    document.getElementById('about_name').innerHTML = common.COMMON_GLOBAL['app_name'];
     document.getElementById('start_message').innerHTML = common.ICONS['app_info'];    
     //theme switcher
     document.getElementById('app_theme_checkbox').checked = true;
