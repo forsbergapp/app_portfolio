@@ -299,10 +299,10 @@ const init_app = async () => {
     //info
     document.getElementById('info_diagram_img').src=APP_GLOBAL['img_diagram_img_small'];
     document.getElementById('info_datamodel_img').src=APP_GLOBAL['img_datamodel_img_small'];
-    document.getElementById('title1').innerHTML = common.COMMON_GLOBAL['app_name'] + ' Diagram';
-    document.getElementById('title2').innerHTML = common.COMMON_GLOBAL['app_name'] + ' Data model';
+    document.getElementById('title1').innerHTML = common.ICONS['sky_cloud'] + common.ICONS['misc_model'];
+    document.getElementById('title2').innerHTML = common.ICONS['app_database'] + common.ICONS['misc_model'];
     document.getElementById('info_message').innerHTML = common.ICONS['app_home'];
-    document.getElementById('contact_text').innerHTML = 'Contact';    
+    document.getElementById('contact_text').innerHTML = common.ICONS['app_email'];
     document.querySelector('#app_copyright').innerHTML = APP_GLOBAL['app_copyright'];
     document.getElementById('app_email').href='mailto:' + APP_GLOBAL['app_email'];
     document.getElementById('app_email').innerHTML=APP_GLOBAL['app_email'];
