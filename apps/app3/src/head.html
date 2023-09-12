@@ -1,5 +1,13 @@
+<script type="importmap">
+    {
+        "imports": {
+            "app" 			: "/app3/js/app.js",
+            "common"	    : "/common/js/common.js"
+        }
+    }
+</script>
 <script type='text/javascript' type='module' >
-    import('/app3/js/app.js').then((app) => {
+    import('app').then((app) => {
             window.app = app;
             app.init(<ITEM_COMMON_PARAMETERS/>);
     })
