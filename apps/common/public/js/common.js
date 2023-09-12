@@ -58,7 +58,6 @@ const COMMON_GLOBAL = {
     'user_direction':'',
     'user_arabic_script':'',
     'user_preference_save':'',
-    'module_leaflet_path':'/common/modules/leaflet/leaflet-src.module.js',
     'module_leaflet_library': '',
     'module_leaflet_flyto':'',
     'module_leaflet_jumpto':'',
@@ -68,7 +67,6 @@ const COMMON_GLOBAL = {
     'module_leaflet_session_map_layer':'',
     'module_leaflet_session_map_OpenStreetMap_Mapnik':'',
     'module_leaflet_session_map_Esri_WorldImagery':'',
-    'module_easy.qrcode_path':'/common/modules/easy.qrcode/easy.qrcode.module.js',
     'module_easy.qrcode_width':'',
     'module_easy.qrcode_height':'',
     'module_easy.qrcode_color_dark':'',
@@ -2533,7 +2531,7 @@ const ProviderSignIn = async (provider_button, callBack) => {
 /* MODULE EASY.QRCODE     */
 /*----------------------- */
 const create_qr = (div, url) => {
-    import(COMMON_GLOBAL['module_easy.qrcode_path']).then(({QRCode})=>{
+    import('easy.qrcode').then(({QRCode})=>{
         new QRCode(document.getElementById(div), {
             text: url,
             width: COMMON_GLOBAL['module_easy.qrcode_width'],
@@ -2556,7 +2554,7 @@ const create_qr = (div, url) => {
 const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
-            import(COMMON_GLOBAL['module_leaflet_path']).then(({L})=>{
+            import('leaflet').then(({L})=>{
                 //save library in variable for optimization
                 COMMON_GLOBAL['module_leaflet_library'] = L;
                 COMMON_GLOBAL['module_leaflet_session_map'] = '';
