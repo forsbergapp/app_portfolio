@@ -1,4 +1,4 @@
-const common = await import('/common/js/common.js');
+const common = await import('common');
 /*
     Functions and globals in this order:
     GLOBALS

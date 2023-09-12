@@ -11,9 +11,9 @@
 	APP    = USED IN APP
 	REPORT = USED IN REPORT
 */
-const common = await import('/common/js/common.js');
-const regional = await import('/common/modules/regional/regional.js');
-const app_common = await import('/app2/js/app_common.js');
+const common = await import('common');
+const regional = await import('regional');
+const app_common = await import('app_common');
 /*----------------------- */
 /* GLOBALS APP & REPORT   */
 /*----------------------- */
@@ -1496,7 +1496,7 @@ const init = async (parameters) => {
 						if (err)
 							resolve();
 						else
-							import('/common/modules/PrayTimes/PrayTimes.module.js').then(({prayTimes}) => {
+							import('PrayTimes').then(({prayTimes}) => {
 								//set current date for report month
 								app_common.APP_GLOBAL['session_currentDate'] = new Date();
 								app_common.APP_GLOBAL['session_CurrentHijriDate'] = new Array();

@@ -10,9 +10,9 @@
     EXCEPTION
     INIT
 */
-const common = await import('/common/js/common.js');
-const app2_report = await import('/app2/js/app_report.js');
-const app_common = await import('/app2/js/app_common.js');
+const common = await import('common');
+const app_report = await import('app_report');
+const app_common = await import('app_common');
 /*----------------------- */
 /* REPORT                 */
 /*----------------------- */
@@ -122,7 +122,7 @@ const getReportSettings = () => {
 const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
     return await new Promise((resolve) => {
         app_common.APP_GLOBAL['timetable_type'] = timetable_type;
-        import('/common/modules/PrayTimes/PrayTimes.module.js').then(({prayTimes}) => {
+        import('PrayTimes').then(({prayTimes}) => {
             switch (timetable_type){
                 //create timetable month or day or year if they are visible instead
                 case 0:{
@@ -148,7 +148,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                         });
                     }
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                    app2_report.displayDay(prayTimes, settings, item_id, current_user_settings).then((timetable) => {
+                    app_report.displayDay(prayTimes, settings, item_id, current_user_settings).then((timetable) => {
                         timetable.style.display = 'block';
                         document.getElementById('paper').innerHTML = timetable.outerHTML;
                         common.create_qr('timetable_qr_code', common.getHostname());
@@ -159,7 +159,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 //1=create timetable month
                 case 1:{
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                    app2_report.displayMonth(prayTimes, settings, item_id).then((timetable) => {
+                    app_report.displayMonth(prayTimes, settings, item_id).then((timetable) => {
                         timetable.style.display = 'block';
                         document.getElementById('paper').innerHTML = timetable.outerHTML;
                         common.create_qr('timetable_qr_code', common.getHostname());
@@ -170,7 +170,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 //2=create timetable year
                 case 2:{
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                    app2_report.displayYear(prayTimes, settings, item_id).then((timetable) => {
+                    app_report.displayYear(prayTimes, settings, item_id).then((timetable) => {
                         timetable.style.display = 'block';
                         document.getElementById('paper').innerHTML = timetable.outerHTML;
                         common.create_qr('timetable_qr_code', common.getHostname());
@@ -212,9 +212,9 @@ const updateViewStat_app = (user_setting_id, user_setting_user_account_id) => {
     else{
         //update always viewed stat with or without user account logged in
         if (common.COMMON_GLOBAL['user_account_id']=='')
-            app2_report.updateReportViewStat(user_setting_id, common.COMMON_GLOBAL['user_account_id']);
+            app_report.updateReportViewStat(user_setting_id, common.COMMON_GLOBAL['user_account_id']);
         else
-            app2_report.updateReportViewStat(user_setting_id, parseInt(common.COMMON_GLOBAL['user_account_id']));
+            app_report.updateReportViewStat(user_setting_id, parseInt(common.COMMON_GLOBAL['user_account_id']));
     }
         
 };
@@ -410,34 +410,34 @@ const settings_translate = async (first=true) => {
                 json = JSON.parse(result);
                 for (let i = 0; i < json.data.length; i++){
                     if (first==true)
-                        app2_report.REPORT_GLOBAL['first_language'][json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+                        app_report.REPORT_GLOBAL['first_language'][json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
                     else
-                        app2_report.REPORT_GLOBAL['second_language'][json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+                        app_report.REPORT_GLOBAL['second_language'][json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
                 }
                 //if translating first language and second language is not used
                 if (first == true &&
                     document.getElementById('setting_select_report_locale_second').value ==0){
-                    app2_report.REPORT_GLOBAL['second_language']['timetable_title']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_day']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_weekday']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_weekday_tr']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_caltype_hijri']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_caltype_gregorian']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_imsak']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_fajr']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_fajr_iqamat']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_sunrise']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_dhuhr']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_dhuhr_iqamat']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_asr']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_asr_iqamat']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_sunset']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_maghrib']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_maghrib_iqamat']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_isha']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_isha_iqamat']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_midnight']= '';
-                    app2_report.REPORT_GLOBAL['second_language']['coltitle_notes']= '';
+                    app_report.REPORT_GLOBAL['second_language']['timetable_title']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_day']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_weekday']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_weekday_tr']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_caltype_hijri']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_caltype_gregorian']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_imsak']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_fajr']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_fajr_iqamat']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_sunrise']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_dhuhr']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_dhuhr_iqamat']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_asr']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_asr_iqamat']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_sunset']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_maghrib']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_maghrib_iqamat']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_isha']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_isha_iqamat']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_midnight']= '';
+                    app_report.REPORT_GLOBAL['second_language']['coltitle_notes']= '';
                 }
             }
         });
@@ -2673,7 +2673,7 @@ const init_app = () => {
         //5.show profile if user in url
         //6.user provider login
         //7.service worker
-        app2_report.set_prayer_method(true).then(() => {
+        app_report.set_prayer_method(true).then(() => {
             set_default_settings().then(() => {
                 settings_translate(true).then(() => {
                     settings_translate(false).then(() => {
@@ -2752,17 +2752,17 @@ const init = (parameters) => {
             if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_NAME')
                 app_common.APP_GLOBAL['info_link_about_name'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-                app2_report.REPORT_GLOBAL['regional_def_calendar_lang'] = parameters.app[i].parameter_value;
+                app_report.REPORT_GLOBAL['regional_def_calendar_lang'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-                app2_report.REPORT_GLOBAL['regional_def_locale_ext_prefix'] = parameters.app[i].parameter_value;
+                app_report.REPORT_GLOBAL['regional_def_locale_ext_prefix'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-                app2_report.REPORT_GLOBAL['regional_def_locale_ext_number_system'] = parameters.app[i].parameter_value;
+                app_report.REPORT_GLOBAL['regional_def_locale_ext_number_system'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-                app2_report.REPORT_GLOBAL['regional_def_locale_ext_calendar'] = parameters.app[i].parameter_value;
+                app_report.REPORT_GLOBAL['regional_def_locale_ext_calendar'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-                app2_report.REPORT_GLOBAL['regional_def_calendar_type_greg'] = parameters.app[i].parameter_value;
+                app_report.REPORT_GLOBAL['regional_def_calendar_type_greg'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-                app2_report.REPORT_GLOBAL['regional_def_calendar_number_system'] = parameters.app[i].parameter_value;
+                app_report.REPORT_GLOBAL['regional_def_calendar_number_system'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_DIRECTION')
                 app_common.APP_GLOBAL['regional_default_direction'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')

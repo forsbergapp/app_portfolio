@@ -1,4 +1,4 @@
-const common = await import('/common/js/common.js');
+const common = await import('common');
 
 const APP_GLOBAL = {
     'app_copyright':'',

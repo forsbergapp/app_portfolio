@@ -1,4 +1,4 @@
-const common = await import('/common/js/common.js');
+const common = await import('common');
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };

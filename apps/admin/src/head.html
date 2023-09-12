@@ -1,5 +1,15 @@
+<script type="importmap">
+    {
+        "imports": {
+            "app" 			: "/admin/js/admin.js",
+            "app_secure" 	: "/admin/js/secure.js",
+            "common"	    : "/common/js/common.js",
+            "leaflet"	    : "/common/modules/leaflet/leaflet-src.module.js"
+        }
+    }
+    </script>
 <script type='text/javascript' type='module' >
-    import('/admin/js/admin.js').then((app) => {
+    import('app').then((app) => {
             window.app = app;
             app.init(<ITEM_COMMON_PARAMETERS/>);
     })
