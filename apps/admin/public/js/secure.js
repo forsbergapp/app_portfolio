@@ -1575,23 +1575,9 @@ const show_monitor = async (yearvalues) =>{
                         common.COMMON_GLOBAL['client_longitude'],
                         common.COMMON_GLOBAL['client_latitude'],
                         APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                        APP_GLOBAL['module_leaflet_map_zoom']).then(() => {
-            common.map_setevent('dblclick', (e) => {
-                if (e.originalEvent.target.id == 'mapid'){
-                    const lng = e.latlng['lng'];
-                    const lat = e.latlng['lat'];
-                    //Update GPS position
-                    common.get_place_from_gps(lng, lat).then((gps_place) => {
-                        common.map_update(lng,
-                                            lat,
-                                            '', //do not change zoom 
-                                            gps_place,
-                                            null,
-                                            APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                            common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                    });
-                }
-            });
+                        APP_GLOBAL['module_leaflet_map_zoom'],
+                        true,
+                        true).then(() => {
             common.map_update(common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
                                 APP_GLOBAL['module_leaflet_map_zoom'],
