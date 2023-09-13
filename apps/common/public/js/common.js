@@ -2563,6 +2563,9 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                     //disable doubleclick in event dblclick since e.preventdefault() does not work
                     COMMON_GLOBAL['module_leaflet_session_map'].doubleClickZoom.disable(); 
         
+                    //add scale
+                    COMMON_GLOBAL['module_leaflet_library'].control.scale().addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                    
                     //add fullscreen button and my location button with eventlisteners
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
                     mapcontrol[0].innerHTML += '<a id=\'common_leaflet_fullscreen_id\' href="#" title="Full Screen" role="button"></a>';
@@ -2571,32 +2574,37 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                         mapcontrol[0].innerHTML += '<a id=\'common_leaflet_my_location_id\' href="#" title="My location" role="button"></a>';
                         document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
                     }
-                    //add events to the buttons
-                    document.querySelector('.leaflet-control-zoom-in').addEventListener('click', () => {
-                        COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() + 1);
+                    //add event delegation on map
+                    document.querySelector(`#${containervalue}`).addEventListener('click', (event) =>{
+                        switch (event.target.id){
+                            case 'common_leaflet_fullscreen_id':{
+                                if (document.fullscreenElement)
+                                    document.exitFullscreen();
+                                else
+                                    document.getElementById(containervalue).requestFullscreen();
+                                break;
+                            }
+                            case 'common_leaflet_my_location_id':{
+                                if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
+                                    map_update(COMMON_GLOBAL['client_longitude'],
+                                    COMMON_GLOBAL['client_latitude'],
+                                    zoomvalue,
+                                    COMMON_GLOBAL['client_place'],
+                                    null,
+                                    map_marker_div_gps,
+                                    COMMON_GLOBAL['module_leaflet_jumpto']);
+                                }                                
+                                break;
+                            }
+                            default:{
+                                if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
+                                    COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() + 1);
+                                if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
+                                    COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() - 1);
+                                break;
+                            }
+                        }
                     });
-                    document.querySelector('.leaflet-control-zoom-out').addEventListener('click', () => {
-                        COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() - 1);
-                    });
-                    document.getElementById('common_leaflet_fullscreen_id').addEventListener('click', () => { 
-                                                    if (document.fullscreenElement)
-                                                        document.exitFullscreen();
-                                                    else
-                                                        document.getElementById(containervalue).requestFullscreen();
-                                                    }, 
-                                            false);
-                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!='')
-                        document.getElementById('common_leaflet_my_location_id').addEventListener('click', 
-                                                () => { 
-                                                        map_update(COMMON_GLOBAL['client_longitude'],
-                                                                COMMON_GLOBAL['client_latitude'],
-                                                                zoomvalue,
-                                                                COMMON_GLOBAL['client_place'],
-                                                                null,
-                                                                map_marker_div_gps,
-                                                                COMMON_GLOBAL['module_leaflet_jumpto']);
-                                                        }, 
-                                                false);
                     resolve();
                 });
             });
