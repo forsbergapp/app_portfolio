@@ -2389,11 +2389,13 @@ const serviceworker = () => {
 const init_map = async () => {
     return await new Promise((resolve) => {
         common.map_init(app_common.APP_GLOBAL['gps_module_leaflet_container'],
-        common.COMMON_GLOBAL['module_leaflet_style'], 
-        document.getElementById('setting_input_long').value, 
-        document.getElementById('setting_input_lat').value, 
-        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
-        app_common.APP_GLOBAL['gps_module_leaflet_zoom']).then(() => {
+                        common.COMMON_GLOBAL['module_leaflet_style'], 
+                        document.getElementById('setting_input_long').value, 
+                        document.getElementById('setting_input_lat').value, 
+                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                        app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
+                        true,
+                        false).then(() => {
             common.map_setevent('dblclick', (e) => {
                 if (e.originalEvent.target.id == 'mapid'){
                     document.getElementById('setting_input_lat').value = e.latlng['lat'];

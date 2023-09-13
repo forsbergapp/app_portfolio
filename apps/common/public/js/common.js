@@ -2551,7 +2551,7 @@ const create_qr = (div, url) => {
 /*----------------------- */
 /* MODULE LEAFLET         */
 /*----------------------- */
-const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue) => {
+const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue, click_event, doubleclick_event) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
             import('leaflet').then(({L})=>{
@@ -2565,8 +2565,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
         
                     //add scale
                     COMMON_GLOBAL['module_leaflet_library'].control.scale().addTo(COMMON_GLOBAL['module_leaflet_session_map']);
-                    
-                    //add fullscreen button and my location button with eventlisteners
+
+                    //add fullscreen button and my location button
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
                     mapcontrol[0].innerHTML += '<a id=\'common_leaflet_fullscreen_id\' href="#" title="Full Screen" role="button"></a>';
                     document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['app_fullscreen'];
@@ -2574,37 +2574,30 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                         mapcontrol[0].innerHTML += '<a id=\'common_leaflet_my_location_id\' href="#" title="My location" role="button"></a>';
                         document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
                     }
-                    //add event delegation on map
-                    document.querySelector(`#${containervalue}`).addEventListener('click', (event) =>{
-                        switch (event.target.id){
-                            case 'common_leaflet_fullscreen_id':{
-                                if (document.fullscreenElement)
-                                    document.exitFullscreen();
-                                else
-                                    document.getElementById(containervalue).requestFullscreen();
-                                break;
+                    if (click_event){
+                        //add event delegation on map
+                        document.querySelector(`#${containervalue}`).addEventListener('click', (event) =>{
+                            map_click_event(event, containervalue, zoomvalue, map_marker_div_gps);
+                        });
+                    }
+                    if (doubleclick_event){
+                        map_setevent('dblclick', (e) => {
+                            if (e.originalEvent.target.id == 'mapid'){
+                                const lng = e.latlng['lng'];
+                                const lat = e.latlng['lat'];
+                                //Update GPS position
+                                get_place_from_gps(lng, lat).then((gps_place) => {
+                                    map_update(lng,
+                                                lat,
+                                                '', //do not change zoom 
+                                                gps_place,
+                                                null,
+                                                map_marker_div_gps,
+                                                COMMON_GLOBAL['module_leaflet_jumpto']);
+                                });
                             }
-                            case 'common_leaflet_my_location_id':{
-                                if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                                    map_update(COMMON_GLOBAL['client_longitude'],
-                                    COMMON_GLOBAL['client_latitude'],
-                                    zoomvalue,
-                                    COMMON_GLOBAL['client_place'],
-                                    null,
-                                    map_marker_div_gps,
-                                    COMMON_GLOBAL['module_leaflet_jumpto']);
-                                }                                
-                                break;
-                            }
-                            default:{
-                                if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
-                                    COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() + 1);
-                                if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
-                                    COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() - 1);
-                                break;
-                            }
-                        }
-                    });
+                        });
+                    }
                     resolve();
                 });
             });
@@ -2613,6 +2606,36 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
             resolve();
     });
     
+};
+const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =>{
+    switch (event.target.id==''?event.target.parentNode.id:event.target.id){
+        case 'common_leaflet_fullscreen_id':{
+            if (document.fullscreenElement)
+                document.exitFullscreen();
+            else
+                document.getElementById(containervalue).requestFullscreen();
+            break;
+        }
+        case 'common_leaflet_my_location_id':{
+            if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
+                map_update(COMMON_GLOBAL['client_longitude'],
+                            COMMON_GLOBAL['client_latitude'],
+                            zoomvalue,
+                            COMMON_GLOBAL['client_place'],
+                            null,
+                            map_marker_div_gps,
+                            COMMON_GLOBAL['module_leaflet_jumpto']);
+            }                                
+            break;
+        }
+        default:{
+            if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
+                COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() + 1);
+            if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
+                COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() - 1);
+            break;
+        }
+    }
 };
 const map_resize = async () => {
     if (checkconnected()) {
@@ -3564,7 +3587,7 @@ export{/* GLOBALS*/
        /* USER PROVIDER */
        ProviderUser_update, ProviderSignIn,
        /* MODULE LEAFLET  */
-       map_init, map_resize, map_line_removeall, map_line_create,
+       map_init, map_click_event, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
