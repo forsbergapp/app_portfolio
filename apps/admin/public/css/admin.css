@@ -1537,3 +1537,9 @@ a:hover, a:active {
 .common_input_error{
 	border:1px solid var(--app_theme_input_error_color) !important;
 }
+.common_module_leaflet_control_button{
+	background-color: var(--app_theme_main_branding_color2);
+}
+.common_module_leaflet_control_expand{
+	background-color: var(--app_theme_main_branding_color2);
+}

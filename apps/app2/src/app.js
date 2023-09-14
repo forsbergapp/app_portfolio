@@ -181,7 +181,6 @@ const createApp = (app_id, username, locale) => {
                 let APP_HIJRI_DATE_ADJUSTMENT='';
                 let APP_IQAMAT='';
                 let APP_FAST_START_END='';
-                let APP_MAP_TYPE='';
                 read_app_files(files, (err, app_files)=>{
                     render_common_html(app_id, app_files,	locale, 'FORM', true, '<AppUserAccount/>', true, true, true, true).then((app)=>{
                         if (err)
@@ -218,10 +217,6 @@ const createApp = (app_id, username, locale) => {
                                     }
                                     case 'CALENDAR_HIJRI_TYPE':{
                                         APP_CALENDAR_HIJRI_TYPE += option;
-                                        break;
-                                    }
-                                    case 'MAP_TYPE':{
-                                        APP_MAP_TYPE += option;
                                         break;
                                     }
                                     case 'PAPER_SIZE':{
@@ -288,7 +283,6 @@ const createApp = (app_id, username, locale) => {
                             app.app = app.app.replace('<AppArabicscript/>',`${USER_ARABIC_SCRIPT}`);
                             app.app = app.app.replace('<AppCalendartype/>',`${APP_CALENDAR_TYPE}`);
                             app.app = app.app.replace('<AppCalendarhijritype/>',`${APP_CALENDAR_HIJRI_TYPE}`);
-                            app.app = app.app.replace('<AppMaptype/>',`${APP_MAP_TYPE}`);
                             app.app = app.app.replace('<AppPapersize/>',`${APP_PAPER_SIZE}`);
                             app.app = app.app.replace('<AppHighlightrow/>',`${APP_HIGHLIGHT_ROW}`);
                             app.app = app.app.replace('<AppMethod/>',`${APP_METHOD}`);
