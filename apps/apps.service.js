@@ -456,6 +456,47 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
         });
     });
 };
+const countries = (app_id, locale) => {
+    return new Promise((resolve) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
+            getCountries(app_id, locale, (err, results)  => {
+                let select_countries;
+                if (err){
+                    resolve (
+                                `<option value='' id='' label='…' selected='selected'>…
+                                </option>`
+                            );
+                }     
+                else{
+                    let current_group_name;
+                    select_countries  =`<option value='' id='' label='…' selected='selected'>…
+                                        </option>`;
+            
+                    results.map( (countries_map,i) => {
+                        if (i === 0){
+                        select_countries += `<optgroup label=${countries_map.group_name} />`;
+                        current_group_name = countries_map.group_name;
+                        }
+                        else{
+                        if (countries_map.group_name !== current_group_name){
+                            select_countries += `<optgroup label=${countries_map.group_name} />`;
+                            current_group_name = countries_map.group_name;
+                        }
+                        select_countries +=
+                        `<option value=${i}
+                                id=${countries_map.id} 
+                                country_code=${countries_map.country_code} 
+                                flag_emoji=${countries_map.flag_emoji} 
+                                group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
+                        </option>`;
+                        }
+                    });
+                    resolve (select_countries);
+                }
+            });
+        });
+    });
+};
 const get_module_with_init = async (app_id,
                                     locale,
                                     system_admin_only,
@@ -465,10 +506,11 @@ const get_module_with_init = async (app_id,
                                     client_longitude,
                                     client_place,
                                     module, callBack) => {
-    const return_with_parameters = (module, app_parameters, first_time)=>{
+    const return_with_parameters = (module, countries, app_parameters, first_time)=>{
         const app_service_parameters = {   
             app_id: app_id,
             app_datatoken: data_token,
+            countries:countries,
             locale: locale,
             ui: ui,
             system_admin_only: system_admin_only,
@@ -491,7 +533,7 @@ const get_module_with_init = async (app_id,
     };
     if (system_admin_only==1){
         module = module.replace('<APP_NAME/>','SYSTEM ADMIN');
-        callBack(null, return_with_parameters(module, null, CheckFirstTime()==true?1:0));
+        callBack(null, return_with_parameters(module, null, null, CheckFirstTime()==true?1:0));
     }
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
@@ -500,14 +542,16 @@ const get_module_with_init = async (app_id,
             if (err)
                 callBack(err, null);
             else{
-                module = module.replace('<APP_NAME/>',result_app_name[0].app_name);
-                //fetch parameters for common_app_id and current app_id
-                getAppStartParameters(app_id, (err,app_parameters) =>{
-                    if (err)
-                        callBack(err, null);
-                    else{
-                        callBack(null, return_with_parameters(module, app_parameters, 0));
-                    }
+                countries(app_id, locale).then((countries)=>{
+                    module = module.replace('<APP_NAME/>',result_app_name[0].app_name);
+                    //fetch parameters for common_app_id and current app_id
+                    getAppStartParameters(app_id, (err,app_parameters) =>{
+                        if (err)
+                            callBack(err, null);
+                        else{
+                            callBack(null, return_with_parameters(module, countries, app_parameters, 0));
+                        }
+                    });
                 });
             }
         });
@@ -818,7 +862,7 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo, check_app_subdomain,
         /*APP functions */
-        apps_start_ok, client_locale, read_app_files, render_common_html, get_module_with_init,
+        apps_start_ok, client_locale, read_app_files, render_common_html, countries, get_module_with_init,
         getMaintenance,
         AppsStart,
         /*APP BFF functions*/

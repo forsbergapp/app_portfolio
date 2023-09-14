@@ -977,6 +977,15 @@ a:active {
 	height: 30px;
 	bottom: 0px;
 }
+#common_module_leaflet_control_expand_search{
+	display: none;
+	width: 360px;
+	height: 60px;
+	bottom: 60px;
+}
+#common_module_leaflet_select_country, #common_module_leaflet_select_city{
+	width:95%;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {

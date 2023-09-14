@@ -67,6 +67,7 @@ const COMMON_GLOBAL = {
     'module_leaflet_session_map_layer':'',
     'module_leaflet_session_map_OpenStreetMap_Mapnik':'',
     'module_leaflet_session_map_Esri_WorldImagery':'',
+    'module_leaflet_countries':'',
     'module_easy.qrcode_width':'',
     'module_easy.qrcode_height':'',
     'module_easy.qrcode_color_dark':'',
@@ -441,10 +442,11 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                     select_locale.innerHTML = html;
                     select_locale.value = lang_code;
                 }
-                callBack(null,null);
+                map_country(lang_code).then(()=>{
+                    callBack(null,null);
+                });
             });
         }
-
     });                            
 };
 const get_null_or_value = (value) => {
@@ -674,13 +676,18 @@ const get_uservariables = () => {
 const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     //colcheck=0 search id
     //colcheck=1 search value
-    for (let i = 0; i < select_item.options.length; i++) {
-        if ((colcheck==0 && select_item.options[i].id == search) ||
-            (colcheck==1 && select_item.options[i].value == search)) {
-            select_item.selectedIndex = i;
-            return null;
-        }
+    try {
+        for (let i = 0; i < select_item.options.length; i++) {
+            if ((colcheck==0 && select_item.options[i].id == search) ||
+                (colcheck==1 && select_item.options[i].value == search)) {
+                select_item.selectedIndex = i;
+                return null;
+            }
+        }    
+    } catch (error) {
+        alert(search + ',' + select_item + ',' + colcheck);
     }
+    
     return null;
 };
 /*----------------------- 
@@ -2551,7 +2558,7 @@ const create_qr = (div, url) => {
 /*----------------------- */
 /* MODULE LEAFLET         */
 /*----------------------- */
-const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue, click_event, doubleclick_event) => {
+const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue, map_marker_div_city, zoomvalue_city, click_event, doubleclick_event) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
             import('leaflet').then(({L})=>{
@@ -2567,9 +2574,19 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                     //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
                     COMMON_GLOBAL['module_leaflet_library'].control.scale({position: 'topright'}).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
 
-
                     //add custom HTML inside div with class .leaflet-control
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
+                    //add search button
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' href='#' title='Search' role='button'>${ICONS['app_search']}
+                                                    <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
+                                                        <select id='common_module_leaflet_select_country'>
+                                                            ${COMMON_GLOBAL['module_leaflet_countries']}
+                                                        </select>
+                                                        <select id='common_module_leaflet_select_city'  >
+                                                            <option value='' id='' label='…' selected='selected'>…</option>
+                                                        </select>
+                                                    </div>
+                                                 </div>`;
                     //add fullscreen button
                     mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' href='#' title='Fullscreen' role='button'>${ICONS['app_fullscreen']}
                                                  </div>`;
@@ -2588,6 +2605,40 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                                                     </div>
                                                 </div>`;
                     SearchAndSetSelectedIndex(COMMON_GLOBAL['module_leaflet_style'], document.getElementById('common_module_leaflet_select_mapstyle'),1);
+
+                    //add event on map countries
+                    const select_country = document.querySelector('#common_module_leaflet_select_country');
+                    const select_city = document.querySelector('#common_module_leaflet_select_city');
+                    select_country.addEventListener('change', () => { 
+                        if (select_country[select_country.selectedIndex].getAttribute('country_code'))
+                            map_city(select_country[select_country.selectedIndex].getAttribute('country_code').toUpperCase()).then(()=>{
+                                null;
+                            }); 
+                        else{
+                            //remove old city list:            
+                            const old_groups = select_city.getElementsByTagName('optgroup');
+                            for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
+                                select_city.removeChild(old_groups[old_index]);
+                            //display first empty city
+                            select_city.selectedIndex = 0;
+                        }
+                            
+                    }, false);
+                    //add event on map cities
+                    document.querySelector('#common_module_leaflet_select_city').addEventListener('change', () => {
+                        const select_city = document.querySelector('#common_module_leaflet_select_city');
+                        const longitude_selected = select_city[select_city.selectedIndex].getAttribute('longitude');
+                        const latitude_selected = select_city[select_city.selectedIndex].getAttribute('latitude');
+                        map_update( longitude_selected, 
+                                    latitude_selected, 
+                                    zoomvalue_city, 
+                                    select_city.options[select_city.selectedIndex].text, 
+                                    null, 
+                                    map_marker_div_city, 
+                                    COMMON_GLOBAL['module_leaflet_flyto']).then(()=> {
+                            null;
+                        });
+                    }, false);
                     //add event on map layer select
                     document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.getElementById('common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
                     
@@ -2624,8 +2675,78 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
     });
     
 };
+const map_country = (lang_code) =>{
+    return new Promise ((resolve, reject)=>{
+        //country
+        FFB ('DB_API', `/country/${lang_code}?`, 'GET', 0, null, (err, result) => {
+            if (err)
+                reject(err,null);
+            else{
+                const json = JSON.parse(result);
+                let html='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+                let current_group_name;
+                for (let i = 0; i < json.countries.length; i++){
+                    if (i === 0){
+                        html += `<optgroup label=${json.countries[i].group_name} />`;
+                        current_group_name = json.countries[i].group_name;
+                    }
+                    else{
+                        if (json.countries[i].group_name !== current_group_name){
+                            html += `<optgroup label=${json.countries[i].group_name} />`;
+                            current_group_name = json.countries[i].group_name;
+                        }
+                        html +=
+                        `<option value=${i}
+                                id=${json.countries[i].id} 
+                                country_code=${json.countries[i].country_code} 
+                                flag_emoji=${json.countries[i].flag_emoji} 
+                                group_name=${json.countries[i].group_name}>${json.countries[i].flag_emoji} ${json.countries[i].text}
+                        </option>`;
+                    }
+                }
+                COMMON_GLOBAL['module_leaflet_countries'] = html;
+                if (document.querySelector('#common_module_leaflet_select_country')){
+                    const select_country = document.getElementById('common_module_leaflet_select_country');
+                    const current_country = document.getElementById('common_module_leaflet_select_country')[document.getElementById('common_module_leaflet_select_country').selectedIndex].id;
+                    select_country.innerHTML = html;
+                    SearchAndSetSelectedIndex(current_country, document.getElementById('common_module_leaflet_select_country'),0);    
+                }
+                resolve();
+            }
+        });
+    });
+    
+};
+const map_city = (country_code) =>{
+    const select_cities = document.querySelector('#common_module_leaflet_select_city');
+    //set default option
+    select_cities.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+    if (country_code!=null){
+        get_cities(country_code, (err, cities)=>{
+            if (err)
+                null;
+            else{
+                //fetch list including default option
+                select_cities.innerHTML = cities;
+            }
+        });
+    }
+};
 const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =>{
+    const toggle_expand = (item) =>{
+        let style_display;
+        if (document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
+            document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
+            style_display = 'block';
+        else
+            style_display = 'none';
+        document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
+    };
     switch (event.target.id==''?event.target.parentNode.id:event.target.id){
+        case 'common_module_leaflet_control_search':{
+            toggle_expand('search');
+            break;
+        }
         case 'common_module_leaflet_control_fullscreen_id':{
             if (document.fullscreenElement)
                 document.exitFullscreen();
@@ -2646,13 +2767,7 @@ const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =
             break;
         }
         case 'common_module_leaflet_control_layer':{
-            let style_display;
-            if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='none' ||
-                document.querySelector('#common_module_leaflet_control_expand_layer').style.display =='')
-                style_display = 'block';
-            else
-                style_display = 'none';
-            document.querySelector('#common_module_leaflet_control_expand_layer').style.display = style_display;
+            toggle_expand('layer');
             break;
         }
         default:{
@@ -3253,10 +3368,11 @@ const set_app_service_parameters = async (parameters) => {
     }
     COMMON_GLOBAL['ui'] = parameters.ui;
     if (COMMON_GLOBAL['ui']==true){
-        COMMON_GLOBAL['user_locale']         = parameters.locale;
-        COMMON_GLOBAL['user_timezone']       = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        COMMON_GLOBAL['user_direction']      = '';
-        COMMON_GLOBAL['user_arabic_script']  = '';
+        COMMON_GLOBAL['module_leaflet_countries']   = parameters.countries;
+        COMMON_GLOBAL['user_locale']                = parameters.locale;
+        COMMON_GLOBAL['user_timezone']              = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        COMMON_GLOBAL['user_direction']             = '';
+        COMMON_GLOBAL['user_arabic_script']         = '';
     }  
 };
 const assign_icons = () => {
@@ -3614,7 +3730,7 @@ export{/* GLOBALS*/
        /* USER PROVIDER */
        ProviderUser_update, ProviderSignIn,
        /* MODULE LEAFLET  */
-       map_init, map_click_event, map_resize, map_line_removeall, map_line_create,
+       map_init, map_country, map_city, map_click_event, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,

@@ -1570,6 +1570,8 @@ const show_monitor = async (yearvalues) =>{
                         common.COMMON_GLOBAL['client_latitude'],
                         APP_GLOBAL['module_leaflet_map_marker_div_gps'],
                         APP_GLOBAL['module_leaflet_map_zoom'],
+                        APP_GLOBAL['module_leaflet_map_marker_div_city'],
+                        APP_GLOBAL['module_leaflet_map_zoom_city'],
                         true,
                         true).then(() => {
             common.map_update(common.COMMON_GLOBAL['client_longitude'],
