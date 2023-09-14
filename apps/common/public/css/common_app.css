@@ -961,6 +961,22 @@ a:active {
 .leaflet-popup-content{
 	width:200px !important;
 }
+.common_module_leaflet_control_button {
+	text-align: center;
+	height: 30px;
+	line-height: 30px;
+	cursor: pointer;
+}
+.common_module_leaflet_control_expand{
+	position: absolute;
+	inset-inline-start: 30px;
+}
+#common_module_leaflet_control_expand_layer{
+	display: none;
+	width: 300px;
+	height: 30px;
+	bottom: 0px;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {

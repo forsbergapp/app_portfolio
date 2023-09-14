@@ -13,3 +13,44 @@
 #common_user_account{
 	visibility: hidden;
 }
+/*APP THEME*/
+.app_theme1 {
+	--app_theme_main_branding_color1: var(--app_blue1);
+	--app_theme_main_branding_color2: var(--app_blue2);
+	--app_theme_main_branding_color3: var(--app_white1);
+	--app_theme_main_branding_color4: var(--app_black);
+	--app_theme_main_branding_color5: var(--app_white2);
+	--app_theme_text_color: var(--app_theme_main_branding_color4);
+	--app_theme_background_color: var(--app_theme_main_branding_color1);
+}
+.app_theme2 {
+	--app_theme_main_branding_color1: var(--app_dark);
+	--app_theme_main_branding_color2: var(--app_black);
+	--app_theme_main_branding_color3: var(--app_dark4);
+	--app_theme_main_branding_color4: var(--app_gold);
+	--app_theme_main_branding_color5: var(--app_white2);
+	--app_theme_text_color: var(--app_theme_main_branding_color4);
+	--app_theme_background_color: var(--app_theme_main_branding_color1);
+}
+.app_theme3 {
+	--app_theme_main_branding_color1: var(--app_cafe_latte);
+	--app_theme_main_branding_color2: var(--app_cafe_latte2);
+	--app_theme_main_branding_color3: var(--app_cafe_latte3);
+	--app_theme_main_branding_color4: var(--app_black);
+	--app_theme_main_branding_color5: var(--app_white2);
+	--app_theme_text_color: var(--app_theme_main_branding_color3);
+	--app_theme_background_color: var(--app_theme_main_branding_color1);
+}
+body{
+	color: var(--app_theme_text_color);
+	fill:var(--app_theme_text_color);
+	background: var(--app_theme_background_color);
+}
+
+/*APP THEME COMMON*/
+.common_module_leaflet_control_button{
+	background-color: var(--app_theme_main_branding_color2);
+}
+.common_module_leaflet_control_expand{
+	background-color: var(--app_theme_main_branding_color2);
+}

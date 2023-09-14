@@ -147,7 +147,6 @@ INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (2,'APP_LOV');
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_ASR',211);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_CALENDARTYPE',7);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_HIGHLATITUDE',212);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_MAPTYPE',9);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_POPULAR_PLACE',NULL);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_REPORT_COLTITLE',208);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, setting_type_id) VALUES (2,'APP_LOV','SETTING_SELECT_REPORT_DIRECTION',5);

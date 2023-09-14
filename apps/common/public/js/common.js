@@ -195,13 +195,13 @@ const ICONS = {
     'provider_id':              icon_string('f2c1'),
     //gps
     'gps':                      icon_string('f3c5'),
-    'gps_map':                  icon_string('f279'),
     'gps_country':              icon_string('f57c'),
     'gps_city':                 icon_string('f64f'),
     'gps_popular_place':        icon_string('f005'),
     'gps_position':             icon_string('f276'),
     'gps_high_latitude':        icon_string('f0ac') + icon_string('f2dc'),
     'map_my_location':          icon_string('f601'),
+    'map_layer':                icon_string('f5fd'),
     //regional
     'regional':                 icon_string('f0ac'),
     'regional_day':             icon_string('f185'),
@@ -2566,14 +2566,30 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                     //add scale
                     COMMON_GLOBAL['module_leaflet_library'].control.scale().addTo(COMMON_GLOBAL['module_leaflet_session_map']);
 
-                    //add fullscreen button and my location button
+
+                    //add custom HTML inside div with class .leaflet-control
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
-                    mapcontrol[0].innerHTML += '<a id=\'common_leaflet_fullscreen_id\' href="#" title="Full Screen" role="button"></a>';
-                    document.getElementById('common_leaflet_fullscreen_id').innerHTML= ICONS['app_fullscreen'];
+                    //add fullscreen button
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' href='#' title='Fullscreen' role='button'>${ICONS['app_fullscreen']}
+                                                 </div>`;
                     if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                        mapcontrol[0].innerHTML += '<a id=\'common_leaflet_my_location_id\' href="#" title="My location" role="button"></a>';
-                        document.getElementById('common_leaflet_my_location_id').innerHTML= ICONS['map_my_location'];
+                        //add my location button
+                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button' href='#' title='My location' role='button'>${ICONS['map_my_location']}
+                                                    </div>`;
                     }
+                    //add layers button with pop out div
+                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' href='#' title='Layer' role='button'>${ICONS['map_layer']}
+                                                    <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
+                                                        <select id='common_module_leaflet_select_mapstyle' >
+                                                            <option value='OpenStreetMap_Mapnik' selected='selected'>OpenStreetMap_Mapnik</option>
+                                                            <option value='Esri.WorldImagery'>Esri.WorldImagery</option>
+                                                        </select>
+                                                    </div>
+                                                </div>`;
+                    SearchAndSetSelectedIndex(COMMON_GLOBAL['module_leaflet_style'], document.getElementById('common_module_leaflet_select_mapstyle'),1);
+                    //add event on map layer select
+                    document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.getElementById('common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
+                    
                     if (click_event){
                         //add event delegation on map
                         document.querySelector(`#${containervalue}`).addEventListener('click', (event) =>{
@@ -2609,14 +2625,14 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
 };
 const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =>{
     switch (event.target.id==''?event.target.parentNode.id:event.target.id){
-        case 'common_leaflet_fullscreen_id':{
+        case 'common_module_leaflet_control_fullscreen_id':{
             if (document.fullscreenElement)
                 document.exitFullscreen();
             else
                 document.getElementById(containervalue).requestFullscreen();
             break;
         }
-        case 'common_leaflet_my_location_id':{
+        case 'common_module_leaflet_control_my_location_id':{
             if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
                 map_update(COMMON_GLOBAL['client_longitude'],
                             COMMON_GLOBAL['client_latitude'],
@@ -2626,6 +2642,16 @@ const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =
                             map_marker_div_gps,
                             COMMON_GLOBAL['module_leaflet_jumpto']);
             }                                
+            break;
+        }
+        case 'common_module_leaflet_control_layer':{
+            let style_display;
+            if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='none' ||
+                document.querySelector('#common_module_leaflet_control_expand_layer').style.display =='')
+                style_display = 'block';
+            else
+                style_display = 'none';
+            document.querySelector('#common_module_leaflet_control_expand_layer').style.display = style_display;
             break;
         }
         default:{
