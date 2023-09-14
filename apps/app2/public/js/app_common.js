@@ -29,8 +29,6 @@ const APP_GLOBAL = {
     'regional_default_calendartype':'',
     'regional_default_calendar_hijri_type':'',
 
-    'gps_default_country':'',
-    'gps_default_city':'',
     'gps_default_place_id':'',
     'gps_module_leaflet_container':'',
     'gps_module_leaflet_zoom':'',

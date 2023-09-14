@@ -14,8 +14,10 @@ const map_click_event = (event) =>{
 };
 const init_app = () =>{
     APP_GLOBAL['module_leaflet_map_container']      ='mapid';
+    APP_GLOBAL['module_leaflet_zoom_city']          = 8;
     APP_GLOBAL['module_leaflet_map_zoom']           = 14;
     APP_GLOBAL['module_leaflet_map_marker_div_gps'] = 'map_marker_gps';
+    APP_GLOBAL['module_leaflet_map_marker_div_city'] = 'map_marker_city';
 
     return new Promise((resolve)=>{
         common.map_init(APP_GLOBAL['module_leaflet_map_container'], 
@@ -24,8 +26,11 @@ const init_app = () =>{
                         common.COMMON_GLOBAL['client_latitude'],
                         APP_GLOBAL['module_leaflet_map_marker_div_gps'],
                         APP_GLOBAL['module_leaflet_map_zoom'],
+                        APP_GLOBAL['module_leaflet_map_marker_div_city'],
+                        APP_GLOBAL['module_leaflet_map_zoom_city'],
                         false, 
                         true).then(()=>{
+            
             common.map_update(  common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
                                 APP_GLOBAL['module_leaflet_map_zoom'],
