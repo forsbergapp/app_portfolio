@@ -1510,10 +1510,6 @@ const show_monitor = async (yearvalues) =>{
         </div>
         <div id='menu_5_content_widget2' class='widget'>
             <div id='mapid'></div>
-            <select id='select_maptype' >
-                <option value='OpenStreetMap_Mapnik' selected='selected'>OpenStreetMap_Mapnik</option>
-                <option value='Esri.WorldImagery'>Esri.WorldImagery</option>
-            </select>
         </div>`;
     
     if (common.COMMON_GLOBAL['system_admin']==1){
@@ -1564,8 +1560,6 @@ const show_monitor = async (yearvalues) =>{
     document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
 
     document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
-
-    document.getElementById('select_maptype').addEventListener('change', () => { common.map_setstyle(document.getElementById('select_maptype').value).then(()=>{null;}); }, false);
 
     const init_monitor = () =>{
         let path;

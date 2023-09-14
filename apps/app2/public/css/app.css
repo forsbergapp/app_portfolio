@@ -1,4 +1,4 @@
-/*APP */
+app_theme_selected_background_color/*APP */
 #paper #common_app_spinner{
 	margin-top: 50%;
     transform: scale(1);
@@ -1040,4 +1040,10 @@ a:active,
 }
 .common_like_unlike{
 	color: var(--app_red) !important;
+}
+.common_module_leaflet_control_button{
+	background-color: var(--app_theme_main_color2);
+}
+.common_module_leaflet_control_expand{
+	background-color: var(--app_theme_main_color2);
 }

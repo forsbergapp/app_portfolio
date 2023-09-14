@@ -705,7 +705,6 @@ const update_ui = async (option, item_id=null) => {
     const settings = {
         paper                   : document.getElementById('paper'),
         timezone_report         : document.getElementById('setting_select_report_timezone'),
-        maptype                 : document.getElementById('setting_select_maptype'),
         country                 : document.getElementById('setting_select_country'),
         city                    : document.getElementById('setting_select_city'),
         select_place            : document.getElementById('setting_select_popular_place'),
@@ -738,15 +737,13 @@ const update_ui = async (option, item_id=null) => {
         //GPS, update map
         case 4:
             {
-                common.map_setstyle(settings.maptype.value).then(() => {
-                    map_update_app(settings.gps_long_input.value,
-                        settings.gps_lat_input.value,
-                        app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
-                        document.getElementById('setting_input_place').value,
-                        null,
-                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
-                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
-                });
+                map_update_app(settings.gps_long_input.value,
+                    settings.gps_lat_input.value,
+                    app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
+                    document.getElementById('setting_input_place').value,
+                    null,
+                    app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                    common.COMMON_GLOBAL['module_leaflet_jumpto']);
                 break;
             }
         //GPS, update cities from country
@@ -1230,7 +1227,6 @@ const user_settings_get = async () => {
                                     regional_arabic_script=${settings.regional_arabic_script}
                                     regional_calendar_type=${settings.regional_calendar_type}
                                     regional_calendar_hijri_type=${settings.regional_calendar_hijri_type}
-                                    gps_map_type=${settings.gps_map_type}
                                     ${settings.gps_country_id==null?'gps_country_id ':'gps_country_id=' + settings.gps_country_id}
                                     ${settings.gps_city_id==null?'gps_city_id ':'gps_city_id=' + settings.gps_city_id}
                                     ${settings.gps_popular_place_id==null?'gps_popular_place_id ':'gps_popular_place_id=' + settings.gps_popular_place_id}
@@ -1365,8 +1361,6 @@ const user_settings_load = async () => {
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_hijri_type'),
         document.getElementById('setting_select_calendar_hijri_type'),1);
     //GPS
-    common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_map_type'),
-        document.getElementById('setting_select_maptype'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'),
         document.getElementById('setting_select_country'),0);
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id')||null !=null) {
@@ -1551,7 +1545,6 @@ const user_settings_function = async (function_name, initial_user_setting, callB
           "regional_calendar_type": "${document.getElementById('setting_select_calendartype').value}",
           "regional_calendar_hijri_type": "${document.getElementById('setting_select_calendar_hijri_type').value}",
 
-          "gps_map_type": "${document.getElementById('setting_select_maptype').value}",
           "gps_country_id": ${select_setting_country[select_setting_country.selectedIndex].getAttribute('id')||null},
           "gps_city_id": ${select_setting_city[select_setting_city.selectedIndex].getAttribute('id')||null},
           "gps_popular_place_id": ${select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')||null},
@@ -1732,7 +1725,6 @@ const set_default_settings = async () => {
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['regional_default_calendar_hijri_type'], document.getElementById('setting_select_calendar_hijri_type'),1);
 
     //GPS 
-    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL['module_leaflet_style'], document.getElementById('setting_select_maptype'),1);
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['gps_default_country'], document.getElementById('setting_select_country'),0);
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['gps_default_city'], document.getElementById('setting_select_city'),0);
     
@@ -1835,7 +1827,6 @@ const set_settings_select = () => {
     option.setAttribute('regional_calendar_type', document.getElementById('setting_select_calendartype').value);
     option.setAttribute('regional_calendar_hijri_type', document.getElementById('setting_select_calendar_hijri_type').value);
 
-    option.setAttribute('gps_map_type', document.getElementById('setting_select_maptype').value);
     option.setAttribute('gps_country_id', document.getElementById('setting_select_country')[document.getElementById('setting_select_country').selectedIndex].getAttribute('id'));
     option.setAttribute('gps_city_id', document.getElementById('setting_select_city')[document.getElementById('setting_select_city').selectedIndex].getAttribute('id'));
     option.setAttribute('gps_popular_place_id', document.getElementById('setting_select_popular_place')[document.getElementById('setting_select_popular_place').selectedIndex].getAttribute('id'));
@@ -2115,7 +2106,7 @@ const setEvents = () => {
     document.getElementById('setting_select_report_locale_second').addEventListener('change', () => { settings_translate(false); }, false);                                                        
 
     //settings gps    
-    document.getElementById('setting_select_maptype').addEventListener('change', () => { update_ui(4); }, false);
+    
     document.getElementById('setting_select_country').addEventListener('change', () => { update_ui(5); }, false);         
     document.getElementById('setting_select_city').addEventListener('change', () => { update_ui(6);}, false);
     document.getElementById('setting_select_popular_place').addEventListener('change', () => { update_ui(7);}, false);
@@ -2396,6 +2387,8 @@ const init_map = async () => {
                         app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
                         true,
                         false).then(() => {
+            //add extra app event on common map layer select
+            document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { update_ui(4); }, false);
             common.map_setevent('dblclick', (e) => {
                 if (e.originalEvent.target.id == 'mapid'){
                     document.getElementById('setting_input_lat').value = e.latlng['lat'];
@@ -2509,7 +2502,6 @@ const init_app = () => {
         document.getElementById('setting_icon_regional_calendartype').innerHTML = common.ICONS['regional_calendar'];
         document.getElementById('setting_icon_regional_calendar_hijri_type').innerHTML = common.ICONS['regional_calendar_hijri_type'];
         //settings tab 2 GPS
-        document.getElementById('setting_icon_gps_maptype').innerHTML = common.ICONS['gps_map'];
         document.getElementById('setting_icon_gps_country').innerHTML = common.ICONS['gps_country'];
         document.getElementById('setting_icon_gps_city').innerHTML = common.ICONS['gps_city'];
         document.getElementById('setting_icon_gps_popular_place').innerHTML = common.ICONS['gps_popular_place'];
