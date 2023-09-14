@@ -2564,7 +2564,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                     COMMON_GLOBAL['module_leaflet_session_map'].doubleClickZoom.disable(); 
         
                     //add scale
-                    COMMON_GLOBAL['module_leaflet_library'].control.scale().addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                    //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
+                    COMMON_GLOBAL['module_leaflet_library'].control.scale({position: 'topright'}).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
 
 
                     //add custom HTML inside div with class .leaflet-control
