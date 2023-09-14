@@ -2608,19 +2608,11 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
 
                     //add event on map countries
                     const select_country = document.querySelector('#common_module_leaflet_select_country');
-                    const select_city = document.querySelector('#common_module_leaflet_select_city');
                     select_country.addEventListener('change', () => { 
                         if (select_country[select_country.selectedIndex].getAttribute('country_code'))
-                            map_city(select_country[select_country.selectedIndex].getAttribute('country_code').toUpperCase()).then(()=>{
-                                null;
-                            }); 
+                            map_city(select_country[select_country.selectedIndex].getAttribute('country_code').toUpperCase());
                         else{
-                            //remove old city list:            
-                            const old_groups = select_city.getElementsByTagName('optgroup');
-                            for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                                select_city.removeChild(old_groups[old_index]);
-                            //display first empty city
-                            select_city.selectedIndex = 0;
+                            map_city_empty();
                         }
                             
                     }, false);
@@ -2732,6 +2724,15 @@ const map_city = (country_code) =>{
         });
     }
 };
+const map_city_empty = () =>{
+    //remove old city list:      
+    const select_city = document.querySelector('#common_module_leaflet_select_city');
+    const old_groups = select_city.getElementsByTagName('optgroup');
+    for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
+        select_city.removeChild(old_groups[old_index]);
+    //display first empty city
+    select_city.selectedIndex = 0;
+};
 const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =>{
     const toggle_expand = (item) =>{
         let style_display;
@@ -2763,7 +2764,10 @@ const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =
                             null,
                             map_marker_div_gps,
                             COMMON_GLOBAL['module_leaflet_jumpto']);
-            }                                
+                const select_country = document.querySelector('#common_module_leaflet_select_country');
+                select_country.selectedIndex = 0;
+                map_city_empty();
+            }
             break;
         }
         case 'common_module_leaflet_control_layer':{
@@ -3730,7 +3734,7 @@ export{/* GLOBALS*/
        /* USER PROVIDER */
        ProviderUser_update, ProviderSignIn,
        /* MODULE LEAFLET  */
-       map_init, map_country, map_city, map_click_event, map_resize, map_line_removeall, map_line_create,
+       map_init, map_country, map_click_event, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
