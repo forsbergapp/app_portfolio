@@ -1,4 +1,4 @@
-const { render_common_html, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id) => {
     return new Promise((resolve, reject) => {
@@ -7,22 +7,28 @@ const createApp = (app_id) => {
             ['<AppHead/>', process.cwd() + '/apps/app4/src/head.html'],
             ['<AppBody/>', process.cwd() + '/apps/app4/src/body.html']
             ];
-        render_app_html(files, (err, app_files)=>{
-            render_common_html(app_id, app_files, null, 'FORM', true, null, false, false, false, false).then((app)=>{
-                if (err)
-                    reject(err);
-                else{
-                    //APP Profile tag not used in common body
-                    app.app = app.app.replace(
-                        '<AppProfileInfo/>',
-                        '');
-                    //APP Profile tag not used in common body
-                    app.app = app.app.replace(
-                        '<AppProfileTop/>',
-                        '');
-                    resolve(app.app);
-                }
-            });
+        render_app_html(app_id, files, {locale:null,
+                                        module_type:'FORM',
+                                        map: true,
+                                        user_account_custom_tag:null,
+                                        app_themes:false, 
+                                        render_locales:false, 
+                                        render_settings:false, 
+                                        render_provider_buttons:false
+                                    },(err, app)=>{
+            if (err)
+                reject(err);
+            else{
+                //APP Profile tag not used in common body
+                app.app = app.app.replace(
+                    '<AppProfileInfo/>',
+                    '');
+                //APP Profile tag not used in common body
+                app.app = app.app.replace(
+                    '<AppProfileTop/>',
+                    '');
+                resolve(app.app);
+            }
         });
     });
 };
