@@ -1,4 +1,4 @@
-const { render_common_html, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createReport = (app_id, module) => {
     return new Promise((resolve, reject) => {
@@ -8,14 +8,20 @@ const createReport = (app_id, module) => {
             ['<AppCommonFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],
             ['<ReportPaper/>', process.cwd() + '/apps/app2/src/report/paper.html']
         ];
-        render_app_html(files, (err, report)=>{
-            render_common_html(app_id, report,null, 'REPORT', false, null, false, false, false, false).then((report)=>{
-                if (err)
-                    reject(err);
-                else{
-                    resolve(report.app);
-                }
-            });
+        render_app_html(app_id, files, {locale:null, 
+                                        module_type:'REPORT', 
+                                        map: false, 
+                                        user_account_custom_tag:null,
+                                        app_themes:false, 
+                                        render_locales:false, 
+                                        render_settings:false, 
+                                        render_provider_buttons:false
+                                    },(err, report)=>{
+            if (err)
+                reject(err);
+            else{
+                resolve(report.app);
+            }
         });
     });
 };

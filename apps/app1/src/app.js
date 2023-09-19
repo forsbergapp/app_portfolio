@@ -1,4 +1,4 @@
-const { render_common_html, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
@@ -15,23 +15,29 @@ const createApp = (app_id, username, locale) => {
             const profile_info = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/profile_info.html`, 'utf8');
             const profile_info_cloud = await fs.promises.readFile(`${process.cwd()}/apps/common/src/profile_info_cloud.html`, 'utf8');
             const app_themes = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/app_themes.html`, 'utf8');
-            render_app_html(files, (err, app_files)=>{
-                render_common_html(app_id, app_files, locale, 'FORM', false, null, false, true, true, true).then((app)=>{
-                    if (err)
-                        reject(err);
-                    else{
-                        //render after COMMON:
-                        app.app = app.app.replace('<AppProfileInfo/>', profile_info);
-                        app.app = app.app.replace('<CommonBodyThemes/>', app_themes);
-                        //render CommonBodyProfileInfoCloud after above, this function only available for this app
-                        app.app = app.app.replace('<CommonBodyProfileInfoCloud/>', profile_info_cloud);
-                        //APP Profile tag not used in common body
-                        app.app = app.app.replace(
-                                '<AppProfileTop/>',
-                                '');   
-                        resolve(app.app);
-                    }
-                });
+            render_app_html(app_id, files, {locale:locale, 
+                                            module_type:'FORM', 
+                                            map: false, 
+                                            user_account_custom_tag:null,
+                                            app_themes:false, 
+                                            render_locales:true, 
+                                            render_settings:true, 
+                                            render_provider_buttons:true
+                                        },(err, app)=>{
+                if (err)
+                    reject(err);
+                else{
+                    //render after COMMON:
+                    app.app = app.app.replace('<AppProfileInfo/>', profile_info);
+                    app.app = app.app.replace('<CommonBodyThemes/>', app_themes);
+                    //render CommonBodyProfileInfoCloud after above, this function only available for this app
+                    app.app = app.app.replace('<CommonBodyProfileInfoCloud/>', profile_info_cloud);
+                    //APP Profile tag not used in common body
+                    app.app = app.app.replace(
+                            '<AppProfileTop/>',
+                            '');   
+                    resolve(app.app);
+                }
             });
         };
         if (username!=null){

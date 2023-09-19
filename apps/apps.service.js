@@ -35,7 +35,7 @@ const createMail = async (app_id, data) =>{
                 ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
                 ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
             ];
-            render_app_html(files, (err, email)=>{
+            render_app_html(app_id, files, null, (err, email)=>{
                 if (err)
                     reject(err);
                 else{                
@@ -478,24 +478,31 @@ const client_locale = (accept_language) =>{
     }
     return locale;
 };
-const render_app_html = async (files, callBack) => {
+const render_app_html = async (app_id, files, app_config, callBack) => {
     let i = 0;
     //ES2020 import() with ES6 promises, object destructuring
     import('node:fs').then(({promises: {readFile}}) => {
         Promise.all(files.map(file => {
             return readFile(file[1], 'utf8');
         })).then(fileBuffers => {
-            let app ='';
+            let app_files ='';
             fileBuffers.forEach(fileBuffer => {
-                if (app=='')
-                    app = fileBuffer.toString();
+                if (app_files=='')
+                    app_files = fileBuffer.toString();
                 else
-                    app = app.replace(
-                            files[i][0],
-                            `${fileBuffer.toString()}`);
+                    app_files = app_files.replace(
+                                    files[i][0],
+                                    `${fileBuffer.toString()}`);
                 i++;
             });
-            callBack(null, app);
+            if (app_config)
+                render_common_html(app_id, app_files, app_config).then((app)=>{
+                    callBack(null, app);
+                });
+            else{
+                //app that does not need common like maintenance and email
+                callBack(null, app_files);
+            }
         })
         .catch(err => {
             callBack(err, null);
@@ -512,18 +519,18 @@ const read_common_files = async (module, files, callBack) => {
     }
     callBack(null, module);
 };
-const render_common_html = async (app_id, module, locale, module_type='FORM', map=false, user_account_custom_tag, app_themes=true, render_locales=true, render_settings=true, render_provider_buttons=true) =>{
+const render_common_html = async (app_id, module, app_config) =>{
     let user_locales;
     let settings;
     let user_timezones = '';
     let user_directions = '';
     let user_arabic_scripts = '';
-    if (render_locales){
+    if (app_config.render_locales){
         const promisegetLocales = async () =>{
             const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
             return new Promise((resolve)=>{
                 let user_locales;
-                getLocales(app_id, locale, (err, result_user_locales) => {
+                getLocales(app_id, app_config.locale, (err, result_user_locales) => {
                     result_user_locales.forEach( (locale,i) => {
                         user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                     });
@@ -533,11 +540,11 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
         };
         user_locales = await promisegetLocales();
     }
-    if (render_settings){
+    if (app_config.render_settings){
         const promisegetSettings = async () =>{
             const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
             return new Promise((resolve)=>{
-                getSettings(app_id, locale, null, (err, settings) => {
+                getSettings(app_id, app_config.locale, null, (err, settings) => {
                     let option;
                     for (let i = 0; i < settings.length; i++) {
                         option = `<option id=${settings[i].id} value='${settings[i].data}'>${settings[i].text}</option>`;
@@ -564,12 +571,10 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
             });
         };
         settings = await promisegetSettings();
-    }
-        
-                    
+    }               
     return new Promise((resolve, reject)=>{
         let common_files;
-        if (module_type == 'FORM'){
+        if (app_config.module_type == 'FORM'){
             common_files = [
 				//HEAD
 				['<CommonHead/>', process.cwd() + '/apps/common/src/head.html'],
@@ -584,11 +589,11 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
 				['<CommonBodyProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], 
 				['<CommonBodyProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
 				['<CommonBodyProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
-				[user_account_custom_tag==null?'<CommonBodyUserAccount/>':user_account_custom_tag, process.cwd() + '/apps/common/src/user_account.html']
+				[app_config.user_account_custom_tag==null?'<CommonBodyUserAccount/>':app_config.user_account_custom_tag, process.cwd() + '/apps/common/src/user_account.html']
             ];
-            if (map==true)
+            if (app_config.map==true)
                 common_files.push(['<CommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html']);
-            if (app_themes==true){
+            if (app_config.app_themes==true){
                 //CommonBodyThemes inside common User account div
                 common_files.push(['<CommonBodyThemes/>', process.cwd() + '/apps/common/src/app_themes.html']);
             }
@@ -607,15 +612,15 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
             if (err)
                 reject(err);
             else{
-                if (map==false)
+                if (app_config.map==false)
                     app = app.replace('<CommonHeadMap/>', '');
                 //render locales
-                if (render_locales)
+                if (app_config.render_locales)
                     app = app.replace('<USER_LOCALE/>',         user_locales);
                 else
                     app = app.replace('<USER_LOCALE/>',         '');
                 //render settings
-                if (render_settings){
+                if (app_config.render_settings){
                     app = app.replace('<USER_TIMEZONE/>',       user_timezones);
                     app = app.replace('<USER_DIRECTION/>',      `<option id='' value=''></option>${user_directions}`);
                     app = app.replace('<USER_ARABIC_SCRIPT/>',  `<option id='' value=''></option>${user_arabic_scripts}`);    
@@ -625,7 +630,7 @@ const render_common_html = async (app_id, module, locale, module_type='FORM', ma
                     app = app.replace('<USER_DIRECTION/>',      '');
                     app = app.replace('<USER_ARABIC_SCRIPT/>',  '');
                 }
-                if (render_provider_buttons){
+                if (app_config.render_provider_buttons){
                     providers_buttons(app_id).then((buttons)=>{
                         app = app.replace('<COMMON_PROVIDER_BUTTONS/>',buttons);
                         resolve({app:app, locales: user_locales, settings: settings});
@@ -877,7 +882,7 @@ const getMaintenance = (app_id) => {
             ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
             ];
-        render_app_html(files, (err, app)=>{
+        render_app_html(app_id, files, null, (err, app)=>{
             if (err)
                 reject(err);
             else{
@@ -1039,7 +1044,7 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo,
         /*APP functions */
-        apps_start_ok, render_app_html, render_common_html,
+        apps_start_ok, render_app_html,
         AppsStart,
         /*APP BFF functions*/
         BFF};
