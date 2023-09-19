@@ -1,4 +1,4 @@
-const { render_common_html, read_app_files } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_common_html, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
@@ -15,7 +15,7 @@ const createApp = (app_id, username, locale) => {
             const profile_info = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/profile_info.html`, 'utf8');
             const profile_info_cloud = await fs.promises.readFile(`${process.cwd()}/apps/common/src/profile_info_cloud.html`, 'utf8');
             const app_themes = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/app_themes.html`, 'utf8');
-            read_app_files(files, (err, app_files)=>{
+            render_app_html(files, (err, app_files)=>{
                 render_common_html(app_id, app_files, locale, 'FORM', false, null, false, true, true, true).then((app)=>{
                     if (err)
                         reject(err);

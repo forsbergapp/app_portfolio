@@ -1,4 +1,4 @@
-const { render_common_html, read_app_files} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_common_html, render_app_html} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const themes = (app_id, locale, settings) =>{
     let theme_found = false;
@@ -137,7 +137,7 @@ const createApp = (app_id, username, locale) => {
             let APP_HIJRI_DATE_ADJUSTMENT='';
             let APP_IQAMAT='';
             let APP_FAST_START_END='';
-            read_app_files(files, (err, app_files)=>{
+            render_app_html(files, (err, app_files)=>{
                 render_common_html(app_id, app_files,	locale, 'FORM', true, '<AppUserAccount/>', true, true, true, true).then((app)=>{
                     if (err)
                         reject(err);
