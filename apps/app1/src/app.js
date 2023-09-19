@@ -1,4 +1,4 @@
-const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_app_with_data, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
@@ -28,15 +28,14 @@ const createApp = (app_id, username, locale) => {
                     reject(err);
                 else{
                     //render after COMMON:
-                    app.app = app.app.replace('<AppProfileInfo/>', profile_info);
-                    app.app = app.app.replace('<CommonBodyThemes/>', app_themes);
+                    const render_variables = [];
+                    render_variables.push(['AppProfileInfo',profile_info]);
+                    render_variables.push(['CommonBodyThemes',app_themes]);
                     //render CommonBodyProfileInfoCloud after above, this function only available for this app
-                    app.app = app.app.replace('<CommonBodyProfileInfoCloud/>', profile_info_cloud);
+                    render_variables.push(['CommonBodyProfileInfoCloud',profile_info_cloud]);
                     //APP Profile tag not used in common body
-                    app.app = app.app.replace(
-                            '<AppProfileTop/>',
-                            '');   
-                    resolve(app.app);
+                    render_variables.push(['AppProfileTop','']);
+                    resolve(render_app_with_data(app.app, render_variables));
                 }
             });
         };

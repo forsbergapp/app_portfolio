@@ -85,9 +85,11 @@ const createMail = async (app_id, data) =>{
                                     break;
                                 }
                             }
-                            email = email.replace('<Logo/>',                '<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>');
-                            email = email.replace('<Verification_code/>',   data.verificationCode);
-                            email = email.replace('<Footer/>',              `<a target='_blank' href='https://${data.host}'>${data.host}</a>`);
+                            const render_variables = [];
+                            render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
+                            render_variables.push(['Verification_code',data.verificationCode]);
+                            render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
+
                             resolve ({
                                 'email_host':         db_SERVICE_MAIL_HOST,
                                 'email_port':         db_SERVICE_MAIL_PORT,
@@ -97,7 +99,7 @@ const createMail = async (app_id, data) =>{
                                 'from':               email_from,
                                 'to':                 data.to,
                                 'subject':            '❂❂❂❂❂❂',
-                                'html':               email
+                                'html':               render_app_with_data(email, render_variables)
                             });
                         }
                     });
@@ -169,19 +171,20 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                         <body >`;
     const info_html2 = `  </body>
                       </html>`;
+    const render_variables = [];                      
     switch (info){
     case 'privacy_policy':{
         get_parameters((err, result)=>{
             import('node:fs').then((fs) =>{
                 fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_policy_url}.html`, 'utf8', (error, fileBuffer) => {
-                    let infopage = fileBuffer.toString();
-                    infopage = infopage.replace('<APPNAME1/>', result.app_name );
-                    infopage = infopage.replace('<APPNAME2/>', result.app_name );
-                    infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
-                    infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
-                    infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_policy );
-                    infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_policy );
-                    callBack(null, info_html1 + infopage + info_html2);
+                    const infopage = fileBuffer.toString();
+                    render_variables.push(['APPNAME1', result.app_name ]);
+                    render_variables.push(['APPNAME2', result.app_name ]);
+                    render_variables.push(['APPURL_HREF', result.app_url ]);
+                    render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
+                    render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_policy ]);
+                    render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_policy ]);
+                    callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
                 });
             });
         });
@@ -191,13 +194,13 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
         get_parameters((err, result)=>{
             import('node:fs').then((fs) =>{
                 fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
-                    let infopage = fileBuffer.toString();
-                    infopage = infopage.replace('<APPNAME1/>', result.app_name );
-                    infopage = infopage.replace('<APPNAME2/>', result.app_name );
-                    infopage = infopage.replace('<APPNAME3/>', result.app_name );
-                    infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_disclaimer );
-                    infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_disclaimer );
-                    callBack(null, info_html1 + infopage + info_html2);
+                    const infopage = fileBuffer.toString();
+                    render_variables.push(['APPNAME1', result.app_name ]);
+                    render_variables.push(['APPNAME2', result.app_name ]);
+                    render_variables.push(['APPNAME3', result.app_name ]);
+                    render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_disclaimer ]);
+                    render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_disclaimer ]);
+                    callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
                 });
             });
         });
@@ -207,13 +210,13 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
         get_parameters((err, result)=>{
             import('node:fs').then((fs) =>{
                 fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
-                    let infopage = fileBuffer.toString();
-                    infopage = infopage.replace('<APPNAME/>', result.app_name );
-                    infopage = infopage.replace('<APPURL_HREF/>', result.app_url );
-                    infopage = infopage.replace('<APPURL_INNERTEXT/>', result.app_url );
-                    infopage = infopage.replace('<APPEMAIL_HREF/>', 'mailto:' + result.info_email_terms );
-                    infopage = infopage.replace('<APPEMAIL_INNERTEXT/>', result.info_email_terms );
-                    callBack(null, info_html1 + infopage + info_html2);
+                    const infopage = fileBuffer.toString();
+                    render_variables.push(['APPNAME', result.app_name ]);
+                    render_variables.push(['APPURL_HREF', result.app_url ]);
+                    render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
+                    render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_terms ]);
+                    render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_terms ]);
+                    callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
                 });
             });
         });
@@ -252,7 +255,7 @@ const getApp = async (req, res, app_id, params, callBack) => {
             else{
                 system_admin_only = 1;
             }
-            app_module_type = 'APP';
+            app_module_type = 'ADMIN';
         }
         else{
             const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
@@ -260,17 +263,17 @@ const getApp = async (req, res, app_id, params, callBack) => {
             if (app == 0)
                 return callBack(null, app);
             system_admin_only = 0;
-            app_module_type = 'ADMIN';
+            app_module_type = 'APP';
             //get translation data
             const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
             const callGetObjects = async () =>{
                 return new Promise((resolve)=>{
                     getObjects(app_id, client_locale(req.headers['accept-language']), 'APP_OBJECT_ITEM', 'COMMON', (err, result_objects) => {
+                        const render_variables = [];
                         for (const row of result_objects){
-                            app = app.replaceAll(
-                                `<CommonTranslation${row.object_item_name.toUpperCase()}/>`,
-                                `${row.text}`);
+                            render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
                         }
+                        app = render_app_with_data(app, render_variables);
                         resolve(app);
                     });
                 });
@@ -519,12 +522,45 @@ const read_common_files = async (module, files, callBack) => {
     }
     callBack(null, module);
 };
+const render_app_with_data = (app, data)=>{
+    for (const variable of data){
+        //add < and /> around tag variablename
+        //replace all tags found with given searched tag with given value
+        //ES2021 replaceAll
+        app = app.replaceAll(`<${variable[0]}/>`,variable[1]);
+    }
+    return app;
+};
 const render_common_html = async (app_id, module, app_config) =>{
+    /*
+    inparameter app_config object
+        {
+        locale:                 locale, 
+        module_type:            'FORM'/'REPORTS', 
+        map:                    true/false, 
+        user_account_custom_tag:[custom tag]/null,
+        app_themes:             true/false, 
+        render_locales:         true/false, 
+        render_settings:        true/false, 
+        render_provider_buttons:true/false
+        }
+
+    returns object
+        {
+        app:app,                                                //HTML format
+        locales: user_locales,                                  //HTML option format
+        settings: { settings: settings,                         //result from database
+                    user_timezones: user_timezones,             //HTML option format
+                    user_directions: user_directions,           //HTML option format
+                    user_arabic_scripts: user_arabic_scripts},  //HTML option format
+        }
+    */
     let user_locales;
     let settings;
     let user_timezones = '';
     let user_directions = '';
     let user_arabic_scripts = '';
+    const render_variables = [];
     if (app_config.render_locales){
         const promisegetLocales = async () =>{
             const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
@@ -612,33 +648,41 @@ const render_common_html = async (app_id, module, app_config) =>{
             if (err)
                 reject(err);
             else{
-                if (app_config.map==false)
-                    app = app.replace('<CommonHeadMap/>', '');
+                if (app_config.map==false){
+                    render_variables.push(['CommonHeadMap','']);
+                }
+                    
                 //render locales
-                if (app_config.render_locales)
-                    app = app.replace('<USER_LOCALE/>',         user_locales);
-                else
-                    app = app.replace('<USER_LOCALE/>',         '');
-                //render settings
-                if (app_config.render_settings){
-                    app = app.replace('<USER_TIMEZONE/>',       user_timezones);
-                    app = app.replace('<USER_DIRECTION/>',      `<option id='' value=''></option>${user_directions}`);
-                    app = app.replace('<USER_ARABIC_SCRIPT/>',  `<option id='' value=''></option>${user_arabic_scripts}`);    
+                if (app_config.render_locales){
+                    render_variables.push(['COMMON_USER_LOCALE',user_locales]);
                 }
                 else{
-                    app = app.replace('<USER_TIMEZONE/>',       '');
-                    app = app.replace('<USER_DIRECTION/>',      '');
-                    app = app.replace('<USER_ARABIC_SCRIPT/>',  '');
+                    render_variables.push(['COMMON_USER_LOCALE','']);
+                }
+                //render settings
+                if (app_config.render_settings){
+                    render_variables.push(['COMMON_USER_TIMEZONE',user_timezones]);
+                    render_variables.push(['COMMON_USER_DIRECTION',`<option id='' value=''></option>${user_directions}`]);
+                    render_variables.push(['COMMON_USER_ARABIC_SCRIPT',`<option id='' value=''></option>${user_arabic_scripts}`]);
+                }
+                else{
+                    render_variables.push(['COMMON_USER_TIMEZONE','']);
+                    render_variables.push(['COMMON_USER_DIRECTION','']);
+                    render_variables.push(['COMMON_USER_ARABIC_SCRIPT','']);
                 }
                 if (app_config.render_provider_buttons){
                     providers_buttons(app_id).then((buttons)=>{
-                        app = app.replace('<COMMON_PROVIDER_BUTTONS/>',buttons);
-                        resolve({app:app, locales: user_locales, settings: settings});
+                        render_variables.push(['COMMON_PROVIDER_BUTTONS',buttons]);                        
+                        resolve({   app:render_app_with_data(app, render_variables), 
+                                    locales: user_locales, 
+                                    settings: settings});
                     });
                 }
                 else{
-                    app = app.replace('<COMMON_PROVIDER_BUTTONS/>','');
-                    resolve({app:app, locales: user_locales, settings: settings});
+                    render_variables.push(['COMMON_PROVIDER_BUTTONS','']);
+                    resolve({   app:render_app_with_data(app, render_variables),
+                                locales: user_locales, 
+                                settings: settings});
                 }
             }
         });
@@ -694,6 +738,7 @@ const get_module_with_init = async (app_id,
                                     client_longitude,
                                     client_place,
                                     module, callBack) => {
+    const render_variables = [];
     const return_with_parameters = (module, countries, app_parameters, first_time)=>{
         const app_service_parameters = {   
             app_id: app_id,
@@ -711,16 +756,15 @@ const get_module_with_init = async (app_id,
             rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
             first_time: first_time
         };
-        module = module.replace(
-                '<ITEM_COMMON_PARAMETERS/>',
-                JSON.stringify({
-                    app_service: app_service_parameters,
-                    app: app_parameters
-                }));
-        return module;
+        render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify({
+                                                            app_service: app_service_parameters,
+                                                            app: app_parameters
+                                                        })]);
+        return render_app_with_data(module, render_variables);
     };
+    
     if (system_admin_only==1){
-        module = module.replace('<APP_NAME/>','SYSTEM ADMIN');
+        render_variables.push(['APP_NAME','SYSTEM ADMIN']);
         callBack(null, return_with_parameters(module, null, null, CheckFirstTime()==true?1:0));
     }
     else{
@@ -731,7 +775,7 @@ const get_module_with_init = async (app_id,
                 callBack(err, null);
             else{
                 countries(app_id, locale).then((countries)=>{
-                    module = module.replace('<APP_NAME/>',result_app_name[0].app_name);
+                    render_variables.push(['APP_NAME',result_app_name[0].app_name]);
                     //fetch parameters for common_app_id and current app_id
                     getAppStartParameters(app_id, (err,app_parameters) =>{
                         if (err)
@@ -882,6 +926,7 @@ const getMaintenance = (app_id) => {
             ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
             ];
+        const render_variables = [];
         render_app_html(app_id, files, null, (err, app)=>{
             if (err)
                 reject(err);
@@ -892,9 +937,8 @@ const getMaintenance = (app_id) => {
                     rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
                     rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF')
                 };
-                app = app.replace('<ITEM_COMMON_PARAMETERS/>',
-                                    JSON.stringify(parameters));
-                resolve(app);
+                render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
+                resolve(render_app_with_data(app, render_variables));
             }
         });
     });
@@ -1044,7 +1088,7 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo,
         /*APP functions */
-        apps_start_ok, render_app_html,
+        apps_start_ok, render_app_html,render_app_with_data,
         AppsStart,
         /*APP BFF functions*/
         BFF};

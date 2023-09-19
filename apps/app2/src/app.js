@@ -1,4 +1,4 @@
-const {render_app_html} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const {render_app_with_data, render_app_html} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const themes = (app_id, locale, settings) =>{
     let theme_found = false;
@@ -224,37 +224,38 @@ const createApp = (app_id, username, locale) => {
                         }
                     }
                     //render profile_info after COMMON:
-                    app.app = app.app.replace('<AppProfileInfo/>',          profile_info);
-                    app.app = app.app.replace('<AppProfileTop/>',           profile_top);
-                    app.app = app.app.replace('<AppLocales/>',              app.locales);
+                    const render_variables = [];
+                    render_variables.push(['AppProfileInfo',profile_info]);
+                    render_variables.push(['AppProfileTop',profile_top]);
+                    render_variables.push(['AppLocales',app.locales]);
                     //add extra option for second locale
-                    app.app = app.app.replace('<AppLocalessecond/>',        `<option id='' value='0' selected='selected'>None</option>${app.locales}`);
+                    render_variables.push(['AppLocalessecond',`<option id='' value='0' selected='selected'>None</option>${app.locales}`]);
 
-                    app.app = app.app.replace('<AppPlaces/>',               places(app_id, locale, app.settings.settings));
+                    render_variables.push(['AppPlaces',places(app_id, locale, app.settings.settings)]);
                     const appthemes = themes(app_id, locale, app.settings.settings);
-                    app.app = app.app.replace('<AppSettingsThemesDay/>',    appthemes[0]);
-                    app.app = app.app.replace('<AppSettingsThemesMonth/>',  appthemes[1]);
-                    app.app = app.app.replace('<AppSettingsThemesYear/>',   appthemes[2]);
+                    render_variables.push(['AppSettingsThemesDay',appthemes[0]]);
+                    render_variables.push(['AppSettingsThemesMonth',appthemes[1]]);
+                    render_variables.push(['AppSettingsThemesYear',appthemes[2]]);
 
                     //app SETTING
-                    app.app = app.app.replace('<AppTimezones/>',`${USER_TIMEZONE}`);
-                    app.app = app.app.replace('<AppDirection/>',`${USER_DIRECTION}`);
-                    app.app = app.app.replace('<AppNumbersystem/>',`${APP_NUMBER_SYSTEM}`);
-                    app.app = app.app.replace('<AppColumntitle/>',`${APP_COLUMN_TITLE}`);
-                    app.app = app.app.replace('<AppArabicscript/>',`${USER_ARABIC_SCRIPT}`);
-                    app.app = app.app.replace('<AppCalendartype/>',`${APP_CALENDAR_TYPE}`);
-                    app.app = app.app.replace('<AppCalendarhijritype/>',`${APP_CALENDAR_HIJRI_TYPE}`);
-                    app.app = app.app.replace('<AppPapersize/>',`${APP_PAPER_SIZE}`);
-                    app.app = app.app.replace('<AppHighlightrow/>',`${APP_HIGHLIGHT_ROW}`);
-                    app.app = app.app.replace('<AppMethod/>',`${APP_METHOD}`);
-                    app.app = app.app.replace('<AppMethodAsr/>',`${APP_METHOD_ASR}`);
-                    app.app = app.app.replace('<AppHighlatitudeadjustment/>',`${APP_HIGH_LATITUDE_ADJUSTMENT}`);
-                    app.app = app.app.replace('<AppTimeformat/>',`${APP_TIMEFORMAT}`);
-                    app.app = app.app.replace('<AppHijridateadjustment/>',`${APP_HIJRI_DATE_ADJUSTMENT}`);
+                    render_variables.push(['AppTimezones',USER_TIMEZONE]);
+                    render_variables.push(['AppDirection',USER_DIRECTION]);
+                    render_variables.push(['AppNumbersystem',APP_NUMBER_SYSTEM]);
+                    render_variables.push(['AppColumntitle',APP_COLUMN_TITLE]);
+                    render_variables.push(['AppArabicscript',USER_ARABIC_SCRIPT]);
+                    render_variables.push(['AppCalendartype',APP_CALENDAR_TYPE]);
+                    render_variables.push(['AppCalendarhijritype',APP_CALENDAR_HIJRI_TYPE]);
+                    render_variables.push(['AppPapersize',APP_PAPER_SIZE]);
+                    render_variables.push(['AppHighlightrow',APP_HIGHLIGHT_ROW]);
+                    render_variables.push(['AppMethod',APP_METHOD]);
+                    render_variables.push(['AppMethodAsr',APP_METHOD_ASR]);
+                    render_variables.push(['AppHighlatitudeadjustment',APP_HIGH_LATITUDE_ADJUSTMENT]);
+                    render_variables.push(['AppTimeformat',APP_TIMEFORMAT]);
+                    render_variables.push(['AppHijridateadjustment',APP_HIJRI_DATE_ADJUSTMENT]);
                     //used several times:
-                    app.app = app.app.replace(new RegExp('<AppIqamat/>', 'g'),`${APP_IQAMAT}`);
-                    app.app = app.app.replace('<AppFaststartend/>',`${APP_FAST_START_END}`);
-                    resolve(app.app);
+                    render_variables.push(['AppIqamat',APP_IQAMAT]);
+                    render_variables.push(['AppFaststartend',APP_FAST_START_END]);
+                    resolve(render_app_with_data(app.app, render_variables));
                 }
             });
         };
