@@ -1,4 +1,4 @@
-const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_app_with_data, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createApp = (app_id) => {
     return new Promise((resolve, reject) => {
@@ -20,14 +20,11 @@ const createApp = (app_id) => {
                 reject(err);
             else{
                 //APP Profile tag not used in common body
-                app.app = app.app.replace(
-                    '<AppProfileInfo/>',
-                    '');
+                const render_variables = [];
+                render_variables.push(['AppProfileInfo','']);
                 //APP Profile tag not used in common body
-                app.app = app.app.replace(
-                    '<AppProfileTop/>',
-                    '');
-                resolve(app.app);
+                render_variables.push(['AppProfileTop','']);
+                resolve(render_app_with_data(app.app, render_variables));
             }
         });
     });

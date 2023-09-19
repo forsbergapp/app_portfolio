@@ -1,6 +1,6 @@
 const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_app_with_data, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
 const createAdmin = (app_id, locale) => {
     return new Promise((resolve, reject) => {
@@ -34,15 +34,12 @@ const createAdmin = (app_id, locale) => {
             if (err)
                 reject(err);
             else{
+                const render_variables = [];
                 //APP Profile tag not used in common body
-                app.app = app.app.replace(
-                    '<AppProfileInfo/>',
-                    '');
+                render_variables.push(['AppProfileInfo','']);
                 //APP Profile tag not used in common body
-                app.app = app.app.replace(
-                    '<AppProfileTop/>',
-                    '');
-                resolve(app.app);
+                render_variables.push(['AppProfileTop','']);
+                resolve(render_app_with_data(app.app, render_variables));
             }
         });
     });
