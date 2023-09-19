@@ -35,7 +35,7 @@ const createMail = async (app_id, data) =>{
                 ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
                 ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
             ];
-            read_app_files(files, (err, email)=>{
+            render_app_html(files, (err, email)=>{
                 if (err)
                     reject(err);
                 else{                
@@ -478,7 +478,7 @@ const client_locale = (accept_language) =>{
     }
     return locale;
 };
-const read_app_files = async (files, callBack) => {
+const render_app_html = async (files, callBack) => {
     let i = 0;
     //ES2020 import() with ES6 promises, object destructuring
     import('node:fs').then(({promises: {readFile}}) => {
@@ -877,7 +877,7 @@ const getMaintenance = (app_id) => {
             ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
             ];
-        read_app_files(files, (err, app)=>{
+        render_app_html(files, (err, app)=>{
             if (err)
                 reject(err);
             else{
@@ -1039,7 +1039,7 @@ export {/*APP EMAIL functions*/
         /*APP ROUTER functiontions */
         getInfo,
         /*APP functions */
-        apps_start_ok, read_app_files, render_common_html,
+        apps_start_ok, render_app_html, render_common_html,
         AppsStart,
         /*APP BFF functions*/
         BFF};
