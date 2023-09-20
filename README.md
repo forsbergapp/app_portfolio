@@ -268,7 +268,11 @@
 	
 	[docs/9.development.md](docs/9.development.md)
 
-10. Issues
+10. Test
+	
+	[docs/10.test.md](docs/10.test.md)
+
+11. Issues
    
 	Not supported:
 
