@@ -1554,5 +1554,4 @@ export{	REPORT_GLOBAL,
 		displayMonth, 
 		displayDay,
 		displayYear,
-		report_exception,
 		init};

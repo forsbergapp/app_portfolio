@@ -450,5 +450,5 @@ const init = (parameters) => {
     });
 };
 export{show_hide_apps_dialogue, setEvents, app_theme_switch, get_apps, user_menu_item_click, user_login_app,
-       app_exception, user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
+       user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
        init_app, init};
