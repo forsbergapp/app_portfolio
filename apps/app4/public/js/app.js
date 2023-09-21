@@ -52,4 +52,4 @@ const init = (parameters) => {
         });
     });
 };
-export{APP_GLOBAL, map_click_event, app_exception, init};
+export{APP_GLOBAL, map_click_event, init};

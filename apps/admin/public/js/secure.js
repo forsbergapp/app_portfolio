@@ -12,7 +12,6 @@ const common = await import('common');
     INSTALLATION
     DB INFO
     SERVER
-    EXCEPTION
     INIT
 */
 /*----------------------- */

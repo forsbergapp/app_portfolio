@@ -3002,6 +3002,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
                 case 401:{
                     //Unauthorized, token expired
                     exception(COMMON_GLOBAL['exception_app_function'], result);
+                    callBack(result, null);
                     break;
                 }
                 case 403:{
@@ -3012,13 +3013,13 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
                 }
                 case 500:{
                     //Unknown error
-                    show_message('EXCEPTION', null,null, result, COMMON_GLOBAL['app_id']);
+                    exception(COMMON_GLOBAL['exception_app_function'], result);
                     callBack(result, null);
                     break;
                 }
                 case 503:{
                     //Service unavailable or other error in microservice
-                    show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                    exception(COMMON_GLOBAL['exception_app_function'], result);
                     callBack(result, null);
                     break;
                 }
