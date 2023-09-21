@@ -55,4 +55,4 @@ const init = (parameters) => {
         init_app().then(() => {});
     });
 };
-export{app_exception, init};
+export{init};

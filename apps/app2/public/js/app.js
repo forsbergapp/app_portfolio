@@ -2916,7 +2916,5 @@ export{/*REPORT*/
        setEvents,
        /*SERVICE WORKER*/
        serviceworker,
-       /*EXCEPTION*/
-       app_exception,
        /*INIT*/
        init_app, init};
