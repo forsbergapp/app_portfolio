@@ -49,8 +49,8 @@
             //using dblClick on leaflet on() function to get coordinates
             return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
         };
-        const root = ReactDOM.createRoot(document.querySelector('#root'));
-        root.render(<App/>); 
+        const application = ReactDOM.createRoot(document.querySelector('#app_react'));
+        application.render(<App/>); 
         //div mapid must be mounted in React before app.init() in this case
         app.init(<ITEM_COMMON_PARAMETERS/>).then(()=>{});
     }) 

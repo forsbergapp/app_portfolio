@@ -535,14 +535,16 @@ const render_common_html = async (app_id, module, app_config) =>{
     /*
     inparameter app_config object
         {
-        locale:                 locale, 
-        module_type:            'FORM'/'REPORTS', 
-        map:                    true/false, 
-        user_account_custom_tag:[custom tag]/null,
-        app_themes:             true/false, 
-        render_locales:         true/false, 
-        render_settings:        true/false, 
-        render_provider_buttons:true/false
+        locale:                     locale, 
+        module_type:                'FORM'/'REPORTS', 
+        map:                        true/false, 
+        custom_tag_search_profile:  [custom tag]/null,      optional custom app placement of component
+        custom_tag_user_account:    [custom tag]/null,      optional custom app placement of component
+        custom_tag_profile_top:     [custom tag]/null,      optional custom app placement of component
+        app_themes:                 true/false, 
+        render_locales:             true/false, 
+        render_settings:            true/false, 
+        render_provider_buttons:    true/false
         }
 
     returns object
@@ -623,9 +625,10 @@ const render_common_html = async (app_id, module, app_config) =>{
 				['<CommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],    
 				//Profile tag CommonBodyProfileDetail in common body
 				['<CommonBodyProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], 
-				['<CommonBodyProfileSearch/>', process.cwd() + '/apps/common/src/profile_search.html'],
 				['<CommonBodyProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
-				[app_config.user_account_custom_tag==null?'<CommonBodyUserAccount/>':app_config.user_account_custom_tag, process.cwd() + '/apps/common/src/user_account.html']
+                [app_config.custom_tag_profile_search==null?'<CommonBodyProfileSearch/>':app_config.custom_tag_profile_search, process.cwd() + '/apps/common/src/profile_search.html'],
+				[app_config.custom_tag_user_account==null?'<CommonBodyUserAccount/>':app_config.custom_tag_user_account, process.cwd() + '/apps/common/src/user_account.html'],
+                [app_config.custom_tag_profile_top==null?'<CommonBodyProfileBtnTop/>':app_config.custom_tag_profile_top, process.cwd() + '/apps/common/src/profile_btn_top.html']
             ];
             if (app_config.map==true)
                 common_files.push(['<CommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html']);
@@ -651,7 +654,14 @@ const render_common_html = async (app_id, module, app_config) =>{
                 if (app_config.map==false){
                     render_variables.push(['CommonHeadMap','']);
                 }
-                    
+                //remove common tags already used in optional app custom tags
+                if(app_config.custom_tag_profile_search!='')
+                    render_variables.push(['CommonBodyProfileSearch','']);
+                if(app_config.custom_tag_user_account!='')
+                    render_variables.push(['CommonBodyUserAccount','']);
+                if(app_config.custom_tag_profile_top!='')
+                    render_variables.push(['CommonBodyProfileBtnTop','']);
+
                 //render locales
                 if (app_config.render_locales){
                     render_variables.push(['COMMON_USER_LOCALE',user_locales]);

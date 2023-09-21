@@ -46,7 +46,9 @@ body{
 	fill:var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
 }
-
+#mapid{
+	z-index: 0;
+}
 /*APP THEME COMMON*/
 .common_module_leaflet_control_button{
 	background-color: var(--app_theme_main_branding_color2);
