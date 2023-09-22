@@ -47,6 +47,7 @@ const init = (parameters) => {
         common.COMMON_GLOBAL['exception_app_function'] = app_exception;
         common.init_common(parameters).then(()=>{
             init_app().then(()=>{
+                document.querySelector('#loading').innerHTML = '';
                 resolve();
             });
         });

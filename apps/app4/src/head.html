@@ -12,8 +12,11 @@
 <script type="module">
     import React from 'React';
     import ReactDOM from 'ReactDOM';
+    import('common').then(({APP_SPINNER})=>{
+        document.querySelector('#loading').innerHTML = APP_SPINNER;
+    });
 </script>
-<script src="/apps/common/public/modules/babel/babel.7.22.7.js"></script>
+<script src="/common/modules/babel/babel.7.22.7.js"></script>
 <script>
     function console_custom(stack, message, message_type){
         let e = stack.split("@");
@@ -50,10 +53,10 @@
             return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
         };
         const application = ReactDOM.createRoot(document.querySelector('#app_react'));
-        application.render(<App/>); 
+        application.render( <App/>); 
         //div mapid must be mounted in React before app.init() in this case
         app.init(<ITEM_COMMON_PARAMETERS/>).then(()=>{});
-    }) 
+    });
 </script>
 
 

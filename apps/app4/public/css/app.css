@@ -1,5 +1,5 @@
 /*APP*/
-#mapid {
+#mapid, #loading {
 	position: absolute;
   	top: 0;
   	bottom: 0;
@@ -13,6 +13,11 @@
 #common_user_account{
 	visibility: hidden;
 }
+#common_app_spinner{
+	top: 50%;
+	transform: scale(1) !important;
+	margin-inline-start: 50%;
+}
 /*APP THEME*/
 .app_theme1 {
 	--app_theme_main_branding_color1: var(--app_blue1);
@@ -21,7 +26,8 @@
 	--app_theme_main_branding_color4: var(--app_black);
 	--app_theme_main_branding_color5: var(--app_white2);
 	--app_theme_text_color: var(--app_theme_main_branding_color4);
-	--app_theme_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_background_color: var(--app_theme_main_branding_color3);
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
 .app_theme2 {
 	--app_theme_main_branding_color1: var(--app_dark);
@@ -31,6 +37,7 @@
 	--app_theme_main_branding_color5: var(--app_white2);
 	--app_theme_text_color: var(--app_theme_main_branding_color4);
 	--app_theme_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
 .app_theme3 {
 	--app_theme_main_branding_color1: var(--app_cafe_latte);
@@ -40,6 +47,7 @@
 	--app_theme_main_branding_color5: var(--app_white2);
 	--app_theme_text_color: var(--app_theme_main_branding_color3);
 	--app_theme_background_color: var(--app_theme_main_branding_color1);
+	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
 }
 body{
 	color: var(--app_theme_text_color);
@@ -55,4 +63,7 @@ body{
 }
 .common_module_leaflet_control_expand{
 	background-color: var(--app_theme_main_branding_color2);
+}
+.common_load-spinner div:after {
+	background-color: var(--app_theme_spinner_background_color);
 }
