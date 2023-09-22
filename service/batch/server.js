@@ -5,6 +5,7 @@ const {MICROSERVICE} = await import(`file://${process.cwd()}/service/service.ser
 
 const startserver = () =>{
 	let options;
+
 	fs.readFile(process.cwd() + MICROSERVICE.filter(row=>row.SERVICE=='BATCH')[0].HTTPS_KEY, 'utf8', (error, fileBuffer) => {
 		const env_key = fileBuffer.toString();
 		fs.readFile(process.cwd() + MICROSERVICE.filter(row=>row.SERVICE=='BATCH')[0].HTTPS_CERT, 'utf8', (error, fileBuffer) => {
@@ -26,10 +27,6 @@ const startserver = () =>{
 			service.start_jobs();
 			process.on('uncaughtException', (err) =>{
 				console.log(err);
-			});
-			process.on('exit', function () {
-				//cancel any pending job that was not finished after server stopped
-				service.joblog_cancel_pending();
 			});
 		});
 	});
