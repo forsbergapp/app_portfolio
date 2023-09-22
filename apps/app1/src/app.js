@@ -37,7 +37,9 @@ const createApp = (app_id, username, locale) => {
                     render_variables.push(['CommonBodyProfileInfoCloud',profile_info_cloud]);
                     //APP Profile tag not used in common body
                     render_variables.push(['AppProfileTop','']);
-                    resolve(render_app_with_data(app.app, render_variables));
+                    resolve({app:render_app_with_data(app.app, render_variables),
+                             map_styles: null,
+                             map:false});
                 }
             });
         };
