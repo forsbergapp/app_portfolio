@@ -331,6 +331,21 @@ app_theme_selected_background_color/*APP */
 	margin-top: -15px;
 }
 /*theme live thumbnail fixes*/
+.slides .paper{
+	background-color:var(--report_white);
+	transform: unset !important;
+	transform-origin: unset !important;
+	margin-top: unset !important;
+}
+.paper.A4{
+	width : 210mm;
+	height : 297mm;
+}
+.paper.Letter{
+	width : 8.5in;
+	height : 11in;
+}
+
 /*Browsers that support zoom*/
 @supports (zoom: 0.125) {
 	#setting_themes_day_slider #timetable_day {
@@ -364,22 +379,22 @@ app_theme_selected_background_color/*APP */
 /*Firefox and other browsers that does not support zoom*/
 @supports not (zoom: 0.13) {
 	#setting_themes_day_slider #timetable_day {
-		transform: scale(0.13) translate(-334%,-334%);
-		width: 734px;
+		transform: scale(0.13) translate(-335%,-333%);
+		width: 740px;
 	}
 	#setting_themes_day_slider #timetable_footer{
 		bottom: -908px;
 	}
 	#setting_themes_month_slider #timetable_month {
-		transform: scale(0.127) translate(-343%,-343%);
-		width: 750px;
+		transform: scale(0.127) translate(-344%,-344%);
+		width: 756px;
 	}
 	#setting_themes_month_slider #timetable_footer{
 		position:static;
 	}
 	#setting_themes_year_slider #timetable_year {
-		transform: scale(0.13) translate(-334%,-334%);
-		width: 734px;
+		transform: scale(0.13) translate(-335%,-333%);
+		width: 740px;
 	}
 	#setting_themes_year_slider #timetable_year #timetable_year_timetables.two_columntitles {
 		margin-top: -40px;

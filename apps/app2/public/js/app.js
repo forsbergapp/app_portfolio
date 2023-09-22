@@ -240,12 +240,17 @@ const update_all_theme_thumbnails = async () => {
     });
 };
 const update_theme_thumbnail = (e, theme_type, classlist_pos) => {
-    e.children[0].innerHTML = document.getElementById('timetable_' + theme_type).outerHTML;
+    //copy paper div with current papersize class
+    e.children[0].innerHTML = document.querySelector('#paper').outerHTML;
+    //remove id from paper
+    e.children[0].children[0].removeAttribute('id');
+    //insert class paper first
+    e.children[0].children[0].className = 'paper ' + e.children[0].children[0].className;
     const new_theme_id = e.children[0].getAttribute('data-theme_id');
-    //theme always second class in classList
-    const old_theme = e.children[0].children[0].classList[classlist_pos];
-    e.children[0].children[0].classList.remove(old_theme);
-    e.children[0].children[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
+    //theme class in classList according to given position
+    const old_theme = e.children[0].children[0].children[0].classList[classlist_pos];
+    e.children[0].children[0].children[0].classList.remove(old_theme);
+    e.children[0].children[0].children[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
 };
 
 const get_theme_id = (type) => {
