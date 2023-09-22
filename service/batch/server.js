@@ -27,6 +27,10 @@ const startserver = () =>{
 			process.on('uncaughtException', (err) =>{
 				console.log(err);
 			});
+			process.on('exit', function () {
+				//cancel any pending job that was not finished after server stopped
+				service.joblog_cancel_pending();
+			});
 		});
 	});
 };
