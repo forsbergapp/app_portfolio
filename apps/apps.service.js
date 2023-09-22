@@ -273,22 +273,24 @@ const getApp = async (req, res, app_id, params, callBack) => {
                         for (const row of result_objects){
                             render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
                         }
-                        app = render_app_with_data(app, render_variables);
-                        resolve(app);
+                        app.app = render_app_with_data(app.app, render_variables);
+                        resolve(app.app);
                     });
                 });
             };
             await callGetObjects();
         }
-        get_module_with_init(   app_id, 
-                                client_locale(req.headers['accept-language']),
-                                system_admin_only,
-                                true,  //ui
-                                datatoken,
-                                result_geodata.latitude,
-                                result_geodata.longitude,
-                                result_geodata.place,
-                                app, (err, app_with_init) =>{
+        get_module_with_init({  app_id: app_id, 
+                                locale: client_locale(req.headers['accept-language']),
+                                system_admin_only:system_admin_only,
+                                map:app.map, 
+                                map_styles: app.map_styles,
+                                ui:true,
+                                datatoken:datatoken,
+                                latitude:result_geodata.latitude,
+                                longitude:result_geodata.longitude,
+                                place:result_geodata.place,
+                                module:app.app}, (err, app_with_init) =>{
             //if app admin then log, system does not log in database
             if (ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
@@ -402,15 +404,17 @@ const getReport = async (req, res, app_id, callBack) => {
                                         result_geodata.geoplugin_countryName;
                 import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`).then(({createReport}) => {
                     createReport(app_id, query_parameters.module, client_locale(req.headers['accept-language'])).then((report) => {
-                        get_module_with_init(   app_id, 
-                                                client_locale(req.headers['accept-language']),
-                                                0,  //system_admin_only
-                                                false,
-                                                datatoken,
-                                                result_geodata.latitude,
-                                                result_geodata.longitude,
-                                                result_geodata.place,
-                                                report, (err, report_with_init) =>{
+                        get_module_with_init({  app_id: app_id, 
+                                                locale: client_locale(req.headers['accept-language']),
+                                                system_admin_only:0,
+                                                map: false,
+                                                map_styles: null,
+                                                ui:false,
+                                                datatoken:datatoken,
+                                                latitude:result_geodata.latitude,
+                                                longitude:result_geodata.longitude,
+                                                place:result_geodata.place,
+                                                module:report}, (err, report_with_init) =>{
                                                     if (err)
                                                         callBack(err, null);
                                                     else{
@@ -555,6 +559,7 @@ const render_common_html = async (app_id, module, app_config) =>{
                     user_timezones: user_timezones,             //HTML option format
                     user_directions: user_directions,           //HTML option format
                     user_arabic_scripts: user_arabic_scripts},  //HTML option format
+                    map_styles: map_styles}                     //HTML option format
         }
     */
     let user_locales;
@@ -562,6 +567,7 @@ const render_common_html = async (app_id, module, app_config) =>{
     let user_timezones = '';
     let user_directions = '';
     let user_arabic_scripts = '';
+    let map_styles = '';
     const render_variables = [];
     if (app_config.render_locales){
         const promisegetLocales = async () =>{
@@ -602,9 +608,18 @@ const render_common_html = async (app_id, module, app_config) =>{
                                 user_arabic_scripts += option;
                                 break;
                             }
+                            //map styles
+                            case 'MAP_TYPE':{
+                                map_styles += option;
+                                break;
+                            }
                         }
                     }
-                    resolve ({settings: settings, user_timezones: user_timezones, user_directions: user_directions, user_arabic_scripts: user_arabic_scripts});
+                    resolve ({  settings: settings, 
+                                user_timezones: user_timezones, 
+                                user_directions: user_directions, 
+                                user_arabic_scripts: user_arabic_scripts,
+                                map_styles: app_config.map==true?map_styles:null});
                 });
             });
         };
@@ -739,27 +754,20 @@ const countries = (app_id, locale) => {
         });
     });
 };
-const get_module_with_init = async (app_id,
-                                    locale,
-                                    system_admin_only,
-                                    ui,
-                                    data_token,
-                                    client_latitude,
-                                    client_longitude,
-                                    client_place,
-                                    module, callBack) => {
+const get_module_with_init = async (app_info, callBack) => {
     const render_variables = [];
     const return_with_parameters = (module, countries, app_parameters, first_time)=>{
         const app_service_parameters = {   
-            app_id: app_id,
-            app_datatoken: data_token,
+            app_id: app_info.app_id,
+            app_datatoken: app_info.datatoken,
             countries:countries,
-            locale: locale,
-            ui: ui,
-            system_admin_only: system_admin_only,
-            client_latitude: client_latitude,
-            client_longitude: client_longitude,
-            client_place: client_place,
+            map_styles: app_info.map_styles,
+            locale: app_info.locale,
+            ui: app_info.ui,
+            system_admin_only: app_info.system_admin_only,
+            client_latitude: app_info.latitude,
+            client_longitude: app_info.longitude,
+            client_place: app_info.place,
             app_sound: ConfigGet(1, 'SERVER', 'APP_SOUND'),
             common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
             rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
@@ -770,31 +778,38 @@ const get_module_with_init = async (app_id,
                                                             app_service: app_service_parameters,
                                                             app: app_parameters
                                                         })]);
-        return render_app_with_data(module, render_variables);
+        return render_app_with_data(app_info.module, render_variables);
     };
     
-    if (system_admin_only==1){
+    if (app_info.system_admin_only==1){
         render_variables.push(['APP_NAME','SYSTEM ADMIN']);
-        callBack(null, return_with_parameters(module, null, null, CheckFirstTime()==true?1:0));
+        callBack(null, return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0));
     }
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-        getAppName(app_id, (err,result_app_name) =>{
+        getAppName(app_info.app_id, (err,result_app_name) =>{
             if (err)
                 callBack(err, null);
             else{
-                countries(app_id, locale).then((countries)=>{
-                    render_variables.push(['APP_NAME',result_app_name[0].app_name]);
-                    //fetch parameters for common_app_id and current app_id
-                    getAppStartParameters(app_id, (err,app_parameters) =>{
-                        if (err)
-                            callBack(err, null);
+                //fetch parameters for common_app_id and current app_id
+                getAppStartParameters(app_info.app_id, (err,app_parameters) =>{
+                    if (err)
+                        callBack(err, null);
+                    else{
+                        render_variables.push(['APP_NAME',result_app_name[0].app_name]);
+                        if (app_info.map == true)
+                            //fetch countries and return map styles
+                            countries(app_info.app_id, app_info.locale).then((countries)=>{
+                                callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
+                            });
                         else{
-                            callBack(null, return_with_parameters(module, countries, app_parameters, 0));
+                            //no countries or map styles
+                            callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
                         }
-                    });
+                    }
                 });
+                
             }
         });
     }        
