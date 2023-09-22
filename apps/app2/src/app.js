@@ -257,7 +257,9 @@ const createApp = (app_id, username, locale) => {
                     //used several times:
                     render_variables.push(['AppIqamat',APP_IQAMAT]);
                     render_variables.push(['AppFaststartend',APP_FAST_START_END]);
-                    resolve(render_app_with_data(app.app, render_variables));
+                    resolve({app:render_app_with_data(app.app, render_variables),
+                             map_styles: app.settings.map_styles,
+                             map:true});
                 }
             });
         };

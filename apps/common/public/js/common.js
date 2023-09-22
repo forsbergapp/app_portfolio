@@ -68,6 +68,7 @@ const COMMON_GLOBAL = {
     'module_leaflet_session_map_OpenStreetMap_Mapnik':'',
     'module_leaflet_session_map_Esri_WorldImagery':'',
     'module_leaflet_countries':'',
+    'module_leaflet_map_styles':'',
     'module_easy.qrcode_width':'',
     'module_easy.qrcode_height':'',
     'module_easy.qrcode_color_dark':'',
@@ -2599,8 +2600,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                     mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' href='#' title='Layer' role='button'>${ICONS['map_layer']}
                                                     <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_mapstyle' >
-                                                            <option value='OpenStreetMap_Mapnik' selected='selected'>OpenStreetMap_Mapnik</option>
-                                                            <option value='Esri.WorldImagery'>Esri.WorldImagery</option>
+                                                            ${COMMON_GLOBAL['module_leaflet_map_styles']}
                                                         </select>
                                                     </div>
                                                 </div>`;
@@ -3374,6 +3374,7 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL['ui'] = parameters.ui;
     if (COMMON_GLOBAL['ui']==true){
         COMMON_GLOBAL['module_leaflet_countries']   = parameters.countries;
+        COMMON_GLOBAL['module_leaflet_map_styles']  = parameters.map_styles;
         COMMON_GLOBAL['user_locale']                = parameters.locale;
         COMMON_GLOBAL['user_timezone']              = Intl.DateTimeFormat().resolvedOptions().timeZone;
         COMMON_GLOBAL['user_direction']             = '';
