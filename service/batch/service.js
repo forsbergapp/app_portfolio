@@ -85,18 +85,6 @@ const joblog_add = async (joblog)=>{
     return {log_id: joblog.log_id, filename: filename};
 };
 
-const joblog_cancel_pending = async ()=>{
-    for (const scheduled_job of JOBS){
-        await joblog_add({  log_id: scheduled_job.log_id,
-                            jobid: scheduled_job.jobid, 
-                            scheduled_start: scheduled_job.scheduled_start, 
-                            start:null, 
-                            end:new Date().toISOString(), 
-                            status:'CANCELED', 
-                            result:'Server restart'});
-    }
-};
-
 /*
 scheduled_milliseconds
         cron expressions:
@@ -289,6 +277,14 @@ const start_jobs = async () =>{
     const os = await import('node:os');
     let jobs = await fs.promises.readFile(`${process.cwd()}${log_path}${file_batch}`, 'utf8');
     jobs = JSON.parse(jobs);
+    //add server start in log, meaning all jobs were terminated
+    await joblog_add({  log_id: null,
+                        jobid: null, 
+                        scheduled_start: null, 
+                        start:new Date().toISOString(), 
+                        end:null, 
+                        status:'CANCELED', 
+                        result:'SERVER RESTART'});
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax
@@ -300,5 +296,5 @@ const start_jobs = async () =>{
         }
     }
 };
-export {joblog_cancel_pending, start_jobs};
+export {start_jobs};
 	
