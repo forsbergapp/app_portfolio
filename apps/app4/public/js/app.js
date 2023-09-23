@@ -18,6 +18,9 @@ const init_map = async (framework)=>{
     switch (framework){
         case '2':{
             //Vue
+            document.querySelector('#toolbar_btn_js').classList = '';
+            document.querySelector('#toolbar_btn_vue').classList = 'toolbar_selected';
+            document.querySelector('#toolbar_btn_react').classList = '';
             map_click_event_js = false;
             const Vue = await import('Vue');
             Vue.createApp({
@@ -34,6 +37,9 @@ const init_map = async (framework)=>{
         }
         case '3':{
             //React
+            document.querySelector('#toolbar_btn_js').classList = '';
+            document.querySelector('#toolbar_btn_vue').classList = '';
+            document.querySelector('#toolbar_btn_react').classList = 'toolbar_selected';
             map_click_event_js = false;
             const {React} = await import('React');
             const {ReactDOM} = await import('ReactDOM');
@@ -56,6 +62,9 @@ const init_map = async (framework)=>{
         case '1':
         default:{
             //Javascript
+            document.querySelector('#toolbar_btn_js').classList = 'toolbar_selected';
+            document.querySelector('#toolbar_btn_vue').classList = '';
+            document.querySelector('#toolbar_btn_react').classList = '';
             map_click_event_js = true;
             document.querySelector('#app_map').innerHTML = '<div id=\'mapid\'></div>';
             break;
@@ -95,6 +104,7 @@ const init_app = async () =>{
     document.querySelector('#toolbar_btn_js').innerHTML = common.ICONS['app_javascript'];
     document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS['app_vue'];
     document.querySelector('#toolbar_btn_react').innerHTML = common.ICONS['app_react'];
+    
     document.querySelector('#toolbar_top').addEventListener('click', (event) => {
         switch (event.target.id || event.target.parentNode.id){
             case 'toolbar_btn_js':{
