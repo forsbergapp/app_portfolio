@@ -1,4 +1,4 @@
-export default
+let React;
 /**
  * @license React
  * react.development.js
@@ -3339,4 +3339,6 @@ export default
   exports.useSyncExternalStore = useSyncExternalStore;
   exports.useTransition = useTransition;
   exports.version = ReactVersion;
+  React = exports;
 })));
+export {React}
