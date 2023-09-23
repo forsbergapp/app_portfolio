@@ -7,7 +7,7 @@ const createApp = (app_id, params) => {
             ['<AppHead/>', process.cwd() + '/apps/app4/src/head.html'],
             ['<AppBody/>', process.cwd() + '/apps/app4/src/body.html']
             ];
-        if (params==null || params =='1' || params =='2' || params =='3' ){
+        if (params==null){
             render_app_html(app_id, files, {locale:null,
                                             module_type:'FORM',
                                             map: true,
