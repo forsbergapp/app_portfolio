@@ -954,7 +954,8 @@ a:active {
 /*Module leaflet, dynamically created popup*/
 #common_module_leaflet_popup_title,
 #common_module_leaflet_popup_sub_title,
-#common_module_leaflet_popup_sub_title_timezone {
+#common_module_leaflet_popup_sub_title_timezone,
+#common_module_leaflet_popup_sub_title_gps{
 	font-weight: bold;
 	text-align: center;
 }

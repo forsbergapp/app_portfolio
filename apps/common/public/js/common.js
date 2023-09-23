@@ -2885,8 +2885,9 @@ const map_update = async (longitude, latitude, zoom, text_place, timezone_text =
             };
             const map_update_text = (timezone_text) => {
                 const popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
-                                 <div id="common_module_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
-                                 <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>`;
+                                   <div id="common_module_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
+                                   <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
+                                   <div id="common_module_leaflet_popup_sub_title_gps">${latitude + ', ' + longitude}</div>`;
                 COMMON_GLOBAL['module_leaflet_library'].popup({ offset: [0, COMMON_GLOBAL['module_leaflet_popup_offset']], closeOnClick: false })
                             .setLatLng([latitude, longitude])
                             .setContent(popuptext)
