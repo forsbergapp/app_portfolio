@@ -170,7 +170,10 @@ const ICONS = {
     'app_shield':               icon_string('f132'),
     'app_browser':              icon_string('f2d2'),
     'app_fullscreen':           '⛶',
-    'init':                     '⭐',
+    'app_init':                 '⭐',
+    'app_vue':                  icon_string('f41f'),
+    'app_react':                icon_string('f41b'),
+    'app_javascript':           icon_string('f3b9'),
     //user
     'user':                     icon_string('f007'),
     'username':                 icon_string('41') + icon_string('42') + icon_string('43'),
