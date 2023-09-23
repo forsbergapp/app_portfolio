@@ -1,4 +1,4 @@
-export default
+let ReactDOM;
 /**
  * @license React
  * react-dom.development.js
@@ -29867,4 +29867,6 @@ export default
   exports.unstable_batchedUpdates = batchedUpdates$1;
   exports.unstable_renderSubtreeIntoContainer = renderSubtreeIntoContainer;
   exports.version = ReactVersion;
+  ReactDOM = exports;
 })));
+export {ReactDOM}

@@ -3,6 +3,6 @@
     {"APP_ID": 1, "SUBDOMAIN": "www", "PATH": "/apps/app1/public", "ENDPOINT": "/app1", "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h"},
     {"APP_ID": 2, "SUBDOMAIN": "app2", "PATH": "/apps/app2/public", "ENDPOINT": "/app2", "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h"},
     {"APP_ID": 3, "SUBDOMAIN": "app3", "PATH": "/apps/app3/public", "ENDPOINT": "/app3", "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h"},
-    {"APP_ID": 4, "SUBDOMAIN": "app4", "PATH": "/apps/app4/public", "ENDPOINT": "/app4", "SHOWINFO":0, "SHOWPARAM":0, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h"}
+    {"APP_ID": 4, "SUBDOMAIN": "app4", "PATH": "/apps/app4/public", "ENDPOINT": "/app4", "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h"}
 ]
 }
