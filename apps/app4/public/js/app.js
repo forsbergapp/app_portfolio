@@ -12,14 +12,9 @@ const map_click_event = (event) =>{
                                     APP_GLOBAL['module_leaflet_map_zoom'], 
                                     APP_GLOBAL['module_leaflet_map_marker_div_gps']);
 };
-const init_app = async () =>{
-    APP_GLOBAL['module_leaflet_map_container']      ='mapid';
-    APP_GLOBAL['module_leaflet_zoom_city']          = 8;
-    APP_GLOBAL['module_leaflet_map_zoom']           = 14;
-    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = 'map_marker_gps';
-    APP_GLOBAL['module_leaflet_map_marker_div_city'] = 'map_marker_city';
+const init_map = async (framework)=>{
     let map_click_event_js;
-    const framework = window.location.pathname.substring(1);
+    document.querySelector('#app_map').innerHTML = '';
     switch (framework){
         case '2':{
             //Vue
@@ -66,7 +61,7 @@ const init_app = async () =>{
             break;
         }
     }
-    
+
     return new Promise((resolve)=>{
         common.map_init(APP_GLOBAL['module_leaflet_map_container'], 
                         common.COMMON_GLOBAL['module_leaflet_style'], 
@@ -89,6 +84,34 @@ const init_app = async () =>{
             resolve();
         });
     });
+};
+const init_app = async () =>{
+    APP_GLOBAL['module_leaflet_map_container']      ='mapid';
+    APP_GLOBAL['module_leaflet_zoom_city']          = 8;
+    APP_GLOBAL['module_leaflet_map_zoom']           = 14;
+    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = 'map_marker_gps';
+    APP_GLOBAL['module_leaflet_map_marker_div_city'] = 'map_marker_city';
+
+    document.querySelector('#toolbar_btn_js').innerHTML = common.ICONS['app_javascript'];
+    document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS['app_vue'];
+    document.querySelector('#toolbar_btn_react').innerHTML = common.ICONS['app_react'];
+    document.querySelector('#toolbar_top').addEventListener('click', (event) => {
+        switch (event.target.id || event.target.parentNode.id){
+            case 'toolbar_btn_js':{
+                init_map('1');
+                break;
+            }
+            case 'toolbar_btn_vue':{
+                init_map('2');
+                break;
+            }
+            case 'toolbar_btn_react':{
+                init_map('3');
+                break;
+            }
+        }
+    });
+    init_map(window.location.pathname.substring(1));
 };
 const init = async (parameters) => {
     const {APP_SPINNER} = await import('common');

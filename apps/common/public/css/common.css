@@ -131,9 +131,17 @@
 	font-display: block;
 	src: url(/common/modules/fontawesome/webfonts/fa-solid-900.woff2) format("woff2")
 }
+@font-face {
+	font-family: "Font Awesome 6 Brands";
+	font-style: normal;
+	font-weight: 900;
+	font-display: block;
+	src: url(/common/modules/fontawesome/webfonts/fa-brands-400.woff2) format("woff2")
+}
+
 /*use this class to display icons*/
 .common_icon {
-	font-family: "Font Awesome 6 Free";
+	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
 	font-weight: 900;
 	font-style: normal;
 	display: inline-block;
