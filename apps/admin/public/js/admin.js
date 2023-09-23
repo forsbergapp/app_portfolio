@@ -291,7 +291,7 @@ const init = (parameters) => {
         document.getElementById('admin_login_username_icon').innerHTML = common.ICONS['user'];
         document.getElementById('admin_login_password_icon').innerHTML = common.ICONS['user_password'];
         if (parameters.app_service.first_time == 1) {
-            document.getElementById('admin_first_time').innerHTML = common.ICONS['init'];
+            document.getElementById('admin_first_time').innerHTML = common.ICONS['app_init'];
             document.getElementById('admin_first_time').style.display = 'block';
             document.getElementById('system_admin_login_password_confirm').style.display = 'block';
             document.getElementById('system_admin_login_password_icon_confirm').innerHTML = common.ICONS['user_password'];
