@@ -125,6 +125,21 @@ const init_app = async () =>{
 };
 const init = async (parameters) => {
     const {APP_SPINNER} = await import('common');
+    if (parameters.app_service.client_latitude ==null){
+        /*
+        generate random gps coordinates when geolocation is disabled
+        random range with decimals 100-999
+        chosen range covers most countries
+        */
+        const random_range = (min, max) =>{
+            return Math.floor(Math.random() * (max - min + 1) + min);
+        };
+        parameters.app_service.client_latitude = `${random_range(-37, 55)}${'.' + random_range(100, 999)}`;
+        parameters.app_service.client_longitude = `${random_range(-127, 144)}${'.' + random_range(100, 999)}`;
+        parameters.app_service.client_place = common.ICONS['gps'] + common.ICONS['app_alert'];
+    }
+    
+
     document.querySelector('#loading').innerHTML = APP_SPINNER;
     return new Promise((resolve)=>{
         common.COMMON_GLOBAL['exception_app_function'] = app_exception;
