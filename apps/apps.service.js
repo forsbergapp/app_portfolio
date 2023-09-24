@@ -1077,7 +1077,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                                 return reject('service GEOLOCATION GET only');
                         }
                         else
-                            return resolve();
+                            return resolve('');
                         break;
                     }
                     case 'WORLDCITIES':{
