@@ -752,7 +752,7 @@ const update_ui = async (option, item_id=null) => {
                     settings.country.options[settings.country.selectedIndex].text;
                 //display empty popular place select
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
+                if (document.querySelector('#mapid').classList.contains('leaflet-container')){
                     //Update map
                     map_update_app(settings.gps_long_input.value,
                         settings.gps_lat_input.value,
@@ -775,7 +775,7 @@ const update_ui = async (option, item_id=null) => {
                 const timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
                 settings.gps_long_input.value = longitude_selected;
                 settings.gps_lat_input.value = latitude_selected;
-                if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
+                if (document.querySelector('#mapid').classList.contains('leaflet-container')){
                     //Update map
                     map_update_app(settings.gps_long_input.value,
                                 settings.gps_lat_input.value,
@@ -784,17 +784,16 @@ const update_ui = async (option, item_id=null) => {
                                 timezone_selected,
                                 app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'], //marker for popular places
                                 common.COMMON_GLOBAL['module_leaflet_flyto']);
+                    //display empty country
+                    common.SearchAndSetSelectedIndex('', settings.country,0);
+                    //remove old city list:            
+                    const old_groups = settings.city.getElementsByTagName('optgroup');
+                    for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
+                        settings.city.removeChild(old_groups[old_index]);
+                    //display first empty city
+                    common.SearchAndSetSelectedIndex('', settings.city,0);
                 }
                 settings.timezone_report.value = timezone_selected;
-
-                //display empty country
-                common.SearchAndSetSelectedIndex('', settings.country,0);
-                //remove old city list:            
-                const old_groups = settings.city.getElementsByTagName('optgroup');
-                for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
-                    settings.city.removeChild(old_groups[old_index]);
-                //display first empty city
-                common.SearchAndSetSelectedIndex('', settings.city,0);
                 const title = settings.select_place.options[settings.select_place.selectedIndex].text;
                 document.getElementById('setting_input_place').value = title;
                 break;
@@ -812,7 +811,7 @@ const update_ui = async (option, item_id=null) => {
                 common.get_place_from_gps(settings.gps_long_input.value, settings.gps_lat_input.value).then((gps_place) => {
                     //Update map
                     document.getElementById('setting_input_place').value = gps_place;
-                    if (document.getElementById('tab_nav_2').classList.contains('tab_nav_selected')){
+                    if (document.querySelector('#mapid').classList.contains('leaflet-container')){
                         map_update_app(settings.gps_long_input.value,
                                         settings.gps_lat_input.value,
                                         '', //do not change zoom 
@@ -822,8 +821,6 @@ const update_ui = async (option, item_id=null) => {
                                         common.COMMON_GLOBAL['module_leaflet_jumpto']).then((timezone_text) => {
                                                 settings.timezone_report.value = timezone_text;
                                         });
-                    }
-                    if (settings.country){
                         //display empty country
                         common.SearchAndSetSelectedIndex('', settings.country,0);
                     }
@@ -1688,16 +1685,18 @@ const set_default_settings = async () => {
     common.SearchAndSetSelectedIndex(app_common.APP_GLOBAL['regional_default_calendar_hijri_type'], document.getElementById('setting_select_calendar_hijri_type'),1);
     
     //set according to users GPS/IP settings
-    if (common.COMMON_GLOBAL['client_latitude'] != '' && common.COMMON_GLOBAL['client_longitude'] != '') {
+    if (common.COMMON_GLOBAL['client_latitude'] && common.COMMON_GLOBAL['client_longitude']) {
         document.getElementById('setting_input_lat').value = common.COMMON_GLOBAL['client_latitude'];
         document.getElementById('setting_input_long').value = common.COMMON_GLOBAL['client_longitude'];
-        //Update GPS position
-        update_ui(9);
         document.getElementById('setting_input_place').value = common.COMMON_GLOBAL['client_place'];
     } else {
         //Set Makkah as default
         const select_place = document.getElementById('setting_select_popular_place');
         select_place.selectedIndex = select_get_selectindex(select_place.id, app_common.APP_GLOBAL['gps_default_place_id']);
+        //update with default geodata in variables since geolocation is disabled
+        common.COMMON_GLOBAL['client_longitude'] = select_place[select_place.selectedIndex].getAttribute('longitude');
+        common.COMMON_GLOBAL['client_latitude'] = select_place[select_place.selectedIndex].getAttribute('latitude');
+        common.COMMON_GLOBAL['client_place'] = select_place.options[select_place.selectedIndex].text;
         //Update popular places
         update_ui(7);
     }
@@ -2380,7 +2379,14 @@ const init_map = async () => {
 
                 update_ui(6);
             }, false);
-    
+            document.getElementById('common_module_leaflet_control_my_location_id').addEventListener('click', () =>{
+                document.getElementById('setting_select_popular_place').selectedIndex = 0;
+                document.getElementById('setting_input_place').value = common.COMMON_GLOBAL['client_place'];
+                document.getElementById('setting_input_long').value = common.COMMON_GLOBAL['client_longitude'];
+                document.getElementById('setting_input_lat').value = common.COMMON_GLOBAL['client_latitude'];
+                map_show_qibbla();
+            }, false);
+
             //add extra app event on common map layer select
             document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { update_ui(4); }, false);
             common.map_setevent('dblclick', (e) => {
