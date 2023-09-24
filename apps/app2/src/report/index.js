@@ -22,7 +22,7 @@ const createReport = (app_id, module) => {
             if (err)
                 reject(err);
             else{
-                resolve(report.app);
+                resolve(report);
             }
         });
     });

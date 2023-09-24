@@ -689,7 +689,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             }
         }    
     } catch (error) {
-        alert(search + ',' + select_item + ',' + colcheck);
+        exception(COMMON_GLOBAL['exception_app_function'], error);
     }
     
     return null;
