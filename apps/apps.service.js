@@ -588,7 +588,7 @@ const render_common_html = async (app_id, module, app_config) =>{
                                 break;
                             }
                             //map styles
-                            case 'MAP_TYPE':{
+                            case 'MAP_STYLE':{
                                 map_styles += option;
                                 break;
                             }
