@@ -65,9 +65,6 @@ const delete_globals = () => {
     APP_GLOBAL['service_log_file_path_server'] = null;
     APP_GLOBAL['service_log_date_format'] = null;
 
-    common.COMMON_GLOBAL['client_latitude'] = null;
-    common.COMMON_GLOBAL['client_longitude'] = null;
-    common.COMMON_GLOBAL['client_place'] = null;
     common.COMMON_GLOBAL['module_leaflet_style'] = null;
     common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
     common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
@@ -3091,10 +3088,6 @@ const init = () => {
         common.COMMON_GLOBAL['module_leaflet_popup_offset']		    ='-25';
         document.getElementById('common_confirm_question').innerHTML = common.ICONS['app_question'];
     }
-    //session variables
-    common.COMMON_GLOBAL['client_latitude'] = '';
-    common.COMMON_GLOBAL['client_longitude'] = '';
-    common.COMMON_GLOBAL['client_place'] = '';
 
     //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
