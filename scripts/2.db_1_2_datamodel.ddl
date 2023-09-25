@@ -448,12 +448,12 @@ GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app_common;
 
 CREATE TABLE app_portfolio.setting (
     id              INT NOT NULL AUTO_INCREMENT,
-    description     VARCHAR(100) NOT NULL,
-    data            VARCHAR(100) NOT NULL,
-    data2           VARCHAR(100),
-    data3           VARCHAR(100),
-    data4           VARCHAR(100),
-    data5           VARCHAR(100),
+    description     VARCHAR(500) NOT NULL,
+    data            VARCHAR(500) NOT NULL,
+    data2           VARCHAR(500),
+    data3           VARCHAR(500),
+    data4           VARCHAR(500),
+    data5           VARCHAR(500),
     setting_type_id INTEGER NOT NULL,
     CONSTRAINT setting_pk PRIMARY KEY ( id )
 );
