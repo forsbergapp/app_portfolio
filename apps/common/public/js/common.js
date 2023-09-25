@@ -65,8 +65,6 @@ const COMMON_GLOBAL = {
     'module_leaflet_style':'',
     'module_leaflet_session_map':'',
     'module_leaflet_session_map_layer':'',
-    'module_leaflet_session_map_OpenStreetMap_Mapnik':'',
-    'module_leaflet_session_map_Esri_WorldImagery':'',
     'module_leaflet_countries':'',
     'module_leaflet_map_styles':'',
     'module_easy.qrcode_width':'',
@@ -2600,10 +2598,14 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                                                     </div>`;
                     }
                     //add layers button with pop out div
+                    let map_styles_options ='';
+                    for (const map_style_option of COMMON_GLOBAL['module_leaflet_map_styles']){
+                        map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
+                    }
                     mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' href='#' title='Layer' role='button'>${ICONS['map_layer']}
                                                     <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_mapstyle' >
-                                                            ${COMMON_GLOBAL['module_leaflet_map_styles']}
+                                                            ${map_styles_options}
                                                         </select>
                                                     </div>
                                                 </div>`;
@@ -2834,27 +2836,21 @@ const map_setevent = (event, function_event) => {
 const map_setstyle = async (mapstyle) => {
     return await new Promise ((resolve) => {
         if (checkconnected()) {
-            if(COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik'])
-                COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik']);
-            if (COMMON_GLOBAL['module_leaflet_session_map_Esri_WorldImagery'])
-                COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_Esri_WorldImagery']);
-            switch (mapstyle){
-                case 'OpenStreetMap_Mapnik':{
-                    COMMON_GLOBAL['module_leaflet_session_map_OpenStreetMap_Mapnik'] = 
-                        COMMON_GLOBAL['module_leaflet_library'].tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                            maxZoom: 19,
-                            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                        }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
-                    break;
-                }
-                case 'Esri.WorldImagery':{
-                    COMMON_GLOBAL['module_leaflet_session_map_Esri_WorldImagery'] = 
-                        COMMON_GLOBAL['module_leaflet_library'].tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
-                            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-                        }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
-                    break;
-                }
+            for (const map_style of COMMON_GLOBAL['module_leaflet_map_styles']){
+                if (map_style.session_map_layer)
+                    COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(map_style.session_map_layer);
             }
+            //mapstyle_record [{id, description, data, data2, data3, data4, data5, session_map_layer});
+            const mapstyle_record = COMMON_GLOBAL['module_leaflet_map_styles'].filter(map_style=>map_style.data==mapstyle)[0];
+            if (mapstyle_record.data3)
+                mapstyle_record.session_map_layer = COMMON_GLOBAL['module_leaflet_library'].tileLayer(mapstyle_record.data2, {
+                    maxZoom: mapstyle_record.data3,
+                    attribution: mapstyle_record.data4
+                }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+            else
+                mapstyle_record.session_map_layer = COMMON_GLOBAL['module_leaflet_library'].tileLayer(mapstyle_record.data2, {
+                    attribution: mapstyle_record.data4
+                }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
             resolve();
         }  
         else
