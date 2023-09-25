@@ -546,7 +546,7 @@ const render_common_html = async (app_id, module, app_config) =>{
     let user_timezones = '';
     let user_directions = '';
     let user_arabic_scripts = '';
-    let map_styles = '';
+    const map_styles = [];
     const render_variables = [];
     if (app_config.render_locales){
         const promisegetLocales = async () =>{
@@ -589,7 +589,13 @@ const render_common_html = async (app_id, module, app_config) =>{
                             }
                             //map styles
                             case 'MAP_STYLE':{
-                                map_styles += option;
+                                map_styles.push({  id:settings[i].id, 
+                                                    description:settings[i].text, 
+                                                    data:settings[i].data, 
+                                                    data2:settings[i].data2, 
+                                                    data3:settings[i].data3, 
+                                                    data4:settings[i].data4, 
+                                                    session_map_layer:null});
                                 break;
                             }
                         }
