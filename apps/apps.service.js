@@ -243,8 +243,7 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
     const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     const datatoken = CreateDataToken(app_id);
     //get GPS from IP
-    const parameters = `/ip?ip=${module_config.ip}`;
-    let result_geodata = await BFF(app_id, 'GEOLOCATION', parameters, module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
+    let result_geodata = await BFF(app_id, 'GEOLOCATION', `/ip?ip=${module_config.ip}`, module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
     .catch(error=>
         callBack(error, null)
     );
@@ -257,10 +256,11 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
                                 result_geodata.geoplugin_countryName;
     }
     else{
+        const result_city = await BFF(app_id, 'WORLDCITIES', '/city/random?', module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
         result_geodata = {};
-        result_geodata.latitude = null;
-        result_geodata.longitude = null;
-        result_geodata.place = null;
+        result_geodata.latitude = JSON.parse(result_city).lat;
+        result_geodata.longitude = JSON.parse(result_city).lng;
+        result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
     }
     let system_admin_only;
     let app_module_type;
@@ -1069,6 +1069,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                     case 'WORLDCITIES':{
                         // parameters ex:
                         // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
+                        // /city/random?&app_id=[id]
                         if (method=='GET'){
                             //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                             authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;

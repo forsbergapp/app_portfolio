@@ -3272,7 +3272,7 @@ const tzlookup = async (latitude, longitude) => {
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
-    await FFB ('WORLDCITIES', `/${countrycode}?`, 'GET', 0, null, (err, result) => {
+    await FFB ('WORLDCITIES', `/country/${countrycode}?`, 'GET', 0, null, (err, result) => {
         if (err)
             callBack(err, null);
         else{
@@ -3748,6 +3748,6 @@ export{/* GLOBALS*/
        /* SERVICE GEOLOCATION */
        get_place_from_gps, get_gps_from_ip,
        /* SERVICE WORLDCITIES */
-       get_cities,       
+       get_cities,
        /* INIT */
        set_event_user_menu, init_common};
