@@ -13,7 +13,7 @@ INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (5
 INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (6, 'ARABIC_SCRIPT', 0);
 INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (7, 'CALENDAR_TYPE', 0);
 INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (8, 'CALENDAR_HIJRI_TYPE', 0);
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (9, 'MAP_TYPE', 0);
+INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (9, 'MAP_STYLE', 0);
 --
 -- setting
 --
@@ -518,8 +518,8 @@ INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('islamic-civil','islamic-civil',NULL,NULL,NULL,NULL,8);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('islamic-rgsa','islamic-rgsa',NULL,NULL,NULL,NULL,8);
 
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('OpenStreetMap_Mapnik','OpenStreetMap_Mapnik',NULL,NULL,NULL,NULL,9);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Esri.WorldImagery','Esri.WorldImagery',NULL,NULL,NULL,NULL,9);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('OpenStreetMap_Mapnik','OpenStreetMap_Mapnik','https://tile.openstreetmap.org/{z}/{x}/{y}.png',19,'&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',NULL,9);
+INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Esri.WorldImagery','Esri.WorldImagery','https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',NULL,'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',NULL,9);
 --
 -- app_object
 --
