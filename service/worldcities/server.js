@@ -21,19 +21,35 @@ const startserver = () =>{
 				res.setHeader('Content-Type',  'application/json; charset=utf-8');
 				const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
 				req.query.app_id = params.get('app_id');
-				if (req.url.startsWith('/worldcities/city/random'))
-					IAM(req.query.app_id, req.headers.authorization).then(result=>{
-						if (result == 1)
-							getCityRandom(req, res);
-						else
-						{
-							res.statusCode = 401;
-							res.write('⛔', 'utf-8');
-							res.end();
-						}
-					});
-				else{
-					if (req.url.startsWith('/worldcities/country/')){
+				switch (true){
+					case req.url.startsWith('/worldcities/city/search/'):{
+						req.params.search = req.url.substring('/worldcities/city/search/'.length, req.url.indexOf('?'));
+						IAM(req.query.app_id, req.headers.authorization).then(result=>{
+							if (result == 1)
+								getCitySearch(req, res);
+							else
+							{
+								res.statusCode = 401;
+								res.write('⛔', 'utf-8');
+								res.end();
+							}
+						});
+						break;
+					}
+					case req.url.startsWith('/worldcities/city/random'):{
+						IAM(req.query.app_id, req.headers.authorization).then(result=>{
+							if (result == 1)
+								getCityRandom(req, res);
+							else
+							{
+								res.statusCode = 401;
+								res.write('⛔', 'utf-8');
+								res.end();
+							}
+						});
+						break;
+					}
+					case req.url.startsWith('/worldcities/country/'):{
 						req.params.country = req.url.substring('/worldcities/country/'.length, req.url.indexOf('?'));
 						IAM(req.query.app_id, req.headers.authorization).then(result=>{
 							if (result == 1)
@@ -45,9 +61,11 @@ const startserver = () =>{
 								res.end();
 							}
 						});
+						break;
 					}
-					else
+					default:
 						res.end();
+						break;
 				}
 			}).listen(MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT, ()=>{
 				console.log(`MICROSERVICE WORLDCITIES PORT ${MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT} `);
@@ -81,5 +99,15 @@ const getCityRandom = async (req, res) => {
 	}
 	res.end();
 };
+const getCitySearch = async (req, res) => {
+	try {
+		const city = await service.getCitySearch(decodeURI(req.params.search), req.query.limit);
+		res.statusCode = 200;
+		res.write(JSON.stringify(city), 'utf8');	
+	} catch (error) {
+		res.statusCode = 500;
+		res.write(error, 'utf8');
+	}
+	res.end();
+};
 startserver();
-export{startserver, getCities, getCityRandom};
