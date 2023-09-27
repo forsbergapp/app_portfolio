@@ -1,16 +1,12 @@
 const common = await import('common');
 const APP_GLOBAL = {
-    'module_leaflet_map_container':'',
-    'module_leaflet_map_zoom':'',
-    'module_leaflet_map_marker_div_gps':''
+    'module_leaflet_map_container':''
 };
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
 const map_click_event = (event) =>{
-    common.map_click_event(event,   APP_GLOBAL['module_leaflet_map_container'], 
-                                    APP_GLOBAL['module_leaflet_map_zoom'], 
-                                    APP_GLOBAL['module_leaflet_map_marker_div_gps']);
+    common.map_click_event(event,   APP_GLOBAL['module_leaflet_map_container']);
 };
 const init_map = async (framework)=>{
     let map_click_event_js;
@@ -76,19 +72,15 @@ const init_map = async (framework)=>{
                         common.COMMON_GLOBAL['module_leaflet_style'], 
                         common.COMMON_GLOBAL['client_longitude'],
                         common.COMMON_GLOBAL['client_latitude'],
-                        APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                        APP_GLOBAL['module_leaflet_map_zoom'],
-                        APP_GLOBAL['module_leaflet_map_marker_div_city'],
-                        APP_GLOBAL['module_leaflet_map_zoom_city'],
                         map_click_event_js, 
                         true).then(()=>{
             
             common.map_update(  common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
-                                APP_GLOBAL['module_leaflet_map_zoom'],
+                                common.COMMON_GLOBAL['module_leaflet_zoom'],
                                 common.COMMON_GLOBAL['client_place'],
                                 null,
-                                APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                                common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
                                 common.COMMON_GLOBAL['module_leaflet_jumpto']);
             resolve();
         });
@@ -96,10 +88,6 @@ const init_map = async (framework)=>{
 };
 const init_app = async () =>{
     APP_GLOBAL['module_leaflet_map_container']      ='mapid';
-    APP_GLOBAL['module_leaflet_zoom_city']          = 8;
-    APP_GLOBAL['module_leaflet_map_zoom']           = 14;
-    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = 'map_marker_gps';
-    APP_GLOBAL['module_leaflet_map_marker_div_city'] = 'map_marker_city';
 
     document.querySelector('#toolbar_btn_js').innerHTML = common.ICONS['app_javascript'];
     document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS['app_vue'];
