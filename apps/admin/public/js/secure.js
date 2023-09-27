@@ -1561,7 +1561,8 @@ const show_monitor = async (yearvalues) =>{
                         common.COMMON_GLOBAL['client_longitude'],
                         common.COMMON_GLOBAL['client_latitude'],
                         true,
-                        true).then(() => {
+                        true,
+                        null).then(() => {
             common.map_update(  common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
                                 common.COMMON_GLOBAL['module_leaflet_zoom'],

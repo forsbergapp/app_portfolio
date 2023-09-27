@@ -2589,7 +2589,7 @@ const create_qr = (div, url) => {
 /*----------------------- */
 /* MODULE LEAFLET         */
 /*----------------------- */
-const map_init = async (containervalue, stylevalue, longitude, latitude, click_event, doubleclick_event) => {
+const map_init = async (containervalue, stylevalue, longitude, latitude, click_event, doubleclick_event, search_event_function) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
             import('leaflet').then(({L})=>{
@@ -2675,7 +2675,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                     //add event on map layer select
                     document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.getElementById('common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
                     //add event on search
-                    document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', (event) => { typewatch(search_input, event, 'module_leaflet', null); }, false);
+                    document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', (event) => { typewatch(search_input, event, 'module_leaflet', search_event_function); }, false);
                     document.getElementById('common_module_leaflet_search_icon').addEventListener('click', () => { 
                         document.getElementById('common_module_leaflet_search_input').focus();
                         document.getElementById('common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
@@ -3848,7 +3848,7 @@ export{/* GLOBALS*/
        /* USER PROVIDER */
        ProviderUser_update, ProviderSignIn,
        /* MODULE LEAFLET  */
-       map_init, map_country, map_click_event, map_resize, map_line_removeall, map_line_create,
+       map_init, map_country, map_show_search_on_map, map_click_event, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,
        /* MODULE EASY.QRCODE */
        create_qr,
