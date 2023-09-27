@@ -630,8 +630,8 @@
 }
 #common_module_leaflet_control_search select,
 #common_module_leaflet_control_search input{
-	max-width: unset;
-	min-width: unset;
+	max-width: unset !important;
+	min-width: unset !important;
 }
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
