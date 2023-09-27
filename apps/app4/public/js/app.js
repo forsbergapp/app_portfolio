@@ -73,7 +73,8 @@ const init_map = async (framework)=>{
                         common.COMMON_GLOBAL['client_longitude'],
                         common.COMMON_GLOBAL['client_latitude'],
                         map_click_event_js, 
-                        true).then(()=>{
+                        true,
+                        null).then(()=>{
             
             common.map_update(  common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],

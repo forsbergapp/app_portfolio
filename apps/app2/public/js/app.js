@@ -2347,7 +2347,8 @@ const init_map = async () => {
                         document.getElementById('setting_input_long').value, 
                         document.getElementById('setting_input_lat').value, 
                         true,
-                        false).then(() => {
+                        false,
+                        map_show_search_on_map_app).then(() => {
             //GPS
             const select_user_setting = document.getElementById('setting_select_user_setting');
             common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'),
@@ -2430,6 +2431,15 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
             resolve(timezonetext);
         });
     });
+};
+const map_show_search_on_map_app = (city) =>{
+    common.map_show_search_on_map(city);
+    map_show_qibbla();
+    common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
+    document.getElementById('setting_input_place').value =  city.querySelector('.common_module_leaflet_search_list_city').innerHTML + ', ' +
+                                                            city.querySelector('.common_module_leaflet_search_list_country').innerHTML;
+    document.getElementById('setting_input_long').value = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
+    document.getElementById('setting_input_lat').value = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
 };
 /*----------------------- */
 /* EXCEPTION              */
