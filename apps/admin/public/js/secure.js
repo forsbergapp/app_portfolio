@@ -23,8 +23,6 @@ const APP_GLOBAL = {
     'limit':'',
     'previous_row':'',
     'module_leaflet_map_container':'',
-    'module_leaflet_map_zoom':'',
-    'module_leaflet_map_marker_div_gps':'',
     'service_log_scope_request':'',
     'service_log_scope_server':'',
     'service_log_scope_app':'',
@@ -46,8 +44,6 @@ const delete_globals = () => {
     APP_GLOBAL['page_last'] = null;
     APP_GLOBAL['limit'] = null;
     APP_GLOBAL['previous_row'] = null;
-    APP_GLOBAL['module_leaflet_map_zoom'] = null;
-    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = null;
     APP_GLOBAL['module_leaflet_map_container'] = null;
     APP_GLOBAL['service_log_scope_request'] = null;
     APP_GLOBAL['service_log_scope_server'] = null;
@@ -1564,18 +1560,14 @@ const show_monitor = async (yearvalues) =>{
                         common.COMMON_GLOBAL['module_leaflet_style'],
                         common.COMMON_GLOBAL['client_longitude'],
                         common.COMMON_GLOBAL['client_latitude'],
-                        APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                        APP_GLOBAL['module_leaflet_map_zoom'],
-                        APP_GLOBAL['module_leaflet_map_marker_div_city'],
-                        APP_GLOBAL['module_leaflet_map_zoom_city'],
                         true,
                         true).then(() => {
-            common.map_update(common.COMMON_GLOBAL['client_longitude'],
+            common.map_update(  common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
-                                APP_GLOBAL['module_leaflet_map_zoom'],
+                                common.COMMON_GLOBAL['module_leaflet_zoom'],
                                 common.COMMON_GLOBAL['client_place'],
                                 null,
-                                APP_GLOBAL['module_leaflet_map_marker_div_gps'],
+                                common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
                                 common.COMMON_GLOBAL['module_leaflet_jumpto']);
             
             if (common.COMMON_GLOBAL['system_admin']==1){
@@ -2467,15 +2459,15 @@ const list_item_click = (item) => {
                     null;
                 else{
                     const json = JSON.parse(result);
-                    common.map_update(json.geoplugin_longitude,
-                                json.geoplugin_latitude,
-                                APP_GLOBAL['module_leaflet_map_zoom'],
-                                json.geoplugin_city + ', ' +
-                                json.geoplugin_regionName + ', ' +
-                                json.geoplugin_countryName,
-                                null,
-                                APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                    common.map_update(  json.geoplugin_longitude,
+                                        json.geoplugin_latitude,
+                                        common.COMMON_GLOBAL['module_leaflet_zoom'],
+                                        json.geoplugin_city + ', ' +
+                                        json.geoplugin_regionName + ', ' +
+                                        json.geoplugin_countryName,
+                                        null,
+                                        common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
+                                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
                 }
             });
         }
@@ -2501,15 +2493,15 @@ const list_item_click = (item) => {
                         null;
                     else{
                         const json = JSON.parse(result);
-                        common.map_update(long,
-                                   lat,
-                                   APP_GLOBAL['module_leaflet_map_zoom'],
-                                   json.geoplugin_place + ', ' + 
-                                   json.geoplugin_region + ', ' + 
-                                   json.geoplugin_countryCode,
-                                   null,
-                                   APP_GLOBAL['module_leaflet_map_marker_div_gps'],
-                                   common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                        common.map_update(  long,
+                                            lat,
+                                            common.COMMON_GLOBAL['module_leaflet_zoom'],
+                                            json.geoplugin_place + ', ' + 
+                                            json.geoplugin_region + ', ' + 
+                                            json.geoplugin_countryCode,
+                                            null,
+                                            common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
+                                            common.COMMON_GLOBAL['module_leaflet_jumpto']);
                     }
             });
         }
@@ -3063,8 +3055,6 @@ const init = () => {
     APP_GLOBAL['previous_row']= '';
 
     APP_GLOBAL['module_leaflet_map_container']      ='mapid';
-    APP_GLOBAL['module_leaflet_map_zoom']           = 14;
-    APP_GLOBAL['module_leaflet_map_marker_div_gps'] = 'map_marker_gps';
 
     APP_GLOBAL['service_log_scope_request']= '';
     APP_GLOBAL['service_log_scope_server']= '';

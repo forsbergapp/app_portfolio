@@ -69,7 +69,7 @@ const setEvents = () => {
     //dialogue profile
     document.getElementById('common_profile_home').addEventListener('click', () => {common.profile_top(1);}, false);
     document.getElementById('common_profile_close').addEventListener('click', () => {common.profile_close();}, false);
-    document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, null);}, false);
+    document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, 'profile', null);}, false);
     document.getElementById('common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1);}, false);
     document.getElementById('common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2);}, false);
     document.getElementById('common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3);}, false);

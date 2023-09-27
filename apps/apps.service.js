@@ -1074,7 +1074,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                             //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                             authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
                             //limit records here in server for this service:
-                            if (parameters.startsWith('/worldcities/city/search'))
+                            if (parameters.startsWith('/city/search'))
                                 parameters = parameters + `&limit=${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
                             path = `/worldcities${parameters}&app_id=${app_id}`;
                         }

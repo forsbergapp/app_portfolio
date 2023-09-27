@@ -1543,3 +1543,9 @@ a:hover, a:active {
 .common_module_leaflet_control_expand{
 	background-color: var(--app_theme_main_branding_color2);
 }
+#common_module_leaflet_search_list_wrap{
+	background-color: var(--app_theme_dialogue_background_color);
+}
+.common_module_leaflet_search_list_selected{
+	background-color: var(--app_theme_list_selected_background_color);
+}

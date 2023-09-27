@@ -31,12 +31,6 @@ const APP_GLOBAL = {
 
     'gps_default_place_id':'',
     'gps_module_leaflet_container':'',
-    'gps_module_leaflet_zoom':'',
-    'gps_module_leaflet_zoom_city':'',
-    'gps_module_leaflet_zoom_pp':'',
-    'gps_module_leaflet_marker_div_pp':'',
-    'gps_module_leaflet_marker_div_city':'',
-    'gps_module_leaflet_marker_div_gps':'',
     'gps_module_leaflet_qibbla_title':'',
     'gps_module_leaflet_qibbla_text_size':'',
     'gps_module_leaflet_qibbla_lat':'',
