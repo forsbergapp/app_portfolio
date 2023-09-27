@@ -1016,6 +1016,11 @@ a:active {
 	margin:0 auto;
 	display:none;
 }
+#common_module_leaflet_search_list a {
+	width: unset;
+	text-align: unset;
+	background-color:unset;
+}
 .common_module_leaflet_search_list_row{
 	height: 3em;
 	text-align: start;
