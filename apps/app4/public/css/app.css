@@ -50,6 +50,8 @@
 	--app_theme_dialogue_shadow_color1:var(--app_shadow1);
 	--app_theme_user_menu_hover_color:var(--app_green);
 	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
+	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color3);
+	--app_theme_selected_background_color:var(--app_lightgrey);
 }
 .app_theme2 {
 	--app_theme_main_branding_color1: var(--app_dark);
@@ -63,6 +65,8 @@
 	--app_theme_dialogue_shadow_color1:var(--app_shadow1);
 	--app_theme_user_menu_hover_color:var(--app_green);
 	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
+	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color3);
+	--app_theme_selected_background_color:var(--app_lightgrey);
 }
 .app_theme3 {
 	--app_theme_main_branding_color1: var(--app_cafe_latte);
@@ -76,6 +80,8 @@
 	--app_theme_dialogue_shadow_color1:var(--app_shadow1);
 	--app_theme_user_menu_hover_color:var(--app_cafe_latte2);
 	--app_theme_user_menu_hover_background_color:var(--app_cafe_latte3);
+	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color3);
+	--app_theme_selected_background_color:var(--app_lightgrey);
 }
 body{
 	color: var(--app_theme_text_color);
@@ -105,4 +111,10 @@ body{
 }
 .common_load-spinner div:after {
 	background-color: var(--app_theme_spinner_background_color);
+}
+#common_module_leaflet_search_list_wrap{
+	background-color: var(--app_theme_dialogue_background_color);
+}
+.common_module_leaflet_search_list_selected{
+	background-color: var(--app_theme_selected_background_color);
 }

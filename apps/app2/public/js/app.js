@@ -709,13 +709,13 @@ const update_ui = async (option, item_id=null) => {
         //GPS, update map
         case 4:
             {
-                map_update_app(settings.gps_long_input.value,
-                    settings.gps_lat_input.value,
-                    app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
-                    document.getElementById('setting_input_place').value,
-                    null,
-                    app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
-                    common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                map_update_app( settings.gps_long_input.value,
+                                settings.gps_lat_input.value,
+                                common.COMMON_GLOBAL['module_leaflet_zoom'],
+                                document.getElementById('setting_input_place').value,
+                                null,
+                                common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
+                                common.COMMON_GLOBAL['module_leaflet_jumpto']);
                 break;
             }
         //GPS, update cities from country
@@ -755,14 +755,14 @@ const update_ui = async (option, item_id=null) => {
                 if (document.querySelector('#mapid').classList.contains('leaflet-container')){
                     //Update map
                     map_update_app(settings.gps_long_input.value,
-                        settings.gps_lat_input.value,
-                        app_common.APP_GLOBAL['gps_module_leaflet_zoom_city'],
-                        document.getElementById('setting_input_place').value,
-                        null,
-                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_city'],
-                        common.COMMON_GLOBAL['module_leaflet_flyto']).then((timezone_selected) => {
-                            settings.timezone_report.value = timezone_selected;
-                        });
+                                    settings.gps_lat_input.value,
+                                    common.COMMON_GLOBAL['module_leaflet_zoom_city'],
+                                    document.getElementById('setting_input_place').value,
+                                    null,
+                                    common.COMMON_GLOBAL['module_leaflet_marker_div_city'],
+                                    common.COMMON_GLOBAL['module_leaflet_flyto']).then((timezone_selected) => {
+                                        settings.timezone_report.value = timezone_selected;
+                                    });
                 }
                 break;
             }
@@ -777,13 +777,13 @@ const update_ui = async (option, item_id=null) => {
                 settings.gps_lat_input.value = latitude_selected;
                 if (document.querySelector('#mapid').classList.contains('leaflet-container')){
                     //Update map
-                    map_update_app(settings.gps_long_input.value,
-                                settings.gps_lat_input.value,
-                                app_common.APP_GLOBAL['gps_module_leaflet_zoom_pp'], //zoom for popular places
-                                settings.select_place.options[settings.select_place.selectedIndex].text,
-                                timezone_selected,
-                                app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'], //marker for popular places
-                                common.COMMON_GLOBAL['module_leaflet_flyto']);
+                    map_update_app( settings.gps_long_input.value,
+                                    settings.gps_lat_input.value,
+                                    common.COMMON_GLOBAL['module_leaflet_zoom_pp'], //zoom for popular places
+                                    settings.select_place.options[settings.select_place.selectedIndex].text,
+                                    timezone_selected,
+                                    common.COMMON_GLOBAL['module_leaflet_marker_div_pp'], //marker for popular places
+                                    common.COMMON_GLOBAL['module_leaflet_flyto']);
                     //display empty country
                     common.SearchAndSetSelectedIndex('', settings.country,0);
                     //remove old city list:            
@@ -812,12 +812,12 @@ const update_ui = async (option, item_id=null) => {
                     //Update map
                     document.getElementById('setting_input_place').value = gps_place;
                     if (document.querySelector('#mapid').classList.contains('leaflet-container')){
-                        map_update_app(settings.gps_long_input.value,
+                        map_update_app( settings.gps_long_input.value,
                                         settings.gps_lat_input.value,
                                         '', //do not change zoom 
                                         gps_place,
                                         null,
-                                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
+                                        common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
                                         common.COMMON_GLOBAL['module_leaflet_jumpto']).then((timezone_text) => {
                                                 settings.timezone_report.value = timezone_text;
                                         });
@@ -2183,7 +2183,7 @@ const setEvents = () => {
     document.getElementById('profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
     document.getElementById('profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
     document.getElementById('profile_user_settings_like').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
-    document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, show_profile_function);}, false);
+    document.getElementById('common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, 'profile', show_profile_function);}, false);
     document.getElementById('profile_select_user_settings').addEventListener('change', 
         (event) => { profile_show_user_setting_detail(event.target.options[event.target.selectedIndex].getAttribute('liked'), 
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
@@ -2346,10 +2346,6 @@ const init_map = async () => {
                         common.COMMON_GLOBAL['module_leaflet_style'], 
                         document.getElementById('setting_input_long').value, 
                         document.getElementById('setting_input_lat').value, 
-                        app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'],
-                        app_common.APP_GLOBAL['gps_module_leaflet_zoom'],
-                        app_common.APP_GLOBAL['module_leaflet_map_marker_div_city'],
-                        app_common.APP_GLOBAL['module_leaflet_map_zoom_city'],
                         true,
                         false).then(() => {
             //GPS
@@ -2771,18 +2767,6 @@ const init = (parameters) => {
                 app_common.APP_GLOBAL['gps_default_place_id'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
                 app_common.APP_GLOBAL['gps_module_leaflet_container'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_ZOOM')
-                app_common.APP_GLOBAL['gps_module_leaflet_zoom'] = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_ZOOM_CITY')
-                app_common.APP_GLOBAL['gps_module_leaflet_zoom_city'] = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_ZOOM_PP')
-                app_common.APP_GLOBAL['gps_module_leaflet_zoom_pp'] = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_MARKER_DIV_PP')
-                app_common.APP_GLOBAL['gps_module_leaflet_marker_div_pp'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_MARKER_DIV_CITY')
-                app_common.APP_GLOBAL['gps_module_leaflet_marker_div_city'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_MARKER_DIV_GPS')
-                app_common.APP_GLOBAL['gps_module_leaflet_marker_div_gps'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
                 app_common.APP_GLOBAL['gps_module_leaflet_qibbla_title'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TEXT_SIZE')

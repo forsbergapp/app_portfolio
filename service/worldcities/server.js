@@ -24,6 +24,10 @@ const startserver = () =>{
 				switch (true){
 					case req.url.startsWith('/worldcities/city/search/'):{
 						req.params.search = req.url.substring('/worldcities/city/search/'.length, req.url.indexOf('?'));
+						if (params.get('limit'))
+							req.query.limit = Number(params.get('limit'));
+						else
+							req.query.limit = 0;
 						IAM(req.query.app_id, req.headers.authorization).then(result=>{
 							if (result == 1)
 								getCitySearch(req, res);

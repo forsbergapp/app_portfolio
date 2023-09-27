@@ -1,4 +1,4 @@
-app_theme_selected_background_color/*APP */
+/*APP */
 #paper #common_app_spinner{
 	margin-top: 50%;
     transform: scale(1);
@@ -628,7 +628,11 @@ app_theme_selected_background_color/*APP */
 	display:block;
 	margin: 0 auto;
 }
-
+#common_module_leaflet_control_search select,
+#common_module_leaflet_control_search input{
+	max-width: unset;
+	min-width: unset;
+}
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
@@ -1061,4 +1065,10 @@ a:active,
 }
 .common_module_leaflet_control_expand{
 	background-color: var(--app_theme_main_color2);
+}
+#common_module_leaflet_search_list_wrap{
+	background-color: var(--app_theme_main_color1);
+}
+.common_module_leaflet_search_list_selected{
+	background-color: var(--app_theme_selected_background_color);
 }

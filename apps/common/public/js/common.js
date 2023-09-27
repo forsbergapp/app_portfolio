@@ -66,6 +66,12 @@ const COMMON_GLOBAL = {
     'module_leaflet_session_map':'',
     'module_leaflet_session_map_layer':'',
     'module_leaflet_countries':'',
+    'module_leaflet_zoom':'', 
+    'module_leaflet_zoom_city':'',
+    'module_leaflet_zoom_pp':'',
+    'module_leaflet_marker_div_gps':'',
+    'module_leaflet_marker_div_city':'',
+    'module_leaflet_marker_div_pp':'',
     'module_leaflet_map_styles':'',
     'module_easy.qrcode_width':'',
     'module_easy.qrcode_height':'',
@@ -313,10 +319,22 @@ let timer = 0;
 //delay API calls when typing to avoid too many calls 
 // ES6 spread operator, arrow function without function keyword
 const typewatch = (callBack, ...parameter) =>{
+    let type_delay=250;
+    if (parameter.length>0 && parameter[0] !=null)
+        switch (parameter[0].code){
+            case 'ArrowLeft':
+            case 'ArrowRight':
+            case 'ArrowUp':
+            case 'ArrowDown':{
+                //immediate response when navigating
+                type_delay = 0;
+                break;
+            }
+        }
     clearTimeout(timer);
     timer = setTimeout(() => {
         callBack(...parameter);
-    }, 500);
+    }, type_delay);
 };
 const toBase64 = (str) => {
     return window.btoa(unescape(encodeURIComponent(str)));
@@ -1720,7 +1738,7 @@ const profile_update_stat = async (callBack) => {
         }
     });
 };
-const search_input = (event, event_function) => {
+const search_input = (event, module, event_function) => {
     switch (event.code){
         case 'ArrowLeft':
         case 'ArrowRight':{
@@ -1728,63 +1746,70 @@ const search_input = (event, event_function) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            if (document.getElementById('common_profile_search_list').style.display=='inline-block'){
-                const x = document.querySelectorAll('.common_profile_search_list_row');
+            if (document.getElementById(`common_${module}_search_list`).style.display=='inline-block'){
+                const x = document.querySelectorAll(`.common_${module}_search_list_row`);
                 for (let i = 0; i <= x.length -1; i++) {
-                    if (x[i].classList.contains('common_profile_search_list_selected'))
+                    if (x[i].classList.contains(`common_${module}_search_list_selected`))
                         //if up and first or
                         //if down and last
                         if ((event.code=='ArrowUp' && i == 0)||
                             (event.code=='ArrowDown' && i == x.length -1)){
                             if(event.code=='ArrowUp'){
                                 //if the first, set the last
-                                x[i].classList.remove ('common_profile_search_list_selected');
-                                x[x.length -1].classList.add ('common_profile_search_list_selected');
+                                x[i].classList.remove (`common_${module}_search_list_selected`);
+                                x[x.length -1].classList.add (`common_${module}_search_list_selected`);
                             }
                             else{
                                 //down
                                 //if the last, set the first
-                                x[i].classList.remove ('common_profile_search_list_selected');
-                                x[0].classList.add ('common_profile_search_list_selected');
+                                x[i].classList.remove (`common_${module}_search_list_selected`);
+                                x[0].classList.add (`common_${module}_search_list_selected`);
                             }
                             return;
                         }
                         else{
                             if(event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
-                                x[i].classList.remove ('common_profile_search_list_selected');
-                                x[i-1].classList.add ('common_profile_search_list_selected');
+                                x[i].classList.remove (`common_${module}_search_list_selected`);
+                                x[i-1].classList.add (`common_${module}_search_list_selected`);
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
-                                x[i].classList.remove ('common_profile_search_list_selected');
-                                x[i+1].classList.add ('common_profile_search_list_selected');
+                                x[i].classList.remove (`common_${module}_search_list_selected`);
+                                x[i+1].classList.add (`common_${module}_search_list_selected`);
                             }
                             return;
                         }
                 }
                 //no highlight found, highlight first
-                x[0].classList.add ('common_profile_search_list_selected');
+                x[0].classList.add (`common_${module}_search_list_selected`);
                 return;
             }
             break;
         }
         case 'Enter':{
             //enter
-            if (document.getElementById('common_profile_search_list').style.display=='inline-block'){
-                const x = document.querySelectorAll('.common_profile_search_list_row');
+            if (document.getElementById(`common_${module}_search_list`).style.display=='inline-block'){
+                const x = document.querySelectorAll(`.common_${module}_search_list_row`);
                 for (let i = 0; i <= x.length -1; i++) {
-                    if (x[i].classList.contains('common_profile_search_list_selected')){
+                    if (x[i].classList.contains(`common_${module}_search_list_selected`)){
                         /*Show profile and leave searchresult so user can go back to searchresult again*/
                         if (event_function ==null){
-                            profile_show(x[i].children[0].children[0].innerHTML,null,()=>{});
+                            if (module=='profile')
+                                profile_show(x[i].children[0].children[0].innerHTML,null,()=>{});
+                            else{
+                                map_show_search_on_map(x[i]);
+                            }
                         }
                         else{
-                            event_function(x[i].children[0].children[0].innerHTML);
+                            if (module=='profile')
+                                event_function(x[i].children[0].children[0].innerHTML);
+                            else
+                                event_function(x[i]);
                         }
                             
-                        x[i].classList.remove ('common_profile_search_list_selected');
+                        x[i].classList.remove (`common_${module}_search_list_selected`);
                     }
                 }
                 return;
@@ -1792,7 +1817,11 @@ const search_input = (event, event_function) => {
             break;
         }
         default:{
-            typewatch(search_profile, event_function==null?null:event_function); 
+            if (module=='profile')
+                typewatch(search_profile, event_function==null?null:event_function); 
+            else{
+                typewatch(worldcities_search); 
+            }
             break;
         }            
     }
@@ -2560,14 +2589,14 @@ const create_qr = (div, url) => {
 /*----------------------- */
 /* MODULE LEAFLET         */
 /*----------------------- */
-const map_init = async (containervalue, stylevalue, longitude, latitude, map_marker_div_gps, zoomvalue, map_marker_div_city, zoomvalue_city, click_event, doubleclick_event) => {
+const map_init = async (containervalue, stylevalue, longitude, latitude, click_event, doubleclick_event) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
             import('leaflet').then(({L})=>{
                 //save library in variable for optimization
                 COMMON_GLOBAL['module_leaflet_library'] = L;
                 COMMON_GLOBAL['module_leaflet_session_map'] = '';
-                COMMON_GLOBAL['module_leaflet_session_map'] = COMMON_GLOBAL['module_leaflet_library'].map(containervalue).setView([latitude, longitude], zoomvalue);
+                COMMON_GLOBAL['module_leaflet_session_map'] = COMMON_GLOBAL['module_leaflet_library'].map(containervalue).setView([latitude, longitude], COMMON_GLOBAL['module_leaflet_zoom']);
                 map_setstyle(stylevalue).then(()=>{
                     //disable doubleclick in event dblclick since e.preventdefault() does not work
                     COMMON_GLOBAL['module_leaflet_session_map'].doubleClickZoom.disable(); 
@@ -2578,7 +2607,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
 
                     //add custom HTML inside div with class .leaflet-control
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
-                    //add search button
+                    //add search button with expand content country select, city select and search input
                     mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' href='#' title='Search' role='button'>${ICONS['app_search']}
                                                     <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_country'>
@@ -2587,6 +2616,13 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                                                         <select id='common_module_leaflet_select_city'  >
                                                             <option value='' id='' label='…' selected='selected'>…</option>
                                                         </select>
+                                                        <div id='common_module_leaflet_search_input_row'>
+                                                            <input id='common_module_leaflet_search_input' type='text' />
+                                                            <div id='common_module_leaflet_search_icon'>${ICONS['app_search']}</div>
+                                                        </div>
+                                                        <div id='common_module_leaflet_search_list_wrap'>
+                                                            <div id='common_module_leaflet_search_list'></div>
+                                                        </div>
                                                     </div>
                                                  </div>`;
                     //add fullscreen button
@@ -2628,21 +2664,28 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                         const latitude_selected = select_city[select_city.selectedIndex].getAttribute('latitude');
                         map_update( longitude_selected, 
                                     latitude_selected, 
-                                    zoomvalue_city, 
+                                    COMMON_GLOBAL['module_leaflet_zoom_city'], 
                                     select_city.options[select_city.selectedIndex].text, 
                                     null, 
-                                    map_marker_div_city, 
+                                    COMMON_GLOBAL['module_leaflet_marker_div_city'], 
                                     COMMON_GLOBAL['module_leaflet_flyto']).then(()=> {
                             null;
                         });
                     }, false);
                     //add event on map layer select
                     document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.getElementById('common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
+                    //add event on search
+                    document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', (event) => { typewatch(search_input, event, 'module_leaflet', null); }, false);
+                    document.getElementById('common_module_leaflet_search_icon').addEventListener('click', () => { 
+                        document.getElementById('common_module_leaflet_search_input').focus();
+                        document.getElementById('common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    }, false);
                     
+
                     if (click_event){
                         //add event delegation on map
                         document.querySelector(`#${containervalue}`).addEventListener('click', (event) =>{
-                            map_click_event(event, containervalue, zoomvalue, map_marker_div_gps);
+                            map_click_event(event, containervalue);
                         });
                     }
                     if (doubleclick_event){
@@ -2657,7 +2700,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, map_mar
                                                 '', //do not change zoom 
                                                 gps_place,
                                                 null,
-                                                map_marker_div_gps,
+                                                COMMON_GLOBAL['module_leaflet_marker_div_gps'],
                                                 COMMON_GLOBAL['module_leaflet_jumpto']);
                                 });
                             }
@@ -2738,19 +2781,41 @@ const map_city_empty = () =>{
     //display first empty city
     select_city.selectedIndex = 0;
 };
-const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =>{
-    const toggle_expand = (item) =>{
-        let style_display;
-        if (document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
-            document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
-            style_display = 'block';
-        else
-            style_display = 'none';
-        document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
-    };
+const map_show_search_on_map = (city)=>{
+    
+    const latitude =    city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
+    const longitude =   city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
+    const place =       city.querySelector('.common_module_leaflet_search_list_city').innerHTML + ', ' +
+                        city.querySelector('.common_module_leaflet_search_list_country').innerHTML;
+    map_update( longitude,
+                latitude,
+                COMMON_GLOBAL['module_leaflet_zoom_city'],
+                place,
+                null,
+                COMMON_GLOBAL['module_leaflet_marker_div_city'],
+                COMMON_GLOBAL['module_leaflet_jumpto']);
+    const select_country = document.querySelector('#common_module_leaflet_select_country');
+    select_country.selectedIndex = 0;
+    map_city_empty();
+    document.querySelector('#common_module_leaflet_search_input').value ='';
+    document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
+    document.querySelector('#common_module_leaflet_search_list').style.display ='none';
+    map_control_toggle_expand('search');
+};
+const map_control_toggle_expand = (item) =>{
+    let style_display;
+    if (document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
+        document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
+        style_display = 'block';
+    else
+        style_display = 'none';
+    document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
+};
+const map_click_event = (event, containervalue) =>{
+    
     switch (event.target.id==''?event.target.parentNode.id:event.target.id){
         case 'common_module_leaflet_control_search':{
-            toggle_expand('search');
+            map_control_toggle_expand('search');
             break;
         }
         case 'common_module_leaflet_control_fullscreen_id':{
@@ -2762,12 +2827,12 @@ const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =
         }
         case 'common_module_leaflet_control_my_location_id':{
             if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                map_update(COMMON_GLOBAL['client_longitude'],
+                map_update( COMMON_GLOBAL['client_longitude'],
                             COMMON_GLOBAL['client_latitude'],
-                            zoomvalue,
+                            COMMON_GLOBAL['module_leaflet_zoom'],
                             COMMON_GLOBAL['client_place'],
                             null,
-                            map_marker_div_gps,
+                            COMMON_GLOBAL['module_leaflet_marker_div_gps'],
                             COMMON_GLOBAL['module_leaflet_jumpto']);
                 const select_country = document.querySelector('#common_module_leaflet_select_country');
                 select_country.selectedIndex = 0;
@@ -2776,7 +2841,7 @@ const map_click_event = (event, containervalue, zoomvalue, map_marker_div_gps) =
             break;
         }
         case 'common_module_leaflet_control_layer':{
-            toggle_expand('layer');
+            map_control_toggle_expand('layer');
             break;
         }
         default:{
@@ -2860,7 +2925,7 @@ const map_setstyle = async (mapstyle) => {
 const map_update_popup = (title) => {
     document.getElementById('common_module_leaflet_popup_title').innerHTML = title;
 };
-const map_update = async (longitude, latitude, zoom, text_place, timezone_text = null, marker_id, to_method) => {
+const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
     return new Promise((resolve)=> {
         if (checkconnected()) {
             const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
@@ -2873,7 +2938,7 @@ const map_update = async (longitude, latitude, zoom, text_place, timezone_text =
                         break;
                     }
                     case 1:{
-                        COMMON_GLOBAL['module_leaflet_session_map'].flyTo([latitude, longitude], zoomvalue);
+                        COMMON_GLOBAL['module_leaflet_session_map'].flyTo([latitude, longitude], COMMON_GLOBAL['module_leaflet_zoom']);
                         break;
                     }
                     //also have COMMON_GLOBAL['module_leaflet_session_map'].panTo(new COMMON_GLOBAL['module_leaflet_library'].LatLng({lng: longitude, lat: latitude}));
@@ -2893,7 +2958,7 @@ const map_update = async (longitude, latitude, zoom, text_place, timezone_text =
                 marker._icon.id = marker_id;
                 resolve(timezone_text);
             };
-            map_update_gps(to_method, zoom, longitude, latitude);
+            map_update_gps(to_method, zoomvalue, longitude, latitude);
             if (timezone_text == null)
                 tzlookup(latitude, longitude).then((tzlookup_text)=>{
                     map_update_text(tzlookup_text);
@@ -3319,6 +3384,47 @@ const get_cities = async (countrycode, callBack) => {
         }
     });
 };
+const worldcities_search = async () =>{
+    const search = document.querySelector('#common_module_leaflet_search_input').value;
+    const get_cities = async (search) =>{
+        return new Promise ((resolve)=>{
+            FFB ('WORLDCITIES', `/city/search/${search}?`, 'GET', 0, null, (err, result) => {
+                if (err)
+                    resolve(null);
+                else
+                    resolve(JSON.parse(result));
+            });
+        });
+    };
+    const cities = await get_cities(search);
+    const search_list = document.querySelector('#common_module_leaflet_search_list');
+    let html = '';
+    if (cities.length > 0){
+        search_list.style.display = 'inline-block';
+        document.querySelector('#common_module_leaflet_search_list_wrap').style.display = 'flex';
+        for (const city of cities){
+            //dont save timezone function on each record, fetch after choosing a city ${await tzlookup(city.lat, city.lng)}
+            html += `<div class='common_module_leaflet_search_list_row'>
+                        <div class='common_module_leaflet_search_list_col'>
+                            <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
+                        </div>
+                        <div class='common_module_leaflet_search_list_col'>
+                            <div class='common_module_leaflet_search_list_city'>${city.city}</div>
+                        </div>
+                        <div class='common_module_leaflet_search_list_col'>
+                            <div class='common_module_leaflet_search_list_country'>${city.admin_name + ',' + city.country}</div>
+                        </div>
+                        <div class='common_module_leaflet_search_list_col'>
+                            <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
+                        </div>
+                        <div class='common_module_leaflet_search_list_col'>
+                            <div class='common_module_leaflet_search_list_longitude'>${city.lng}</div>
+                        </div>
+                    </div>`;
+        }
+    }            
+    search_list.innerHTML = html;
+};
 /*-----------------------
   EXCEPTION              
   
@@ -3673,6 +3779,12 @@ const set_app_parameters = (common_parameters) => {
             case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL['module_leaflet_jumpto'] = parseInt(parameter.parameter_value);break;}
             case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL['module_leaflet_popup_offset'] = parseInt(parameter.parameter_value);break;}
             case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL['module_leaflet_style'] = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_ZOOM'                  :{COMMON_GLOBAL['module_leaflet_zoom'] = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_ZOOM_CITY'             :{COMMON_GLOBAL['module_leaflet_zoom_city'] = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_ZOOM_PP'               :{COMMON_GLOBAL['module_leaflet_zoom_pp'] = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_MARKER_DIV_GPS'        :{COMMON_GLOBAL['module_leaflet_marker_div_gps'] = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_MARKER_DIV_CITY'       :{COMMON_GLOBAL['module_leaflet_marker_div_city'] = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_MARKER_DIV_PP'         :{COMMON_GLOBAL['module_leaflet_marker_div_pp'] = parameter.parameter_value;break;}
         }
     }
 };
