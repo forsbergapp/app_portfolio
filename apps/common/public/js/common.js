@@ -1820,7 +1820,7 @@ const search_input = (event, module, event_function) => {
             if (module=='profile')
                 typewatch(search_profile, event_function==null?null:event_function); 
             else{
-                typewatch(worldcities_search); 
+                typewatch(worldcities_search, event_function==null?null:event_function); 
             }
             break;
         }            
@@ -2785,8 +2785,8 @@ const map_show_search_on_map = (city)=>{
     
     const latitude =    city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
     const longitude =   city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
-    const place =       city.querySelector('.common_module_leaflet_search_list_city').innerHTML + ', ' +
-                        city.querySelector('.common_module_leaflet_search_list_country').innerHTML;
+    const place =       city.querySelector('.common_module_leaflet_search_list_city a').innerHTML + ', ' +
+                        city.querySelector('.common_module_leaflet_search_list_country a').innerHTML;
     map_update( longitude,
                 latitude,
                 COMMON_GLOBAL['module_leaflet_zoom_city'],
@@ -3384,7 +3384,7 @@ const get_cities = async (countrycode, callBack) => {
         }
     });
 };
-const worldcities_search = async () =>{
+const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').value;
     const get_cities = async (search) =>{
         return new Promise ((resolve)=>{
@@ -3409,10 +3409,10 @@ const worldcities_search = async () =>{
                             <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_city'>${city.city}</div>
+                            <div class='common_module_leaflet_search_list_city'><a class='click_city' href='#'>${city.city}</a></div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_country'>${city.admin_name + ',' + city.country}</div>
+                            <div class='common_module_leaflet_search_list_country'><a class='click_city' href='#'>${city.admin_name + ',' + city.country}</a></div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
                             <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
@@ -3422,6 +3422,16 @@ const worldcities_search = async () =>{
                         </div>
                     </div>`;
         }
+        document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
+            //execute function from inparameter or use default when not specified
+            if (event.target.classList.contains('click_city'))
+                if (event_function ==null){
+                    map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{});
+                }
+                else{
+                    event_function(event.target.parentNode.parentNode.parentNode);
+                }
+        });
     }            
     search_list.innerHTML = html;
 };

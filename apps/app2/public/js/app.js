@@ -2436,8 +2436,8 @@ const map_show_search_on_map_app = (city) =>{
     common.map_show_search_on_map(city);
     map_show_qibbla();
     common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
-    document.getElementById('setting_input_place').value =  city.querySelector('.common_module_leaflet_search_list_city').innerHTML + ', ' +
-                                                            city.querySelector('.common_module_leaflet_search_list_country').innerHTML;
+    document.getElementById('setting_input_place').value =  city.querySelector('.common_module_leaflet_search_list_city a').innerHTML + ', ' +
+                                                            city.querySelector('.common_module_leaflet_search_list_country a').innerHTML;
     document.getElementById('setting_input_long').value = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
     document.getElementById('setting_input_lat').value = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
 };
