@@ -52,6 +52,7 @@
 	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
 	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color3);
 	--app_theme_selected_background_color:var(--app_lightgrey);
+	--app_theme_hover:var(--app_green);
 }
 .app_theme2 {
 	--app_theme_main_branding_color1: var(--app_dark);
@@ -67,6 +68,7 @@
 	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
 	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color3);
 	--app_theme_selected_background_color:var(--app_lightgrey);
+	--app_theme_hover:var(--app_green);
 }
 .app_theme3 {
 	--app_theme_main_branding_color1: var(--app_cafe_latte);
@@ -82,11 +84,15 @@
 	--app_theme_user_menu_hover_background_color:var(--app_cafe_latte3);
 	--app_theme_dialogue_background_color:var(--app_theme_main_branding_color3);
 	--app_theme_selected_background_color:var(--app_lightgrey);
+	--app_theme_hover:var(--app_green);
 }
 body{
 	color: var(--app_theme_text_color);
 	fill:var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
+}
+a:hover, a:active{
+	color: var(--app_theme_hover) !important;
 }
 #toolbar_top{
 	color: var(--app_theme_main_branding_color1);
