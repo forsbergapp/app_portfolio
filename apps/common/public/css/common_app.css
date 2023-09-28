@@ -959,9 +959,48 @@ a:active {
 	font-weight: bold;
 	text-align: center;
 }
+/*module leaflet fixes*/
 .leaflet-popup-content{
 	width:200px !important;
 }
+.leaflet-zoom-box{
+	z-index: 8 !important;  /*org 800*/
+}
+.leaflet-pane{
+	z-index: 4 !important; /*400*/
+}
+.leaflet-tile-pane{
+	z-index: 2 !important; /*200*/
+}
+.leaflet-overlay-pane{
+	z-index: 4 !important; /*400*/
+}
+.leaflet-shadow-pane{
+	z-index: 5 !important; /*500*/
+}
+.leaflet-marker-pane{
+	z-index: 6 !important; /*600*/
+}
+.leaflet-tooltip-pane{
+	z-index: 7 !important; /*650*/
+}
+.leaflet-popup-pane{
+	z-index: 7 !important; /*700*/
+}
+.leaflet-map-pane canvas{
+	z-index: 1 !important; /*100*/
+}
+.leaflet-map-pane svg{
+	z-index: 2 !important; /*200*/
+}
+.leaflet-control{
+	z-index: 8 !important; /*800*/
+}
+.leaflet-top,
+.leaflet-bottom{
+	z-index: 10 !important; /*1000*/
+}
+
 .common_module_leaflet_control_button {
 	text-align: center;
 	height: 30px;
