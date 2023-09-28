@@ -2797,7 +2797,10 @@ let L;
   	if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
 
   	var handler = function (e) {
-  		return fn.call(context || obj, e || window.event);
+		if ((e.target.id && e.target.id.startsWith('common_module_leaflet')) || (e.target.className && e.target.className.search('common_module_leaflet')>0))
+			return false;
+		else
+  			return fn.call(context || obj, e || window.event);	
   	};
 
   	var originalHandler = handler;

@@ -974,13 +974,13 @@ a:active {
 }
 #common_module_leaflet_control_expand_layer{
 	display: none;
-	width: 50vw;
+	width: 60vw;
 	height: 30px;
 	bottom: 0px;
 }
 #common_module_leaflet_control_expand_search{
 	display: none;
-	width: 50vw;
+	width: 60vw;
     top: 60px;
 }
 #common_module_leaflet_select_country, #common_module_leaflet_select_city{

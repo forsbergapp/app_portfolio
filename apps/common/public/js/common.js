@@ -2653,7 +2653,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                         if (select_country[select_country.selectedIndex].getAttribute('country_code'))
                             map_city(select_country[select_country.selectedIndex].getAttribute('country_code').toUpperCase());
                         else{
-                            map_city_empty();
+                            map_toolbar_reset();
                         }
                             
                     }, false);
@@ -2672,7 +2672,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                     null, 
                                     COMMON_GLOBAL['module_leaflet_marker_div_city'], 
                                     COMMON_GLOBAL['module_leaflet_flyto']).then(()=> {
-                            null;
+                            map_toolbar_reset();
                         });
                     }, false);
                     //add event on map layer select
@@ -2784,6 +2784,18 @@ const map_city_empty = () =>{
     //display first empty city
     select_city.selectedIndex = 0;
 };
+const map_toolbar_reset = ()=>{
+    const select_country = document.querySelector('#common_module_leaflet_select_country');
+    select_country.selectedIndex = 0;
+    map_city_empty();
+    document.querySelector('#common_module_leaflet_search_input').value ='';
+    document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
+    document.querySelector('#common_module_leaflet_search_list').style.display ='none';
+    if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+        map_control_toggle_expand('search');
+    if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+        map_control_toggle_expand('layer');
+};
 const map_show_search_on_map = (city)=>{
     
     const latitude =    city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
@@ -2797,13 +2809,7 @@ const map_show_search_on_map = (city)=>{
                 null,
                 COMMON_GLOBAL['module_leaflet_marker_div_city'],
                 COMMON_GLOBAL['module_leaflet_jumpto']);
-    const select_country = document.querySelector('#common_module_leaflet_select_country');
-    select_country.selectedIndex = 0;
-    map_city_empty();
-    document.querySelector('#common_module_leaflet_search_input').value ='';
-    document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
-    document.querySelector('#common_module_leaflet_search_list').style.display ='none';
-    map_control_toggle_expand('search');
+    map_toolbar_reset();
 };
 const map_control_toggle_expand = (item) =>{
     let style_display;
@@ -2818,6 +2824,8 @@ const map_click_event = (event, containervalue) =>{
     
     switch (event.target.id==''?event.target.parentNode.id:event.target.id){
         case 'common_module_leaflet_control_search':{
+            if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+                map_control_toggle_expand('layer');
             map_control_toggle_expand('search');
             break;
         }
@@ -2839,11 +2847,13 @@ const map_click_event = (event, containervalue) =>{
                             COMMON_GLOBAL['module_leaflet_jumpto']);
                 const select_country = document.querySelector('#common_module_leaflet_select_country');
                 select_country.selectedIndex = 0;
-                map_city_empty();
+                map_toolbar_reset();
             }
             break;
         }
         case 'common_module_leaflet_control_layer':{
+            if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+                map_toolbar_reset();
             map_control_toggle_expand('layer');
             break;
         }
@@ -3412,10 +3422,10 @@ const worldcities_search = async (event_function) =>{
                             <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_city'><a class='click_city' href='#'>${city.city}</a></div>
+                            <div class='common_module_leaflet_search_list_city'><a class='common_module_leaflet_click_city' href='#'>${city.city}</a></div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_country'><a class='click_city' href='#'>${city.admin_name + ',' + city.country}</a></div>
+                            <div class='common_module_leaflet_search_list_country'><a class='common_module_leaflet_click_city' href='#'>${city.admin_name + ',' + city.country}</a></div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
                             <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
@@ -3427,12 +3437,13 @@ const worldcities_search = async (event_function) =>{
         }
         document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
             //execute function from inparameter or use default when not specified
-            if (event.target.classList.contains('click_city'))
+            if (event.target.classList.contains('common_module_leaflet_click_city'))
                 if (event_function ==null){
-                    map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{});
+                    map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{map_toolbar_reset('search');});
                 }
                 else{
                     event_function(event.target.parentNode.parentNode.parentNode);
+                    map_toolbar_reset();
                 }
         });
     }            
