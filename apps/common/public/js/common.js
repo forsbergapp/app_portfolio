@@ -2657,9 +2657,6 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                         }
                             
                     }, false);
-                    document.querySelector('#common_module_leaflet_search_list_wrap').addEventListener('touchmove', () => { 
-                        return true;
-                    });
                     //add event on map cities
                     document.querySelector('#common_module_leaflet_select_city').addEventListener('change', () => {
                         const select_city = document.querySelector('#common_module_leaflet_select_city');
