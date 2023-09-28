@@ -959,48 +959,9 @@ a:active {
 	font-weight: bold;
 	text-align: center;
 }
-/*module leaflet fixes*/
 .leaflet-popup-content{
 	width:200px !important;
 }
-.leaflet-zoom-box{
-	z-index: 8 !important;  /*org 800*/
-}
-.leaflet-pane{
-	z-index: 4 !important; /*400*/
-}
-.leaflet-tile-pane{
-	z-index: 2 !important; /*200*/
-}
-.leaflet-overlay-pane{
-	z-index: 4 !important; /*400*/
-}
-.leaflet-shadow-pane{
-	z-index: 5 !important; /*500*/
-}
-.leaflet-marker-pane{
-	z-index: 6 !important; /*600*/
-}
-.leaflet-tooltip-pane{
-	z-index: 7 !important; /*650*/
-}
-.leaflet-popup-pane{
-	z-index: 7 !important; /*700*/
-}
-.leaflet-map-pane canvas{
-	z-index: 1 !important; /*100*/
-}
-.leaflet-map-pane svg{
-	z-index: 2 !important; /*200*/
-}
-.leaflet-control{
-	z-index: 8 !important; /*800*/
-}
-.leaflet-top,
-.leaflet-bottom{
-	z-index: 10 !important; /*1000*/
-}
-
 .common_module_leaflet_control_button {
 	text-align: center;
 	height: 30px;
@@ -1013,46 +974,42 @@ a:active {
 }
 #common_module_leaflet_control_expand_layer{
 	display: none;
-	width: 300px;
+	width: 50vw;
 	height: 30px;
 	bottom: 0px;
 }
 #common_module_leaflet_control_expand_search{
 	display: none;
-	width: 360px;
-	height: 120px;
-	bottom: 0px;
+	width: 50vw;
+    top: 60px;
 }
 #common_module_leaflet_select_country, #common_module_leaflet_select_city{
 	width:95%;
 }
-
 #common_module_leaflet_input_row{
 	position: fixed;
 	z-index: 1;
 	margin-inline-start: calc(50% - 140px);
 }
 #common_module_leaflet_search_input{
-	width:315px !important;
+	width:90% !important;
 }
 #common_module_leaflet_search_icon{
 	display: inline-block;
 	cursor: pointer;
 }
 #common_module_leaflet_search_list_wrap{
-	width: 360px;
+	width: 100%;
 	z-index:1;
-	position:fixed;
-	max-height: calc(100% - 200px);
 	display: none;
 	flex-direction: column;
 }
 #common_module_leaflet_search_list{
-	width:350px;
+	margin-inline-start: 10px;
 	overflow-y: auto;
     overflow-x: hidden;
-	padding: 10px;
-	margin:0 auto;
+	margin-bottom:10px;
+	max-height: 230px;
 	display:none;
 }
 #common_module_leaflet_search_list a {
