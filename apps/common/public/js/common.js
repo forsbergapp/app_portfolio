@@ -1598,7 +1598,7 @@ const search_profile = (click_function) => {
                     image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image);
                     name = json.items[i].username;
                     html +=
-                    `<div class='common_profile_search_list_row'>
+                    `<div class='common_profile_search_list_row' tabindex=-1>
                         <div class='common_profile_search_list_col'>
                             <div class='common_profile_search_list_user_account_id'>${json.items[i].id}</div>
                         </div>
@@ -1748,6 +1748,10 @@ const search_input = (event, module, event_function) => {
         case 'ArrowDown':{
             if (document.getElementById(`common_${module}_search_list`).style.display=='inline-block'){
                 const x = document.querySelectorAll(`.common_${module}_search_list_row`);
+                const focus_item = (element) =>{
+                    element.focus();
+                    document.querySelector(`#common_${module}_search_input`).focus();
+                };
                 for (let i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains(`common_${module}_search_list_selected`))
                         //if up and first or
@@ -1758,12 +1762,14 @@ const search_input = (event, module, event_function) => {
                                 //if the first, set the last
                                 x[i].classList.remove (`common_${module}_search_list_selected`);
                                 x[x.length -1].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(x[x.length -1]);
                             }
                             else{
                                 //down
                                 //if the last, set the first
                                 x[i].classList.remove (`common_${module}_search_list_selected`);
                                 x[0].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(x[0]);
                             }
                             return;
                         }
@@ -1772,18 +1778,21 @@ const search_input = (event, module, event_function) => {
                                 //remove highlight, highlight previous
                                 x[i].classList.remove (`common_${module}_search_list_selected`);
                                 x[i-1].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(x[i-1]);
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
                                 x[i].classList.remove (`common_${module}_search_list_selected`);
                                 x[i+1].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(x[i+1]);
                             }
                             return;
                         }
                 }
                 //no highlight found, highlight first
                 x[0].classList.add (`common_${module}_search_list_selected`);
+                focus_item(x[0]);
                 return;
             }
             break;
@@ -3396,7 +3405,7 @@ const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').value;
     const get_cities = async (search) =>{
         return new Promise ((resolve)=>{
-            FFB ('WORLDCITIES', `/city/search/${search}?`, 'GET', 0, null, (err, result) => {
+            FFB ('WORLDCITIES', `/city/search/${encodeURI(search)}?`, 'GET', 0, null, (err, result) => {
                 if (err)
                     resolve(null);
                 else
@@ -3412,7 +3421,7 @@ const worldcities_search = async (event_function) =>{
     if (cities.length > 0){
         for (const city of cities){
             //dont save timezone function on each record, fetch after choosing a city ${await tzlookup(city.lat, city.lng)}
-            html += `<div class='common_module_leaflet_search_list_row'>
+            html += `<div class='common_module_leaflet_search_list_row' tabindex=-1>
                         <div class='common_module_leaflet_search_list_col'>
                             <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
                         </div>
