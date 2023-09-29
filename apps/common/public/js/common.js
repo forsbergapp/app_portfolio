@@ -2621,7 +2621,6 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                                             <div id='common_module_leaflet_search_icon'>${ICONS['app_search']}</div>
                                                         </div>
                                                         <div id='common_module_leaflet_search_list_wrap'>
-                                                            <div id='common_module_leaflet_search_list'></div>
                                                         </div>
                                                     </div>
                                                  </div>`;
@@ -2786,8 +2785,7 @@ const map_toolbar_reset = ()=>{
     select_country.selectedIndex = 0;
     map_city_empty();
     document.querySelector('#common_module_leaflet_search_input').value ='';
-    document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
-    document.querySelector('#common_module_leaflet_search_list').style.display ='none';
+    document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML ='';
     if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
         map_control_toggle_expand('search');
     if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
@@ -3407,11 +3405,11 @@ const worldcities_search = async (event_function) =>{
         });
     };
     const cities = await get_cities(search);
-    const search_list = document.querySelector('#common_module_leaflet_search_list');
+    const search_list = document.querySelector('#common_module_leaflet_search_list_wrap');
+    //remove innerHTML with eventlistener
+    document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML = '';
     let html = '';
     if (cities.length > 0){
-        search_list.style.display = 'inline-block';
-        document.querySelector('#common_module_leaflet_search_list_wrap').style.display = 'flex';
         for (const city of cities){
             //dont save timezone function on each record, fetch after choosing a city ${await tzlookup(city.lat, city.lng)}
             html += `<div class='common_module_leaflet_search_list_row'>
@@ -3432,19 +3430,19 @@ const worldcities_search = async (event_function) =>{
                         </div>
                     </div>`;
         }
-        document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
-            //execute function from inparameter or use default when not specified
-            if (event.target.classList.contains('common_module_leaflet_click_city'))
-                if (event_function ==null){
-                    map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{map_toolbar_reset('search');});
-                }
-                else{
-                    event_function(event.target.parentNode.parentNode.parentNode);
-                    map_toolbar_reset();
-                }
-        });
     }            
-    search_list.innerHTML = html;
+    search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:inline-block'>${html}</div>`;
+    document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
+        //execute function from inparameter or use default when not specified
+        if (event.target.classList.contains('common_module_leaflet_click_city'))
+            if (event_function ==null){
+                map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{map_toolbar_reset('search');});
+            }
+            else{
+                event_function(event.target.parentNode.parentNode.parentNode);
+                map_toolbar_reset();
+            }
+    });
 };
 /*-----------------------
   EXCEPTION              
