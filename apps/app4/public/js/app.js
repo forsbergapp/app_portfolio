@@ -39,7 +39,7 @@ const init_map = async (framework)=>{
             map_click_event_js = false;
             const {React} = await import('React');
             const {ReactDOM} = await import('ReactDOM');
-            const App_function = () => {
+            const App = () => {
                 //onClick handles single and doubleclick in this React component since onClick and onDoubleClick does not work in React
                 //without tricks
                 //using dblClick on leaflet on() function to get coordinates
@@ -52,9 +52,9 @@ const init_map = async (framework)=>{
             //JSX syntax
             //application.render( <App/>);
             //Using pure Javascript
-            //Intermediate storage to support some browsers mapid div not created when rendering
-            const App = App_function;
             application.render( App());
+            //set delay so some browsers render ok on mobiles.
+            await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
             break;
         }
         case '1':
@@ -68,7 +68,6 @@ const init_map = async (framework)=>{
             break;
         }
     }
-
     return new Promise((resolve)=>{
         common.map_init(APP_GLOBAL['module_leaflet_map_container'], 
                         common.COMMON_GLOBAL['module_leaflet_style'], 
