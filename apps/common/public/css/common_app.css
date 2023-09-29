@@ -1001,7 +1001,7 @@ a:active {
 #common_module_leaflet_search_list_wrap{
 	width: 100%;
 	z-index:1;
-	display: none;
+	display: flex;
 	flex-direction: column;
 }
 #common_module_leaflet_search_list{
@@ -1010,7 +1010,7 @@ a:active {
     overflow-x: hidden;
 	margin-bottom:10px;
 	max-height: 230px;
-	display:none;
+	display:inline-block;
 }
 #common_module_leaflet_search_list a {
 	width: unset;
