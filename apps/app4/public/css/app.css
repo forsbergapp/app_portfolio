@@ -109,6 +109,10 @@ a:hover, a:active{
 }
 
 /*APP THEME COMMON*/
+.common_dialogue_content{
+	color: var(--app_theme_text_color) !important;
+	background-color:var(--app_theme_background_color) !important;
+}
 .common_module_leaflet_control_button{
 	background-color: var(--app_theme_main_branding_color2);
 }
