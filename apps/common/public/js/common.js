@@ -3812,13 +3812,17 @@ const set_app_parameters = (common_parameters) => {
 
 const init_common = async (parameters) => {
     return new Promise((resolve) =>{
+        const init_resolve = () =>{
+            document.body.classList.remove('body_init');
+            resolve();
+        };
         if (COMMON_GLOBAL['app_id'] ==null)
             set_app_service_parameters(parameters.app_service);
         if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
             //admin app
             broadcast_init();
             if (COMMON_GLOBAL['system_admin_only']==1){
-                resolve();
+                init_resolve();
             }
             else{
                 set_app_parameters(parameters.app);
@@ -3826,10 +3830,10 @@ const init_common = async (parameters) => {
                     assign_icons();
                     set_events();
                     set_user_account_app_settings();
-                    resolve();
+                    init_resolve();
                 }
                 else
-                    resolve();
+                    init_resolve();
             }
         }
         else{
@@ -3840,10 +3844,10 @@ const init_common = async (parameters) => {
                 assign_icons();
                 set_events();
                 set_user_account_app_settings();
-                resolve();
+                init_resolve();
             }
             else
-                resolve();
+                init_resolve();
         }
     });
 };
