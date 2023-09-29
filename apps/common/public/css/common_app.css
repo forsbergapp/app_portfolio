@@ -5,6 +5,10 @@ body{
 	padding: 0px;
 	width: auto;
 }
+.body_init{
+	display: none;
+	visibility: hidden;
+}
 select,input, button {
 	font-family: inherit;
 	font-size:inherit;
