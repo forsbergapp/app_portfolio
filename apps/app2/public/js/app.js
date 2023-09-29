@@ -244,6 +244,8 @@ const update_theme_thumbnail = (e, theme_type, classlist_pos) => {
     e.children[0].innerHTML = document.querySelector('#paper').outerHTML;
     //remove id from paper
     e.children[0].children[0].removeAttribute('id');
+    //remove styles
+    e.children[0].children[0].removeAttribute('style');
     //insert class paper first
     e.children[0].children[0].className = 'paper ' + e.children[0].children[0].className;
     const new_theme_id = e.children[0].getAttribute('data-theme_id');
