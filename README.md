@@ -131,6 +131,10 @@
 	www.nodejs.org
 	Express
 	www.expressjs.com
+	Vue
+	www.vuejs.org
+	React
+	www.react.dev
 	Font Awesome
 	www.fontawesome.com
 	Google Fonts
