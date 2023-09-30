@@ -1554,64 +1554,72 @@ const show_monitor = async (yearvalues) =>{
     document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
 
     const init_monitor = () =>{
+
         let path;
         let token_type = '';
-        common.map_init(APP_GLOBAL['module_leaflet_map_container'],
-                        common.COMMON_GLOBAL['module_leaflet_style'],
-                        common.COMMON_GLOBAL['client_longitude'],
-                        common.COMMON_GLOBAL['client_latitude'],
-                        true,
-                        true,
-                        null).then(() => {
-            common.map_update(  common.COMMON_GLOBAL['client_longitude'],
+        const show_map = () =>{
+            //show map only for this condition
+            if (common.COMMON_GLOBAL['system_admin_only'] != 1)
+
+                common.map_init(APP_GLOBAL['module_leaflet_map_container'],
+                                common.COMMON_GLOBAL['module_leaflet_style'],
+                                common.COMMON_GLOBAL['client_longitude'],
                                 common.COMMON_GLOBAL['client_latitude'],
-                                common.COMMON_GLOBAL['module_leaflet_zoom'],
-                                common.COMMON_GLOBAL['client_place'],
-                                null,
-                                common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                                common.COMMON_GLOBAL['module_leaflet_jumpto']);
-            
-            if (common.COMMON_GLOBAL['system_admin']==1){
-                path  = '/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-                token_type = 2;
-            }
+                                true,
+                                true,
+                                null).then(() => {
+                    common.map_update(  common.COMMON_GLOBAL['client_longitude'],
+                                        common.COMMON_GLOBAL['client_latitude'],
+                                        common.COMMON_GLOBAL['module_leaflet_zoom'],
+                                        common.COMMON_GLOBAL['client_place'],
+                                        null,
+                                        common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
+                                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                    common.map_resize();
+                });
+
+        };
+        
+        if (common.COMMON_GLOBAL['system_admin']==1){
+            path  = '/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+            token_type = 2;
+        }
+        else{
+            path  = '/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+            token_type = 1;
+        }      
+        common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {
+            if (err)
+                null;
             else{
-                path  = '/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-                token_type = 1;
-            }      
-            common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {
-                if (err)
-                    null;
-                else{
-                    APP_GLOBAL['limit'] = parseInt(JSON.parse(result_limit).data);
-                    //connected
-                    document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
-                    document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
-                    document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
-                    if (common.COMMON_GLOBAL['system_admin']==1){
-                        //server log
-                        document.getElementById('select_year_menu5').innerHTML = yearvalues;
-                        document.getElementById('select_year_menu5').selectedIndex = 0;
-                        document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
-                        document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
-                        get_server_log_parameters().then(() => {
-                            common.map_resize();
-                            nav_click(document.getElementById('list_connected_title'));
-                        });
-                    }
-                    else{
-                        APP_GLOBAL['page'] = 0;
-                        //log
-                        document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
-                        document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
-                        document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
-                        fix_pagination_buttons();
-                        common.map_resize();
+                APP_GLOBAL['limit'] = parseInt(JSON.parse(result_limit).data);
+                //connected
+                document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
+                document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
+                document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
+                if (common.COMMON_GLOBAL['system_admin']==1){
+                    //server log
+                    document.getElementById('select_year_menu5').innerHTML = yearvalues;
+                    document.getElementById('select_year_menu5').selectedIndex = 0;
+                    document.getElementById('select_month_menu5').selectedIndex = new Date().getMonth();
+                    document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
+                    get_server_log_parameters().then(() => {
+                        show_map();
                         nav_click(document.getElementById('list_connected_title'));
-                    }    
+                    });
                 }
-                
-            });
+                else{
+                    APP_GLOBAL['page'] = 0;
+                    //log
+                    document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
+                    document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
+                    document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
+                    fix_pagination_buttons();
+                    show_map();
+                    nav_click(document.getElementById('list_connected_title'));
+                }    
+            }
+            
         });
     };
     //fetch geolocation once
@@ -2058,16 +2066,16 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                             <div class='list_connected_col'>
                                                 <div>${json.data[i].ip.replace('::ffff:','')}</div>
                                             </div>
-                                            <div class='list_connected_col list_gps_click gps_click'>
+                                            <div class='list_connected_col gps_click'>
                                                 <div>${common.get_null_or_value(json.data[i].gps_latitude)}</div>
                                             </div>
-                                            <div class='list_connected_col list_gps_click gps_click'>
+                                            <div class='list_connected_col gps_click'>
                                                 <div>${common.get_null_or_value(json.data[i].gps_longitude)}</div>
                                             </div>
                                             <div class='list_connected_col'>
                                                 <div>${common.get_null_or_value(show_user_agent(json.data[i].user_agent))}</div>
                                             </div>
-                                            <div class='list_connected_col list_chat_click chat_click'>
+                                            <div class='list_connected_col chat_click'>
                                                 <div>${common.ICONS['app_chat']}</div>
                                             </div>
                                         </div>`;
@@ -2105,10 +2113,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                             <div class='list_app_log_col'>
                                                 <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
                                             </div>
-                                            <div class='list_app_log_col list_gps_click gps_click'>
+                                            <div class='list_app_log_col gps_click'>
                                                 <div>${common.get_null_or_value(json.data[i].client_latitude)}</div>
                                             </div>
-                                            <div class='list_app_log_col list_gps_click gps_click'>
+                                            <div class='list_app_log_col gps_click'>
                                                 <div>${common.get_null_or_value(json.data[i].client_longitude)}</div>
                                             </div>
                                             <div class='list_app_log_col'>
@@ -2146,7 +2154,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_request_log_col'>
                                                         <div>${json.data[i].host}</div>
                                                     </div>
-                                                    <div class='list_request_log_col list_gps_click gps_click'>
+                                                    <div class='list_request_log_col gps_click'>
                                                         <div>${json.data[i].ip==''?'':json.data[i].ip.replace('::ffff:','')}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
@@ -2443,7 +2451,8 @@ const page_navigation = (item) => {
 const list_item_click = (item) => {
     let path;
     let tokentype;
-    if (item.className.indexOf('gps_click')>0){
+    //check if gps_click and if not system admin only when map is not loaded
+    if (item.classList.contains('gps_click') & common.COMMON_GLOBAL['system_admin_only'] != 1){
         if (item.parentNode.parentNode.id =='list_server_log'){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
@@ -2508,7 +2517,7 @@ const list_item_click = (item) => {
         }
     }
     else
-        if (item.className.indexOf('chat_click')>0){
+        if (item.classList.contains('chat_click')){
             show_broadcast_dialogue('CHAT', item.parentNode.children[0].children[0].innerHTML);
         }
     

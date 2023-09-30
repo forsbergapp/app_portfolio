@@ -817,7 +817,7 @@ ul#admin_login_nav li{
 	padding-inline-start: 5px;
 	text-align: start;
 }   
-.list_sort_click, .list_gps_click, .list_chat_click {
+.list_sort_click, .gps_click, .chat_click {
 	cursor:pointer;
 }
 .list_app_log_col, .list_connected_col{
