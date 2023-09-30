@@ -147,9 +147,9 @@ const pool_start = async (dbparameters) =>{
                   user: dbparameters.user,
                   password: dbparameters.password,
                   connectString: dbparameters.connectString,
-                  poolMin: dbparameters.poolMin,
-                  poolMax: dbparameters.poolMax,
-                  poolIncrement: dbparameters.poolIncrement,
+                  poolMin: Number(dbparameters.poolMin),
+                  poolMax: Number(dbparameters.poolMax),
+                  poolIncrement: Number(dbparameters.poolIncrement),
                   poolAlias: pool_id
                }, (err) => {
                   if (err)
