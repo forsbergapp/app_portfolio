@@ -41,9 +41,14 @@ const createAdmin = (app_id, locale) => {
                 render_variables.push(['AppProfileInfo','']);
                 //APP Profile tag not used in common body
                 render_variables.push(['AppProfileTop','']);
-                resolve({app:render_app_with_data(app.app, render_variables),
-                         map_styles: app.settings.map_styles,
-                         map:true});
+                if (app.settings)
+                    resolve({   app:render_app_with_data(app.app, render_variables),
+                                map_styles: app.settings.map_styles,
+                                map:true});
+                else
+                    resolve({   app:render_app_with_data(app.app, render_variables),
+                                map_styles: null,
+                                map:true});
             }
         });
     });
