@@ -180,9 +180,10 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
         callBack(null, connected_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
     };
     i=0;
-    if (connected_clients_no_res.length>0)
+    if (connected_clients_no_res.length>0){
         //update list using map with app role icons if database started
-        if(ConfigGet(1, 'SERVICE_DB', 'START')==1){
+        const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+        if(ConfigGet(1, 'SERVICE_DB', 'START')==1 && apps_start_ok()==true){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({ getUserRoleAdmin }) => {
                 connected_clients_no_res.map(client=>{
                     getUserRoleAdmin(app_id, client.user_account_id, dba, (err, result_app_role)=>{
@@ -204,6 +205,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
         }
         else
             sort_and_return();
+    }
     else
         callBack(null, null);
 };
