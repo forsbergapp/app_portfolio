@@ -2861,10 +2861,10 @@ const show_installation = () =>{
                     }
                 }
             }, false);
+            document.querySelector('#install_db_icon').classList.remove('installed');
+            if (JSON.parse(result).installed == 1)
+                document.querySelector('#install_db_icon').classList.add('installed');
         }
-        document.querySelector('#install_db_icon').classList.remove('installed');
-        if (err==null && JSON.parse(result).installed == 1)
-            document.querySelector('#install_db_icon').classList.add('installed');
     });
 };
 /*----------------------- */
