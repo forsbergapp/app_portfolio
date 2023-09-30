@@ -819,18 +819,49 @@ const install_db = async (app_id, optional=null, callBack)=> {
                   //if ; must be in wrong place then set tag in import script and convert it
                   if (sql.includes('<SEMICOLON/>'))
                      sql = sql.replace('<SEMICOLON/>', ';');
-                  if (sql.toUpperCase().includes('CREATE DATABASE')){
-                        //remove database name in dba pool
-                        await pool_close(null, db_use, DBA);
-                        const json_data = {
+                  //close and start pool when creating database, some modules dont like database name when creating database
+                  //exclude db 4
+                  if (db_use != '4')
+                     if (sql.toUpperCase().includes('CREATE DATABASE')){
+                           //remove database name in dba pool
+                           await pool_close(null, db_use, DBA);
+                           const json_data = {
+                                 use:                     db_use,
+                                 pool_id:                 '',
+                                 port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
+                                 host:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                                 dba:                     DBA,
+                                 user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                                 password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                                 database:                '',
+                                 //db 1 + 2 parameters
+                                 charset:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+                                 connnectionLimit:          ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
+                                 // db 3 parameters
+                                 connectionTimeoutMillis:   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
+                                 idleTimeoutMillis:         ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
+                                 max:                       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`),
+                                 // db 4 parameters
+                                 connectString:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+                                 poolMin:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`),
+                                 poolMax:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`),
+                                 poolIncrement:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
+                              };
+                           await pool_start(json_data);
+                     }
+                     else{
+                        if (change_system_admin_pool == true){
+                           //add database name in dba pool
+                           await pool_close(null, db_use, DBA);
+                           const json_data = {
                               use:                     db_use,
                               pool_id:                 '',
                               port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
-                              host:                     ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
+                              host:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
                               dba:                     DBA,
                               user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
                               password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                              database:                '',
+                              database:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`),
                               //db 1 + 2 parameters
                               charset:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
                               connnectionLimit:          ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
@@ -844,39 +875,11 @@ const install_db = async (app_id, optional=null, callBack)=> {
                               poolMax:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`),
                               poolIncrement:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
                            };
-                        await pool_start(json_data);
-                  }
-                  else{
-                     if (change_system_admin_pool == true){
-                        //add database name in dba pool
-                        await pool_close(null, db_use, DBA);
-                        const json_data = {
-                           use:                     db_use,
-                           pool_id:                 '',
-                           port:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_PORT`),
-                           host:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_HOST`),
-                           dba:                     DBA,
-                           user:                    ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
-                           password:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                           database:                ConfigGet(1, 'SERVICE_DB', `DB${db_use}_NAME`),
-                           //db 1 + 2 parameters
-                           charset:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                           connnectionLimit:          ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
-                           // db 3 parameters
-                           connectionTimeoutMillis:   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-                           idleTimeoutMillis:         ConfigGet(1, 'SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-                           max:                       ConfigGet(1, 'SERVICE_DB', `DB${db_use}_MAX`),
-                           // db 4 parameters
-                           connectString:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-                           poolMin:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MIN`),
-                           poolMax:                   ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_MAX`),
-                           poolIncrement:             ConfigGet(1, 'SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
-                        };
-                        await pool_start(json_data);
-                        //change to database value for the rest of the function
-                        change_system_admin_pool = false;
+                           await pool_start(json_data);
+                           //change to database value for the rest of the function
+                           change_system_admin_pool = false;
+                        }
                      }
-                  }
                   await install_db_execute_statement(app_id, sql, {});
                   if (Object.prototype.hasOwnProperty.call(install_row, 'optional')==true && install_row.optional==optional)
                      count_statements_optional += 1;
