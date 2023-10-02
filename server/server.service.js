@@ -961,7 +961,7 @@ const serverExpress = async () => {
         if (ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION')=='1'){
             const ssl_verification_path = ConfigGet(1, 'SERVER', 'HTTPS_SSL_VERIFICATION_PATH');
             app.use(ssl_verification_path,express.static(process.cwd() + ssl_verification_path));
-            app.use(express.static(process.cwd(), { dotfiles: 'allow' }));
+            app.use(express.static(process.cwd() + ssl_verification_path, { dotfiles: 'allow' }));
         }
         //
         //ROUTES
