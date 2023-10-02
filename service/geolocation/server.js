@@ -110,7 +110,7 @@ const getIp = async (req, res) => {
 		res.write(geodata, 'utf8');
 	}
 	else{
-		if (req.query.ip == '::1' || req.query.ip == '::ffff:127.0.0.1'){
+		if (req.query.ip == '::1' || req.query.ip == '::ffff:127.0.0.1' || req.query.ip == '127.0.0.1'){
 			//create empty record with ip ::1 first time
 			service.writeCacheGeodata('IP', service.getGeodataEmpty('IP'));
 			url = 'http://www.geoplugin.net/json.gp?ip=';
