@@ -823,7 +823,6 @@ ul#admin_login_nav li{
 .list_app_log_col, .list_connected_col{
 	display:inline-block;
 	margin-inline-end: 10px;
-	overflow: auto;
 }
 
 .list_app_log_col:nth-child(1){
@@ -918,7 +917,6 @@ ul#admin_login_nav li{
 	display:inline-block;
 	width:auto;
 	margin-inline-end: 10px;
-	overflow: auto;
 }
 .list_request_log_col:nth-child(1),
 .list_server_log_col:nth-child(1),

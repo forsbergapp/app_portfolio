@@ -57,6 +57,9 @@ a:active {
 .common_list_lov_click{
 	cursor:pointer;
 }
+.common_wide_list_column{
+	overflow: auto;
+}
 /*checkbox with switch ui*/
 .common_switch_input {
 	display: none;

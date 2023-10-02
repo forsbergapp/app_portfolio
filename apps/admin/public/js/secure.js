@@ -2072,7 +2072,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                             <div class='list_connected_col gps_click'>
                                                 <div>${common.get_null_or_value(json.data[i].gps_longitude)}</div>
                                             </div>
-                                            <div class='list_connected_col'>
+                                            <div class='list_connected_col common_wide_list_column'>
                                                 <div>${common.get_null_or_value(show_user_agent(json.data[i].user_agent))}</div>
                                             </div>
                                             <div class='list_connected_col chat_click'>
@@ -2089,7 +2089,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                             <div class='list_app_log_col'>
                                                 <div>${json.data[i].date_created}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].server_http_host}</div>
                                             </div>
                                             <div class='list_app_log_col'>
@@ -2101,10 +2101,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                             <div class='list_app_log_col'>
                                                 <div>${json.data[i].app_module_type}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].app_module_request}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].app_module_result}</div>
                                             </div>
                                             <div class='list_app_log_col'>
@@ -2119,22 +2119,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                             <div class='list_app_log_col gps_click'>
                                                 <div>${common.get_null_or_value(json.data[i].client_longitude)}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].user_language}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].user_timezone}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].user_number_system}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].user_platform}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].server_user_agent}</div>
                                             </div>
-                                            <div class='list_app_log_col'>
+                                            <div class='list_app_log_col common_wide_list_column'>
                                                 <div>${json.data[i].server_http_accept_language}</div>
                                             </div>
                                         </div>`;
@@ -2151,7 +2151,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_request_log_col'>
                                                         <div>${json.data[i].logdate}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i].host}</div>
                                                     </div>
                                                     <div class='list_request_log_col gps_click'>
@@ -2163,7 +2163,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_request_log_col'>
                                                         <div>${json.data[i].correlationid}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i].url}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
@@ -2175,16 +2175,16 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_request_log_col'>
                                                         <div>${json.data[i].statusCode}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i].statusMessage}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i]['user-agent']}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i]['accept-language']}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i].referer}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
@@ -2196,7 +2196,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_request_log_col'>
                                                         <div>${roundOff(json.data[i].responsetime)}</div>
                                                     </div>
-                                                    <div class='list_request_log_col'>
+                                                    <div class='list_request_log_col common_wide_list_column'>
                                                         <div>${json.data[i].logtext}</div>
                                                     </div>
                                                 </div>`;
@@ -2223,16 +2223,16 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_server_app_log_col'>
                                                         <div>${json.data[i].app_id}</div>
                                                     </div>
-                                                    <div class='list_server_app_log_col'>
+                                                    <div class='list_server_app_log_col common_wide_list_column'>
                                                         <div>${json.data[i].app_filename}</div>
                                                     </div>
-                                                    <div class='list_server_app_log_col'>
+                                                    <div class='list_server_app_log_col common_wide_list_column'>
                                                         <div>${json.data[i].app_function_name}</div>
                                                     </div>
                                                     <div class='list_server_app_log_col'>
                                                         <div>${json.data[i].app_app_line}</div>
                                                     </div>
-                                                    <div class='list_server_app_log_col'>
+                                                    <div class='list_server_app_log_col common_wide_list_column'>
                                                         <div>${json.data[i].logtext}</div>
                                                     </div>
                                                 </div>`;
@@ -2250,10 +2250,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_service_log_col'>
                                                         <div>${json.data[i].service}</div>
                                                     </div>
-                                                    <div class='list_service_log_col'>
+                                                    <div class='list_service_log_col common_wide_list_column'>
                                                         <div>${json.data[i].parameters}</div>
                                                     </div>
-                                                    <div class='list_service_log_col'>
+                                                    <div class='list_service_log_col common_wide_list_column'>
                                                         <div>${json.data[i].logtext}</div>
                                                     </div>
                                                 </div>`;
@@ -2271,13 +2271,13 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                     <div class='list_db_log_col'>
                                                         <div>${json.data[i].db}</div>
                                                     </div>
-                                                    <div class='list_db_log_col'>
+                                                    <div class='list_db_log_col common_wide_list_column'>
                                                         <div>${json.data[i].sql}</div>
                                                     </div>
-                                                    <div class='list_db_log_col'>
+                                                    <div class='list_db_log_col common_wide_list_column'>
                                                         <div>${json.data[i].parameters}</div>
                                                     </div>
-                                                    <div class='list_db_log_col'>
+                                                    <div class='list_db_log_col common_wide_list_column'>
                                                         <div>${json.data[i].logtext}</div>
                                                     </div>
                                                 </div>`;
