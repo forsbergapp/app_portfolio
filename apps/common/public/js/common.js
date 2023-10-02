@@ -2953,7 +2953,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
     return new Promise((resolve)=> {
         if (checkconnected()) {
             const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
-                switch (to_method){
+                switch (Number(to_method)){
                     case 0:{
                         if (zoomvalue == '')
                             COMMON_GLOBAL['module_leaflet_session_map'].setView(new COMMON_GLOBAL['module_leaflet_library'].LatLng(latitude, longitude));
