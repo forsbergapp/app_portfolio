@@ -1355,7 +1355,7 @@ const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
                         <img class='common_profile_top_list_avatar' ${image}>
                     </div>
                     <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_username'>
+                        <div class='common_profile_top_list_username common_wide_list_column'>
                             <a href='#'>${name}</a>
                         </div>
                     </div>
@@ -1485,7 +1485,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                     <img class='common_profile_detail_list_app_logo' src='${json.items[i].logo}'>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_name common_link'>
+                                    <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
                                         ${json.items[i].app_name}
                                     </div>
                                 </div>
@@ -1512,7 +1512,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                     <img class='common_profile_detail_list_avatar' ${image}>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_username'>
+                                    <div class='common_profile_detail_list_username common_wide_list_column'>
                                         <a href='#'>${json.items[i].username}</a>
                                     </div>
                                 </div>
@@ -1606,7 +1606,7 @@ const search_profile = (click_function) => {
                             <img class='common_profile_search_list_avatar' ${image}>
                         </div>
                         <div class='common_profile_search_list_col'>
-                            <div class='common_profile_search_list_username'>
+                            <div class='common_profile_search_list_username common_wide_list_column'>
                                 <a href='#'>${name}</a>
                             </div>
                         </div>
