@@ -670,6 +670,8 @@ const show_users = () =>{
     document.querySelector('#list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
     document.querySelector('#menu_3_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_user_account_search_input').focus();document.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     document.getElementById('users_save').addEventListener('click', () => { button_save('users_save');}, false); 
+    //event
+    set_list_eventlisteners('user_account', 'sort');
     search_users();
 
 };
@@ -868,7 +870,6 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
                 //add lov icon for super admin
                 document.querySelectorAll('#list_user_account .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
             }
-            set_list_eventlisteners('user_account', 'sort', true);
             list_events('list_user_account', 'list_user_account_row', ' .list_edit');
             if (focus==true){
                 //set focus at start
@@ -1519,6 +1520,7 @@ const show_monitor = async (yearvalues) =>{
     //connected
     document.getElementById('select_app_menu5_list_connected').innerHTML = document.getElementById('select_app_menu5').innerHTML;
 
+    //set events
     document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 0, 'DESC', document.querySelector('#list_server_log_search_input').value); }, false);
     document.querySelector('#menu_5_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_server_log_search_input').focus();document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     
@@ -1531,6 +1533,16 @@ const show_monitor = async (yearvalues) =>{
         else
             nav_click(event.target);
       }, true);
+
+    //add sort events on title
+    set_list_eventlisteners('connected', 'sort');
+    set_list_eventlisteners('app_log', 'sort');
+    set_list_eventlisteners('server_log', 'sort');
+    //add events on some columns searching in all rows
+    set_list_eventlisteners('connected', 'gps');
+    set_list_eventlisteners('connected', 'chat');
+    set_list_eventlisteners('app_log', 'gps');
+    set_list_eventlisteners('server_log', 'gps');
 
     document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
     document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
@@ -2292,27 +2304,16 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         case 'list_connected':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                            //add sort events on title
-                            set_list_eventlisteners('connected', 'sort',true);
-                            //add events on some columns searching in all rows
-                            set_list_eventlisteners('connected', 'gps');
-                            set_list_eventlisteners('connected', 'chat');
                             break;
                         }
                         case 'list_app_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                            //add events on some columns searching in all rows
-                            set_list_eventlisteners('app_log', 'sort', true);
-                            set_list_eventlisteners('app_log', 'gps');
                             break;
                         }
                         case 'list_server_log':{
                             document.getElementById(list_div).innerHTML = html;
                             document.getElementById(list_div_col_title + sort).classList.add(order_by);
-                            //add events on some columns searching in all rows
-                            set_list_eventlisteners('server_log', 'sort', true);
-                            set_list_eventlisteners('server_log', 'gps');
                             break;
                         }
                     }
@@ -2342,25 +2343,23 @@ const show_app_log = async (sort=1, order_by='desc', offset=0, limit=APP_GLOBAL[
               sort,
               order_by);
 }; 
-const set_list_eventlisteners = (list_type, list_function, remove_events) => {
+const set_list_eventlisteners = (list_type, list_function) => {
+    /* 
+    list function: sort, chat gps
+    */
     const click_function_title = (event) => { 
                                     if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
                                         list_sort_click(event.target.parentNode);
                                 };
     const click_function_rowcolumn = (event) => { 
-                                        if (event.target.parentNode.parentNode.classList.contains(`list_${list_function}_click`))
+                                        if (event.target.parentNode.parentNode.classList.contains(`${list_function}_click`))
                                             list_item_click(event.target.parentNode.parentNode);
                                         else
-                                            if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
+                                            if (event.target.parentNode.classList.contains(`${list_function}_click`))
                                                 list_item_click(event.target.parentNode);
                                     };
     
-    let element = document.getElementById(`list_${list_type}`);
-    if (remove_events==true){
-        //remove all eventlisteners
-        element.replaceWith(element.cloneNode(true));
-        element = document.getElementById(`list_${list_type}`);
-    }
+    const element = document.getElementById(`list_${list_type}`);
     if (list_function=='sort')
         element.addEventListener('click', click_function_title);
     else
