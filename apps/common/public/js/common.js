@@ -1292,6 +1292,13 @@ const show_window_info = (info, url, content_type, iframe_content) => {
         }
     }
 };
+const show_hide_window_info_toolbar = () => {
+    if (document.getElementById('common_window_info_toolbar').style.display=='flex' ||
+        document.getElementById('common_window_info_toolbar').style.display=='')
+        document.getElementById('common_window_info_toolbar').style.display='none';
+    else
+        document.getElementById('common_window_info_toolbar').style.display='flex';
+};
 /*-----------------------
   PROFILE               
 
@@ -3690,6 +3697,7 @@ const set_events = () => {
             document.getElementById('common_window_info_content').classList='';
             document.getElementById('common_window_info_toolbar').classList='';
     });
+    document.getElementById('common_window_info_info').addEventListener('click', () => { show_hide_window_info_toolbar();  }, false);
     document.querySelector('#common_window_info_toolbar').addEventListener('click', (event)=>{
         let event_target_id;
         if  (event.target.parentNode.id == 'common_window_info_toolbar'){

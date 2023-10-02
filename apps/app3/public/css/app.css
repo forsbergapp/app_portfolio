@@ -87,7 +87,3 @@ body {
 #common_window_info{
 	background: var(--app_white);
 }
-#common_window_info_btn_close .common_icon{
-	background: var(--app_white);
-    box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
-}
