@@ -373,8 +373,15 @@ const getLogs = async (app_id, data, callBack) => {
             }
             else{
                 //string sort with lowercase and localcompare
-                first_sort = first[data.sort==null?'logdate':data.sort].toLowerCase();
-                second_sort = second[data.sort==null?'logdate':data.sort].toLowerCase();                
+                first_sort = first[data.sort==null?'logdate':data.sort];
+                if (first_sort == undefined)
+                    first_sort = 'undefined';
+                else
+                    first_sort = first_sort.toLowerCase();
+                if (second_sort == undefined)
+                    second_sort = 'undefined';
+                else
+                    second_sort = second_sort.toLowerCase();
                 //using localeCompare as collation method
                 if (first_sort.localeCompare(second_sort)<0 )
                     return -1 * order_by_num;
