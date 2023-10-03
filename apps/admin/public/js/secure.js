@@ -60,10 +60,6 @@ const delete_globals = () => {
     APP_GLOBAL['service_log_file_interval'] = null;
     APP_GLOBAL['service_log_file_path_server'] = null;
     APP_GLOBAL['service_log_date_format'] = null;
-
-    common.COMMON_GLOBAL['module_leaflet_style'] = null;
-    common.COMMON_GLOBAL['module_leaflet_jumpto'] = null;
-    common.COMMON_GLOBAL['module_leaflet_popup_offset'] = null;
 };
 
 /*----------------------- */
