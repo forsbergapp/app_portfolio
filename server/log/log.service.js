@@ -387,7 +387,7 @@ const getLogs = async (app_id, data, callBack) => {
         callBack(null, log_rows);
     })
     //return empty and not error
-    .catch(callBack(null, []));
+    .catch(()=>callBack(null, []));
 };
 const getStatusCodes = async () =>{
     /*
