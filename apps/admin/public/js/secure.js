@@ -2408,7 +2408,7 @@ const page_navigation = (item) => {
     const order_by = get_sort(1);
     if (sort =='')
         sort = 8;
-    switch (item.id){
+    switch (item.id==''?item.parentNode.id:item.id){
         case 'list_app_log_first':{
             APP_GLOBAL['page'] = 0;
             show_app_log(sort, order_by, 0,APP_GLOBAL['limit']);
