@@ -1901,10 +1901,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                     <div id='list_server_log_col_title_ip' class='list_request_log_col list_sort_click list_title'>
                                         <div>IP</div>
                                     </div>
-                                    <div id='list_server_log_col_title_request_id' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_requestid' class='list_request_log_col list_sort_click list_title'>
                                         <div>REQUEST_ID</div>
                                     </div>
-                                    <div id='list_server_log_col_title_correlation_id' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_correlationid' class='list_request_log_col list_sort_click list_title'>
                                         <div>CORRELATION_ID</div>
                                     </div>
                                     <div id='list_server_log_col_title_url' class='list_request_log_col list_sort_click list_title'>
@@ -1937,7 +1937,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                     <div id='list_server_log_col_title_size_sent' class='list_request_log_col list_sort_click list_title'>
                                         <div>SIZE_SENT</div>
                                     </div>
-                                    <div id='list_server_log_col_title1_response_time' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_responsetime' class='list_request_log_col list_sort_click list_title'>
                                         <div>RESPONSE_TIME</div>
                                     </div>
                                     <div id='list_server_log_col_title_logtext' class='list_request_log_col list_sort_click list_title'>
