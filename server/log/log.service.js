@@ -303,7 +303,8 @@ const getLogParameters = (app_id, callBack) => {
     results.SERVICE_LOG_FILE_INTERVAL = ConfigGet(1, 'SERVICE_LOG', 'FILE_INTERVAL');
     return callBack(null, results);
 };
-const getLogs = (app_id, data, callBack) => {
+const getLogs = async (app_id, data, callBack) => {
+    const fs = await import('node:fs');
     let filename;
     if (parseInt(data.month) <10)
         data.month = '0' + data.month;
@@ -317,241 +318,75 @@ const getLogs = (app_id, data, callBack) => {
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
         else
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
-    const fixed_log = [];
-    try {
-        import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + ConfigGet(0, null, 'PATH_LOG') + filename, 'utf8', (error, fileBuffer) => {
-                if (error)
-                    return callBack(null, fixed_log);
-                else{
-                    fileBuffer.toString().split('\r\n').forEach((record) => {
-                        if (record.length>0){
-                            const record_parse = JSON.parse(record);
-                            //filter app id
-                            if (data.select_app_id==='')
-                                data.select_app_id = null;
-                            if ( ((data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (record_parse.app_id == parseInt(data.select_app_id) ||data.select_app_id ==null)) ||
-                                 (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')){
-                                    //filter search
-                                    if (data.search==null || data.search=='null' || data.search=='')
-                                        fixed_log.push(record_parse);
-                                    else
-                                        for (const value of Object.values(record_parse)){
-                                            if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
-                                                !value.toString().toLowerCase().startsWith('/log/logs'))
-                                                if (value.toString().toLowerCase().includes(data.search.toLowerCase()))
-                                                    fixed_log.push(record_parse);
-                                        }
-                            }
-                        }
-                    });
+    const match = (record, search) =>{
+        for (const value of Object.values(record)){
+            if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
+                !value.toString().toLowerCase().startsWith('/log/logs')){
+                    const col_check = value.toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+                    const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+                    if (col_check.search(search_check)>-1)
+                        return true;
                 }
-                const sortByProperty = (property, order_by) => {
-                    return (a,b) => {
-                        if(a[property] > b[property])  
-                            return 1 * order_by;
-                        else if(a[property] < b[property])  
-                            return -1 * order_by;
-                    
-                        return 0;  
-                    };  
-                };
-                let column_sort;
-                let order_by;
-                if (data.order_by =='asc')
-                    order_by = 1;
-                else   
-                    order_by = -1;
-                switch (data.logscope){
-                    case 'REQUEST':{
-                        switch (parseInt(data.sort)){
-                            case 0:{
-                                column_sort = 'logdate';
-                                break;
-                            }
-                            case 1:{
-                                column_sort = 'host';
-                                break;
-                            }
-                            case 2:{
-                                column_sort = 'ip';
-                                break;
-                            }
-                            case 3:{
-                                column_sort = 'requestid';
-                                break;
-                            }
-                            case 4:{
-                                column_sort = 'correlationid';
-                                break;
-                            }
-                            case 5:{
-                                column_sort = 'url';
-                                break;
-                            }
-                            case 6:{
-                                column_sort = 'http_info';
-                                break;
-                            }
-                            case 7:{
-                                column_sort = 'method';
-                                break;
-                            }
-                            case 8:{
-                                column_sort = 'statusCode';
-                                break;
-                            }
-                            case 9:{
-                                column_sort = 'statusMessage';
-                                break;
-                            }
-                            case 10:{
-                                column_sort = '["user-agent"]';
-                                break;
-                            }
-                            case 11:{
-                                column_sort = '["accept-language"]';
-                                break;
-                            }
-                            case 12:{
-                                column_sort = 'referer';
-                                break;
-                            }
-                            case 13:{
-                                column_sort = 'size_received';
-                                break;
-                            }
-                            case 14:{
-                                column_sort = 'size_sent';
-                                break;
-                            }
-                            case 15:{
-                                column_sort = 'responsetime';
-                                break;
-                            }
-                            case 16:{
-                                column_sort = 'logtext';
-                                break;
-                            }
-                            default:{
-                                column_sort = 'logdate';
-                            }
-                        }
-                        break;
-                    } 
-                    case 'SERVER':{
-                        switch (parseInt(data.sort)){
-                            case 0:{
-                                column_sort = 'logdate';
-                                break;
-                            }
-                            case 1:{
-                                column_sort = 'logtext';
-                                break;
-                            }
-                            default:{
-                                column_sort = 'logdate';
-                            }
-                        }
-                        break;
-                    }
-                    case 'APP':{
-                        switch (parseInt(data.sort)){
-                            case 0:{
-                                column_sort = 'logdate';
-                                break;
-                            }
-                            case 1:{
-                                column_sort = 'app_id';
-                                break;
-                            }
-                            case 2:{
-                                column_sort = 'app_filename';
-                                break;
-                            }
-                            case 3:{
-                                column_sort = 'app_function_name';
-                                break;
-                            }
-                            case 4:{
-                                column_sort = 'app_app_line';
-                                break;
-                            }
-                            case 5:{
-                                column_sort = 'logtext';
-                                break;
-                            }
-                            default:{
-                                column_sort = 'logdate';
-                            }
-                        }
-                        break;
-                    }
-                    case 'SERVICE':{
-                        switch (parseInt(data.sort)){
-                            case 0:{
-                                column_sort = 'logdate';
-                                break;
-                            }
-                            case 1:{
-                                column_sort = 'app_id';
-                                break;
-                            }
-                            case 2:{
-                                column_sort = 'service';
-                                break;
-                            }
-                            case 3:{
-                                column_sort = 'parameters';
-                                break;
-                            }
-                            case 4:{
-                                column_sort = 'logtext';
-                                break;
-                            }
-                            default:{
-                                column_sort = 'logdate';
-                            }
-                        }
-                        break;
-                    }
-                    case 'DB':{
-                        switch (parseInt(data.sort)){
-                            case 0:{
-                                column_sort = 'logdate';
-                                break;
-                            }
-                            case 1:{
-                                column_sort = 'app_id';
-                                break;
-                            }
-                            case 2:{
-                                column_sort = 'db';
-                                break;
-                            }
-                            case 3:{
-                                column_sort = 'sql';
-                                break;
-                            }
-                            case 4:{
-                                column_sort = 'parameters';
-                                break;
-                            }
-                            default:{
-                                column_sort = 'logdate';
-                            }
-                        }
-                        break;
-                    }
-                }
-                fixed_log.sort(sortByProperty(column_sort, order_by));
-                return callBack(null, fixed_log);
-            });
+        }
+        return false;
+    };
+    //read log file
+    await fs.promises.readFile(`${process.cwd()}${ConfigGet(0, null, 'PATH_LOG')}${filename}`, 'utf8')
+    .then(fileBuffer=>{
+        //read log records in the file
+        let log_rows = fileBuffer.toString().split('\r\n');
+        //remove empty row and parse records to object
+        log_rows = log_rows.filter(record=>record.length>0).map(record=>{if (record.length>0)
+                                            return JSON.parse(record);
+                                          });
+        //filter records
+        log_rows = log_rows.filter(record => {
+                return (
+                        (
+                            (
+                             (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == parseInt(data.select_app_id) ||record.select_app_id ==null || data.select_app_id ==''))||
+                             (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
+                            ) &&
+                         ((data.search==null || data.search=='null' || data.search=='')|| 
+                          ((data.search!=null || data.search!='null' || data.search!='') && match(record, data.search)))
+                    );
         });
-    } 
-    catch (error) {
-        return callBack(error);
-    }
+        //sort 
+        let order_by_num;
+        if (data.order_by =='asc')
+            order_by_num = 1;
+        else   
+            order_by_num = -1;
+        log_rows = log_rows.sort((first, second)=>{
+            let first_sort, second_sort;
+            //sort default is connection_date if sort missing as argument
+            if (typeof first[data.sort==null?'logdate':data.sort] == 'number'){
+                //number sort
+                first_sort = first[data.sort==null?'logdate':data.sort];
+                second_sort = second[data.sort==null?'logdate':data.sort];
+                if (first_sort< second_sort )
+                    return -1 * order_by_num;
+                else if (first_sort> second_sort)
+                    return 1 * order_by_num;
+                else
+                    return 0;
+            }
+            else{
+                //string sort with lowercase and localcompare
+                first_sort = first[data.sort==null?'logdate':data.sort].toLowerCase();
+                second_sort = second[data.sort==null?'logdate':data.sort].toLowerCase();                
+                //using localeCompare as collation method
+                if (first_sort.localeCompare(second_sort)<0 )
+                    return -1 * order_by_num;
+                else if (first_sort.localeCompare(second_sort)>0 )
+                    return 1 * order_by_num;
+                else
+                    return 0;
+            }
+        });
+        callBack(null, log_rows);
+    })
+    .catch(error=>callBack(error));
 };
 const getStatusCodes = async () =>{
     /*
