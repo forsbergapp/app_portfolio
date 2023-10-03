@@ -1521,13 +1521,8 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#menu_5_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_server_log_search_input').focus();document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     
     document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
-        if(event.target.id=='')
-            if (event.target.parentNode.id=='')
-                nav_click(event.target.parentNode.parentNode);
-            else
-                nav_click(event.target.parentNode);
-        else
-            nav_click(event.target);
+        const n = id => id==''?null:id;
+        nav_click(n(event.target.id)?? n(event.target.parentNode.id) ?? n(event.target.parentNode.parentNode.id) ?? event.target.parentNode.parentNode.parentNode.id);    
       }, true);
 
     //add sort events on title
@@ -1540,24 +1535,24 @@ const show_monitor = async (yearvalues) =>{
     set_list_eventlisteners('app_log', 'gps');
     set_list_eventlisteners('server_log', 'gps');
 
-    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
-    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
-    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title'));}, false);
+    document.getElementById('select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title').id);}, false);
+    document.getElementById('select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title').id);}, false);
+    document.getElementById('select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.getElementById('list_app_log_title').id);}, false);
 
     document.getElementById('list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target);}, false);
     document.getElementById('list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target);}, false);
     document.getElementById('list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target);}, false);
     document.getElementById('list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target);}, false);
 
-    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'));}, false);
-    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'));}, false);
-    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title'));}, false);
+    document.getElementById('select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title').id);}, false);
+    document.getElementById('select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title').id);}, false);
+    document.getElementById('select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.getElementById('list_connected_title').id);}, false);
 
-    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);    
-    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
-    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
-    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
-    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title'));}, false);
+    document.getElementById('select_logscope5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title').id);}, false);    
+    document.getElementById('select_app_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title').id);}, false);
+    document.getElementById('select_year_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title').id);}, false);
+    document.getElementById('select_month_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title').id);}, false);
+    document.getElementById('select_day_menu5').addEventListener('change', () => { nav_click(document.getElementById('list_server_log_title').id);}, false);
 
     document.getElementById('filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
 
@@ -1613,7 +1608,7 @@ const show_monitor = async (yearvalues) =>{
                     document.getElementById('select_day_menu5').selectedIndex = new Date().getDate() -1;
                     get_server_log_parameters().then(() => {
                         show_map();
-                        nav_click(document.getElementById('list_connected_title'));
+                        nav_click(document.getElementById('list_connected_title').id);
                     });
                 }
                 else{
@@ -1624,7 +1619,7 @@ const show_monitor = async (yearvalues) =>{
                     document.getElementById('select_month_menu5_app_log').selectedIndex = new Date().getMonth();
                     fix_pagination_buttons();
                     show_map();
-                    nav_click(document.getElementById('list_connected_title'));
+                    nav_click(document.getElementById('list_connected_title').id);
                 }    
             }
             
@@ -1658,7 +1653,7 @@ const fix_pagination_buttons = () => {
         }
     }
 };
-const nav_click = (item) => {
+const nav_click = (item_id) => {
     const reset_monitor = () => {
         document.getElementById('list_monitor_nav_1').classList='';
         document.getElementById('list_monitor_nav_2').classList='';
@@ -1672,7 +1667,7 @@ const nav_click = (item) => {
         document.getElementById('list_config_nav_0').classList='';
     };
     
-    switch (item.id){
+    switch (item_id){
         //MONITOR
         case 'list_connected_title':{
             reset_monitor();
@@ -1825,7 +1820,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         break;
                     }
                     case 'list_app_log':{
-                        APP_GLOBAL['page_last'] = Math.floor(json[0].total_rows/APP_GLOBAL['limit']) * APP_GLOBAL['limit'];
+                        APP_GLOBAL['page_last'] = Math.floor(json.data[0].total_rows/APP_GLOBAL['limit']) * APP_GLOBAL['limit'];
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
                                     <div id='list_app_log_col_title1' class='list_app_log_col list_sort_click list_title'>
                                         <div>ID</div>
@@ -2677,10 +2672,10 @@ const show_server_config = () =>{
         </div>`;
     document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save');}, false); 
     document.querySelector('#list_config_nav').addEventListener('click', (event) => {
-        nav_click(event.target.id==''?event.target.parentNode:event.target);
+        nav_click(event.target.id==''?event.target.parentNode.id:event.target.id);
      }, true);
 
-    nav_click(document.getElementById('list_config_server_title'));
+    nav_click(document.getElementById('list_config_server_title').id);
 };
 const show_config = async (config_nav=1) => {
     document.getElementById('list_config').innerHTML = common.APP_SPINNER;
