@@ -86,106 +86,66 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
     callBack(null, null);
 };
 const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba, callBack) => {
-    const connected_clients_no_res = [];
-    let i=0;
-    CONNECTED_CLIENTS.forEach(client=>{
-        if (client.app_id == app_id_select || app_id_select == ''){
-            i++;
-            let copyClient;
-            if (limit=='' || (limit!='' && i<=limit)){
-                //connection date in ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-                //return selected year and month
-                if (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
-                    parseInt(client.connection_date.substring(5,7)) == parseInt(month)){
-                        copyClient = {
-                            id: client.id,
-                            app_id: client.app_id,
-                            app_role_id: '',
-                            app_role_icon: '',
-                            user_account_id: client.user_account_id,
-                            system_admin: client.system_admin,
-                            user_agent: client.user_agent,
-                            connection_date: client.connection_date,
-                            ip: client.ip,
-                            gps_latitude: client.gps_latitude,
-                            gps_longitude: client.gps_longitude,
-                            identity_provider_id: client.identity_provider_id
-                        };
-                        connected_clients_no_res.push(copyClient);
-                    }
-            }
-        }
+    if (limit == '')
+        limit = 0;
+    else
+       limit = Number(limit);
+    if (app_id_select == '')
+        app_id_select = null;
+    else
+        app_id_select = Number(app_id_select);
+    const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+    const db_ok = ConfigGet(1, 'SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
+    //filter    
+    let connected_clients_no_res = CONNECTED_CLIENTS.filter((client, index)=>{
+        return index<=limit &&
+        (client.app_id == app_id_select || app_id_select==null) &&
+        (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
+         parseInt(client.connection_date.substring(5,7)) == parseInt(month));
     });
-    const sortByProperty = (property, order_by) => {
-        return (a,b) => {
-            if(a[property] > b[property])  
-                return 1 * order_by;
-            else if(a[property] < b[property])  
-                return -1 * order_by;
-            return 0;  
-        };  
-    };        
-    const sort_and_return = () => {
-        let column_sort;
+    //remove response key in result
+    connected_clients_no_res.map(client=>delete client.response);
+    const sort_and_return = (sort) =>{
         let order_by_num;
         if (order_by =='asc')
             order_by_num = 1;
         else   
             order_by_num = -1;
-        switch (parseInt(sort)){
-            case 1:{
-                column_sort = 'id';
-                break;
+        return connected_clients_no_res = connected_clients_no_res.sort((first, second)=>{
+            let first_sort, second_sort;
+            //sort default is connection_date if sort missing as argument
+            if (typeof first[sort==null?'connection_date':sort] == 'number'){
+                //number sort
+                first_sort = first[sort==null?'connection_date':sort];
+                second_sort = second[sort==null?'connection_date':sort];
+                if (first_sort< second_sort )
+                    return -1 * order_by_num;
+                else if (first_sort> second_sort)
+                    return 1 * order_by_num;
+                else
+                    return 0;
             }
-            case 2:{
-                column_sort = 'connection_date';
-                break;
+            else{
+                //string sort with lowercase and localcompare
+                first_sort = first[sort==null?'connection_date':sort].toLowerCase();
+                second_sort = second[sort==null?'connection_date':sort].toLowerCase();
+                //using localeCompare as collation method
+                if (first_sort.localeCompare(second_sort)<0 )
+                    return -1 * order_by_num;
+                else if (first_sort.localeCompare(second_sort)>0 )
+                    return 1 * order_by_num;
+                else
+                    return 0;
             }
-            case 3:{
-                column_sort = 'app_id';
-                break;
-            }
-            case 4:{
-                column_sort = 'app_role_icon';
-                break;
-            }
-            case 5:{
-                column_sort = 'user_account_id';
-                break;
-            }
-            case 6:{
-                column_sort = 'system_admin';
-                break;
-            }
-            case 7:{
-                column_sort = 'ip';
-                break;
-            }
-            case 8:{
-                column_sort = 'gps_latitude';
-                break;
-            }
-            case 9:{
-                column_sort = 'gps_longitude';
-                break;
-            }
-            case 10:{
-                column_sort = 'user_agent';
-                break;
-            }
-            default:{
-                column_sort = 'connection_date';
-            }
-        }
-        callBack(null, connected_clients_no_res.sort(sortByProperty(column_sort, order_by_num)));
+        });
     };
-    i=0;
     if (connected_clients_no_res.length>0){
-        //update list using map with app role icons if database started
-        const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
-        if(ConfigGet(1, 'SERVICE_DB', 'START')==1 && apps_start_ok()==true){
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({ getUserRoleAdmin }) => {
-                connected_clients_no_res.map(client=>{
+        if (db_ok){
+            //update with user role
+            const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
+            let i=0;
+            connected_clients_no_res.map(client=>{
+                if (client.system_admin=='0')
                     getUserRoleAdmin(app_id, client.user_account_id, dba, (err, result_app_role)=>{
                         if (err)
                             callBack(err, null);
@@ -195,16 +155,24 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
                                 client.app_role_icon = result_app_role.icon;
                             }
                             if (i== connected_clients_no_res.length - 1) 
-                                sort_and_return();
+                                callBack(null, sort_and_return(sort));
                             else
                                 i++;
                         }
                     });
-                });
+                else{
+                    client.app_role_id = '';
+                    client.app_role_icon = '';
+                    if (i== connected_clients_no_res.length - 1) 
+                        callBack(null, sort_and_return(sort));
+                    else
+                        i++;
+                }
+                    
             });
         }
         else
-            sort_and_return();
+            callBack(null, sort_and_return(sort));
     }
     else
         callBack(null, null);

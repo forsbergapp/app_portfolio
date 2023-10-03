@@ -1792,37 +1792,37 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     */
                     case 'list_connected':{
                         html = `<div id='list_connected_row_title' class='list_connected_row'>
-                                    <div id='list_connected_col_title1' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_id' class='list_connected_col list_sort_click list_title'>
                                         <div>ID</div>
                                     </div>
-                                    <div id='list_connected_col_title2' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_connection_date' class='list_connected_col list_sort_click list_title'>
                                         <div>CONNECTION DATE</div>
                                     </div>
-                                    <div id='list_connected_col_title3' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_app_id' class='list_connected_col list_sort_click list_title'>
                                         <div>APP ID</div>
                                     </div>
-                                    <div id='list_connected_col_title4' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_app_role_icon' class='list_connected_col list_sort_click list_title'>
                                         <div>ROLE</div>
                                     </div>
-                                    <div id='list_connected_col_title5' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_user_account_id' class='list_connected_col list_sort_click list_title'>
                                         <div>USER ID</div>
                                     </div>
-                                    <div id='list_connected_col_title6' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_system_admin' class='list_connected_col list_sort_click list_title'>
                                         <div>SYSTEM ADMIN</div>
                                     </div>
-                                    <div id='list_connected_col_title7' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_ip' class='list_connected_col list_sort_click list_title'>
                                         <div>IP</div>
                                     </div>
-                                    <div id='list_connected_col_title8' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_gps_latitude' class='list_connected_col list_sort_click list_title'>
                                         <div>GPS LAT</div>
                                     </div>
-                                    <div id='list_connected_col_title9' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_gps_longitude' class='list_connected_col list_sort_click list_title'>
                                         <div>GPS LONG</div>
                                     </div>
-                                    <div id='list_connected_col_title10' class='list_connected_col list_sort_click list_title'>
+                                    <div id='list_connected_col_title_user_agent' class='list_connected_col list_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_connected_col_title11' class='list_connected_col list_title'>
+                                    <div id='list_connected_col_title_broadcast' class='list_connected_col list_title'>
                                         <div>BROADCAST</div>
                                     </div>
                                 </div>`;
@@ -2303,7 +2303,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     switch (list_div){
                         case 'list_connected':{
                             document.getElementById(list_div).innerHTML = html;
-                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            document.getElementById(list_div_col_title + '_' + sort).classList.add(order_by);
                             break;
                         }
                         case 'list_app_log':{
@@ -2322,7 +2322,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         });        
     }
 };
-const show_connected = async (sort=1, order_by='desc') => {
+const show_connected = async (sort='connection_date', order_by='desc') => {
     const app_id = document.getElementById('select_app_menu5_list_connected').options[document.getElementById('select_app_menu5_list_connected').selectedIndex].value;
     const year = document.getElementById('select_year_menu5_list_connected').value;
     const month = document.getElementById('select_month_menu5_list_connected').value;
@@ -2398,7 +2398,7 @@ const list_sort_click = (item) => {
             break;
         }
         case 'list_connected':{
-            show_connected(item.id.substr(item.id.length - 1), get_order(item));    
+            show_connected(item.id.substr('list_connected_col_title_'.length), get_order(item));
             break;
         }
         case 'list_server_log':{
