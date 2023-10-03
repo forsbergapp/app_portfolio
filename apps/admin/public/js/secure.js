@@ -1521,7 +1521,7 @@ const show_monitor = async (yearvalues) =>{
     document.getElementById('select_app_menu5_list_connected').innerHTML = document.getElementById('select_app_menu5').innerHTML;
 
     //set events
-    document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 0, 'DESC', document.querySelector('#list_server_log_search_input').value); }, false);
+    document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').value); }, false);
     document.querySelector('#menu_5_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_server_log_search_input').focus();document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     
     document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
@@ -1703,7 +1703,7 @@ const nav_click = (item) => {
             document.getElementById('list_app_log_form').style.display='none';
             document.getElementById('list_server_log_form').style.display='block';
             document.getElementById('list_monitor_nav_3').classList= 'list_nav_selected_tab';
-            show_server_logs(0, 'DESC', document.querySelector('#list_server_log_search_input').value);
+            show_server_logs('logdate', 'DESC', document.querySelector('#list_server_log_search_input').value);
             break;
         }
         //SERVER CONFIG
@@ -1829,7 +1829,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         break;
                     }
                     case 'list_app_log':{
-                        APP_GLOBAL['page_last'] = Math.floor(json.data[0].total_rows/APP_GLOBAL['limit']) * APP_GLOBAL['limit'];
+                        APP_GLOBAL['page_last'] = Math.floor(json[0].total_rows/APP_GLOBAL['limit']) * APP_GLOBAL['limit'];
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
                                     <div id='list_app_log_col_title1' class='list_app_log_col list_sort_click list_title'>
                                         <div>ID</div>
@@ -1892,55 +1892,55 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         switch (logscope){
                             case 'REQUEST':{
                                 html =`<div id='list_server_log_row_title' class='list_server_log_row'>
-                                    <div id='list_server_log_col_title0' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_logdate' class='list_request_log_col list_sort_click list_title'>
                                         <div>LOGDATE</div>
                                     </div>
-                                    <div id='list_server_log_col_title1' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_host' class='list_request_log_col list_sort_click list_title'>
                                         <div>HOST</div>
                                     </div>
-                                    <div id='list_server_log_col_title2' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_ip' class='list_request_log_col list_sort_click list_title'>
                                         <div>IP</div>
                                     </div>
-                                    <div id='list_server_log_col_title3' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_request_id' class='list_request_log_col list_sort_click list_title'>
                                         <div>REQUEST_ID</div>
                                     </div>
-                                    <div id='list_server_log_col_title4' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_correlation_id' class='list_request_log_col list_sort_click list_title'>
                                         <div>CORRELATION_ID</div>
                                     </div>
-                                    <div id='list_server_log_col_title5' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_url' class='list_request_log_col list_sort_click list_title'>
                                         <div>URL</div>
                                     </div>
-                                    <div id='list_server_log_col_title6' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_http_info' class='list_request_log_col list_sort_click list_title'>
                                         <div>HTTP INFO</div>
                                     </div>
-                                    <div id='list_server_log_col_title7' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_method' class='list_request_log_col list_sort_click list_title'>
                                         <div>METHOD</div>
                                     </div>
-                                    <div id='list_server_log_col_title8' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_statuscode' class='list_request_log_col list_sort_click list_title'>
                                         <div>STATUSCODE</div>
                                     </div>
-                                    <div id='list_server_log_col_title9' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_statusmessage' class='list_request_log_col list_sort_click list_title'>
                                         <div>STATUSMESSAGE</div>
                                     </div>
-                                    <div id='list_server_log_col_title10' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_user-agent' class='list_request_log_col list_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_server_log_col_title11' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_accept-language' class='list_request_log_col list_sort_click list_title'>
                                         <div>ACCEPT LANGUAGE</div>
                                     </div>
-                                    <div id='list_server_log_col_title12' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_referer' class='list_request_log_col list_sort_click list_title'>
                                         <div>REFERER</div>
                                     </div>
-                                    <div id='list_server_log_col_title13' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_size_received' class='list_request_log_col list_sort_click list_title'>
                                         <div>SIZE_RECEIVED</div>
                                     </div>
-                                    <div id='list_server_log_col_title14' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_size_sent' class='list_request_log_col list_sort_click list_title'>
                                         <div>SIZE_SENT</div>
                                     </div>
-                                    <div id='list_server_log_col_title15' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title1_response_time' class='list_request_log_col list_sort_click list_title'>
                                         <div>RESPONSE_TIME</div>
                                     </div>
-                                    <div id='list_server_log_col_title16' class='list_request_log_col list_sort_click list_title'>
+                                    <div id='list_server_log_col_title_logtext' class='list_request_log_col list_sort_click list_title'>
                                         <div>LOG TEXT</div>
                                     </div>
                                 </div>`;
@@ -1948,10 +1948,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             }
                             case 'SERVER':{
                                 html = `<div id='list_server_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title0' class='list_server_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logdate' class='list_server_log_col list_sort_click list_title'>
                                                 <div>LOGDATE</div>
                                             </div>
-                                            <div id='list_server_log_col_title1' class='list_server_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logtext' class='list_server_log_col list_sort_click list_title'>
                                                 <div>LOGTEXT</div>
                                             </div>
                                         </div>`;
@@ -1959,22 +1959,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             }
                             case 'APP':{
                                 html = `<div id='list_server_app_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title0' class='list_server_app_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logdate' class='list_server_app_log_col list_sort_click list_title'>
                                                 <div>LOGDATE</div>
                                             </div>
-                                            <div id='list_server_log_col_title1' class='list_server_app_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_app_id' class='list_server_app_log_col list_sort_click list_title'>
                                                 <div>APP ID</div>
                                             </div>
-                                            <div id='list_server_log_col_title2' class='list_server_app_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_filename' class='list_server_app_log_col list_sort_click list_title'>
                                                 <div>FILENAME</div>
                                             </div>
-                                            <div id='list_server_log_col_title3' class='list_server_app_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_function' class='list_server_app_log_col list_sort_click list_title'>
                                                 <div>FUNCTION</div>
                                             </div>
-                                            <div id='list_server_log_col_title4' class='list_server_app_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_line' class='list_server_app_log_col list_sort_click list_title'>
                                                 <div>LINE</div>
                                             </div>
-                                            <div id='list_server_log_col_title5' class='list_server_app_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logtext' class='list_server_app_log_col list_sort_click list_title'>
                                                 <div>LOG TEXT</div>
                                             </div>
                                         </div>`;
@@ -1982,19 +1982,19 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             }
                             case 'SERVICE':{
                                 html = `<div id='list_service_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title0' class='list_service_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logdate' class='list_service_log_col list_sort_click list_title'>
                                                 <div>LOGDATE</div>
                                             </div>
-                                            <div id='list_server_log_col_title1' class='list_service_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_app_id' class='list_service_log_col list_sort_click list_title'>
                                                 <div>APP ID</div>
                                             </div>
-                                            <div id='list_server_log_col_title2' class='list_service_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_service' class='list_service_log_col list_sort_click list_title'>
                                                 <div>SERVICE</div>
                                             </div>
-                                            <div id='list_server_log_col_title3' class='list_service_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_parameters' class='list_service_log_col list_sort_click list_title'>
                                                 <div>PARAMETERS</div>
                                             </div>
-                                            <div id='list_server_log_col_title4' class='list_service_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logtext' class='list_service_log_col list_sort_click list_title'>
                                                 <div>LOG TEXT</div>
                                             </div>
                                         </div>`;
@@ -2002,22 +2002,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             }
                             case 'DB':{
                                 html = `<div id='list_service_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title0' class='list_db_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logdate' class='list_db_log_col list_sort_click list_title'>
                                                 <div>LOGDATE</div>
                                             </div>
-                                            <div id='list_server_log_col_title1' class='list_db_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_app_id' class='list_db_log_col list_sort_click list_title'>
                                                 <div>APP ID</div>
                                             </div>
-                                            <div id='list_server_log_col_title2' class='list_db_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_db' class='list_db_log_col list_sort_click list_title'>
                                                 <div>DB</div>
                                             </div>
-                                            <div id='list_server_log_col_title3' class='list_db_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_sql' class='list_db_log_col list_sort_click list_title'>
                                                 <div>SQL</div>
                                             </div>
-                                            <div id='list_server_log_col_title4' class='list_db_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_parameters' class='list_db_log_col list_sort_click list_title'>
                                                 <div>PARAMETERS</div>
                                             </div>
-                                            <div id='list_server_log_col_title5' class='list_db_log_col list_sort_click list_title'>
+                                            <div id='list_server_log_col_title_logtext' class='list_db_log_col list_sort_click list_title'>
                                                 <div>LOG TEXT</div>
                                             </div>
                                         </div>`;
@@ -2028,22 +2028,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     }
                 }
                 if (json.data.length >0){
-                    for (let i = 0; i < json.data.length; i++) {
+                    for (const log of json.data) {
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
-                                if (json.data[i].id==common.COMMON_GLOBAL['service_broadcast_client_ID'])
+                                if (log.id==common.COMMON_GLOBAL['service_broadcast_client_ID'])
                                     list_connected_current_user_row = 'list_current_user_row';
                                 else
                                     list_connected_current_user_row ='';
                                 let app_role_class;
-                                let app_role_icon = json.data[i].app_role_icon;
-                                if (json.data[i].system_admin==1){
+                                let app_role_icon = log.app_role_icon;
+                                if (log.system_admin==1){
                                     app_role_class = 'app_role_system_admin';
                                     app_role_icon = common.ICONS['app_system_admin'];
                                 }
                                 else
-                                    switch (json.data[i].app_role_id){
+                                    switch (log.app_role_id){
                                         case 0:{
                                             app_role_class = 'app_role_superadmin';
                                             break;
@@ -2058,34 +2058,34 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                     }
                                 html += `<div class='list_connected_row ${list_connected_current_user_row}'>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].id}</div>
+                                                <div>${log.id}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].connection_date}</div>
+                                                <div>${log.connection_date}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].app_id}</div>
+                                                <div>${log.app_id}</div>
                                             </div>
                                             <div class='list_connected_col ${app_role_class}'>
                                                 <div>${app_role_icon}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${common.get_null_or_value(json.data[i].user_account_id)}</div>
+                                                <div>${common.get_null_or_value(log.user_account_id)}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].system_admin}</div>
+                                                <div>${log.system_admin}</div>
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${json.data[i].ip.replace('::ffff:','')}</div>
+                                                <div>${log.ip.replace('::ffff:','')}</div>
                                             </div>
                                             <div class='list_connected_col gps_click'>
-                                                <div>${common.get_null_or_value(json.data[i].gps_latitude)}</div>
+                                                <div>${common.get_null_or_value(log.gps_latitude)}</div>
                                             </div>
                                             <div class='list_connected_col gps_click'>
-                                                <div>${common.get_null_or_value(json.data[i].gps_longitude)}</div>
+                                                <div>${common.get_null_or_value(log.gps_longitude)}</div>
                                             </div>
                                             <div class='list_connected_col common_wide_list_column'>
-                                                <div>${common.get_null_or_value(show_user_agent(json.data[i].user_agent))}</div>
+                                                <div>${common.get_null_or_value(show_user_agent(log.user_agent))}</div>
                                             </div>
                                             <div class='list_connected_col chat_click'>
                                                 <div>${common.ICONS['app_chat']}</div>
@@ -2096,120 +2096,120 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             case 'list_app_log':{
                                 html += `<div class='list_app_log_row'>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].id}</div>
+                                                <div>${log.id}</div>
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].date_created}</div>
+                                                <div>${log.date_created}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].server_http_host}</div>
+                                                <div>${log.server_http_host}</div>
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].app_id}</div>
+                                                <div>${log.app_id}</div>
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].app_module}</div>
+                                                <div>${log.app_module}</div>
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].app_module_type}</div>
+                                                <div>${log.app_module_type}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].app_module_request}</div>
+                                                <div>${log.app_module_request}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].app_module_result}</div>
+                                                <div>${log.app_module_result}</div>
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].app_user_id}</div>
+                                                <div>${log.app_user_id}</div>
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${json.data[i].server_remote_addr.replace('::ffff:','')}</div>
+                                                <div>${log.server_remote_addr.replace('::ffff:','')}</div>
                                             </div>
                                             <div class='list_app_log_col gps_click'>
-                                                <div>${common.get_null_or_value(json.data[i].client_latitude)}</div>
+                                                <div>${common.get_null_or_value(log.client_latitude)}</div>
                                             </div>
                                             <div class='list_app_log_col gps_click'>
-                                                <div>${common.get_null_or_value(json.data[i].client_longitude)}</div>
+                                                <div>${common.get_null_or_value(log.client_longitude)}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].user_language}</div>
+                                                <div>${log.user_language}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].user_timezone}</div>
+                                                <div>${log.user_timezone}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].user_number_system}</div>
+                                                <div>${log.user_number_system}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].user_platform}</div>
+                                                <div>${log.user_platform}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].server_user_agent}</div>
+                                                <div>${log.server_user_agent}</div>
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${json.data[i].server_http_accept_language}</div>
+                                                <div>${log.server_http_accept_language}</div>
                                             </div>
                                         </div>`;
                                 break;
                             }
                             case 'list_server_log':{
                                 //test if JSON in logtext
-                                if (typeof json.data[i].logtext === 'object')
-                                    json.data[i].logtext = JSON.stringify(json.data[i].logtext);
+                                if (typeof log.logtext === 'object')
+                                    log.logtext = JSON.stringify(log.logtext);
                                 switch (logscope){
                                     case 'REQUEST':{
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].logdate}</div>
+                                                        <div>${log.logdate}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].host}</div>
+                                                        <div>${log.host}</div>
                                                     </div>
                                                     <div class='list_request_log_col gps_click'>
-                                                        <div>${json.data[i].ip==''?'':json.data[i].ip.replace('::ffff:','')}</div>
+                                                        <div>${log.ip==''?'':log.ip.replace('::ffff:','')}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].requestid}</div>
+                                                        <div>${log.requestid}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].correlationid}</div>
+                                                        <div>${log.correlationid}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].url}</div>
+                                                        <div>${log.url}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].http_info}</div>
+                                                        <div>${log.http_info}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].method}</div>
+                                                        <div>${log.method}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].statusCode}</div>
+                                                        <div>${log.statusCode}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].statusMessage}</div>
+                                                        <div>${log.statusMessage}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i]['user-agent']}</div>
+                                                        <div>${log['user-agent']}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i]['accept-language']}</div>
+                                                        <div>${log['accept-language']}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].referer}</div>
+                                                        <div>${log.referer}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].size_received}</div>
+                                                        <div>${log.size_received}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${json.data[i].size_sent}</div>
+                                                        <div>${log.size_sent}</div>
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${roundOff(json.data[i].responsetime)}</div>
+                                                        <div>${roundOff(log.responsetime)}</div>
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].logtext}</div>
+                                                        <div>${log.logtext}</div>
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2218,10 +2218,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_server_log_col'>
-                                                        <div>${json.data[i].logdate}</div>
+                                                        <div>${log.logdate}</div>
                                                     </div>
                                                     <div class='list_server_log_col'>
-                                                        <div>${json.data[i].logtext}</div>
+                                                        <div>${log.logtext}</div>
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2230,22 +2230,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_server_app_log_col'>
-                                                        <div>${json.data[i].logdate}</div>
+                                                        <div>${log.logdate}</div>
                                                     </div>
                                                     <div class='list_server_app_log_col'>
-                                                        <div>${json.data[i].app_id}</div>
+                                                        <div>${log.app_id}</div>
                                                     </div>
                                                     <div class='list_server_app_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].app_filename}</div>
+                                                        <div>${log.app_filename}</div>
                                                     </div>
                                                     <div class='list_server_app_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].app_function_name}</div>
+                                                        <div>${log.app_function_name}</div>
                                                     </div>
                                                     <div class='list_server_app_log_col'>
-                                                        <div>${json.data[i].app_app_line}</div>
+                                                        <div>${log.app_app_line}</div>
                                                     </div>
                                                     <div class='list_server_app_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].logtext}</div>
+                                                        <div>${log.logtext}</div>
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2254,19 +2254,19 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_service_log_col'>
-                                                        <div>${json.data[i].logdate}</div>
+                                                        <div>${log.logdate}</div>
                                                     </div>
                                                     <div class='list_service_log_col'>
-                                                        <div>${json.data[i].app_id}</div>
+                                                        <div>${log.app_id}</div>
                                                     </div>
                                                     <div class='list_service_log_col'>
-                                                        <div>${json.data[i].service}</div>
+                                                        <div>${log.service}</div>
                                                     </div>
                                                     <div class='list_service_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].parameters}</div>
+                                                        <div>${log.parameters}</div>
                                                     </div>
                                                     <div class='list_service_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].logtext}</div>
+                                                        <div>${log.logtext}</div>
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2275,22 +2275,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_db_log_col'>
-                                                        <div>${json.data[i].logdate}</div>
+                                                        <div>${log.logdate}</div>
                                                     </div>
                                                     <div class='list_db_log_col'>
-                                                        <div>${json.data[i].app_id}</div>
+                                                        <div>${log.app_id}</div>
                                                     </div>
                                                     <div class='list_db_log_col'>
-                                                        <div>${json.data[i].db}</div>
+                                                        <div>${log.db}</div>
                                                     </div>
                                                     <div class='list_db_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].sql}</div>
+                                                        <div>${log.sql}</div>
                                                     </div>
                                                     <div class='list_db_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].parameters}</div>
+                                                        <div>${log.parameters}</div>
                                                     </div>
                                                     <div class='list_db_log_col common_wide_list_column'>
-                                                        <div>${json.data[i].logtext}</div>
+                                                        <div>${log.logtext}</div>
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2313,7 +2313,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         }
                         case 'list_server_log':{
                             document.getElementById(list_div).innerHTML = html;
-                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            document.getElementById(list_div_col_title + '_' + sort).classList.add(order_by);
                             break;
                         }
                     }
@@ -2402,7 +2402,7 @@ const list_sort_click = (item) => {
             break;
         }
         case 'list_server_log':{
-            show_server_logs([...item.parentElement.children].indexOf(item), get_order(item), document.querySelector('#list_server_log_search_input').value);
+            show_server_logs(item.id.substr('list_server_log_col_title_'.length), get_order(item), document.querySelector('#list_server_log_search_input').value);
             break;
         }
         case 'list_user_account':{
@@ -2584,7 +2584,7 @@ const get_server_log_parameters = async () => {
         }
     });
 };
-const show_server_logs = (sort=0, order_by='desc', search=null) => {
+const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
         if (common.check_input(document.querySelector('#list_server_log_search_input').value, 100, false) == false)
             return null;
