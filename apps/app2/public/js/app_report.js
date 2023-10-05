@@ -173,10 +173,7 @@ const timetable_user_setting_get = async (user_setting_id, callBack) => {
 																//YEAR: month with less info
 
 							ui_navigation_left      : 'toolbar_btn_left',
-							ui_navigation_right     : 'toolbar_btn_right',
-							ui_timetable_day_id     : 'timetable_day',
-							ui_timetable_month_id   : 'timetable_month',
-							ui_timetable_year_id    : 'timetable_year'
+							ui_navigation_right     : 'toolbar_btn_right'
 						}
 			);
 		} 
@@ -560,10 +557,11 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
 //header and footer style
 const getstyle = (img_src, align) => {
 	let style='';
-		if (fileisloaded(img_src))
-			style = 'background-image:url("' + img_src +'");';
+	if (fileisloaded(img_src))
+		style = 'background-image:url("' + img_src +'");';
+	if (align!='')
 		style +=  'text-align:' + align;
-		return style;
+	return style;
 };
 const fileisloaded = (image_item_src) => {
     if (image_item_src == '')
@@ -859,115 +857,78 @@ const makeTableRow = (data, items, timerow, year, month, settings, date) => {
 	return html;
 };
 // display timetable month
-const displayMonth = async (prayTimes, settings, item_id) => {
-	return new Promise((resolve) => {
-		const timetable = document.createElement('div');
-		let month;
-		let year;
-		let title;
-		let month_html='';
-		let header_style ='';
-		let footer_style ='';
-			
-		const set_month_year_title = () => {
-			let options;
-			switch (settings.reporttype_year_month){
-				case 'MONTH':{
-					options = {month:'long', year: 'numeric'};
-					break;
+const displayMonth = (prayTimes, settings, item_id, year_class='') => {
+	const timezone_offset = parseInt(regional.getTimezoneOffset(settings.timezone));
+	let month;
+	let year;
+	let title;
+	
+	const set_month_year_title = () => {
+		let options;
+		switch (settings.reporttype_year_month){
+			case 'MONTH':{
+				options = {month:'long', year: 'numeric'};
+				break;
+				}
+			case 'YEAR':{
+				options = {month:'long'};
+				break;
+				}
+		}	
+		if (settings.calendartype=='GREGORIAN'){
+			//get previous or next Gregorian month using current Gregorian month
+			if (item_id == settings.ui_navigation_left){
+				app_common.APP_GLOBAL['session_currentDate'].setMonth(app_common.APP_GLOBAL['session_currentDate'].getMonth() -1);
+			}
+			else 
+				if (item_id == settings.ui_navigation_right){
+					app_common.APP_GLOBAL['session_currentDate'].setMonth(app_common.APP_GLOBAL['session_currentDate'].getMonth() +1);
 					}
-				case 'YEAR':{
-					options = {month:'long'};
-					break;
-					}
-			}	
-			if (settings.calendartype=='GREGORIAN'){
-				//get previous or next Gregorian month using current Gregorian month
+			month = app_common.APP_GLOBAL['session_currentDate'].getMonth();
+			year = app_common.APP_GLOBAL['session_currentDate'].getFullYear();
+			title = new Date(year,month,1).toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
+		}
+		else
+			if (settings.calendartype=='HIJRI'){
+				//get previous or next Hijri month using current Hijri month  
 				if (item_id == settings.ui_navigation_left){
-					app_common.APP_GLOBAL['session_currentDate'].setMonth(app_common.APP_GLOBAL['session_currentDate'].getMonth() -1);
+					if (app_common.APP_GLOBAL['session_CurrentHijriDate'][0] ==1){
+						app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = 12;
+						app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] - 1;
+					}
+					else
+						app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = app_common.APP_GLOBAL['session_CurrentHijriDate'][0] - 1;
 				}
 				else 
 					if (item_id == settings.ui_navigation_right){
-						app_common.APP_GLOBAL['session_currentDate'].setMonth(app_common.APP_GLOBAL['session_currentDate'].getMonth() +1);
-						}
-				month = app_common.APP_GLOBAL['session_currentDate'].getMonth();
-				year = app_common.APP_GLOBAL['session_currentDate'].getFullYear();
-				title = new Date(year,month,1).toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
-			}
-			else
-				if (settings.calendartype=='HIJRI'){
-					//get previous or next Hijri month using current Hijri month  
-					if (item_id == settings.ui_navigation_left){
-						if (app_common.APP_GLOBAL['session_CurrentHijriDate'][0] ==1){
-							app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = 12;
-							app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] - 1;
+						if (app_common.APP_GLOBAL['session_CurrentHijriDate'][0] ==12){
+							app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = 1;
+							app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] + 1;
 						}
 						else
-							app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = app_common.APP_GLOBAL['session_CurrentHijriDate'][0] - 1;
-					}
-					else 
-						if (item_id == settings.ui_navigation_right){
-							if (app_common.APP_GLOBAL['session_CurrentHijriDate'][0] ==12){
-								app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = 1;
-								app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] + 1;
-							}
-							else
-								app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = app_common.APP_GLOBAL['session_CurrentHijriDate'][0] + 1;
-						}	
-					month = app_common.APP_GLOBAL['session_CurrentHijriDate'][0];
-					year  = app_common.APP_GLOBAL['session_CurrentHijriDate'][1];
-					const title_date = common.getGregorian(new Array(year,month,1), 0);
-					title = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_calendar'] + settings.calendar_hijri_type + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
-				}
-		};
-		const items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, settings.locale);
-		let month_data_class='';
-		if (settings.number_system=='hanidec')
-			month_data_class = 'default_font bignumbers';
-		else
-			month_data_class = 'default_font';
-		set_month_year_title();
+							app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = app_common.APP_GLOBAL['session_CurrentHijriDate'][0] + 1;
+					}	
+				month = app_common.APP_GLOBAL['session_CurrentHijriDate'][0];
+				year  = app_common.APP_GLOBAL['session_CurrentHijriDate'][1];
+				const title_date = common.getGregorian(new Array(year,month,1), 0);
+				title = new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_calendar'] + settings.calendar_hijri_type + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
+			}
+	};
+	const items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, settings.locale);
+	let month_data_class='';
+	if (settings.number_system=='hanidec')
+		month_data_class = 'default_font bignumbers';
+	else
+		month_data_class = 'default_font';
+	set_month_year_title();
 
-		//TIMETABLE
-		//add default class, theme class and font class		
-		timetable.classList = 	settings.timetable_class + ' ' + 
-								settings.timetable_month + ' ' + 
-								settings.theme_month + ' ' +
-								settings.arabic_script;
-		//HEADER
-		if (settings.reporttype_year_month =='MONTH'){
-			//set only id for month timetable, not year
-			timetable.id = settings.ui_timetable_month_id;
-			//Set direction
-			//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
-			timetable.style.direction = settings.direction;
-	
-			header_style = getstyle(settings.header_img_src, settings.header_align);
-			footer_style = getstyle(settings.footer_img_src, settings.footer_align);
-	
-			month_html +=
-				`<div id='timetable_header' class='display_font' style='${header_style}'>
-					<div >${settings.header_txt1}</div>
-					<div >${settings.header_txt2}</div>
-					<div >${settings.header_txt3}</div>
-					<div id='timetable_qr_code'></div>
-				</div>`;
-		}
-
-		//HEADER DATA
-		month_html+=
-		`<div id='timetable_month_data_header' class='display_font'>
-			<div id='timetable_month_data_header_title1'>${title}</div>
-			<div id='timetable_month_data_header_title2'>${REPORT_GLOBAL['first_language'].timetable_title} ${settings.second_locale!=0?REPORT_GLOBAL['second_language'].timetable_title:''}</div>
-		</div>
-		<div id='timetable_month_data' class='${month_data_class}'>
-			${timetable_headers(1, items, settings)}`;
-		
-		// get start date and end date for both gregorian and hijri
+	// get start date and end date for both gregorian and hijri
+	const timetable_data = ()=>{
 		let date;
 		let endDate;
 		let date_hijri = null;
 		let endDate_hijri = null;
+		
 		if (settings.calendartype=='GREGORIAN'){
 			date = new Date(year, month, 1);
 			endDate = new Date(year, month+ 1, 1);
@@ -985,67 +946,89 @@ const displayMonth = async (prayTimes, settings, item_id) => {
 				endDate = new Date(endDate[0], endDate[1]-1, endDate[2]);
 			}
 		setMethod_praytimes(prayTimes, settings.method, settings.asr, settings.highlat);
-		regional.getTimezoneOffset(settings.timezone).then((timezone_offset) => {
-			//DATA
-			while (date < endDate) {
-				const times = prayTimes.getTimes(date, [settings.gps_lat, settings.gps_long], parseInt(timezone_offset), 0, settings.format);
-				if (settings.calendartype=='GREGORIAN')
-					times.day = date.getDate();
-				else
-					times.day = ++date_hijri[2] - 1;
-				let row_class='';
-				//check if today
-				if (isToday(date))
-					row_class = 'timetable_month_data_today_row ';
-				//check if row should be highlighted
-				switch (settings.highlight){
-				case '1':{
-					//check if friday
-					if (date.getDay() == 5)
-						row_class += 'timetable_month_data_highlight_row ';
-					break;
-					}
-				case '2':{
-					//check if saturday
-					if (date.getDay() == 6)
-						row_class += 'timetable_month_data_highlight_row ';
-					break;
-					}
-				case '3':{
-					//check if sunday
-					if (date.getDay() == 0)
-						row_class += 'timetable_month_data_highlight_row ';
-					break;
-					}
-				case '4':{
-					//check if day 1-10
-					if (times.day < 11)
-						row_class += 'timetable_month_data_day_01-10_row ';
-					//check if day 11-20
-					if (times.day > 10 && times.day < 21)
-						row_class += 'timetable_month_data_day_11-20_row ';
-					//check if day 21 - 
-					if (times.day > 20)
-						row_class += 'timetable_month_data_day_21-30_row ';
-					break;
-					}
-				} 
-				if (settings.calendartype=='HIJRI'){
-					const display_date = common.getGregorian(new Array(year,month,times['day']), settings.hijri_adj);
-					month_html += `<div class='${'timetable_month_data_row ' + row_class}'>
-										${makeTableRow(times, items, 1, year, month, settings, display_date)}
-								   </div>`;
+		
+		let month_html='';
+		//DATA
+		while (date < endDate) {
+			const times = prayTimes.getTimes(date, [settings.gps_lat, settings.gps_long], timezone_offset, 0, settings.format);
+			if (settings.calendartype=='GREGORIAN')
+				times.day = date.getDate();
+			else
+				times.day = ++date_hijri[2] - 1;
+			let row_class='';
+			//check if today
+			if (isToday(date))
+				row_class = 'timetable_month_data_today_row ';
+			//check if row should be highlighted
+			switch (settings.highlight){
+			case '1':{
+				//check if friday
+				if (date.getDay() == 5)
+					row_class += 'timetable_month_data_highlight_row ';
+				break;
 				}
-				else
-					month_html += `<div class='${'timetable_month_data_row ' + row_class}'>
-										${makeTableRow(times, items, 1, year, month, settings)}
-								   </div>`;
-				date.setDate(date.getDate()+ 1);
+			case '2':{
+				//check if saturday
+				if (date.getDay() == 6)
+					row_class += 'timetable_month_data_highlight_row ';
+				break;
+				}
+			case '3':{
+				//check if sunday
+				if (date.getDay() == 0)
+					row_class += 'timetable_month_data_highlight_row ';
+				break;
+				}
+			case '4':{
+				//check if day 1-10
+				if (times.day < 11)
+					row_class += 'timetable_month_data_day_01-10_row ';
+				//check if day 11-20
+				if (times.day > 10 && times.day < 21)
+					row_class += 'timetable_month_data_day_11-20_row ';
+				//check if day 21 - 
+				if (times.day > 20)
+					row_class += 'timetable_month_data_day_21-30_row ';
+				break;
+				}
+			} 
+			if (settings.calendartype=='HIJRI'){
+				const display_date = common.getGregorian(new Array(year,month,times['day']), settings.hijri_adj);
+				month_html += `<div class='${'timetable_month_data_row ' + row_class}'>
+									${makeTableRow(times, items, 1, year, month, settings, display_date)}
+								</div>`;
 			}
-			//FOOTER
-			month_html += '</div>';
-			if (settings.reporttype_year_month =='MONTH'){
-				month_html +=
+			else
+				month_html += `<div class='${'timetable_month_data_row ' + row_class}'>
+									${makeTableRow(times, items, 1, year, month, settings)}
+								</div>`;
+			date.setDate(date.getDate()+ 1);
+		}
+		return month_html;
+	};
+	//TIMETABLE
+	//add default class, theme class and font class		
+	//set only id for month timetable, not year
+	//set LTR or RTL on table layout if MONTH, on YEAR direction is set on the whole year layout
+	return  `<div id='${settings.reporttype_year_month =='MONTH'?'timetable_month':''}'
+				class='${settings.timetable_class} ${settings.timetable_month} ${settings.theme_month} ${settings.arabic_script} ${year_class}'
+				style='${settings.reporttype_year_month =='MONTH'?'direction:' + settings.direction + ';':''}'>
+				${settings.reporttype_year_month =='MONTH'?
+				`<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
+					<div >${settings.header_txt1}</div>
+					<div >${settings.header_txt2}</div>
+					<div >${settings.header_txt3}</div>
+					<div id='timetable_qr_code'></div>
+				</div>`:''}
+				<div id='timetable_month_data_header' class='display_font'>
+					<div id='timetable_month_data_header_title1'>${title}</div>
+					<div id='timetable_month_data_header_title2'>${REPORT_GLOBAL['first_language'].timetable_title} ${settings.second_locale!=0?REPORT_GLOBAL['second_language'].timetable_title:''}</div>
+				</div>
+				<div id='timetable_month_data' class='${month_data_class}'>
+					${timetable_headers(1, items, settings)}
+					${timetable_data()}
+				</div>
+				${settings.reporttype_year_month =='MONTH'?
 				`<div id='timetable_month_data_footer' class='default_font'>
 					<div id='timetable_month_data_footer_row'>
 						<div id='timetable_footer_col'>
@@ -1065,16 +1048,12 @@ const displayMonth = async (prayTimes, settings, item_id) => {
 						</div>
 					</div>
 				</div>
-				<div id='timetable_footer' class='display_font' style='${footer_style}'>
+				<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
 					<div>${settings.footer_txt1}</div>
 					<div>${settings.footer_txt2}</div>
 					<div>${settings.footer_txt3}</div>
-				</div>`;
-			}	
-			timetable.innerHTML = month_html;
-			resolve(timetable);
-		});
-	});
+				</div>`:''}
+			</div>`;
 };
 /*----------------------- */
 /* COMMON APP & REPORT    */
@@ -1096,135 +1075,125 @@ const create_day_title_row = (col_titles, show_imsak, show_sunset, show_midnight
 			</div>`;
 };
 
-const displayDay = async (prayTimes, settings, item_id, user_settings) => {
-	return new Promise((resolve) => {
-		const timetable = document.createElement('div');
-		timetable.id = settings.ui_timetable_day_id;
-		let day_html='';
-		let times; 
-		const options = { timeZone: settings.timezone, 
-						weekday: 'long', 
-						year: 'numeric', 
-						month: 'long', 
-						day: 'numeric'};
-		const options_hijri = { timeZone: settings.timezone, 
-						year: 'numeric', 
-						month: 'long', 
-						day: 'numeric'};
-						
-		
-		if (item_id == settings.ui_navigation_left){
-			app_common.APP_GLOBAL['session_currentDate'].setDate(app_common.APP_GLOBAL['session_currentDate'].getDate() -1);
-		}
-		else 
-			if (item_id == settings.ui_navigation_right){
-				app_common.APP_GLOBAL['session_currentDate'].setDate(app_common.APP_GLOBAL['session_currentDate'].getDate() +1);
-				}
+const displayDay = (prayTimes, settings, item_id, user_settings) => {
+	let times; 
+	const options = { timeZone: settings.timezone, 
+					weekday: 'long', 
+					year: 'numeric', 
+					month: 'long', 
+					day: 'numeric'};
+	const options_hijri = { timeZone: settings.timezone, 
+					year: 'numeric', 
+					month: 'long', 
+					day: 'numeric'};
+					
+	if (item_id == settings.ui_navigation_left){
+		app_common.APP_GLOBAL['session_currentDate'].setDate(app_common.APP_GLOBAL['session_currentDate'].getDate() -1);
+	}
+	else 
+		if (item_id == settings.ui_navigation_right){
+			app_common.APP_GLOBAL['session_currentDate'].setDate(app_common.APP_GLOBAL['session_currentDate'].getDate() +1);
+			}
 
-		const date_current = new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),app_common.APP_GLOBAL['session_currentDate'].getMonth(),app_common.APP_GLOBAL['session_currentDate'].getDate());
-		const date_title4 = date_current.toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
-		date_current.setDate(date_current.getDate() + parseInt(settings.hijri_adj));
-		const date_title5 = date_current.toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_calendar'] + settings.calendar_hijri_type + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options_hijri).toLocaleUpperCase();
-		
-		//Set theme and font classes on main div
-		timetable.classList = settings.timetable_class + ' ' + settings.theme_day + ' ' + settings.arabic_script;
-		//set LTR or RTL on table layout
-		timetable.style.direction = settings.direction;
-
-		const header_style = getstyle(settings.header_img_src, settings.header_align);
-		const footer_style = getstyle(settings.footer_img_src, settings.footer_align);
-
-		day_html += `<div id='timetable_header' class='display_font' style='${header_style}'>
-						<div >${settings.header_txt1}</div>
-						<div >${settings.header_txt2}</div>
-						<div >${settings.header_txt3}</div>
-						<div id='timetable_qr_code'></div>
-					</div>`;
-		
-		day_html +=`<div id='timetable_day_timetable_header' class='display_font'>
-						<div>${date_title4}</div>
-						<div>${date_title5}</div>
-					</div>
-					<div id='timetable_day_timetable' class='default_font'>
-			${timetable_headers(0, null, settings)}`;
-		
-		const day_timetable = (user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
-			user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) => {
-				regional.getTimezoneOffset(user_timezone).then((timezone_offset) => {
-					tot_day_async_html++;
-					times = prayTimes.getTimes(app_common.APP_GLOBAL['session_currentDate'], [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, user_format);				
-					const col_imsak = settings.show_imsak == 'YES'?show_col(1, 'imsak', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['imsak']):''; 
-					const col_fajr = show_col(1, 'fajr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['fajr']);
-					const col_sunrise = show_col(1, 'sunrise', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['sunrise']);
-					const col_dhuhr = show_col(1, 'dhuhr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['dhuhr']);
-					const col_asr = show_col(1, 'asr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['asr']);
-					const col_sunset = settings.show_sunset == 'YES'?show_col(1, 'sunset', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['sunset']):'';
-					const col_maghrib = show_col(1, 'maghrib', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['maghrib']);
-					const col_isha = show_col(1, 'isha', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['isha']);
-					const col_midnight = settings.show_midnight == 'YES'? show_col(1, 'midnight', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['midnight']):'';
-					//set css variable to calculate grid columns and font size depending how many columns used
-					let day_columns = 6;
-					if (settings.show_imsak == 'YES')
-						day_columns++;
-					if (settings.show_sunset == 'YES')
-						day_columns++;
-					if (settings.show_midnight == 'YES')
-						day_columns++;
-					document.querySelector(':root').style.setProperty('--app_day_columns', day_columns);
-
-					day_html +=
-						`<div class='timetable_day_timetable_row_data ${isToday(date_current)==true?'timetable_day_today_row':''}'>
-							${col_imsak}${col_fajr}${col_sunrise}${col_dhuhr}${col_asr}${col_sunset}${col_maghrib}${col_isha}${col_midnight}
-						</div>
-						<div class='timetable_day_timetable_footer'>
-							<div class='timetable_day_timetable_footer_row'>
-								<div>${user_place}</div>
-								<div>${settings.show_gps == 'YES' ? REPORT_GLOBAL['first_language'].gps_lat_text:''}</div>
-								<div>${settings.show_gps == 'YES' ? user_gps_latitude.toLocaleString(user_locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + user_number_system):''}</div>
-								<div>${settings.show_gps == 'YES' ? REPORT_GLOBAL['first_language'].gps_long_text:''}</div>
-								<div>${settings.show_gps == 'YES' ? user_gps_longitude.toLocaleString(user_locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + user_number_system):''}</div>
-							</div>
-							${settings.show_timezone == 'YES'?`<div class='timetable_day_timetable_footer_row'>
-																<div class='timetable_day_current_time'></div>
-																<div class='timetable_day_timezone'>${REPORT_GLOBAL['first_language'].timezone_text + ' ' + user_timezone}</div>
-															</div>`:''}
-						</div>`;
-					if (tot_day_async_html==user_settings.length){
-						//Footer
-						day_html += 
-						`</div>
-						<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
-						<div id='timetable_footer' class='display_font' style='${footer_style}'>
-							<div>${settings.footer_txt1}</div>
-							<div>${settings.footer_txt2}</div>
-							<div>${settings.footer_txt3}</div>
-							<div></div>
-						</div>
-						<div id='timetable_day_time' class='default_font'>
-						</div>`;
-						timetable.innerHTML = day_html;
-						resolve(timetable);
-					}
-				});
-		};
+	const date_current = new Date(app_common.APP_GLOBAL['session_currentDate'].getFullYear(),app_common.APP_GLOBAL['session_currentDate'].getMonth(),app_common.APP_GLOBAL['session_currentDate'].getDate());
+	const date_title4 = date_current.toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options).toLocaleUpperCase();
+	date_current.setDate(date_current.getDate() + parseInt(settings.hijri_adj));
+	const date_title5 = date_current.toLocaleDateString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_calendar'] + settings.calendar_hijri_type + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options_hijri).toLocaleUpperCase();
+	
+	const timetable_data = () => {
 		let tot_day_async_html = 0;
+		const day_timetable = (	user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
+										user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
+			let day_html = '';
+			const timezone_offset = regional.getTimezoneOffset(user_timezone);
+			tot_day_async_html++;
+			times = prayTimes.getTimes(app_common.APP_GLOBAL['session_currentDate'], [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, user_format);				
+			const col_imsak = settings.show_imsak == 'YES'?show_col(1, 'imsak', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['imsak']):''; 
+			const col_fajr = show_col(1, 'fajr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['fajr']);
+			const col_sunrise = show_col(1, 'sunrise', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['sunrise']);
+			const col_dhuhr = show_col(1, 'dhuhr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['dhuhr']);
+			const col_asr = show_col(1, 'asr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['asr']);
+			const col_sunset = settings.show_sunset == 'YES'?show_col(1, 'sunset', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['sunset']):'';
+			const col_maghrib = show_col(1, 'maghrib', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['maghrib']);
+			const col_isha = show_col(1, 'isha', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['isha']);
+			const col_midnight = settings.show_midnight == 'YES'? show_col(1, 'midnight', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['midnight']):'';
+			//set css variable to calculate grid columns and font size depending how many columns used
+			let day_columns = 6;
+			if (settings.show_imsak == 'YES')
+				day_columns++;
+			if (settings.show_sunset == 'YES')
+				day_columns++;
+			if (settings.show_midnight == 'YES')
+				day_columns++;
+			document.querySelector(':root').style.setProperty('--app_day_columns', day_columns);
+
+			day_html +=
+				`<div class='timetable_day_timetable_row_data ${isToday(date_current)==true?'timetable_day_today_row':''}'>
+					${col_imsak}${col_fajr}${col_sunrise}${col_dhuhr}${col_asr}${col_sunset}${col_maghrib}${col_isha}${col_midnight}
+				</div>
+				<div class='timetable_day_timetable_footer'>
+					<div class='timetable_day_timetable_footer_row'>
+						<div>${user_place}</div>
+						<div>${settings.show_gps == 'YES' ? REPORT_GLOBAL['first_language'].gps_lat_text:''}</div>
+						<div>${settings.show_gps == 'YES' ? user_gps_latitude.toLocaleString(user_locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + user_number_system):''}</div>
+						<div>${settings.show_gps == 'YES' ? REPORT_GLOBAL['first_language'].gps_long_text:''}</div>
+						<div>${settings.show_gps == 'YES' ? user_gps_longitude.toLocaleString(user_locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + user_number_system):''}</div>
+					</div>
+					${settings.show_timezone == 'YES'?`<div class='timetable_day_timetable_footer_row'>
+														<div class='timetable_day_current_time'></div>
+														<div class='timetable_day_timezone'>${REPORT_GLOBAL['first_language'].timezone_text + ' ' + user_timezone}</div>
+													</div>`:''}
+				</div>`;
+			if (tot_day_async_html==user_settings.length){
+				return day_html;
+			}
+		};
+
+		let html = '';
 		for (let i=0;i<=user_settings.length-1;i++){	
 			setMethod_praytimes(prayTimes, 
 								user_settings[i].prayer_method, 
 								user_settings[i].prayer_asr_method, 
 								user_settings[i].prayer_high_latitude_adjustment);
 			
-			day_timetable(user_settings[i].regional_language_locale, 
-						user_settings[i].regional_timezone, 
-						user_settings[i].regional_number_system, 
-						user_settings[i].regional_calendar_hijri_type,
-						parseFloat(user_settings[i].gps_lat_text), 
-						parseFloat(user_settings[i].gps_long_text), 
-						user_settings[i].prayer_time_format, 
-						user_settings[i].prayer_hijri_date_adjustment, 
-						user_settings[i].description);
-		}
-	});
+			html += day_timetable(	user_settings[i].regional_language_locale, 
+									user_settings[i].regional_timezone, 
+									user_settings[i].regional_number_system, 
+									user_settings[i].regional_calendar_hijri_type,
+									parseFloat(user_settings[i].gps_lat_text), 
+									parseFloat(user_settings[i].gps_long_text), 
+									user_settings[i].prayer_time_format, 
+									user_settings[i].prayer_hijri_date_adjustment, 
+									user_settings[i].description);
+		}	
+		return html;
+	};
+
+	//TIMETABLE
+	return `<div id='timetable_day' class='${settings.timetable_class} ${settings.theme_day} ${settings.arabic_script}' style='direction: ${settings.direction};'>
+				<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
+					<div >${settings.header_txt1}</div>
+					<div >${settings.header_txt2}</div>
+					<div >${settings.header_txt3}</div>
+					<div id='timetable_qr_code'></div>
+				</div>
+				<div id='timetable_day_timetable_header' class='display_font'>
+					<div>${date_title4}</div>
+					<div>${date_title5}</div>
+				</div>
+				<div id='timetable_day_timetable' class='default_font'>
+					${timetable_headers(0, null, settings)}
+					${timetable_data()}
+				</div>
+				<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
+				<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
+					<div>${settings.footer_txt1}</div>
+					<div>${settings.footer_txt2}</div>
+					<div>${settings.footer_txt3}</div>
+					<div></div>
+				</div>
+				<div id='timetable_day_time' class='default_font'></div>
+			</div>`;
 };
 const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 	let json;
@@ -1266,151 +1235,136 @@ const timetable_day_user_settings_get = async (user_account_id, callBack) => {
 /* COMMON APP & REPORT    */
 /* TIMETABLE YEAR         */
 /*----------------------- */
-const displayYear = async (prayTimes, settings, item_id) => {
-	return new Promise((resolve) => {
-		const timetable = document.createElement('div');
-		timetable.id = settings.ui_timetable_year_id;
-		const startmonth            = app_common.APP_GLOBAL['session_currentDate'].getMonth();
-		const starthijrimonth       = app_common.APP_GLOBAL['session_CurrentHijriDate'][0];
-		let year_html='';
-		
-		settings.reporttype_year_month        = 'YEAR';
-		
-		//Set theme and font class
-		timetable.classList = settings.timetable_class + ' ' + settings.theme_year + ' ' + settings.arabic_script;
-		//set LTR or RTL on year layout
-		timetable.style.direction = settings.direction;
+const displayYear = (prayTimes, settings, item_id) => {
+	const startmonth            = app_common.APP_GLOBAL['session_currentDate'].getMonth();
+	const starthijrimonth       = app_common.APP_GLOBAL['session_CurrentHijriDate'][0];
+	
+	settings.reporttype_year_month        = 'YEAR';
 
-		//if both second language and both transliteration and translation columntitles will be shown
-		//add class to fix size
-		let timetable_class ='';
-		let timetable_footer_class ='';
-		if (settings.second_locale!='0') {
-			//transliteration OR translation
-			if (settings.coltitle=='0' || settings.coltitle=='3'){
-				timetable_class = 'class="two_columntitles"';
-				timetable_footer_class = 'class="default_font two_columntitles"';
-			}
-			else{
-				timetable_class = 'class="three_columntitles"';
-				timetable_footer_class = 'class="default_font three_columntitles"';
-			}
+	//if both second language and both transliteration and translation columntitles will be shown
+	//add class to fix size
+	let timetable_class ='';
+	let timetable_footer_class ='';
+	if (settings.second_locale!='0') {
+		//transliteration OR translation
+		if (settings.coltitle=='0' || settings.coltitle=='3'){
+			timetable_class = 'class="two_columntitles"';
+			timetable_footer_class = 'class="default_font two_columntitles"';
 		}
 		else{
-			//transliteration and translation are in the column titles
-			if (settings.coltitle=='1' || settings.coltitle=='2'){
-				timetable_class = 'class="two_columntitles"';
-				timetable_footer_class = 'class="default_font two_columntitles"';
+			timetable_class = 'class="three_columntitles"';
+			timetable_footer_class = 'class="default_font three_columntitles"';
+		}
+	}
+	else{
+		//transliteration and translation are in the column titles
+		if (settings.coltitle=='1' || settings.coltitle=='2'){
+			timetable_class = 'class="two_columntitles"';
+			timetable_footer_class = 'class="default_font two_columntitles"';
+		}
+	}
+
+	//if item_id is set then navigate previous/next month/year
+	if (item_id == settings.ui_navigation_left){
+		if (settings.calendartype=='GREGORIAN')
+			app_common.APP_GLOBAL['session_currentDate'].setYear(app_common.APP_GLOBAL['session_currentDate'].getFullYear() - 1);
+		else
+			app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] - 1;
+	}
+	else 
+		if (item_id == settings.ui_navigation_right){
+			if (settings.calendartype=='GREGORIAN')
+				app_common.APP_GLOBAL['session_currentDate'].setYear(app_common.APP_GLOBAL['session_currentDate'].getFullYear() + 1);
+			else
+				app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] + 1;
 			}
-		}
 
-		//if item_id is set then navigate previous/next month/year
-		if (item_id == settings.ui_navigation_left){
-			if (settings.calendartype=='GREGORIAN')
-				app_common.APP_GLOBAL['session_currentDate'].setYear(app_common.APP_GLOBAL['session_currentDate'].getFullYear() - 1);
-			else
-				app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] - 1;
-		}
-		else 
-			if (item_id == settings.ui_navigation_right){
-				if (settings.calendartype=='GREGORIAN')
-					app_common.APP_GLOBAL['session_currentDate'].setYear(app_common.APP_GLOBAL['session_currentDate'].getFullYear() + 1);
-				else
-					app_common.APP_GLOBAL['session_CurrentHijriDate'][1] = app_common.APP_GLOBAL['session_CurrentHijriDate'][1] + 1;
-				}
+	//show year with selected locale and number system for both Hijri and Gregorian
+	const options_year = { timeZone: settings.timezone, 
+						year: 'numeric',
+						useGrouping:false};
+	let year_title4;
+	if (settings.calendartype=='GREGORIAN'){
+		year_title4 = app_common.APP_GLOBAL['session_currentDate'].getFullYear();
+		year_title4 = year_title4.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options_year);
+	}
+	else{
+		//HIJRI
+		year_title4 = app_common.APP_GLOBAL['session_CurrentHijriDate'][1];
+		year_title4 = year_title4.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options_year);
+	}
+	const months = new Array(12);
+	app_common.APP_GLOBAL['session_currentDate'].setMonth(startmonth);
+	app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = starthijrimonth;
 
-		const header_style = getstyle(settings.header_img_src, settings.header_align);
-		const footer_style = getstyle(settings.footer_img_src, settings.footer_align);
-
-		//timetable header
-		//show year with selected locale and number system for both Hijri and Gregorian
-		const options_year = { timeZone: settings.timezone, 
-							year: 'numeric',
-							useGrouping:false};
-		let year_title4;
-		if (settings.calendartype=='GREGORIAN'){
-			year_title4 = app_common.APP_GLOBAL['session_currentDate'].getFullYear();
-			year_title4 = year_title4.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options_year);
-		}
-		else{
-			//HIJRI
-			year_title4 = app_common.APP_GLOBAL['session_CurrentHijriDate'][1];
-			year_title4 = year_title4.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system, options_year);
-		}
-		//timetables
-		const months = new Array(12);
-		const year_timetable = () => {
-			year_html += `<div id='timetable_header' class='display_font' style='${header_style}'>
-							<div >${settings.header_txt1}</div>
-							<div >${settings.header_txt2}</div>
-							<div >${settings.header_txt3}</div>
-							<div id='timetable_qr_code'></div>
-						</div>`;
-			year_html += `	<div id='timetable_year_timetables_header' class='display_font'>
-								<div>${year_title4}</div>
-								<div>${REPORT_GLOBAL['first_language'].timetable_title} ${settings.second_locale!=0?REPORT_GLOBAL['second_language'].timetable_title:''}</div>
+	//TIMETABLE
+	const year_timetable = ()=>{
+		return `<div id='timetable_year'
+					class='${settings.timetable_class} ${settings.theme_year} ${settings.arabic_script}'
+					style='direction:' ${settings.direction}'>
+					<div id='timetable_header' class='display_font' style='${getstyle(settings.header_img_src, settings.header_align)}'>
+						<div >${settings.header_txt1}</div>
+						<div >${settings.header_txt2}</div>
+						<div >${settings.header_txt3}</div>
+						<div id='timetable_qr_code'></div>
+					</div>
+					<div id='timetable_year_timetables_header' class='display_font'>
+						<div>${year_title4}</div>
+						<div>${REPORT_GLOBAL['first_language'].timetable_title} ${settings.second_locale!=0?REPORT_GLOBAL['second_language'].timetable_title:''}</div>
+					</div>
+					<div id='timetable_year_timetables' ${timetable_class}'>
+						<div class='timetable_year_timetables_row'>
+							${months[0]}
+							${months[1]}
+							${months[2]}
+							${months[3]}
+						</div>
+						<div class='timetable_year_timetables_row'>
+							${months[4]}
+							${months[5]}
+							${months[6]}
+							${months[7]}
+						</div>
+						<div class='timetable_year_timetables_row'>
+							${months[8]}
+							${months[9]}
+							${months[10]}
+							${months[11]}
+						</div>
+					</div>
+					<div id='timetable_year_timetables_footer' ${timetable_footer_class}'>
+						<div id='timetable_year_timetables_footer_row'>
+							<div id='timetable_year_timetables_footer_col'>
+								<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.place}</div>
+								<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?REPORT_GLOBAL['first_language'].gps_lat_text:''}</div>
+								<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_lat.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
+								<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?REPORT_GLOBAL['first_language'].gps_long_text:''}</div>
+								<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
+								<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?REPORT_GLOBAL['first_language'].timezone_text:''}</div>
+								<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?settings.timezone:''}</div>
+								<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
 							</div>
-							<div id='timetable_year_timetables' ${timetable_class}'>
-								<div class='timetable_year_timetables_row'>
-									${months[0]}
-									${months[1]}
-									${months[2]}
-									${months[3]}
-								</div>
-								<div class='timetable_year_timetables_row'>
-									${months[4]}
-									${months[5]}
-									${months[6]}
-									${months[7]}
-								</div>
-								<div class='timetable_year_timetables_row'>
-									${months[8]}
-									${months[9]}
-									${months[10]}
-									${months[11]}
-								</div>
-							</div>
-							<div id='timetable_year_timetables_footer' ${timetable_footer_class}'>
-								<div id='timetable_year_timetables_footer_row'>
-									<div id='timetable_year_timetables_footer_col'>
-										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.place}</div>
-										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?REPORT_GLOBAL['first_language'].gps_lat_text:''}</div>
-										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_lat.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
-										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?REPORT_GLOBAL['first_language'].gps_long_text:''}</div>
-										<div ${settings.show_gps == 'YES'?'class=""':'class="hidden"'}>${settings.show_gps == 'YES'?settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
-										<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?REPORT_GLOBAL['first_language'].timezone_text:''}</div>
-										<div ${settings.show_timezone == 'YES'?'class=""':'class="hidden"'}>${settings.show_timezone == 'YES'?settings.timezone:''}</div>
-										<div class='copyright'>${app_common.APP_GLOBAL['app_copyright']}</div>
-									</div>
-								</div>
-							</div>
-							<div id='timetable_footer' display_font' style='${footer_style}'>
-								<div >${settings.footer_txt1}</div>
-								<div >${settings.footer_txt2}</div>
-								<div >${settings.footer_txt3}</div>
-								<div></div>
-							</div>`;
-			timetable.innerHTML = year_html;
-		
-			app_common.APP_GLOBAL['session_currentDate'].setMonth(startmonth);
-			app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = starthijrimonth;
-			resolve(timetable);
-		};
-		let month_processed=0;
-		for (let monthindex = 1; monthindex <= 12; monthindex++) { 
-			if (settings.calendartype=='GREGORIAN')
-				app_common.APP_GLOBAL['session_currentDate'].setMonth(monthindex -1);
-			else
-				app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = monthindex;
-			displayMonth(prayTimes, settings, null).then((timetable_result) => {
-				month_processed++;
-				timetable_result.classList.add(settings.timetable_year_month);
-				months[monthindex-1] = timetable_result.outerHTML;
-				if (month_processed ==12)
-					year_timetable();
-			});
-		}
-	});
+						</div>
+					</div>
+					<div id='timetable_footer' display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
+						<div >${settings.footer_txt1}</div>
+						<div >${settings.footer_txt2}</div>
+						<div >${settings.footer_txt3}</div>
+						<div></div>
+					</div>
+				</div>`;
+	};
+	let month_processed=0;
+	for (let monthindex = 1; monthindex <= 12; monthindex++) { 
+		if (settings.calendartype=='GREGORIAN')
+			app_common.APP_GLOBAL['session_currentDate'].setMonth(monthindex -1);
+		else
+			app_common.APP_GLOBAL['session_CurrentHijriDate'][0] = monthindex;
+		month_processed++;
+		months[monthindex-1] = displayMonth(prayTimes, settings, null, settings.timetable_year_month);
+		if (month_processed ==12)
+			return year_timetable();
+	}
 };
 /*----------------------- */
 /* EXCEPTION REPORT       */
@@ -1513,32 +1467,25 @@ const init = async (parameters) => {
 											if (err)
 												resolve();
 											else{
-												displayDay(prayTimes, report_parameters, null, user_settings_parameters).then((timetable) => {
-													timetable.style.display = 'block';
-													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													common.create_qr('timetable_qr_code', window.location.href);
-													resolve();
-												});
+												document.getElementById('paper').innerHTML = displayDay(prayTimes, report_parameters, null, user_settings_parameters);
+												common.create_qr('timetable_qr_code', window.location.href);
+												resolve();
 											}
 												
 										});
 									}
 									else
-										if (reporttype==1)
-											displayMonth(prayTimes, report_parameters, null).then((timetable) => {
-												timetable.style.display = 'block';
-												document.getElementById('paper').innerHTML = timetable.outerHTML;
+										if (reporttype==1){
+											document.getElementById('paper').innerHTML = displayMonth(prayTimes, report_parameters, null);
+											common.create_qr('timetable_qr_code', window.location.href);
+											resolve();
+										}
+										else 
+											if (reporttype==2){
+												document.getElementById('paper').innerHTML = displayYear(prayTimes, report_parameters, null);
 												common.create_qr('timetable_qr_code', window.location.href);
 												resolve();
-											});
-										else 
-											if (reporttype==2)
-												displayYear(prayTimes, report_parameters, null).then((timetable) => {
-													timetable.style.display = 'block';
-													document.getElementById('paper').innerHTML = timetable.outerHTML;
-													common.create_qr('timetable_qr_code', window.location.href);
-													resolve();
-												});
+											}
 								});
 							});
 							
