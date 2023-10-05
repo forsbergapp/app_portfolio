@@ -52,21 +52,6 @@ const startserver = () =>{
 						});
 						break;
 					}
-					case '/geolocation/timezone':{
-						req.query.latitude = params.get('latitude');
-						req.query.longitude = params.get('longitude');
-						IAM(req.query.app_id, req.headers.authorization).then(result=>{
-							if (result == 1)
-								getTimezone(req, res);
-							else
-							{
-								res.statusCode = 401;
-								res.write('⛔', 'utf-8');
-								res.end();
-							}
-						});
-						break;
-					}
 					default:{
 						res.end();
 					}
@@ -124,12 +109,5 @@ const getIp = async (req, res) => {
 	}
 	res.end();
 };
-const getTimezone = (req, res) => {
-	service.getTimezone(req.query.latitude, req.query.longitude, (err, result)=>{
-		res.statusCode = 200;
-		res.write(result, 'utf8');
-		res.end();
-	});
-};
 startserver();
-export {startserver, getPlace, getIp, getTimezone};
+export {startserver, getPlace, getIp};

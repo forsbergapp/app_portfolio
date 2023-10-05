@@ -2950,6 +2950,7 @@ const map_update_popup = (title) => {
     document.getElementById('common_module_leaflet_popup_title').innerHTML = title;
 };
 const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
+    const {getTimezone} = await import('regional');
     return new Promise((resolve)=> {
         if (checkconnected()) {
             const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
@@ -2984,9 +2985,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
             };
             map_update_gps(to_method, zoomvalue, longitude, latitude);
             if (timezone_text == null)
-                tzlookup(latitude, longitude).then((tzlookup_text)=>{
-                    map_update_text(tzlookup_text);
-                });
+                map_update_text(getTimezone(latitude, longitude));
             else{
                 map_update_text(timezone_text);
             }
@@ -3259,10 +3258,7 @@ const checkOnline = (div_icon_online, user_account_id) => {
     });
 };
 /*-----------------------
-  SERVICE GEOLOCATION    
-
-  local objects:
-  tzlookup
+  SERVICE GEOLOCATION   
   ----------------------- */
 const get_place_from_gps = async (longitude, latitude) => {
     return await new Promise((resolve)=>{
@@ -3335,28 +3331,6 @@ const get_gps_from_ip = async () => {
     });
 
 };
-const tzlookup = async (latitude, longitude) => {
-    return new Promise((resolve)=>{
-        const path = `/timezone?latitude=${latitude}&longitude=${longitude}`;
-        let tokentype;
-        if (COMMON_GLOBAL['system_admin']==1){
-            //system admin
-            tokentype = 2;
-        }
-        else
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
-                //admin
-                tokentype = 1;
-            }
-            else{
-                //not logged in or a user use this token
-                tokentype = 0;
-            }
-        FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, text_timezone) => {
-            resolve (text_timezone);
-        });
-    });
-};
 /*----------------------- */
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
@@ -3427,7 +3401,6 @@ const worldcities_search = async (event_function) =>{
     let html = '';
     if (cities.length > 0){
         for (const city of cities){
-            //dont save timezone function on each record, fetch after choosing a city ${await tzlookup(city.lat, city.lng)}
             html += `<div class='common_module_leaflet_search_list_row' tabindex=-1>
                         <div class='common_module_leaflet_search_list_col'>
                             <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
