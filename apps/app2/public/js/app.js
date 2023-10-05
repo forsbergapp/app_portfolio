@@ -113,10 +113,7 @@ const getReportSettings = () => {
                                                     //YEAR: month with less info
                 
                 ui_navigation_left      : 'toolbar_btn_left',
-                ui_navigation_right     : 'toolbar_btn_right',
-                ui_timetable_day_id     : 'timetable_day',
-                ui_timetable_month_id   : 'timetable_month',
-                ui_timetable_year_id    : 'timetable_year'};
+                ui_navigation_right     : 'toolbar_btn_right'};
 };
 // update timetable
 const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
@@ -148,34 +145,25 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                         });
                     }
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                    app_report.displayDay(prayTimes, settings, item_id, current_user_settings).then((timetable) => {
-                        timetable.style.display = 'block';
-                        document.getElementById('paper').innerHTML = timetable.outerHTML;
-                        common.create_qr('timetable_qr_code', common.getHostname());
-                        resolve();
-                    });
+                    document.getElementById('paper').innerHTML = app_report.displayDay(prayTimes, settings, item_id, current_user_settings);
+                    common.create_qr('timetable_qr_code', common.getHostname());
+                    resolve();
                     break;
                 }
                 //1=create timetable month
                 case 1:{
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                    app_report.displayMonth(prayTimes, settings, item_id).then((timetable) => {
-                        timetable.style.display = 'block';
-                        document.getElementById('paper').innerHTML = timetable.outerHTML;
-                        common.create_qr('timetable_qr_code', common.getHostname());
-                        resolve();
-                    });
+                    document.getElementById('paper').innerHTML = app_report.displayMonth(prayTimes, settings, item_id);
+                    common.create_qr('timetable_qr_code', common.getHostname());
+                    resolve();
                     break;
                 }
                 //2=create timetable year
                 case 2:{
                     document.getElementById('paper').innerHTML = common.APP_SPINNER;
-                    app_report.displayYear(prayTimes, settings, item_id).then((timetable) => {
-                        timetable.style.display = 'block';
-                        document.getElementById('paper').innerHTML = timetable.outerHTML;
-                        common.create_qr('timetable_qr_code', common.getHostname());
-                        resolve();
-                    });
+                    document.getElementById('paper').innerHTML = app_report.displayYear(prayTimes, settings, item_id);
+                    common.create_qr('timetable_qr_code', common.getHostname());
+                    resolve();
                     break;
                 }
                 default:{

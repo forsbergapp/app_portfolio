@@ -3,7 +3,7 @@
 //It returns the timezone offset in minutes for any IANA timezone name 
 //for any valid javascript date in the past, present and future.
 //function getTimezoneOffset( tz_str, date ) {
-const getTimezoneOffset = async (tz_str) => {
+const getTimezoneOffset = (tz_str) => {
     //https://github.com/mobz/get-timezone-offset
     const parseDate = ( date_str ) => {
         const us_re = /(\d+).(\d+).(\d+),?\s+(\d+).(\d+)(.(\d+))?/;
