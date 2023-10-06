@@ -2,6 +2,7 @@ const common = await import('common');
 const APP_GLOBAL = {
     'module_leaflet_map_container':''
 };
+Object.seal(APP_GLOBAL);
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };

@@ -90,4 +90,5 @@ const APP_GLOBAL = {
     'timetable_type':'',
     'module_praytimes_methods':''    
 };
+Object.seal(APP_GLOBAL);
 export{APP_GLOBAL};

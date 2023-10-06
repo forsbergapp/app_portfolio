@@ -39,6 +39,7 @@ const APP_GLOBAL = {
     'service_log_url_destination_password':'',
     'service_log_date_format':''
 };
+Object.seal(APP_GLOBAL);
 const delete_globals = () => {
     APP_GLOBAL['page'] = null;
     APP_GLOBAL['page_last'] = null;

@@ -24,6 +24,7 @@ const APP_GLOBAL = {
     'info_link_about_name':'',
     'info_link_about_url':''
 };
+Object.seal(APP_GLOBAL);
 const show_hide_apps_dialogue = () => {
     if (document.getElementById('dialogue_start_content').style.visibility=='visible' ||
         document.getElementById('dialogue_start_content').style.visibility==''){

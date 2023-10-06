@@ -30,6 +30,7 @@ const COMMON_GLOBAL = {
     'app_id':null,
     'app_url':'',
     'app_logo':'',
+    'app_sound':'',
     'ui':'',
     'exception_app_function':'',
     'user_app_role_id':'',
@@ -44,6 +45,7 @@ const COMMON_GLOBAL = {
     'rest_dt':'',
     'rest_admin_at':'',
     'rest_resource_server':'',
+    'rest_resource_bff':'',
     'image_file_allowed_type1':'',
     'image_file_allowed_type2':'',
     'image_file_allowed_type3':'',
@@ -84,6 +86,7 @@ const COMMON_GLOBAL = {
     'service_broadcast_client_ID':'',
     'service_broadcast_eventsource':''
 };
+Object.seal(COMMON_GLOBAL);
 const icon_string = (hexvalue) => `<div class='common_icon'>${String.fromCharCode(parseInt(hexvalue, 16))}</div>`;
 const icon_string_svg = (svg) => `<div class='common_icon'>${svg}</div>`;
 const ICONS = {
@@ -261,6 +264,7 @@ const ICONS = {
     'message_email':            icon_string('f0e0'),
     'message_record':           icon_string('f1c0')
 };
+Object.seal(ICONS);
 const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
                                     <div></div>
                                     <div></div>
