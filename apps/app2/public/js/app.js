@@ -2445,7 +2445,7 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
         });
     });
 };
-const map_show_search_on_map_app = (city) =>{
+const map_show_search_on_map_app = async (city) =>{
     common.map_show_search_on_map(city);
     map_show_qibbla();
     common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
@@ -2453,6 +2453,9 @@ const map_show_search_on_map_app = (city) =>{
                                                             city.querySelector('.common_module_leaflet_search_list_country a').innerHTML;
     document.getElementById('setting_input_long').value = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
     document.getElementById('setting_input_lat').value = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
+    const {getTimezone} = await import('regional');
+    document.querySelector('#setting_select_report_timezone').value = getTimezone(city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML, 
+                                                                                  city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML);
 };
 /*----------------------- */
 /* EXCEPTION              */

@@ -2797,10 +2797,10 @@ let L;
   	if (obj[eventsKey] && obj[eventsKey][id]) { return this; }
 
   	var handler = function (e) {
-		if ((e.target.id && e.target.id.startsWith('common_module_leaflet')) || (e.target.className && e.target.className.startsWith('common_module_leaflet')))
+		if ((e.target.id && e.target.id.startsWith('common_module_leaflet')) || (e.target.className && typeof e.target.className=='string' && e.target.className.startsWith('common_module_leaflet')))
 			return false;
 		else
-  			return fn.call(context || obj, e || window.event);	
+			return fn.call(context || obj, e || window.event);
   	};
 
   	var originalHandler = handler;
