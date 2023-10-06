@@ -1,31 +1,33 @@
 const common = await import('common');
+const APP_GLOBAL = {
+                    'docs':[{'id':1,
+                            'doc_title':'Diagram',
+                            'doc_url':'/app1/images/app_portfolio.webp',
+                            'doc_url_small':'/app1/images/app_portfolio_small.webp'},
+                            {'id':2,
+                            'doc_title':'Data Model',
+                            'doc_url':'/app1/images/data_model.webp',
+                            'doc_url_small':'/app1/images/data_model_small.webp'},
+                            {'id':3,
+                            'doc_title':'Property Management',
+                            'doc_url':'/app3/images/datamodel_pm.webp',
+                            'doc_url_small':'/app3/images/datamodel_pm_small.webp'}
+                            ]
+};
+Object.seal(APP_GLOBAL);
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
 const getdocs = (docid = null) => {
     document.querySelector('#doc_list').innerHTML = common.APP_SPINNER;
-    const result = `{"data":[{"id":1,
-                            "doc_title":"Diagram",
-                            "doc_url":"/app1/images/app_portfolio.webp",
-                            "doc_url_small":"/app1/images/app_portfolio_small.webp"},
-                            {"id":2,
-                            "doc_title":"Data Model",
-                            "doc_url":"/app1/images/data_model.webp",
-                            "doc_url_small":"/app1/images/data_model_small.webp"},
-                            {"id":3,
-                            "doc_title":"Property Management",
-                            "doc_url":"/app3/images/datamodel_pm.webp",
-                            "doc_url_small":"/app3/images/datamodel_pm_small.webp"}
-                            ]}`;
     let html ='';
-    const json = JSON.parse(result);
-    for (let i = 0; i < json.data.length; i++) {
-        if (docid== json.data[i].id || docid==null)
+    for (const doc of APP_GLOBAL['docs']) {
+        if (docid== doc.id || docid==null)
             html += `<div id='doc_list_item'>
-                        <div id='doc_${json.data[i].id}' full_size='${json.data[i].doc_url}' class='doc_list_item_image_div'>
-                            <img class='doc_list_item_image' src='${json.data[i].doc_url_small}'>
+                        <div id='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image_div'>
+                            <img class='doc_list_item_image' src='${doc.doc_url_small}'>
                         </div>
-                        <div class='doc_list_item_title'>${json.data[i].doc_title}</div>
+                        <div class='doc_list_item_title'>${doc.doc_title}</div>
                     </div>`;
     }
     document.querySelector('#doc_list').innerHTML = html;
