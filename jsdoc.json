@@ -1,0 +1,23 @@
+{
+    "tags": {
+        "allowUnknownTags": true,
+        "dictionaries": ["jsdoc"]
+    },
+    "source": {
+        "includePattern": ".+\\.js$",
+        "excludePattern": "(.git/|.vscode/|.well_known/|config/|docs/|logs/|node_modules/)"
+    },
+    "plugins": ["plugins/markdown"],
+    "recurseDepth": 10,
+    "sourceType": "module",
+    "templates": {
+        "cleverLinks": false,
+        "monospaceLinks": false
+    },
+    "opts": {
+        "destination": "./docs/jsdoc",
+        "encoding": "utf8",
+        "private": true,
+        "recurse": true
+    }
+}

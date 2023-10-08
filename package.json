@@ -14,7 +14,8 @@
     "puppeteer": "^19.11.1"
   },
   "scripts": {
-    "test": "jasmine --config=test/jasmine.json"
+    "test": "jasmine --config=test/jasmine.json",
+    "jsdoc": "jsdoc -c jsdoc.json"
   },
   "keywords": [],
   "author": "",
@@ -22,7 +23,17 @@
   "type": "module",
   "description": "",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.4",
+    "@types/compression": "^1.7.3",
+    "@types/express": "^4.17.18",
+    "@types/jsonwebtoken": "^9.0.3",
+    "@types/mysql": "^2.15.22",
+    "@types/nodemailer": "^6.4.11",
+    "@types/oracledb": "^6.0.1",
+    "@types/pg": "^8.10.3",
     "eslint": "^8.49.0",
-    "jasmine": "^5.1.0"
+    "jasmine": "^5.1.0",
+    "jsdoc": "^4.0.2",
+    "typescript": "^5.2.2"
   }
 }

@@ -23,7 +23,7 @@ const createAdmin = (app_id, locale) => {
             render_provider_buttons=false;
         }
         render_app_html(app_id, files, {locale:locale, 
-                                        module_type:'FORM', 
+                                        module_type:'APP', 
                                         map: true, 
                                         custom_tag_profile_search:null,
                                         custom_tag_user_account:'<AppUserAccount/>',

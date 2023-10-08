@@ -1,9 +1,18 @@
+/** @module apps */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../types.js';
+
 const service = await import('./apps.service.js');
 
-//backend for frontend
-//returns status 401 (parameter errors), 503(ANY error in called service) or 200 if ok
-//together with error or result
-const BFF = async (req, res) =>{
+/**
+ * Backend for frontend (BFF)
+ * @async
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ * @returns {Types.res|*} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
+  */
+const BFF = (req, res) =>{
     //check inparameters
     if (!req.query.app_id &&
         !req.query.service &&
@@ -19,6 +28,7 @@ const BFF = async (req, res) =>{
         const service_called = req.query.service.toUpperCase();
         if (service_called=='MAIL')
             message_queue=true;
+        /** @type {string} */
         let parameters;
         if (req.query.user_account_logon_user_account_id)
             parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`;
@@ -36,8 +46,9 @@ const BFF = async (req, res) =>{
                                                                      )[0].split('=')[1];
             delete req.query.parameters;
             delete req.query.service;
-            const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
-            BroadcastConnect(req,res);
+            import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`).then(({BroadcastConnect})=>{
+                BroadcastConnect(req,res);
+            });
         }
         else
             service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body)
@@ -64,12 +75,18 @@ const BFF = async (req, res) =>{
             });
     }
 };
-//backend for frontend without authorization
-const BFF_noauth = async (req, res) =>{
+/**
+ * Backend for frontend (BFF) without authorization
+ * @async
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ * @returns {Types.res} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
+ */
+const BFF_noauth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='BROADCAST' && 
         Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-            BFF(req,res);
+            return BFF(req,res);
         }
     else{
         //required parameters not provided
@@ -79,8 +96,14 @@ const BFF_noauth = async (req, res) =>{
         });
     }
 };
-//backend for frontend auth with basic authorization and no middleware
-const BFF_auth = async (req, res) =>{
+/**
+ * Backend for frontend (BFF) with basic authorization and no middleware
+ * @async
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ * @returns {Types.res} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
+ */
+const BFF_auth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='AUTH' && req.headers.authorization.toUpperCase().startsWith('BASIC'))
         return BFF(req,res);
