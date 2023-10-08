@@ -149,6 +149,10 @@
 	www.github.com/umpirsky/country-list
 	Language Translations
 	www.github.com/umpirsky/language-list
+	JSDoc
+	www.jsdoc.app
+	Typescript
+	www.typescriptlang.org
 
 # Apps included
 
@@ -276,7 +280,11 @@
 	
 	[docs/10.test.md](docs/10.test.md)
 
-11. Issues
+11. Typescript
+	
+	[docs/11.typescript.md](docs/11.typescript.md)
+
+12. Issues
    
 	Not supported:
 

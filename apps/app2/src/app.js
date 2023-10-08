@@ -138,7 +138,7 @@ const createApp = (app_id, username, locale) => {
             let APP_IQAMAT='';
             let APP_FAST_START_END='';
             render_app_html(app_id, files, {locale:locale, 
-                                            module_type:'FORM', 
+                                            module_type:'APP', 
                                             map: true, 
                                             custom_tag_profile_search:'<AppProfileSearch/>',
                                             custom_tag_user_account:'<AppUserAccount/>',
@@ -269,8 +269,8 @@ const createApp = (app_id, username, locale) => {
                     if (result)
                         main(app_id);
                     else{
-                        //return 0 meaning redirect to /
-                        resolve (0);
+                        //meaning redirect to /
+                        resolve ({app: null, map: null, map_styles:null});
                     }
                 });
             });

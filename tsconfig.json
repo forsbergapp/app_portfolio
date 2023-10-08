@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {"allowJs":true,
+                        "checkJs":true,
+                        "strict":true,
+                        "outDir":"build",
+                        "lib": ["es2022", "dom"],
+                        "module":"es2022",
+                        "target":"es2022"},
+    "include": ["server.js", "apps/apps.controller.js", "apps/apps.service.js"],
+    "exclude":["apps/common/public/modules"]
+}
