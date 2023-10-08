@@ -16,7 +16,7 @@ const createApp = (app_id, username, locale) => {
             const profile_info_cloud = await fs.promises.readFile(`${process.cwd()}/apps/common/src/profile_info_cloud.html`, 'utf8');
             const app_themes = await fs.promises.readFile(`${process.cwd()}/apps/app1/src/app_themes.html`, 'utf8');
             render_app_html(app_id, files, {locale:locale, 
-                                            module_type:'FORM', 
+                                            module_type:'APP', 
                                             map: false, 
                                             custom_tag_profile_search:null,
                                             custom_tag_user_account:null,
@@ -49,8 +49,8 @@ const createApp = (app_id, username, locale) => {
                     if (result)
                         main(app_id);
                     else{
-                        //return 0 meaning redirect to /
-                        resolve (0);
+                        //rmeaning redirect to /
+                        resolve ({app: null, map: null, map_styles:null});
                     }
                 });
             });

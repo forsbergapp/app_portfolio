@@ -9,7 +9,7 @@ const createApp = (app_id, params) => {
             ];
         if (params==null || params =='1' || params =='2' || params =='3' ){
             render_app_html(app_id, files, {locale:null, 
-                                            module_type:'FORM', 
+                                            module_type:'APP', 
                                             map: false, 
                                             custom_tag_profile_search:null,
                                             custom_tag_user_account:null,
@@ -33,8 +33,10 @@ const createApp = (app_id, params) => {
                 }
             });
         }
-        else
-            resolve(0);        
+        else{
+            //meaning redirect to /
+            resolve ({app: null, map: null, map_styles:null});
+        }
     });
 };
 export{createApp};
