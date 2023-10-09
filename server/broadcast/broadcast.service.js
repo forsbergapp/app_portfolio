@@ -97,14 +97,29 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     const db_ok = ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
     //filter    
-    let connected_clients_no_res = CONNECTED_CLIENTS.filter((client, index)=>{
+    
+    let connected_clients_no_res =[];
+    for (const client of CONNECTED_CLIENTS)
+        //return keys without response
+        connected_clients_no_res.push({ app_id: client.app_id, 
+                                        app_role_icon: client.app_role_icon, 
+                                        app_role_id: client.app_role_id, 
+                                        connection_date: client.connection_date,
+                                        gps_latitude: client.gps_latitude,
+                                        gps_longitude: client.gps_longitude,
+                                        id: client.id,
+                                        identity_provider_id: client.identity_provider_id,
+                                        ip: client.ip,
+                                        system_admin: client.system_admin,
+                                        user_account_id: client.user_account_id,
+                                        user_agent: client.user_agent});
+    //return rows controlling limit, app_id, year and month
+    connected_clients_no_res = connected_clients_no_res.filter((client, index)=>{
         return index<=limit &&
         (client.app_id == app_id_select || app_id_select==null) &&
         (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
          parseInt(client.connection_date.substring(5,7)) == parseInt(month));
     });
-    //remove response key in result
-    connected_clients_no_res.map(client=>delete client.response);
     const sort_and_return = (sort) =>{
         let order_by_num;
         if (order_by =='asc')
