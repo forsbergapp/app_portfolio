@@ -102,11 +102,11 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     for (const client of CONNECTED_CLIENTS)
         //return keys without response
         connected_clients_no_res.push({ app_id: client.app_id, 
-                                        app_role_icon: client.app_role_icon, 
-                                        app_role_id: client.app_role_id, 
+                                        app_role_icon: client.app_role_icon ?? '',
+                                        app_role_id: client.app_role_id ?? '',
                                         connection_date: client.connection_date,
-                                        gps_latitude: client.gps_latitude,
-                                        gps_longitude: client.gps_longitude,
+                                        gps_latitude: client.gps_latitude ?? '',
+                                        gps_longitude: client.gps_longitude ?? '',
                                         id: client.id,
                                         identity_provider_id: client.identity_provider_id,
                                         ip: client.ip,
