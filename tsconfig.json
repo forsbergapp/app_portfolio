@@ -3,9 +3,11 @@
                         "checkJs":true,
                         "strict":true,
                         "outDir":"build",
+                        "allowSyntheticDefaultImports": true,
+                        "esModuleInterop": true,
                         "lib": ["es2022", "dom"],
                         "module":"es2022",
                         "target":"es2022"},
-    "include": ["server.js", "apps/apps.controller.js", "apps/apps.service.js"],
+    "include": ["server.js", "server/server.controller.js", "server/server.service.js", "apps/apps.controller.js", "apps/apps.service.js"],
     "exclude":["apps/common/public/modules"]
 }

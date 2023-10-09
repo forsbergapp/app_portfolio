@@ -86,7 +86,7 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 					AND   t.object_name = COALESCE(:Xobject_Xname, t.object_name)
 			ORDER BY 1, 2, 3, 4, 5, 6`;
 		const parameters = {
-						common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+						common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
 						app_id: app_id,
 						lang_code1: get_locale(lang_code, 1),
 						lang_code2: get_locale(lang_code, 2),

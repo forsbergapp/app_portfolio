@@ -26,7 +26,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 									AND aus2.user_account_app_app_id = :app_id
 									AND :initial_setting = 1)`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-			if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3')
+			if (ConfigGet('SERVICE_DB', 'USE')=='3')
 				sql = sql + ' RETURNING id';
 			parameters = {
 							description: data.description,
@@ -39,7 +39,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 				if (err)
 					return callBack(err, null);
 				else
-					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+					switch (ConfigGet('SERVICE_DB', 'USE')){
 						case '1':
 						case '2':
 						case '3':{

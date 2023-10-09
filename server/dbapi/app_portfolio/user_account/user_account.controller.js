@@ -71,7 +71,7 @@ const checked_error = (app_id, lang_code, err, res) =>{
             err.sqlMessage);
         if (app_code != null){
             getMessage(app_id,
-                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                 app_code, 
                 lang_code, (err,results_message)  => {
                             return res.status(400).send(
@@ -122,7 +122,7 @@ const userSignup = (req, res) => {
     }
     if (service.password_length_wrong(req.body.password))
         getMessage(req.query.app_id, 
-                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                    ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
                     20106, 
                     req.query.lang_code, (err,results_message)  => {
                         return res.status(400).send(
@@ -139,7 +139,7 @@ const userSignup = (req, res) => {
             else{
                 if (req.body.provider_id == null ) {
                     //send email for local users only
-                    getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
+                    getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                         //send email SIGNUP
                         sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.insertId, req.body.verification_code, req.body.email, 
                                       req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -284,7 +284,7 @@ const passwordResetUser = (req, res) => {
                                                     err
                                                 );
                                             else{
-                                                getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
+                                                getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                     //send email PASSWORD_RESET
                                                     sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, email, 
                                                                   req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -513,7 +513,7 @@ const updateUserLocal = (req, res) => {
                         req.body.new_password != '' &&
                         service.password_length_wrong(req.body.new_password))
                             getMessage( req.query.app_id,
-                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                        ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                                         20106, 
                                         req.query.lang_code, (err,results_message)  => {
                                                 return res.status(400).send(
@@ -535,7 +535,7 @@ const updateUserLocal = (req, res) => {
                                 else{
                                     if (results_update){
                                         if (send_email){
-                                            getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
+                                            getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                 //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                                 sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], req.params.id, req.body.verification_code, req.body.new_email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -614,7 +614,7 @@ const updateUserLocal = (req, res) => {
                     res.statusMessage = 'invalid password attempt for user id:' + req.params.id;
                     //invalid password
                     getMessage(req.query.app_id,
-                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                                 20401, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(400).send(
@@ -626,7 +626,7 @@ const updateUserLocal = (req, res) => {
             else {
                 //user not found
                 getMessage( req.query.app_id,
-                            ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                            ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                             20305, 
                             req.query.lang_code, (err,results_message)  => {
                                 return res.status(404).send(
@@ -641,7 +641,7 @@ const updatePassword = (req, res) => {
     req.params.id = parseInt(req.params.id);
     if (service.password_length_wrong(req.body.new_password))
         getMessage(req.query.app_id,
-                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                    ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                     20106, 
                     req.query.lang_code, (err,results_message)  => {
                         return res.status(400).send(
@@ -778,7 +778,7 @@ const deleteUser = (req, res) => {
                                     res.statusMessage = 'invalid password attempt for user id:' + req.params.id;
                                     //invalid password
                                     getMessage(req.query.app_id,
-                                        ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                        ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                                         20401, 
                                         req.query.lang_code, (err,results_message)  => {
                                                 return res.status(400).send(
@@ -790,7 +790,7 @@ const deleteUser = (req, res) => {
                             else{
                                 //user not found
                                 getMessage( req.query.app_id,
-                                            ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                            ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                                             20305, 
                                             req.query.lang_code, (err,results_message)  => {
                                                 return res.status(404).send(
@@ -805,7 +805,7 @@ const deleteUser = (req, res) => {
             else{
                 //user not found
                 getMessage(req.query.app_id,
-                            ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                            ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                             20305, 
                             req.query.lang_code, (err,results_message)  => {
                                 return res.status(404).send(
@@ -846,8 +846,8 @@ const userLogin = (req, res) => {
                 }
                 
                 if (result_pw == 1) {
-                    if ((req.query.app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') && (results.app_role_id == 0 || results.app_role_id == 1))||
-                            req.query.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
+                    if ((req.query.app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID') && (results.app_role_id == 0 || results.app_role_id == 1))||
+                            req.query.app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
                         createUserAccountApp(req.query.app_id, results.id, (err) => {
                             if (err) {
                                 return res.status(500).send(
@@ -864,7 +864,7 @@ const userLogin = (req, res) => {
                                                 err
                                             );
                                         else{
-                                            getParameter(req.query.app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
+                                            getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
                                                 //send email UNVERIFIED
                                                 sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, results.email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -930,7 +930,7 @@ const userLogin = (req, res) => {
                             res.statusMessage = 'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username;
                             //Username or password not found
                             getMessage( req.query.app_id,
-                                ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                                ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                                 20300, 
                                 req.query.lang_code, (err,results_message)  => {
                                         return res.status(400).send(
@@ -944,7 +944,7 @@ const userLogin = (req, res) => {
                 res.statusMessage = 'user not found:' + req.body.username;
                 //User not found
                 getMessage( req.query.app_id,
-                    ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), 
+                    ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
                     20305, 
                     req.query.lang_code, (err,results_message)  => {
                         return res.status(404).send(

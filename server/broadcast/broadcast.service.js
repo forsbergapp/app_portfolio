@@ -1,4 +1,4 @@
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/server.service.js`);
 let CONNECTED_CLIENTS = [];
 
 const ClientConnect = (res) => {
@@ -21,16 +21,16 @@ const ClientSend = (res, message, message_type) => {
 };
 const BroadcastCheckMaintenance = () => {
     //start interval if apps are started
-    if (ConfigGet(1, 'SERVER', 'APP_START')=='1'){
+    if (ConfigGet('SERVER', 'APP_START')=='1'){
         setInterval(() => {
-            if (ConfigGet(0, null, 'MAINTENANCE')=='1'){
+            if (ConfigGetInit('MAINTENANCE')=='1'){
                 CONNECTED_CLIENTS.forEach(client=>{
-                    if (client.app_id != ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){
+                    if (client.app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
                         ClientSend(client.response, '', 'MAINTENANCE');
                     }
                 });
             }
-        }, ConfigGet(1, 'SERVICE_BROADCAST', 'CHECK_INTERVAL'));
+        }, ConfigGet('SERVICE_BROADCAST', 'CHECK_INTERVAL'));
     }
 };
 const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
@@ -95,7 +95,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     else
         app_id_select = Number(app_id_select);
     const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
-    const db_ok = ConfigGet(1, 'SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
+    const db_ok = ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
     //filter    
     let connected_clients_no_res = CONNECTED_CLIENTS.filter((client, index)=>{
         return index<=limit &&

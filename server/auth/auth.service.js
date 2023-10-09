@@ -1,4 +1,4 @@
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
 const IPtoNum = (ip) => {
     return Number(
@@ -9,7 +9,7 @@ const IPtoNum = (ip) => {
 };
 const access_control = (ip, host, user_agent, accept_language, callBack) => {
 
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
+    if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
         const ip_v4 = ip.replace('::ffff:','');
         block_ip_control(ip_v4, (err, result_range) =>{
             if (err){
@@ -22,7 +22,7 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                 }
                 else{
                     //check if host exists
-                    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')=='1' &&
+                    if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')=='1' &&
                         typeof host=='undefined'){
                         //406 Not Acceptable
                         return callBack(null, {statusCode: 406, 
@@ -31,7 +31,7 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                     else{
                         //check if accessed from domain and not os hostname
                         import('node:os').then(({hostname}) =>{
-                            if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')=='1' &&
+                            if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')=='1' &&
                                 host==hostname()){
                                 //406 Not Acceptable
                                 return callBack(null, {statusCode: 406, 
@@ -47,7 +47,7 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                                             return callBack(null,null);
                                         else{
                                             //check if user-agent exists
-                                            if(ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT_EXIST')==1 &&
+                                            if(ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT_EXIST')==1 &&
                                                 typeof user_agent=='undefined'){
                                                 //406 Not Acceptable
                                                 return callBack(null, {statusCode: 406, 
@@ -55,7 +55,7 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                                             }
                                             else{
                                                 //check if accept-language exists
-                                                if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')=='1' &&
+                                                if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')=='1' &&
                                                     typeof accept_language=='undefined'){
                                                     //406 Not Acceptable
                                                     return callBack(null, {statusCode: 406, 
@@ -78,10 +78,10 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
         return callBack(null,null);
 };
 const block_ip_control = async (ip_v4, callBack) => {
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
+    if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
         let ranges;
         import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (err, fileBuffer) => {
+            fs.readFile(process.cwd() + ConfigGetInit('FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (err, fileBuffer) => {
                 if (err)
                     return callBack(err, null);
                 else{
@@ -115,10 +115,10 @@ const safe_user_agents = async (user_agent, callBack) => {
                         ]
         }
     */
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
+    if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
         let json;  
         import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + ConfigGet(0, null, 'FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (err, fileBuffer) => {
+            fs.readFile(process.cwd() + ConfigGetInit('FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (err, fileBuffer) => {
                 if (err){
                     return callBack(err, null);
                 }
@@ -192,7 +192,7 @@ const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
     return new Promise((resolve, reject)=>{
         if (authorization){
             const token = authorization.slice(7);
-            verify(token, ConfigGet(7, app_id, 'ACCESS_SECRET'), (err) => {
+            verify(token, ConfigGetApp(app_id, 'ACCESS_SECRET'), (err) => {
                 if (err)
                    resolve(false);
                 else {
@@ -221,7 +221,7 @@ const checkDataToken = async (app_id, token) =>{
     return new Promise(resolve =>{
         if (token){
             token = token.slice(7);
-            verify(token, ConfigGet(7, app_id, 'DATA_SECRET'), (err) => {
+            verify(token, ConfigGetApp(app_id, 'DATA_SECRET'), (err) => {
                 if (err){
                     resolve(false);
                 } else {
@@ -237,17 +237,17 @@ const checkDataToken = async (app_id, token) =>{
 };
 const accessToken = (app_id)=>{
     const jsontoken_at = sign ({tokentimstamp: Date.now()}, 
-                          ConfigGet(7, app_id, 'ACCESS_SECRET'), 
+                        ConfigGetApp(app_id, 'ACCESS_SECRET'), 
                          {
-                          expiresIn: ConfigGet(7, app_id, 'ACCESS_EXPIRE')
+                          expiresIn: ConfigGetApp(app_id, 'ACCESS_EXPIRE')
                          });
     return jsontoken_at;
 };
 const CreateDataToken = (app_id)=>{
     const jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
-                            ConfigGet(7, app_id, 'DATA_SECRET'), 
+                        ConfigGetApp(app_id, 'DATA_SECRET'), 
                             {
-                            expiresIn: ConfigGet(7, app_id, 'DATA_EXPIRE')
+                            expiresIn: ConfigGetApp(app_id, 'DATA_EXPIRE')
                             });
     return jsontoken_dt;
 };

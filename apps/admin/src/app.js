@@ -12,7 +12,7 @@ const createAdmin = (app_id, locale) => {
             ['<AppSecure/>', process.cwd() + '/apps/admin/src/secure.html']
             ];
         let render_locales, render_settings, render_provider_buttons;
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
+        if (ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
             render_locales = true;
             render_settings= true;
             render_provider_buttons=true;

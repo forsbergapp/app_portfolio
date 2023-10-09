@@ -6,6 +6,8 @@
  * @property {string} body.config_no                    - Server parameter
  * @property {string} body.config_json                  - Server parameter
  * @property {string} baseUrl
+ * @property {string} hostname
+ * @property {string} path
  * @property {string} originalUrl
  * @property {string} ip
  * @property {string} method
@@ -32,7 +34,14 @@
  * @property {string} query.config_type_no              - Server parameter
  * @property {string} query.config_group                - Server parameter
  * 
- * @property {{authorization: string, 'user-agent': string, 'accept-language': string, host:string, accept:string, referer:string}} headers
+ * @property {{ authorization: string, 
+ *              'user-agent': string, 
+ *              'accept-language': string, 
+ *              host:string, 
+ *              accept:string, 
+ *              referer:string,
+ *              'X-Request-Id':string,
+ *              'X-Correlation-Id':string}} headers
  */
 /**
  * Response
@@ -45,6 +54,8 @@
  * @property {function} send
  * @property {function} redirect 
  * @property {function} getHeader
+ * @property {function} setHeader
+ * @property {function} removeHeader
  * @property {function} on
  */
 /**
@@ -52,6 +63,7 @@
  * @typedef {object} express
  * @property {function} use
  * @property {function} get
+ * @property {function} set
  * @property {function} route
  * @property {function} listen
  */
@@ -181,6 +193,58 @@
  * @property {string} info_link_disclaimer_url
  * @property {string} info_link_terms_url
  * @property {string} info_link_about_url
+ */
+/**
+ * Access control
+ * @typedef {object} access_control
+ * @property {number} statusCode
+ * @property {string} statusMessage
+ */
+/*
+ * Config init, choose type of declaration and fix ts-ignore
+ * @typedef {object} config_init
+ * @property {string} CONFIGURATION
+ * @property {string} CREATED
+ * @property {string} MODIFIED
+ * @property {string} MAINTENANCE
+ * @property {string} FILE_CONFIG_SERVER
+ * @property {string} FILE_CONFIG_AUTH_BLOCKIP
+ * @property {string} FILE_CONFIG_AUTH_USERAGENT
+ * @property {string} FILE_CONFIG_AUTH_POLICY
+ * @property {string} PATH_LOG
+ * @property {string} FILE_CONFIG_AUTH_USER
+ * @property {string} FILE_CONFIG_APPS
+*/
+/**
+ * Config init
+ * 
+ * @typedef {{  CONFIGURATION:string,
+ *              CREATED:string,
+ *              MODIFIED:string,
+ *              MAINTENANCE:string,
+ *              FILE_CONFIG_SERVER:string,
+ *              FILE_CONFIG_AUTH_BLOCKIP:string,
+ *              FILE_CONFIG_AUTH_USERAGENT:string,
+ *              FILE_CONFIG_AUTH_POLICY:string,
+ *              PATH_LOG:string,
+ *              FILE_CONFIG_AUTH_USER:string,
+ *              FILE_CONFIG_APPS:string}} config_init
+ */
+/**
+ * Config apps
+ * @typedef  {object} config_apps
+ * @property {number} APP_ID
+ * @property {string} SUBDOMAIN
+ * @property {string} PATH
+ * @property {string} ENDPOINT
+ * @property {string} SHOWINFO
+ * @property {string} SHOWPARAM
+ * @property {string} [CLIENT_ID]
+ * @property {string} [CLIENT_SECRET]
+ * @property {string} [DATA_SECRET]
+ * @property {string} [DATA_EXPIRE]
+ * @property {string} [ACCESS_SECRET]
+ * @property {string} [ACCESS_EXPIRE]
  */
 /**
  * DB result app
