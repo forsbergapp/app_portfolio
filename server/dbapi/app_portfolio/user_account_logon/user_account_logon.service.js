@@ -47,7 +47,7 @@ const checkLogin = (app_id, user_account_id, access_token, client_ip, callBack) 
 				app_id: app_id,
 				access_token: access_token,
 				client_ip: client_ip,
-				admin_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+				admin_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
 				super_admin_app_role_id: 0,
 				admin_app_role_id: 1
 			};

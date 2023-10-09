@@ -2,7 +2,7 @@ const { ConfigGet } = await import(`file://${process.cwd()}/server/server.servic
 const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const createLog = (app_id, data, callBack) => {
-	if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
+	if (ConfigGet('SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
 		//max 4000 characters can be saved
 		if (data.app_module_result!=null)
 			data.app_module_result = data.app_module_result.substr(0,3999);

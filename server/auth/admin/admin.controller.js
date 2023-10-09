@@ -1,12 +1,12 @@
 const {default:{sign, verify}} = await import('jsonwebtoken');
 
-const {CheckFirstTime, ConfigGet, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetUser, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const checkSystemAdmin = (req, res, next) => {
     let token = req.get('authorization');
     if (token){
         token = token.slice(7);
-        verify(token, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), (err) => {
+        verify(token, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), (err) => {
             if (err){
                 res.status(401).send({
                     message: '⛔'
@@ -25,11 +25,11 @@ const checkSystemAdmin = (req, res, next) => {
 const authSystemAdmin = (req, res) => {
     const check_user = async (username, password) => {
         const { default: {compareSync} } = await import('bcryptjs');
-        const config_username = ConfigGet(6)['username'];
-        const config_password = ConfigGet(6)['password'];
+        const config_username = ConfigGetUser('username');
+        const config_password = ConfigGetUser('password');
         if (username == config_username && compareSync(password, config_password)) {
-            const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
-                                expiresIn: ConfigGet(1, 'SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
+            const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
+                                expiresIn: ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
                                 });
             return res.status(200).json({ 
                 token_at: jsontoken_at

@@ -16,7 +16,7 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 		//'duplicate key value violates unique constraint "user_account_username_un"'
 		//Oracle message:
 		//'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
-		const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+		const db_use = ConfigGet('SERVICE_DB', 'USE');
 		if ((db_use =='1' && code == 'ER_DUP_ENTRY') || //MariaDB/MySQL
 			(db_use =='2' && errorNum ==1) ||  		  //Oracle
 			(db_use =='3' && code=='23505')){ 		  //PostgreSQL
@@ -46,7 +46,7 @@ const record_not_found = (res, app_id, lang_code) => {
 	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`).then(({ getMessage }) => {
 			getMessage( app_id, 
-						ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+						ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
 						20400, 
 						lang_code, (err,results_message)  => {
 							return res.status(404).send(
@@ -80,19 +80,19 @@ const get_locale = (lang_code, part) => {
 			}
 		}
 };
-const db_schema = () => ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_NAME`);
+const db_schema = () => ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_NAME`);
 
 const db_limit_rows = (sql, limit_type = null) => {
-	const db_use = ConfigGet(1, 'SERVICE_DB', 'USE');
+	const db_use = ConfigGet('SERVICE_DB', 'USE');
 	if (db_use == '1' || db_use == '2' || db_use == '3')
 		switch (limit_type){
 			case 1:{
 				//use env limit
-				return sql + ` LIMIT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')} `;
+				return sql + ` LIMIT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')} `;
 			}
 			case 2:{
 				//use env limit
-				return sql + ` LIMIT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} `;
+				return sql + ` LIMIT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} `;
 			}
 			case null:{
 				//use app function limit
@@ -104,11 +104,11 @@ const db_limit_rows = (sql, limit_type = null) => {
 			switch (limit_type){
 				case 1:{
 					//use env limit
-					return sql + ` FETCH NEXT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')} ROWS ONLY`;
 				}
 				case 2:{
 					//use env limit
-					return sql + ` FETCH NEXT ${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} ROWS ONLY`;
 				}
 				case null:{
 					//use app function limit
@@ -121,10 +121,10 @@ const db_limit_rows = (sql, limit_type = null) => {
 
 const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 	import(`file://${process.cwd()}/server/db/db.service.js`).then(({db_query}) => {
-		db_query(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, dba)
+		db_query(app_id, parseInt(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((result)=> {
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBI}) => {
-				LogDBI(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, result)
+				LogDBI(app_id, parseInt(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 				.then(()=>{
 					return callBack(null, result);});
 				});
@@ -132,7 +132,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 		.catch(error=>{
 			const database_error = 'DATABASE ERROR';
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBE}) => {
-				LogDBE(app_id, parseInt(ConfigGet(1, 'SERVICE_DB', 'USE')), sql, parameters, error)
+				LogDBE(app_id, parseInt(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
 				.then(()=>{
 					const app_code = get_app_code(error.errorNum, 
 						error.message, 
@@ -143,7 +143,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 						return callBack(error, null);
 					else{
 						//return full error to admin
-						if (app_id==ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
+						if (app_id==ConfigGet('SERVER', 'APP_COMMON_APP_ID'))
 							return callBack(error, null);
 						else
 							return callBack(database_error, null);

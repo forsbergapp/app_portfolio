@@ -3,7 +3,7 @@
 import * as Types from './../types.js';
 
 const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
-const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
 
 /**
@@ -51,7 +51,7 @@ const createMail = async (app_id, data) =>{
                 if (err)
                     reject(err);
                 else{                
-                    getParameters_server(app_id, ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Array.<Types.db_parameter>}*/ result)=>{
+                    getParameters_server(app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Array.<Types.db_parameter>}*/ result)=>{
                         if (err) {                
                             reject(err);
                         }
@@ -295,7 +295,7 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
         //get app admin
         const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
         app = await createAdmin(app_id, client_locale(module_config.accept_language));
-        if (ConfigGet(1, 'SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
+        if (ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
             system_admin_only = 0;
         }
         else{
@@ -355,7 +355,7 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
                             place:result_geodata.place,
                             module:app.app}, (err, app_with_init) =>{
         //if app admin then log, system does not log in database
-        if (ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+        if (ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                 createLog(app_id,
                         { app_id : app_id,
@@ -391,7 +391,7 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
  * @param {Types.callBack} callBack   - CallBack with error and success info
  */
 const getApp = (req, res, app_id, params, callBack) => {
-    if (apps_start_ok() ==true || app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')){  
+    if (apps_start_ok() ==true || app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID')){  
         callCreateApp(app_id, {	module_type:'APP', 
                                 params:params, 
                                 ip:req.ip,
@@ -483,8 +483,8 @@ const getReport = async (req, res, app_id, callBack) => {
  * @returns {boolean}   - Returns true if MAINTENANCE=0 and START=1 and APP_START=1 and DB[DBUSE]_APP_ADMIN_USER is defined else false
  */
 const apps_start_ok = ()=>{
-    if (ConfigGet(0, null, 'MAINTENANCE')=='0' && ConfigGet(1, 'SERVICE_DB', 'START')=='1' && ConfigGet(1, 'SERVER', 'APP_START')=='1' &&
-        ConfigGet(1, 'SERVICE_DB', `DB${ConfigGet(1, 'SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+    if (ConfigGetInit('MAINTENANCE')=='0' && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
+        ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
         return true;
     else
         return false;
@@ -832,10 +832,10 @@ const get_module_with_init = async (app_info, callBack) => {
             client_latitude: app_info.latitude,
             client_longitude: app_info.longitude,
             client_place: app_info.place,
-            app_sound: ConfigGet(1, 'SERVER', 'APP_SOUND'),
-            common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
-            rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
-            rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF'),
+            app_sound: ConfigGet('SERVER', 'APP_SOUND'),
+            common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
+            rest_resource_server: ConfigGet('SERVER', 'REST_RESOURCE_SERVER'),
+            rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
             first_time: first_time
         };
         render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify({
@@ -887,19 +887,19 @@ const get_module_with_init = async (app_info, callBack) => {
  */
 const AppsStart = async (app) => {
 
-    const express = await import('express');
+    const {default:express} = await import('express');
 
     app.use('/common',express.static(process.cwd() + '/apps/common/public'));
 
-    for (const app_config of ConfigGet(7, null, 'APPS'))
+    for (const app_config of ConfigGetApps())
         app.use(app_config.ENDPOINT,express.static(process.cwd() + app_config.PATH));
     
     //routes
     
     app.get('/sw.js',(/**@type {Types.req} */req, /**@type {Types.res} */ res, /**@type {function} */ next) => {
-        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
         import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + `${ConfigGet(7, app_id, 'PATH')}/sw.js`, 'utf8', (error, fileBuffer) => {
+            fs.readFile(process.cwd() + `${ConfigGetApp(app_id, 'PATH')}/sw.js`, 'utf8', (error, fileBuffer) => {
                 //show empty if any error for this file
                 if (error){
                     res.statusCode = 500;
@@ -915,9 +915,9 @@ const AppsStart = async (app) => {
     });
                           
     app.get('/info/:info',(/**@type {Types.req} */req, /**@type {Types.res} */ res, /**@type {function} */ next) => {
-        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
         if (apps_start_ok()==true)
-            if (ConfigGet(7, app_id, 'SHOWINFO')==1)
+            if (ConfigGetApp(app_id, 'SHOWINFO')==1)
                 switch (req.params.info){
                     case 'about':
                     case 'disclaimer':
@@ -952,7 +952,7 @@ const AppsStart = async (app) => {
             });
     });
     app.get('/reports',(/** @type{Types.req}*/req, /**@type {Types.res} */ res) => {
-        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
         //no app_id in reports url
         req.query.app_id = app_id;
         if (app_id == 0)
@@ -978,7 +978,7 @@ const AppsStart = async (app) => {
             });
     });
     app.get('/',(/** @type{Types.req}*/req, /** @type{Types.res}*/res) => {
-        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
+        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
         getApp(req, res, app_id, null,(err, app_result)=>{
             //show empty if any error
             if (err){
@@ -991,11 +991,11 @@ const AppsStart = async (app) => {
         });
     });
     app.get('/:sub',(/** @type{Types.req}*/req, /** @type{Types.res}*/res, /**@type{function}*/next) => {
-        const app_id = ConfigGet(7, req.headers.host, 'SUBDOMAIN');
-        if (ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID') == app_id)
+        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
+        if (ConfigGet('SERVER', 'APP_COMMON_APP_ID') == app_id)
             return res.redirect('/');
         else
-            if (ConfigGet(7, app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
+            if (ConfigGetApp(app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
                 getApp(req, res, app_id, req.params.sub, (err, app_result)=>{
                     //show empty if any error
                     if (err){
@@ -1038,8 +1038,8 @@ const getMaintenance = (app_id) => {
                 //maintenance can be used from all app_id
                 const parameters = {   
                     app_id: app_id,
-                    rest_resource_server: ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER'),
-                    rest_resource_bff: ConfigGet(1, 'SERVER', 'REST_RESOURCE_BFF')
+                    rest_resource_server: ConfigGet('SERVER', 'REST_RESOURCE_SERVER'),
+                    rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
                 };
                 render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
                 resolve(render_app_with_data(app, render_variables));
@@ -1100,29 +1100,29 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                     case 'AUTH':{
                         // parameters ex:
                         // /auth /auth/admin
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'BROADCAST':{
                         // parameters ex:
                         // /broadcast...
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'LOG':{
                         // parameters ex:
                         // /log...
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'SERVER':{
                         // parameters ex:
                         // /config...  /info
-                        path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                         break;
                     }
                     case 'DB_API':{
-                        const rest_resource_service_db_schema = ConfigGet(1, 'SERVICE_DB', 'REST_RESOURCE_SCHEMA');
+                        const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
                         switch (method){
                             // parameters ex:
                             // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
@@ -1133,9 +1133,9 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                             case 'PATCH':
                             case 'DELETE':{
                                 if (parameters.startsWith('/admin'))
-                                    path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/dbapi${parameters}&app_id=${app_id}`;
+                                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${parameters}&app_id=${app_id}`;
                                 else
-                                    path = `${ConfigGet(1, 'SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
+                                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
                                 break;
                             }
                             default:{
@@ -1149,7 +1149,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         // /ip?app_id=[id]&lang_code=en
                         // /place?latitude[latitude]&longitude=[longitude]
                         //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
-                        if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' || parameters.startsWith('/ip')==false){
+                        if (ConfigGet('SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' || parameters.startsWith('/ip')==false){
                             if (method=='GET'){
                                 //set ip from client in case ip query parameter is missing
                                 const basepath = parameters.split('?')[0];
@@ -1166,7 +1166,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                                     parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
                                 }
                                 //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                                authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
+                                authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, 'CLIENT_ID') + ':' + ConfigGetApp(app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
                                 path = `/geolocation${parameters}&app_id=${app_id}`;
                             }
                             else
@@ -1182,10 +1182,10 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         // /city/random?&app_id=[id]
                         if (method=='GET'){
                             //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                            authorization = `Basic ${Buffer.from(ConfigGet(7, app_id, 'CLIENT_ID') + ':' + ConfigGet(7, app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
+                            authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, 'CLIENT_ID') + ':' + ConfigGetApp(app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
                             //limit records here in server for this service:
                             if (parameters.startsWith('/city/search'))
-                                parameters = parameters + `&limit=${ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
+                                parameters = parameters + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
                             path = `/worldcities${parameters}&app_id=${app_id}`;
                         }
                             
