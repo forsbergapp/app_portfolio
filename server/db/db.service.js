@@ -11,11 +11,11 @@ const POOL_DB =[
                   [4, null, []]  //Oracle pools       [db number, dba, apps in array]
                ];                     
 
-if (ConfigGet(1, 'SERVICE_DB', 'USE')=='4'){
+if (ConfigGet('SERVICE_DB', 'USE')=='4'){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
-   ORACLEDB.initOracleClient({ libDir: ConfigGet(1, 'SERVICE_DB', 'DB4_LIBDIR'),
-                                 configDir: ConfigGet(1, 'SERVICE_DB', 'DB4_CONFIGDIR')});
+   ORACLEDB.initOracleClient({ libDir: ConfigGet('SERVICE_DB', 'DB4_LIBDIR'),
+                                 configDir: ConfigGet('SERVICE_DB', 'DB4_CONFIGDIR')});
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
 }
 

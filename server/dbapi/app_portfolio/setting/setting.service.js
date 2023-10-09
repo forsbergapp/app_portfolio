@@ -40,7 +40,7 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                               lang_code2: get_locale(lang_code, 2),
                               lang_code3: get_locale(lang_code, 3),
                               app_id : app_id,
-                              common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'),
+                              common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
                               setting_type_name: setting_type_name
                               };
           db_execute(app_id, sql, parameters, null, (err, result)=>{

@@ -17,7 +17,7 @@ const getParameters_server = (app_id, data_app_id, callBack) => {
 				ORDER BY 1, 3`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			const parameters = {app_id: data_app_id,
-								common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')};
+								common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID')};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -152,7 +152,7 @@ const getAppStartParameters = (app_id, callBack) => {
 					ORDER BY 1`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			const parameters = {app_id: app_id,
-								common_app_id: ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID')};
+								common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID')};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);

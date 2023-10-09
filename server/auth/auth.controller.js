@@ -35,7 +35,7 @@ const checkAccessTokenAdmin = (req, res, next) => {
 const checkAccessToken = (req, res, next) => {
     //if user login is disabled then check also current logged in user
     //so they can't modify anything anymore with current accesstoken
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')=='1'){
+    if (ConfigGet('SERVICE_AUTH', 'ENABLE_USER_LOGIN')=='1'){
         checkAccessTokenCommon(req, res, next);
     }
     else{
@@ -55,7 +55,7 @@ const checkDataToken = (req, res, next) => {
     });
 };
 const checkDataTokenRegistration = (req, res, next) => {
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_REGISTRATION')=='1')
+    if (ConfigGet('SERVICE_AUTH', 'ENABLE_USER_REGISTRATION')=='1')
         checkDataToken(req, res, next);
     else{
         //return 403 Forbidden
@@ -64,7 +64,7 @@ const checkDataTokenRegistration = (req, res, next) => {
         
 };
 const checkDataTokenLogin = (req, res, next) => {
-    if (ConfigGet(1, 'SERVICE_AUTH', 'ENABLE_USER_LOGIN')=='1')
+    if (ConfigGet('SERVICE_AUTH', 'ENABLE_USER_LOGIN')=='1')
         checkDataToken(req, res, next);
     else{
         //return 403 Forbidden

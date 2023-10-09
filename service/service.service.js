@@ -52,13 +52,13 @@ const service_request = async (service, path, method, timeout, client_ip, author
                 break;
             }
             default:{
-                if (ConfigGet(1, 'SERVER', 'HTTPS_ENABLE')=='1'){
+                if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
                     request_protocol = https;
-                    port = ConfigGet(1, 'SERVER', 'HTTPS_PORT');
+                    port = ConfigGet('SERVER', 'HTTPS_PORT');
                 }
                 else{
                     request_protocol = http;
-                    port = ConfigGet(1, 'SERVER', 'PORT');
+                    port = ConfigGet('SERVER', 'PORT');
                 }   
                 break;
             }
@@ -139,17 +139,17 @@ const service_request = async (service, path, method, timeout, client_ip, author
 class CircuitBreaker {
     constructor() {
         this.states = {};
-        this.failureThreshold = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_FAILURETHRESHOLD');
-        this.cooldownPeriod = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD');
-        this.requestTimetout = ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT');
+        this.failureThreshold = ConfigGet('SERVER', 'SERVICE_CIRCUITBREAKER_FAILURETHRESHOLD');
+        this.cooldownPeriod = ConfigGet('SERVER', 'SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD');
+        this.requestTimetout = ConfigGet('SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT');
     }
     async callService(app_id, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
         if (!this.canRequest(service))
             return false;
         try {
             let timeout;
-            if (app_id == ConfigGet(1, 'SERVER', 'APP_COMMON_APP_ID'))
-                timeout = 60 * 1000 * ConfigGet(1, 'SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
+            if (app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID'))
+                timeout = 60 * 1000 * ConfigGet('SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
             else
                 timeout = this.requestTimetout * 1000;
             const response = await service_request (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);

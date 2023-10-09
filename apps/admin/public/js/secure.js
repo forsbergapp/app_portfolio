@@ -382,7 +382,7 @@ const get_apps = async () => {
         let service;
         if (common.COMMON_GLOBAL['system_admin']==1){
             service = 'SERVER';
-            url = '/config/systemadmin?config_type_no=7&config_group=&parameter=APPS';
+            url = '/config/systemadmin/apps?';
             authorization_type = 2;
         }
         else{
@@ -1202,7 +1202,7 @@ const button_save = async (item) => {
                                       "config_json": ${config_create_server_json()}}`;
                     else
                         json_data = `{"config_no":   ${config_no},
-                                      "config_json": ${JSON.stringify(document.getElementById('list_config_edit').innerHTML)}}`;
+                                      "config_json": ${document.getElementById('list_config_edit').innerHTML}}`;
                     const json_object = JSON.parse(json_data);
                     json_data = JSON.stringify(json_object, undefined, 2);
                     const old_button = document.getElementById(item).innerHTML;
@@ -1585,11 +1585,11 @@ const show_monitor = async (yearvalues) =>{
         };
         
         if (common.COMMON_GLOBAL['system_admin']==1){
-            path  = '/config/systemadmin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+            path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
             token_type = 2;
         }
         else{
-            path  = '/config/admin?config_type_no=1&config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+            path  = '/config/admin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
             token_type = 1;
         }      
         common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {

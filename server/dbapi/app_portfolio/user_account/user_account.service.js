@@ -142,7 +142,7 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 			search = '%' + search + '%';
 		const parameters = {search: search,
 							offset: offset ?? 0,
-							limit: limit ?? parseInt(ConfigGet(1, 'SERVICE_DB', 'LIMIT_LIST_SEARCH')),
+							limit: limit ?? parseInt(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')),
 							};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
@@ -290,7 +290,7 @@ const create = (app_id, data, callBack) => {
 							:provider_image,
 							:provider_Ximage_url,
 							:provider_email) `;				
-			if (ConfigGet(1, 'SERVICE_DB', 'USE') == '3') {
+			if (ConfigGet('SERVICE_DB', 'USE') == '3') {
 				sql = sql + ' RETURNING id ';
 			}
 			parameters = {
@@ -316,7 +316,7 @@ const create = (app_id, data, callBack) => {
 				if (err)
 					return callBack(err, null);
 				else
-					switch (ConfigGet(1, 'SERVICE_DB', 'USE')){
+					switch (ConfigGet('SERVICE_DB', 'USE')){
 						case '1':
 						case '2':
 						case '3':{
@@ -368,7 +368,7 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id
 					AND verification_code = :verification_code `;
-		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3'){
+		if (ConfigGet('SERVICE_DB', 'USE')=='3'){
 			sql = sql + ' RETURNING id';
 		}
 		const parameters ={
@@ -391,7 +391,7 @@ const updateUserVerificationCode = (app_id, id, verification_code, callBack) => 
 					  active = 0,
 					  date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		if (ConfigGet(1, 'SERVICE_DB', 'USE')=='3'){
+		if (ConfigGet('SERVICE_DB', 'USE')=='3'){
 			sql = sql + ' RETURNING id';
 		}
 		const parameters ={
