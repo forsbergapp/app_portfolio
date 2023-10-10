@@ -88,6 +88,7 @@ const ConfigSave = (req,res) => {
  * @returns {Types.res|*}
  */
 const ConfigGet = (req,res) => {
+    
     service.ConfigGetCallBack(req.query.config_group, req.query.parameter, (err, result)=>{
         if (err){
             return res.status(500).send(
