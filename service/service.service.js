@@ -1,24 +1,58 @@
 const http = await import('node:http');
 const https = await import('node:https');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-
+const fs = await import('node:fs');
 const ServiceConfig = async (parameter) =>{
-    const fs = await import('node:fs');
-    const config = await fs.promises.readFile(`${process.cwd()}/config/config.json`, 'utf8');
-    const rows =  JSON.parse(config).SERVER;
-                                    
-    const value = rows.filter(row=>Object.prototype.hasOwnProperty.call(row, parameter))[0][parameter];
+    let value='';
+    try {
+        //fetch config parameters if config file exists
+        const config = await fs.promises.readFile(`${process.cwd()}/config/config.json`, 'utf8');
+        const rows =  JSON.parse(config).SERVER;
+        value = rows.filter(row=>Object.prototype.hasOwnProperty.call(row, parameter))[0][parameter];    
+    } catch (error) {
+        //config file still does not exists
+        value = null;
+    }
     return value;
+};
+const MicroserviceServer = async (service) =>{
+    const env_https_enabled = await ServiceConfig('HTTPS_ENABLE');
+    const env_key_path = await ServiceConfig('HTTPS_KEY');
+    const env_cert_path = await ServiceConfig('HTTPS_CERT');
+    let env_key = null;
+    let env_cert = null;
+    if (env_key_path){
+        env_key = await fs.promises.readFile(process.cwd() + env_key_path, 'utf8');
+        env_cert = await fs.promises.readFile(process.cwd() + env_cert_path, 'utf8');
+    }
+    const env_http_port = MICROSERVICE.filter(row=>row.SERVICE==service)[0].PORT;
+    const env_https_port = MICROSERVICE.filter(row=>row.SERVICE==service)[0].HTTPS_PORT;
+    
+    const options = {
+        key: env_key,
+        cert: env_cert
+    };
+    if (env_https_enabled=='1')
+        return {
+            server  : https,
+            port	: env_https_port,
+            options : options
+        };
+    else
+        return {
+            server  : http,
+            port 	: env_http_port,
+            options : options
+        };
 };
 
 const MICROSERVICE = [
-                        {'SERVICE':'GEOLOCATION', 'PORT':3001, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')},
-                        {'SERVICE':'WORLDCITIES', 'PORT':3002, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')},
-                        {'SERVICE':'BATCH',       'PORT':3003, 'HTTPS_KEY': await ServiceConfig('HTTPS_KEY'), 'HTTPS_CERT': await ServiceConfig('HTTPS_CERT')}
+                        {'SERVICE':'GEOLOCATION', 'PORT':3001, 'HTTPS_PORT': 4001 },
+                        {'SERVICE':'WORLDCITIES', 'PORT':3002, 'HTTPS_PORT': 4002 },
+                        {'SERVICE':'BATCH',       'PORT':3003, 'HTTPS_PORT': 4003 }
                      ];
 
 const IAM = async (app_id, authorization) =>{
-    const fs = await import('node:fs');
     const apps = await fs.promises.readFile(`${process.cwd()}/config/apps.json`, 'utf8');
     const rows =  await  JSON.parse(apps).APPS;
     const CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
@@ -39,16 +73,28 @@ const service_request = async (service, path, method, timeout, client_ip, author
         const hostname = 'localhost';
         let port;
         switch (service){
+            //mail and pdf microservice use message queue and have no servers
+            //batch microservice is not callable, only used to run batch jobs
             case 'GEOLOCATION':{
-                //always call microservices with https
-                request_protocol = https;
-                port = MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].PORT;
+                if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
+                    request_protocol = https;
+                    port = MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].HTTPS_PORT;
+                }
+                else{
+                    request_protocol = http;
+                    port = MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].PORT;
+                }
                 break;
             }
             case 'WORLDCITIES':{
-                //always call microservices with https
-                request_protocol = https;
-                port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT;
+                if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
+                    request_protocol = https;
+                    port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].HTTPS_PORT;
+                }
+                else{
+                    request_protocol = http;
+                    port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT;
+                }
                 break;
             }
             default:{
@@ -193,7 +239,6 @@ class CircuitBreaker {
 }
 
 const MessageQueue = async (service, message_type, message, message_id) => {
-    const fs = await import('node:fs');
     
     return new Promise((resolve, reject) =>{
         const write_file = (file, message, result) =>{
@@ -347,4 +392,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {IAM, MICROSERVICE, CircuitBreaker, MessageQueue};
+export {IAM, MicroserviceServer, MICROSERVICE, CircuitBreaker, MessageQueue};
