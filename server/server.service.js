@@ -1,9 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-//use config variables fore the frequent used configurations for faster performance
+//use config variables for the frequent used configurations for faster performance
 //to avoid readfile async and diskusage
-//variables only available from ConfigGet function
 //variables are updated when admin updates config
 /**@type{Types.config_init} */
 let CONFIG_INIT;
