@@ -636,7 +636,7 @@ const CheckFirstTime = () => {
  * @param {Types.callBack} callBack
  */
 const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
-    const {genSaltSync, hashSync} = await import('bcryptjs');
+    const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
     /**@ts-ignore */
     CONFIG_USER['username'] = admin_name;
     /**@ts-ignore */
