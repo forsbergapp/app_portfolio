@@ -1,70 +1,59 @@
 const service = await import('./service.js');
-const fs = await import('node:fs');
-const https = await import('node:https');
-const {MICROSERVICE, IAM} = await import(`file://${process.cwd()}/service/service.service.js`);
+const { MicroserviceServer, IAM } = await import(`file://${process.cwd()}/service/service.service.js`);
 
-const startserver = () =>{
-	let options;
-	fs.readFile(process.cwd() + MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].HTTPS_KEY, 'utf8', (error, fileBuffer) => {
-		const env_key = fileBuffer.toString();
-		fs.readFile(process.cwd() + MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].HTTPS_CERT, 'utf8', (error, fileBuffer) => {
-			const env_cert = fileBuffer.toString();
-			options = {
-				key: env_key,
-				cert: env_cert
-			};
-			https.createServer(options, (req, res) => {
-				req.query = {};
-				req.params = {};
-				res.setHeader('Access-Control-Allow-Methods', 'GET');
-				res.setHeader('Access-Control-Allow-Origin', '*');
-				res.setHeader('Content-Type',  'application/json; charset=utf-8');
-				const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
-				req.query.app_id = params.get('app_id');
-				req.query.ip = params.get('ip');
-				switch (req.url.substring(0, req.url.indexOf('?'))){
-					case '/geolocation/place':{
-						req.query.latitude = params.get('latitude');
-						req.query.longitude = params.get('longitude');
-						IAM(req.query.app_id, req.headers.authorization).then(result=>{
-							if (result == 1)
-								getPlace(req, res);
-							else
-							{
-								res.statusCode = 401;
-								res.write('⛔', 'utf-8');
-								res.end();
-							}
-						});
-						break;
-					}
-					case '/geolocation/ip':{
-						req.query.ip = params.get('ip');
-						IAM(req.query.app_id, req.headers.authorization).then(result=>{
-							if (result == 1)
-								getIp(req, res);
-							else
-							{
-								res.statusCode = 401;
-								res.write('⛔', 'utf-8');
-								res.end();
-							}
-						});
-						break;
-					}
-					default:{
+const startserver = async () =>{
+	const request = await MicroserviceServer('GEOLOCATION');
+	
+	request.server.createServer(request.options, (req, res) => {
+		req.query = {};
+		req.params = {};
+		res.setHeader('Access-Control-Allow-Methods', 'GET');
+		res.setHeader('Access-Control-Allow-Origin', '*');
+		res.setHeader('Content-Type',  'application/json; charset=utf-8');
+		const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
+		req.query.app_id = params.get('app_id');
+		req.query.ip = params.get('ip');
+		switch (req.url.substring(0, req.url.indexOf('?'))){
+			case '/geolocation/place':{
+				req.query.latitude = params.get('latitude');
+				req.query.longitude = params.get('longitude');
+				IAM(req.query.app_id, req.headers.authorization).then(result=>{
+					if (result == 1)
+						getPlace(req, res);
+					else
+					{
+						res.statusCode = 401;
+						res.write('⛔', 'utf-8');
 						res.end();
 					}
-				}
-				
-			}).listen(MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].PORT, ()=>{
-				console.log(`MICROSERVICE GEOLOCATION PORT ${MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].PORT} `);
-			});
+				});
+				break;
+			}
+			case '/geolocation/ip':{
+				req.query.ip = params.get('ip');
+				IAM(req.query.app_id, req.headers.authorization).then(result=>{
+					if (result == 1)
+						getIp(req, res);
+					else
+					{
+						res.statusCode = 401;
+						res.write('⛔', 'utf-8');
+						res.end();
+					}
+				});
+				break;
+			}
+			default:{
+				res.end();
+			}
+		}
+		
+	}).listen(request.port, ()=>{
+		console.log(`MICROSERVICE GEOLOCATION PORT ${request.port} `);
+	});
 
-			process.on('uncaughtException', (err) =>{
-				console.log(err);
-			});
-		});
+	process.on('uncaughtException', (err) =>{
+		console.log(err);
 	});
 };
 
