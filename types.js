@@ -2,9 +2,9 @@
  * Request
  * @typedef {Object} req
  * @property {object} body
- * @property {string} body.value                        - Server parameter
- * @property {string} body.config_no                    - Server parameter
- * @property {string} body.config_json                  - Server parameter
+ * @property {string} body.value                                    - Server parameter
+ * @property {string} body.config_no                                - Server parameter
+ * @property {config} body.config_json                              - Server parameter
  * @property {string} baseUrl
  * @property {string} hostname
  * @property {string} path
@@ -13,7 +13,9 @@
  * @property {string} method
  * @property {function} get
  * @property {string} protocol
- * @property {{sub:string, info:string}} params
+ * @property {object} params
+ * @property {string} params.sub
+ * @property {string} params.info
  * @property {object} query
  * @property {(string|number|*)} query.id
  * @property {(string|number|*)} query.app_id
@@ -22,17 +24,21 @@
  * @property {(string|number|*)} query.user_account_id
  * @property {(string|number|*)} query.user_account_logon_user_account_id
  * @property {string} query.lang_code
- * @property {string} query.reportid                    - Report parameter
- * @property {string} query.messagequeque               - Report parameter
- * @property {string} query.ps                          - Report parameter
- * @property {number} query.hf                          - Report parameter
+ * @property {string} query.reportid                                - Report parameter
+ * @property {string} query.messagequeque                           - Report parameter
+ * @property {string} query.ps                                      - Report parameter
+ * @property {number} query.hf                                      - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
- * @property {string} query.parameter                   - Server parameter
+ * @property {string} query.parameter                               - Server parameter
  * @property {string} query.system_admin
  * @property {string} query.identity_provider_id
- * @property {string} query.config_type_no              - Server parameter
- * @property {string} query.config_group                - Server parameter
+ * @property {'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'} query.config_type_no - Server parameter
+ * @property {  'SERVER'|
+ *              'SERVICE_AUTH'|
+ *              'SERVICE_BROADCAST'|
+ *              'SERVICE_DB'|
+ *              'SERVICE_LOG'} query.config_group                   - Server parameter
  * 
  * @property {{ authorization: string, 
  *              'user-agent': string, 
@@ -48,7 +54,7 @@
  * @typedef {Object} res
  * @property {function} status
  * @property {number} statusCode
- * @property {(Error|string|number|null)} statusMessage
+ * @property {(Error|string|number|null|object)} statusMessage
  * @property {function} type
  * @property {function} end
  * @property {function} send
@@ -70,14 +76,18 @@
 /**
  * Callback with error and result
  * @callback callBack
- * @param {(Error|string|number|null)} error
+ * @param {(Error|string|number|null|unknown)} error
  * @param {(string|object|null|*)} result
  */
-
 /**
  * Error stack
- * @typedef {string} stack
+ * @typedef {string} error_stack
  */
+/**
+ * Error 
+ * @typedef {Object.<Error | null , undefined>} error
+ */
+
 /**
  * App config
  *
@@ -200,39 +210,159 @@
  * @property {number} statusCode
  * @property {string} statusMessage
  */
-/*
- * Config init, choose type of declaration and fix ts-ignore
- * @typedef {object} config_init
- * @property {string} CONFIGURATION
- * @property {string} CREATED
- * @property {string} MODIFIED
- * @property {string} MAINTENANCE
- * @property {string} FILE_CONFIG_SERVER
- * @property {string} FILE_CONFIG_AUTH_BLOCKIP
- * @property {string} FILE_CONFIG_AUTH_USERAGENT
- * @property {string} FILE_CONFIG_AUTH_POLICY
- * @property {string} PATH_LOG
- * @property {string} FILE_CONFIG_AUTH_USER
- * @property {string} FILE_CONFIG_APPS
-*/
 /**
  * Config init
- * 
- * @typedef {{  CONFIGURATION:string,
- *              CREATED:string,
- *              MODIFIED:string,
- *              MAINTENANCE:string,
- *              FILE_CONFIG_SERVER:string,
- *              FILE_CONFIG_AUTH_BLOCKIP:string,
- *              FILE_CONFIG_AUTH_USERAGENT:string,
- *              FILE_CONFIG_AUTH_POLICY:string,
- *              PATH_LOG:string,
- *              FILE_CONFIG_AUTH_USER:string,
- *              FILE_CONFIG_APPS:string}} config_init
+ * @typedef {{  ['CONFIGURATION']:string, 
+ *              ['CREATED']:string, 
+ *              ['MODIFIED']:string,
+ *              ['MAINTENANCE']:string,
+ *              ['FILE_CONFIG_SERVER']:string,
+ *              ['FILE_CONFIG_AUTH_BLOCKIP']:string,
+ *              ['FILE_CONFIG_AUTH_USERAGENT']:string,
+ *              ['FILE_CONFIG_AUTH_POLICY']:string,
+ *              ['PATH_LOG']:string,
+ *              ['FILE_CONFIG_AUTH_USER']:string,
+ *              ['FILE_CONFIG_APPS']:string}} config_init
+*/
+/**
+ * Config files
+ * @typedef {[number, string]} config_files
+ */
+/**
+ * Config init parameter
+ * @typedef {   'CONFIGURATION'|
+ *              'CREATED'|
+ *              'MODIFIED'|
+ *              'MAINTENANCE'|
+ *              'FILE_CONFIG_SERVER'|
+ *              'FILE_CONFIG_AUTH_BLOCKIP'|
+ *              'FILE_CONFIG_AUTH_USERAGENT'|
+ *              'FILE_CONFIG_AUTH_POLICY'|
+ *              'PATH_LOG'|
+ *              'FILE_CONFIG_AUTH_USER'|
+ *              'FILE_CONFIG_APPS'} config_init_parameter
+ */
+
+/**
+ * Config type no
+ * @typedef {'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'} config_type_no
+ */
+/**
+ * Config group
+ * @typedef {'SERVER'|'SERVICE_AUTH'|'SERVICE_BROADCAST'|'SERVICE_DB'|'SERVICE_LOG'} config_group
+ */
+
+/**
+ * Config
+ * @typedef  {{ ['SERVER']:[{   HTTPS_KEY:string,
+ *                              HTTPS_CERT:string,
+ *                              PORT:string,
+ *                              HTTPS_ENABLE:string,
+ *                              HTTPS_PORT:string,
+ *                              HTTPS_SSL_VERIFICATION:string,
+ *                              HTTPS_SSL_VERIFICATION_PATH:string,
+ *                              JSON_LIMIT:string,
+ *                              TEST_SUBDOMAIN:string,
+ *                              APP_START:string,
+ *                              APP_SOUND:string,
+ *                              APP_COMMON_APP_ID:string,
+ *                              REST_RESOURCE_SERVER:string,
+ *                              REST_RESOURCE_BFF:string,
+ *                              REST_RESOURCE_SERVICE:string,
+ *                              SERVICE_CIRCUITBREAKER_FAILURETHRESHOLD:string,
+ *                              SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD:string,
+ *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT:string,
+ *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN:string}], 
+ *              ['SERVICE_AUTH']:[{ ACCESS_CONTROL_ENABLE:string,
+ *                                  ACCESS_CONTROL_IP:string,
+ *                                  ACCESS_CONTROL_HOST_EXIST:string,
+ *                                  ACCESS_CONTROL_ACCESS_FROM:string,
+ *                                  ACCESS_CONTROL_USER_AGENT:string,
+ *                                  ACCESS_CONTROL_USER_AGENT_EXIST:string,
+ *                                  ACCESS_CONTROL_ACCEPT_LANGUAGE:string,
+ *                                  ADMIN_TOKEN_EXPIRE_ACCESS:string,
+ *                                  ADMIN_TOKEN_SECRET:string,
+ *                                  ENABLE_CONTENT_SECURITY_POLICY:string,
+ *                                  ENABLE_GEOLOCATION:string,
+ *                                  ENABLE_USER_REGISTRATION:string,
+ *                                  ENABLE_USER_LOGIN:string,
+ *                                  ENABLE_DBLOG:string}],
+ *              ['SERVICE_BROADCAST']:[{CHECK_INTERVAL:string}],
+ *              ['SERVICE_DB']:[{   START:string,
+ *                                  REST_RESOURCE_SCHEMA:string,
+ *                                  USE:string,
+ *                                  LIMIT_LIST_SEARCH:string,
+ *                                  LIMIT_PROFILE_TOP:string,
+ *                                  DB1_SYSTEM_ADMIN_USER:string,
+ *                                  DB1_SYSTEM_ADMIN_PASS:string,
+ *                                  DB1_APP_ADMIN_USER:string,
+ *                                  DB1_APP_ADMIN_PASS:string,
+ *                                  DB1_PORT:string,
+ *                                  DB1_HOST:string,
+ *                                  DB1_NAME:string,
+ *                                  DB1_CHARACTERSET:string,
+ *                                  DB1_CONNECTION_LIMIT:string,
+ *                                  DB2_SYSTEM_ADMIN_USER:string,
+ *                                  DB2_SYSTEM_ADMIN_PASS:string,
+ *                                  DB2_APP_ADMIN_USER:string,
+ *                                  DB2_APP_ADMIN_PASS:string,
+ *                                  DB2_PORT:string,
+ *                                  DB2_HOST:string,
+ *                                  DB2_NAME:string,
+ *                                  DB2_CHARACTERSET:string,
+ *                                  DB2_CONNECTION_LIMIT:string,
+ *                                  DB3_SYSTEM_ADMIN_USER:string,
+ *                                  DB3_SYSTEM_ADMIN_PASS:string,
+ *                                  DB3_APP_ADMIN_USER:string,
+ *                                  DB3_APP_ADMIN_PASS:string,
+ *                                  DB3_PORT:string,
+ *                                  DB3_HOST:string,
+ *                                  DB3_NAME:string,
+ *                                  DB3_TIMEOUT_CONNECTION:string,
+ *                                  DB3_TIMEOUT_IDLE:string,
+ *                                  DB3_MAX:string,
+ *                                  DB4_SYSTEM_ADMIN_USER:string,
+ *                                  DB4_SYSTEM_ADMIN_PASS:string,
+ *                                  DB4_APP_ADMIN_USER:string,
+ *                                  DB4_APP_ADMIN_PASS:string,
+ *                                  DB4_HOST:string,
+ *                                  DB4_NAME:string,
+ *                                  DB4_CONNECT_STRING:string,
+ *                                  DB4_POOL_MIN:string,
+ *                                  DB4_POOL_MAX:string,
+ *                                  DB4_POOL_INCREMENT:string,
+ *                                  DB4_LIBDIR:string,
+ *                                  DB4_CONFIGDIR:string}],
+ *              ['SERVICE_LOG']:[{  SCOPE_REQUEST:string,
+ *                                  SCOPE_SERVER:string,
+ *                                  SCOPE_APP:string,
+ *                                  SCOPE_SERVICE:string,
+ *                                  SCOPE_DB:string,
+ *                                  ENABLE_REQUEST_INFO:string,
+ *                                  ENABLE_REQUEST_VERBOSE:string,
+ *                                  ENABLE_DB:string,
+ *                                  ENABLE_SERVICE:string,
+ *                                  LEVEL_VERBOSE:string,
+ *                                  LEVEL_ERROR:string,
+ *                                  LEVEL_INFO:string,
+ *                                  FILE_INTERVAL:string,
+ *                                  DATE_FORMAT:string}],
+ *              ['APPS']:[{ CLIENT_ID:string, 
+ *                          CLIENT_SECRET:string, 
+ *                          DATA_SECRET:string, 
+ *                          ACCESS_SECRET:string}],
+ *              ['configuration']:string,
+ *              ['comment']:string,
+ *              ['created']:string,
+ *              ['modified']:string,
+ *              ['content-security-policy']:string}} config
  */
 /**
  * Config apps
  * @typedef  {object} config_apps
+ * @property {function} filter
+ * @property {function} reduce
+ * @property {function} concat
  * @property {number} APP_ID
  * @property {string} SUBDOMAIN
  * @property {string} PATH
@@ -245,6 +375,17 @@
  * @property {string} [DATA_EXPIRE]
  * @property {string} [ACCESS_SECRET]
  * @property {string} [ACCESS_EXPIRE]
+ */
+/**
+ * Config user
+ * @typedef {{  ['username']:string, 
+ *              ['password']:string, 
+ *              ['created']:string,
+ *              ['modified']:string}} config_user
+ */
+/**
+ * Config user parameter
+ * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
  */
 /**
  * DB result app
