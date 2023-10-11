@@ -3423,8 +3423,10 @@ const worldcities_search = async (event_function) =>{
                         </div>
                     </div>`;
         }
-    }            
-    search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:inline-block'>${html}</div>`;
+        search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:inline-block'>${html}</div>`;
+    }
+    else
+        search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:none'>${''}</div>`;
     document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
         //execute function from inparameter or use default when not specified
         if (event.target.classList.contains('common_module_leaflet_click_city'))

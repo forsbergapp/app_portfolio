@@ -1020,7 +1020,7 @@ a:active {
 	overflow-y: auto;
     overflow-x: hidden;
 	margin-bottom:10px;
-	max-height: 230px;
+	max-height: calc(5 * 3em);
 	display:inline-block;
 }
 #common_module_leaflet_search_list a {
@@ -1068,4 +1068,7 @@ a:active {
 	#common_message_title #common_message_info_list{
 		width: 500px;
 	}	
+	#common_module_leaflet_search_list{
+		max-height: calc(3 * 3em);
+	}
 }
