@@ -11,7 +11,8 @@ const map_click_event = (event) =>{
 };
 const init_map = async (framework)=>{
     let map_click_event_js;
-    document.querySelector('#app_map').innerHTML = '';
+    document.querySelector('#app_map').outerHTML = '<div id="app_map"></div>';
+    
     switch (framework){
         case '2':{
             //Vue
