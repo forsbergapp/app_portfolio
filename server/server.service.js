@@ -1,3 +1,5 @@
+/** @module server */
+
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
@@ -454,15 +456,15 @@ const ConfigMaintenanceGet = (callBack) => {
 /**
  * Config get saved
  * 
-    config_type_no
-    0 = config_init     path + file
-    1 = config          path + file
-    2 = auth blockip    path + file
-    3 = auth useragent  path + file
-    4 = auth policy     path + file
-    5 = log path        path
-    6 = auth user       path + file
-    7 = apps            path + file
+ *   config_type_no
+ *   0 = config_init     path + file
+ *   1 = config          path + file
+ *   2 = auth blockip    path + file
+ *   3 = auth useragent  path + file
+ *   4 = auth policy     path + file
+ *   5 = log path        path
+ *   6 = auth user       path + file
+ *   7 = apps            path + file
  * @async
  * @param {Types.config_type_no} config_type_no
  * @returns {Promise<Types.config>}

@@ -7,7 +7,6 @@ const service = await import('./apps.service.js');
 
 /**
  * Backend for frontend (BFF)
- * @async
  * @param {Types.req} req - Request
  * @param {Types.res} res
  * @returns {Types.res|*} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
@@ -77,7 +76,6 @@ const BFF = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) without authorization
- * @async
  * @param {Types.req} req - Request
  * @param {Types.res} res
  * @returns {Types.res} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
@@ -98,7 +96,6 @@ const BFF_noauth = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) with basic authorization and no middleware
- * @async
  * @param {Types.req} req - Request
  * @param {Types.res} res
  * @returns {Types.res} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
