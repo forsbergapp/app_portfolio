@@ -161,7 +161,7 @@
 	App monitors database, users and apps, can broadcast messages or remotely shutdown apps for maintenance, 
 	provides user statistics in graphs created by pure css, javascript and html, 
 	maintains apps and server parameters, displays server logs, monitors connected clients, installs and uninstalls
-	database, installs and uninstalls demo data. Supports MariaDB, MySQL,  PostreSQL and Oracle databases.
+	database, installs and uninstalls demo data. Supports MariaDB, MySQL, PostreSQL and Oracle databases.
 
 	2.App 1 - Main app to display your app portfolio.
 	Single page web app (SPA).
@@ -242,7 +242,7 @@
 	switcher. Vue and React are implemented without Babel and as ECMAScript modules to show
 	how pure Javascript solution without build step, transpiler or any NodeJs module modifications.
 	
-	App 2 and admin app are both using Leaflet module with same logic although without Jaavascript 
+	App 2 and admin app are both using Leaflet module with same logic although without Javascript 
 	framework switcher.
 
 	Uses Leaflet module to show maps with this functionality:
