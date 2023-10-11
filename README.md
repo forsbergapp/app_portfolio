@@ -156,15 +156,15 @@
 
 # Apps included
 
-	1.App 0 - Admin single page web app (SPA) with source code secured logged in as admin from database
-	or server system admin authenticated outside database and dynamically loads app code after login. 
-	Logout deletes secured app code and deletes any traces still running as SPA. 
+	1.App 0 - Admin app
+	Single page web app (SPA). 
 	App monitors database, users and apps, can broadcast messages or remotely shutdown apps for maintenance, 
 	provides user statistics in graphs created by pure css, javascript and html, 
-	maintains apps parameters and full log functionality including
-	log of server, apps, routers, controllers, services and SQL.
+	maintains apps and server parameters, displays server logs, monitors connected clients, installs and uninstalls
+	database, installs and uninstalls demo data. Supports MariaDB, MySQL,  PostreSQL and Oracle databases.
 
-	2.App 1 - Main single page app to display your app portfolio.
+	2.App 1 - Main app to display your app portfolio.
+	Single page web app (SPA).
 	Social network functionality with profile, like, follow, view other user settings and statistics.
 
 	3.App2 - Timetables app
@@ -212,6 +212,7 @@
 
 
 	4.App 3 - Presentation app
+	Single page web app (SPA).
 	Created to show how a simple app can be installed.
 	Includes diagram and data model of app portfolio and a data model for future project.
 
@@ -234,6 +235,28 @@
 	- booking reservation facility, network access management
 	- service management water, electricity, internet, phone lines etc
 	- board of directors management with reunion schedule
+
+	5.App 5 - Map app
+	Single page web app (SPA).
+	Map app with implemented client multiframework using pure Javascript, Vue and React
+	switcher. Vue and React are implemented without Babel and as ECMAScript modules to show
+	how pure Javascript solution without build step, transpiler or any NodeJs module modifications.
+	
+	App 2 and admin app are both using Leaflet module with same logic although without Jaavascript 
+	framework switcher.
+
+	Uses Leaflet module to show maps with this functionality:
+	- current gps position with geodata displayed as popup on map
+	- Added custom functionality on Leaflet module with solutions for custom event integration
+	- Search any country and get all cities for given country using worldcities microservice
+	- Search free text using worldcities microservice
+	- My location button
+	- Fullscreen button
+	- Change layer button
+	- Double click on map to show info of selected place
+	- Move and zoom to any place on earth
+	- Scale info on map
+	- Toolbar to switch Javascript framework
 
 # Installation instructions
 
