@@ -34,7 +34,7 @@ const createApp = (app_id, params) => {
             });
         }
         else{
-            //meaning redirect to /
+            //redirect to /
             resolve ({app: null, map: null, map_styles:null});
         }
     });

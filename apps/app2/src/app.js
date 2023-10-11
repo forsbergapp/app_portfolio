@@ -269,7 +269,7 @@ const createApp = (app_id, username, locale) => {
                     if (result)
                         main(app_id);
                     else{
-                        //meaning redirect to /
+                        //redirect to /
                         resolve ({app: null, map: null, map_styles:null});
                     }
                 });
