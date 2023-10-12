@@ -5,9 +5,9 @@
                         "outDir":"build",
                         "allowSyntheticDefaultImports": true,
                         "esModuleInterop": true,
-                        "lib": ["es2022", "dom"],
+                        "lib": ["es2022"],
                         "module":"es2022",
                         "target":"es2022"},
     "include": ["server", "apps", "service", "test"],
-    "exclude":["apps/common/public/modules"]
+    "exclude":["apps/admin/public", "apps/app*/public", "apps/common/public"]
 }

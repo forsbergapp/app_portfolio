@@ -170,7 +170,25 @@
  * @property {string} locales                     - HTML option format
  * @property {render_common_settings} settings    
  */
-
+/**
+ * App common parameters
+ * @typedef {object}        app_service_parameters
+ * @property {number}       app_id
+ * @property {string}       app_datatoken
+ * @property {string|null}  countries
+ * @property {map_styles}   map_styles
+ * @property {string}       locale
+ * @property {boolean}      ui
+ * @property {number}       system_admin_only
+ * @property {string|null}  client_latitude
+ * @property {string|null}  client_longitude
+ * @property {string|null}  client_place
+ * @property {number}       app_sound
+ * @property {number}       common_app_id
+ * @property {string}       rest_resource_server
+ * @property {string}       rest_resource_bff
+ * @property {number}       first_time
+ */
 /**
  * App create
  * @typedef {object} app_create
