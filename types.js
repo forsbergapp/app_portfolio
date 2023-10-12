@@ -89,36 +89,6 @@
  */
 
 /**
- * App config
- *
- * @typedef {object} app_config                  - app configuration
- * @property {string} locale                     - locale
- * @property {string} module_type                - module_type APP or REPORT
- * @property {boolean} map                       - return map styles and map header, true/false
- * @property {string} custom_tag_profile_search  - [custom tag]/null, optional custom app placement of component
- * @property {string} custom_tag_user_account    - [custom tag]/null, optional custom app placement of component
- * @property {string} custom_tag_profile_top     - [custom tag]/null, optional custom app placement of component
- * @property {boolean} app_themes                - render app themes, true/false
- * @property {boolean} render_locales            - render locales, true/false
- * @property {boolean} render_settings           - render settings, true/false
- * @property {boolean} render_provider_buttons   - render provider buttons, true/false
- */
-/**
- * App info
- * @typedef {object} app_info              - app info
- * @property {number} app_id               - app id
- * @property {string} locale               - locale
- * @property {number} system_admin_only    - 0/1
- * @property {boolean} map                 - map
- * @property {string|null} map_styles      - map styles
- * @property {boolean} ui                  - ui true/false app=true, report=false
- * @property {string} datatoken            - JW token
- * @property {string} latitude             - geodata latitude
- * @property {string} longitude            - geodata longitude
- * @property {string} place                - geodata place
- * @property {string} module               - HTML
- */
-/**
  * Email param data
  * @typedef {object} email_param_data
  * @property {string} emailtype         - [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
@@ -141,9 +111,38 @@
  * @property {string} subject
  * @property {string} html
  */
-
 /**
- * Module config info
+ * App config
+ *
+ * @typedef {object} app_config                  - app configuration
+ * @property {string} locale                     - locale
+ * @property {string} module_type                - module_type APP or REPORT
+ * @property {boolean} map                       - return map styles and map header, true/false
+ * @property {string} custom_tag_profile_search  - [custom tag]/null, optional custom app placement of component
+ * @property {string} custom_tag_user_account    - [custom tag]/null, optional custom app placement of component
+ * @property {string} custom_tag_profile_top     - [custom tag]/null, optional custom app placement of component
+ * @property {boolean} app_themes                - render app themes, true/false
+ * @property {boolean} render_locales            - render locales, true/false
+ * @property {boolean} render_settings           - render settings, true/false
+ * @property {boolean} render_provider_buttons   - render provider buttons, true/false
+ */
+/**
+ * App info
+ * @typedef {object} app_info              - app info
+ * @property {number} app_id               - app id
+ * @property {string} locale               - locale
+ * @property {number} system_admin_only    - 0/1
+ * @property {boolean|null} map                 - map
+ * @property {map_styles} map_styles  - map styles
+ * @property {boolean} ui                  - ui true/false app=true, report=false
+ * @property {string} datatoken            - JW token
+ * @property {string} latitude             - geodata latitude
+ * @property {string} longitude            - geodata longitude
+ * @property {string} place                - geodata place
+ * @property {string} module               - HTML
+ */
+/**
+ * App module config info
  * 
  * @typedef {object} module_config
  * @property {string} module_type        - APP or REPORT
@@ -156,24 +155,44 @@
  * @property {object} body               - request body
  */
 /**
- * Render common info settings
+ * App render common info settings
  * @typedef {object} render_common_settings
- * @property {db_setting} settings        - db result
+ * @property {db_setting[]} settings        - db result
  * @property {string} user_timezones      - HTML option format
  * @property {string} user_directions     - HTML option format
  * @property {string} user_arabic_scripts - HTML option format
- * @property {string} map_styles          - HTML option format                   - HTML option format
+ * @property {map_styles} map_styles          - HTML option format                   - HTML option format
  */
 /**
- * Render common info
+ * App render common items for apps with locales and settings
  * @typedef {object} render_common
  * @property {string} app                         - HTML
  * @property {string} locales                     - HTML option format
- * @property {render_common_settings} settings    - HTML option format
+ * @property {render_common_settings} settings    
+ */
+
+/**
+ * App create
+ * @typedef {object} app_create
+ * @property {string} app                         - HTML
+ * @property {boolean|null} map     
+ * @property {map_styles|null} map_styles
  */
 /**
- * Map styles
- * @typedef {object} map_styles
+ * App create empty
+ * @typedef {object} app_create_empty
+ * @property {null} app                         - HTML
+ * @property {null} map     
+ * @property {null} map_styles
+ */
+
+/**
+ * App request parameter
+ * @typedef {string} app_parameter
+ */
+/**
+ * App map styles
+ * @typedef {object|null} map_styles
  * @property {string} id
  * @property {string} description
  * @property {string} data
@@ -405,6 +424,10 @@
  * DB result parameter
  * @typedef {{parameter_name:string, parameter_value:string}} db_parameter
  * DB result setting
- * @typedef {{id:string, setting_type_name:string, text:string, data:string, data2:string, data3:string, data4:string}} db_setting
+ * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_setting
+ * DB result user_profile
+ * @typedef {{  id:string, bio:string, private:number|null, user_level:string, date_created:string, username:string, avatar:string, 
+ *              identity_provider_id:string, provider_id:string, provider_first_name:string, provider_last_name:string, provider_image:string, provider_image_url:string,
+ *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_ProfileUser
  */
 export {};

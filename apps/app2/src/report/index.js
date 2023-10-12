@@ -1,4 +1,16 @@
+/** @module apps/app2 */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
 const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+
+/**
+ * Creates report
+ * @param {number} app_id
+ * @param {string} module
+ * @returns {Promise.<string>}
+ */
 
 const createReport = (app_id, module) => {
     return new Promise((resolve, reject) => {
@@ -18,11 +30,11 @@ const createReport = (app_id, module) => {
                                         render_locales:false, 
                                         render_settings:false, 
                                         render_provider_buttons:false
-                                    },(err, report)=>{
+                                    },(/**@type{Types.error}*/err, /**@type{Types.render_common}*/report)=>{
             if (err)
                 reject(err);
             else{
-                resolve(report);
+                resolve(report.app);
             }
         });
     });

@@ -1,7 +1,18 @@
+/** @module apps/admin */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../types.js';
+
 const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { render_app_with_data, render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
+/**
+ * Creates Admin app
+ * @param {number} app_id 
+ * @param {string} locale
+ * @returns {Types.res|*}
+ */
 const createAdmin = (app_id, locale) => {
     return new Promise((resolve, reject) => {
         const files = [
@@ -32,7 +43,7 @@ const createAdmin = (app_id, locale) => {
                                         render_locales:render_locales, 
                                         render_settings:render_settings, 
                                         render_provider_buttons:render_provider_buttons
-                                    }, (err, app)=>{
+                                    }, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
             if (err)
                 reject(err);
             else{

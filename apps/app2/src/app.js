@@ -1,5 +1,18 @@
+/** @module apps/app4 */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../types.js';
+
+
 const {render_app_with_data, render_app_html} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 
+/**
+ * Get themes
+ * @param {number} app_id
+ * @param {string} locale
+ * @param {Types.db_setting[]} settings
+ * @returns {[string|null,string|null,string|null]}
+ */
 const themes = (app_id, locale, settings) =>{
     let theme_found = false;
     let span_themes_day ='', span_themes_month='', span_themes_year='';
@@ -63,8 +76,15 @@ const themes = (app_id, locale, settings) =>{
     else
         return [null, null, null];
 };
+/**
+ * Get places
+ * @param {number} app_id
+ * @param {string} locale
+ * @param {Types.db_setting[]} settings
+ * @returns {string}
+ */
 const places = (app_id, locale, settings) => {
-    let select_places;
+    let select_places = '';
     let place_found = false;
     let i = 0;
     for (const setting of settings.filter(setting=>setting.app_id==app_id && setting.setting_type_name=='PLACE')){
@@ -95,10 +115,23 @@ const places = (app_id, locale, settings) => {
                 <option value="" id="" latitude="0" longitude="0" timezone="" selected="selected">...</option>`;
     }
 };
-
+/**
+ * Nvl returns '' if null else the value
+ * @param {string|null} value
+ * @returns {string|null}
+ * 
+ */
+const nvl = value => value==null?'':value;
+/**
+ * Creates app
+ * @param {number} app_id
+ * @param {Types.app_parameter} username
+ * @param {string} locale
+ * @returns {Promise.<Types.app_create|Types.app_create_empty>}
+ */
 const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
-        const main = async (app_id) => {
+        const main = async (/**@type{number}*/app_id) => {
             const files = [
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
                 ['<AppReportsFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],                
@@ -147,15 +180,15 @@ const createApp = (app_id, username, locale) => {
                                             render_locales:true, 
                                             render_settings:true, 
                                             render_provider_buttons:true
-                                        }, (err, app)=>{
+                                        }, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
                 if (err)
                     reject(err);
                 else{
                     //render settings
                     let option;
-                    for (let i = 0; i < app.settings.settings.length; i++) {
-                        option = `<option id=${app.settings.settings[i].id} value='${app.settings.settings[i].data}'>${app.settings.settings[i].text}</option>`;
-                        switch (app.settings.settings[i].setting_type_name){
+                    for (const setting of app.settings.settings) {
+                        option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
+                        switch (setting.setting_type_name){
                             case 'TIMEZONE':{
                                 USER_TIMEZONE += option;
                                 break;
@@ -193,9 +226,8 @@ const createApp = (app_id, username, locale) => {
                                 break;
                             }
                             case 'METHOD':{
-                                const nvl = (value) => value==null?'':value;
-                                option = `<option id=${app.settings.settings[i].id} value='${app.settings.settings[i].data}' ` +
-                                            `data2='${nvl(app.settings.settings[i].data2)}' data3='${nvl(app.settings.settings[i].data3)}' data4='${nvl(app.settings.settings[i].data4)}' data5='${nvl(app.settings.settings[i].data5)}'>${app.settings.settings[i].text}</option>`;
+                                option = `<option id=${setting.id} value='${setting.data}' ` +
+                                            `data2='${nvl(setting.data2)}' data3='${nvl(setting.data3)}' data4='${nvl(setting.data4)}' data5='${nvl(setting.data5)}'>${setting.text}</option>`;
                                 APP_METHOD += option;
                                 break;
                             }
@@ -265,7 +297,7 @@ const createApp = (app_id, username, locale) => {
         };
         if (username!=null){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
-                getProfileUser(app_id, null, username, null, (err,result)=>{
+                getProfileUser(app_id, null, username, null, (/**@type{Types.error}*/err,/**@type{Types.db_ProfileUser}*/result)=>{
                     if (result)
                         main(app_id);
                     else{
