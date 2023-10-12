@@ -826,6 +826,8 @@ const get_module_with_init = async (app_info, callBack) => {
     /**@type {[string, string][]} */
     const render_variables = [];
     const return_with_parameters = (/** @type{string}*/ module, /** @type{(string|null)}*/ countries, /** @type{Types.db_app_parameter[]|null}*/ app_parameters, /** @type{number}*/ first_time)=>{
+
+        /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
             app_id: app_info.app_id,
             app_datatoken: app_info.datatoken,
