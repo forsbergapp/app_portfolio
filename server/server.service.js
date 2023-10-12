@@ -1020,21 +1020,21 @@ const serverExpress = async () => {
         app.get('*', (/**@type{Types.req}*/req, /**@type{Types.res}*/ res, /**@type{function}*/ next) => {
             //if first time, when no system admin exists, then redirect everything to admin
             if (CheckFirstTime() && req.headers.host.startsWith('admin') == false && req.headers.referer==undefined)
-            return res.redirect(`http://admin.${req.headers.host.lastIndexOf('.')==-1?req.headers.host:req.headers.host.lastIndexOf('.')}`);
+                res.redirect(`http://admin.${req.headers.host.lastIndexOf('.')==-1?req.headers.host:req.headers.host.lastIndexOf('.')}`);
             else{
             //redirect naked domain to www except for localhost
             if (((req.headers.host.split('.').length - 1) == 1) &&
                 req.headers.host.indexOf('localhost')==-1)
                 if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
-                return res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
+                    res.redirect('https://' + 'www.' + req.headers.host + req.originalUrl);
                 else
-                return res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
+                    res.redirect('http://' + 'www.' + req.headers.host + req.originalUrl);
             else{
                 //redirect from http to https if https enabled
                 if (req.protocol=='http' && ConfigGet('SERVER', 'HTTPS_ENABLE')=='1')
-                return res.redirect('https://' + req.headers.host + req.originalUrl);
+                    res.redirect('https://' + req.headers.host + req.originalUrl);
                 else{
-                return next();
+                    next();
                 }
             }
             }

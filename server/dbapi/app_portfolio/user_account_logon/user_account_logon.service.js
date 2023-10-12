@@ -28,7 +28,7 @@ const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBa
 		});
 	};
 const checkLogin = (app_id, user_account_id, access_token, client_ip, callBack) => {
-		const sql = `SELECT 1
+		const sql = `SELECT 1 "login"
 					   FROM ${db_schema()}.user_account_logon ual,
 							${db_schema()}.user_account ua
 					  WHERE ua.id = :user_account_id
