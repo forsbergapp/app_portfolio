@@ -16,7 +16,7 @@ const microservice_circuitbreak = new microservice.CircuitBreaker();
 const createMail = async (app_id, data) =>{
     const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
-        /** @type {Array.<Array.<string>>} */
+        /** @type {[string, string][]} */
         let files= [];
         /** @type {string} */
         let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
@@ -51,7 +51,7 @@ const createMail = async (app_id, data) =>{
                 if (err)
                     reject(err);
                 else{                
-                    getParameters_server(app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Array.<Types.db_parameter>}*/ result)=>{
+                    getParameters_server(app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Types.db_parameter[]}*/ result)=>{
                         if (err) {                
                             reject(err);
                         }
@@ -97,6 +97,7 @@ const createMail = async (app_id, data) =>{
                                     break;
                                 }
                             }
+                            /** @type {[string, string][]} */
                             const render_variables = [];
                             render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
                             render_variables.push(['Verification_code',data.verificationCode]);
@@ -135,9 +136,9 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
     /** @type {Types.callBack} callBack */
     const get_parameters = (app_id, callBack) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`).then(({getApp}) => {
-            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Array.<Types.db_app>}*/result_app)=>{
+            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Types.db_app[]}*/result_app)=>{
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
-                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Array.<Types.db_parameter>}> }*/result)=>{
+                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_parameter[]}> }*/result)=>{
                         //app_parameter table
                         let db_info_email_policy;
                         let db_info_email_disclaimer;
@@ -191,7 +192,7 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                         <body >`;
     const info_html2 = `  </body>
                       </html>`;
-    /** @type {Array.<Array.<string>>} */
+    /** @type {[string, string][]} */
     const render_variables = [];
     const fs = await import('node:fs');
     if (info=='privacy_policy'||info=='disclaimer'||info=='terms'||info=='about' )
@@ -284,10 +285,10 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
     let system_admin_only;
     /** @type {string} */
     let app_module_type;
-    /** @type {{app: string, map: boolean, map_styles:string}} */
+    /** @type {Types.app_create} */
     let app;
     let config_map;
-    /** @type {string|null} */
+    /** @type {Types.map_styles} */
     let config_map_styles;
     let config_ui;
 
@@ -322,7 +323,8 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
 
             const callGetObjects = async () =>{
                 return new Promise((resolve)=>{
-                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Array.<Types.db_app_object_item>}*/ result_objects) => {
+                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_app_object_item[]}*/ result_objects) => {
+                        /**@type {[string, string][]} */
                         const render_variables = [];
                         for (const row of result_objects){
                             render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
@@ -518,10 +520,10 @@ const client_locale = (accept_language) =>{
 /**
  * Render html for APP or REPORT
  * 
- * @param {number} app_id                   - application_id
- * @param {Array.<Array.<string>>} files    - array with files
- * @param {(Types.app_config|null)} app_config    - app configuration
- * @param {Types.callBack} callBack               - CallBack with error and app/report html
+ * @param {number} app_id                       - application_id
+ * @param {[string, string][]} files              - array with files
+ * @param {(Types.app_config|null)} app_config  - app configuration
+ * @param {Types.callBack} callBack             - CallBack with error and app/report html
  */
 const render_app_html = (app_id, files, app_config, callBack) => {
     let i = 0;
@@ -546,7 +548,9 @@ const render_app_html = (app_id, files, app_config, callBack) => {
                 });
             else{
                 //app that does not need common like maintenance and email
-                callBack(null, app_files);
+                callBack(null, {app:app_files,
+                                locales: null, 
+                                settings: null});
             }
         })
         .catch(err => {
@@ -559,7 +563,7 @@ const render_app_html = (app_id, files, app_config, callBack) => {
  * 
  * @async
  * @param {string} module       - html
- * @param {Array.<Array.<string>>} files
+ * @param {[string, string][]} files
  * @param {Types.callBack} callBack   - CallBack with error and app/report html
  */
 const read_common_files = async (module, files, callBack) => {
@@ -575,9 +579,9 @@ const read_common_files = async (module, files, callBack) => {
 /**
  * Renders app html with data
  * 
- * @param {string} app                  - html
- * @param {Array.<Array.<string>>} data - array with tags and data
- * @returns {string}                    - app html with data
+ * @param {string} app            - html
+ * @param {[string, string][]} data - array with tags and data
+ * @returns {string}              - app html with data
  */
 const render_app_with_data = (app, data)=>{
     for (const variable of data){
@@ -605,9 +609,9 @@ const render_common_html = async (app_id, module, app_config) =>{
     let user_timezones = '';
     let user_directions = '';
     let user_arabic_scripts = '';
-    /** @type {Array.<Types.map_styles>} */
+    /** @type {Types.map_styles[]} */
     const map_styles = [];
-    /** @type {Array.<Array.<string>>} */
+    /** @type {[string, string][]} */
     const render_variables = [];
     if (app_config.render_locales){
         const promisegetLocales = async () =>{
@@ -615,7 +619,7 @@ const render_common_html = async (app_id, module, app_config) =>{
             return new Promise((resolve)=>{
                 /** @type {string}*/
                 let user_locales;
-                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Array.<Types.db_locale>}*/ result_user_locales) => {
+                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_locale[]}*/ result_user_locales) => {
                     result_user_locales.forEach((locale, i) => {
                         user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                     });
@@ -629,7 +633,7 @@ const render_common_html = async (app_id, module, app_config) =>{
         const promisegetSettings = async () =>{
             const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
             return new Promise((resolve)=>{
-                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Array.<Types.db_setting>}*/ settings) => {
+                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Types.db_setting[]}*/ settings) => {
                     let option;
                     for (const setting of settings) {
                         option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
@@ -673,6 +677,7 @@ const render_common_html = async (app_id, module, app_config) =>{
         settings = await promisegetSettings();
     }               
     return new Promise((resolve, reject)=>{
+        /**@type {[string, string][]} */
         let common_files;
         if (app_config.module_type == 'APP'){
             common_files = [
@@ -770,7 +775,7 @@ const render_common_html = async (app_id, module, app_config) =>{
 const countries = (app_id, locale) => {
     return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Array.<Types.db_country>}*/ results)  => {
+            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_country[]}*/ results)  => {
                 /** @type {string}*/
                 let select_countries;
                 if (err){
@@ -818,9 +823,9 @@ const countries = (app_id, locale) => {
  * @param {Types.callBack} callBack - CallBack with error and app/report html
  */
 const get_module_with_init = async (app_info, callBack) => {
-    /**@type{Array.<Array.<string>>} */
+    /**@type {[string, string][]} */
     const render_variables = [];
-    const return_with_parameters = (/** @type{string}*/ module, /** @type{(string|null)}*/ countries, /** @type{Array.<Types.db_app_parameter>|null}*/ app_parameters, /** @type{number}*/ first_time)=>{
+    const return_with_parameters = (/** @type{string}*/ module, /** @type{(string|null)}*/ countries, /** @type{Types.db_app_parameter[]|null}*/ app_parameters, /** @type{number}*/ first_time)=>{
         const app_service_parameters = {   
             app_id: app_info.app_id,
             app_datatoken: app_info.datatoken,
@@ -852,12 +857,12 @@ const get_module_with_init = async (app_info, callBack) => {
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-        getAppName(app_info.app_id, ( /** @type {string}*/ err,/** @type{Array.<Types.db_app_name>}*/result_app_name) =>{
+        getAppName(app_info.app_id, ( /** @type {string}*/ err,/** @type{Types.db_app_name[]}*/result_app_name) =>{
             if (err)
                 callBack(err, null);
             else{
                 //fetch parameters for common_app_id and current app_id
-                getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Array.<Types.db_app_parameter>}*/app_parameters) =>{
+                getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Types.db_app_parameter[]}*/app_parameters) =>{
                     if (err)
                         callBack(err, null);
                     else{
@@ -1023,13 +1028,14 @@ const AppsStart = async (app) => {
  */
 const getMaintenance = (app_id) => {
     return new Promise((resolve, reject) => {
+        /** @type {[string, string][]} */
         const files = [
             ['APP', process.cwd() + '/apps/common/src/index_maintenance.html'],
             ['<AppCommonHeadMaintenance/>', process.cwd() + '/apps/common/src/head_maintenance.html'],
             ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
             ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
             ];
-        /** @type {Array.<Array.<string>>} */
+        /** @type {[string, string][]} */
         const render_variables = [];
         render_app_html(app_id, files, null, (err, app)=>{
             if (err)
@@ -1056,7 +1062,7 @@ const getMaintenance = (app_id) => {
 const providers_buttons = async (app_id) =>{
     const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
     return new Promise((resolve, reject)=>{
-        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Array.<Types.db_identity_provider>}*/result)=>{
+        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Types.db_identity_provider[]}*/result)=>{
             if (err)
                 reject(err);
             else{

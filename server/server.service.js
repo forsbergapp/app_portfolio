@@ -12,7 +12,7 @@ let CONFIG_INIT;
 let CONFIG;
 /**@type{Types.config_user} */
 let CONFIG_USER;
-/**@type{Array.<Types.config_apps>} */
+/**@type{Types.config_apps[]} */
 let CONFIG_APPS;
 /**@type{string} */
 let SLASH;
@@ -85,7 +85,7 @@ const COMMON = {
 };
 /**
  * Config files
- * @returns {Array.<Types.config_files>}
+ * @returns {Types.config_files[]}
  */
 const config_files = () => {
     return [
@@ -240,7 +240,7 @@ const DefaultConfig = async () => {
     }); 
     const i = 0;
     //read all default files
-    /**@type{Array.<Types.config_files>} */
+    /**@type{Types.config_files[]} */
     const default_files = [
                             [1, 'default_config.json'],
                             [2, 'default_auth_blockip.json'],
@@ -254,7 +254,7 @@ const DefaultConfig = async () => {
     const config_json = await Promise.all(default_files.map(file => {
         return fs.promises.readFile(process.cwd() + '/server/' + file[1], 'utf8');
     }));
-    /**@type{Array.<Types.config>} */
+    /**@type{Types.config[]} */
     const config_obj = [JSON.parse(config_json[0]),
                         JSON.parse(config_json[1]),
                         JSON.parse(config_json[2]),
