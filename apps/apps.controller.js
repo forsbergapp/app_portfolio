@@ -7,10 +7,11 @@ const service = await import('./apps.service.js');
 
 /**
  * Backend for frontend (BFF)
+ * 
+ * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  * @param {Types.req} req - Request
  * @param {Types.res} res
- * @returns {Types.res|*} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
-  */
+ */
 const BFF = (req, res) =>{
     //check inparameters
     if (!req.query.app_id &&
@@ -18,7 +19,7 @@ const BFF = (req, res) =>{
         !req.query.parameters)
         //required parameters not provided
         //use common app id to get message and use first lang_code form app or if missing use language in headers
-        return res.status(401).send({
+        res.status(401).send({
             message: '⛔'
         });
     else{
@@ -57,9 +58,9 @@ const BFF = (req, res) =>{
                     LogServiceI(req.query.app_id, service_called, parameters, log_text).then(()=>{
                         //message queue saves result there
                         if (message_queue)
-                            return res.status(200).send('✅');
+                            res.status(200).send('✅');
                         else
-                            return res.status(200).send(result_service);
+                            res.status(200).send(result_service);
                     });
                 });
             })
@@ -68,7 +69,7 @@ const BFF = (req, res) =>{
                     //log ERROR to module log and to files
                     LogServiceE(req.query.app_id, service_called, parameters, error).then(() => {
                         //return service unavailable and error message
-                        return res.status(503).send(error);
+                        res.status(503).send(error);
                     });
                 });
             });
@@ -76,38 +77,40 @@ const BFF = (req, res) =>{
 };
 /**
  * Backend for frontend (BFF) without authorization
+ * 
+ * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  * @param {Types.req} req - Request
  * @param {Types.res} res
- * @returns {Types.res} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  */
 const BFF_noauth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='BROADCAST' && 
         Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-            return BFF(req,res);
+            BFF(req,res);
         }
     else{
         //required parameters not provided
         //use common app id to get message and use first lang_code form app or if missing use language in headers
-        return res.status(401).send({
+        res.status(401).send({
             message: '⛔'
         });
     }
 };
 /**
  * Backend for frontend (BFF) with basic authorization and no middleware
+ * 
+ * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  * @param {Types.req} req - Request
  * @param {Types.res} res
- * @returns {Types.res} res res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  */
 const BFF_auth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='AUTH' && req.headers.authorization.toUpperCase().startsWith('BASIC'))
-        return BFF(req,res);
+        BFF(req,res);
     else{
         //required parameters not provided
         //use common app id to get message and use first lang_code form app or if missing use language in headers
-        return res.status(401).send({
+        res.status(401).send({
             message: '⛔'
         });
     }

@@ -77,7 +77,7 @@
  * Callback with error and result
  * @callback callBack
  * @param {(Error|string|number|null|unknown)} error
- * @param {(string|object|null|*)} result
+ * @param {(boolean|string|object|null|*)} result
  */
 /**
  * Error stack
@@ -427,7 +427,7 @@
 /**
  * DB result app
  * @typedef {{app_name:string, url:string}} db_app
- * DB app_name 
+ * DB result app_name 
  * @typedef {{app_name:string}} db_app_name
  * DB result app_objects
  * @typedef {{object_item_name:string, text:string}} db_app_object_item
@@ -443,6 +443,11 @@
  * @typedef {{parameter_name:string, parameter_value:string}} db_parameter
  * DB result setting
  * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_setting
+ * USER:
+ * DB result check login
+ * @typedef {{login:number}} db_Checklogin
+ * DB result user app role id
+ * @typedef {{app_role_id:number}} db_UserAppRoleAdmin
  * DB result user_profile
  * @typedef {{  id:string, bio:string, private:number|null, user_level:string, date_created:string, username:string, avatar:string, 
  *              identity_provider_id:string, provider_id:string, provider_first_name:string, provider_last_name:string, provider_image:string, provider_image_url:string,

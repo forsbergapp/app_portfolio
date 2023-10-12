@@ -1,5 +1,16 @@
+/** @module server/auth */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const {ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
+
+/**
+ * IP to number
+ * @param {string} ip
+ * @returns {number}
+ */
 const IPtoNum = (ip) => {
     return Number(
         ip.split('.')
@@ -7,11 +18,26 @@ const IPtoNum = (ip) => {
         .join('')
     );
 };
+/**
+ * Access control
+ * Controls if ACCESS_CONTROL_ENABLE=1 else skips all checks
+ *  if ip is blocked return 403
+ *  if ACCESS_CONTROL_HOST_EXIST=1 then check if host exists else return 406
+ *  if ACCESS_CONTROL_ACCESS_FROM=1 then check if request accessed from domain and not from os hostname else return 406
+ *  if user agent is in safe list then return ok else continue checks:
+ *  if ACCESS_CONTROL_USER_AGENT_EXIST=1 then check if user agent exists else return 406
+ *  if ACCESS_CONTROL_ACCEPT_LANGUAGE=1 then check if accept languaget exists else return 406
+ * @param {string} ip
+ * @param {string} host
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {Types.callBack} callBack
+ */
 const access_control = (ip, host, user_agent, accept_language, callBack) => {
 
     if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
         const ip_v4 = ip.replace('::ffff:','');
-        block_ip_control(ip_v4, (err, result_range) =>{
+        block_ip_control(ip_v4, (/**@type{Types.error}*/err, /**@type{Types.access_control}*/result_range)=>{
             if (err){
                 callBack(err, null);
             }
@@ -38,7 +64,7 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
                                                        statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
                             }
                             else{
-                                safe_user_agents(user_agent, (err, safe)=>{
+                                safe_user_agents(user_agent, (/**@type{Types.error}*/err, /**@type{boolean}*/safe)=>{
                                     if (err){
                                         return callBack(err, null);
                                     }
@@ -77,6 +103,12 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
     else
         return callBack(null,null);
 };
+/**
+ * Controls if ip is blocked
+ *  if ip is blocked return 403
+ * @param {string} ip_v4
+ * @param {Types.callBack} callBack
+ */
 const block_ip_control = async (ip_v4, callBack) => {
     if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
         let ranges;
@@ -105,6 +137,11 @@ const block_ip_control = async (ip_v4, callBack) => {
     else
         return callBack(null, null);
 };
+/**
+ * Controls if user agent is safe
+ * @param {string} user_agent
+ * @param {Types.callBack} callBack
+ */
 const safe_user_agents = async (user_agent, callBack) => {
     /*format file
         {"user_agent": [
@@ -136,6 +173,11 @@ const safe_user_agents = async (user_agent, callBack) => {
     else
         return callBack(null, false);
 };
+/**
+ * Controls request
+ * @param {string} req_path
+ * @param {Types.callBack} callBack
+ */
 const check_request = (req_path, callBack) =>{
     let err = null;
     try {
@@ -151,6 +193,11 @@ const check_request = (req_path, callBack) =>{
         callBack(null, null);
 };
 
+/**
+ * Checks if internet exists
+ * 
+ * @returns {Promise<0|1>} - 0=No internet, 1= Internet
+ */
 const check_internet = async () => {
     return new Promise(resolve =>{
         //test connection with localhost
@@ -187,19 +234,27 @@ const check_internet = async () => {
     });
 };
 
-//ENDPOINT MIDDLEWARE
+/**
+ * Checks access token
+ * 
+ * @param {number} app_id
+ * @param {number} user_account_id
+ * @param {string} ip
+ * @param {string} authorization
+ * @returns {Promise<boolean>}
+ */
 const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
     return new Promise((resolve, reject)=>{
         if (authorization){
             const token = authorization.slice(7);
-            verify(token, ConfigGetApp(app_id, 'ACCESS_SECRET'), (err) => {
+            verify(token, ConfigGetApp(app_id, 'ACCESS_SECRET'), (/**@type{Types.error}*/err) => {
                 if (err)
                    resolve(false);
                 else {
                     //check access token belongs to user_account.id, app_id and ip saved when logged in
                     //and if app_id=0 then check user is admin
                     import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
-                        checkLogin(app_id, user_account_id, authorization.replace('Bearer ',''), ip, (err, result)=>{
+                        checkLogin(app_id, user_account_id, authorization.replace('Bearer ',''), ip, (/**@type{Types.error}*/err, /**@type{Types.db_Checklogin[]}*/result)=>{
                             if (err)
                                 reject(err);
                             else{
@@ -217,11 +272,17 @@ const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
             resolve(false);
     });
 };
+/**
+ * Checks data token
+ * @param {number} app_id
+ * @param {string} token
+ * @returns {Promise<boolean>}
+ */
 const checkDataToken = async (app_id, token) =>{
     return new Promise(resolve =>{
         if (token){
             token = token.slice(7);
-            verify(token, ConfigGetApp(app_id, 'DATA_SECRET'), (err) => {
+            verify(token, ConfigGetApp(app_id, 'DATA_SECRET'), (/**@type{Types.error}*/err) => {
                 if (err){
                     resolve(false);
                 } else {
@@ -235,6 +296,12 @@ const checkDataToken = async (app_id, token) =>{
     });
     
 };
+/**
+ * Checks access token
+ * 
+ * @param {number} app_id
+ * @returns {string}
+ */
 const accessToken = (app_id)=>{
     const jsontoken_at = sign ({tokentimstamp: Date.now()}, 
                         ConfigGetApp(app_id, 'ACCESS_SECRET'), 
@@ -243,6 +310,12 @@ const accessToken = (app_id)=>{
                          });
     return jsontoken_at;
 };
+/**
+ * Checks access token
+ * 
+ * @param {number} app_id
+ * @returns {string}
+ */
 const CreateDataToken = (app_id)=>{
     const jsontoken_dt = sign ({tokentimstamp: Date.now()}, 
                         ConfigGetApp(app_id, 'DATA_SECRET'), 
