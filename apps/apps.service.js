@@ -1050,7 +1050,7 @@ const getMaintenance = (app_id) => {
                     rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
                 };
                 render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
-                resolve(render_app_with_data(app, render_variables));
+                resolve(render_app_with_data(app.app, render_variables));
             }
         });
     });
