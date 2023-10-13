@@ -1,11 +1,23 @@
+/** @module server/broadcast */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const service = await import('./broadcast.service.js');
 
+/**
+ * Broadcast connect
+ * Used by EventSource and leaves connection open
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const BroadcastConnect = async (req, res) => {
     const {checkDataToken} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     if (checkDataToken(req.query.authorization)){
         const client_id = Date.now();
         service.ClientConnect(res);
         service.ClientOnClose(res, client_id);
+        /**@type{Types.broadcast_connect_list} */
         const newClient = {
             id: client_id,
             app_id: req.query.app_id,
@@ -23,8 +35,13 @@ const BroadcastConnect = async (req, res) => {
         service.ClientSend(res, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
     }
     else
-        return res.status(401).send('⛔');
+        res.status(401).send('⛔');
 };
+/**
+ * Broadcast send as system admin
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const BroadcastSendSystemAdmin = (req, res) => {
     if (req.body.app_id)
         req.body.app_id = parseInt(req.body.app_id);
@@ -32,12 +49,17 @@ const BroadcastSendSystemAdmin = (req, res) => {
         req.body.client_id = parseInt(req.body.client_id);
     req.body.client_id_current = parseInt(req.body.client_id_current);
     service.BroadcastSendSystemAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
-                                        req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
-        return res.status(200).send(
+                                        req.body.broadcast_type, req.body.broadcast_message, (/**@type{Types.error}*/err, result) =>{
+        res.status(200).send(
             err ?? result
         );
     });
 };
+/**
+ * Broadcast send as admin
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const BroadcastSendAdmin = (req, res) => {
     if (req.body.app_id)
         req.body.app_id = parseInt(req.body.app_id);
@@ -45,74 +67,99 @@ const BroadcastSendAdmin = (req, res) => {
         req.body.client_id = parseInt(req.body.client_id);
     req.body.client_id_current = parseInt(req.body.client_id_current);
     service.BroadcastSendAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
-                                req.body.broadcast_type, req.body.broadcast_message, (err, result) =>{
-        return res.status(200).send(
+                                req.body.broadcast_type, req.body.broadcast_message, (/**@type{Types.error}*/err, result) =>{
+        res.status(200).send(
             err ?? result
         );
     });
 };
+/**
+ * Broadcast connected list admin
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const ConnectedList = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
-                            req.query.order_by, req.query.sort, 0, (err, result) => {
+                            req.query.order_by, req.query.sort, 0, (/**@type{Types.error}*/err, result) => {
         if (err) {
-            return res.status(500).send({
+            res.status(500).send({
                 data: err
             });
         }
         else{
             if (result && result.length>0)
-                return res.status(200).json({
+                res.status(200).json({
                     data: result
                 });
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                    record_not_found(res, req.query.app_id, req.query.lang_code);
                 });
             }
         }
     });
 };
+/**
+ * Broadcast connected list system admin
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const ConnectedListSystemAdmin = (req, res) => {
     service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
-                            req.query.order_by, req.query.sort,  1, (err, result) => {
+                            req.query.order_by, req.query.sort,  1, (/**@type{Types.error}*/err, result) => {
         if (err) {
-            return res.status(500).send({
+            res.status(500).send({
                 data: err
             });
         }
         else{
             if (result && result.length>0)
-                return res.status(200).json({
+                res.status(200).json({
                     data: result
                 });
             else{
-                return res.status(404).send(
+                res.status(404).send(
                     'Record not found'
                 );
             }
         }
     });
 };
+/**
+ * Broadcast connected list count
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const ConnectedCount = (req, res) => {
-    service.ConnectedCount(req.query.identity_provider_id, req.query.count_logged_in, (err, count_connected) => {
-        return res.status(200).json({
+    service.ConnectedCount(req.query.identity_provider_id, req.query.count_logged_in, (/**@type{Types.error}*/err, count_connected) => {
+        res.status(200).json({
             data: count_connected
         });
     });
 };
+/**
+ * Broadcast connected list update
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const ConnectedUpdate = (req, res) => {
     service.ConnectedUpdate(req.query.client_id, req.query.user_account_logon_user_account_id, req.query.system_admin, req.query.identity_provider_id, 
                             req.query.latitude, req.query.longitude,
-                            (err, result) =>{
-        return res.status(200).json(
+                            (/**@type{Types.error}*/err, result) =>{
+        res.status(200).json(
             err ?? result
         );
     });
 };
+/**
+ * Broadcast check connected
+ * @param {Types.req} req
+ * @param {Types.res} res
+ */
 const ConnectedCheck = (req, res) => {
     req.params.user_account_id = parseInt(req.params.user_account_id);
-    service.ConnectedCheck(req.params.user_account_id, (err, result_connected)=>{
-        return res.status(200).json({
+    service.ConnectedCheck(req.params.user_account_id, (/**@type{Types.error}*/err, result_connected)=>{
+        res.status(200).json({
             online: result_connected
         });
     });
