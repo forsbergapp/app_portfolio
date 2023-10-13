@@ -5,6 +5,7 @@ import * as Types from './../types.js';
 const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
 const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
+const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
 
 /**
  * Creates email
@@ -1097,36 +1098,88 @@ const providers_buttons = async (app_id) =>{
  * @param {object} data
  * @returns {Promise<(*)>}
  */
-const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data) => {
+const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, res=null) => {
     const { check_internet } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     const result_internet = await check_internet();
     return new Promise((resolve, reject) => {
         if (result_internet==1){
             try {
                 let path;
+                const call_service = (path, service) => {
+                    microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
+                    .then((/**@type{*}*/result)=>resolve(result))
+                    .catch((/**@type{*}*/error)=>reject(error));
+                };
                 switch (service){
                     case 'AUTH':{
                         // parameters ex:
                         // /auth /auth/admin
                         path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        call_service(path, service);
                         break;
                     }
                     case 'BROADCAST':{
                         // parameters ex:
                         // /broadcast...
-                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        if (parameters.startsWith('/broadcast/connection/connect')){
+                            //this endpoint does not exists
+                            //this is used for EventSource that needs to leave connection open
+                            // ex path and query parameters: 
+                            ///broadcast/connection/connect?identity_provider_id=&system_admin=null&&latitude=[...]&longitude=[...]&lang_code=en
+                            const query_parameters = parameters.split('?')[1].split('&');
+                            /**
+                             * 
+                             * @param {string} param
+                             * @param {1|null} type
+                             * @returns {string|number|null}
+                             */
+                            const get_query_value = (param, type=null) => {
+                                const value_row = query_parameters.filter(query=>query.toLowerCase().startsWith(param));
+                                if (value_row.length == 0)
+                                    return null;
+                                else{
+                                    if (type==1){
+                                        //Number
+                                        if (value_row[0].split('=')[1]=='')
+                                            return null;
+                                        else
+                                            return Number(value_row[0].split('=')[1]);
+                                    }
+                                    else
+                                        return value_row[0].split('=')[1];
+                                }    
+                            };     
+                            BroadcastConnect(   app_id, 
+                                                get_query_value('identity_provider_id',1),
+                                                get_query_value('user_account_logon_user_account_id',1),
+                                                get_query_value('system_admin',1),
+                                                get_query_value('latitude'),
+                                                get_query_value('longitude'),
+                                                get_query_value('authorization'),
+                                                headers_user_agent,
+                                                ip,
+                                                res).then(()=> {
+                                return resolve('');
+                            });
+                        }
+                        else{
+                            path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                            call_service(path, service);
+                        }
                         break;
                     }
                     case 'LOG':{
                         // parameters ex:
                         // /log...
                         path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        call_service(path, service);
                         break;
                     }
                     case 'SERVER':{
                         // parameters ex:
                         // /config...  /info
                         path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        call_service(path, service);
                         break;
                     }
                     case 'DB_API':{
@@ -1150,6 +1203,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                                 return reject('service DB GET, POST, PUT, PATCH or DELETE only');
                             }
                         }
+                        call_service(path, service);
                         break;
                     }
                     case 'GEOLOCATION':{
@@ -1176,6 +1230,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                                 //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                                 authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, 'CLIENT_ID') + ':' + ConfigGetApp(app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
                                 path = `/geolocation${parameters}&app_id=${app_id}`;
+                                call_service(path, service);
                             }
                             else
                                 return reject('service GEOLOCATION GET only');
@@ -1195,6 +1250,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                             if (parameters.startsWith('/city/search'))
                                 parameters = parameters + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
                             path = `/worldcities${parameters}&app_id=${app_id}`;
+                            call_service(path, service);
                         }
                             
                         else
@@ -1205,9 +1261,6 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         return reject(`service ${service} does not exist`);
                     }
                 }
-                microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
-                .then((/**@type{*}*/result)=>resolve(result))
-                .catch((/**@type{*}*/error)=>reject(error));
             } catch (error) {
                 return reject(error);
             }

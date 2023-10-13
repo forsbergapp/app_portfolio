@@ -6,38 +6,6 @@ import * as Types from './../../types.js';
 const service = await import('./broadcast.service.js');
 
 /**
- * Broadcast connect
- * Used by EventSource and leaves connection open
- * @param {Types.req} req
- * @param {Types.res} res
- */
-const BroadcastConnect = async (req, res) => {
-    const {checkDataToken} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-    if (checkDataToken(req.query.authorization)){
-        const client_id = Date.now();
-        service.ClientConnect(res);
-        service.ClientOnClose(res, client_id);
-        /**@type{Types.broadcast_connect_list} */
-        const newClient = {
-            id: client_id,
-            app_id: req.query.app_id,
-            user_account_id: req.query.user_account_logon_user_account_id ?? null,
-            system_admin: req.query.system_admin=='null'?'':req.query.system_admin,
-            user_agent: req.headers['user-agent'],
-            connection_date: new Date().toISOString(),
-            ip: req.ip,
-            gps_latitude: req.query.latitude,
-            gps_longitude: req.query.longitude,
-            identity_provider_id: req.query.identity_provider_id,
-            response: res
-        };
-        service.ClientAdd(newClient);
-        service.ClientSend(res, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
-    }
-    else
-        res.status(401).send('⛔');
-};
-/**
  * Broadcast send as system admin
  * @param {Types.req} req
  * @param {Types.res} res
@@ -164,5 +132,5 @@ const ConnectedCheck = (req, res) => {
         });
     });
 };
-export {BroadcastConnect, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
+export {BroadcastSendSystemAdmin, BroadcastSendAdmin, 
         ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck};

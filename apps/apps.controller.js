@@ -34,45 +34,33 @@ const BFF = (req, res) =>{
             parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`;
         else
             parameters = decodedparameters;
-        if (service_called=='BROADCAST' && decodedparameters.startsWith('/broadcast/connection/connect')){
-            // return broadcast stream
-            // ex path and query parameters: /broadcast/connection/connect?identity_provider_id=&system_admin=null&lang_code=en
-            const query_parameters = parameters.toLowerCase().split('?')[1].split('&');
-            req.query.system_admin = query_parameters.filter(query=>{ 
-                                                                return query.startsWith('system_admin');}
-                                                            )[0].split('=')[1];
-            req.query.identity_provider_id = query_parameters.filter(query=>{ 
-                                                                     return query.startsWith('identity_provider_id');}
-                                                                     )[0].split('=')[1];
-            delete req.query.parameters;
-            delete req.query.service;
-            import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`).then(({BroadcastConnect})=>{
-                BroadcastConnect(req,res);
-            });
-        }
-        else
-            service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body)
-            .then(result_service => {
-                import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
-                    const log_text = message_queue==true?null:result_service;
-                    LogServiceI(req.query.app_id, service_called, parameters, log_text).then(()=>{
-                        //message queue saves result there
+        service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
+        .then(result_service => {
+            import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
+                const log_text = message_queue==true?null:result_service;
+                LogServiceI(req.query.app_id, service_called, parameters, log_text).then(()=>{
+                    //message queue saves result there
+                    if (parameters.startsWith('/broadcast/connection/connect')){
+                        //EventSource requested so no more update of response
+                        null;
+                    }
+                    else
                         if (message_queue)
                             res.status(200).send('✅');
                         else
                             res.status(200).send(result_service);
-                    });
-                });
-            })
-            .catch(error => {
-                import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
-                    //log ERROR to module log and to files
-                    LogServiceE(req.query.app_id, service_called, parameters, error).then(() => {
-                        //return service unavailable and error message
-                        res.status(503).send(error);
-                    });
                 });
             });
+        })
+        .catch(error => {
+            import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
+                //log ERROR to module log and to files
+                LogServiceE(req.query.app_id, service_called, parameters, error).then(() => {
+                    //return service unavailable and error message
+                    res.status(503).send(error);
+                });
+            });
+        });
     }
 };
 /**
