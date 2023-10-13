@@ -115,7 +115,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
                 'User-Agent': 'server',
                 'Accept-Language': '*',
                 'Content-Type': 'application/json',
-                'Content-Length': Buffer.byteLength(body),
+                'Content-Length': Buffer.byteLength(JSON.stringify(body)),
                 'Authorization': authorization
             };
             //host: 'localhost',
@@ -141,7 +141,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
                     'User-Agent': headers_user_agent,
                     'Accept-Language': headers_accept_language,
                     'Content-Type': 'application/json',
-                    'Content-Length': Buffer.byteLength(body),
+                    'Content-Length': Buffer.byteLength(JSON.stringify(body)),
                     'Authorization': authorization,
                     'X-Forwarded-For': client_ip
                 };
@@ -175,7 +175,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
             
         });
         if (method !='GET')
-            request.write(body);
+            request.write(JSON.stringify(body));
         request.on('timeout', () => {
             reject('timeout');
         });

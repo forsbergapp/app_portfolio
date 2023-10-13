@@ -1205,7 +1205,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         return reject(`service ${service} does not exist`);
                     }
                 }
-                microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, (data)?JSON.stringify(data):null)
+                microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
                 .then((/**@type{*}*/result)=>resolve(result))
                 .catch((/**@type{*}*/error)=>reject(error));
             } catch (error) {

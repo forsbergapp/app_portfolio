@@ -9,7 +9,7 @@ const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.serv
  * Creates report
  * @param {number} app_id
  * @param {string} module
- * @returns {Promise.<string>}
+ * @returns {Promise.<Types.render_common>}
  */
 
 const createReport = (app_id, module) => {
@@ -34,7 +34,7 @@ const createReport = (app_id, module) => {
             if (err)
                 reject(err);
             else{
-                resolve(report.app);
+                resolve(report);
             }
         });
     });

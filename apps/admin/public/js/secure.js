@@ -434,11 +434,11 @@ const sendBroadcast = () => {
         broadcast_type = 'CHAT';
     }
         
-    const json_data =`{"app_id": ${app_id==''?null:app_id},
-                     "client_id": ${client_id==''?null:client_id},
-                     "client_id_current": ${common.COMMON_GLOBAL['service_broadcast_client_ID']},
-                     "broadcast_type" :"${broadcast_type}", 
-                     "broadcast_message":"${broadcast_message}"}`;
+    const json_data ={  app_id:             app_id==''?null:app_id,
+                        client_id:          client_id==''?null:client_id,
+                        client_id_current:  common.COMMON_GLOBAL['service_broadcast_client_ID'],
+                        broadcast_type:     broadcast_type, 
+                        broadcast_message:  broadcast_message};
     let path='';
     let token_type;
     if (common.COMMON_GLOBAL['system_admin']==1){
@@ -552,9 +552,7 @@ const set_maintenance = () => {
             check_value = 1;
         else
             check_value = 0;
-        const json_data = `{
-                            "value": ${check_value}
-                         }`;
+        const json_data = {value: check_value};
         common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 2, json_data, () => {});
     }
 };
@@ -1179,16 +1177,16 @@ const button_save = async (item) => {
                                             config_group += ',';
                                     }
                             );
-                            config_json.push(JSON.stringify(JSON.parse(`[${config_group}]`), undefined, 2));
+                            config_json.push(JSON.parse(`[${config_group}]`));
                         }
                     );
-                    return `{   
-                                "SERVER":${config_json[0]},
-                                "SERVICE_AUTH":${config_json[1]},
-                                "SERVICE_BROADCAST":${config_json[2]},
-                                "SERVICE_DB":${config_json[3]},
-                                "SERVICE_LOG":${config_json[4]}
-                            }`;
+                    return {   
+                                SERVER:             config_json[0],
+                                SERVICE_AUTH:       config_json[1],
+                                SERVICE_BROADCAST:  config_json[2],
+                                SERVICE_DB:         config_json[3],
+                                SERVICE_LOG:        config_json[4]
+                            };
                 };
                 //no fetched from end of item name list_config_nav_X
                 const config_no = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16);
@@ -1198,21 +1196,18 @@ const button_save = async (item) => {
                 }
                 else{
                     if (config_no == 1)
-                        json_data = `{"config_no":   ${config_no},
-                                      "config_json": ${config_create_server_json()}}`;
+                        json_data = {   config_no:   config_no,
+                                        config_json: config_create_server_json()};
                     else
-                        json_data = `{"config_no":   ${config_no},
-                                      "config_json": ${document.getElementById('list_config_edit').innerHTML}}`;
-                    const json_object = JSON.parse(json_data);
-                    json_data = JSON.stringify(json_object, undefined, 2);
+                        json_data = {   config_no:   config_no,
+                                        config_json: document.getElementById('list_config_edit').innerHTML};
                     const old_button = document.getElementById(item).innerHTML;
                     document.getElementById(item).innerHTML = common.APP_SPINNER;
                     common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 2, json_data, () => {
                         document.getElementById(item).innerHTML = old_button;
                     });
                 }
-            }
-    
+            }    
 };
 const update_record = async (table, 
                              row_element,
@@ -1225,17 +1220,17 @@ const update_record = async (table,
         document.getElementById(button).innerHTML = common.APP_SPINNER;
         switch (table){
             case 'user_account':{
-                json_data = `{"app_role_id": "${parameters.app_role_id}",
-                              "active":"${parameters.active}",
-                              "user_level":"${parameters.user_level}",
-                              "private":"${parameters.private}",
-                              "username":"${parameters.username}",
-                              "bio":"${parameters.bio}",
-                              "email":"${parameters.email}",
-                              "email_unverified":"${parameters.email_unverified}",
-                              "password":"${parameters.password}",
-                              "password_reminder":"${parameters.password_reminder}",
-                              "verification_code":"${parameters.verification_code}"}`;
+                json_data = {   app_role_id:        parameters.app_role_id,
+                                active:             parameters.active,
+                                user_level:         parameters.user_level,
+                                private:            parameters.private,
+                                username:           parameters.username,
+                                bio:                parameters.bio,
+                                email:              parameters.email,
+                                email_unverified:   parameters.email_unverified,
+                                password:           parameters.password,
+                                password_reminder:  parameters.password_reminder,
+                                verification_code:  parameters.verification_code};
                 path = `/user_account/admin/${parameters.id}?`;
                 break;
             }
@@ -1247,19 +1242,19 @@ const update_record = async (table,
                         parameters.enabled=true;
                     }
                 }
-                json_data = `{"app_name": "${parameters.app_name}",
-                              "url": "${parameters.url}",
-                              "logo": "${parameters.logo}",
-                              "enabled": "${parameters.enabled==true?1:0}"}`;
+                json_data = {   app_name:   parameters.app_name,
+                                url:        parameters.url,
+                                logo:       parameters.logo,
+                                enabled:    parameters.enabled==true?1:0};
                 path = `/apps/admin/${parameters.id}?`;
                 break;
             }
             case 'app_parameter':{
-                json_data = `{"app_id": ${parameters.app_id},
-                              "parameter_name":"${parameters.parameter_name}",
-                              "parameter_type_id":"${parameters.parameter_type_id}",
-                              "parameter_value":"${parameters.parameter_value}",
-                              "parameter_comment":"${parameters.parameter_comment}"}`;
+                json_data = {   app_id:             parameters.app_id,
+                                parameter_name:     parameters.parameter_name,
+                                parameter_type_id:  parameters.parameter_type_id,
+                                parameter_value:    parameters.parameter_value,
+                                parameter_comment:  parameters.parameter_comment};
                 path = '/app_parameter/admin?';
                 break;
             }
@@ -2834,7 +2829,7 @@ const show_installation = () =>{
                             common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
                         }
                         else{
-                            const json_data = `{"demo_password": "${document.querySelector('#install_demo_password').value}"}`;
+                            const json_data = {demo_password: document.querySelector('#install_demo_password').value};
                             const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                             document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
                             common.FFB ('DB_API', '/admin/demo?', 'POST', 2, json_data, (err, result) => {

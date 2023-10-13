@@ -689,13 +689,14 @@ const check_input = (text, text_length=100, nodb_message=false) => {
     }
 };
 const get_uservariables = () => {
-    return `"user_language": "${navigator.language}",
-            "user_timezone": "${Intl.DateTimeFormat().resolvedOptions().timeZone}",
-            "user_number_system": "${Intl.NumberFormat().resolvedOptions().numberingSystem}",
-            "user_platform": "${navigator.platform}",
-            "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
-            "client_longitude": "${COMMON_GLOBAL['client_longitude']}",
-            "client_place": "${COMMON_GLOBAL['client_place']}"`;
+    return {    user_language:      navigator.language,
+                user_timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone,
+                user_number_system: Intl.NumberFormat().resolvedOptions().numberingSystem,
+                user_platform:      navigator.platform,
+                client_latitude:    COMMON_GLOBAL['client_latitude'],
+                client_longitude:   COMMON_GLOBAL['client_longitude'],
+                client_place:       COMMON_GLOBAL['client_place']
+            };
 };
 const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
     //colcheck=0 search id
@@ -1578,20 +1579,18 @@ const search_profile = (click_function) => {
             //search using access token with logged in user_account_id
             path = `/user_account/profile/username/searchA?search=${encodeURI(searched_username)}`;
             token = 1;
-            json_data = `{
-                        "user_account_id":${COMMON_GLOBAL['user_account_id']},
-                        "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
-                        "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
-                        }`;
+            json_data = {   user_account_id:    COMMON_GLOBAL['user_account_id'],
+                            client_latitude:    COMMON_GLOBAL['client_latitude'],
+                            client_longitude:   COMMON_GLOBAL['client_longitude']
+                        };
         }
         else{
             //search using data token without logged in user_account_id
             path = `/user_account/profile/username/searchD?search=${encodeURI(searched_username)}`;
             token = 0;
-            json_data = `{
-                        "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
-                        "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
-                        }`;
+            json_data = {   client_latitude:    COMMON_GLOBAL['client_latitude'],
+                            client_longitude:   COMMON_GLOBAL['client_longitude']
+                        };
         }
         FFB ('DB_API', path, 'POST', token, json_data, (err, result) => {
             if (err)
@@ -1657,11 +1656,10 @@ const profile_show = async (user_account_id_other = null, username = null, callB
             path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
         }
         //PROFILE MAIN
-        const json_data =
-            `{
-            "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
-            "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
-            }`;
+        const json_data ={  
+                            client_latitude:    COMMON_GLOBAL['client_latitude'],
+                            client_longitude:   COMMON_GLOBAL['client_longitude']
+                        };
         FFB ('DB_API', path, 'POST', 0, json_data, (err, result) => {
             if (err)
                 return callBack(err,null);
@@ -1728,11 +1726,10 @@ const profile_close = () => {
 };
 const profile_update_stat = async (callBack) => {
     const profile_id = document.getElementById('common_profile_id');
-    const json_data =
-    `{
-        "client_latitude": "${COMMON_GLOBAL['client_latitude']}",
-        "client_longitude": "${COMMON_GLOBAL['client_longitude']}"
-    }`;
+    const json_data ={  
+                        client_latitude:    COMMON_GLOBAL['client_latitude'],
+                        client_longitude:   COMMON_GLOBAL['client_longitude']
+                    };
     //get updated stat for given user
     //to avoid update in stat set searched by same user
     FFB ('DB_API', `/user_account/profile/id/${profile_id.innerHTML}?id=${profile_id.innerHTML}`, 'POST', 0, json_data, (err, result) => {
@@ -1875,13 +1872,12 @@ const user_login = async (username, password, callBack) => {
         show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
         return callBack('ERROR', null);
     }
-
-    const json_data = `{
-                    "app_id": ${COMMON_GLOBAL['app_id']},
-                    "username":"${encodeURI(username)}",
-                    "password":"${encodeURI(password)}",
-                    ${get_uservariables()}
-                 }`;
+    // ES6 object spread operator for user variables
+    const json_data = { app_id:    COMMON_GLOBAL['app_id'],
+                        username:  encodeURI(username),
+                        password:  encodeURI(password),
+                        ...get_uservariables()
+                    };
 
     FFB ('DB_API', '/user_account/login?', 'PUT', 0, json_data, (err, result) => {
         if (err)
@@ -2056,25 +2052,24 @@ const user_update = async () => {
             show_message('ERROR', 20301, null, null);
             return null;
         }
-        json_data = `{ 
-                        "username":"${username}",
-                        "bio":"${bio}",
-                        "private": ${boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)},
-                        "password":"${password}",
-                        "new_password":"${new_password}",
-                        "password_reminder":"${password_reminder}",
-                        "email":"${email}",
-                        "new_email":${new_email==''?null:'"' + new_email + '"'},
-                        "avatar":"${avatar}",
-                        ${get_uservariables()}
-                    }`;
+        json_data = {   username:           username,
+                        bio:                bio,
+                        private:            boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked),
+                        password:           password,
+                        new_password:       new_password,
+                        password_reminder:  password_reminder,
+                        email:              email,
+                        new_email:          new_email==''?null:new_email,
+                        avatar:             avatar,
+                        ...get_uservariables()
+                    };
         path = `/user_account/${COMMON_GLOBAL['user_account_id']}?`;
     } else {
-        json_data = `{"provider_id": "${document.getElementById('common_user_edit_provider_id').innerHTML}",
-                      "username":"${username}",
-                      "bio":"${bio}",
-                      "private":${boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)}
-                     }`;
+        json_data = {   provider_id:    document.getElementById('common_user_edit_provider_id').innerHTML,
+                        username:       username,
+                        bio:            bio,
+                        private:        boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)
+                    };
         path = `/user_account/common/${COMMON_GLOBAL['user_account_id']}?`;
     }
     const old_button = document.getElementById('common_user_edit_btn_user_update').innerHTML;
@@ -2114,14 +2109,13 @@ const user_signup = () => {
         check_input(password_reminder)== false)
         return null;
 
-    const json_data = `{
-                        "username":"${username}",
-                        "password":"${password}",
-                        "password_reminder":"${password_reminder}",
-                        "email":"${email}",
-                        "active":0 ,
-                        ${get_uservariables()}
-                     }`;
+    const json_data = { username:           username,
+                        password:           password,
+                        password_reminder:  password_reminder,
+                        email:              email,
+                        active:             0,
+                        ...get_uservariables()
+                     };
     if (username == '') {
         //"Please enter username"
         show_message('ERROR', 20303, null, null, COMMON_GLOBAL['common_app_id']);
@@ -2186,10 +2180,10 @@ const user_verify_check_input = async (item, nextField, callBack) => {
             document.getElementById('common_user_verify_verification_char6').classList.remove('common_input_error');
 
             //activate user
-            json_data = `{"verification_code":${verification_code},
-                          "verification_type": ${verification_type},
-                          ${get_uservariables()}
-                         }`;
+            json_data = {   verification_code:  verification_code,
+                            verification_type:  verification_type,
+                            ...get_uservariables()
+                        };
             FFB ('DB_API', `/user_account/activate/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 0, json_data, (err, result) => {
                 document.getElementById('common_user_verify_email').innerHTML = old_button;
                 if (err){    
@@ -2277,7 +2271,7 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
     
             const old_button = document.getElementById('common_user_edit_btn_user_delete_account').innerHTML;
             document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
-            const json_data = `{"password":"${password}"}`;
+            const json_data = { password: password};
 
             FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err) => {
                 document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
@@ -2304,14 +2298,14 @@ const user_function = (user_function, callBack) => {
         case 'FOLLOW':
             {
                 path = '/user_account_follow';
-                json_data = '{"user_account_id":' + user_id_profile + '}';
+                json_data = { user_account_id: user_id_profile};
                 check_div = document.getElementById('common_profile_follow');
                 break;
             }
         case 'LIKE':
             {
                 path = '/user_account_like';
-                json_data = '{"user_account_id":' + user_id_profile + '}';
+                json_data = { user_account_id: user_id_profile};
                 check_div = document.getElementById('common_profile_like');
                 break;
             }
@@ -2388,10 +2382,9 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
 };
 const user_forgot = async () => {
     const email = document.getElementById('common_forgot_email').value;
-    const json_data = `{
-                        "email": "${email}",
-                        ${get_uservariables()}
-                     }`;
+    const json_data = { email: email,
+                        ...get_uservariables()
+                    };
     if (check_input(email) == false || email =='')
         return;
     else{
@@ -2416,11 +2409,10 @@ const updatePassword = () => {
     const new_password = document.getElementById('common_user_new_password').value;
     const new_password_confirm = document.getElementById('common_user_new_password_confirm').value;
     const user_new_password_auth = document.getElementById('common_user_new_password_auth').innerHTML;
-    const json_data = `{
-                        "new_password" : "${new_password}",
-                        "auth" : "${user_new_password_auth}",
-                        ${get_uservariables()}
-                     }`;
+    const json_data = { new_password:   new_password,
+                        auth:           user_new_password_auth,
+                        ...get_uservariables()
+                     };
     if (check_input(new_password) == false ||
         check_input(new_password_confirm) == false)
         return;
@@ -2452,12 +2444,12 @@ const updatePassword = () => {
 const user_preference_save = async () => {
     if (COMMON_GLOBAL['user_preference_save']==true && COMMON_GLOBAL['user_account_id'] != ''){
         const json_data =
-        `{
-        "preference_locale": "${document.getElementById('common_user_locale_select').value}",
-        "setting_preference_timezone_id": "${document.getElementById('common_user_timezone_select').options[document.getElementById('common_user_timezone_select').selectedIndex].id}",
-        "setting_preference_direction_id": "${document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id}",
-        "setting_preference_arabic_script_id": "${document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id}"
-        }`;
+            {  
+                preference_locale: document.getElementById('common_user_locale_select').value,
+                setting_preference_timezone_id: document.getElementById('common_user_timezone_select').options[document.getElementById('common_user_timezone_select').selectedIndex].id,
+                setting_preference_direction_id: document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id,
+                setting_preference_arabic_script_id: document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id
+            };
         await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err) => {
             if (err)
                 null;
@@ -2539,18 +2531,17 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                   COMMON_GLOBAL['image_avatar_width'],
                   COMMON_GLOBAL['image_avatar_height']).then((profile_image)=>{
         let json;
-        const json_data =`{
-                            "app_id": ${COMMON_GLOBAL['app_id']},
-                            "active": 1,
-                            "identity_provider_id": ${identity_provider_id},
-                            "provider_id":"${profile_id}",
-                            "provider_first_name":"${profile_first_name}",
-                            "provider_last_name":"${profile_last_name}",
-                            "provider_image":"${window.btoa(profile_image)}",
-                            "provider_image_url":"${profile_image_url}",
-                            "provider_email":"${profile_email}",
-                            ${get_uservariables()}
-                        }`;
+        const json_data ={  app_id:                 COMMON_GLOBAL['app_id'],
+                            active:                 1,
+                            identity_provider_id:   identity_provider_id,
+                            provider_id:            profile_id,
+                            provider_first_name:    profile_first_name,
+                            provider_last_name:     profile_last_name,
+                            provider_image:         window.btoa(profile_image),
+                            provider_image_url:     profile_image_url,
+                            provider_email:         profile_email,
+                            ...get_uservariables()
+                        };
         FFB ('DB_API', `/user_account/provider/${profile_id}?`, 'PUT', 0, json_data, (err, result) => {
             if (err)
                 return callBack(err, null);
@@ -3001,7 +2992,6 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
 /*----------------------- */
 const FFB = async (service, path, method, authorization_type, json_data, callBack) => {
     let status;
-    let headers;
     let authorization;
     let bff_path;
     switch (authorization_type){
@@ -3028,7 +3018,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
         }
         case 3:{
             //admin login authorization post
-            authorization = `Basic ${window.btoa(JSON.parse(json_data).username + ':' + JSON.parse(json_data).password)}`;
+            authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
             json_data = null;
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
             break;
@@ -3041,22 +3031,24 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             break;
         }
     }
-    if (json_data !='' && json_data !=null){
-        headers = {
-                    'Content-Type': 'application/json',
-                    'Authorization': authorization
-                  };
-    }
-    else{
-        headers = {
-                    'Authorization': authorization
-                  };
-    }
-    const options = {
+    let options = {};
+    if (json_data ==null)
+        options = {
                     method: method,
-                    headers: headers,
-                    body: json_data
-                  };
+                    headers: {
+                                Authorization: authorization
+                            },
+                    body: null
+                };
+    else
+        options = {
+                method: method,
+                headers: {
+                            'Content-Type': 'application/json',
+                            Authorization: authorization
+                        },
+                body: JSON.stringify(json_data)
+            };
     path += `&lang_code=${COMMON_GLOBAL['user_locale']}`;
     const encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
