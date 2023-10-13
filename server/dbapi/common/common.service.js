@@ -49,7 +49,7 @@ const record_not_found = (res, app_id, lang_code) => {
 						ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
 						20400, 
 						lang_code, (err,results_message)  => {
-							return res.status(404).send(
+							res.status(404).send(
 								err ?? results_message.text
 							);
 						});

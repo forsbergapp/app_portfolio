@@ -1,24 +1,55 @@
+/** @module server/broadcast */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/server.service.js`);
+/**@type{Types.broadcast_connect_list[]} */
 let CONNECTED_CLIENTS = [];
 
+/**
+ * Broadcast client connect
+ * Used by EventSource and leaves connection open
+ * @param {Types.res} res
+ */
 const ClientConnect = (res) => {
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Connection', 'keep-alive');
 };
+/**
+ * Broadcast client close
+ * Used by EventSource and closes connection
+ * @param {Types.res} res
+ * @param {number} client_id
+ */
 const ClientOnClose = (res, client_id) => {
     res.on('close', ()=>{
         CONNECTED_CLIENTS = CONNECTED_CLIENTS.filter(client => client.id !== client_id);
         res.end();
     });
 };
+/**
+ * Broadcast client add
+ * @param {Types.broadcast_connect_list} newClient
+ */
 const ClientAdd = (newClient) => {
     CONNECTED_CLIENTS.push(newClient);
 };
+/**
+ * Broadcast client send
+ * Used by EventSource and closes connection
+ * @param {Types.res} res
+ * @param {string} message
+ * @param {string} message_type
+ */
 const ClientSend = (res, message, message_type) => {
     res.write (`data: ${btoa(`{"broadcast_type"   : "${message_type}", 
                                "broadcast_message": "${ message }"}`)}\n\n`);
     res.flush();
 };
+/**
+ * Broadcast check maintenance
+ */
 const BroadcastCheckMaintenance = () => {
     //start interval if apps are started
     if (ConfigGet('SERVER', 'APP_START')=='1'){
@@ -33,6 +64,15 @@ const BroadcastCheckMaintenance = () => {
         }, ConfigGet('SERVICE_BROADCAST', 'CHECK_INTERVAL'));
     }
 };
+/**
+ * Broadcast client send as system admin
+ * @param {number} app_id
+ * @param {number} client_id
+ * @param {number} client_id_current
+ * @param {string} broadcast_type
+ * @param {string} broadcast_message
+ * @param {Types.callBack} callBack
+ */
 const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
     if (app_id == '' || app_id == 'null')
         app_id = null;
@@ -60,6 +100,15 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
         }
     callBack(null, null);
 };
+/**
+ * Broadcast client send as admin
+ * @param {number} app_id
+ * @param {number} client_id
+ * @param {number} client_id_current
+ * @param {string} broadcast_type
+ * @param {string} broadcast_message
+ * @param {Types.callBack} callBack
+ */
 const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
     if (app_id == '' || app_id == 'null')
         app_id = null;
@@ -85,6 +134,18 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
     
     callBack(null, null);
 };
+/**
+ * Broadcast connected list
+ * @param {number} app_id
+ * @param {number} app_id_select
+ * @param {number} limit
+ * @param {number} year
+ * @param {number} month
+ * @param {string} order_by
+ * @param {string} sort
+ * @param {string} dba
+ * @param {Types.callBack} callBack
+ */
 const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba, callBack) => {
     if (limit == '')
         limit = 0;
@@ -97,7 +158,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     const db_ok = ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
     //filter    
-    
+    /**@type{Types.broadcast_connect_list[]} */
     let connected_clients_no_res =[];
     for (const client of CONNECTED_CLIENTS)
         //return keys without response
@@ -120,8 +181,12 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
         (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
          parseInt(client.connection_date.substring(5,7)) == parseInt(month));
     });
+    /**
+     * Sort
+     * @param {string|null} sort
+     */
     const sort_and_return = (sort) =>{
-        let order_by_num;
+        let order_by_num = 0;
         if (order_by =='asc')
             order_by_num = 1;
         else   
@@ -161,7 +226,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             let i=0;
             connected_clients_no_res.map(client=>{
                 if (client.system_admin=='0')
-                    getUserRoleAdmin(app_id, client.user_account_id, dba, (err, result_app_role)=>{
+                    getUserRoleAdmin(app_id, client.user_account_id, dba, (/**@type{Types.error}*/err, /**@type{Types.db_UserRoleAdmin}*/result_app_role)=>{
                         if (err)
                             callBack(err, null);
                         else{
@@ -192,6 +257,12 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     else
         callBack(null, null);
 };
+/**
+ * Broadcast connected count
+ * @param {string} identity_provider_id
+ * @param {number} count_logged_in
+ * @param {Types.callBack} callBack
+ */
 const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
     let count_connected=0;
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
@@ -213,8 +284,18 @@ const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
             count_connected = count_connected + 1;
         }
     }
-    return callBack(null, count_connected);
+    callBack(null, count_connected);
 };
+/**
+ * Broadcast connected update
+ * @param {number} client_id
+ * @param {number} user_account_id
+ * @param {number} system_admin
+ * @param {string} identity_provider_id
+ * @param {string} latitude
+ * @param {string} longitude
+ * @param {Types.callBack} callBack
+ */
 const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, latitude, longitude, callBack) => {
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].id==client_id){
@@ -229,6 +310,11 @@ const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_prov
     }
     return callBack(null, null);
 };
+/**
+ * Broadcast check connected
+ * @param {number} user_account_id
+ * @param {Types.callBack} callBack
+ */
 const ConnectedCheck = (user_account_id, callBack) => {
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if (CONNECTED_CLIENTS[i].user_account_id == user_account_id){

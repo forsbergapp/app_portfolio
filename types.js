@@ -1,10 +1,17 @@
 /**
  * Request
  * @typedef {Object} req
+ * @property {object} params
+ * @property {number} params.user_account_id                        - Admin parameter
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
  * @property {string} body.config_no                                - Server parameter
  * @property {config} body.config_json                              - Server parameter
+ * @property {number} body.app_id
+ * @property {number} body.client_id                                - Broadcast parameter
+ * @property {number} body.client_id_current                        - Broadcast parameter
+ * @property {string} body.broadcast_type                           - Broadcast parameter
+ * @property {string} body.broadcast_message                        - Broadcast parameter
  * @property {string} baseUrl
  * @property {string} hostname
  * @property {string} path
@@ -16,14 +23,25 @@
  * @property {object} params
  * @property {string} params.sub
  * @property {string} params.info
+ * 
  * @property {object} query
  * @property {(string|number|*)} query.id
  * @property {(string|number|*)} query.app_id
+ * @property {number} query.select_app_id                           - Admin parameter
+ * @property {number} query.year                                    - Admin parameter
+ * @property {number} query.month                                   - Admin parameter
+ * @property {number} query.limit                                   - Admin parameter
+ * @property {string} query.order_by                                - Admin parameter
+ * @property {string} query.sort                                    - Admin parameter
+ * @property {string} query.count_logged_in                         - Admin parameter
  * @property {(string|number|*)} query.app_user_id
  * @property {(string|number|*)} query.client_id
  * @property {(string|number|*)} query.user_account_id
  * @property {(string|number|*)} query.user_account_logon_user_account_id
  * @property {string} query.lang_code
+ * @property {string} query.authorization                           - EventSource parameter
+ * @property {string} query.latitude                                - Broadcast and geolocation parameter
+ * @property {string} query.longitude                               - Broadcast and geolocation parameter
  * @property {string} query.reportid                                - Report parameter
  * @property {string} query.messagequeque                           - Report parameter
  * @property {string} query.ps                                      - Report parameter
@@ -31,7 +49,7 @@
  * @property {string|*} query.service
  * @property {string|*} query.parameters
  * @property {string} query.parameter                               - Server parameter
- * @property {string} query.system_admin
+ * @property {number|null} query.system_admin
  * @property {string} query.identity_provider_id
  * @property {'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'} query.config_type_no - Server parameter
  * @property {  'SERVER'|
@@ -63,6 +81,8 @@
  * @property {function} setHeader
  * @property {function} removeHeader
  * @property {function} on
+ * @property {function} write
+ * @property {function} flush           - Used for EventSource
  */
 /**
  * Express
@@ -424,6 +444,25 @@
  * Config user parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
  */
+
+/**
+ * Broadcast client
+ * @typedef {object} broadcast_connect_list
+ * @property {number} id
+ * @property {number} app_id
+ * @property {number|string} app_role_icon
+ * @property {number|string} app_role_id
+ * @property {number} user_account_id
+ * @property {number} system_admin
+ * @property {string} user_agent
+ * @property {string} connection_date
+ * @property {string} ip
+ * @property {string} gps_latitude
+ * @property {string} gps_longitude
+ * @property {string} identity_provider_id
+ * @property {res}    response
+ */
+
 /**
  * DB result app
  * @typedef {{app_name:string, url:string}} db_app
@@ -444,11 +483,13 @@
  * DB result setting
  * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_setting
  * USER:
- * DB result check login
+ * DB result Checklogin
  * @typedef {{login:number}} db_Checklogin
- * DB result user app role id
+ * DB result UserAppRoleAdmin
  * @typedef {{app_role_id:number}} db_UserAppRoleAdmin
- * DB result user_profile
+ * DB result UserRoleAdmin
+ * @typedef {{app_role_id:number, icon:string}} db_UserRoleAdmin
+ * DB result ProfileUser
  * @typedef {{  id:string, bio:string, private:number|null, user_level:string, date_created:string, username:string, avatar:string, 
  *              identity_provider_id:string, provider_id:string, provider_first_name:string, provider_last_name:string, provider_image:string, provider_image_url:string,
  *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_ProfileUser
