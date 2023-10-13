@@ -229,12 +229,11 @@ const timetable_translate_settings = async (locale, locale_second) => {
 /* COMMON APP & REPORT    */
 /*----------------------- */
 const updateReportViewStat = (user_setting_id, user_account_id) => {
-    const json_data =`{
-                    "user_account_id":${user_account_id==''?null:user_account_id},
-                    "user_setting_id":${user_setting_id},
-                    "client_longitude": "${common.COMMON_GLOBAL['client_longitude']}",
-                    "client_latitude": "${common.COMMON_GLOBAL['client_latitude']}"
-                    }`;
+    const json_data ={	user_account_id:user_account_id==''?null:user_account_id,
+						user_setting_id:user_setting_id,
+						client_longitude: common.COMMON_GLOBAL['client_longitude'],
+						client_latitude: common.COMMON_GLOBAL['client_latitude']
+                    };
 	common.FFB ('DB_API', '/user_account_app_setting_view?', 'POST', 0, json_data, () => {});
 };
 const getColumnTitles = (transliteration = 0, calendartype, locale, second_locale, first_locale) => {
