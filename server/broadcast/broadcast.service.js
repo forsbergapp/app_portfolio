@@ -8,6 +8,55 @@ const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/
 let CONNECTED_CLIENTS = [];
 
 /**
+ * Broadcast connect
+ * Used by EventSource and leaves connection open
+ * @param {number} app_id
+ * @param {string} identity_provider_id
+ * @param {number} user_account_logon_user_account_id
+ * @param {number} system_admin
+ * @param {string} latitude
+ * @param {string} longitude
+ * @param {string} authorization
+ * @param {string} headers_user_agent
+ * @param {string} ip
+ * @param {Types.res} response
+ */
+const BroadcastConnect = async (app_id, 
+                                identity_provider_id, 
+                                user_account_logon_user_account_id, 
+                                system_admin,
+                                latitude, 
+                                longitude, 
+                                authorization, 
+                                headers_user_agent, 
+                                ip, 
+                                response) =>{
+    const {checkDataToken} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+    if (checkDataToken(authorization)){
+        const client_id = Date.now();
+        ClientConnect(response);
+        ClientOnClose(response, client_id);
+        /**@type{Types.broadcast_connect_list} */
+        const newClient = {
+            id:                     client_id,
+            app_id:                 app_id,
+            user_account_id:        user_account_logon_user_account_id,
+            system_admin:           system_admin,
+            user_agent:             headers_user_agent,
+            connection_date:        new Date().toISOString(),
+            ip:                     ip,
+            gps_latitude:           latitude,
+            gps_longitude:          longitude,
+            identity_provider_id:   identity_provider_id,
+            response:               response
+        };
+        ClientAdd(newClient);
+        ClientSend(response, `{\\"client_id\\": ${client_id}}`, 'CONNECTINFO');
+    }
+    else
+        response.status(401).send('⛔');
+};
+/**
  * Broadcast client connect
  * Used by EventSource and leaves connection open
  * @param {Types.res} res
@@ -323,5 +372,5 @@ const ConnectedCheck = (user_account_id, callBack) => {
     }
     return callBack(null, 0);
 };
-export {ClientConnect, ClientOnClose, ClientAdd, ClientSend, BroadcastCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
+export {BroadcastConnect, ClientConnect, ClientOnClose, ClientAdd, ClientSend, BroadcastCheckMaintenance, BroadcastSendSystemAdmin, BroadcastSendAdmin, 
         ConnectedList, ConnectedCount, ConnectedUpdate, ConnectedCheck};

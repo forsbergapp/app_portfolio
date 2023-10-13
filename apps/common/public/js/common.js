@@ -3026,6 +3026,8 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
         case 4:{
             //broadcast connect authorization
             authorization = `Bearer ${COMMON_GLOBAL['rest_dt']}`;
+            //use query to send authorization since EventSource does not support headers
+            path += `&authorization=${authorization}`;
             json_data = null;
             bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/noauth`;
             break;
@@ -3054,8 +3056,6 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
     url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
     if (service=='BROADCAST' && authorization_type==4){
-        //use query to send authorization since EventSource does not support headers
-        url += `&authorization=${authorization}`;
         callBack(null, new EventSource(url));
     }
     else
