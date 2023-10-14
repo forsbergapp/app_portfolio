@@ -8,482 +8,43 @@ const microservice_circuitbreak = new microservice.CircuitBreaker();
 const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
 
 /**
- * Creates email
- * @async
- * @param {number} app_id                       - Application id
- * @param {Types.email_param_data} data         - Email param data
- * @returns {Promise<Types.email_return_data>}  - Email return data
+ * Get number value from request key
+ * returns number or null for numbers
+ * so undefined and '' are avoided sending arguement to service functions
+ * @param {Types.req_id_number} param
+ * @returns {number|null}
  */
-const createMail = async (app_id, data) =>{
-    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-    return new Promise((resolve, reject) => {
-        /** @type {[string, string][]} */
-        let files= [];
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_HOST;
-        /** @type {string} */
-        let db_SERVICE_MAIL_PORT;
-        /** @type {string} */
-        let db_SERVICE_MAIL_SECURE;
-        /** @type {string} */
-        let db_SERVICE_MAIL_USERNAME;
-        /** @type {string} */
-        let db_SERVICE_MAIL_PASSWORD;
-        //email type 1-4 implemented are emails with verification code
-        if (parseInt(data.emailtype)==1 || 
-            parseInt(data.emailtype)==2 || 
-            parseInt(data.emailtype)==3 ||
-            parseInt(data.emailtype)==4){
-
-            files = [
-                ['MAIL', process.cwd() + '/apps/common/src/mail.html'],
-                ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
-                ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
-            ];
-            render_app_html(app_id, files, null, (err, email)=>{
-                if (err)
-                    reject(err);
-                else{                
-                    getParameters_server(app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Types.db_parameter[]}*/ result)=>{
-                        if (err) {                
-                            reject(err);
-                        }
-                        else{
-                            for (const parameter of result){
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
-
-                                if (parameter.parameter_name=='SERVICE_MAIL_HOST')
-                                    db_SERVICE_MAIL_HOST = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_PORT')
-                                    db_SERVICE_MAIL_PORT = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
-                                    db_SERVICE_MAIL_SECURE = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
-                                    db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
-                                    db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
-                            }
-                            /** @type {string} */
-                            let email_from = '';
-                            switch (parseInt(data.emailtype)){
-                                case 1:{
-                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-                                    break;
-                                }
-                                case 2:{
-                                    email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-                                    break;
-                                }
-                                case 3:{
-                                    email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
-                                    break;
-                                }
-                                case 4:{
-                                    email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-                                    break;
-                                }
-                            }
-                            /** @type {[string, string][]} */
-                            const render_variables = [];
-                            render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
-                            render_variables.push(['Verification_code',data.verificationCode]);
-                            render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
-
-                            resolve ({
-                                'email_host':         db_SERVICE_MAIL_HOST,
-                                'email_port':         db_SERVICE_MAIL_PORT,
-                                'email_secure':       db_SERVICE_MAIL_SECURE,
-                                'email_auth_user':    db_SERVICE_MAIL_USERNAME,
-                                'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
-                                'from':               email_from,
-                                'to':                 data.to,
-                                'subject':            '❂❂❂❂❂❂',
-                                'html':               render_app_with_data( email, render_variables)
-                            });
-                        }
-                    });
-                }
-            });
-        }
-        else
-            reject ('not implemented');
-    });
-};
+ const getNumberValue = param => (param==null||param==undefined||param=='')?null:Number(param);
 
 /**
- * Gets info page with rendered data
- * @async
- * @param {number} app_id       - Application id
- * @param {string} info         - 'privacy_policy', 'disclaimer', 'terms', 'about'
- * @param {string} lang_code    - Locale
- * @param {Types.callBack} callBack   - CallBack with error and success info or null in both info parameter is unknown
+ * Get value from path with query string
+ * @param {string} parameters
+ * @param {string} param
+ * @param {1|null} type     - 1 = number
+ * @returns {string|number|null}
  */
-const getInfo = async (app_id, info, lang_code, callBack) => {
-    /** @type {Types.callBack} callBack */
-    const get_parameters = (app_id, callBack) => {
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`).then(({getApp}) => {
-            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Types.db_app[]}*/result_app)=>{
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
-                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_parameter[]}> }*/result)=>{
-                        //app_parameter table
-                        let db_info_email_policy;
-                        let db_info_email_disclaimer;
-                        let db_info_email_terms;
-                        let db_info_link_policy_url;
-                        let db_info_link_disclaimer_url;
-                        let db_info_link_terms_url;
-                        let db_info_link_about_url;
-                        if (err)
-                            callBack(err, null);
-                        else{
-                            for (const parameter of result){
-                                if (parameter.parameter_name=='INFO_EMAIL_POLICY')
-                                    db_info_email_policy = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
-                                    db_info_email_disclaimer = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_EMAIL_TERMS')
-                                    db_info_email_terms = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
-                                    db_info_link_policy_url = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                                    db_info_link_disclaimer_url = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
-                                    db_info_link_terms_url = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
-                                    db_info_link_about_url = parameter.parameter_value;
-                            }
-                            callBack(null, {app_name: result_app[0].app_name,
-                                            app_url: result_app[0].url,
-                                            info_email_policy: db_info_email_policy,
-                                            info_email_disclaimer: db_info_email_disclaimer,
-                                            info_email_terms: db_info_email_terms,
-                                            info_link_policy_url: db_info_link_policy_url,
-                                            info_link_disclaimer_url: db_info_link_disclaimer_url,
-                                            info_link_terms_url: db_info_link_terms_url,
-                                            info_link_about_url: db_info_link_about_url
-                                            });
-                        }
-                    });
-                });
-            });
-        });
-    };
-    const info_html1 = `<!DOCTYPE html>
-                      <html>
-                        <head>
-                            <meta charset='UTF-8'>
-                            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
-                            <link rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
-                        </head>	
-                        <body >`;
-    const info_html2 = `  </body>
-                      </html>`;
-    /** @type {[string, string][]} */
-    const render_variables = [];
-    const fs = await import('node:fs');
-    if (info=='privacy_policy'||info=='disclaimer'||info=='terms'||info=='about' )
-        get_parameters(app_id, (/** @type {string}*/ err, /** @type{Types.info_page_data}*/ result)=>{
-            switch (info){
-                case 'privacy_policy':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_policy_url}.html`, 'utf8', ( error, fileBuffer) => {
-                        const infopage = fileBuffer.toString();
-                        render_variables.push(['APPNAME1', result.app_name ]);
-                        render_variables.push(['APPNAME2', result.app_name ]);
-                        render_variables.push(['APPURL_HREF', result.app_url ]);
-                        render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
-                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_policy ]);
-                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_policy ]);
-                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
-                    });
-                    break;
-                }
-                case 'disclaimer':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
-                        const infopage = fileBuffer.toString();
-                        render_variables.push(['APPNAME1', result.app_name ]);
-                        render_variables.push(['APPNAME2', result.app_name ]);
-                        render_variables.push(['APPNAME3', result.app_name ]);
-                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_disclaimer ]);
-                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_disclaimer ]);
-                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
-                    });
-                    break;
-                }
-                case 'terms':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
-                        const infopage = fileBuffer.toString();
-                        render_variables.push(['APPNAME', result.app_name ]);
-                        render_variables.push(['APPURL_HREF', result.app_url ]);
-                        render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
-                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_terms ]);
-                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_terms ]);
-                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
-                    });
-                    break;
-                }
-                case 'about':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
-                        callBack(null, info_html1 + fileBuffer.toString() + info_html2);
-                    });
-                    break;
-                }
-            }
-        });
-    else
-        callBack(null, null);
-};
-/**
- * Creates app that performs these tasks:
- * 1. Creates data token
- * 2. Gets geodata for given ip adress
- * 3. Creates admin app, app with translation objects or report
- * 4. gets parameters for module
- * 5. logs in app log table if database is available
- * @async
- * @param {number} app_id                           - Application id
- * @param {Types.module_config} module_config       - Object with module configuration parameters
- * @param {Types.callBack} callBack                 - CallBack with error and success info
- */
-const callCreateApp = async (app_id, module_config, callBack) =>{
-    //Data token
-    const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-    const datatoken = CreateDataToken(app_id);
-    //get GPS from IP
-    const result_gps = await BFF(app_id, 'GEOLOCATION', `/ip?ip=${module_config.ip}`, module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
-    .catch(error=>
-        callBack(error, null)
-    );
-    const result_geodata = {};
-    if (result_gps){
-        result_geodata.latitude = JSON.parse(result_gps).geoplugin_latitude;
-        result_geodata.longitude = JSON.parse(result_gps).geoplugin_longitude;
-        result_geodata.place =  JSON.parse(result_gps).geoplugin_city + ', ' +
-                                JSON.parse(result_gps).geoplugin_regionName + ', ' +
-                                JSON.parse(result_gps).geoplugin_countryName;
-    }
+ const get_query_value = (parameters, param, type=null) => {
+    const query_parameters = parameters.split('?')[1].split('&');
+    const value_row = query_parameters.filter(query=>query.toLowerCase().startsWith(param));
+    if (value_row.length == 0)
+        return null;
     else{
-        const result_city = await BFF(app_id, 'WORLDCITIES', '/city/random?', module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
-        result_geodata.latitude = JSON.parse(result_city).lat;
-        result_geodata.longitude = JSON.parse(result_city).lng;
-        result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
-    }
-    /** @type {number} */
-    let system_admin_only;
-    /** @type {string} */
-    let app_module_type;
-    /** @type {Types.app_create} */
-    let app;
-    let config_map;
-    /** @type {Types.map_styles} */
-    let config_map_styles;
-    let config_ui;
-
-    if (app_id == 0 && module_config.module_type=='APP'){
-        //get app admin
-        const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
-        app = await createAdmin(app_id, client_locale(module_config.accept_language));
-        if (ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
-            system_admin_only = 0;
-        }
-        else{
-            system_admin_only = 1;
-        }
-        app_module_type = 'ADMIN';
-        config_map = app.map;
-        config_map_styles = app.map_styles;
-        config_ui = true;
-    }
-    else{
-        system_admin_only = 0;
-        if (module_config.module_type=='APP'){
-            const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
-            app = await createApp(app_id, module_config.params, client_locale(module_config.accept_language));
-            if (app.app == null)
-                return callBack(null, null);
-            app_module_type = 'APP';
-            config_map = app.map;
-            config_map_styles = app.map_styles;
-            config_ui = true;
-            //get translation data
-            const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
-
-            const callGetObjects = async () =>{
-                return new Promise((resolve)=>{
-                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_app_object_item[]}*/ result_objects) => {
-                        /**@type {[string, string][]} */
-                        const render_variables = [];
-                        for (const row of result_objects){
-                            render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
-                        }
-                        app.app = render_app_with_data(app.app, render_variables);
-                        resolve(app.app);
-                    });
-                });
-            };
-            await callGetObjects();
-        }
-        else{
-            const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
-            app = await createReport(app_id, module_config.params, client_locale(module_config.accept_language));
-            app_module_type = 'REPORT';
-            config_map = false;
-            config_map_styles = null;
-            config_ui = false;
-        }
-    }
-    get_module_with_init({  app_id: app_id, 
-                            locale: client_locale(module_config.accept_language),
-                            system_admin_only:system_admin_only,
-                            map:config_map, 
-                            map_styles: config_map_styles,
-                            ui:config_ui,
-                            datatoken:datatoken,
-                            latitude:result_geodata.latitude,
-                            longitude:result_geodata.longitude,
-                            place:result_geodata.place,
-                            module:app.app}, (err, app_with_init) =>{
-        //if app admin then log, system does not log in database
-        if (ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
-                createLog(app_id,
-                        { app_id : app_id,
-                            app_module : 'APPS',
-                            app_module_type : app_module_type,
-                            app_module_request : null,
-                            app_module_result : result_geodata.place,
-                            app_user_id : null,
-                            user_language : null,
-                            user_timezone : null,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : module_config.ip,
-                            server_user_agent : module_config.user_agent,
-                            server_http_host : module_config.host,
-                            server_http_accept_language : module_config.accept_language,
-                            client_latitude : result_geodata.latitude,
-                            client_longitude : result_geodata.longitude
-                        }, ()  => {
-                            return callBack(null, app_with_init);
-                });
-            });
-        else
-            return callBack(null, app_with_init);
-    });
-};
-/**
- * Gets app if app is ok to start or return maintenance, if app is admin then get admin app
- * @param {Types.req_app_parameters} req    - Request
- * @param {number} app_id                   - application id
- * @param {string|null} params              - parameter in url
- * @param {Types.callBack} callBack         - CallBack with error and success info
- */
-const getApp = (req, app_id, params, callBack) => {
-    if (apps_start_ok() ==true || app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID')){  
-        callCreateApp(app_id, {	module_type:'APP', 
-                                params:params, 
-                                ip:req.ip,
-                                method:req.method,
-                                user_agent: req.headers_user_agent,
-                                accept_language: req.accept_language,
-                                host: req.host,
-                                body: req.body
-                                }, (err, app) =>{
-            if (err)
-                callBack(null, null);
+        if (type==1){
+            //Number
+            if (value_row[0].split('=')[1]=='')
+                return null;
             else
-                callBack(null, app);
-        });
-    }
-    else
-        getMaintenance(app_id).then((result_maintenance) => {
-            callBack(null, result_maintenance);
-        });
-};
-/**
- * Creates report that performs these tasks:
- * 1. Checks if ok to get report or return maintenance
- * 2. Fetches papersize and margin parameters from encoded parameter
- * 3. If PDF then PUBLISH to message queue else get report
- * @async
- * @param {Types.req_report_parameters} req - Request
- * @param {number} app_id                   - application id
- * @param {Types.callBack} callBack         - CallBack with error and success info
- */
-const getReport = async (req, app_id, callBack) => {
-    if (apps_start_ok() ==true){
-        const decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
-        //example string:
-        //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
-        
-        let query_parameters = '{';
-        decodedparameters.split('&').forEach((parameter, index)=>{
-            query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
-            if (index < decodedparameters.split('&').length - 1)
-                query_parameters += ',';
-        });
-        query_parameters += '}';
-        /** @type {Types.report_query_parameters}*/
-        const query_parameters_obj = JSON.parse(query_parameters);
-    
-        req.query.ps = query_parameters_obj.ps; //papersize     A4/Letter
-        req.query.hf = query_parameters_obj.hf; //header/footer 1/0
-    
-        if (query_parameters_obj.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == 'undefined' ){
-            //PDF
-            req.query.service ='PDF';
-            const url = `${req.protocol}://${req.headers.host}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
-            //call message queue
-            const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
-            MessageQueue('PDF', 'PUBLISH', {url:url, ps:req.query.ps, hf:(req.query.hf==1)}, null)
-                .then((/**@type{string}*/pdf)=>{
-                    callBack(null, pdf);
-                })
-                .catch((/**@type{string}*/error)=>{
-                    callBack(error, null);
-                });
+                return Number(value_row[0].split('=')[1]);
         }
-        else{
-            callCreateApp(app_id, {	module_type:'REPORT', 
-                                    params:query_parameters_obj.module, 
-                                    ip:req.ip,
-                                    method:req.method,
-                                    user_agent: req.headers['user-agent'],
-                                    accept_language: req.headers['accept-language'],
-                                    host: req.headers.host,
-                                    body: req.body
-                                    }, (err, report)=>{
-                if (err)
-                    callBack(null, null);
-                else
-                    callBack(null, report);
-            });
-        }
-    }
-    else
-        getMaintenance(app_id).then((result_maintenance) => {
-            callBack(null, result_maintenance);
-        });
+        else
+            return value_row[0].split('=')[1];
+    }    
 };
 /**
  * Checks if ok to start app
  * @returns {boolean}   - Returns true if MAINTENANCE=0 and START=1 and APP_START=1 and DB[DBUSE]_APP_ADMIN_USER is defined else false
  */
-const apps_start_ok = ()=>{
+ const apps_start_ok = ()=>{
     if (ConfigGetInit('MAINTENANCE')=='0' && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
         ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
         return true;
@@ -524,7 +85,7 @@ const client_locale = (accept_language) =>{
  * @param {(Types.app_config|null)} app_config  - app configuration
  * @param {Types.callBack} callBack             - CallBack with error and app/report html
  */
-const render_app_html = (app_id, files, app_config, callBack) => {
+ const render_app_html = (app_id, files, app_config, callBack) => {
     let i = 0;
     //ES2020 import() with ES6 promises, object destructuring
     import('node:fs').then(({promises: {readFile}}) => {
@@ -885,7 +446,477 @@ const get_module_with_init = async (app_info, callBack) => {
     }        
 };
 
+/**
+ * Creates email
+ * @async
+ * @param {number} app_id                       - Application id
+ * @param {Types.email_param_data} data         - Email param data
+ * @returns {Promise<Types.email_return_data>}  - Email return data
+ */
+const createMail = async (app_id, data) =>{
+    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+    return new Promise((resolve, reject) => {
+        /** @type {[string, string][]} */
+        let files= [];
+        /** @type {string} */
+        let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+        /** @type {string} */
+        let db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+        /** @type {string} */
+        let db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+        /** @type {string} */
+        let db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+        /** @type {string} */
+        let db_SERVICE_MAIL_HOST;
+        /** @type {string} */
+        let db_SERVICE_MAIL_PORT;
+        /** @type {string} */
+        let db_SERVICE_MAIL_SECURE;
+        /** @type {string} */
+        let db_SERVICE_MAIL_USERNAME;
+        /** @type {string} */
+        let db_SERVICE_MAIL_PASSWORD;
+        //email type 1-4 implemented are emails with verification code
+        if (parseInt(data.emailtype)==1 || 
+            parseInt(data.emailtype)==2 || 
+            parseInt(data.emailtype)==3 ||
+            parseInt(data.emailtype)==4){
 
+            files = [
+                ['MAIL', process.cwd() + '/apps/common/src/mail.html'],
+                ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
+                ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
+            ];
+            render_app_html(app_id, files, null, (err, email)=>{
+                if (err)
+                    reject(err);
+                else{                
+                    getParameters_server(app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Types.db_parameter[]}*/ result)=>{
+                        if (err) {                
+                            reject(err);
+                        }
+                        else{
+                            for (const parameter of result){
+                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
+                                    db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
+
+                                if (parameter.parameter_name=='SERVICE_MAIL_HOST')
+                                    db_SERVICE_MAIL_HOST = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_PORT')
+                                    db_SERVICE_MAIL_PORT = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
+                                    db_SERVICE_MAIL_SECURE = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
+                                    db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
+                                if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
+                                    db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
+                            }
+                            /** @type {string} */
+                            let email_from = '';
+                            switch (parseInt(data.emailtype)){
+                                case 1:{
+                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                    break;
+                                }
+                                case 2:{
+                                    email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+                                    break;
+                                }
+                                case 3:{
+                                    email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+                                    break;
+                                }
+                                case 4:{
+                                    email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+                                    break;
+                                }
+                            }
+                            /** @type {[string, string][]} */
+                            const render_variables = [];
+                            render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
+                            render_variables.push(['Verification_code',data.verificationCode]);
+                            render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
+
+                            resolve ({
+                                'email_host':         db_SERVICE_MAIL_HOST,
+                                'email_port':         db_SERVICE_MAIL_PORT,
+                                'email_secure':       db_SERVICE_MAIL_SECURE,
+                                'email_auth_user':    db_SERVICE_MAIL_USERNAME,
+                                'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
+                                'from':               email_from,
+                                'to':                 data.to,
+                                'subject':            '❂❂❂❂❂❂',
+                                'html':               render_app_with_data( email, render_variables)
+                            });
+                        }
+                    });
+                }
+            });
+        }
+        else
+            reject ('not implemented');
+    });
+};
+
+/**
+ * Gets info page with rendered data
+ * @async
+ * @param {number} app_id       - Application id
+ * @param {string} info         - 'privacy_policy', 'disclaimer', 'terms', 'about'
+ * @param {string} lang_code    - Locale
+ * @param {Types.callBack} callBack   - CallBack with error and success info or null in both info parameter is unknown
+ */
+const getInfo = async (app_id, info, lang_code, callBack) => {
+    /** @type {Types.callBack} callBack */
+    const get_parameters = (app_id, callBack) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`).then(({getApp}) => {
+            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Types.db_app[]}*/result_app)=>{
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
+                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_parameter[]}> }*/result)=>{
+                        //app_parameter table
+                        let db_info_email_policy;
+                        let db_info_email_disclaimer;
+                        let db_info_email_terms;
+                        let db_info_link_policy_url;
+                        let db_info_link_disclaimer_url;
+                        let db_info_link_terms_url;
+                        let db_info_link_about_url;
+                        if (err)
+                            callBack(err, null);
+                        else{
+                            for (const parameter of result){
+                                if (parameter.parameter_name=='INFO_EMAIL_POLICY')
+                                    db_info_email_policy = parameter.parameter_value;
+                                if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
+                                    db_info_email_disclaimer = parameter.parameter_value;
+                                if (parameter.parameter_name=='INFO_EMAIL_TERMS')
+                                    db_info_email_terms = parameter.parameter_value;
+                                if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
+                                    db_info_link_policy_url = parameter.parameter_value;
+                                if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                                    db_info_link_disclaimer_url = parameter.parameter_value;
+                                if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
+                                    db_info_link_terms_url = parameter.parameter_value;
+                                if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
+                                    db_info_link_about_url = parameter.parameter_value;
+                            }
+                            callBack(null, {app_name: result_app[0].app_name,
+                                            app_url: result_app[0].url,
+                                            info_email_policy: db_info_email_policy,
+                                            info_email_disclaimer: db_info_email_disclaimer,
+                                            info_email_terms: db_info_email_terms,
+                                            info_link_policy_url: db_info_link_policy_url,
+                                            info_link_disclaimer_url: db_info_link_disclaimer_url,
+                                            info_link_terms_url: db_info_link_terms_url,
+                                            info_link_about_url: db_info_link_about_url
+                                            });
+                        }
+                    });
+                });
+            });
+        });
+    };
+    const info_html1 = `<!DOCTYPE html>
+                      <html>
+                        <head>
+                            <meta charset='UTF-8'>
+                            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+                            <link rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
+                        </head>	
+                        <body >`;
+    const info_html2 = `  </body>
+                      </html>`;
+    /** @type {[string, string][]} */
+    const render_variables = [];
+    const fs = await import('node:fs');
+    if (info=='privacy_policy'||info=='disclaimer'||info=='terms'||info=='about' )
+        get_parameters(app_id, (/** @type {string}*/ err, /** @type{Types.info_page_data}*/ result)=>{
+            switch (info){
+                case 'privacy_policy':{
+                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_policy_url}.html`, 'utf8', ( error, fileBuffer) => {
+                        const infopage = fileBuffer.toString();
+                        render_variables.push(['APPNAME1', result.app_name ]);
+                        render_variables.push(['APPNAME2', result.app_name ]);
+                        render_variables.push(['APPURL_HREF', result.app_url ]);
+                        render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
+                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_policy ]);
+                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_policy ]);
+                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
+                    });
+                    break;
+                }
+                case 'disclaimer':{
+                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
+                        const infopage = fileBuffer.toString();
+                        render_variables.push(['APPNAME1', result.app_name ]);
+                        render_variables.push(['APPNAME2', result.app_name ]);
+                        render_variables.push(['APPNAME3', result.app_name ]);
+                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_disclaimer ]);
+                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_disclaimer ]);
+                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
+                    });
+                    break;
+                }
+                case 'terms':{
+                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
+                        const infopage = fileBuffer.toString();
+                        render_variables.push(['APPNAME', result.app_name ]);
+                        render_variables.push(['APPURL_HREF', result.app_url ]);
+                        render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
+                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_terms ]);
+                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_terms ]);
+                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
+                    });
+                    break;
+                }
+                case 'about':{
+                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
+                        callBack(null, info_html1 + fileBuffer.toString() + info_html2);
+                    });
+                    break;
+                }
+            }
+        });
+    else
+        callBack(null, null);
+};
+/**
+ * Gets modules APP or REPORT that performs these tasks:
+ * 1. Creates data token
+ * 2. Gets geodata for given ip adress
+ * 3. Creates admin app, app with translation objects or report
+ * 4. gets parameters for module
+ * 5. logs in app log table if database is available
+ * @async
+ * @param {number} app_id                           - Application id
+ * @param {Types.module_config} module_config       - Object with module configuration parameters
+ * @param {Types.callBack} callBack                 - CallBack with error and success info
+ */
+const getModule = async (app_id, module_config, callBack) =>{
+    //Data token
+    const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+    const datatoken = CreateDataToken(app_id);
+    //get GPS from IP
+    const result_gps = await BFF(app_id, 'GEOLOCATION', `/ip?ip=${module_config.ip}`, module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
+    .catch(error=>
+        callBack(error, null)
+    );
+    const result_geodata = {};
+    if (result_gps){
+        result_geodata.latitude = JSON.parse(result_gps).geoplugin_latitude;
+        result_geodata.longitude = JSON.parse(result_gps).geoplugin_longitude;
+        result_geodata.place =  JSON.parse(result_gps).geoplugin_city + ', ' +
+                                JSON.parse(result_gps).geoplugin_regionName + ', ' +
+                                JSON.parse(result_gps).geoplugin_countryName;
+    }
+    else{
+        const result_city = await BFF(app_id, 'WORLDCITIES', '/city/random?', module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
+        result_geodata.latitude = JSON.parse(result_city).lat;
+        result_geodata.longitude = JSON.parse(result_city).lng;
+        result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
+    }
+    /** @type {number} */
+    let system_admin_only;
+    /** @type {string} */
+    let app_module_type;
+    /** @type {Types.app_create} */
+    let app;
+    let config_map;
+    /** @type {Types.map_styles} */
+    let config_map_styles;
+    let config_ui;
+
+    if (app_id == 0 && module_config.module_type=='APP'){
+        //get app admin
+        const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
+        app = await createAdmin(app_id, client_locale(module_config.accept_language));
+        if (ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
+            system_admin_only = 0;
+        }
+        else{
+            system_admin_only = 1;
+        }
+        app_module_type = 'ADMIN';
+        config_map = app.map;
+        config_map_styles = app.map_styles;
+        config_ui = true;
+    }
+    else{
+        system_admin_only = 0;
+        if (module_config.module_type=='APP'){
+            const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
+            app = await createApp(app_id, module_config.params, client_locale(module_config.accept_language));
+            if (app.app == null)
+                return callBack(null, null);
+            app_module_type = 'APP';
+            config_map = app.map;
+            config_map_styles = app.map_styles;
+            config_ui = true;
+            //get translation data
+            const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
+
+            const callGetObjects = async () =>{
+                return new Promise((resolve)=>{
+                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_app_object_item[]}*/ result_objects) => {
+                        /**@type {[string, string][]} */
+                        const render_variables = [];
+                        for (const row of result_objects){
+                            render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
+                        }
+                        app.app = render_app_with_data(app.app, render_variables);
+                        resolve(app.app);
+                    });
+                });
+            };
+            await callGetObjects();
+        }
+        else{
+            const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
+            app = await createReport(app_id, module_config.params, client_locale(module_config.accept_language));
+            app_module_type = 'REPORT';
+            config_map = false;
+            config_map_styles = null;
+            config_ui = false;
+        }
+    }
+    get_module_with_init({  app_id: app_id, 
+                            locale: client_locale(module_config.accept_language),
+                            system_admin_only:system_admin_only,
+                            map:config_map, 
+                            map_styles: config_map_styles,
+                            ui:config_ui,
+                            datatoken:datatoken,
+                            latitude:result_geodata.latitude,
+                            longitude:result_geodata.longitude,
+                            place:result_geodata.place,
+                            module:app.app}, (err, app_with_init) =>{
+        //if app admin then log, system does not log in database
+        if (ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
+                createLog(app_id,
+                        { app_id : app_id,
+                            app_module : 'APPS',
+                            app_module_type : app_module_type,
+                            app_module_request : null,
+                            app_module_result : result_geodata.place,
+                            app_user_id : null,
+                            user_language : null,
+                            user_timezone : null,
+                            user_number_system : null,
+                            user_platform : null,
+                            server_remote_addr : module_config.ip,
+                            server_user_agent : module_config.user_agent,
+                            server_http_host : module_config.host,
+                            server_http_accept_language : module_config.accept_language,
+                            client_latitude : result_geodata.latitude,
+                            client_longitude : result_geodata.longitude
+                        }, ()  => {
+                            return callBack(null, app_with_init);
+                });
+            });
+        else
+            return callBack(null, app_with_init);
+    });
+};
+/**
+ * Gets app if app is ok to start or return maintenance, if app is admin then get admin app
+ * @param {Types.req_app_parameters} req    - Request
+ * @param {number} app_id                   - application id
+ * @param {string|null} params              - parameter in url
+ * @param {Types.callBack} callBack         - CallBack with error and success info
+ */
+const getApp = (req, app_id, params, callBack) => {
+    if (apps_start_ok() ==true || app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID')){  
+        getModule(app_id, {	module_type:'APP', 
+                            params:params, 
+                            ip:req.ip,
+                            method:req.method,
+                            user_agent: req.headers_user_agent,
+                            accept_language: req.headers_accept_language,
+                            host: req.headers_host,
+                            body: req.body
+                            }, (err, app) =>{
+            if (err)
+                callBack(null, null);
+            else
+                callBack(null, app);
+        });
+    }
+    else
+        getMaintenance(app_id).then((result_maintenance) => {
+            callBack(null, result_maintenance);
+        });
+};
+/**
+ * Creates report that performs these tasks:
+ * 1. Checks if ok to get report or return maintenance
+ * 2. Fetches papersize and margin parameters from encoded parameter
+ * 3. If PDF then PUBLISH to message queue else get report
+ * @async
+ * @param {Types.req_report_parameters} req - Request
+ * @param {number} app_id                   - application id
+ * @param {Types.callBack} callBack         - CallBack with error and success info
+ */
+const getReport = async (req, app_id, callBack) => {
+    if (apps_start_ok() ==true){
+        const decodedparameters = Buffer.from(req.reportid, 'base64').toString('utf-8');
+        //example string:
+        //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
+        
+        let query_parameters = '{';
+        decodedparameters.split('&').forEach((parameter, index)=>{
+            query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
+            if (index < decodedparameters.split('&').length - 1)
+                query_parameters += ',';
+        });
+        query_parameters += '}';
+        /** @type {Types.report_query_parameters}*/
+        const query_parameters_obj = JSON.parse(query_parameters);
+    
+        const ps = query_parameters_obj.ps; //papersize     A4/Letter
+        const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
+    
+        if (query_parameters_obj.format.toUpperCase() == 'PDF' && typeof req.messagequeue == 'undefined' ){
+            //PDF
+            const url = `${req.protocol}://${req.headers_host}/reports?ps=${req.ps}&hf=${req.hf}&reportid=${req.reportid}&messagequeue=1`;
+            //call message queue
+            const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
+            MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
+                .then((/**@type{string}*/pdf)=>{
+                    callBack(null, pdf);
+                })
+                .catch((/**@type{string}*/error)=>{
+                    callBack(error, null);
+                });
+        }
+        else{
+            getModule(app_id, {	module_type:'REPORT', 
+                                params:query_parameters_obj.module, 
+                                ip:req.ip,
+                                method:req.method,
+                                user_agent: req.headers_user_agent,
+                                accept_language: req.headers_accept_language,
+                                host: req.headers_host,
+                                body: req.body
+                                }, (err, report)=>{
+                if (err)
+                    callBack(null, null);
+                else
+                    callBack(null, report);
+            });
+        }
+    }
+    else
+        getMaintenance(app_id).then((result_maintenance) => {
+            callBack(null, result_maintenance);
+        });
+};
 /**
  * Gets module maintenance
  * 
@@ -950,7 +981,7 @@ const providers_buttons = async (app_id) =>{
 /**
  * Backend for frontend BFF
  * @async
- * @param {number} app_id
+ * @param {Types.req_id_number} app_id
  * @param {string} service
  * @param {string} parameters
  * @param {string} ip
@@ -990,36 +1021,13 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                             //this is used for EventSource that needs to leave connection open
                             // ex path and query parameters: 
                             ///broadcast/connection/connect?identity_provider_id=&system_admin=null&&latitude=[...]&longitude=[...]&lang_code=en
-                            const query_parameters = parameters.split('?')[1].split('&');
-                            /**
-                             * 
-                             * @param {string} param
-                             * @param {1|null} type
-                             * @returns {string|number|null}
-                             */
-                            const get_query_value = (param, type=null) => {
-                                const value_row = query_parameters.filter(query=>query.toLowerCase().startsWith(param));
-                                if (value_row.length == 0)
-                                    return null;
-                                else{
-                                    if (type==1){
-                                        //Number
-                                        if (value_row[0].split('=')[1]=='')
-                                            return null;
-                                        else
-                                            return Number(value_row[0].split('=')[1]);
-                                    }
-                                    else
-                                        return value_row[0].split('=')[1];
-                                }    
-                            };     
                             BroadcastConnect(   app_id, 
-                                                get_query_value('identity_provider_id',1),
-                                                get_query_value('user_account_logon_user_account_id',1),
-                                                get_query_value('system_admin',1),
-                                                get_query_value('latitude'),
-                                                get_query_value('longitude'),
-                                                get_query_value('authorization'),
+                                                get_query_value(parameters, 'identity_provider_id',1),
+                                                get_query_value(parameters, 'user_account_logon_user_account_id',1),
+                                                get_query_value(parameters, 'system_admin',1),
+                                                get_query_value(parameters, 'latitude'),
+                                                get_query_value(parameters, 'longitude'),
+                                                get_query_value(parameters, 'authorization'),
                                                 headers_user_agent,
                                                 ip,
                                                 res).then(()=> {
@@ -1133,11 +1141,11 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
             return reject('no internet');
     });
 };
-export {/*APP EMAIL functions*/
+export {/*APP functions */
+        getNumberValue, apps_start_ok, render_app_html,render_app_with_data,
+        /*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */
         getApp, getReport, getInfo,getMaintenance,
-        /*APP functions */
-        apps_start_ok, render_app_html,render_app_with_data,
         /*APP BFF functions*/
         BFF};
