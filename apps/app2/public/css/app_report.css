@@ -208,7 +208,7 @@
 	padding-right: 5px;
 }
 #timetable_day .timetable_day_timetable_footer_row:nth-child(even) div {
-	display: block;
+	display: inline-block;
 	padding-top: 2px;
 	padding-left: 5px;
 	padding-right: 5px;
