@@ -199,7 +199,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
                 return resolve();
             }
         }
-        return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_DB'), ConfigGet('SERVICE_LOG', level_info), log_json_db));
+        return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
     });
 };
 
