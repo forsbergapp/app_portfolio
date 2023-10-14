@@ -46,7 +46,10 @@
  * @property {string} query.latitude                                - Broadcast and geolocation parameter
  * @property {string} query.longitude                               - Broadcast and geolocation parameter
  * @property {string} query.reportid                                - Report parameter
+ * @property {string} query.service                                 - Report parameter
  * @property {string} query.messagequeue                            - Report parameter
+ * @property {string} query.ps                                      - Report parameter
+ * @property {boolean} query.hf                                     - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
  * @property {string} query.parameter                               - Server parameter
@@ -62,6 +65,7 @@
  * @property {{ authorization: string, 
  *              'user-agent': string, 
  *              'accept-language': string, 
+ *              'content-type': string, 
  *              host:string, 
  *              accept:string, 
  *              referer:string,
@@ -73,13 +77,17 @@
  */
 
 /**
+ * Request id
+ * @typedef {string|number|null|undefined} req_id_number
+ */
+/**
  * Request app params
  * @typedef {Object} req_app_parameters
  * @property {string} ip
  * @property {string} method
  * @property {string} headers_user_agent
- * @property {string} accept_language
- * @property {string} host
+ * @property {string} headers_accept_language
+ * @property {string} headers_host
  * @property {object} body
  */
 /**
@@ -87,12 +95,14 @@
  * @typedef {Object} req_report_parameters
  * @property {string} reportid
  * @property {string} messagequeue
+ * @property {string} ps
+ * @property {boolean} hf
  * @property {string} protocol
  * @property {string} ip
  * @property {string} method
  * @property {string} headers_user_agent
- * @property {string} accept_language
- * @property {string} host
+ * @property {string} headers_accept_language
+ * @property {string} headers_host
  * @property {object} body
  */
 /**

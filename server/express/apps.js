@@ -11,27 +11,29 @@ const fs = await import('node:fs');
  * @param {Types.req} req 
  * @returns {Types.req_app_parameters} 
  */
-const req_app_param = req =>{return{    ip:                 req.ip, 
-                                        method:             req.method,
-                                        headers_user_agent: req.headers['user-agent'],
-                                        accept_language:    req.headers['accept-language'],
-                                        host:               req.headers.host,
-                                        body:               req.body};
+const req_app_param = req =>{return{    ip:                     req.ip, 
+                                        method:                 req.method,
+                                        headers_user_agent:     req.headers['user-agent'],
+                                        headers_accept_language:req.headers['accept-language'],
+                                        headers_host:           req.headers.host,
+                                        body:                   req.body};
                             };
 /**
  * Returns parameters for reports
  * @param {Types.req} req 
  * @returns {Types.req_report_parameters} 
  */
-const req_report_param = req =>{return{ reportid:           req.query.reportid, 
-                                        messagequeue:      req.query.messagequeue,
-                                        protocol:           req.protocol,
-                                        ip:                 req.ip,
-                                        method:             req.method,
-                                        headers_user_agent: req.headers['user-agent'],
-                                        accept_language:    req.headers['accept-language'],
-                                        host:               req.headers.host,
-                                        body:               req.body};
+const req_report_param = req =>{return{ reportid:               req.query.reportid, 
+                                        messagequeue:           req.query.messagequeue,
+                                        ps:                     req.query.ps,
+                                        hf:                     req.query.hf,
+                                        protocol:               req.protocol,
+                                        ip:                     req.ip,
+                                        method:                 req.method,
+                                        headers_user_agent:     req.headers['user-agent'],
+                                        headers_accept_language:req.headers['accept-language'],
+                                        headers_host:           req.headers.host,
+                                        body:                   req.body};
                             };
 /**
  * Gets module with application name, app service parameters with optional countries
@@ -105,12 +107,10 @@ const req_report_param = req =>{return{ reportid:           req.query.reportid,
     });
     app.get('/reports',(/** @type{Types.req}*/req, /**@type {Types.res} */ res) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        //no app_id in reports url
-        req.query.app_id = app_id;
         if (app_id == 0)
             res.redirect('/');
         else
-            getReport(req, app_id, (/**@type{Types.error}*/err, /**@type{string}*/report_result)=>{
+            getReport(req_report_param(req), app_id, (/**@type{Types.error}*/err, /**@type{string}*/report_result)=>{
                 //redirect if any error
                 if (err){
                     res.statusCode = 500;
@@ -119,7 +119,7 @@ const req_report_param = req =>{return{ reportid:           req.query.reportid,
                     //res.redirect('/');
                 }
                 else{
-                    if (req.query.service==='PDF'){
+                    if ((req.headers['content-type']) && req.headers['content-type'].startsWith('application/pdf')){
                         res.type('application/pdf');
                         res.send(report_result);
                         //res.end(report_result, 'binary');

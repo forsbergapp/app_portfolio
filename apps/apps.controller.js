@@ -34,11 +34,11 @@ const BFF = (req, res) =>{
             parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`;
         else
             parameters = decodedparameters;
-        service.BFF(req.query.app_id, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
+        service.BFF(service.getNumberValue(req.query.app_id), service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
         .then(result_service => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
                 const log_text = message_queue==true?null:result_service;
-                LogServiceI(req.query.app_id, service_called, parameters, log_text).then(()=>{
+                LogServiceI(service.getNumberValue(req.query.app_id), service_called, parameters, log_text).then(()=>{
                     //message queue saves result there
                     if (parameters.startsWith('/broadcast/connection/connect')){
                         //EventSource requested so no more update of response
@@ -55,7 +55,7 @@ const BFF = (req, res) =>{
         .catch(error => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
                 //log ERROR to module log and to files
-                LogServiceE(req.query.app_id, service_called, parameters, error).then(() => {
+                LogServiceE(service.getNumberValue(req.query.app_id), service_called, parameters, error).then(() => {
                     //return service unavailable and error message
                     res.status(503).send(error);
                 });
