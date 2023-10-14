@@ -46,23 +46,23 @@ const logdate = (date_format) => {
 };
 const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
     return await new Promise((resolve) => {
-        const log_json_server = {logdate:             logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
-                            host:               req.get('host'),
-                            ip:                 req.ip,
-                            requestid:          req.headers['X-Request-Id'],
-                            correlationid:      req.headers['X-Correlation-Id'],
-                            url:                req.originalUrl,
-                            method:             req.method,
-                            statusCode:         statusCode,
-                            statusMessage:      statusMessage,
-                            ['user-agent']:     req.headers['user-agent'], 
-                            ['accept-language']:req.headers['accept-language'], 
-                            referer:            req.headers['referer'],
-                            size_received:      req.socket.bytesRead,
-                            size_sent:          req.socket.bytesWritten,
-                            responsetime:       responsetime,
-                            logtext:            err.status + '-' + err.message
-                        };
+        const log_json_server = {   logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                                    host:               req.headers.host,
+                                    ip:                 req.ip,
+                                    requestid:          req.headers['X-Request-Id'],
+                                    correlationid:      req.headers['X-Correlation-Id'],
+                                    url:                req.originalUrl,
+                                    method:             req.method,
+                                    statusCode:         statusCode,
+                                    statusMessage:      statusMessage,
+                                    ['user-agent']:     req.headers['user-agent'], 
+                                    ['accept-language']:req.headers['accept-language'], 
+                                    referer:            req.headers['referer'],
+                                    size_received:      req.socket.bytesRead,
+                                    size_sent:          req.socket.bytesWritten,
+                                    responsetime:       responsetime,
+                                    logtext:            err.status + '-' + err.message
+                                };
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
     });
 };
@@ -74,23 +74,23 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
         switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
             case '1':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
-                log_json_server = {logdate: logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
-                                    host:                   req.get('host'),
-                                    ip:                     req.ip,
-                                    requestid:              req.headers['X-Request-Id'],
-                                    correlationid:          req.headers['X-Correlation-Id'],
-                                    url:                    req.originalUrl,
-                                    http_info:              req.protocol + '/' + req.httpVersion,
-                                    method:                 req.method,
-                                    statusCode:             statusCode,
-                                    statusMessage:          statusMessage,
-                                    ['user-agent']:         req.headers['user-agent'], 
-                                    ['accept-language']:    req.headers['accept-language'], 
-                                    referer:                req.headers['referer'],
-                                    size_received:          req.socket.bytesRead,
-                                    size_sent:              req.socket.bytesWritten,
-                                    responsetime:           responsetime,
-                                    logtext:                ''
+                log_json_server = { logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                                    host:               req.headers.host,
+                                    ip:                 req.ip,
+                                    requestid:          req.headers['X-Request-Id'],
+                                    correlationid:      req.headers['X-Correlation-Id'],
+                                    url:                req.originalUrl,
+                                    http_info:          req.protocol + '/' + req.httpVersion,
+                                    method:             req.method,
+                                    statusCode:         statusCode,
+                                    statusMessage:      statusMessage,
+                                    ['user-agent']:     req.headers['user-agent'], 
+                                    ['accept-language']:req.headers['accept-language'], 
+                                    referer:            req.headers['referer'],
+                                    size_received:      req.socket.bytesRead,
+                                    size_sent:          req.socket.bytesWritten,
+                                    responsetime:       responsetime,
+                                    logtext:            ''
                                   };
                 break;
             }
@@ -118,8 +118,8 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
                         logtext.rawHeaders[index] = 'Basic ...';
                 });
                 logtext = 'req:' + JSON.stringify(logtext, getCircularReplacer());
-                log_json_server = {logdate:             logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
-                                    host:               req.get('host'),
+                log_json_server = { logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                                    host:               req.headers.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
                                     correlationid:      req.headers['X-Correlation-Id'],

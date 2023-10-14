@@ -22,6 +22,7 @@
  * @property {string} method
  * @property {function} get
  * @property {string} protocol
+ * @property {string} httpVersion
  * @property {object} params
  * @property {string} params.sub
  * @property {string} params.info
@@ -66,6 +67,9 @@
  *              referer:string,
  *              'X-Request-Id':string,
  *              'X-Correlation-Id':string}} headers
+ * @property {object} socket
+ * @property {string} socket.bytesRead
+ * @property {string} socket.bytesWritten
  */
 
 /**
@@ -91,6 +95,26 @@
  * @property {string} host
  * @property {object} body
  */
+/**
+ * Request log params
+ * @typedef {Object} req_log_parameters
+ * @property {string} host
+ * @property {string} ip
+ * @property {string} protocol
+ * @property {string} httpVersion
+ * @property {string} originalUrl
+ * @property {string} method
+ * @property {object} headers
+ * @property {string} headers['X-Request-Id']
+ * @property {string} headers['X-Correlation-Id']
+ * @property {string} headers['user-agent']
+ * @property {string} headers['accept-language']
+ * @property {string} headers['referer']
+ * @property {object} socket
+ * @property {string} socket.bytesRead
+ * @property {string} socket.bytesWritten
+ */
+
 
 /**
  * Response
