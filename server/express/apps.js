@@ -6,6 +6,7 @@ import * as Types from './../../types.js';
 const {ConfigGet, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {apps_start_ok, getInfo, getApp, getReport, getMaintenance} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const fs = await import('node:fs');
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
  * Returns parameters for apps
  * @param {Types.req} req 
@@ -145,11 +146,11 @@ const req_report_param = req =>{return{ reportid:               req.query.report
     });
     app.get('/:sub',(/** @type{Types.req}*/req, /** @type{Types.res}*/res, /**@type{function}*/next) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        if (ConfigGet('SERVER', 'APP_COMMON_APP_ID') == app_id)
+        if (getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) == app_id)
             return res.redirect('/');
         else
             if (ConfigGetApp(app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
-                getApp(req, app_id, req.params.sub, (/**@type{Types.error}*/err, /**@type{string}*/app_result)=>{
+                getApp(req_app_param(req), app_id, req.params.sub, (/**@type{Types.error}*/err, /**@type{string}*/app_result)=>{
                     //show empty if any error
                     if (err){
                         res.statusCode = 500;

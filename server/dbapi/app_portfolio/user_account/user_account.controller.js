@@ -8,6 +8,7 @@ const { insertUserAccountLogon } = await import(`file://${process.cwd()}/server/
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
 
 const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, 
                              ip, authorization, headers_user_agent, headers_accept_language, callBack) => {
@@ -35,7 +36,7 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
         });
 };
 const getUsersAdmin = (req, res) => {
-    service.getUsersAdmin(req.query.app_id, req.query.search, req.query.sort, req.query.order_by, req.query.offset, req.query.limit, (err, results) => {
+    service.getUsersAdmin(getNumberValue(req.query.app_id), req.query.search, getNumberValue(req.query.sort), getNumberValue(req.query.order_by), getNumberValue(req.query.offset), getNumberValue(req.query.limit), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -49,7 +50,7 @@ const getUsersAdmin = (req, res) => {
     });
 };
 const getStatCountAdmin = (req, res) => {
-    service.getStatCountAdmin(req.query.app_id, (err, results) => {
+    service.getStatCountAdmin(getNumberValue(req.query.app_id), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -64,20 +65,20 @@ const getStatCountAdmin = (req, res) => {
 };
 const checked_error = (app_id, lang_code, err, res) =>{
     import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({ get_app_code }) => {
-        const app_code = get_app_code(err.errorNum, 
-            err.message, 
-            err.code, 
-            err.errno, 
-            err.sqlMessage);
+        const app_code = get_app_code(  err.errorNum, 
+                                        err.message, 
+                                        err.code, 
+                                        err.errno, 
+                                        err.sqlMessage);
         if (app_code != null){
-            getMessage(app_id,
-                ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
-                app_code, 
-                lang_code, (err,results_message)  => {
-                            return res.status(400).send(
-                                err ?? results_message.text
-                            );
-                });
+            getMessage( app_id,
+                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                        app_code, 
+                        lang_code, (err,results_message)  => {
+                                    return res.status(400).send(
+                                        err ?? results_message.text
+                                    );
+                        });
             }
         else
             return res.status(500).send(
@@ -86,16 +87,26 @@ const checked_error = (app_id, lang_code, err, res) =>{
     });
 };
 const updateUserSuperAdmin = (req, res) => {
-    req.params.id = parseInt(req.params.id);
-    service.updateUserSuperAdmin(req.query.app_id, req.params.id, req.body, (err, results) => {
+    const data = {  app_role_id:        getNumberValue(req.body.app_role_id),
+                    active:             getNumberValue(req.body.active),
+                    user_level:         getNumberValue(req.body.user_level),
+                    private:            getNumberValue(req.body.private),
+                    username:           req.body.username,
+                    bio:                req.body.bio,
+                    email:              req.body.email,
+                    email_unverified:   req.body.email_unverified,
+                    password:           req.body.password,
+                    password_reminder:  req.body.password_reminder,
+                    verification_code:  req.body.verification_code};
+    service.updateUserSuperAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data, (err, results) => {
         if (err) {
-            return checked_error(req.query.app_id, req.query.lang_code, err, res);
+            return checked_error(getNumberValue(req.query.app_id), req.query.lang_code, err, res);
         }
         else{
             if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
                 //delete admin app from user if user is not an admin anymore
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-                    deleteUserAccountApps(req.query.app_id, req.params.id, req.query.app_id, (err) =>{
+                    deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.app_id), (err) =>{
                         if (err)
                             return res.status(500).send(
                                 err
@@ -121,8 +132,8 @@ const userSignup = (req, res) => {
         req.body.verification_code = service.verification_code();
     }
     if (service.password_length_wrong(req.body.password))
-        getMessage(req.query.app_id, 
-                    ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
+        getMessage(getNumberValue(req.query.app_id),
+                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
                     20106, 
                     req.query.lang_code, (err,results_message)  => {
                         return res.status(400).send(
@@ -132,16 +143,16 @@ const userSignup = (req, res) => {
     else{
         if (req.body.password)
             req.body.password = hashSync(req.body.password, salt);
-        service.create(req.query.app_id, req.body, (err, results) => {
+        service.create(getNumberValue(req.query.app_id), req.body, (err, results) => {
             if (err) {
-                return checked_error(req.query.app_id, req.query.lang_code, err, res);
+                return checked_error(getNumberValue(req.query.app_id), req.query.lang_code, err, res);
             }
             else{
                 if (req.body.provider_id == null ) {
                     //send email for local users only
-                    getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
+                    getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter_value)=>{
                         //send email SIGNUP
-                        sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.insertId, req.body.verification_code, req.body.email, 
+                        sendUserEmail(getNumberValue(req.query.app_id), parameter_value, req.headers['host'], results.insertId, req.body.verification_code, req.body.email, 
                                       req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                             if (err) {
                                 //return res from userSignup
@@ -151,7 +162,7 @@ const userSignup = (req, res) => {
                             } 
                             else
                                 return res.status(200).json({
-                                    accessToken: accessToken(req.query.app_id),
+                                    accessToken: accessToken(getNumberValue(req.query.app_id)),
                                     id: results.insertId,
                                     data: results
                                 });
@@ -160,7 +171,7 @@ const userSignup = (req, res) => {
                 }
                 else
                     return res.status(200).json({
-                        accessToken: accessToken(req.query.app_id),
+                        accessToken: accessToken(getNumberValue(req.query.app_id)),
                         id: results.insertId,
                         data: results
                     });
@@ -169,24 +180,22 @@ const userSignup = (req, res) => {
     }
 };
 const activateUser = (req, res) => {
-    req.params.id = parseInt(req.params.id);
-    const verification_code_to_check = req.body.verification_code;
     let auth_new_password = null;
-    if (req.body.verification_type == 3){
+    if (getNumberValue(req.body.verification_type) == 3){
         //reset password
         auth_new_password = service.verification_code();
     }
-    service.activateUser(req.query.app_id, req.params.id, req.body.verification_type, verification_code_to_check, auth_new_password, (err, results) => {
+    service.activateUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.body.verification_type), req.body.verification_code, auth_new_password, (err, results) => {
         if (err) {
-            return checked_error(req.query.app_id, req.query.lang_code, err, res);
+            return checked_error(getNumberValue(req.query.app_id), req.query.lang_code, err, res);
         }
         else
             if (auth_new_password == null){
-                if (results.affectedRows==1 && req.body.verification_type==4){
+                if (results.affectedRows==1 && getNumberValue(req.body.verification_type)==4){
                     //new email verified
                     const eventData = {
-                        app_id : req.query.app_id,
-                        user_account_id: req.params.id,
+                        app_id : getNumberValue(req.query.app_id),
+                        user_account_id: getNumberValue(req.params.id),
                         event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                         event_status: 'SUCCESSFUL',
                         user_language: req.body.user_language,
@@ -200,7 +209,7 @@ const activateUser = (req, res) => {
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
                     };
-                    insertUserEvent(req.query.app_id, eventData, (err)=>{
+                    insertUserEvent(getNumberValue(req.query.app_id), eventData, (err)=>{
                         if (err)
                             return res.status(500).send(
                                 err
@@ -225,7 +234,7 @@ const activateUser = (req, res) => {
                 return res.status(200).json({
                     count: results.changedRows,
                     auth: auth_new_password,
-                    accessToken: accessToken(req.query.app_id),
+                    accessToken: accessToken(getNumberValue(req.query.app_id)),
                     items: Array(results)
                 });
             }
@@ -234,7 +243,7 @@ const activateUser = (req, res) => {
 const passwordResetUser = (req, res) => {
     const email = req.body.email ?? '';
     if (email !='')
-        service.getEmailUser(req.query.app_id, email, (err, results) => {
+        service.getEmailUser(getNumberValue(req.query.app_id), email, (err, results) => {
             if (err) {
                 return res.status(500).send(
                     err
@@ -242,7 +251,7 @@ const passwordResetUser = (req, res) => {
             }
             else
                 if (results){
-                    getLastUserEvent(req.query.app_id, results.id, 'PASSWORD_RESET', (err, result_user_event)=>{
+                    getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(results.id), 'PASSWORD_RESET', (err, result_user_event)=>{
                         if (err)
                             return res.status(200).json({
                                 sent: 0
@@ -256,7 +265,7 @@ const passwordResetUser = (req, res) => {
                                 });
                             else{
                                 const eventData = {
-                                    app_id : req.query.app_id,
+                                    app_id : getNumberValue(req.query.app_id),
                                     user_account_id: results.id,
                                     event: 'PASSWORD_RESET',
                                     event_status: 'INPROGRESS',
@@ -271,22 +280,22 @@ const passwordResetUser = (req, res) => {
                                     client_latitude : req.body.client_latitude,
                                     client_longitude : req.body.client_longitude
                                 };
-                                insertUserEvent(req.query.app_id, eventData, (err)=>{
+                                insertUserEvent(getNumberValue(req.query.app_id), eventData, (err)=>{
                                     if (err)
                                         return res.status(200).json({
                                             sent: 0
                                         });
                                     else{
                                         const new_code = service.verification_code();
-                                        service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err) => {
+                                        service.updateUserVerificationCode(getNumberValue(req.query.app_id), results.id, new_code, (err) => {
                                             if (err)
                                                 return res.status(500).send(
                                                     err
                                                 );
                                             else{
-                                                getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
+                                                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter_value)=>{
                                                     //send email PASSWORD_RESET
-                                                    sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, email, 
+                                                    sendUserEmail(getNumberValue(req.query.app_id), parameter_value, req.headers['host'], results.id, new_code, email, 
                                                                   req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                                                         if (err) {
                                                             return res.status(500).send(
@@ -319,8 +328,7 @@ const passwordResetUser = (req, res) => {
     
 };
 const getUserByUserId = (req, res) => {
-    req.params.id = parseInt(req.params.id);
-    service.getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
+    service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -335,40 +343,13 @@ const getUserByUserId = (req, res) => {
             }
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                 });
             }
     });
 };
 const getProfileUser = (req, res) => {
-    if (typeof req.params.id == 'undefined' || req.params.id=='' || req.params.id==null){
-        //searching for username
-        //user not logged in
-        req.params.id = null;
-        req.query.id = null;
-        req.body.user_account_id = null;
-        req.body.user_account_id_view = null;
-    }
-    else
-        if (typeof req.query.search == 'undefined' ||req.query.search=='' ||req.query.search==null){
-            //searching for user id, ignore username search
-            //user logged in
-            req.query.search = null;
-            if (typeof req.query.id=='undefined' ||req.query.id == '' ||req.query.id == null){
-                //user not logged in searching for profile id
-                req.query.id = null;
-            }
-            else{
-                //user logged in searching for profile id
-                req.query.id = parseInt(req.query.id);
-            }
-            req.body.user_account_id = req.query.id;
-            req.body.user_account_id_view = parseInt(req.params.id);
-        }
-    req.body.client_ip = req.ip;
-    req.body.client_user_agent = req.headers['user-agent'];
-
-    service.getProfileUser(req.query.app_id, req.params.id, req.query.search, req.query.id, (err, results) => {
+    service.getProfileUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.params.id)==null?req.query.search:null, getNumberValue(req.query.id), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -376,18 +357,22 @@ const getProfileUser = (req, res) => {
         }
         else{
             if (results){
-                if (results.id == req.query.id) {
+                if (results.id == getNumberValue(req.query.id)) {
                     //send without {} so the variablename is not sent
                     return res.status(200).json(
                         results
                     );
                 }
                 else{
-                    //set user id when username is searched
-                    if (req.body.user_account_id_view==null)
-                        req.body.user_account_id_view = results.id;
                     import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
-                        insertUserAccountView(req.query.app_id, req.body, (err) => {
+                        const data = {  user_account_id:        getNumberValue(req.params.id),
+                                                                //set user id when username is searched
+                                        user_account_id_view:   getNumberValue(req.params.id) ?? results.id,
+                                        client_ip:              req.ip,
+                                        client_user_agent:      req.headers['user-agent'],
+                                        client_longitude:       req.body.client_longitude,
+                                        client_latitude:        req.body.client_latitude};
+                        insertUserAccountView(getNumberValue(req.query.app_id), data, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -405,26 +390,28 @@ const getProfileUser = (req, res) => {
             }
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                 });
             }
         }            
     });
 };
 const searchProfileUser = (req, res) => {
-    const username = req.query.search;
-    service.searchProfileUser(req.query.app_id, username, (err, results) => {
+    service.searchProfileUser(getNumberValue(req.query.app_id), req.query.search, (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
             );
         }
         else{
-            req.body.search = username;
-            req.body.client_ip = req.ip;
-            req.body.client_user_agent = req.headers['user-agent'];
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
-                insertProfileSearch(req.query.app_id, req.body, (err) => {
+                const data = {  user_account_id:    req.body.user_account_id,
+                                search:             req.query.search,
+                                client_ip:          req.ip,
+                                client_user_agent:  req.headers['user-agent'],
+                                client_longitude:   req.body.client_longitude,
+                                client_latitude:    req.body.client_latitude};
+                insertProfileSearch(getNumberValue(req.query.app_id), data, (err) => {
                     if (err) {
                         return res.status(500).send(
                             err
@@ -438,7 +425,7 @@ const searchProfileUser = (req, res) => {
                             });
                         else {
                             import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                return record_not_found(res, req.query.app_id, req.query.lang_code);
+                                return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                             });
                         }
                     }
@@ -448,12 +435,7 @@ const searchProfileUser = (req, res) => {
     });
 };
 const getProfileDetail = (req, res) => {
-    req.params.id = parseInt(req.params.id);
-    let detailchoice;
-    if (typeof req.query.detailchoice !== 'undefined')
-        detailchoice = req.query.detailchoice;
-
-    service.getProfileDetail(req.query.app_id, req.params.id, detailchoice, (err, results) => {
+    service.getProfileDetail(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.detailchoice), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -467,16 +449,14 @@ const getProfileDetail = (req, res) => {
                 });
             else {
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                 });
             }
         }
     });
 };
 const getProfileTop = (req, res) => {
-    if (typeof req.params.statchoice !== 'undefined')
-        req.params.statchoice = parseInt(req.params.statchoice);
-    service.getProfileTop(req.query.app_id, req.params.statchoice, (err, results) => {
+    service.getProfileTop(getNumberValue(req.query.app_id), getNumberValue(req.params.statchoice), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -490,16 +470,15 @@ const getProfileTop = (req, res) => {
                 });
             else {
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                 });
             }                    
         }
     });
 };
 const updateUserLocal = (req, res) => {
-    req.params.id = parseInt(req.params.id);
     const salt = genSaltSync(10);
-    service.checkPassword(req.query.app_id, req.params.id, (err, results) => {
+    service.checkPassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -512,8 +491,8 @@ const updateUserLocal = (req, res) => {
                     if (typeof req.body.new_password !== 'undefined' && 
                         req.body.new_password != '' &&
                         service.password_length_wrong(req.body.new_password))
-                            getMessage( req.query.app_id,
-                                        ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
+                            getMessage( getNumberValue(req.query.app_id),
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                                         20106, 
                                         req.query.lang_code, (err,results_message)  => {
                                                 return res.status(400).send(
@@ -528,16 +507,25 @@ const updateUserLocal = (req, res) => {
                                 req.body.password = hashSync(req.body.password, salt);
                         }
                         const updateLocal = (send_email) => {
-                            service.updateUserLocal(req.query.app_id, req.body, req.params.id, (err, results_update) => {
+                            const data = {  biod:               req.body.bio,
+                                            private:            req.body.private,
+                                            username:           req.body.username,
+                                            password:           req.body.password,
+                                            password_reminder:  req.body.password_reminder,
+                                            email:              req.body.email,
+                                            new_email:          req.body.new_email,
+                                            avatar:             req.body.avatar,
+                                            verification_code:  req.body.verification_code};
+                            service.updateUserLocal(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id), (err, results_update) => {
                                 if (err) {
                                     return checked_error(req.query.app_id, req.query.lang_code, err, res);
                                 }
                                 else{
                                     if (results_update){
                                         if (send_email){
-                                            getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
+                                            getParameter(req.query.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter_value)=>{
                                                 //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                                sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], req.params.id, req.body.verification_code, req.body.new_email, 
+                                                sendUserEmail(getNumberValue(req.query.app_id), parameter_value, req.headers['host'], getNumberValue(req.params.id), req.body.verification_code, req.body.new_email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                                                     if (err) {
                                                         return res.status(500).send(
@@ -558,7 +546,7 @@ const updateUserLocal = (req, res) => {
                                     } 
                                     else{
                                         import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                            return record_not_found(res, req.query.app_id, req.query.lang_code);
+                                            return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                                         });
                                     }
                                 }
@@ -567,7 +555,7 @@ const updateUserLocal = (req, res) => {
                         if (typeof req.body.new_email != 'undefined' && 
                             req.body.new_email!='' &&
                             req.body.new_email!= null)
-                            getLastUserEvent(req.query.app_id, req.params.id, 'EMAIL_VERIFIED_CHANGE_EMAIL', (err, result_user_event)=>{
+                            getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(req.params.id), 'EMAIL_VERIFIED_CHANGE_EMAIL', (err, result_user_event)=>{
                                 if (err)
                                     return res.status(500).json({
                                         err
@@ -577,8 +565,8 @@ const updateUserLocal = (req, res) => {
                                         typeof result_user_event == 'undefined'){
                                         //no change email in progress or older than at least 1 day
                                         const eventData = {
-                                            app_id : req.query.app_id,
-                                            user_account_id: req.params.id,
+                                            app_id : getNumberValue(req.query.app_id),
+                                            user_account_id: getNumberValue(req.params.id),
                                             event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                                             event_status: 'INPROGRESS',
                                             user_language: req.body.user_language,
@@ -592,7 +580,7 @@ const updateUserLocal = (req, res) => {
                                             client_latitude : req.body.client_latitude,
                                             client_longitude : req.body.client_longitude
                                         };
-                                        insertUserEvent(req.query.app_id, eventData, (err)=>{
+                                        insertUserEvent(getNumberValue(req.query.app_id), eventData, (err)=>{
                                             if (err)
                                                 return res.status(500).json({
                                                     err
@@ -613,8 +601,8 @@ const updateUserLocal = (req, res) => {
                 else {
                     res.statusMessage = 'invalid password attempt for user id:' + req.params.id;
                     //invalid password
-                    getMessage(req.query.app_id,
-                                ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
+                    getMessage(getNumberValue(req.query.app_id),
+                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                                 20401, 
                                 req.query.lang_code, (err,results_message)  => {
                                     return res.status(400).send(
@@ -625,8 +613,8 @@ const updateUserLocal = (req, res) => {
             } 
             else {
                 //user not found
-                getMessage( req.query.app_id,
-                            ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
+                getMessage( getNumberValue(req.query.app_id),
+                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                             20305, 
                             req.query.lang_code, (err,results_message)  => {
                                 return res.status(404).send(
@@ -638,10 +626,9 @@ const updateUserLocal = (req, res) => {
     });
 };
 const updatePassword = (req, res) => {
-    req.params.id = parseInt(req.params.id);
     if (service.password_length_wrong(req.body.new_password))
-        getMessage(req.query.app_id,
-                    ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
+        getMessage(getNumberValue(req.query.app_id),
+                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                     20106, 
                     req.query.lang_code, (err,results_message)  => {
                         return res.status(400).send(
@@ -650,16 +637,17 @@ const updatePassword = (req, res) => {
                     });
     else{
         const salt = genSaltSync(10);
-        req.body.new_password = hashSync(req.body.new_password, salt);
-        service.updatePassword(req.query.app_id, req.params.id, req.body, (err, results) => {
+        const data = {  new_password:   hashSync(req.body.new_password, salt),
+                        auth:           req.body.auth};
+        service.updatePassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data, (err, results) => {
             if (err) {
-                return checked_error(req.query.app_id, req.query.lang_code, err, res);
+                return checked_error(getNumberValue(req.query.app_id), req.query.lang_code, err, res);
             }
             else {
                 if (results) {
                     const eventData = {
-                        app_id : req.query.app_id,
-                        user_account_id: req.params.id,
+                        app_id : getNumberValue(req.query.app_id),
+                        user_account_id: getNumberValue(req.params.id),
                         event: 'PASSWORD_RESET',
                         event_status: 'SUCCESSFUL',
                         user_language: req.body.user_language,
@@ -673,7 +661,7 @@ const updatePassword = (req, res) => {
                         client_latitude : req.body.client_latitude,
                         client_longitude : req.body.client_longitude
                     };
-                    insertUserEvent(req.query.app_id, eventData, (err)=>{
+                    insertUserEvent(getNumberValue(req.query.app_id), eventData, (err)=>{
                         if (err)
                             return res.status(200).json({
                                 sent: 0
@@ -686,7 +674,7 @@ const updatePassword = (req, res) => {
                 }
                 else{
                     import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                        return record_not_found(res, req.query.app_id, req.query.lang_code);
+                        return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                     });
                 }
             }
@@ -694,10 +682,12 @@ const updatePassword = (req, res) => {
     }
 };
 const updateUserCommon = (req, res) => {
-    req.params.id = parseInt(req.params.id);
-    service.updateUserCommon(req.query.app_id, req.body, req.params.id, (err, results) => {
+    const data = {  username:   req.body.username,
+                    bio:        req.body.bio,
+                    private:    req.body.private,};
+    service.updateUserCommon(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id), (err, results) => {
         if (err) {
-            return checked_error(req.query.app_id, req.query.lang_code, err, res);
+            return checked_error(getNumberValue(req.query.app_id), req.query.lang_code, err, res);
         }
         else {
             if (results) {
@@ -707,15 +697,14 @@ const updateUserCommon = (req, res) => {
             }
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                 });
             }
         }
     });
 };
 const deleteUser = (req, res) => {
-    req.params.id = parseInt(req.params.id);
-    service.getUserByUserId(req.query.app_id, req.params.id, (err, results) => {
+    service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -724,7 +713,7 @@ const deleteUser = (req, res) => {
         else {
             if (results) {
                 if (results.provider_id !=null){
-                    service.deleteUser(req.query.app_id, req.params.id, (err, results_delete) => {
+                    service.deleteUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results_delete) => {
                         if (err) {
                             return res.status(500).send(
                                 err
@@ -738,14 +727,14 @@ const deleteUser = (req, res) => {
                             }
                             else{
                                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                                 });
                             }
                         }
                     });
                 }
                 else{
-                    service.checkPassword(req.query.app_id, req.params.id, (err, results) => {
+                    service.checkPassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) => {
                         if (err) {
                             return res.status(500).send(
                                 err
@@ -754,7 +743,7 @@ const deleteUser = (req, res) => {
                         else {
                             if (results) {
                                 if (compareSync(req.body.password, results.password)){
-                                    service.deleteUser(req.query.app_id, req.params.id, (err, results_delete) => {
+                                    service.deleteUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results_delete) => {
                                         if (err) {
                                             return res.status(500).send(
                                                 err
@@ -768,7 +757,7 @@ const deleteUser = (req, res) => {
                                             }
                                             else{
                                                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                                    return record_not_found(res, req.query.app_id, req.query.lang_code);
+                                                    return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                                                 });
                                             }
                                         }
@@ -777,20 +766,20 @@ const deleteUser = (req, res) => {
                                 else{
                                     res.statusMessage = 'invalid password attempt for user id:' + req.params.id;
                                     //invalid password
-                                    getMessage(req.query.app_id,
-                                        ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
-                                        20401, 
-                                        req.query.lang_code, (err,results_message)  => {
-                                                return res.status(400).send(
-                                                    err ?? results_message.text
-                                                );
-                                        });
+                                    getMessage( getNumberValue(req.query.app_id),
+                                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                20401, 
+                                                req.query.lang_code, (err,results_message)  => {
+                                                        return res.status(400).send(
+                                                            err ?? results_message.text
+                                                        );
+                                                });
                                 } 
                             }
                             else{
                                 //user not found
-                                getMessage( req.query.app_id,
-                                            ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
+                                getMessage( getNumberValue(req.query.app_id),
+                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                                             20305, 
                                             req.query.lang_code, (err,results_message)  => {
                                                 return res.status(404).send(
@@ -804,8 +793,8 @@ const deleteUser = (req, res) => {
             }
             else{
                 //user not found
-                getMessage(req.query.app_id,
-                            ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
+                getMessage(getNumberValue(req.query.app_id),
+                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                             20305, 
                             req.query.lang_code, (err,results_message)  => {
                                 return res.status(404).send(
@@ -818,37 +807,26 @@ const deleteUser = (req, res) => {
 
 };
 const userLogin = (req, res) => {
-    let result_pw;
-    service.userLogin(req.query.app_id, req.body, (err, results) => {
+    const data =    {   username: req.body.username};
+    service.userLogin(getNumberValue(req.query.app_id), data, (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
             );
         }
         else{
-            req.body.client_ip = req.ip;
-            req.body.client_user_agent = req.headers['user-agent'];
-            if (typeof req.body.client_longitude == 'undefined')
-                req.body.client_longitude = '';
-            if (typeof req.body.client_latitude == 'undefined')
-                req.body.client_latitude = '';
-            if (typeof req.body.client_place == 'undefined')
-                req.body.client_place = '';
             if (results) {
-                req.body.user_account_id = results.id;
-                const result = compareSync(req.body.password, results.password);
-                if (result) {
-                    result_pw = 1;
-                    req.body.result = 1;
-                } else {
-                    result_pw = 0;
-                    req.body.result = 0;
-                }
-                
-                if (result_pw == 1) {
-                    if ((req.query.app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID') && (results.app_role_id == 0 || results.app_role_id == 1))||
-                            req.query.app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                        createUserAccountApp(req.query.app_id, results.id, (err) => {
+                const data = {  user_account_id:    getNumberValue(results.id),
+                                app_id:             getNumberValue(req.body.app_id),
+                                result:             Number(compareSync(req.body.password, results.password)),
+                                client_ip:          req.ip,
+                                client_user_agent:  req.headers['user-agent'],
+                                client_longitude:   req.body.client_longitude ?? null,
+                                client_latitude:    req.body.client_latitude ?? null};
+                if (compareSync(req.body.password, results.password)) {
+                    if ((getNumberValue(req.query.app_id) == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (results.app_role_id == 0 || results.app_role_id == 1))||
+                            getNumberValue(req.query.app_id) != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
+                        createUserAccountApp(getNumberValue(req.query.app_id), results.id, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
@@ -858,7 +836,7 @@ const userLogin = (req, res) => {
                                 //if user not activated then send email with new verification code
                                 const new_code = service.verification_code();
                                 if (results.active == 0){
-                                    service.updateUserVerificationCode(req.query.app_id, results.id, new_code, (err) => {
+                                    service.updateUserVerificationCode(getNumberValue(req.query.app_id), results.id, new_code, (err) => {
                                         if (err)
                                             return res.status(500).send(
                                                 err
@@ -866,7 +844,7 @@ const userLogin = (req, res) => {
                                         else{
                                             getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter_value)=>{
                                                 //send email UNVERIFIED
-                                                sendUserEmail(req.query.app_id, parameter_value, req.headers['host'], results.id, new_code, results.email, 
+                                                sendUserEmail(getNumberValue(req.query.app_id), parameter_value, req.headers['host'], results.id, new_code, results.email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                                                     if (err) {
                                                         return res.status(500).send(
@@ -874,8 +852,8 @@ const userLogin = (req, res) => {
                                                         );
                                                     }
                                                     else{
-                                                        req.body.access_token = accessToken(req.query.app_id);
-                                                        insertUserAccountLogon(req.query.app_id, req.body, (err) => {
+                                                        data.access_token = accessToken(req.query.app_id);
+                                                        insertUserAccountLogon(getNumberValue(req.query.app_id), data, (err) => {
                                                             if (err)
                                                                 return res.status(500).send(
                                                                     err
@@ -883,7 +861,7 @@ const userLogin = (req, res) => {
                                                             else
                                                                 return res.status(200).json({
                                                                     count: Array(results.items).length,
-                                                                    accessToken: req.body.access_token,
+                                                                    accessToken: data.access_token,
                                                                     items: Array(results)
                                                                 });
                                                         });
@@ -894,8 +872,8 @@ const userLogin = (req, res) => {
                                     });
                                 }
                                 else{
-                                    req.body.access_token = accessToken(req.query.app_id);
-                                    insertUserAccountLogon(req.query.app_id, req.body, (err) => {
+                                    data.access_token = accessToken(req.query.app_id);
+                                    insertUserAccountLogon(getNumberValue(req.query.app_id), data, (err) => {
                                         if (err)
                                             return res.status(500).send(
                                                 err
@@ -903,7 +881,7 @@ const userLogin = (req, res) => {
                                         else
                                             return res.status(200).json({
                                                 count: Array(results.items).length,
-                                                accessToken: req.body.access_token,
+                                                accessToken: data.access_token,
                                                 items: Array(results)
                                             });
                                     });
@@ -912,7 +890,7 @@ const userLogin = (req, res) => {
                         });
                     }
                     else{
-                        res.statusMessage = 'unauthorized admin login attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username;
+                        res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(results.id) + ', username:' + req.body.username;
                         //unauthorized, only admin allowed to log in to admin
                         return res.status(401).send(
                             '⛔'
@@ -920,22 +898,22 @@ const userLogin = (req, res) => {
                     }
                     
                 } else {
-                    insertUserAccountLogon(req.query.app_id, req.body, (err) => {
+                    insertUserAccountLogon(getNumberValue(req.query.app_id), data, (err) => {
                         if (err) {
                             return res.status(500).send(
                                 err
                             );
                         }
                         else{
-                            res.statusMessage = 'invalid password attempt for user id:' + req.body.user_account_id + ', username:' + req.body.username;
+                            res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(results.id) + ', username:' + req.body.username;
                             //Username or password not found
-                            getMessage( req.query.app_id,
-                                ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
-                                20300, 
-                                req.query.lang_code, (err,results_message)  => {
-                                        return res.status(400).send(
-                                            err ?? results_message.text
-                                        );
+                            getMessage( getNumberValue(req.query.app_id),
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        20300, 
+                                        req.query.lang_code, (err,results_message)  => {
+                                                return res.status(400).send(
+                                                    err ?? results_message.text
+                                                );
                             });
                         }
                     });
@@ -943,46 +921,56 @@ const userLogin = (req, res) => {
             } else{
                 res.statusMessage = 'user not found:' + req.body.username;
                 //User not found
-                getMessage( req.query.app_id,
-                    ConfigGet('SERVER', 'APP_COMMON_APP_ID'), 
-                    20305, 
-                    req.query.lang_code, (err,results_message)  => {
-                        return res.status(404).send(
-                            err ?? results_message.text
-                        );
+                getMessage( getNumberValue(req.query.app_id),
+                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                            20305, 
+                            req.query.lang_code, (err,results_message)  => {
+                                return res.status(404).send(
+                                    err ?? results_message.text
+                                );
                 });
             }
         }
     });
 };
 const providerSignIn = (req, res) => {
-    req.body.result = 1;
-    req.body.client_ip = req.ip;
-    req.body.client_user_agent = req.headers['user-agent'];
-    req.params.id = parseInt(req.params.id);
-    service.providerSignIn(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
+    service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id), (err, results) => {
         if (err) {
             return res.status(500).send(
                 err
             );
         }
         else{
+            const data_user = { identity_provider_id:   req.body.identity_provider_id,
+                                provider_id:            req.body.provider_id,
+                                provider_first_name:    req.body.provider_first_name,
+                                provider_last_name:     req.body.provider_last_name,
+                                provider_image:         req.body.provider_image,
+                                provider_image_url:     req.body.provider_image_url,
+                                provider_email:         req.body.provider_email};
+            const data_login = {user_account_id:        req.body.user_account_id,
+                                app_id:                 req.body.app_id,
+                                result:                 1,
+                                client_ip:              req.ip,
+                                client_user_agent:      req.headers['user-agent'],
+                                client_longitude:       req.body.client_longitude,
+                                client_latitude:        req.body.client_latitude};
             if (results.length > 0) {
-                service.updateSigninProvider(req.query.app_id, results[0].id, req.body, (err) => {
+                service.updateSigninProvider(getNumberValue(req.query.app_id), results[0].id, data_user, (err) => {
                     if (err) {
-                        return checked_error(req.query.app_id, req.query.lang_code, err, res);
+                        return checked_error(getNumberValue(req.query.app_id), req.query.lang_code, err, res);
                     }
                     else{
-                        req.body.user_account_id = results[0].id;
-                        createUserAccountApp(req.query.app_id, results[0].id, (err) => {
+                        data_login.user_account_id = results[0].id;
+                        createUserAccountApp(getNumberValue(req.query.app_id), results[0].id, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
                                 );
                             }
                             else{
-                                req.body.access_token = accessToken(req.query.app_id);
-                                insertUserAccountLogon(req.query.app_id, req.body, (err) => {
+                                data_login.access_token = accessToken(req.query.app_id);
+                                insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (err) => {
                                     if (err) {
                                         return res.status(500).send(
                                             err
@@ -991,7 +979,7 @@ const providerSignIn = (req, res) => {
                                     else
                                         return res.status(200).json({
                                             count: results.length,
-                                            accessToken: req.body.access_token,
+                                            accessToken: data_login.access_token,
                                             items: results,
                                             userCreated: 0
                                         });
@@ -1004,49 +992,45 @@ const providerSignIn = (req, res) => {
             } else {
                 //if provider user not found then create user and one user setting
                 //avatar not used by providers, set default null
-                if (typeof req.body.avatar == 'undefined')
-                    req.body.avatar = null;
-                //one of the images should be empty, set defaul null
-                if (typeof req.body.provider_image == 'undefined')
-                    req.body.provider_image = null;
-
-                service.create(req.query.app_id, req.body, (err, results_create) => {
+                data_user.avatar = req.body.avatar ?? null;
+                data_user.avatar = req.body.provider_image ?? null;
+                service.create(getNumberValue(req.query.app_id), data_user, (err, results_create) => {
                     if (err) {
                         return res.status(500).send(
                             err
                         );
                     }
                     else{
-                        req.body.user_account_id = results_create.insertId;
-                        createUserAccountApp(req.query.app_id, results_create.insertId, (err) => {
+                        data_login.user_account_id = results_create.insertId;
+                        createUserAccountApp(getNumberValue(req.query.app_id), results_create.insertId, (err) => {
                             if (err) {
                                 return res.status(500).send(
                                     err
                                 );
                             }
                             else{
-                                service.providerSignIn(req.query.app_id, req.body.identity_provider_id, req.params.id, (err, results) => {
+                                service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id), (err, results) => {
                                     if (err) {
                                         return res.status(500).send(
                                             err
                                         );
                                     }
                                     else{
-                                            req.body.access_token = accessToken(req.query.app_id);
-                                            insertUserAccountLogon(req.query.app_id, req.body, (err) => {
-                                                if (err) {
-                                                    return res.status(500).send(
-                                                        err
-                                                    );
-                                                }
-                                                else
-                                                    return res.status(200).json({
-                                                        count: results.length,
-                                                        accessToken: req.body.access_token,
-                                                        items: results,
-                                                        userCreated: 1
-                                                    });
-                                            });
+                                        data_login.access_token = accessToken(getNumberValue(req.query.app_id));
+                                        insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (err) => {
+                                            if (err) {
+                                                return res.status(500).send(
+                                                    err
+                                                );
+                                            }
+                                            else
+                                                return res.status(200).json({
+                                                    count: results.length,
+                                                    accessToken: data_login.access_token,
+                                                    items: results,
+                                                    userCreated: 1
+                                                });
+                                        });
                                     }
                                 });
                             }

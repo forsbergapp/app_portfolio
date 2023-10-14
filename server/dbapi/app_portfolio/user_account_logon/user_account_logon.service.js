@@ -1,8 +1,8 @@
 const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBack) => {
-		if(typeof app_id_select=='undefined' ||app_id_select == '\'\'')
-			app_id_select = null;
 		const sql = `SELECT user_account_id "user_account_id",
 		              app_id "app_id",
 					  result "result",
@@ -47,7 +47,7 @@ const checkLogin = (app_id, user_account_id, access_token, client_ip, callBack) 
 				app_id: app_id,
 				access_token: access_token,
 				client_ip: client_ip,
-				admin_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
+				admin_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 				super_admin_app_role_id: 0,
 				admin_app_role_id: 1
 			};
@@ -72,8 +72,8 @@ const insertUserAccountLogon = (app_id, data, callBack) => {
 						access_token: data.access_token,
 						client_ip: data.client_ip,
 						client_user_agent: data.client_user_agent,
-						client_longitude:  data.client_longitude ?? null,
-						client_latitude:  data.client_latitude ?? null
+						client_longitude:  data.client_longitude,
+						client_latitude:  data.client_latitude
 					};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)

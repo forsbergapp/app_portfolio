@@ -5,18 +5,15 @@ import * as Types from './../../types.js';
 
 const service = await import('./broadcast.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 /**
  * Broadcast send as system admin
  * @param {Types.req} req
  * @param {Types.res} res
  */
 const BroadcastSendSystemAdmin = (req, res) => {
-    if (req.body.app_id)
-        req.body.app_id = parseInt(req.body.app_id);
-    if (req.body.client_id)
-        req.body.client_id = parseInt(req.body.client_id);
-    req.body.client_id_current = parseInt(req.body.client_id_current);
-    service.BroadcastSendSystemAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
+    service.BroadcastSendSystemAdmin(getNumberValue(req.body.app_id), getNumberValue(req.body.client_id), getNumberValue(req.body.client_id_current),
                                         req.body.broadcast_type, req.body.broadcast_message, (/**@type{Types.error}*/err, result) =>{
         res.status(200).send(
             err ?? result
@@ -29,12 +26,7 @@ const BroadcastSendSystemAdmin = (req, res) => {
  * @param {Types.res} res
  */
 const BroadcastSendAdmin = (req, res) => {
-    if (req.body.app_id)
-        req.body.app_id = parseInt(req.body.app_id);
-    if (req.body.client_id)        
-        req.body.client_id = parseInt(req.body.client_id);
-    req.body.client_id_current = parseInt(req.body.client_id_current);
-    service.BroadcastSendAdmin(req.body.app_id, req.body.client_id, req.body.client_id_current,
+    service.BroadcastSendAdmin(getNumberValue(req.body.app_id), getNumberValue(req.body.client_id), getNumberValue(req.body.client_id_current),
                                 req.body.broadcast_type, req.body.broadcast_message, (/**@type{Types.error}*/err, result) =>{
         res.status(200).send(
             err ?? result
@@ -47,7 +39,7 @@ const BroadcastSendAdmin = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedList = (req, res) => {
-    service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
+    service.ConnectedList(getNumberValue(req.query.app_id), getNumberValue(req.query.select_app_id), getNumberValue(req.query.limit), getNumberValue(req.query.year), getNumberValue(req.query.month), 
                             req.query.order_by, req.query.sort, 0, (/**@type{Types.error}*/err, result) => {
         if (err) {
             res.status(500).send({
@@ -61,7 +53,7 @@ const ConnectedList = (req, res) => {
                 });
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    record_not_found(res, req.query.app_id, req.query.lang_code);
+                    record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
                 });
             }
         }
@@ -73,7 +65,7 @@ const ConnectedList = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedListSystemAdmin = (req, res) => {
-    service.ConnectedList(req.query.app_id, req.query.select_app_id, req.query.limit, req.query.year, req.query.month, 
+    service.ConnectedList(getNumberValue(req.query.app_id), getNumberValue(req.query.select_app_id), getNumberValue(req.query.limit), getNumberValue(req.query.year), getNumberValue(req.query.month), 
                             req.query.order_by, req.query.sort,  1, (/**@type{Types.error}*/err, result) => {
         if (err) {
             res.status(500).send({
@@ -99,7 +91,7 @@ const ConnectedListSystemAdmin = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedCount = (req, res) => {
-    service.ConnectedCount(req.query.identity_provider_id, req.query.count_logged_in, (/**@type{Types.error}*/err, count_connected) => {
+    service.ConnectedCount(req.query.identity_provider_id, getNumberValue(req.query.count_logged_in), (/**@type{Types.error}*/err, count_connected) => {
         res.status(200).json({
             data: count_connected
         });
@@ -111,7 +103,7 @@ const ConnectedCount = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedUpdate = (req, res) => {
-    service.ConnectedUpdate(req.query.client_id, req.query.user_account_logon_user_account_id, req.query.system_admin, req.query.identity_provider_id, 
+    service.ConnectedUpdate(getNumberValue(req.query.client_id), getNumberValue(req.query.user_account_logon_user_account_id), getNumberValue(req.query.system_admin), req.query.identity_provider_id, 
                             req.query.latitude, req.query.longitude,
                             (/**@type{Types.error}*/err, result) =>{
         res.status(200).json(
@@ -125,8 +117,7 @@ const ConnectedUpdate = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedCheck = (req, res) => {
-    req.params.user_account_id = parseInt(req.params.user_account_id);
-    service.ConnectedCheck(req.params.user_account_id, (/**@type{Types.error}*/err, result_connected)=>{
+    service.ConnectedCheck(getNumberValue(req.params.user_account_id), (/**@type{Types.error}*/err, result_connected)=>{
         res.status(200).json({
             online: result_connected
         });

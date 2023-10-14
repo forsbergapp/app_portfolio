@@ -5,6 +5,7 @@ import * as Types from './../../types.js';
 
 const service = await import('./auth.service.js');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * Middleware check access token common
@@ -14,7 +15,7 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
  * @returns {Types.res|*}
  */
 const checkAccessTokenCommon = (req, res, next) => {
-    service.checkAccessToken(req.query.app_id, req.query.user_account_logon_user_account_id, req.ip, req.get('authorization'))
+    service.checkAccessToken(getNumberValue(req.query.app_id), getNumberValue(req.query.user_account_logon_user_account_id), req.ip, req.get('authorization'))
     .then(result=>{
         if (result==true)
             next();
@@ -32,7 +33,7 @@ const checkAccessTokenCommon = (req, res, next) => {
 const checkAccessTokenSuperAdmin = (req, res, next) => {
     if (req.query.app_id==0)
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
-            getUserAppRoleAdmin(req.query.app_id, req.query.user_account_logon_user_account_id, (/**@type{Types.error}*/err, /**@type{Types.db_UserAppRoleAdmin[]}*/result)=>{
+            getUserAppRoleAdmin(getNumberValue(req.query.app_id), getNumberValue(req.query.user_account_logon_user_account_id), (/**@type{Types.error}*/err, /**@type{Types.db_UserAppRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){
                     checkAccessTokenCommon(req, res, next);
                 }
@@ -51,7 +52,7 @@ const checkAccessTokenSuperAdmin = (req, res, next) => {
  * @returns {Types.res|*}
  */
 const checkAccessTokenAdmin = (req, res, next) => {
-    if (req.query.app_id==0){
+    if (getNumberValue(req.query.app_id)==0){
         checkAccessTokenCommon(req, res, next);
     }
     else
@@ -82,7 +83,7 @@ const checkAccessToken = (req, res, next) => {
  * @param {function} next
  */
 const checkDataToken = (req, res, next) => {
-    service.checkDataToken(req.query.app_id, req.get('authorization'))
+    service.checkDataToken(getNumberValue(req.query.app_id), req.get('authorization'))
     .then((result)=>{
         if (result==true)
             next();

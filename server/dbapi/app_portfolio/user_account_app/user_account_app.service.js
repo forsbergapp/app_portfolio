@@ -63,10 +63,6 @@ const getUserAccountApp = (app_id, user_account_id, callBack) => {
 		});
 	};
 const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
-		if (data.setting_preference_direction_id=='')
-			data.setting_preference_direction_id = null;
-		if (data.setting_preference_arabic_script_id=='')
-			data.setting_preference_arabic_script_id = null;
 		const sql = `UPDATE ${db_schema()}.user_account_app
 						SET preference_locale = :preference_locale,
 							setting_preference_timezone_id = :setting_preference_timezone_id,

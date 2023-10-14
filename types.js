@@ -55,7 +55,7 @@
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
  * @property {string} query.identity_provider_id
- * @property {'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'} query.config_type_no - Server parameter
+ * @property {0|1|2|3|4|5|6|7} query.config_type_no - Server parameter
  * @property {  'SERVER'|
  *              'SERVICE_AUTH'|
  *              'SERVICE_BROADCAST'|
@@ -262,8 +262,8 @@
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
- * @property {number}       app_sound
- * @property {number}       common_app_id
+ * @property {number|null}  app_sound
+ * @property {number|null}  common_app_id
  * @property {string}       rest_resource_server
  * @property {string}       rest_resource_bff
  * @property {number}       first_time
@@ -361,7 +361,7 @@
 
 /**
  * Config type no
- * @typedef {'0'|'1'|'2'|'3'|'4'|'5'|'6'|'7'} config_type_no
+ * @typedef {0|1|2|3|4|5|6|7} config_type_no
  */
 /**
  * Config group
@@ -509,18 +509,34 @@
  * @typedef {object} broadcast_connect_list
  * @property {number} id
  * @property {number} app_id
- * @property {number|string} app_role_icon
- * @property {number|string} app_role_id
  * @property {number} user_account_id
+ * @property {string} identity_provider_id
  * @property {number} system_admin
- * @property {string} user_agent
  * @property {string} connection_date
- * @property {string} ip
  * @property {string} gps_latitude
  * @property {string} gps_longitude
- * @property {string} identity_provider_id
+ * @property {string} ip
+ * @property {string} user_agent
  * @property {res}    response
  */
+/**
+ * Broadcast client
+ * @typedef {object} broadcast_connect_list_no_res
+ * @property {number} id
+ * @property {number} app_id
+ * @property {number|string} [app_role_icon]
+ * @property {number|string} [app_role_id]
+ * @property {number} user_account_id
+ * @property {string} identity_provider_id
+ * @property {number} system_admin
+ * @property {string} connection_date
+ * @property {string} gps_latitude
+ * @property {string} gps_longitude
+ * @property {string} ip
+ * @property {string} user_agent
+
+ */
+
 
 /**
  * DB result app

@@ -1,7 +1,9 @@
 const service = await import('./admin.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const DBInfo = (req, res) => {
-	service.DBInfo(req.query.app_id, (err, results) =>{
+	service.DBInfo(getNumberValue(req.query.app_id), (err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -13,7 +15,7 @@ const DBInfo = (req, res) => {
 	});	
 };
 const DBInfoSpace = (req, res) => {
-	service.DBInfoSpace(req.query.app_id, (err, results) =>{
+	service.DBInfoSpace(getNumberValue(req.query.app_id), (err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -25,7 +27,7 @@ const DBInfoSpace = (req, res) => {
 	});
 };
 const DBInfoSpaceSum = (req, res) => {
-	service.DBInfoSpaceSum(req.query.app_id, (err, results) =>{
+	service.DBInfoSpaceSum(getNumberValue(req.query.app_id), (err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -37,7 +39,7 @@ const DBInfoSpaceSum = (req, res) => {
 	});
 };
 const demo_add = async (req, res)=> {
-	service.demo_add(req.query.app_id, req.body.demo_password, req.query.lang_code, (err, results) =>{
+	service.demo_add(getNumberValue(req.query.app_id), req.body.demo_password, req.query.lang_code, (err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -47,7 +49,7 @@ const demo_add = async (req, res)=> {
 	});
 };
 const demo_delete = async (req, res)=> {
-	service.demo_delete(req.query.app_id, (err, result_demo_users_length) =>{
+	service.demo_delete(getNumberValue(req.query.app_id), (err, result_demo_users_length) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -59,7 +61,7 @@ const demo_delete = async (req, res)=> {
 	});
 };
 const demo_get = async (req, res)=> {
-	service.demo_get(req.query.app_id, (err, results) =>{
+	service.demo_get(getNumberValue(req.query.app_id), (err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -71,7 +73,7 @@ const demo_get = async (req, res)=> {
 	});
 };
 const install_db = (req, res) =>{
-	service.install_db(req.query.app_id,req.query.optional, (err, results) =>{
+	service.install_db(getNumberValue(req.query.app_id),getNumberValue(req.query.optional), (err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
@@ -81,7 +83,7 @@ const install_db = (req, res) =>{
 	});
 };
 const install_db_check = (req, res) =>{
-	service.install_db_check(req.query.app_id, (err, results) =>{
+	service.install_db_check(getNumberValue(req.query.app_id), (err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
@@ -91,7 +93,7 @@ const install_db_check = (req, res) =>{
 	});
 };
 const install_db_delete = (req, res) =>{
-	service.install_db_delete(req.query.app_id, (err, results) =>{
+	service.install_db_delete(getNumberValue(req.query.app_id), (err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err

@@ -7,14 +7,7 @@ const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`f
 const microservice_circuitbreak = new microservice.CircuitBreaker();
 const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
 
-/**
- * Get number value from request key
- * returns number or null for numbers
- * so undefined and '' are avoided sending arguement to service functions
- * @param {Types.req_id_number} param
- * @returns {number|null}
- */
- const getNumberValue = param => (param==null||param==undefined||param=='')?null:Number(param);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * Get value from path with query string
@@ -399,8 +392,8 @@ const get_module_with_init = async (app_info, callBack) => {
             client_latitude: app_info.latitude,
             client_longitude: app_info.longitude,
             client_place: app_info.place,
-            app_sound: ConfigGet('SERVER', 'APP_SOUND'),
-            common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
+            app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
+            common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
             rest_resource_server: ConfigGet('SERVER', 'REST_RESOURCE_SERVER'),
             rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
             first_time: first_time
@@ -491,7 +484,7 @@ const createMail = async (app_id, data) =>{
                 if (err)
                     reject(err);
                 else{                
-                    getParameters_server(app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'), (/** @type {string}*/ err, /** @type {Types.db_parameter[]}*/ result)=>{
+                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), (/** @type {string}*/ err, /** @type {Types.db_parameter[]}*/ result)=>{
                         if (err) {                
                             reject(err);
                         }
@@ -832,7 +825,7 @@ const getModule = async (app_id, module_config, callBack) =>{
  * @param {Types.callBack} callBack         - CallBack with error and success info
  */
 const getApp = (req, app_id, params, callBack) => {
-    if (apps_start_ok() ==true || app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID')){  
+    if (apps_start_ok() ==true || app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){  
         getModule(app_id, {	module_type:'APP', 
                             params:params, 
                             ip:req.ip,
@@ -1142,7 +1135,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
     });
 };
 export {/*APP functions */
-        getNumberValue, apps_start_ok, render_app_html,render_app_with_data,
+        apps_start_ok, render_app_html,render_app_with_data,
         /*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */

@@ -1,7 +1,9 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
-    if (typeof setting_type_name=='undefined' ||setting_type_name=='' ||setting_type_name==null)
+    if (typeof setting_type_name=='undefined' ||setting_type_name=='')
           setting_type_name = null;
      const sql = `SELECT st.app_id "app_id",
                    st.setting_type_name "setting_type_name",
@@ -40,7 +42,7 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                               lang_code2: get_locale(lang_code, 2),
                               lang_code3: get_locale(lang_code, 3),
                               app_id : app_id,
-                              common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
+                              common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
                               setting_type_name: setting_type_name
                               };
           db_execute(app_id, sql, parameters, null, (err, result)=>{

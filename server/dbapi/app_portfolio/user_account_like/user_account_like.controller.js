@@ -1,9 +1,9 @@
 const service = await import('./user_account_like.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const likeUser = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	const id_like = parseInt(req.body.user_account_id);
-	service.likeUser(req.query.app_id, req.params.id,id_like, (err,results) => {
+	service.likeUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id),getNumberValue(req.body.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -16,9 +16,7 @@ const likeUser = (req, res) => {
 	});
 };
 const unlikeUser = (req, res) => {
-	req.params.id   = parseInt(req.params.id);
-	const id_unlike = parseInt(req.body.user_account_id);
-	service.unlikeUser(req.query.app_id, req.params.id,id_unlike, (err,results) => {
+	service.unlikeUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id),getNumberValue(req.body.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err

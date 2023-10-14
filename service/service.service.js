@@ -2,6 +2,15 @@ const http = await import('node:http');
 const https = await import('node:https');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const fs = await import('node:fs');
+/**
+ * Get number value from request key
+ * returns number or null for numbers
+ * so undefined and '' are avoided sending arguement to service functions
+ * @param {Types.req_id_number} param
+ * @returns {number|null}
+ */
+ const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
+
 const ServiceConfig = async (parameter) =>{
     let value='';
     try {
@@ -194,7 +203,7 @@ class CircuitBreaker {
             return false;
         try {
             let timeout;
-            if (app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID'))
+            if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
                 timeout = 60 * 1000 * ConfigGet('SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
             else
                 timeout = this.requestTimetout * 1000;

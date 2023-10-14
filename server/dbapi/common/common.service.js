@@ -1,5 +1,7 @@
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 	const app_error_code = parseInt((JSON.stringify(errno) ?? JSON.stringify(errorNum)));
     //check if user defined exception
@@ -46,7 +48,7 @@ const record_not_found = (res, app_id, lang_code) => {
 	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`).then(({ getMessage }) => {
 			getMessage( app_id, 
-						ConfigGet('SERVER', 'APP_COMMON_APP_ID'),
+						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 						20400, 
 						lang_code, (err,results_message)  => {
 							res.status(404).send(
@@ -143,7 +145,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 						return callBack(error, null);
 					else{
 						//return full error to admin
-						if (app_id==ConfigGet('SERVER', 'APP_COMMON_APP_ID'))
+						if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
 							return callBack(error, null);
 						else
 							return callBack(database_error, null);

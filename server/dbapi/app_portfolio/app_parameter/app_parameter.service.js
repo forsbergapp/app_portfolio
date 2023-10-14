@@ -1,5 +1,7 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const getParameters_server = (app_id, data_app_id, callBack) => {
 		//returns parameters for app_id=0 and given app_id
 		//and parameter type 0,1,2, only to be called from server
@@ -17,7 +19,7 @@ const getParameters_server = (app_id, data_app_id, callBack) => {
 				ORDER BY 1, 3`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			const parameters = {app_id: data_app_id,
-								common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID')};
+								common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);
@@ -78,18 +80,18 @@ const getParameter = (app_id, data_app_id, parameter_name, callBack) => {
 				return callBack(null, result[0].parameter_value);
 		});
 	};
-const setParameter_admin = (app_id, body, callBack) => {
+const setParameter_admin = (app_id, data, callBack) => {
 		const sql = `UPDATE ${db_schema()}.app_parameter
 						SET parameter_type_id = :parameter_type_id,
 							parameter_value = :parameter_value,
 							parameter_comment = :parameter_comment
 					  WHERE app_id = :app_id
 						AND parameter_name = :parameter_name`;
-		const parameters = {parameter_type_id: body.parameter_type_id,
-							parameter_value: body.parameter_value, 
-							parameter_comment: body.parameter_comment,
-							app_id: body.app_id,
-							parameter_name: body.parameter_name};
+		const parameters = {parameter_type_id: data.parameter_type_id,
+							parameter_value: data.parameter_value, 
+							parameter_comment: data.parameter_comment,
+							app_id: data.app_id,
+							parameter_name: data.parameter_name};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -97,14 +99,14 @@ const setParameter_admin = (app_id, body, callBack) => {
 				return callBack(null, result);
 		});
 	};
-const setParameterValue_admin = (app_id, body, callBack) => {
+const setParameterValue_admin = (app_id, data, callBack) => {
 		const sql = `UPDATE ${db_schema()}.app_parameter
 						SET parameter_value = :parameter_value
 					  WHERE app_id = :app_id
 						AND parameter_name = :parameter_name`;
-		const parameters = {parameter_value: body.parameter_value, 
-							app_id: body.app_id,
-							parameter_name: body.parameter_name};
+		const parameters = {parameter_value: data.parameter_value, 
+							app_id: data.app_id,
+							parameter_name: data.parameter_name};
 		db_execute(app_id, sql, parameters, null, (err, result)=>{
 			if (err)
 				return callBack(err, null);
@@ -152,7 +154,7 @@ const getAppStartParameters = (app_id, callBack) => {
 					ORDER BY 1`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			const parameters = {app_id: app_id,
-								common_app_id: ConfigGet('SERVER', 'APP_COMMON_APP_ID')};
+								common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);

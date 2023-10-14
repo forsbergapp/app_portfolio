@@ -1,8 +1,13 @@
 const service = await import('./user_account_app_setting.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const createUserSetting = (req, res) => {
-	const body = req.body;
-	service.createUserSetting(req.query.app_id, req.query.initial, body, (err,results) => {
+	const data = {	description:		req.body.description,
+					settings_json: 		req.body.settings_json,
+					user_account_id:	getNumberValue(req.body.user_account_id)
+				};
+	service.createUserSetting(getNumberValue(req.query.app_id), req.query.initial, data, (err,results) => {
 		if (err)
 			return res.status(500).send(
 				err
@@ -15,8 +20,7 @@ const createUserSetting = (req, res) => {
 	});
 };
 const getUserSettingsByUserId = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	service.getUserSettingsByUserId(req.query.app_id, req.params.id, (err, results) =>{
+	service.getUserSettingsByUserId(getNumberValue(req.query.app_id), req.params.id, (err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err
@@ -29,13 +33,12 @@ const getUserSettingsByUserId = (req, res) => {
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-					return record_not_found(res, req.query.app_id, req.query.lang_code);
+					return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
 				});
 	});
 };
 const getProfileUserSetting = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	service.getProfileUserSetting(req.query.app_id, req.params.id, (err, results) =>{
+	service.getProfileUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) =>{
 		if (err) {
 			return res.status(500).send(
 				err
@@ -54,11 +57,7 @@ const getProfileUserSetting = (req, res) => {
 	});
 };
 const getProfileUserSettings = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	let id_current_user;
-	if (typeof req.query.id !== 'undefined')
-		id_current_user = req.query.id;
-	service.getProfileUserSettings(req.query.app_id, req.params.id, id_current_user, (err, results) =>{
+	service.getProfileUserSettings(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.id), (err, results) =>{
 		if (err) {
 			return res.status(500).send(
 				err
@@ -72,17 +71,12 @@ const getProfileUserSettings = (req, res) => {
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-					return record_not_found(res, req.query.app_id, req.query.lang_code);
+					return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
 				});
 	});
 };
 const getProfileUserSettingDetail = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	let detailchoice;
-	if (typeof req.query.detailchoice !== 'undefined')
-		detailchoice = req.query.detailchoice;
-
-	service.getProfileUserSettingDetail(req.query.app_id, req.params.id, detailchoice, (err, results) => {
+	service.getProfileUserSettingDetail(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.detailchoice), (err, results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -96,15 +90,13 @@ const getProfileUserSettingDetail = (req, res) => {
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-					return record_not_found(res, req.query.app_id, req.query.lang_code);
+					return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
 				});
 		}
 	});
 };
 const getProfileTopSetting = (req, res) => {
-	if (typeof req.params.statchoice !== 'undefined')
-		req.params.statchoice = parseInt(req.params.statchoice);
-	service.getProfileTopSetting(req.query.app_id, req.params.statchoice, (err, results) => {
+	service.getProfileTopSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.statchoice), (err, results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -118,14 +110,13 @@ const getProfileTopSetting = (req, res) => {
 				}); 
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-					return record_not_found(res, req.query.app_id, req.query.lang_code);
+					return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
 				});
 		}
 	});
 };
 const getUserSetting = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	service.getUserSetting(req.query.app_id, req.params.id, (err, results) =>{
+	service.getUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) =>{
 		if (err) {
 			return res.status(500).send(
 				err
@@ -140,8 +131,10 @@ const getUserSetting = (req, res) => {
 	});
 };
 const updateUserSetting = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	service.updateUserSetting(req.query.app_id, req.body, req.params.id, (err, results) =>{
+	const data = {	description:		req.body.description,
+					settings_json: 		req.body.settings_json,
+					user_account_id:	getNumberValue(req.body.user_account_id)};
+	service.updateUserSetting(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id), (err, results) =>{
 		if (err) {
 			return res.status(500).send(
 				err
@@ -154,14 +147,13 @@ const updateUserSetting = (req, res) => {
 				);
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-					return record_not_found(res, req.query.app_id, req.query.lang_code);
+					return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
 				});
 		}
 	});
 };
 const deleteUserSetting = (req, res) => {
-	req.params.id = parseInt(req.params.id);
-	service.deleteUserSetting(req.query.app_id, req.params.id, (err, results) =>{
+	service.deleteUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) =>{
 		if (err) {
 			return res.status(500).send(
 				err
@@ -174,7 +166,7 @@ const deleteUserSetting = (req, res) => {
 				);
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-					return record_not_found(res, req.query.app_id, req.query.lang_code);
+					return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
 				});
 		}
 	});
