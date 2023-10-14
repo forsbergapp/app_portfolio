@@ -15,6 +15,39 @@ const {ConfigGet, ConfigGetSaved} = await import(`file://${process.cwd()}/server
 };    
 
 /**
+ * Returns parameters for log
+ * @param {Types.req} req
+ * @returns {Types.req_log_parameters|Types.req|null} 
+ */
+const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
+                                //INFO
+                                case '1':{
+                                    return {host:           req.headers.host,
+                                            ip:             req.ip,
+                                            protocol:       req.protocol,
+                                            httpVersion:    req.httpVersion,
+                                            originalUrl:    req.originalUrl,
+                                            method:         req.method,
+                                            headers:        {   ['X-Request-Id']:      req.headers['X-Request-Id'],
+                                                                ['X-Correlation-Id']:  req.headers['X-Correlation-Id'],
+                                                                ['user-agent']:        req.headers['user-agent'], 
+                                                                ['accept-language']:   req.headers['accept-language'], 
+                                                                ['referer']:           req.headers.referer},
+                                            socket:         {   bytesRead:          req.socket.bytesRead,
+                                                                bytesWritten:       req.socket.bytesWritten}};
+                                }
+                                //VERBOSE
+                                case '2':{
+                                    return req;
+                                }
+                                //NONE
+                                case '0':
+                                default:{
+                                    return null;
+                                }
+                            }};
+
+/**
  * server Express Log error
  * @param {Types.express} app
  */
@@ -22,7 +55,7 @@ const {ConfigGet, ConfigGetSaved} = await import(`file://${process.cwd()}/server
     import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogRequestE}) => {
         //ERROR LOGGING
         app.use((/**@type{Types.error}*/err,/**@type{Types.req}*/req,/**@type{Types.res}*/res, /**@type{function}*/next) => {
-            LogRequestE(req, res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
+            LogRequestE(req_log(req), res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
                 next();
             });
         });    
@@ -359,11 +392,11 @@ const serverExpress = async () => {
                 req.query.client_id = parseInt(req.query.client_id);
             if (req.headers.accept == 'text/event-stream'){
                 //Eventsource, log since response is open and log again when closing
-                LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res));
+                LogRequestI(req_log(req), res.statusCode, res.statusMessage, responsetime(res));
             }
             res.on('close',()=>{
                 //eventsource response time will be time connected until disconnected
-                LogRequestI(req, res.statusCode, res.statusMessage, responsetime(res)).then(() => {
+                LogRequestI(req_log(req), res.statusCode, res.statusMessage, responsetime(res)).then(() => {
                     res.end();
                 });
             });
