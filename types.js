@@ -3,6 +3,8 @@
  * @typedef {Object} req
  * @property {object} params
  * @property {number} params.user_account_id                        - Admin parameter
+ * @property {string} params.info                                   - Info parameter
+ * @property {string} params.sub                                    - App showparam parameter
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
  * @property {string} body.config_no                                - Server parameter
@@ -43,9 +45,7 @@
  * @property {string} query.latitude                                - Broadcast and geolocation parameter
  * @property {string} query.longitude                               - Broadcast and geolocation parameter
  * @property {string} query.reportid                                - Report parameter
- * @property {string} query.messagequeque                           - Report parameter
- * @property {string} query.ps                                      - Report parameter
- * @property {number} query.hf                                      - Report parameter
+ * @property {string} query.messagequeue                            - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
  * @property {string} query.parameter                               - Server parameter
@@ -67,6 +67,31 @@
  *              'X-Request-Id':string,
  *              'X-Correlation-Id':string}} headers
  */
+
+/**
+ * Request app params
+ * @typedef {Object} req_app_parameters
+ * @property {string} ip
+ * @property {string} method
+ * @property {string} headers_user_agent
+ * @property {string} accept_language
+ * @property {string} host
+ * @property {object} body
+ */
+/**
+ * Request report params
+ * @typedef {Object} req_report_parameters
+ * @property {string} reportid
+ * @property {string} messagequeue
+ * @property {string} protocol
+ * @property {string} ip
+ * @property {string} method
+ * @property {string} headers_user_agent
+ * @property {string} accept_language
+ * @property {string} host
+ * @property {object} body
+ */
+
 /**
  * Response
  * @typedef {Object} res

@@ -3,7 +3,7 @@
 import * as Types from './../types.js';
 
 const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
-const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
 const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
 
@@ -387,21 +387,20 @@ const callCreateApp = async (app_id, module_config, callBack) =>{
 };
 /**
  * Gets app if app is ok to start or return maintenance, if app is admin then get admin app
- * @param {Types.req} req             - Request
- * @param {Types.res} res             - Response
- * @param {number} app_id       - application id
- * @param {string|null} params  - parameter in url
- * @param {Types.callBack} callBack   - CallBack with error and success info
+ * @param {Types.req_app_parameters} req    - Request
+ * @param {number} app_id                   - application id
+ * @param {string|null} params              - parameter in url
+ * @param {Types.callBack} callBack         - CallBack with error and success info
  */
-const getApp = (req, res, app_id, params, callBack) => {
+const getApp = (req, app_id, params, callBack) => {
     if (apps_start_ok() ==true || app_id == ConfigGet('SERVER', 'APP_COMMON_APP_ID')){  
         callCreateApp(app_id, {	module_type:'APP', 
                                 params:params, 
                                 ip:req.ip,
                                 method:req.method,
-                                user_agent: req.headers['user-agent'],
-                                accept_language: req.headers['accept-language'],
-                                host: req.headers['host'],
+                                user_agent: req.headers_user_agent,
+                                accept_language: req.accept_language,
+                                host: req.host,
                                 body: req.body
                                 }, (err, app) =>{
             if (err)
@@ -421,12 +420,11 @@ const getApp = (req, res, app_id, params, callBack) => {
  * 2. Fetches papersize and margin parameters from encoded parameter
  * 3. If PDF then PUBLISH to message queue else get report
  * @async
- * @param {Types.req} req           - Request
- * @param {Types.res} res           - Response
- * @param {number} app_id     - application id
- * @param {Types.callBack} callBack - CallBack with error and success info
+ * @param {Types.req_report_parameters} req - Request
+ * @param {number} app_id                   - application id
+ * @param {Types.callBack} callBack         - CallBack with error and success info
  */
-const getReport = async (req, res, app_id, callBack) => {
+const getReport = async (req, app_id, callBack) => {
     if (apps_start_ok() ==true){
         const decodedparameters = Buffer.from(req.query.reportid, 'base64').toString('utf-8');
         //example string:
@@ -448,7 +446,7 @@ const getReport = async (req, res, app_id, callBack) => {
         if (query_parameters_obj.format.toUpperCase() == 'PDF' && typeof req.query.messagequeque == 'undefined' ){
             //PDF
             req.query.service ='PDF';
-            const url = `${req.protocol}://${req.get('host')}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
+            const url = `${req.protocol}://${req.headers.host}/reports?ps=${req.query.ps}&hf=${req.query.hf}&reportid=${req.query.reportid}&messagequeque=1`;
             //call message queue
             const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
             MessageQueue('PDF', 'PUBLISH', {url:url, ps:req.query.ps, hf:(req.query.hf==1)}, null)
@@ -466,7 +464,7 @@ const getReport = async (req, res, app_id, callBack) => {
                                     method:req.method,
                                     user_agent: req.headers['user-agent'],
                                     accept_language: req.headers['accept-language'],
-                                    host: req.headers['host'],
+                                    host: req.headers.headers.host,
                                     body: req.body
                                     }, (err, report)=>{
                 if (err)
@@ -887,142 +885,7 @@ const get_module_with_init = async (app_info, callBack) => {
     }        
 };
 
-/**
- * Gets module with application name, app service parameters with optional countries
- * 
- * @async
- * @param {Types.express} app
- */
-const AppsStart = async (app) => {
 
-    const {default:express} = await import('express');
-
-    app.use('/common',express.static(process.cwd() + '/apps/common/public'));
-
-    for (const app_config of ConfigGetApps())
-        app.use(app_config.ENDPOINT,express.static(process.cwd() + app_config.PATH));
-    
-    //routes
-    
-    app.get('/sw.js',(/**@type {Types.req} */req, /**@type {Types.res} */ res, /**@type {function} */ next) => {
-        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + `${ConfigGetApp(app_id, 'PATH')}/sw.js`, 'utf8', (error, fileBuffer) => {
-                //show empty if any error for this file
-                if (error){
-                    res.statusCode = 500;
-                    res.statusMessage = error;
-                    next();
-                }
-                else{
-                    res.type('text/javascript');
-                    res.send(fileBuffer.toString());
-                }
-            });
-        });
-    });
-                          
-    app.get('/info/:info',(/**@type {Types.req} */req, /**@type {Types.res} */ res, /**@type {function} */ next) => {
-        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        if (apps_start_ok()==true)
-            if (ConfigGetApp(app_id, 'SHOWINFO')==1)
-                switch (req.params.info){
-                    case 'about':
-                    case 'disclaimer':
-                    case 'privacy_policy':
-                    case 'terms':{
-                        if (typeof req.query.lang_code !='undefined'){
-                            req.query.lang_code = 'en';
-                        }
-                        getInfo(app_id, req.params.info, req.query.lang_code, (err, info_result)=>{
-                            //show empty if any error
-                            if (err){
-                                res.statusCode = 500;
-                                res.statusMessage = err;
-                                next();
-                            }
-                            else
-                                res.send(info_result);
-                        });
-                        break;
-                    }
-                    default:{
-                        res.send(null);
-                        break;
-                    }
-                }
-            else
-                next();
-        else
-            getMaintenance(app_id)
-            .then((app_result) => {
-                res.send(app_result);
-            });
-    });
-    app.get('/reports',(/** @type{Types.req}*/req, /**@type {Types.res} */ res) => {
-        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        //no app_id in reports url
-        req.query.app_id = app_id;
-        if (app_id == 0)
-            res.redirect('/');
-        else
-            getReport(req, res, app_id, (err, report_result)=>{
-                //redirect if any error
-                if (err){
-                    res.statusCode = 500;
-                    res.statusMessage = err;
-                    res.redirect('/');
-                }
-                else{
-                    if (req.query.service==='PDF'){
-                        res.type('application/pdf');
-                        res.send(report_result);
-                        //res.end(report_result, 'binary');
-                    }
-                    else    
-                        res.send(report_result);
-                }
-                    
-            });
-    });
-    app.get('/',(/** @type{Types.req}*/req, /** @type{Types.res}*/res) => {
-        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        getApp(req, res, app_id, null,(err, app_result)=>{
-            //show empty if any error
-            if (err){
-                res.statusCode = 500;
-                res.statusMessage = err;
-                res.end();
-            }
-            else
-                return res.send(app_result);
-        });
-    });
-    app.get('/:sub',(/** @type{Types.req}*/req, /** @type{Types.res}*/res, /**@type{function}*/next) => {
-        const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        if (ConfigGet('SERVER', 'APP_COMMON_APP_ID') == app_id)
-            return res.redirect('/');
-        else
-            if (ConfigGetApp(app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
-                getApp(req, res, app_id, req.params.sub, (err, app_result)=>{
-                    //show empty if any error
-                    if (err){
-                        res.statusCode = 500;
-                        res.statusMessage = err;
-                        res.end();
-                    }
-                    else{
-                        //if app_result=null means here redirect to /
-                        if (app_result==null)
-                            return res.redirect('/');
-                        else
-                            return res.send(app_result);
-                    }
-                });
-            else
-                next();
-    });
-};
 /**
  * Gets module maintenance
  * 
@@ -1096,6 +959,7 @@ const providers_buttons = async (app_id) =>{
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {object} data
+ * @param {Types.res|null} res
  * @returns {Promise<(*)>}
  */
 const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, res=null) => {
@@ -1104,8 +968,8 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
     return new Promise((resolve, reject) => {
         if (result_internet==1){
             try {
-                let path;
-                const call_service = (path, service) => {
+                let path = '';
+                const call_service = (/**@type{string}*/path, /**@type{string}*/service) => {
                     microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
                     .then((/**@type{*}*/result)=>resolve(result))
                     .catch((/**@type{*}*/error)=>reject(error));
@@ -1272,9 +1136,8 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
 export {/*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */
-        getInfo,
+        getApp, getReport, getInfo,getMaintenance,
         /*APP functions */
         apps_start_ok, render_app_html,render_app_with_data,
-        AppsStart,
         /*APP BFF functions*/
         BFF};
