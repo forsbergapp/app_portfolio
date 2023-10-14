@@ -464,7 +464,7 @@ const getReport = async (req, app_id, callBack) => {
                                     method:req.method,
                                     user_agent: req.headers['user-agent'],
                                     accept_language: req.headers['accept-language'],
-                                    host: req.headers.headers.host,
+                                    host: req.headers.host,
                                     body: req.body
                                     }, (err, report)=>{
                 if (err)
