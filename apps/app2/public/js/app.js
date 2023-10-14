@@ -446,7 +446,7 @@ const showreporttime = () => {
     };
     document.getElementById('setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(document.getElementById('setting_select_locale').value, options);
     //If day report created with time, display time there also
-    if (document.getElementById('tiemtable_day_time')) {
+    if (document.getElementById('timetable_day_time')) {
         document.getElementById('timetable_day_time').innerHTML = document.getElementById('setting_report_date_time_display').innerHTML;
     }
     if (document.getElementsByClassName('timetable_day_current_time').length > 0) {
