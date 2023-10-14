@@ -1,8 +1,6 @@
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const getApp = (app_id, id,lang_code, callBack) => {
-		if (typeof id=='undefined')
-			id=null;
 		const sql = `SELECT	id "id",
 						app_name "app_name",
 						url "url",

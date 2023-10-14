@@ -306,10 +306,10 @@ const getLogParameters = (app_id, callBack) => {
 const getLogs = async (app_id, data, callBack) => {
     const fs = await import('node:fs');
     let filename;
-    if (parseInt(data.month) <10)
+    if (data.month <10)
         data.month = '0' + data.month;
     if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
-        if (parseInt(data.day) <10)
+        if (data.day <10)
             data.day = '0' + data.day;
         filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
     }
@@ -344,7 +344,7 @@ const getLogs = async (app_id, data, callBack) => {
                 return (
                         (
                             (
-                             (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == parseInt(data.select_app_id) ||record.select_app_id ==null || data.select_app_id ==''))||
+                             (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == data.select_app_id ||record.select_app_id ==null || data.select_app_id ==''))||
                              (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
                             ) &&
                          ((data.search==null || data.search=='null' || data.search=='')|| 
@@ -417,7 +417,7 @@ const getLogsStats = async (app_id, data, callBack) => {
     const logstat = [];
     
     const fs = await import('node:fs');
-    if (parseInt(data.month) <10)
+    if (data.month <10)
         data.month = '0' + data.month;
     const files = await fs.promises.readdir(`${process.cwd()}${ConfigGetInit('PATH_LOG')}`);
     let sample;

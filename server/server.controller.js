@@ -5,6 +5,8 @@ import * as Types from './../types.js';
 
 const service = await import('./server.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 /**
  * Config maintenance get
  * @param {Types.req} req - Request
@@ -49,7 +51,7 @@ const ConfigMaintenanceSet = (req, res) => {
  */
 const ConfigGetSaved = async (req, res) => {
     try {
-        const result = await service.ConfigGetSaved(req.query.config_type_no);
+        const result = await service.ConfigGetSaved(getNumberValue(req.query.config_type_no));
         res.status(200).json(
             {
                 data: result
@@ -67,7 +69,7 @@ const ConfigGetSaved = async (req, res) => {
  * @param {Types.res} res
  */
 const ConfigSave = (req,res) => {
-    service.ConfigSave(parseInt(req.body.config_no), req.body.config_json, false, (err, result)=>{
+    service.ConfigSave(getNumberValue(req.body.config_no), req.body.config_json, false, (err, result)=>{
         if (err){
             res.status(500).send(
                 err

@@ -188,16 +188,10 @@ const getStatCountAdmin = (app_id, callBack) => {
 const updateUserSuperAdmin = (app_id, id, data, callBack) => {
 		let sql;
 		let parameters;
-		if (data.active =='')
-			data.active = null;
 		if (data.email_unverified =='')
 			data.email_unverified = null;
-		if (data.app_role_id=='')
-			data.app_role_id = null;
 		if (data.bio=='')
 			data.bio = null;
-		if (data.user_level=='')
-			data.user_level = null;
 		if (data.password_reminder=='')
 			data.password_reminder = null;
 		if (data.verification_code=='')

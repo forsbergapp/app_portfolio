@@ -27,6 +27,15 @@ const SERVER_CONFIG_INIT_PATH = `${SLASH}config${SLASH}config_init.json`;
 const app_portfolio_title = 'App Portfolio';
 
 /**
+ * Get number value from request key
+ * returns number or null for numbers
+ * so undefined and '' are avoided sending arguement to service functions
+ * @param {Types.req_id_number} param
+ * @returns {number|null}
+ */
+ const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
+
+/**
  * Create random string
  * @returns {string}
  */
@@ -461,7 +470,7 @@ const ConfigMaintenanceGet = (callBack) => {
  */
 const ConfigGetSaved = async (config_type_no) => {
     const config_file = config_files().filter((file) => {
-        return (file[0] == parseInt(config_type_no));
+        return (file[0] == config_type_no);
     })[0][1];
     const fs = await import('node:fs');
     const fileBuffer = await fs.promises.readFile(process.cwd() + config_file, 'utf8');
@@ -688,7 +697,7 @@ const serverStart = async () =>{
     });
 };
 
-export {COMMON, CreateRandomString,
+export {COMMON, getNumberValue, CreateRandomString,
         ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, ConfigInfo, Info, 
         ConfigGet, ConfigGetInit, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig, serverStart };

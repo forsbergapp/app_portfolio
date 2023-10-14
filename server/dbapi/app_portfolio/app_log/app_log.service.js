@@ -100,8 +100,6 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 				break;
 			}
 		}
-		if (data_app_id=='')
-			data_app_id = null;
 		sql = `SELECT id "id",
 					  app_id "app_id",
 					  app_module "app_module",

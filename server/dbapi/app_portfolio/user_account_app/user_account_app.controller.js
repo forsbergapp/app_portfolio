@@ -1,7 +1,9 @@
 const service = await import('./user_account_app.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const createUserAccountApp = (req, res) => {
-	service.createUserAccountApp(req.query.app_id, req.body.user_account_id, (err,results) => {
+	service.createUserAccountApp(getNumberValue(req.query.app_id), getNumberValue(req.body.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -14,8 +16,7 @@ const createUserAccountApp = (req, res) => {
 	});
 };
 const getUserAccountApps = (req, res) => {
-	req.params.user_account_id = parseInt(req.params.user_account_id);
-	service.getUserAccountApps(req.query.app_id, req.params.user_account_id, (err,results) => {
+	service.getUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -28,8 +29,7 @@ const getUserAccountApps = (req, res) => {
 	});
 };
 const getUserAccountApp = (req, res) => {
-	req.params.user_account_id = parseInt(req.params.user_account_id);
-	service.getUserAccountApp(req.query.app_id, req.params.user_account_id, (err,results) => {
+	service.getUserAccountApp(getNumberValue(req.query.app_id), getNumberValue(req.params.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -41,8 +41,12 @@ const getUserAccountApp = (req, res) => {
 	});
 };
 const updateUserAccountApp = (req, res) => {
-	req.params.user_account_id = parseInt(req.params.user_account_id);
-	service.updateUserAccountApp(req.query.app_id, req.params.user_account_id, req.body, (err,results) => {
+	const data = {	setting_preference_direction_id: 	getNumberValue(req.body.setting_preference_direction_id),
+					setting_preference_arabic_script_id:getNumberValue(req.body.setting_preference_arabic_script_id),
+					setting_preference_timezone_id: 	getNumberValue(req.body.setting_preference_timezone_id),
+					preference_locale:					req.body.preference_locale
+				};
+	service.updateUserAccountApp(getNumberValue(req.query.app_id), getNumberValue(req.params.user_account_id), data, (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -55,9 +59,7 @@ const updateUserAccountApp = (req, res) => {
 	});
 };
 const deleteUserAccountApps = (req, res) => {
-	req.params.user_account_id = parseInt(req.params.user_account_id);
-	req.params.app_id = parseInt(req.params.app_id);
-	service.deleteUserAccountApps(req.query.app_id, req.params.user_account_id, req.params.app_id, (err,results) => {
+	service.deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.user_account_id), getNumberValue(req.params.app_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err

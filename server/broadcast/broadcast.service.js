@@ -3,6 +3,8 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**@type{Types.broadcast_connect_list[]} */
 let CONNECTED_CLIENTS = [];
@@ -41,13 +43,13 @@ const BroadcastConnect = async (app_id,
             id:                     client_id,
             app_id:                 app_id,
             user_account_id:        user_account_logon_user_account_id,
+            identity_provider_id:   identity_provider_id,
             system_admin:           system_admin,
-            user_agent:             headers_user_agent,
             connection_date:        new Date().toISOString(),
-            ip:                     ip,
             gps_latitude:           latitude,
             gps_longitude:          longitude,
-            identity_provider_id:   identity_provider_id,
+            ip:                     ip,
+            user_agent:             headers_user_agent,
             response:               response
         };
         ClientAdd(newClient);
@@ -105,7 +107,7 @@ const BroadcastCheckMaintenance = () => {
         setInterval(() => {
             if (ConfigGetInit('MAINTENANCE')=='1'){
                 CONNECTED_CLIENTS.forEach(client=>{
-                    if (client.app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
+                    if (client.app_id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){
                         ClientSend(client.response, '', 'MAINTENANCE');
                     }
                 });
@@ -123,8 +125,6 @@ const BroadcastCheckMaintenance = () => {
  * @param {Types.callBack} callBack
  */
 const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
-    if (app_id == '' || app_id == 'null')
-        app_id = null;
     if (broadcast_type=='INFO' || broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
         //except MAINTENANCE to admin and current user
@@ -159,8 +159,6 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
  * @param {Types.callBack} callBack
  */
 const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message, callBack) => {
-    if (app_id == '' || app_id == 'null')
-        app_id = null;
     if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
         //admin can only broadcast INFO or CHAT
         if (broadcast_type=='INFO'){
@@ -192,43 +190,34 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
  * @param {number} month
  * @param {string} order_by
  * @param {string} sort
- * @param {string} dba
+ * @param {number} dba
  * @param {Types.callBack} callBack
  */
 const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba, callBack) => {
-    if (limit == '')
-        limit = 0;
-    else
-       limit = Number(limit);
-    if (app_id_select == '')
-        app_id_select = null;
-    else
-        app_id_select = Number(app_id_select);
+    limit = Number(limit ?? 0);
     const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     const db_ok = ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
     //filter    
-    /**@type{Types.broadcast_connect_list[]} */
+    /**@type{Types.broadcast_connect_list_no_res[]} */
     let connected_clients_no_res =[];
     for (const client of CONNECTED_CLIENTS)
         //return keys without response
-        connected_clients_no_res.push({ app_id: client.app_id, 
-                                        app_role_icon: client.app_role_icon ?? '',
-                                        app_role_id: client.app_role_id ?? '',
+        connected_clients_no_res.push({ id: client.id,
+                                        app_id: client.app_id, 
+                                        user_account_id: client.user_account_id,
+                                        identity_provider_id: client.identity_provider_id,
+                                        system_admin: client.system_admin,
                                         connection_date: client.connection_date,
                                         gps_latitude: client.gps_latitude ?? '',
                                         gps_longitude: client.gps_longitude ?? '',
-                                        id: client.id,
-                                        identity_provider_id: client.identity_provider_id,
                                         ip: client.ip,
-                                        system_admin: client.system_admin,
-                                        user_account_id: client.user_account_id,
                                         user_agent: client.user_agent});
     //return rows controlling limit, app_id, year and month
     connected_clients_no_res = connected_clients_no_res.filter((client, index)=>{
         return index<=limit &&
         (client.app_id == app_id_select || app_id_select==null) &&
-        (parseInt(client.connection_date.substring(0,4)) == parseInt(year) && 
-         parseInt(client.connection_date.substring(5,7)) == parseInt(month));
+        (parseInt(client.connection_date.substring(0,4)) == year && 
+         parseInt(client.connection_date.substring(5,7)) == month);
     });
     /**
      * Sort
@@ -240,6 +229,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             order_by_num = 1;
         else   
             order_by_num = -1;
+
         return connected_clients_no_res = connected_clients_no_res.sort((first, second)=>{
             let first_sort, second_sort;
             //sort default is connection_date if sort missing as argument
@@ -274,7 +264,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
             let i=0;
             connected_clients_no_res.map(client=>{
-                if (client.system_admin=='0')
+                if (client.system_admin==0)
                     getUserRoleAdmin(app_id, client.user_account_id, dba, (/**@type{Types.error}*/err, /**@type{Types.db_UserRoleAdmin}*/result_app_role)=>{
                         if (err)
                             callBack(err, null);
@@ -318,16 +308,16 @@ const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
         if ((count_logged_in==1 &&
                 CONNECTED_CLIENTS[i].identity_provider_id == identity_provider_id &&
                 identity_provider_id !='' &&
-                CONNECTED_CLIENTS[i].user_account_id != '') ||
+                CONNECTED_CLIENTS[i].user_account_id != null) ||
             (count_logged_in==1 &&
                 identity_provider_id =='' &&
                 CONNECTED_CLIENTS[i].identity_provider_id =='' &&
-                (CONNECTED_CLIENTS[i].user_account_id != '' ||
+                (CONNECTED_CLIENTS[i].user_account_id != null ||
                 CONNECTED_CLIENTS[i].system_admin == 1)) ||
             (count_logged_in==0 && 
                 identity_provider_id =='' &&
                 CONNECTED_CLIENTS[i].identity_provider_id =='' &&
-                CONNECTED_CLIENTS[i].user_account_id =='' &&
+                CONNECTED_CLIENTS[i].user_account_id ==null &&
                 CONNECTED_CLIENTS[i].system_admin == 0))
             {
             count_connected = count_connected + 1;

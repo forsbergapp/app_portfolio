@@ -374,22 +374,9 @@ const serverExpress = async () => {
             else
                 next();
         });
-        //convert query id parameters from string to integer
-        //and logs after response is finished
+        
+        //logs after response is finished
         app.use((/**@type{Types.req}*/req, /**@type{Types.res}*/ res, /**@type{function}*/ next) => {
-            //req.params can be modified in controller
-            if (req.query.app_id)
-                req.query.app_id = parseInt(req.query.app_id);
-            if (req.query.id)
-                req.query.id = parseInt(req.query.id);
-            if (req.query.user_account_logon_user_account_id)
-                req.query.user_account_logon_user_account_id = parseInt(req.query.user_account_logon_user_account_id);
-            if (req.query.user_account_id)
-                req.query.user_account_id = parseInt(req.query.user_account_id);
-            if (req.query.app_user_id)
-                req.query.app_user_id = parseInt(req.query.app_user_id);
-            if (req.query.client_id)
-                req.query.client_id = parseInt(req.query.client_id);
             if (req.headers.accept == 'text/event-stream'){
                 //Eventsource, log since response is open and log again when closing
                 LogRequestI(req_log(req), res.statusCode, res.statusMessage, responsetime(res));
