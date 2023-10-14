@@ -1,9 +1,9 @@
 const service = await import('./user_account_follow.service.js');
-	
+
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const followUser = (req, res) => {
-	req.params.id   = parseInt(req.params.id);
-	const id_follow = parseInt(req.body.user_account_id);
-	service.followUser(req.query.app_id, req.params.id,id_follow, (err,results) => {
+	service.followUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id),getNumberValue(req.body.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err
@@ -16,9 +16,7 @@ const followUser = (req, res) => {
 	});
 };
 const unfollowUser = (req, res) => {
-	req.params.id     = parseInt(req.params.id);
-	const id_unfollow = parseInt(req.body.user_account_id);
-	service.unfollowUser(req.query.app_id, req.params.id,id_unfollow, (err,results) => {
+	service.unfollowUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id),getNumberValue(req.body.user_account_id), (err,results) => {
 		if (err) {
 			return res.status(500).send(
 				err

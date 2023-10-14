@@ -1,12 +1,14 @@
 const service = await import('./locale.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const getLocales = (req, res) => {
 	let lang_code;
 	if (typeof req.params.lang_code == 'undefined')
 		lang_code ='en';
 	else
 		lang_code = req.params.lang_code;
-	service.getLocales(req.query.app_id, lang_code,(err, results) =>{
+	service.getLocales(getNumberValue(req.query.app_id), lang_code,(err, results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err

@@ -1,6 +1,9 @@
 const service = await import('./log.service.js');
+
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const getLogParameters = (req, res) => {
-	service.getLogParameters(req.query_app_id, (err, results) =>{
+	service.getLogParameters(getNumberValue(req.query_app_id), (err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
@@ -12,7 +15,18 @@ const getLogParameters = (req, res) => {
 	});
 };
 const getLogs = (req, res) => {
-	service.getLogs(req.query_app_id, req.query, (err, results) =>{
+	const data = {	app_id:			getNumberValue(req.query.app_id),
+					select_app_id:	getNumberValue(req.query.select_app_id),
+					logscope:		req.query.logscope,
+					loglevel:		req.query.loglevel,
+					search:			req.query.search,
+					sort:			req.query.sort,
+					order_by:		req.query.order_by,
+					year: 			getNumberValue(req.query.year),
+					month:			getNumberValue(req.query.month),
+					day:			getNumberValue(req.query.day),
+					};
+	service.getLogs(getNumberValue(req.query_app_id), data, (err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err
@@ -40,7 +54,11 @@ const getStatusCodes = async (req, res) =>{
 
 };
 const getLogsStats = async (req, res) => {
-	service.getLogsStats(req.query_app_id, req.query, (err, results) =>{
+	const data = {	code:			getNumberValue(req.query.code),
+					year: 			getNumberValue(req.query.year),
+					month:			getNumberValue(req.query.month)
+					};
+	service.getLogsStats(getNumberValue(req.query_app_id), data, (err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err
@@ -59,7 +77,7 @@ const getLogsStats = async (req, res) => {
 	});
 };
 const getFiles = (req, res) => {
-	service.getFiles(req.query_app_id, (err, results) =>{
+	service.getFiles(getNumberValue(req.query_app_id), (err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err

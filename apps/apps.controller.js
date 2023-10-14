@@ -5,6 +5,8 @@ import * as Types from './../types.js';
 
 const service = await import('./apps.service.js');
 
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 /**
  * Backend for frontend (BFF)
  * 
@@ -14,7 +16,7 @@ const service = await import('./apps.service.js');
  */
 const BFF = (req, res) =>{
     //check inparameters
-    if (!req.query.app_id &&
+    if (!getNumberValue(req.query.app_id) &&
         !req.query.service &&
         !req.query.parameters)
         //required parameters not provided
@@ -30,15 +32,15 @@ const BFF = (req, res) =>{
             message_queue=true;
         /** @type {string} */
         let parameters;
-        if (req.query.user_account_logon_user_account_id)
-            parameters = decodedparameters + `&user_account_logon_user_account_id=${req.query.user_account_logon_user_account_id}`;
+        if (getNumberValue(req.query.user_account_logon_user_account_id))
+            parameters = decodedparameters + `&user_account_logon_user_account_id=${getNumberValue(req.query.user_account_logon_user_account_id)}`;
         else
             parameters = decodedparameters;
-        service.BFF(service.getNumberValue(req.query.app_id), service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
+        service.BFF(getNumberValue(req.query.app_id), service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
         .then(result_service => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
                 const log_text = message_queue==true?null:result_service;
-                LogServiceI(service.getNumberValue(req.query.app_id), service_called, parameters, log_text).then(()=>{
+                LogServiceI(getNumberValue(req.query.app_id), service_called, parameters, log_text).then(()=>{
                     //message queue saves result there
                     if (parameters.startsWith('/broadcast/connection/connect')){
                         //EventSource requested so no more update of response
@@ -55,7 +57,7 @@ const BFF = (req, res) =>{
         .catch(error => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
                 //log ERROR to module log and to files
-                LogServiceE(service.getNumberValue(req.query.app_id), service_called, parameters, error).then(() => {
+                LogServiceE(getNumberValue(req.query.app_id), service_called, parameters, error).then(() => {
                     //return service unavailable and error message
                     res.status(503).send(error);
                 });
