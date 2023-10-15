@@ -290,6 +290,20 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
   
   ----------------------- */
 
+const getTimezoneOffset = (local_timezone) =>{
+    const utc = new Date(	new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'}),
+                            new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}),
+                            new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'}),
+                            new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false}),
+                            new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'})).valueOf();
+
+    const local = new Date(	new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'}),
+                            new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'}),
+                            new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'}),
+                            new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false}),
+                            new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'})).valueOf();
+    return (local-utc) / 1000 / 60 / 60;
+};
 
 const getGregorian = (HijriDate, adjustment) =>{
     const DAY = 86400000; // a day in milliseconds
@@ -3836,7 +3850,7 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
+       getTimezoneOffset, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, checkbox_value, checkbox_checked, image_format,
        list_image_format_src, recreate_img, set_avatar, boolean_to_number, number_to_boolean,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
