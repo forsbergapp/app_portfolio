@@ -441,7 +441,6 @@ INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Pacific/Wake','Pacific/Wake',NULL,NULL,NULL,NULL,3);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Pacific/Wallis','Pacific/Wallis',NULL,NULL,NULL,NULL,3);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Pacific/Yap','Pacific/Yap',NULL,NULL,NULL,NULL,3);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('uninhabited','uninhabited',NULL,NULL,NULL,NULL,3);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('UTC','UTC',NULL,NULL,NULL,NULL,3);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Etc/GMT+12','Etc/GMT+12',NULL,NULL,NULL,NULL,3);
 INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Etc/GMT+11','Etc/GMT+11',NULL,NULL,NULL,NULL,3);
