@@ -12,7 +12,6 @@
 	REPORT = USED IN REPORT
 */
 const common = await import('common');
-const regional = await import('regional');
 const app_common = await import('app_common');
 /*----------------------- */
 /* GLOBALS APP & REPORT   */
@@ -716,7 +715,7 @@ const localTime = (value, locale, format, hours=null, minutes=null) =>{
 		case '24h':{
 			switch (method){
 				case 1:{
-					return (hours==null?calc.hours:hours).toLocaleString(locale) + ':' + (minutes==null?calc.minutes:minutes).toLocaleString(locale);
+					return (hours==null?calc.hours:hours).toLocaleString(locale) + ':' + (minutes==null?calc.minutes:minutes).toLocaleString(locale).padStart(2,0);
 				}
 				case 2:{
 					const localtime = new Date(1970,1,1, hours==null?calc.hours:hours, minutes==null?calc.minutes:minutes);
@@ -760,7 +759,7 @@ const localTime = (value, locale, format, hours=null, minutes=null) =>{
 				case 1:{
 					//adjust 24 to 12 format
 					const hour12 = ((hours==null?calc.hours:hours) + 12 -1)% 12+ 1;
-					return (hour12).toLocaleString(locale) + ':' + (minutes==null?calc.minutes:minutes).toLocaleString(locale);
+					return (hour12).toLocaleString(locale) + ':' + (minutes==null?calc.minutes:minutes).toLocaleString(locale).padStart(2,0);
 				}
 				case 2:{
 					const localtime = new Date(1970,1,1, hours==null?calc.hours:hours, minutes==null?calc.minutes:minutes);
@@ -923,7 +922,7 @@ const makeTableRow = (data, items, timerow, year, month, settings, date) => {
 };
 // display timetable month
 const displayMonth = (prayTimes, settings, item_id, year_class='') => {
-	const timezone_offset = parseInt(regional.getTimezoneOffset(settings.timezone));
+	const timezone_offset = common.getTimezoneOffset(settings.timezone);
 	let month;
 	let year;
 	let title;
@@ -1011,7 +1010,7 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 				endDate = new Date(endDate[0], endDate[1]-1, endDate[2]);
 			}
 		setMethod_praytimes(prayTimes, settings.method, settings.asr, settings.highlat);
-		
+
 		let month_html='';
 		//DATA
 		while (date < endDate) {
@@ -1169,7 +1168,7 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 		const day_timetable = (	user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
 										user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
 			let day_html = '';
-			const timezone_offset = regional.getTimezoneOffset(user_timezone);
+			const timezone_offset = common.getTimezoneOffset(user_timezone);
 			times = prayTimes.getTimes(app_common.APP_GLOBAL['session_currentDate'], [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, 'Float');
 			const col_imsak = settings.show_imsak == 'YES'?show_col(1, 'imsak', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['imsak'], user_format):''; 
 			const col_fajr = show_col(1, 'fajr', app_common.APP_GLOBAL['session_currentDate'].getFullYear(), app_common.APP_GLOBAL['session_currentDate'].getMonth(), app_common.APP_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['fajr'], user_format);
