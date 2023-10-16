@@ -3,40 +3,40 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { render_report_html } = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { timetable } = await import(`file://${process.cwd()}/apps/app2/src/report/timetable.js`);
 
 /**
- * Creates report
+ * Creates report server
  * @param {number} app_id
- * @param {string} module
- * @returns {Promise.<Types.render_common>}
+ * @param {object} report_parameters
+ * @returns {Promise.<string>}
  */
-
-const createReport = (app_id, module) => {
+const createReport= (app_id, report_parameters) => {
     return new Promise((resolve, reject) => {
         const files = [
-            ['REPORT', process.cwd() + '/apps/app2/src/report/' + module],
+            ['REPORT', process.cwd() + '/apps/app2/src/report/timetable.html'],
             ['<ReportHead/>', process.cwd() + '/apps/app2/src/report/head.html'],
-            ['<AppCommonFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],
-            ['<ReportPaper/>', process.cwd() + '/apps/app2/src/report/paper.html']
+            ['<AppCommonFonts/>', process.cwd() + '/apps/app2/src/fonts.html']
         ];
-        render_app_html(app_id, files, {locale:null, 
-                                        module_type:'REPORT', 
-                                        map: false, 
-                                        custom_tag_profile_search:null,
-                                        custom_tag_user_account:null,
-                                        custom_tag_profile_top:null,
-                                        app_themes:false, 
-                                        render_locales:false, 
-                                        render_settings:false, 
-                                        render_provider_buttons:false
-                                    },(/**@type{Types.error}*/err, /**@type{Types.render_common}*/report)=>{
+        render_report_html(app_id, files,(/**@type{Types.error}*/err, /**@type{string}*/report)=>{
             if (err)
                 reject(err);
             else{
-                resolve(report);
+                timetable({ app_id:         app_id,
+                            reportid:       report_parameters.reportid,
+                            ip:             report_parameters.ip,
+                            user_agent:     report_parameters.user_agent,
+                            accept_language:report_parameters.accept_language,
+                            latitude:       report_parameters.latitude,
+                            longitude:      report_parameters.longitude,
+                            host:           report_parameters.host,
+                            report:         report}).then((report_rendered)=>{
+                    resolve(report_rendered);
+                });
             }
         });
     });
 };
+
 export{createReport};
