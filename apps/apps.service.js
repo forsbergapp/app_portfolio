@@ -987,151 +987,145 @@ const providers_buttons = async (app_id) =>{
  * @returns {Promise<(*)>}
  */
 const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, res=null) => {
-    const { check_internet } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-    const result_internet = await check_internet();
     return new Promise((resolve, reject) => {
-        if (result_internet==1){
-            try {
-                let path = '';
-                const call_service = (/**@type{string}*/path, /**@type{string}*/service) => {
-                    microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
-                    .then((/**@type{*}*/result)=>resolve(result))
-                    .catch((/**@type{*}*/error)=>reject(error));
-                };
-                switch (service){
-                    case 'AUTH':{
-                        // parameters ex:
-                        // /auth /auth/admin
-                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
-                        call_service(path, service);
-                        break;
-                    }
-                    case 'BROADCAST':{
-                        // parameters ex:
-                        // /broadcast...
-                        if (parameters.startsWith('/broadcast/connection/connect')){
-                            //this endpoint does not exists
-                            //this is used for EventSource that needs to leave connection open
-                            // ex path and query parameters: 
-                            ///broadcast/connection/connect?identity_provider_id=&system_admin=null&&latitude=[...]&longitude=[...]&lang_code=en
-                            BroadcastConnect(   app_id, 
-                                                get_query_value(parameters, 'identity_provider_id',1),
-                                                get_query_value(parameters, 'user_account_logon_user_account_id',1),
-                                                get_query_value(parameters, 'system_admin',1),
-                                                get_query_value(parameters, 'latitude'),
-                                                get_query_value(parameters, 'longitude'),
-                                                get_query_value(parameters, 'authorization'),
-                                                headers_user_agent,
-                                                ip,
-                                                res).then(()=> {
-                                return resolve('');
-                            });
-                        }
-                        else{
-                            path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
-                            call_service(path, service);
-                        }
-                        break;
-                    }
-                    case 'LOG':{
-                        // parameters ex:
-                        // /log...
-                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
-                        call_service(path, service);
-                        break;
-                    }
-                    case 'SERVER':{
-                        // parameters ex:
-                        // /config...  /info
-                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
-                        call_service(path, service);
-                        break;
-                    }
-                    case 'DB_API':{
-                        const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-                        switch (method){
-                            // parameters ex:
-                            // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
-                            // /db/admin and /db/common have no db schema
-                            case 'GET':
-                            case 'POST':
-                            case 'PUT':
-                            case 'PATCH':
-                            case 'DELETE':{
-                                if (parameters.startsWith('/admin'))
-                                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${parameters}&app_id=${app_id}`;
-                                else
-                                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
-                                break;
-                            }
-                            default:{
-                                return reject('service DB GET, POST, PUT, PATCH or DELETE only');
-                            }
-                        }
-                        call_service(path, service);
-                        break;
-                    }
-                    case 'GEOLOCATION':{
-                        // parameters ex:
-                        // /ip?app_id=[id]&lang_code=en
-                        // /place?latitude[latitude]&longitude=[longitude]
-                        //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
-                        if (ConfigGet('SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' || parameters.startsWith('/ip')==false){
-                            if (method=='GET'){
-                                //set ip from client in case ip query parameter is missing
-                                const basepath = parameters.split('?')[0];
-                                if (parameters.startsWith('/ip')){    
-                                    const params = parameters.split('?')[1].split('&');
-                                    //if ip parameter does not exist
-                                    if (params.filter(parm=>parm.includes('ip=')).length==0 )
-                                        params.push(`ip=${ip}`);
-                                    else{
-                                        //if empty ip parameter
-                                        if (params.filter(parm=>parm == 'ip=').length==1)
-                                            params.map(parm=>parm = parm.replace('ip=', `ip=${ip}`));
-                                    }
-                                    parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
-                                }
-                                //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
-                                authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, 'CLIENT_ID') + ':' + ConfigGetApp(app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
-                                path = `/geolocation${parameters}&app_id=${app_id}`;
-                                call_service(path, service);
-                            }
-                            else
-                                return reject('service GEOLOCATION GET only');
-                        }
-                        else
+        try {
+            let path = '';
+            const call_service = (/**@type{string}*/path, /**@type{string}*/service) => {
+                microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
+                .then((/**@type{*}*/result)=>resolve(result))
+                .catch((/**@type{*}*/error)=>reject(error));
+            };
+            switch (service){
+                case 'AUTH':{
+                    // parameters ex:
+                    // /auth /auth/admin
+                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                    call_service(path, service);
+                    break;
+                }
+                case 'BROADCAST':{
+                    // parameters ex:
+                    // /broadcast...
+                    if (parameters.startsWith('/broadcast/connection/connect')){
+                        //this endpoint does not exists
+                        //this is used for EventSource that needs to leave connection open
+                        // ex path and query parameters: 
+                        ///broadcast/connection/connect?identity_provider_id=&system_admin=null&&latitude=[...]&longitude=[...]&lang_code=en
+                        BroadcastConnect(   app_id, 
+                                            get_query_value(parameters, 'identity_provider_id',1),
+                                            get_query_value(parameters, 'user_account_logon_user_account_id',1),
+                                            get_query_value(parameters, 'system_admin',1),
+                                            get_query_value(parameters, 'latitude'),
+                                            get_query_value(parameters, 'longitude'),
+                                            get_query_value(parameters, 'authorization'),
+                                            headers_user_agent,
+                                            ip,
+                                            res).then(()=> {
                             return resolve('');
-                        break;
+                        });
                     }
-                    case 'WORLDCITIES':{
+                    else{
+                        path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                        call_service(path, service);
+                    }
+                    break;
+                }
+                case 'LOG':{
+                    // parameters ex:
+                    // /log...
+                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                    call_service(path, service);
+                    break;
+                }
+                case 'SERVER':{
+                    // parameters ex:
+                    // /config...  /info
+                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
+                    call_service(path, service);
+                    break;
+                }
+                case 'DB_API':{
+                    const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
+                    switch (method){
                         // parameters ex:
-                        // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
-                        // /city/random?&app_id=[id]
+                        // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
+                        // /db/admin and /db/common have no db schema
+                        case 'GET':
+                        case 'POST':
+                        case 'PUT':
+                        case 'PATCH':
+                        case 'DELETE':{
+                            if (parameters.startsWith('/admin'))
+                                path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${parameters}&app_id=${app_id}`;
+                            else
+                                path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
+                            break;
+                        }
+                        default:{
+                            return reject('service DB GET, POST, PUT, PATCH or DELETE only');
+                        }
+                    }
+                    call_service(path, service);
+                    break;
+                }
+                case 'GEOLOCATION':{
+                    // parameters ex:
+                    // /ip?app_id=[id]&lang_code=en
+                    // /place?latitude[latitude]&longitude=[longitude]
+                    //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
+                    if (ConfigGet('SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' || parameters.startsWith('/ip')==false){
                         if (method=='GET'){
+                            //set ip from client in case ip query parameter is missing
+                            const basepath = parameters.split('?')[0];
+                            if (parameters.startsWith('/ip')){    
+                                const params = parameters.split('?')[1].split('&');
+                                //if ip parameter does not exist
+                                if (params.filter(parm=>parm.includes('ip=')).length==0 )
+                                    params.push(`ip=${ip}`);
+                                else{
+                                    //if empty ip parameter
+                                    if (params.filter(parm=>parm == 'ip=').length==1)
+                                        params.map(parm=>parm = parm.replace('ip=', `ip=${ip}`));
+                                }
+                                parameters = `${basepath}?${params.reduce((param_sum,param)=>param_sum += '&' + param)}`;
+                            }
                             //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
                             authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, 'CLIENT_ID') + ':' + ConfigGetApp(app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
-                            //limit records here in server for this service:
-                            if (parameters.startsWith('/city/search'))
-                                parameters = parameters + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
-                            path = `/worldcities${parameters}&app_id=${app_id}`;
+                            path = `/geolocation${parameters}&app_id=${app_id}`;
                             call_service(path, service);
                         }
-                            
                         else
-                            return reject('service WORLDCITIES GET only');
-                        break;
+                            return reject('service GEOLOCATION GET only');
                     }
-                    default:{
-                        return reject(`service ${service} does not exist`);
-                    }
+                    else
+                        return resolve('');
+                    break;
                 }
-            } catch (error) {
-                return reject(error);
+                case 'WORLDCITIES':{
+                    // parameters ex:
+                    // /[countrycode]?app_user_id=[id]&app_id=[id]&lang_code=en
+                    // /city/random?&app_id=[id]
+                    if (method=='GET'){
+                        //use app, id, CLIENT_ID and CLIENT_SECRET for microservice IAM
+                        authorization = `Basic ${Buffer.from(ConfigGetApp(app_id, 'CLIENT_ID') + ':' + ConfigGetApp(app_id, 'CLIENT_SECRET'),'utf-8').toString('base64')}`;
+                        //limit records here in server for this service:
+                        if (parameters.startsWith('/city/search'))
+                            parameters = parameters + `&limit=${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')}`;
+                        path = `/worldcities${parameters}&app_id=${app_id}`;
+                        call_service(path, service);
+                    }
+                        
+                    else
+                        return reject('service WORLDCITIES GET only');
+                    break;
+                }
+                default:{
+                    return reject(`service ${service} does not exist`);
+                }
             }
+        } catch (error) {
+            return reject(error);
         }
-        else
-            return reject('no internet');
     });
 };
 export {/*APP functions */
