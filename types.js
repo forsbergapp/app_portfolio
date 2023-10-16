@@ -224,14 +224,16 @@
  * App module config info
  * 
  * @typedef {object} module_config
- * @property {string} module_type        - APP or REPORT
- * @property {string|null} params        - parameter in url used by SHOW_PROFILE parameter in apps.json
- * @property {string} ip                 - ip address
- * @property {string} method             - request method
- * @property {string} user_agent         - request user agent
- * @property {string} accept_language    - request accept language
- * @property {string} host               - request host
- * @property {object} body               - request body
+ * @property {string} module_type       - APP or REPORT
+ * @property {string|null} params       - parameter in url used by SHOW_PROFILE parameter in apps.json
+ * @property {string|null} reportid     - REPORT
+ * @property {string|null} reportname   - REPORT
+ * @property {string} ip                - ip address
+ * @property {string} method            - request method
+ * @property {string} user_agent        - request user agent
+ * @property {string} accept_language   - request accept language
+ * @property {string} host              - request host
+ * @property {object} body              - request body
  */
 /**
  * App render common info settings

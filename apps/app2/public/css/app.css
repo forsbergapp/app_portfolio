@@ -919,6 +919,15 @@ a:active,
 	background-color:var(--report_theme_footer_background_color);
 }
 /* THEME COMMON */
+.common_dialogue{
+	background-color: var(--app_shadow3);
+}
+.common_dialogue_content{
+	background-color:var(--app_light) !important;
+	color: var(--app_black) !important;
+	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
+}
+
 .common_link{
 	color:var(--app_theme_links);
 }

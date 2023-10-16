@@ -112,6 +112,54 @@ const client_locale = (accept_language) =>{
     });
 };
 /**
+ * Render html for REPORT
+ * 
+ * @param {number} app_id               - application_id
+ * @param {[string, string][]} files    - array with files
+ * @param {Types.callBack} callBack     - CallBack with error and app/report html
+ */
+const render_report_html = (app_id, files, callBack) => {
+    read_module_files(files, (err, report)=>{
+        if (err)
+            callBack(err, null);
+        else{
+            /**@type {[string, string][]} */
+            let common_files;
+            common_files = [
+                            //HEAD
+                            ['<CommonReportHead/>', process.cwd() + '/apps/common/src/report/head.html'],
+                            ['<CommonReportHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html']
+                        ];
+            read_common_files(report, common_files, (err, report)=>{
+                if (err)
+                    callBack(err, null);
+                else
+                    callBack(null, report);
+            });
+        }
+    });
+};
+/**
+ * Reads module files in sequential order
+ * 
+ * @async
+ * @param {[string, string][]} files
+ * @param {Types.callBack} callBack   - CallBack with error and app/report html
+ */
+ const read_module_files = async (files, callBack) => {
+    const fs = await import('node:fs');
+    let module = '';
+    for (const file of files){
+        const filecontent = await fs.promises.readFile(file[1]);
+        if (module=='')
+            module = filecontent.toString();
+        else
+            module = module.replace(file[0],`${filecontent.toString()}`);
+    }
+    callBack(null, module);
+};
+
+/**
  * Reads common html files in sequential order
  * 
  * @async
@@ -232,41 +280,29 @@ const render_common_html = async (app_id, module, app_config) =>{
     return new Promise((resolve, reject)=>{
         /**@type {[string, string][]} */
         let common_files;
-        if (app_config.module_type == 'APP'){
-            common_files = [
-				//HEAD
-				['<CommonHead/>', process.cwd() + '/apps/common/src/head.html'],
-				['<CommonHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
-				//BODY
-				['<CommonBody/>', process.cwd() + '/apps/common/src/body.html'],
-                ['<CommonBodyDialogues/>', process.cwd() + '/apps/common/src/body_dialogues.html'],
-                ['<CommonBodyWindowInfo/>', process.cwd() + '/apps/common/src/body_window_info.html'],
-				['<CommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
-				['<CommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],    
-				//Profile tag CommonBodyProfileDetail in common body
-				['<CommonBodyProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], 
-				['<CommonBodyProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
-                [app_config.custom_tag_profile_search==null?'<CommonBodyProfileSearch/>':app_config.custom_tag_profile_search, process.cwd() + '/apps/common/src/profile_search.html'],
-				[app_config.custom_tag_user_account==null?'<CommonBodyUserAccount/>':app_config.custom_tag_user_account, process.cwd() + '/apps/common/src/user_account.html'],
-                [app_config.custom_tag_profile_top==null?'<CommonBodyProfileBtnTop/>':app_config.custom_tag_profile_top, process.cwd() + '/apps/common/src/profile_btn_top.html']
-            ];
-            if (app_config.map==true)
-                common_files.push(['<CommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html']);
-            if (app_config.app_themes==true){
-                //CommonBodyThemes inside common User account div
-                common_files.push(['<CommonBodyThemes/>', process.cwd() + '/apps/common/src/app_themes.html']);
-            }
+        common_files = [
+            //HEAD
+            ['<CommonHead/>', process.cwd() + '/apps/common/src/head.html'],
+            ['<CommonHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
+            //BODY
+            ['<CommonBody/>', process.cwd() + '/apps/common/src/body.html'],
+            ['<CommonBodyDialogues/>', process.cwd() + '/apps/common/src/body_dialogues.html'],
+            ['<CommonBodyWindowInfo/>', process.cwd() + '/apps/common/src/body_window_info.html'],
+            ['<CommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
+            ['<CommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],    
+            //Profile tag CommonBodyProfileDetail in common body
+            ['<CommonBodyProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], 
+            ['<CommonBodyProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
+            [app_config.custom_tag_profile_search==null?'<CommonBodyProfileSearch/>':app_config.custom_tag_profile_search, process.cwd() + '/apps/common/src/profile_search.html'],
+            [app_config.custom_tag_user_account==null?'<CommonBodyUserAccount/>':app_config.custom_tag_user_account, process.cwd() + '/apps/common/src/user_account.html'],
+            [app_config.custom_tag_profile_top==null?'<CommonBodyProfileBtnTop/>':app_config.custom_tag_profile_top, process.cwd() + '/apps/common/src/profile_btn_top.html']
+        ];
+        if (app_config.map==true)
+            common_files.push(['<CommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html']);
+        if (app_config.app_themes==true){
+            //CommonBodyThemes inside common User account div
+            common_files.push(['<CommonBodyThemes/>', process.cwd() + '/apps/common/src/app_themes.html']);
         }
-        else
-            common_files = [
-                //HEAD
-                ['<CommonReportHead/>', process.cwd() + '/apps/common/src/report/head.html'],
-                ['<CommonReportHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
-                //BODY
-                ['<CommonReportBody/>', process.cwd() + '/apps/common/src/report/body.html'],
-                ['<CommonReportBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
-                ['<CommonReportBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html']
-            ];
         read_common_files(module, common_files, (err, app)=>{
             if (err)
                 reject(err);
@@ -771,24 +807,19 @@ const getModule = async (app_id, module_config, callBack) =>{
         }
         else{
             const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
-            app = await createReport(app_id, module_config.params, client_locale(module_config.accept_language));
+            const data = {  reportid:       module_config.reportid,
+                            reportname:     module_config.reportname,
+                            ip:             module_config.ip,
+                            user_agent:     module_config.user_agent,
+                            accept_language:module_config.accept_language,
+                            latitude:       result_geodata.latitude,
+                            longitude:      result_geodata.longitude,
+                            host:           module_config.host};
+            app = await createReport(app_id, data);
             app_module_type = 'REPORT';
-            config_map = false;
-            config_map_styles = null;
-            config_ui = false;
         }
     }
-    get_module_with_init({  app_id: app_id, 
-                            locale: client_locale(module_config.accept_language),
-                            system_admin_only:system_admin_only,
-                            map:config_map, 
-                            map_styles: config_map_styles,
-                            ui:config_ui,
-                            datatoken:datatoken,
-                            latitude:result_geodata.latitude,
-                            longitude:result_geodata.longitude,
-                            place:result_geodata.place,
-                            module:app.app}, (err, app_with_init) =>{
+    const log = module => {
         //if app admin then log, system does not log in database
         if (ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
@@ -810,12 +841,30 @@ const getModule = async (app_id, module_config, callBack) =>{
                             client_latitude : result_geodata.latitude,
                             client_longitude : result_geodata.longitude
                         }, ()  => {
-                            return callBack(null, app_with_init);
+                            return callBack(null, module);
                 });
             });
         else
-            return callBack(null, app_with_init);
-    });
+            return callBack(null, module);
+    };
+    if (module_config.module_type=='APP'){
+        get_module_with_init({  app_id: app_id, 
+            locale: client_locale(module_config.accept_language),
+            system_admin_only:system_admin_only,
+            map:config_map, 
+            map_styles: config_map_styles,
+            ui:config_ui,
+            datatoken:datatoken,
+            latitude:result_geodata.latitude,
+            longitude:result_geodata.longitude,
+            place:result_geodata.place,
+            module:app.app}, (err, app_with_init) =>{
+            log(app_with_init);
+        });
+    }
+    else
+        log(app);
+    
 };
 /**
  * Gets app if app is ok to start or return maintenance, if app is admin then get admin app
@@ -827,7 +876,9 @@ const getModule = async (app_id, module_config, callBack) =>{
 const getApp = (req, app_id, params, callBack) => {
     if (apps_start_ok() ==true || app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){  
         getModule(app_id, {	module_type:'APP', 
-                            params:params, 
+                            params:params,
+                            reportid:null,
+                            reportname:null,
                             ip:req.ip,
                             method:req.method,
                             user_agent: req.headers_user_agent,
@@ -890,7 +941,9 @@ const getReport = async (req, app_id, callBack) => {
         }
         else{
             getModule(app_id, {	module_type:'REPORT', 
-                                params:query_parameters_obj.module, 
+                                reportname:query_parameters_obj.module,
+                                reportid:req.reportid,
+                                params:null,
                                 ip:req.ip,
                                 method:req.method,
                                 user_agent: req.headers_user_agent,
@@ -1129,7 +1182,7 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
     });
 };
 export {/*APP functions */
-        apps_start_ok, render_app_html,render_app_with_data,
+        apps_start_ok, render_app_html,render_report_html ,render_app_with_data,
         /*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */

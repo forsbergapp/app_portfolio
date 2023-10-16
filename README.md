@@ -143,8 +143,14 @@
 	www.leafletjs.com
 	Geoplugin Geolocation
 	www.geoplugin.com
-	EasyQRCodeJS
-	www.github.com/ushelp/EasyQRCodeJS
+	Pray Times client version
+    www.praytimes.org
+    Pray Times server version
+    www.npmjs.com/package/praytimes
+    EasyQRCodeJS client version
+    www.github.com/ushelp/EasyQRCodeJS
+    EasyQRCodeJS server version
+    https://www.npmjs.com/package/easyqrcodejs-nodejs
 	Country Translations
 	www.github.com/umpirsky/country-list
 	Language Translations

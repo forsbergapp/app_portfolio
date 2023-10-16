@@ -79,9 +79,6 @@ const COMMON_GLOBAL = {
     'module_easy.qrcode_height':'',
     'module_easy.qrcode_color_dark':'',
     'module_easy.qrcode_color_light':'',
-    'module_easy.qrcode_logo_file_path':'',
-    'module_easy.qrcode_logo_width':'',
-    'module_easy.qrcode_logo_height':'',
     'module_easy.qrcode_background_color':'',
     'service_broadcast_client_ID':'',
     'service_broadcast_eventsource':''
@@ -2601,11 +2598,6 @@ const create_qr = (div, url) => {
             height: COMMON_GLOBAL['module_easy.qrcode_height'],
             colorDark: COMMON_GLOBAL['module_easy.qrcode_color_dark'],
             colorLight: COMMON_GLOBAL['module_easy.qrcode_color_light'],
-            logo: COMMON_GLOBAL['module_easy.qrcode_logo_file_path'],
-            logoWidth: COMMON_GLOBAL['module_easy.qrcode_logo_width'],
-            logoHeight: COMMON_GLOBAL['module_easy.qrcode_logo_height'],
-            logoBackgroundColor: COMMON_GLOBAL['module_easy.qrcode_background_color'],
-            logoBackgroundTransparent: false,
             drawer: 'svg'
         });
     });
