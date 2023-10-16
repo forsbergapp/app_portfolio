@@ -108,16 +108,19 @@ const req_report_param = req =>{return{ reportid:               req.query.report
     });
     app.get('/reports',(/** @type{Types.req}*/req, /**@type {Types.res} */ res) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        if (app_id == 0)
-            res.redirect('/');
-        else
+        if (app_id == 0){
+            res.statusCode = 503;
+            res.statusMessage = '';
+            res.send('');
+        }
+        else{
+            //const data = {...}
             getReport(req_report_param(req), app_id, (/**@type{Types.error}*/err, /**@type{string}*/report_result)=>{
                 //redirect if any error
                 if (err){
                     res.statusCode = 500;
                     res.statusMessage = err;
                     res.send(err.message);
-                    //res.redirect('/');
                 }
                 else{
                     if ((req.headers['content-type']) && req.headers['content-type'].startsWith('application/pdf')){
@@ -130,6 +133,8 @@ const req_report_param = req =>{return{ reportid:               req.query.report
                 }
                     
             });
+        }
+            
     });
     app.get('/',(/** @type{Types.req}*/req, /** @type{Types.res}*/res) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');

@@ -312,12 +312,6 @@ const init = (parameters) => {
                     common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
                 if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_LIGHT')
                     common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_FILE_PATH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = parameters.app[i].parameter_value;
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_WIDTH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(parameters.app[i].parameter_value);
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_LOGO_HEIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(parameters.app[i].parameter_value);
                 if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
                     common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
             }

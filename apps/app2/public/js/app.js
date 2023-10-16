@@ -193,19 +193,6 @@ const get_report_url = (id, sid, papersize, item, format) => {
     //url query parameters are decoded in report module and in report service
     return common.getHostname() + `/reports?reportid=${encodedurl}`;
 };
-const updateViewStat_app = (user_setting_id, user_setting_user_account_id) => {
-    if (parseInt(user_setting_user_account_id) == parseInt(common.COMMON_GLOBAL['user_account_id']))
-        //do not update viewed stat if logged in user is the same as the user account in user setting
-        null;
-    else{
-        //update always viewed stat with or without user account logged in
-        if (common.COMMON_GLOBAL['user_account_id']=='')
-            app_report.updateReportViewStat(user_setting_id, common.COMMON_GLOBAL['user_account_id']);
-        else
-            app_report.updateReportViewStat(user_setting_id, parseInt(common.COMMON_GLOBAL['user_account_id']));
-    }
-        
-};
 /*----------------------- */
 /* THEME                  */
 /*----------------------- */
@@ -1862,7 +1849,6 @@ const profile_user_setting_link = (item) => {
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
         case 'profile_user_settings_year':{
-            updateViewStat_app(sid,user_account_id);
             const url = get_report_url(user_account_id, 
                                      sid, 
                                      paper_size,
@@ -2686,7 +2672,7 @@ const init_app = () => {
         //5.show profile if user in url
         //6.user provider login
         //7.service worker
-        app_report.set_prayer_method(true).then(() => {
+        app_report.set_prayer_method().then(() => {
             set_default_settings().then(() => {
                 settings_translate(true).then(() => {
                     settings_translate(false).then(() => {
@@ -2900,12 +2886,6 @@ const init = (parameters) => {
                 common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
                 common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_FILE_PATH')
-                common.COMMON_GLOBAL['module_easy.qrcode_logo_file_path'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_WIDTH')
-                common.COMMON_GLOBAL['module_easy.qrcode_logo_width'] = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_LOGO_HEIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_logo_height'] = parseInt(parameters.app[i].parameter_value);
             if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
                 common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
         }
@@ -2913,7 +2893,7 @@ const init = (parameters) => {
     });
 };
 export{/*REPORT*/
-       printTable, getReportSettings, update_timetable_report, get_report_url, updateViewStat_app,
+       printTable, getReportSettings, update_timetable_report, get_report_url,
        /*MAP*/
        init_map, map_show_qibbla, map_update_app,
        /*THEME*/
