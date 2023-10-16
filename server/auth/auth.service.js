@@ -193,46 +193,6 @@ const check_request = (req_path, callBack) =>{
         callBack(null, null);
 };
 
-/**
- * Checks if internet exists
- * 
- * @returns {Promise<0|1>} - 0=No internet, 1= Internet
- */
-const check_internet = async () => {
-    return new Promise(resolve =>{
-        //test connection with localhost
-        //no need to specify other domain to test internet
-        import('node:dns').then(({resolve: dns_resolve}) => {
-            dns_resolve('localhost', 'A', (err) => {
-                /*  error if disconnected internet:
-                code:       'ECONNREFUSED'
-                errno:      undefined
-                hostname:   'localhost'
-                syscall:    'queryA'
-                message:    'queryA ECONNREFUSED localhost'
-                stack:      'Error: queryA ECONNREFUSED localhost\n    
-                                at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
-                                at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
-                
-                error if not found              
-                code:       'ENOTFOUND'
-                errno:      undefined
-                hostname:   'localhost'
-                syscall:    'queryA'
-                message:    'queryA ENOTFOUND localhost'
-                stack:      'Error: queryA ENOTFOUND localhost\n    
-                            at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
-                            at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
-                */
-                //use only resolve here, no reject to avoid .catch statement in calling function
-                if ((err) && err.code=='ECONNREFUSED')
-                    resolve(0);
-                else 
-                    resolve(1);
-            });
-        });
-    });
-};
 
 /**
  * Checks access token
@@ -324,6 +284,6 @@ const CreateDataToken = (app_id)=>{
                             });
     return jsontoken_dt;
 };
-export {access_control, block_ip_control, safe_user_agents, check_request, check_internet, 
+export {access_control, block_ip_control, safe_user_agents, check_request,
         checkAccessToken,checkDataToken, 
         accessToken,CreateDataToken};

@@ -1,5 +1,5 @@
 const service = await import('./service.js');
-const { MicroserviceServer, IAM } = await import(`file://${process.cwd()}/service/service.service.js`);
+const { no_internet_message, check_internet, MicroserviceServer, IAM } = await import(`file://${process.cwd()}/service/service.service.js`);
 
 const startserver = async () =>{
 	const request = await MicroserviceServer('GEOLOCATION');
@@ -65,13 +65,19 @@ const getPlace = async (req, res) => {
 		res.write(geodata, 'utf8');
 	}
 	else{
-		//service can return other formats, set json
-		const url = `http://www.geoplugin.net/extras/location.gp?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
-		geodata = await service.getGeodata(url, req.headers['accept-language']);
-		if (geodata != '[[]]')
-			service.writeCacheGeodata('PLACE', geodata);
-		res.statusCode = 200;
-		res.write(geodata, 'utf8');
+		if (check_internet==1){
+			//service can return other formats, set json
+			const url = `http://www.geoplugin.net/extras/location.gp?format=json&lat=${req.query.latitude}&lon=${req.query.longitude}`;
+			geodata = await service.getGeodata(url, req.headers['accept-language']);
+			if (geodata != '[[]]')
+				service.writeCacheGeodata('PLACE', geodata);
+			res.statusCode = 200;
+			res.write(geodata, 'utf8');
+		}
+		else{
+			res.statusCode = 503;
+			res.write(no_internet_message, 'utf-8');
+		}
 	}
 	res.end();
 };
@@ -84,17 +90,23 @@ const getIp = async (req, res) => {
 		res.write(geodata, 'utf8');
 	}
 	else{
-		if (req.query.ip == '::1' || req.query.ip == '::ffff:127.0.0.1' || req.query.ip == '127.0.0.1'){
-			//create empty record with ip ::1 first time
-			service.writeCacheGeodata('IP', service.getGeodataEmpty('IP'));
-			url = 'http://www.geoplugin.net/json.gp?ip=';
+		if (check_internet==1){
+			if (req.query.ip == '::1' || req.query.ip == '::ffff:127.0.0.1' || req.query.ip == '127.0.0.1'){
+				//create empty record with ip ::1 first time
+				service.writeCacheGeodata('IP', service.getGeodataEmpty('IP'));
+				url = 'http://www.geoplugin.net/json.gp?ip=';
+			}
+			else
+				url = `http://www.geoplugin.net/json.gp?ip=${req.query.ip}`;
+			geodata = await service.getGeodata(url, req.headers['accept-language']);
+			service.writeCacheGeodata('IP', geodata);
+			res.statusCode = 200;
+			res.write(geodata, 'utf8');
 		}
-		else
-			url = `http://www.geoplugin.net/json.gp?ip=${req.query.ip}`;
-		geodata = await service.getGeodata(url, req.headers['accept-language']);
-		service.writeCacheGeodata('IP', geodata);
-		res.statusCode = 200;
-		res.write(geodata, 'utf8');
+		else{
+			res.statusCode = 503;
+			res.write(no_internet_message, 'utf-8');
+		}
 	}
 	res.end();
 };
