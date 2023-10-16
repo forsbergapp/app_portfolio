@@ -4,47 +4,7 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 const fs = await import('node:fs');
 
 
-const no_internet_message = '🗺⛔';
-/**
- * Checks if internet exists
- * 
- * @returns {Promise<0|1>} - 0=No internet, 1= Internet
- */
- const check_internet = async () => {
-    return new Promise(resolve =>{
-        //test connection with localhost
-        //no need to specify other domain to test internet
-        import('node:dns').then(({resolve: dns_resolve}) => {
-            dns_resolve('localhost', 'A', (err) => {
-                /*  error if disconnected internet:
-                code:       'ECONNREFUSED'
-                errno:      undefined
-                hostname:   'localhost'
-                syscall:    'queryA'
-                message:    'queryA ECONNREFUSED localhost'
-                stack:      'Error: queryA ECONNREFUSED localhost\n    
-                                at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
-                                at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
-                
-                error if not found              
-                code:       'ENOTFOUND'
-                errno:      undefined
-                hostname:   'localhost'
-                syscall:    'queryA'
-                message:    'queryA ENOTFOUND localhost'
-                stack:      'Error: queryA ENOTFOUND localhost\n    
-                            at QueryReqWrap.onresolve [as oncomplete] (node:dns:256:19)\n    
-                            at QueryReqWrap.callbackTrampoline (node:internal/async_hooks:130:17)'
-                */
-                //use only resolve here, no reject to avoid .catch statement in calling function
-                if ((err) && err.code=='ECONNREFUSED')
-                    resolve(0);
-                else 
-                    resolve(1);
-            });
-        });
-    });
-};
+const timeout_message = '🗺⛔?';
 
 /**
  * Get number value from request key
@@ -230,7 +190,7 @@ const service_request = async (service, path, method, timeout, client_ip, author
         if (method !='GET')
             request.write(JSON.stringify(body));
         request.on('timeout', () => {
-            reject('timeout');
+            reject(timeout_message);
         });
         request.end();
     });
@@ -445,4 +405,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {no_internet_message, check_internet, IAM, MicroserviceServer, MICROSERVICE, CircuitBreaker, MessageQueue};
+export {IAM, MicroserviceServer, MICROSERVICE, CircuitBreaker, MessageQueue};
