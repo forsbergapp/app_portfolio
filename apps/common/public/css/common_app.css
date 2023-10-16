@@ -387,18 +387,6 @@ a:active {
 	z-index:52;
 }
 /*DIALOGUE MESSAGE*/
-#common_dialogue_message_content{
-	padding: 25px;
-}
-#common_dialogue_message, #common_confirm_question, #common_message_cancel, #common_message_close{
-	visibility: hidden;
-}
-#common_message_buttons{
-	height: 0;
-}
-#common_message_title{
-	display:inline-block;
-}
 
 #common_dialogue_message{
 	z-index:53;
@@ -1309,9 +1297,6 @@ a:active {
 @media only screen and (min-width: 768px) {
 	body{
 		font-size: 18px;
-	}
-	.common_dialogue_content{
-		font-size:14px;
 	}
 	#common_dialogue_profile_content{
 		width:500px;
