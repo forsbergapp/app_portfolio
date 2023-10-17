@@ -54,7 +54,8 @@ const getStatusCodes = async (req, res) =>{
 
 };
 const getLogsStats = async (req, res) => {
-	const data = {	code:			getNumberValue(req.query.code),
+	const data = {	app_id:			getNumberValue(req.query.select_app_id),
+					code:			getNumberValue(req.query.code),
 					year: 			getNumberValue(req.query.year),
 					month:			getNumberValue(req.query.month)
 					};

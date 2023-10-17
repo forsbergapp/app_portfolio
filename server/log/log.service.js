@@ -434,6 +434,7 @@ const getLogsStats = async (app_id, data, callBack) => {
             }
             else
                 sample = `${data.year}${data.month}`;
+            const {ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
             const fileBuffer = await fs.promises.readFile(`${process.cwd() + ConfigGetInit('PATH_LOG') + `REQUEST_INFO_${sample}.log`}`, 'utf8');
             fileBuffer.toString().split('\r\n').forEach((record) => {
                 if (record != ''){
@@ -441,16 +442,18 @@ const getLogsStats = async (app_id, data, callBack) => {
                     //add for given status code or all status codes if all should be returned
                     //save this as chart 2 with days
                     if (data.code == null || data.code == record_obj.statusCode){
-                        //add unique status codes to a set
-                        log_status_codes.add(record_obj.statusCode);
-                        log_days.add(day);
-                        logfiles.push({ 
-                            statusCode: record_obj.statusCode,
-                            year: data.year,
-                            month: data.month,
-                            day: day});
+                        const domain_app_id = record_obj.host?ConfigGetApp(record_obj.host, 'SUBDOMAIN'):null;
+                        if (data.app_id == null || data.app_id == domain_app_id){
+                            //add unique status codes to a set
+                            log_status_codes.add(record_obj.statusCode);
+                            log_days.add(day);
+                            logfiles.push({ 
+                                statusCode: record_obj.statusCode,
+                                year: data.year,
+                                month: data.month,
+                                day: day});
+                        }                        
                     }
-                        
                 }
             });
         }

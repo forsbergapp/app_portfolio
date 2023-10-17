@@ -279,12 +279,7 @@ ul#admin_login_nav li{
 .box_legend_col{
 	height: 10px;
 	display: inline-block;
-}
-.box_legend_col:nth-child(1){
-	width: calc(10% - 5px);
-}
-.box_legend_col:nth-child(2){
-	width: calc(90% - 5px);
+	min-width: 50px;
 }
 #box2{
 	width: 100%;
