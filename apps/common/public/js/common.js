@@ -251,15 +251,10 @@ const ICONS = {
     'misc_ban':                 icon_string('f05e'),
     'infinite':                 '∞',
     //message
-    'message_user':             icon_string('f2bd'),
+    'message_fail':             icon_string('f057'),
+    'message_success':          icon_string('f058'),
     'message_error':            icon_string('f00d'),
-    'message_error_file':       icon_string('e4eb'),
-    'message_missing':          icon_string('21'),
-    'message_not_found':        icon_string('3f'),
-    'message_text':             icon_string('41') + icon_string('42') + icon_string('43'),
-    'message_password':         icon_string('f084'),
-    'message_email':            icon_string('f0e0'),
-    'message_record':           icon_string('f1c0')
+    'message_text':             icon_string('41') + icon_string('42') + icon_string('43')
 };
 Object.seal(ICONS);
 const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">

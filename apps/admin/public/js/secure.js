@@ -461,11 +461,14 @@ const sendBroadcast = () => {
         path = '/broadcast/message/Admin?';
         token_type = 1;
     }
-    common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err) => {
+    common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err, result) => {
         if (err)
             null;
         else{
-            common.show_message('INFO', null, null, `${common.ICONS['app_send']}!`, common.COMMON_GLOBAL['app_id']);
+            if (Number(result) == 1)
+                common.show_message('INFO', null, null, `${common.ICONS['message_success']}`, common.COMMON_GLOBAL['app_id']);
+            else
+                common.show_message('INFO', null, null, `${common.ICONS['message_fail']}`, common.COMMON_GLOBAL['app_id']);
         }
     });
 };    
