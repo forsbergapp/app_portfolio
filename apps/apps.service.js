@@ -124,8 +124,7 @@ const render_report_html = (app_id, files, callBack) => {
             callBack(err, null);
         else{
             /**@type {[string, string][]} */
-            let common_files;
-            common_files = [
+            const common_files = [
                             //HEAD
                             ['<CommonReportHead/>', process.cwd() + '/apps/common/src/report/head.html'],
                             ['<CommonReportHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html']
@@ -180,9 +179,9 @@ const read_common_files = async (module, files, callBack) => {
 /**
  * Renders app html with data
  * 
- * @param {string} app            - html
+ * @param {string} app              - html
  * @param {[string, string][]} data - array with tags and data
- * @returns {string}              - app html with data
+ * @returns {string}                - app html with data
  */
 const render_app_with_data = (app, data)=>{
     for (const variable of data){
@@ -279,8 +278,7 @@ const render_common_html = async (app_id, module, app_config) =>{
     }               
     return new Promise((resolve, reject)=>{
         /**@type {[string, string][]} */
-        let common_files;
-        common_files = [
+        const common_files = [
             //HEAD
             ['<CommonHead/>', process.cwd() + '/apps/common/src/head.html'],
             ['<CommonHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
@@ -817,10 +815,17 @@ const getModule = async (app_id, module_config, callBack) =>{
                             latitude:       result_geodata.latitude,
                             longitude:      result_geodata.longitude,
                             url:            module_config.url};
-            app = await createReport(app_id, data);
+            const report = await createReport(app_id, data);
+            app = {app:report, map:false, map_styles:null};
             app_module_type = 'REPORT';
+            config_map = null;
+            config_map_styles = null;
+            config_ui = null;
         }
     }
+    /**
+     * @param {string} module
+     */
     const log = module => {
         //if app admin then log, system does not log in database
         if (ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
@@ -850,22 +855,22 @@ const getModule = async (app_id, module_config, callBack) =>{
             return callBack(null, module);
     };
     if (module_config.module_type=='APP'){
-        get_module_with_init({  app_id: app_id, 
-            locale: client_locale(module_config.accept_language),
-            system_admin_only:system_admin_only,
-            map:config_map, 
-            map_styles: config_map_styles,
-            ui:config_ui,
-            datatoken:datatoken,
-            latitude:result_geodata.latitude,
-            longitude:result_geodata.longitude,
-            place:result_geodata.place,
-            module:app.app}, (err, app_with_init) =>{
-            log(app_with_init);
+        get_module_with_init({  app_id:             app_id, 
+                                locale:             client_locale(module_config.accept_language),
+                                system_admin_only:  system_admin_only,
+                                map:                config_map, 
+                                map_styles:         config_map_styles,
+                                ui:                 config_ui,
+                                datatoken:          datatoken,
+                                latitude:           result_geodata.latitude,
+                                longitude:          result_geodata.longitude,
+                                place:              result_geodata.place,
+                                module:             app.app}, (err, app_with_init) =>{
+                                log(app_with_init);
         });
     }
     else
-        log(app);
+        log(app.app);
     
 };
 /**
@@ -880,6 +885,7 @@ const getApp = (req, app_id, params, callBack) => {
         getModule(app_id, {	module_type:'APP', 
                             params:params,
                             reportid:null,
+                            uid_view:null,
                             reportname:null,
                             url:null,
                             ip:req.ip,

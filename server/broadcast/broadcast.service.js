@@ -189,7 +189,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
  * @param {number} year
  * @param {number} month
  * @param {string} order_by
- * @param {string} sort
+ * @param {Types.sort_broadcast} sort
  * @param {number} dba
  * @param {Types.callBack} callBack
  */
@@ -204,6 +204,8 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
         //return keys without response
         connected_clients_no_res.push({ id: client.id,
                                         app_id: client.app_id, 
+                                        app_role_icon:'',
+                                        app_role_id:'',
                                         user_account_id: client.user_account_id,
                                         identity_provider_id: client.identity_provider_id,
                                         system_admin: client.system_admin,
@@ -221,7 +223,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     });
     /**
      * Sort
-     * @param {string|null} sort
+     * @param {Types.sort_broadcast} sort
      */
     const sort_and_return = (sort) =>{
         let order_by_num = 0;
@@ -231,23 +233,22 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             order_by_num = -1;
 
         return connected_clients_no_res = connected_clients_no_res.sort((first, second)=>{
-            let first_sort, second_sort;
             //sort default is connection_date if sort missing as argument
             if (typeof first[sort==null?'connection_date':sort] == 'number'){
                 //number sort
-                first_sort = first[sort==null?'connection_date':sort];
-                second_sort = second[sort==null?'connection_date':sort];
-                if (first_sort< second_sort )
+                const first_sort_num = first[sort==null?'connection_date':sort];
+                const second_sort_num = second[sort==null?'connection_date':sort];
+                if (first_sort_num< second_sort_num )
                     return -1 * order_by_num;
-                else if (first_sort> second_sort)
+                else if (first_sort_num> second_sort_num)
                     return 1 * order_by_num;
                 else
                     return 0;
             }
             else{
                 //string sort with lowercase and localcompare
-                first_sort = first[sort==null?'connection_date':sort].toLowerCase();
-                second_sort = second[sort==null?'connection_date':sort].toLowerCase();
+                const first_sort = first[sort==null?'connection_date':sort].toString().toLowerCase();
+                const second_sort = second[sort==null?'connection_date':sort].toString().toLowerCase();
                 //using localeCompare as collation method
                 if (first_sort.localeCompare(second_sort)<0 )
                     return -1 * order_by_num;
