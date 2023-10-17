@@ -30,7 +30,7 @@ const createReport= (app_id, report_parameters) => {
                             accept_language:report_parameters.accept_language,
                             latitude:       report_parameters.latitude,
                             longitude:      report_parameters.longitude,
-                            host:           report_parameters.host,
+                            url:            report_parameters.url,
                             report:         report}).then((report_rendered)=>{
                     resolve(report_rendered);
                 });
