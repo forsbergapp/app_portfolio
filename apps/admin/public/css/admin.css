@@ -245,16 +245,17 @@ ul#admin_login_nav li{
 #box1_chart{
 	width: 49%;
 	display: inline-block;
+	height:120px;
 }
 #box1_pie{
 	border-radius: 50%;
-	width: calc(20% + (100px - 20%));
 	display: inline-block;
+	height: 117px;
+	width: 117px;
 }
 #box1_pie:after {
 	content: "";
 	display: block;
-	padding-bottom: 100%;
   }
 .box_title{
 	margin:10px;
@@ -270,6 +271,7 @@ ul#admin_login_nav li{
 	width: 50%;
 	vertical-align: top;
 	overflow-y: auto;
+	height: 120px;
 }
 .box_legend_row{
 	width: 100%;

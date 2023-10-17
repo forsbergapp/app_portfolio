@@ -440,7 +440,7 @@ const getLogsStats = async (app_id, data, callBack) => {
                     const  record_obj = JSON.parse(record);
                     //add for given status code or all status codes if all should be returned
                     //save this as chart 2 with days
-                    if (data.code == '' || data.code == record_obj.statusCode){
+                    if (data.code == null || data.code == record_obj.statusCode){
                         //add unique status codes to a set
                         log_status_codes.add(record_obj.statusCode);
                         log_days.add(day);
