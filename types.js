@@ -117,17 +117,15 @@
  * @property {string} httpVersion
  * @property {string} originalUrl
  * @property {string} method
- * @property {object} headers
- * @property {string} headers['X-Request-Id']
- * @property {string} headers['X-Correlation-Id']
- * @property {string} headers['user-agent']
- * @property {string} headers['accept-language']
- * @property {string} headers['referer']
+ * @property {{ 'X-Request-Id':string,
+ *              'X-Correlation-Id':string,
+ *              'user-agent':string,
+ *              'accept-language':string,
+ *              referer:string }} headers
  * @property {object} socket
  * @property {string} socket.bytesRead
  * @property {string} socket.bytesWritten
  */
-
 
 /**
  * Response
@@ -216,7 +214,7 @@
  * @property {number} system_admin_only     - 0/1
  * @property {boolean|null} map             - map
  * @property {map_styles} map_styles        - map styles
- * @property {boolean} ui                   - ui true/false app=true, report=false
+ * @property {boolean|null} ui              - ui true/false app=true, report=false
  * @property {string} datatoken             - JW token
  * @property {string} latitude              - geodata latitude
  * @property {string} longitude             - geodata longitude
@@ -264,7 +262,7 @@
  * @property {string|null}  countries
  * @property {map_styles}   map_styles
  * @property {string}       locale
- * @property {boolean}      ui
+ * @property {boolean|null} ui
  * @property {number}       system_admin_only
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude
@@ -279,8 +277,8 @@
  * App create
  * @typedef {object} app_create
  * @property {string} app                         - HTML
- * @property {boolean|null} map     
- * @property {map_styles|null} map_styles
+ * @property {boolean} map     
+ * @property {map_styles} map_styles
  */
 /**
  * App create empty
@@ -325,7 +323,7 @@
  * @property {string}       accept_language
  * @property {string}       latitude
  * @property {string}       longitude
- * @property {string}       url
+ * @property {string|null}  url
  */
 /**
  * Info page data
@@ -541,22 +539,35 @@
  */
 /**
  * Broadcast client
- * @typedef {object} broadcast_connect_list_no_res
- * @property {number} id
- * @property {number} app_id
- * @property {number|string} [app_role_icon]
- * @property {number|string} [app_role_id]
- * @property {number} user_account_id
- * @property {string} identity_provider_id
- * @property {number} system_admin
- * @property {string} connection_date
- * @property {string} gps_latitude
- * @property {string} gps_longitude
- * @property {string} ip
- * @property {string} user_agent
-
+ * @typedef {{  'id':number,
+ *              'app_id':number,
+ *              'app_role_icon':number|string,
+ *              'app_role_id':number|string,
+ *              'user_account_id':number,
+ *              'identity_provider_id':string,
+ *              'system_admin':number,
+ *              'connection_date':string,
+ *              'gps_latitude':string,
+ *              'gps_longitude':string,
+ *              'ip':string,
+ *              'user_agent':string}} broadcast_connect_list_no_res
  */
 
+/**
+ * @typedef {   'id'|
+ *              'app_id'|
+ *              'app_role_icon'|
+ *              'app_role_id'|
+ *              'user_account_id'|
+ *              'identity_provider_id'|
+ *              'system_admin'|
+ *              'connection_date'|
+ *              'gps_latitude'|
+ *              'gps_longitude'|
+ *              'ip'|
+ *              'user_agent'|
+ *              null} sort_broadcast
+ */
 
 /**
  * DB result app

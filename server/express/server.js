@@ -28,11 +28,11 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
                                             httpVersion:    req.httpVersion,
                                             originalUrl:    req.originalUrl,
                                             method:         req.method,
-                                            headers:        {   ['X-Request-Id']:      req.headers['X-Request-Id'],
-                                                                ['X-Correlation-Id']:  req.headers['X-Correlation-Id'],
-                                                                ['user-agent']:        req.headers['user-agent'], 
-                                                                ['accept-language']:   req.headers['accept-language'], 
-                                                                ['referer']:           req.headers.referer},
+                                            headers:        {   'X-Request-Id':       req.headers['X-Request-Id'],
+                                                                'X-Correlation-Id':   req.headers['X-Correlation-Id'],
+                                                                'user-agent':         req.headers['user-agent'], 
+                                                                'accept-language':    req.headers['accept-language'], 
+                                                                referer:              req.headers.referer},
                                             socket:         {   bytesRead:          req.socket.bytesRead,
                                                                 bytesWritten:       req.socket.bytesWritten}};
                                 }
