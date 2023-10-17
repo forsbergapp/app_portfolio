@@ -1854,7 +1854,9 @@ const profile_user_setting_link = (item) => {
                                      paper_size,
                                      item.id,
                                      'HTML');
-            common.show_window_info(2, null, 'HTML', url);
+            //send viewing user account id if logged in or set empty
+            const uid_view = common.COMMON_GLOBAL['user_account_id']==''?'':parseInt(common.COMMON_GLOBAL['user_account_id']);
+            common.show_window_info(2, null, 'HTML', `${url}&uid_view=${uid_view}`);
             break;
         }
         case 'profile_user_settings_like':{

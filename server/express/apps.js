@@ -28,6 +28,7 @@ const req_report_param = req =>{return{ reportid:               req.query.report
                                             messagequeue:           req.query.messagequeue,
                                             ps:                     req.query.ps,
                                             hf:                     req.query.hf,
+                                            uid_view:               getNumberValue(req.query.uid_view),
                                             protocol:               req.protocol,
                                             ip:                     req.ip,
                                             method:                 req.method,

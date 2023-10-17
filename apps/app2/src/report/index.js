@@ -9,7 +9,7 @@ const { timetable } = await import(`file://${process.cwd()}/apps/app2/src/report
 /**
  * Creates report server
  * @param {number} app_id
- * @param {object} report_parameters
+ * @param {Types.report_create_parameters} report_parameters
  * @returns {Promise.<string>}
  */
 const createReport= (app_id, report_parameters) => {
@@ -25,6 +25,7 @@ const createReport= (app_id, report_parameters) => {
             else{
                 timetable({ app_id:         app_id,
                             reportid:       report_parameters.reportid,
+                            uid_view:       report_parameters.uid_view,
                             ip:             report_parameters.ip,
                             user_agent:     report_parameters.user_agent,
                             accept_language:report_parameters.accept_language,
