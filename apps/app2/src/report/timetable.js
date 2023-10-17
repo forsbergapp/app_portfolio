@@ -1477,7 +1477,7 @@ const timetable = async (timetable_parameters) => {
 								if (err)
 									resolve();
 								else
-									import('PrayTimes').then(({default: prayTimes}) => {
+									import('praytimes').then(({default: prayTimes}) => {
 										//set current date for report month
 										REPORT_GLOBAL['session_currentDate'] = new Date();
 										REPORT_GLOBAL['session_CurrentHijriDate'] = new Array();
