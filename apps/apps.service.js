@@ -807,7 +807,9 @@ const getModule = async (app_id, module_config, callBack) =>{
         }
         else{
             const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
+            /**@type{Types.report_create_parameters} */
             const data = {  reportid:       module_config.reportid,
+                            uid_view:       module_config.uid_view,
                             reportname:     module_config.reportname,
                             ip:             module_config.ip,
                             user_agent:     module_config.user_agent,
@@ -944,6 +946,7 @@ const getReport = async (req, app_id, callBack) => {
             getModule(app_id, {	module_type:'REPORT', 
                                 reportname:query_parameters_obj.module,
                                 reportid:req.reportid,
+                                uid_view: req.uid_view,
                                 params:null,
                                 ip:req.ip,
                                 method:req.method,

@@ -50,6 +50,7 @@
  * @property {string} query.messagequeue                            - Report parameter
  * @property {string} query.ps                                      - Report parameter
  * @property {boolean} query.hf                                     - Report parameter
+ * @property {number|null} query.uid_view                           - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
  * @property {string} query.parameter                               - Server parameter
@@ -92,19 +93,20 @@
  */
 /**
  * Request report params
- * @typedef {Object} req_report_parameters
- * @property {string} reportid
- * @property {string} messagequeue
- * @property {string} ps
- * @property {boolean} hf
- * @property {string} protocol
- * @property {string} ip
- * @property {string} method
- * @property {string} headers_user_agent
- * @property {string} headers_accept_language
- * @property {string} headers_host
- * @property {string} url
- * @property {object} body
+ * @typedef {Object}        req_report_parameters
+ * @property {string}       reportid
+ * @property {string}       messagequeue
+ * @property {string}       ps
+ * @property {boolean}      hf
+ * @property {number|null}  uid_view
+ * @property {string}       protocol
+ * @property {string}       ip
+ * @property {string}       method
+ * @property {string}       headers_user_agent
+ * @property {string}       headers_accept_language
+ * @property {string}       headers_host
+ * @property {string}       url
+ * @property {object}       body
  */
 /**
  * Request log params
@@ -228,6 +230,7 @@
  * @property {string} module_type       - APP or REPORT
  * @property {string|null} params       - parameter in url used by SHOW_PROFILE parameter in apps.json
  * @property {string|null} reportid     - REPORT
+ * @property {number|null} uid_view     - REPORT
  * @property {string|null} reportname   - REPORT
  * @property {string|null} url          - REPORT
  * @property {string} ip                - ip address
@@ -311,6 +314,19 @@
  * @property {string} format
  */
 
+/**
+ * Report create parameters
+ * @typedef {object}        report_create_parameters
+ * @property {string|null}  reportid
+ * @property {number|null}  uid_view
+ * @property {string|null}  reportname
+ * @property {string}       ip
+ * @property {string}       user_agent
+ * @property {string}       accept_language
+ * @property {string}       latitude
+ * @property {string}       longitude
+ * @property {string}       url
+ */
 /**
  * Info page data
  * @typedef {object} info_page_data
