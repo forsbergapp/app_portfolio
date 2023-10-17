@@ -21,6 +21,7 @@ const req_app_param = req =>{return{    ip:                     req.ip,
                             };
 /**
  * Returns parameters for reports
+ * url is used for QR Code and last query parameter is removed
  * @param {Types.req} req 
  * @returns {Types.req_report_parameters} 
  */
@@ -35,7 +36,7 @@ const req_report_param = req =>{return{ reportid:               req.query.report
                                             headers_user_agent:     req.headers['user-agent'],
                                             headers_accept_language:req.headers['accept-language'],
                                             headers_host:           req.headers.host,
-                                            url:                    `${req.protocol}://${req.headers.host}${req.originalUrl}`,
+                                            url:                    `${req.protocol}://${req.headers.host}${req.originalUrl.substr(0,req.originalUrl.indexOf('&uid_view='))}`,
                                             body:                   req.body};
                             };
 /**
