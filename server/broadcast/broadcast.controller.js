@@ -15,8 +15,8 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const BroadcastSendSystemAdmin = (req, res) => {
     service.BroadcastSendSystemAdmin(getNumberValue(req.body.app_id), getNumberValue(req.body.client_id), getNumberValue(req.body.client_id_current),
                                         req.body.broadcast_type, req.body.broadcast_message, (/**@type{Types.error}*/err, result) =>{
-        res.status(200).send(
-            err ?? result
+        res.status(200).json(
+            result
         );
     });
 };
@@ -28,8 +28,8 @@ const BroadcastSendSystemAdmin = (req, res) => {
 const BroadcastSendAdmin = (req, res) => {
     service.BroadcastSendAdmin(getNumberValue(req.body.app_id), getNumberValue(req.body.client_id), getNumberValue(req.body.client_id_current),
                                 req.body.broadcast_type, req.body.broadcast_message, (/**@type{Types.error}*/err, result) =>{
-        res.status(200).send(
-            err ?? result
+        res.status(200).json(
+            result
         );
     });
 };
