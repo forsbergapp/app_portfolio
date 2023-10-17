@@ -149,8 +149,13 @@ const config_files = () => {
                         (/**@type{Types.config_apps}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
                 }
                 default:{
-                    return Object.entries(CONFIG_APPS)[0][1].filter(
-                        (/**@type{Types.config_apps}*/app)=>{return config_group.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;
+                    try {
+                        return Object.entries(CONFIG_APPS)[0][1].filter(
+                            (/**@type{Types.config_apps}*/app)=>{return config_group.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+                    } catch (error) {
+                        //request can be called from unkown hosts
+                        return null;
+                    }
                 }
             }
         }

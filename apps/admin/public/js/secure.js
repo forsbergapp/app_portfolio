@@ -217,7 +217,6 @@ const show_start = async (yearvalues) =>{
                     let degree_stop = 0;
 
                     let chart_color;
-                    let legend_text;
                     chart_1.forEach((stat, i)=>{
                         //calculate colors and degree
                         degree_stop = degree_start + +stat.amount/sum_amount*360;
@@ -227,14 +226,14 @@ const show_start = async (yearvalues) =>{
                         else
                             chart_colors += chart_color;
                         //add to legend below chart
-                        
+                        let legend_text_chart1;
                         if (common.COMMON_GLOBAL['system_admin']==1)
-                            legend_text = SearchAndGetText(document.getElementById('select_status_codes'), stat.statusCode);
+                            legend_text_chart1 = SearchAndGetText(document.getElementById('select_status_codes'), stat.statusCode);
                         else
-                            legend_text = SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id);
+                            legend_text_chart1 = SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id);
                         html += `<div id='box1_legend_row' class='box_legend_row'>
                                     <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
-                                    <div id='box1_legend_col2' class='box_legend_col'>${legend_text}</div>
+                                    <div id='box1_legend_col2' class='box_legend_col'>${legend_text_chart1}</div>
                                 </div>`;
                         degree_start = degree_start + stat.amount/sum_amount*360;
                     });
@@ -273,14 +272,27 @@ const show_start = async (yearvalues) =>{
                                                                     </div>
                                                                     <div id='box2_bar_data'>${html}</div>`;
                     //legend below chart
-                    if (common.COMMON_GLOBAL['system_admin']==1)
-                        legend_text = document.getElementById('select_status_codes').options[document.getElementById('select_status_codes').selectedIndex].text;
-                    else
-                        legend_text = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text;
-                    document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
+                    let legend_text_chart2;
+                    if (common.COMMON_GLOBAL['system_admin']==1){
+                        //as system admin you can filter http codes and application
+                        legend_text_chart2 = document.getElementById('select_status_codes').options[document.getElementById('select_status_codes').selectedIndex].text;
+                        const legend_text_chart2_apps = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text;
+                        document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
                                                                             <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                            <div id='box2_legend_col2' class='box_legend_col'>${legend_text}</div>
+                                                                            <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
+                                                                            <div id='box2_legend_col3' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                            <div id='box2_legend_col4' class='box_legend_col'>${legend_text_chart2_apps}</div>
                                                                         </div>` ;
+                    }
+                        
+                    else{
+                        // as admin you can filter application
+                        legend_text_chart2 = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text;
+                        document.getElementById('box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
+                                                                            <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                            <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
+                                                                        </div>` ;
+                    }
                 }
             });
         }
