@@ -814,7 +814,7 @@ const getModule = async (app_id, module_config, callBack) =>{
                             accept_language:module_config.accept_language,
                             latitude:       result_geodata.latitude,
                             longitude:      result_geodata.longitude,
-                            host:           module_config.host};
+                            url:            module_config.url};
             app = await createReport(app_id, data);
             app_module_type = 'REPORT';
         }
@@ -879,6 +879,7 @@ const getApp = (req, app_id, params, callBack) => {
                             params:params,
                             reportid:null,
                             reportname:null,
+                            url:null,
                             ip:req.ip,
                             method:req.method,
                             user_agent: req.headers_user_agent,
@@ -948,7 +949,8 @@ const getReport = async (req, app_id, callBack) => {
                                 method:req.method,
                                 user_agent: req.headers_user_agent,
                                 accept_language: req.headers_accept_language,
-                                host: req.headers_host,
+                                url: req.url,
+                                host:req.headers_host,
                                 body: req.body
                                 }, (err, report)=>{
                 if (err)

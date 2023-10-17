@@ -25,16 +25,17 @@ const req_app_param = req =>{return{    ip:                     req.ip,
  * @returns {Types.req_report_parameters} 
  */
 const req_report_param = req =>{return{ reportid:               req.query.reportid, 
-                                        messagequeue:           req.query.messagequeue,
-                                        ps:                     req.query.ps,
-                                        hf:                     req.query.hf,
-                                        protocol:               req.protocol,
-                                        ip:                     req.ip,
-                                        method:                 req.method,
-                                        headers_user_agent:     req.headers['user-agent'],
-                                        headers_accept_language:req.headers['accept-language'],
-                                        headers_host:           req.headers.host,
-                                        body:                   req.body};
+                                            messagequeue:           req.query.messagequeue,
+                                            ps:                     req.query.ps,
+                                            hf:                     req.query.hf,
+                                            protocol:               req.protocol,
+                                            ip:                     req.ip,
+                                            method:                 req.method,
+                                            headers_user_agent:     req.headers['user-agent'],
+                                            headers_accept_language:req.headers['accept-language'],
+                                            headers_host:           req.headers.host,
+                                            url:                    `${req.protocol}://${req.headers.host}${req.originalUrl}`,
+                                            body:                   req.body};
                             };
 /**
  * Gets module with application name, app service parameters with optional countries

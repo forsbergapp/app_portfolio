@@ -103,6 +103,7 @@
  * @property {string} headers_user_agent
  * @property {string} headers_accept_language
  * @property {string} headers_host
+ * @property {string} url
  * @property {object} body
  */
 /**
@@ -207,18 +208,18 @@
  */
 /**
  * App info
- * @typedef {object} app_info              - app info
- * @property {number} app_id               - app id
- * @property {string} locale               - locale
- * @property {number} system_admin_only    - 0/1
- * @property {boolean|null} map                 - map
- * @property {map_styles} map_styles  - map styles
- * @property {boolean} ui                  - ui true/false app=true, report=false
- * @property {string} datatoken            - JW token
- * @property {string} latitude             - geodata latitude
- * @property {string} longitude            - geodata longitude
- * @property {string} place                - geodata place
- * @property {string} module               - HTML
+ * @typedef {object} app_info               - app info
+ * @property {number} app_id                - app id
+ * @property {string} locale                - locale
+ * @property {number} system_admin_only     - 0/1
+ * @property {boolean|null} map             - map
+ * @property {map_styles} map_styles        - map styles
+ * @property {boolean} ui                   - ui true/false app=true, report=false
+ * @property {string} datatoken             - JW token
+ * @property {string} latitude              - geodata latitude
+ * @property {string} longitude             - geodata longitude
+ * @property {string} place                 - geodata place
+ * @property {string} module                - HTML
  */
 /**
  * App module config info
@@ -228,6 +229,7 @@
  * @property {string|null} params       - parameter in url used by SHOW_PROFILE parameter in apps.json
  * @property {string|null} reportid     - REPORT
  * @property {string|null} reportname   - REPORT
+ * @property {string|null} url          - REPORT
  * @property {string} ip                - ip address
  * @property {string} method            - request method
  * @property {string} user_agent        - request user agent

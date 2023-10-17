@@ -150,7 +150,7 @@
     EasyQRCodeJS client version
     www.github.com/ushelp/EasyQRCodeJS
     EasyQRCodeJS server version
-    https://www.npmjs.com/package/easyqrcodejs-nodejs
+    www.npmjs.com/package/easyqrcodejs-nodejs
 	Country Translations
 	www.github.com/umpirsky/country-list
 	Language Translations
