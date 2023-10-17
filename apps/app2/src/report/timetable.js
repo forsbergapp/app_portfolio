@@ -1495,7 +1495,7 @@ const timetable = async (timetable_parameters) => {
 														resolve();
 													else{
 														render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_setting, user_settings_parameters)]);
-														getQRCode(timetable_parameters.host).then((qrcode)=>{
+														getQRCode(timetable_parameters.url).then((qrcode)=>{
 															render_variables.push(['REPORT_QRCODE',qrcode]);
 															resolve(render_app_with_data(timetable_parameters.report, render_variables));
 														});
@@ -1505,7 +1505,7 @@ const timetable = async (timetable_parameters) => {
 											else
 												if (reporttype==1){
 													render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_setting)]);
-													getQRCode(timetable_parameters.host).then((qrcode)=>{
+													getQRCode(timetable_parameters.url).then((qrcode)=>{
 														render_variables.push(['REPORT_QRCODE',qrcode]);
 														resolve(render_app_with_data(timetable_parameters.report, render_variables));
 													});
@@ -1513,7 +1513,7 @@ const timetable = async (timetable_parameters) => {
 												else 
 													if (reporttype==2){
 														render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_setting)]);
-														getQRCode(timetable_parameters.host).then((qrcode)=>{
+														getQRCode(timetable_parameters.url).then((qrcode)=>{
 															render_variables.push(['REPORT_QRCODE',qrcode]);
 															resolve(render_app_with_data(timetable_parameters.report, render_variables));
 														});
