@@ -10,7 +10,7 @@ const likeUserSetting = (req, res) => {
 			);
 		}
 		return res.status(200).json({
-			count: results.changedRows,
+			count: results.affectedRows,
 			items: Array(results)
 		});
 	});
@@ -23,7 +23,7 @@ const unlikeUserSetting = (req, res) => {
 			);
 		}
 		return res.status(200).json({
-			count: results.changedRows,
+			count: results.affectedRows,
 			items: Array(results)
 		});
 	});

@@ -1,77 +1,92 @@
+/** @module server/dbapi/admin */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../types.js';
+
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const DBA=1;
-
-const DBStart = async () => {
+/**
+ * Starts pool with parameters
+ * @param {number} db_use 
+ * @param {number} dba 
+ * @param {string} user 
+ * @param {string} password 
+ * @param {number|null} pool_id 
+ * @returns {Promise.<null>}
+ */
+const pool_db = async (db_use, dba, user, password, pool_id) =>{
    const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+   return new Promise ((resolve, reject)=>{
+      /**@type{Types.pool_parameters} */
+      const dbparameters = {
+         use:                       db_use,
+         pool_id:                   pool_id,
+         host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+         port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+         dba:                       dba,
+         user:                      user,
+         password:                  password,
+         database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+         //db 1 + 2 parameters
+         charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
+         connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+         // db 3 parameters
+         connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+         idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+         max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+         // db 4 parameters
+         connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
+         poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+         poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+         poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+      };
+      pool_start(dbparameters)
+      .then((/**@type{null}*/result)=>{
+         LogServerI(`Started pool ${dbparameters.pool_id}, db ${dbparameters.use}, host ${dbparameters.host}, port ${dbparameters.port}, dba ${dbparameters.dba}, user ${dbparameters.user}, database ${dbparameters.database}`);
+         resolve(result);
+      })
+      .catch((/**@type{Types.error}*/error)=>{
+         LogServerE('Starting pool error: ' + error);
+         reject(error);
+      });
+   });
+};
+/**
+ * Start pools for database used
+ */
+const DBStart = async () => {
    if (ConfigGet('SERVICE_DB', 'START')=='1'){    
       let user;
       let password;
       let dba = 0;
-      const db_use = parseInt(ConfigGet('SERVICE_DB', 'USE'));
-      const host = ConfigGet('SERVICE_DB', `DB${db_use}_HOST`);
-      const port = ConfigGet('SERVICE_DB', `DB${db_use}_PORT`);
-      const database = ConfigGet('SERVICE_DB', `DB${db_use}_NAME`);
-      const pool_db = async (dba, user, password, pool_id) =>{
-         return new Promise ((resolve, reject)=>{
-            const dbparameters = {
-               use:                       db_use,
-               pool_id:                   pool_id,
-               host:                      host,
-               port:                      port,
-               dba:                       dba,
-               user:                      user,
-               password:                  password,
-               database:                  database,
-               //db 1 + 2 parameters
-               charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-               connnectionLimit:          ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
-               // db 3 parameters
-               connectionTimeoutMillis:   ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-               idleTimeoutMillis:         ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-               max:                       ConfigGet('SERVICE_DB', `DB${db_use}_MAX`),
-               // db 4 parameters
-               connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-               poolMin:                   ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`),
-               poolMax:                   ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`),
-               poolIncrement:             ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
-            };
-            pool_start(dbparameters)
-            .then(result=>{
-               LogServerI(`Started pool ${pool_id}, db ${db_use}, host ${host}, port ${port}, dba ${dba}, user ${user}, database ${database}`);
-               resolve(result);
-            })
-            .catch(error=>{
-               LogServerE('Starting pool error: ' + error);
-               reject(error);
-            });
-         });
-      };
+      const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+      
       if (ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)){
          user = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`)}`;
          password = `${ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`)}`;
          dba = 1;
-         await pool_db(dba, user, password, null);
+         await pool_db(db_use, dba, user, password, null);
       }
       if (ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)){
          user = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
          password = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
          dba = 0;
-         await pool_db(dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+         await pool_db(db_use, dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
          .then(()=>{
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
                //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),(err, result_apps) =>{
+               getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),(/**@type{Types.error}*/err, /**@type{Types.db_result_getAppDBParametersAdmin[]}*/result_apps) =>{
                   if (err)
                      throw err;
                   else {
                      //get app id, db username and db password
                      for (const app  of result_apps){
                         if (app.id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-                           pool_db(dba, app.db_user, app.db_password, app.id);
+                           pool_db(db_use, dba, app.db_user, app.db_password, app.id);
                      }
                   }
                });
@@ -80,6 +95,11 @@ const DBStart = async () => {
       }  
    }
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const DBInfo = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
@@ -148,7 +168,7 @@ const DBInfo = async (app_id, callBack) => {
                   database: db_use,
                   Xdatabase_schema: db_schema()
                   };
-   db_execute(app_id, sql, parameters, DBA, (err, result)=>{
+   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfo[]}*/result)=>{
       if (err)
          return callBack(err, null);
       else{
@@ -162,6 +182,11 @@ const DBInfo = async (app_id, callBack) => {
       }
    });
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const DBInfoSpace = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
@@ -213,13 +238,18 @@ const DBInfoSpace = async (app_id, callBack) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   db_execute(app_id, sql, parameters, DBA, (err, result)=>{
+   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfoSpace[]}*/result)=>{
       if (err)
          return callBack(err, null);
       else
          return callBack(null, result);
    });
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack
+ */
 const DBInfoSpaceSum = async (app_id, callBack) => {
    const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
@@ -263,17 +293,22 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   db_execute(app_id, sql, parameters, DBA, (err, result)=>{
+   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfoSpaceSum[]}*/result)=>{
       if (err)
          return callBack(err, null);
       else
          return callBack(null, result[0]);
    });
 };
+/**
+ * Create demo users with user settings from /scripts/demo/demo.json
+ *	and reading images in /scripts/demo/demo*.webp
+ * @param {number} app_id 
+ * @param {string} demo_password 
+ * @param {string} lang_code 
+ * @param {Types.callBack} callBack
+ */
 const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
-   /* create demo users with user settings from /scripts/demo/demo.json
-	   and reading images in /scripts/demo/demo*.webp
-	*/
 	const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
 	const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
 	const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
@@ -302,43 +337,48 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 			]}
 		*/
 		const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
+      /**@type{[Types.demo_user]}*/
 		const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
 		let email_index = 1000;
 		let records_user_account = 0;
 		let records_user_account_app = 0;
 		let records_user_account_app_setting = 0;
 		const password_encrypted = hashSync(demo_password, genSaltSync(10));
+      /**
+       * Create demo users
+       * @param {[Types.demo_user]} demo_users 
+       * @returns {Promise.<null>}
+       */
 		const create_users = async (demo_users) =>{
 			return await new Promise((resolve, reject)=>{
-				const create_update_id = (demo_user)=>{
+				const create_update_id = (/**@type{Types.demo_user}*/demo_user)=>{
 					const email = `demo${++email_index}@localhost`;
-					const json_data_user = {
-											username:               demo_user.username,
-											bio:                    demo_user.bio,
-											avatar:                 demo_user.avatar,
-											password:               password_encrypted,
-											password_reminder:      '',
-											email:                  email,
-											active:                 1,
-											private:                0,
-											user_level:             2,
-											verification_code:      null,
-											identity_provider_id:   null,
-											provider_id:            null,
-											provider_first_name:    null,
-											provider_last_name:     null,
-											provider_image:         null,
-											provider_image_url:     null,
-											provider_email:         null
-										};
-					create(app_id, json_data_user, (err, results_create) => {
+					const data = { username:               demo_user.username,
+                              bio:                    demo_user.bio,
+                              avatar:                 demo_user.avatar,
+                              password:               password_encrypted,
+                              password_reminder:      '',
+                              email:                  email,
+                              active:                 1,
+                              private:                0,
+                              user_level:             2,
+                              verification_code:      null,
+                              identity_provider_id:   null,
+                              provider_id:            null,
+                              provider_first_name:    null,
+                              provider_last_name:     null,
+                              provider_image:         null,
+                              provider_image_url:     null,
+                              provider_email:         null
+									};
+					create(app_id, data, (/**@type{Types.error}*/err, /**@type{Types.db_result_insert}*/results_create) => {
 						if (err)
 							reject(err);
 						else{
 							demo_user.id = results_create.insertId;
 							records_user_account++;
 							if (records_user_account == demo_users.length)
-								resolve();
+								resolve(null);
 						}
 					});
 				};
@@ -347,9 +387,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				}
 			});
 		};
+      /**
+       * Create user account app
+       * @param {number} app_id 
+       * @param {number|undefined} user_account_id 
+       * @returns 
+       */
 		const create_user_account_app = async (app_id, user_account_id) =>{
 			return new Promise((resolve, reject) => {
-				createUserAccountApp(app_id, user_account_id,  (err,results) => {
+				createUserAccountApp(app_id, user_account_id,  (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 					if (err)
 						reject(err);
 					else{
@@ -360,14 +406,21 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				});
 			});
 		};
-		const create_setting = async (user_setting_app_id, json_data, i) => {
+      /**
+       * Create user setting
+       * @param {number} user_setting_app_id 
+       * @param {object} data 
+       * @param {number} i 
+       * @returns 
+       */
+		const create_setting = async (user_setting_app_id, data, i) => {
 			return new Promise((resolve, reject) => {
             let initial;
             if (i==0)
                initial = 1;
             else
                initial = 0;
-            createUserSetting(user_setting_app_id, initial, json_data, (err,results) => {
+            createUserSetting(user_setting_app_id, initial, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 					if (err)
 						reject(err);
 					else{
@@ -395,10 +448,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 					settings_header_image = `${demo_user.settings[i].image_header_image_img}.webp`;
 				else
 					settings_header_image = `${demo_user.username}.webp`;
-				let image = await fs.promises.readFile(`${process.cwd()}/scripts/demo/${settings_header_image}`);
-				image = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+            /**@type{Buffer} */
+				const image = await fs.promises.readFile(`${process.cwd()}/scripts/demo/${settings_header_image}`);
+            /**@ts-ignore */
+				const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+
 				//update settings with loaded image into BASE64 format
-				demo_user.settings[i].image_header_image_img = image;
+				demo_user.settings[i].image_header_image_img = image_string;
 				//use random day and month themes
 				//day 10001-10010
 				demo_user.settings[i].design_theme_day_id = Math.floor(10001 + Math.random() * 10);
@@ -422,9 +478,16 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		let records_user_account_setting_view = 0;
 		//create social records
 		const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'SETTINGS_LIKE', 'SETTINGS_VIEW', 'SETTINGS_VIEW_ANONYMOUS'];
+      /**
+       * Create like user
+       * @param {number} app_id 
+       * @param {number} id 
+       * @param {number} id_like 
+       * @returns 
+       */
 		const create_likeuser = async (app_id, id, id_like ) =>{
 			return new Promise((resolve, reject) => {
-				likeUser(app_id, id, id_like, (err,results) => {
+				likeUser(app_id, id, id_like, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 					if (err)
 						reject(err);
 					else{
@@ -435,9 +498,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				});
 			});
 		};
-		const create_user_account_view = async (app_id, json_data ) =>{
+      /**
+       * Create user account view
+       * @param {number} app_id 
+       * @param {object} data 
+       * @returns 
+       */
+		const create_user_account_view = async (app_id, data ) =>{
 			return new Promise((resolve, reject) => {
-				insertUserAccountView(app_id, json_data, (err,results) => {
+				insertUserAccountView(app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 					if (err)
 						reject(err);
 					else{
@@ -448,9 +517,16 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				});
 			});
 		};
+      /**
+       * Create user acccount follow
+       * @param {number} app_id 
+       * @param {number} id 
+       * @param {number} id_follow 
+       * @returns 
+       */
 		const create_user_account_follow = async (app_id, id, id_follow ) =>{
 			return new Promise((resolve, reject) => {
-				followUser(app_id, id, id_follow, (err,results) => {
+				followUser(app_id, id, id_follow, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 					if (err)
 						reject(err);
 					else{
@@ -461,14 +537,21 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				});
 			});
 		};
+      /**
+       * Create user account app setting like
+       * @param {number} app_id 
+       * @param {number} user1 
+       * @param {number} user2 
+       * @returns 
+       */
 		const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
 			return new Promise((resolve, reject) => {
-				getUserSettingsByUserId(app_id, user1, (err,results_settings) => {
+				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_getUserSettingsByUserId[]}*/results_settings) => {
 					if (err)
 						reject(err);
 					else{
 						const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
-						likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (err,results) => {
+						likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 							if (err)
 								reject(err);
 							else{
@@ -481,9 +564,17 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				});
 			});
 		};
+      /**
+       * Create user account app setting view
+       * @param {number} app_id 
+       * @param {number} user1 
+       * @param {number} user2 
+       * @param {string} social_type 
+       * @returns 
+       */
 		const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
 			return new Promise((resolve, reject) => {
-				getUserSettingsByUserId(app_id, user1, (err,results_settings) => {
+				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_getUserSettingsByUserId[]}*/results_settings) => {
 					if (err)
 						reject(err);
 					else{
@@ -500,7 +591,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                                                    client_user_agent: null,
                                                    client_longitude: null,
                                                    client_latitude: null
-															}, (err,results) => {
+															}, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 							if (err)
 								reject(err);
 							else{
@@ -515,17 +606,26 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		};
 		for (const social_type of social_types){
 			//select new random sample for each social type
+         /**@type{[number]|[]} */
 			const random_users1 = [];
+         /**@type{[number]|[]} */
 			const random_users2 = [];
 			//loop until two groups both have 50% samples with unique users in each sample
 			const sample_amount = Math.floor(demo_users.length * 0.5);
 			while (random_users1.length < sample_amount || random_users2.length < sample_amount){
 				const random_array_index1 = Math.floor(1 + Math.random() * demo_users.length - 1 );
 				const random_array_index2 = Math.floor(1 + Math.random() * demo_users.length - 1 );
-				if (random_users1.length <sample_amount && !random_users1.includes(demo_users[random_array_index1].id) )
-					random_users1.push(demo_users[random_array_index1].id);
-				if (random_users2.length <sample_amount && !random_users2.includes(demo_users[random_array_index2].id))
-					random_users2.push(demo_users[random_array_index2].id);
+            const random_include_id1 = demo_users[random_array_index1].id;
+            /**@ts-ignore */
+				if (random_users1.length <sample_amount && !random_users1.includes(random_include_id1) ){
+               /**@ts-ignore */
+               random_users1.push(demo_users[random_array_index1].id);
+            }
+            /**@ts-ignore */
+				if (random_users2.length <sample_amount && !random_users2.includes(demo_users[random_array_index2].id)){
+               /**@ts-ignore */
+               random_users2.push(demo_users[random_array_index2].id);
+            }
 			}
 			for (const user1 of random_users1){
 				for(const user2 of random_users2){
@@ -594,9 +694,14 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		return callBack(error, null);
 	}	
 };
+/**
+ * Demo delete
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const demo_delete = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers, deleteUser})=>{
-		getDemousers(app_id, (err, result_demo_users) =>{
+		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_getDemousers[]}*/result_demo_users) =>{
 			if (err) {
             return callBack(err, null);
 			}
@@ -606,14 +711,14 @@ const demo_delete = async (app_id, callBack)=> {
 					const delete_user = async () => {
 						return new Promise((resolve)=>{
 							for (const user of result_demo_users){
-								deleteUser(app_id, user.id,  (err) =>{
+								deleteUser(app_id, user.id,  (/**@type{Types.error}*/err) =>{
 									if (err) {
 										resolve(err);
 									}
 									else{
 										deleted_user++;
 										if (deleted_user == result_demo_users.length)
-											resolve();
+											resolve(null);
 									}
 								});
 							}
@@ -632,9 +737,14 @@ const demo_delete = async (app_id, callBack)=> {
 		});
 	});
 };
+/**
+ * Demo get
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const demo_get = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers})=>{
-		getDemousers(app_id, (err, result_demo_users) =>{
+		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_getDemousers}*/result_demo_users) =>{
 			if (err)
             return callBack(err, null);
          else
@@ -642,10 +752,17 @@ const demo_get = async (app_id, callBack)=> {
 		});
 	});
 };
+/**
+ * Install db execute statement
+ * @param {number} app_id 
+ * @param {string} sql 
+ * @param {object} parameters 
+ * @returns 
+ */
 const install_db_execute_statement = async (app_id, sql, parameters) => {
    const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    return new Promise((resolve, reject) =>{
-      db_execute(app_id, sql, parameters, DBA, (err, result)=>{
+      db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{*}*/result)=>{
          if (err)
             reject(err);
          else
@@ -653,6 +770,11 @@ const install_db_execute_statement = async (app_id, sql, parameters) => {
       });
    });
 };
+/**
+ * Install get files
+ * @param {string} json_type 
+ * @returns 
+ */
 const install_db_get_files = async (json_type) =>{
    let files;
    let app_installed = 1;
@@ -733,6 +855,13 @@ const install_db_get_files = async (json_type) =>{
       }
    }
 };
+/**
+ * Install db
+ * @param {number}         app_id 
+ * @param {number|null}    optional 
+ * @param {Types.callBack} callBack 
+ * @returns 
+ */
 const install_db = async (app_id, optional=null, callBack)=> {
    
    const {db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
@@ -746,9 +875,9 @@ const install_db = async (app_id, optional=null, callBack)=> {
    const install_result = [];
    const password_tag = '<APP_PASSWORD/>';
    let change_system_admin_pool=true;
-   const db_use = ConfigGet('SERVICE_DB', 'USE');
+   const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
    install_result.push({'start': new Date().toISOString()});
-   const sql_with_password = (username, sql) =>{
+   const sql_with_password = (/**@type{string}*/username, /**@type{string}*/sql) =>{
       let password;
       //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
       //Database users use SHA256
@@ -776,13 +905,13 @@ const install_db = async (app_id, optional=null, callBack)=> {
    try {
       const files = await install_db_get_files('install');
       for (const file of files){
-         let install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-         install_json = JSON.parse(install_json);
+         const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
+         const install_obj = JSON.parse(install_json);
          //filter for current database or for all databases and optional rows
-         install_json.install = install_json.install.filter((row) => 
-               (Object.prototype.hasOwnProperty.call(row, 'optional')==false || (Object.prototype.hasOwnProperty.call(row, 'optional')==1 && row.optional==optional)) && 
+         install_obj.install = install_obj.install.filter((/**@type{Types.install_database_script}*/row) => 
+               (('optional' in row)==false || (('optional' in row) && row.optional==optional)) && 
                (row.db == ConfigGet('SERVICE_DB', 'USE') || row.db == null));
-         for (const install_row of install_json.install){
+         for (const install_row of install_obj.install){
             let install_sql;
             switch (file[0]){
                case 0:{
@@ -803,7 +932,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
             
             //split script file into separate sql statements
             for (let sql of install_sql.split(';')){
-               const check_sql = (sql) =>{
+               const check_sql = (/**@type{string}*/sql) =>{
                   if (!sql || sql.endsWith('\r\n') || sql=='\n' || sql=='\n\n')
                      return false;
                   else
@@ -823,31 +952,31 @@ const install_db = async (app_id, optional=null, callBack)=> {
                      sql = sql.replace('<SEMICOLON/>', ';');
                   //close and start pool when creating database, some modules dont like database name when creating database
                   //exclude db 4
-                  if (db_use != '4')
+                  if (db_use != 4)
                      if (sql.toUpperCase().includes('CREATE DATABASE')){
                            //remove database name in dba pool
                            await pool_close(null, db_use, DBA);
                            const json_data = {
-                                 use:                     db_use,
-                                 pool_id:                 '',
-                                 port:                    ConfigGet('SERVICE_DB', `DB${db_use}_PORT`),
-                                 host:                     ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-                                 dba:                     DBA,
-                                 user:                    ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
-                                 password:                ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                                 database:                '',
+                                 use:                       db_use,
+                                 pool_id:                   null,
+                                 port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                                 host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                                 dba:                       DBA,
+                                 user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                                 password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                                 database:                  '',
                                  //db 1 + 2 parameters
                                  charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                 connnectionLimit:          ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
+                                 connnectionLimit:          getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                  // db 3 parameters
-                                 connectionTimeoutMillis:   ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-                                 idleTimeoutMillis:         ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-                                 max:                       ConfigGet('SERVICE_DB', `DB${db_use}_MAX`),
+                                 connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                                 idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                                 max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
                                  // db 4 parameters
                                  connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-                                 poolMin:                   ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`),
-                                 poolMax:                   ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`),
-                                 poolIncrement:             ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
+                                 poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+                                 poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+                                 poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
                               };
                            await pool_start(json_data);
                      }
@@ -856,26 +985,26 @@ const install_db = async (app_id, optional=null, callBack)=> {
                            //add database name in dba pool
                            await pool_close(null, db_use, DBA);
                            const json_data = {
-                              use:                     db_use,
-                              pool_id:                 '',
-                              port:                    ConfigGet('SERVICE_DB', `DB${db_use}_PORT`),
-                              host:                    ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-                              dba:                     DBA,
-                              user:                    ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
-                              password:                ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                              database:                ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
+                              use:                       db_use,
+                              pool_id:                   null,
+                              port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                              host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                              dba:                       DBA,
+                              user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                              password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                              database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
                               //db 1 + 2 parameters
                               charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                              connnectionLimit:          ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`),
+                              connnectionLimit:          getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                               // db 3 parameters
-                              connectionTimeoutMillis:   ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-                              idleTimeoutMillis:         ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-                              max:                       ConfigGet('SERVICE_DB', `DB${db_use}_MAX`),
+                              connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                              idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                              max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
                               // db 4 parameters
                               connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-                              poolMin:                   ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`),
-                              poolMax:                   ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`),
-                              poolIncrement:             ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`)
+                              poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
+                              poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
+                              poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
                            };
                            await pool_start(json_data);
                            //change to database value for the rest of the function
@@ -883,15 +1012,15 @@ const install_db = async (app_id, optional=null, callBack)=> {
                         }
                      }
                   await install_db_execute_statement(app_id, sql, {});
-                  if (Object.prototype.hasOwnProperty.call(install_row, 'optional')==true && install_row.optional==optional)
+                  if (('optional' in install_row)==true && install_row.optional==optional)
                      count_statements_optional += 1;
                   else
                      count_statements += 1;
                }
             }  
          }
-         if (install_json.users)
-            for (const users_row of install_json.users.filter((row) => row.db == ConfigGet('SERVICE_DB', 'USE') || row.db == null)){
+         if (install_obj.users)
+            for (const users_row of install_obj.users.filter((/**@type{Types.install_database_app_user_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')) || row.db == null)){
                switch (file[0]){
                   case 1:{
                         if (users_row.sql.includes(password_tag)){
@@ -933,6 +1062,11 @@ const install_db = async (app_id, optional=null, callBack)=> {
             return callBack(error, null);
    }
 };
+/**
+ * Install db check
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const install_db_check = async (app_id, callBack)=> {
    const {db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    try {
@@ -941,11 +1075,16 @@ const install_db_check = async (app_id, callBack)=> {
          `SELECT 1 FROM ${db_schema()}.app
             WHERE id = :app_id`, 
          {app_id: app_id});
-         return callBack(null, {'installed': 1});
+         return callBack(null, {installed: 1});
    } catch (error) {
-      return callBack(null, {'installed': 0});
+      return callBack(null, {installed: 0});
    }
 };
+/**
+ * Install db delete
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const install_db_delete = async (app_id, callBack)=> {
    const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
    let count_statements = 0;
@@ -955,8 +1094,8 @@ const install_db_delete = async (app_id, callBack)=> {
    const db_use = ConfigGet('SERVICE_DB', 'USE');
    try {
       for (const file of  files){
-         let uninstall_sql = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-         uninstall_sql = JSON.parse(uninstall_sql).uninstall.filter((row) => row.db == ConfigGet('SERVICE_DB', 'USE'));
+         const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
+         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{Types.uninstall_database_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')));
          for (const sql_row of uninstall_sql){
             if (db_use=='3')
                if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
@@ -964,16 +1103,16 @@ const install_db_delete = async (app_id, callBack)=> {
                   await pool_close(null, db_use, DBA);
                   const json_data = {
                      use:                     db_use,
-                     pool_id:                 '',
-                     port:                    ConfigGet('SERVICE_DB', `DB${db_use}_PORT`),
-                     ost:                     ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                     pool_id:                 null,
+                     port:                    getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                     host:                    ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
                      dba:                     DBA,
                      user:                    ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
                      password:                ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
                      database:                '',
-                     connectionTimeoutMillis: ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`),
-                     idleTimeoutMillis:       ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`),
-                     max:                     ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)
+                     connectionTimeoutMillis: getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                     idleTimeoutMillis:       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                     max:                     getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`))
                   };
                   await pool_start(json_data);
                }
@@ -987,8 +1126,8 @@ const install_db_delete = async (app_id, callBack)=> {
                DB[USE]_APP_ADMIN_PASS = null
          */
       }
-      return callBack(null, {'info':[{'count'     : count_statements},
-                                    {'count_fail': count_statements_fail}
+      return callBack(null, {'info':[  { count    : count_statements},
+                                       {count_fail: count_statements_fail}
                                     ]});
    } 
    catch (error) {

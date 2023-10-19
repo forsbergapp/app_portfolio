@@ -216,14 +216,14 @@ const activateUser = (req, res) => {
                             );
                         else
                             return res.status(200).json({
-                                count: results.changedRows,
+                                count: results.affectedRows,
                                 items: Array(results)
                             });
                     });
                 }
                 else
                     return res.status(200).json({
-                        count: results.changedRows,
+                        count: results.affectedRows,
                         items: Array(results)
                     });
             }
@@ -232,7 +232,7 @@ const activateUser = (req, res) => {
                 //email was verified and activated with data token, but now the password will be updated
                 //using accessToken and authentication code
                 return res.status(200).json({
-                    count: results.changedRows,
+                    count: results.affectedRows,
                     auth: auth_new_password,
                     accessToken: accessToken(getNumberValue(req.query.app_id)),
                     items: Array(results)
