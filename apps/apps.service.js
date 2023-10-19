@@ -219,7 +219,7 @@ const render_common_html = async (app_id, module, app_config) =>{
             return new Promise((resolve)=>{
                 /** @type {string}*/
                 let user_locales;
-                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_locale[]}*/ result_user_locales) => {
+                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_result_locale[]}*/ result_user_locales) => {
                     result_user_locales.forEach((locale, i) => {
                         user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                     });
@@ -233,7 +233,7 @@ const render_common_html = async (app_id, module, app_config) =>{
         const promisegetSettings = async () =>{
             const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
             return new Promise((resolve)=>{
-                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Types.db_setting[]}*/ settings) => {
+                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Types.db_result_setting[]}*/ settings) => {
                     let option;
                     for (const setting of settings) {
                         option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
@@ -362,7 +362,7 @@ const render_common_html = async (app_id, module, app_config) =>{
 const countries = (app_id, locale) => {
     return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_country[]}*/ results)  => {
+            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_result_country[]}*/ results)  => {
                 /** @type {string}*/
                 let select_countries;
                 if (err){
@@ -377,7 +377,7 @@ const countries = (app_id, locale) => {
                     select_countries  =`<option value='' id='' label='…' selected='selected'>…
                                         </option>`;
             
-                    results.map( (/** @type Types.db_country}*/ countries_map, /** @type {number}*/ i) => {
+                    results.map( (/** @type Types.db_result_country}*/ countries_map, /** @type {number}*/ i) => {
                         if (i === 0){
                         select_countries += `<optgroup label=${countries_map.group_name} />`;
                         current_group_name = countries_map.group_name;
@@ -412,7 +412,7 @@ const countries = (app_id, locale) => {
 const get_module_with_init = async (app_info, callBack) => {
     /**@type {[string, string][]} */
     const render_variables = [];
-    const return_with_parameters = (/** @type{string}*/ module, /** @type{(string|null)}*/ countries, /** @type{Types.db_app_parameter[]|null}*/ app_parameters, /** @type{number}*/ first_time)=>{
+    const return_with_parameters = (/** @type{string}*/ module, /** @type{(string|null)}*/ countries, /** @type{Types.db_result_app_parameter[]|null}*/ app_parameters, /** @type{number}*/ first_time)=>{
 
         /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
@@ -446,12 +446,12 @@ const get_module_with_init = async (app_info, callBack) => {
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-        getAppName(app_info.app_id, ( /** @type {string}*/ err,/** @type{Types.db_app_name[]}*/result_app_name) =>{
+        getAppName(app_info.app_id, ( /** @type {string}*/ err,/** @type{Types.db_result_app_name[]}*/result_app_name) =>{
             if (err)
                 callBack(err, null);
             else{
                 //fetch parameters for common_app_id and current app_id
-                getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Types.db_app_parameter[]}*/app_parameters) =>{
+                getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter[]}*/app_parameters) =>{
                     if (err)
                         callBack(err, null);
                     else{
@@ -518,7 +518,7 @@ const createMail = async (app_id, data) =>{
                 if (err)
                     reject(err);
                 else{                
-                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), (/** @type {string}*/ err, /** @type {Types.db_parameter[]}*/ result)=>{
+                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), (/** @type {string}*/ err, /** @type {Types.db_result_parameter[]}*/ result)=>{
                         if (err) {                
                             reject(err);
                         }
@@ -603,9 +603,9 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
     /** @type {Types.callBack} callBack */
     const get_parameters = (app_id, callBack) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`).then(({getApp}) => {
-            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Types.db_app[]}*/result_app)=>{
+            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Types.db_result_app[]}*/result_app)=>{
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
-                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_parameter[]}> }*/result)=>{
+                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_result_parameter[]}> }*/result)=>{
                         //app_parameter table
                         let db_info_email_policy;
                         let db_info_email_disclaimer;
@@ -790,7 +790,7 @@ const getModule = async (app_id, module_config, callBack) =>{
 
             const callGetObjects = async () =>{
                 return new Promise((resolve)=>{
-                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_app_object_item[]}*/ result_objects) => {
+                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_result_app_object_item[]}*/ result_objects) => {
                         /**@type {[string, string][]} */
                         const render_variables = [];
                         for (const row of result_objects){
@@ -1016,7 +1016,7 @@ const getMaintenance = (app_id) => {
 const providers_buttons = async (app_id) =>{
     const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
     return new Promise((resolve, reject)=>{
-        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Types.db_identity_provider[]}*/result)=>{
+        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Types.db_result_identity_provider[]}*/result)=>{
             if (err)
                 reject(err);
             else{
