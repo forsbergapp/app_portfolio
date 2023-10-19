@@ -14,6 +14,7 @@
  * @property {number} body.client_id_current                        - Broadcast parameter
  * @property {string} body.broadcast_type                           - Broadcast parameter
  * @property {string} body.broadcast_message                        - Broadcast parameter
+ * @property {string} body.demo_password                            - Admin parameter
  * @property {string} baseUrl
  * @property {string} hostname
  * @property {string} path
@@ -35,8 +36,9 @@
  * @property {number} query.month                                   - Admin parameter
  * @property {number} query.limit                                   - Admin parameter
  * @property {string} query.order_by                                - Admin parameter
- * @property {string} query.sort                                    - Admin parameter
+ * @property {sort_broadcast} query.sort                            - Admin parameter
  * @property {string} query.count_logged_in                         - Admin parameter
+ * @property {number} query.optional                                - Admin parameter
  * @property {(string|number|*)} query.app_user_id
  * @property {(string|number|*)} query.client_id
  * @property {(string|number|*)} query.user_account_id
@@ -76,7 +78,6 @@
  * @property {string} socket.bytesRead
  * @property {string} socket.bytesWritten
  */
-
 /**
  * Request id
  * @typedef {string|number|null|undefined} req_id_number
@@ -241,11 +242,11 @@
 /**
  * App render common info settings
  * @typedef {object} render_common_settings
- * @property {db_setting[]} settings        - db result
- * @property {string} user_timezones      - HTML option format
- * @property {string} user_directions     - HTML option format
- * @property {string} user_arabic_scripts - HTML option format
- * @property {map_styles} map_styles          - HTML option format                   - HTML option format
+ * @property {db_result_setting[]} settings - db result
+ * @property {string} user_timezones        - HTML option format
+ * @property {string} user_directions       - HTML option format
+ * @property {string} user_arabic_scripts   - HTML option format
+ * @property {map_styles} map_styles        - HTML option format                   - HTML option format
  */
 /**
  * App render common items for apps with locales and settings
@@ -570,34 +571,233 @@
  */
 
 /**
+ * @typedef {[number, object|null, [object|pool_4|null]|null]} pool_db
+ */
+
+/**
+ * @typedef {object}        pool_parameters
+ * @property {number}       use
+ * @property {number|null}  pool_id
+ * @property {number}       port
+ * @property {string}       host
+ * @property {number}       dba
+ * @property {string}       user
+ * @property {string}       password
+ * @property {string}       database
+ * @property {string}       charset                 - DB 1+2 MariaDB/MySQL
+ * @property {number}       connectionLimit         - DB 1+2 MariaDB/MySQL
+ * @property {number}       connectionTimeoutMillis - DB 3 PostgreSQL
+ * @property {number}       idleTimeoutMillis       - DB 3 PostgreSQL
+ * @property {number}       max                     - DB 3 PostgreSQL
+ * @property {string}       connectString           - DB 4 Oracle
+ * @property {number}       poolMin                 - DB 4 Oracle
+ * @property {number}       poolMax                 - DB 4 Oracle
+ * @property {number}       poolIncrement           - DB 4 Oracle
+ */
+/**
+ * @typedef {object}    pool_connection_1_2
+ * @property {function} release
+ * @property {function} query
+ * @property {object}   config
+ * @property {function} config.queryFormat
+ * @property {function} escape
+ */
+/**
+ * @typedef {*}         pool_connection_1_2_result
+ */
+
+/**
+ * @typedef {object}    pool_connection_3
+ * @property {function} release
+ * @property {function} query
+ */
+/**
+ * @typedef {object}    pool_connection_3_result
+ * @property {string}   command
+ * @property {number}   insertId
+ * @property {number}   affectedRows
+ * @property {number}   rowCount
+ * @property {[{dataTypeID:number, name:string}]}      fields
+ * @property {[*]}      rows
+ */
+/**
+ * @typedef {[{ type:number, 
+ *              name:string}]}    pool_connection_3_fields
+ */
+
+/**
+ * @typedef {object|null}   pool_4
+ * @property {string}       pool_id_app
+ */
+
+/**
+ * @typedef {[object]}  admin_db_install_result - Log variable with object with any key
+ */
+/**
+ * @typedef {object}  admin_db_install_db_check
+ * @property {1|0}    installed
+ */
+/**
+ * @typedef {object}  admin_db_install_delete_result
+ * @property {[{count:number}, {count_fail:number}]}    info
+ */
+/**
+ * @typedef {object}    demo_user
+ * @property {number}   [id]
+ * @property {string}   username
+ * @property {string}   bio
+ * @property {string}   avatar
+ * @property {[{
+ *              app_id:                             number,
+ *              description:                        string,
+ *              regional_language_locale:           string,
+ *              regional_timezone:                  string,
+ *              regional_number_system:             string,
+ *              regional_layout_direction:          string,
+ *              regional_second_language_locale:    string,
+ *              regional_column_title:              string,
+ *              regional_arabic_script:             string,
+ *              regional_calendar_type:             string,
+ *              regional_calendar_hijri_type:       string,
+ *              gps_map_type:                       string,
+ *              gps_country_id:                     number|null,
+ *              gps_city_id:                        number|null,
+ *              gps_popular_place_id:               number|null,
+ *              gps_lat_text:                       string,
+ *              gps_long_text:                      string,
+ *              design_theme_day_id:                number,
+ *              design_theme_month_id:              number,
+ *              design_theme_year_id:               number,
+ *              design_paper_size:                  string,
+ *              design_row_highlight:               string,
+ *              design_column_weekday_checked:      string,
+ *              design_column_calendartype_checked: string,
+ *              design_column_notes_checked:        string,
+ *              design_column_gps_checked:          string,
+ *              design_column_timezone_checked:     string,
+ *              image_header_image_img:             string,
+ *              image_footer_image_img:             string,
+ *              text_header_1_text:                 string,
+ *              text_header_2_text:                 string,
+ *              text_header_3_text:                 string,
+ *              text_header_align:                  string,
+ *              text_footer_1_text:                 string,
+ *              text_footer_2_text:                 string,
+ *              text_footer_3_text:                 string,
+ *              text_footer_align:                  string,
+ *              prayer_method:                      string,
+ *              prayer_asr_method:                  string,
+ *              prayer_high_latitude_adjustment:    string,
+ *              prayer_time_format:                 string,
+ *              prayer_hijri_date_adjustment:       string,
+ *              prayer_fajr_iqamat:                 string,
+ *              prayer_dhuhr_iqamat:                string,
+ *              prayer_asr_iqamat:                  string,
+ *              prayer_maghrib_iqamat:              string,
+ *              prayer_isha_iqamat:                 string,
+ *              prayer_column_imsak_checked:        string,
+ *              prayer_column_sunset_checked:       string,
+ *              prayer_column_midnight_checked:     string,
+ *              prayer_column_fast_start_end:       string
+ *              }]}   settings
+ * 
+ */
+/**
+ * Install JSON
+ * @typedef {object}        install_database_script
+ * @property {number|null}  db
+ * @property {string}       script
+ * @property {number}       [optional]
+ */
+/**
+ * Uninstall JSON
+ * @typedef {object}        uninstall_database_script
+ * @property {number|null}  db
+ * @property {string}       sql
+ */
+/**
+ * Install JSON app
+ * @typedef {object}        install_database_app_script
+ * @property {number|null}  db
+ * @property {string}       sql
+ */
+/**
+ * Install JSON app user
+ * @typedef {object}        install_database_app_user_script
+ * @property {number}       db
+ * @property {string}       sql
+ */
+/**
+ * Uninstall JSON app
+ * @typedef {object}        uninstall_database_app_script
+ * @property {number|null}  db
+ * @property {string}       sql
+ */
+
+
+/**
+ * INSERT:
+ * DB result INSERT
+ * @typedef {{insertId:number, rows:[], affectedRows:number, rowsAffected:number}}  db_result_insert
+ * DELETE:
+ * @typedef {{rows:[], affectedRows:number, rowsAffected:number}}                   db_result_delete
+ * UPDATE:
+ * @typedef {{rows:[], affectedRows:number, rowsAffected:number}}                   db_result_update
+ * SELECT:
+ * @typedef {{rows:[], affectedRows:number, rowsAffected:number}}                   db_result_select
+ * DB result DB Info
+ * @typedef {{  database_use:   number,
+ *              database_name:  string,
+ *              version:        string,
+ *              database_schema:string,
+ *              hostname:       string,
+ *              connections:    number,
+ *              started:        string}} db_result_DBInfo
+ * DB result DB Info space
+ * @typedef {{  table_name:     string,
+ *              total_size:     number,
+ *              data_used:      number,
+ *              data_free:      number,
+ *              pct_used:       number}} db_result_DBInfoSpace
+ * DB result DB Info space sum
+ * @typedef {{  total_size:     number,
+ *              data_used:      number,
+ *              data_free:      number,
+ *              pct_used:       number}} db_result_DBInfoSpaceSum
  * DB result app
- * @typedef {{app_name:string, url:string}} db_app
+ * @typedef {{app_name:string, url:string}} db_result_app
  * DB result app_name 
- * @typedef {{app_name:string}} db_app_name
+ * @typedef {{app_name:string}} db_result_app_name
  * DB result app_objects
- * @typedef {{object_item_name:string, text:string}} db_app_object_item
+ * @typedef {{object_item_name:string, text:string}} db_result_app_object_item
  * DB result app_parameter
- * @typedef {{app_id: number, parameter_type_id:number, parameter_name:string, parameter_value :string, parameter_comment:string}} db_app_parameter
+ * @typedef {{app_id: number, parameter_type_id:number, parameter_name:string, parameter_value :string, parameter_comment:string}} db_result_app_parameter
+ * DB result getAppDBParametersAdmin
+ * @typedef {{id: number, db_user:string, db_password:string}} db_result_getAppDBParametersAdmin
  * DB result country
- * @typedef {{id:string, group_name:string, country_code:string, flag_emoji:string, text:string}} db_country
+ * @typedef {{id:string, group_name:string, country_code:string, flag_emoji:string, text:string}} db_result_country
  * DB result identity provider
- * @typedef {{id:string, provider_name:string}} db_identity_provider
+ * @typedef {{id:string, provider_name:string}} db_result_identity_provider
  * DB result locale
- * @typedef {{locale: String, text:string}} db_locale
+ * @typedef {{locale: String, text:string}} db_result_locale
  * DB result parameter
- * @typedef {{parameter_name:string, parameter_value:string}} db_parameter
+ * @typedef {{parameter_name:string, parameter_value:string}} db_result_parameter
  * DB result setting
- * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_setting
+ * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_result_setting
+ * DB result getUserSettingsByUserId
+ * @typedef {{id:number, description:string, settings_json:string, date_created:string, date_modified:string, user_account_app_user_account_id:number, user_account_app_app_id:number}} db_result_getUserSettingsByUserId
  * USER:
+ * DB result getDemousers
+ * @typedef {{id:number}} db_result_getDemousers
  * DB result Checklogin
- * @typedef {{login:number}} db_Checklogin
+ * @typedef {{login:number}} db_result_Checklogin
  * DB result UserAppRoleAdmin
- * @typedef {{app_role_id:number}} db_UserAppRoleAdmin
+ * @typedef {{app_role_id:number}} db_result_UserAppRoleAdmin
  * DB result UserRoleAdmin
- * @typedef {{app_role_id:number, icon:string}} db_UserRoleAdmin
+ * @typedef {{app_role_id:number, icon:string}} db_result_UserRoleAdmin
  * DB result ProfileUser
  * @typedef {{  id:string, bio:string, private:number|null, user_level:string, date_created:string, username:string, avatar:string, 
  *              identity_provider_id:string, provider_id:string, provider_first_name:string, provider_last_name:string, provider_image:string, provider_image_url:string,
- *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_ProfileUser
+ *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_result_ProfileUser
  */
 export {};

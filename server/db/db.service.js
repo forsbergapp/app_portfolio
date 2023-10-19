@@ -1,14 +1,25 @@
+/** @module server/db */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 //mysql module used for both MariaDB and MySQL
-let MYSQL               = await import('mysql');
-let {default: PG}       = await import('pg');
-let {default: ORACLEDB} = await import('oracledb');
+const MYSQL               = await import('mysql');
+const {default: PG}       = await import('pg');
+const {default: ORACLEDB} = await import('oracledb');
 
-const POOL_DB =[
-                  [1, null, []], //MySQL pools        [db number, dba, apps in array]
-                  [2, null, []], //MariaDB pools      [db number, dba, apps in array]
-                  [3, null, []], //PostgreSQL pools   [db number, dba, apps in array]
-                  [4, null, []]  //Oracle pools       [db number, dba, apps in array]
+/**
+ * POOL_DB
+ * All database pool connections are saved here
+ * Oracle uses number to 
+ * @type{Types.pool_db[]}
+ */
+const POOL_DB =[ 
+                  [1, null, null], //MySQL pools        [db number, dba pool object, apps pool object]
+                  [2, null, null], //MariaDB pools      [db number, dba pool object, apps pool object]
+                  [3, null, null], //PostgreSQL pools   [db number, dba pool object, apps pool object]
+                  [4, null, null]  //Oracle pools       [db number, dba pool object, apps pool object]
                ];                     
 
 if (ConfigGet('SERVICE_DB', 'USE')=='4'){
@@ -18,67 +29,60 @@ if (ConfigGet('SERVICE_DB', 'USE')=='4'){
                                  configDir: ConfigGet('SERVICE_DB', 'DB4_CONFIGDIR')});
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
 }
-
-const pool_close_all = async (db)=>{
-      //relase db pools from memory, not shutting down db
-      for (const dbnumber in POOL_DB){
-         if (dbnumber[0]==parseInt(db)){
-            db[1] = null;
-            db[2] = [];
-         }
-      }
-      //reset db variables
-      switch (parseInt(db)){
-         case 1:
-         case 2:{
-            MYSQL = null;
-            MYSQL = await import('mysql');
-            break;
-         }
-         case 3:{
-            PG = null;
-            PG = await import('pg');
-            break;
-         }
-         case 4:{
-            ORACLEDB = null;
-            ORACLEDB = await import('oracledb');
-            break;
-         }
-      }
+/**
+ * Delete all pools for given database
+ * Deletes variable content, not the same as 
+ * using API to close, release or end connection
+ * and all database API use different logic.
+ * Needed to restart database connection after admin
+ * have changed parameters and without having to restart server
+ * @param {number} db
+ */
+const pool_delete_all = (db)=>{
+      //relase db pools from memory
+      POOL_DB.map(pool=>{if (pool[0]==db){
+                           pool[1]=null;
+                           pool[2]=null;
+                        }
+                        });
 };
+/**
+ * Pool start
+ * 
+ * dbparameters in JSON format:
+ *      "use":                     1-4
+ *      "pool_id":                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
+ *      "port":                    port,
+ *      "host":                    host,
+ *      "dba":                     1/0,
+ *      "user":                    username,
+ *      "password":                password,
+ *      "database":                database,
+ *
+ *      //db 1 + 2 parameters      see MariaDB/MySQL documentation
+ *      "charset":                 character set,
+ *      "connnectionLimit":        connection limit
+ *
+ *      // db 3 parameters         see PostgreSQL documentation
+ *      "connectionTimeoutMillis": connection timout milliseconds
+ *      "idleTimeoutMillis":       idle timeout milliseconds
+ *      "max":                     max
+ *
+ *      //db 4 parameters          see Oracle documentation
+ *      "connectString":           connectstring
+ *      "poolMin":                 pool min
+ *      "poolMax":                 pool max
+ *      "poolIncrement":           pool increment
+ * @param {Types.pool_parameters} dbparameters 
+ * @returns {Promise.<null>}
+ */
 const pool_start = async (dbparameters) =>{
-   /* dbparameters in JSON format:
-      "use":                     1-4
-      "pool_id":                 start with 0 and increase pool id value +1 for each new pool where pool will be saved
-      "port":                    port,
-      "host":                    host,
-      "dba":                     1/0,
-      "user":                    username,
-      "password":                password,
-      "database":                database,
-
-      //db 1 + 2 parameters      see MySQL/MariaDB documentation
-      "charset":                 character set,
-      "connnectionLimit":        connection limit
-
-      // db 3 parameters         see PostgreSQL documentation
-      "connectionTimeoutMillis": connection timout milliseconds
-      "idleTimeoutMillis":       idle timeout milliseconds
-      "max":                     max
-
-      //db 4 parameters          see Oracle documentation
-      "connectString":           connectstring
-      "poolMin":                 pool min
-      "poolMax":                 pool max
-      "poolIncrement":           pool increment
-   */
    return new Promise((resolve, reject) => {
-      switch(parseInt(dbparameters.use)){
+      switch(dbparameters.use){
          case 1:
          case 2:{
             if (dbparameters.dba==1)
-               POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use)) 
+               POOL_DB.map(db=>{ if (db[0]==dbparameters.use) 
                                     db[1]=MYSQL.createPool({
                                           host: dbparameters.host,
                                           port: dbparameters.port,
@@ -86,25 +90,30 @@ const pool_start = async (dbparameters) =>{
                                           password: dbparameters.password,
                                           database: dbparameters.database,
                                           charset: dbparameters.charset,
-                                          connnectionLimit: dbparameters.connnectionLimit
+                                          connectionLimit: dbparameters.connectionLimit
                });
-               resolve();
+               resolve(null);
             });
-            else
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use))
-                                    db[2].push(
-                                       MYSQL.createPool({
-                                       host: dbparameters.host,
-                                       port: dbparameters.port,
-                                       user: dbparameters.user,
-                                       password: dbparameters.password,
-                                       database: dbparameters.database,
-                                       charset: dbparameters.charset,
-                                       connnectionLimit: dbparameters.connnectionLimit
-                                       }));
+            else{
+               /**@type{object} */
+               const mysql_pool = MYSQL.createPool({
+                                    host: dbparameters.host,
+                                    port: dbparameters.port,
+                                    user: dbparameters.user,
+                                    password: dbparameters.password,
+                                    database: dbparameters.database,
+                                    charset: dbparameters.charset,
+                                    connectionLimit: dbparameters.connectionLimit
                                  });
-               resolve();
-
+               POOL_DB.map(db=>{if (db[0]==dbparameters.use)
+                  if (db[2])
+                     db[2].push(mysql_pool);
+                  else
+                     db[2] = [mysql_pool];
+               });
+               resolve(null);
+            }
+               
             break;
          }
          case 3:{
@@ -125,82 +134,134 @@ const pool_start = async (dbparameters) =>{
             if (dbparameters.dba==1)
                createpoolPostgreSQL()
                .then(pool=>{
-                  POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use))    
+                  POOL_DB.map(db=>{ if (db[0]==dbparameters.use)
                      db[1]=pool;
                   });
-                  resolve();
+                  resolve(null);
                });
             else
                createpoolPostgreSQL()
                .then(pool=>{
-                  POOL_DB.map(db=>{ if (db[0]==parseInt(dbparameters.use))    
-                     db[2].push(pool);
+                  POOL_DB.map(db=>{ if (db[0]==dbparameters.use)
+                     if (db[2])
+                        db[2].push(pool);
+                     else
+                        db[2] = [pool];
                   });
-                  resolve();
+                  resolve(null);
                });
             break;
          }
          case 4:{
-            let pool_id;
-            const createpoolOracle= ()=>{
+            /**
+             * 
+             * @param {string} poolAlias
+             */
+            const createpoolOracle= poolAlias=>{
                ORACLEDB.createPool({	
                   user: dbparameters.user,
                   password: dbparameters.password,
                   connectString: dbparameters.connectString,
-                  poolMin: Number(dbparameters.poolMin),
-                  poolMax: Number(dbparameters.poolMax),
-                  poolIncrement: Number(dbparameters.poolIncrement),
-                  poolAlias: pool_id
+                  poolMin: dbparameters.poolMin,
+                  poolMax: dbparameters.poolMax,
+                  poolIncrement: dbparameters.poolIncrement,
+                  poolAlias: poolAlias
                }, (err) => {
                   if (err)
                      reject(err);
                   else
-                     resolve();
+                     resolve(null);
                });
             };
             if (dbparameters.dba==1){
-               pool_id = 'DBA';
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[1]=pool_id;});
-               createpoolOracle();
+               const pool_id_dba = 'DBA';
+               POOL_DB.map(db=>{ if (db[0]==dbparameters.use) 
+                                    db[1]={pool_id_dba};
+                              });
+               createpoolOracle(pool_id_dba);
             }
             else{
-               pool_id = `'${dbparameters.pool_id}'`;
-               POOL_DB.map(db=>{if (db[0]==parseInt(dbparameters.use)) db[2].push(pool_id);});
-               createpoolOracle();
+               POOL_DB.map(db=>{if (db[0]==dbparameters.use) 
+                                 if (db[2])
+                                    db[2].push({pool_id_app:dbparameters.pool_id});
+                                 else
+                                    db[2] = [{pool_id_app: dbparameters.pool_id}];
+                              });
+               /**@ts-ignore */
+               createpoolOracle(dbparameters.pool_id.toString());
             }
             break;
          }
       }
    });
 };
+/**
+ * Delete pool for given database
+ * @param {number} pool_id 
+ * @param {number} db_use 
+ * @param {number} dba 
+ * @returns 
+ */
 const pool_close = async (pool_id, db_use, dba) =>{
    try {
       if (dba==1)
-         POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1] = null;
+         POOL_DB.map(db=>{
+                           if (db[0]==db_use)
+                              db[1] = null;
+         });
       else
-         POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)] = null;
+         POOL_DB.map(db=>{
+            if (db[0]==db_use)
+               if (db[2])
+                  db[2][pool_id] = null;
+         });
    } catch (err) {
       return null;   
    }
    return null;
 
 };
+/**
+ * Get pool for database
+ * @param {number} pool_id 
+ * @param {number} db_use 
+ * @param {number} dba 
+ * @returns {object|string|null}
+ */
 const pool_get = (pool_id, db_use, dba) => {
    let pool;
    try {
-      
-      if (dba==1){
-         pool = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][1];
-         return pool;
-      }
+      if (dba==1)
+         return POOL_DB.filter(db=>db[0]==db_use)[0][1];
       else{
-         pool = POOL_DB.filter(db=>db[0]==parseInt(db_use))[0][2][parseInt(pool_id)];
-         return pool;
+         pool = POOL_DB.filter(db=>db[0]==db_use)[0];
+         if (pool[2])
+            if (db_use==4){
+               if (pool[2][pool_id])
+                  /**@ts-ignore */
+                  return pool[2][pool_id].pool_id_app;
+               else
+                  return null;
+            }
+            else
+               return pool[2][pool_id];
+         else
+            return null;
       }
    } catch (err) {
       return null;
    }  
 };
+
+/**
+ * Get pool for given database
+ * @param {number} pool_id 
+ * @param {number} db_use 
+ * @param {string} sql
+ * @param {object} parameters
+ * @param {number} dba 
+ * @returns 
+ */
 const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    return new Promise((resolve,reject)=>{
       switch (db_use){
@@ -208,7 +269,8 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          case 2:{
             //Both MySQL and MariaDB use MySQL npm module
             try {
-               pool_get(pool_id, db_use, dba).getConnection((err, conn) => {
+               /**@ts-ignore */
+               pool_get(pool_id, db_use, dba).getConnection((/**@type{Types.error}*/err, /**@type{Types.pool_connection_1_2}*/conn) => {
                   if (err)
                      return reject (err);
                   else{
@@ -216,7 +278,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      //change json parameters to [] syntax with bind variable names
                      //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
                      //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
-                     conn.config.queryFormat = (sql, parameters) => {
+                     conn.config.queryFormat = (/**@type{string}*/sql, /**@type{[]}*/parameters) => {
                         if (!parameters) return sql;
                         return sql.replace(/:(\w+)/g, (txt, key) => {
                            if (Object.prototype.hasOwnProperty.call(parameters, key)) {
@@ -225,7 +287,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                            return txt;
                         });
                      };
-                     conn.query(sql, parameters, (err, result, fields) => {
+                     conn.query(sql, parameters, (/**@type{Types.error}*/err, /**@type{[Types.pool_connection_1_2_result]}*/result, /**@type{Types.pool_connection_3_fields}*/fields) => {
                         if (err){
                            return reject (err);
                         }
@@ -253,6 +315,10 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             break;
          }
          case 3:{
+            /**
+             * @param {string} parameterizedSql
+             * @param {object} params
+             */
             const queryConvert = (parameterizedSql, params) => {
                //change json parameters to $ syntax
                //use unique index with $1, $2 etc, parameter can be used several times
@@ -261,6 +327,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
                //postgresql syntax: connection.query("UPDATE [table] SET [column] = $1", [0, "value"];
                 const [text, values] = Object.entries(params).reduce(
+               /**@ts-ignore */
                     ([sql, array, index], param) => [sql.replace(/:(\w+)/g, (txt, key) => {
                                                                if (key in params)
                                                                   return `$${Object.keys(params).indexOf(key) + 1}`;
@@ -276,9 +343,10 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             };	
             const parsed_result = queryConvert(sql, parameters);
             try {
-               pool_get(pool_id, db_use, dba).connect().then((pool3)=>{
+               /**@ts-ignore */
+               pool_get(pool_id, db_use, dba).connect().then((/**@type{Types.pool_connection_3}*/pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
-                  .then((result) => {
+                  .then((/**@type{Types.pool_connection_3_result}*/result) => {
                   pool3.release();
                   //add common attributes
                   if (result.command == 'INSERT' && result.rows.length>0)
@@ -305,10 +373,10 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                   else
                      return resolve(result);
                   })
-                  .catch(err => {
+                  .catch((/**@type{Types.error}*/err) => {
                      return reject(err);
                   });
-               }).catch(err=>{
+               }).catch((/**@type{Types.error}*/err)=>{
                   return reject(err);   
                });
             } catch (err) {
@@ -318,6 +386,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          }
          case 4:{
             try{
+               /**@ts-ignore */
                ORACLEDB.getConnection(pool_get(pool_id, db_use, dba)).then((pool4)=>{
                   /*
                   Fix CLOB column syntax to avoid ORA-01461 for these columns:
@@ -332,16 +401,21 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         key.toLowerCase() == 'avatar' ||
                         key.toLowerCase() == 'provider_image' ||
                         key.toLowerCase() == 'settings_json')
+                        /**@ts-ignore */
                         parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
                   });
-                  pool4.execute(sql, parameters, (err,result) => {
+                  /**@ts-ignore */
+                  pool4.execute(sql, parameters, (/**@type{Types.error}*/err, /**@type{Types.db_result_insert|Types.db_result_delete|Types.db_result_update|Types.db_result_select}*/result) => {
                      if (err) {
                         return reject(err);
                      }
                      else{
                         pool4.close();
-                        if (result.rowsAffected)
+                        if (result.rowsAffected){
+                           //add custom key using same name as other databases
+                           /**@ts-ignore */
                            result.affectedRows = result.rowsAffected;
+                        }
                         if (result.rows)
                            return resolve(result.rows);
                         else
@@ -364,6 +438,6 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
    });
 };
 
-export{pool_close_all, 
+export{pool_delete_all, 
        pool_start, pool_close, pool_get,
        db_query};

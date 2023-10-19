@@ -16,7 +16,7 @@ const insertUserSettingView = (req, res) => {
             );
         }
         return res.status(200).json({
-            count: results.changedRows,
+            count: results.affectedRows,
             items: Array(results)
         });
     });
