@@ -1,9 +1,19 @@
+/** @module server/log */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const service = await import('./log.service.js');
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
+/**
+ * Get log parameters
+ * @param {Types.req} req 
+ * @param {Types.res} res 
+ */
 const getLogParameters = (req, res) => {
-	service.getLogParameters(getNumberValue(req.query_app_id), (err, results) =>{
+	service.getLogParameters(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, results) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
@@ -14,7 +24,13 @@ const getLogParameters = (req, res) => {
 			});
 	});
 };
+/**
+ * Get logs
+ * @param {Types.req} req 
+ * @param {Types.res} res 
+ */
 const getLogs = (req, res) => {
+	/**@type{Types.admin_log_data_parameters} */
 	const data = {	app_id:			getNumberValue(req.query.app_id),
 					select_app_id:	getNumberValue(req.query.select_app_id),
 					logscope:		req.query.logscope,
@@ -22,11 +38,11 @@ const getLogs = (req, res) => {
 					search:			req.query.search,
 					sort:			req.query.sort,
 					order_by:		req.query.order_by,
-					year: 			getNumberValue(req.query.year),
-					month:			getNumberValue(req.query.month),
-					day:			getNumberValue(req.query.day),
+					year: 			req.query.year.toString(),
+					month:			req.query.month.toString(),
+					day:			req.query.day,
 					};
-	service.getLogs(getNumberValue(req.query_app_id), data, (err, results) =>{
+	service.getLogs(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err
@@ -44,6 +60,11 @@ const getLogs = (req, res) => {
 		}
 	});
 };
+/**
+ * Get status codes
+ * @param {Types.req} req 
+ * @param {Types.res} res 
+ */
 const getStatusCodes = async (req, res) =>{
 	const status_codes = await service.getStatusCodes();
 	service.getStatusCodes().then(()=>{
@@ -53,13 +74,18 @@ const getStatusCodes = async (req, res) =>{
 	});
 
 };
+/**
+ * Get log stat
+ * @param {Types.req} req 
+ * @param {Types.res} res 
+ */
 const getLogsStats = async (req, res) => {
 	const data = {	app_id:			getNumberValue(req.query.select_app_id),
 					code:			getNumberValue(req.query.code),
 					year: 			getNumberValue(req.query.year),
 					month:			getNumberValue(req.query.month)
 					};
-	service.getLogsStats(getNumberValue(req.query_app_id), data, (err, results) =>{
+	service.getLogsStats(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err
@@ -77,8 +103,13 @@ const getLogsStats = async (req, res) => {
 		}
 	});
 };
+/**
+ * Get log files
+ * @param {Types.req} req 
+ * @param {Types.res} res 
+ */
 const getFiles = (req, res) => {
-	service.getFiles(getNumberValue(req.query_app_id), (err, results) =>{
+	service.getFiles(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, results) =>{
 		if (err)
 			return res.status(500).send(
 				err

@@ -1,49 +1,75 @@
+/** @module server/log */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/server.service.js`);
+const fs = await import('node:fs');
+/**
+ * Send log
+ * @param {string} logscope 
+ * @param {string} loglevel 
+ * @param {object} log 
+ * @returns {Promise.<null>}
+ */
 const sendLog = async (logscope, loglevel, log) => {
     return await new Promise((resolve) => {
-        let filename;
-        const logdate = new Date();
         try{        
-            log = JSON.stringify(log);
+            let filename = '';
+            const logdate = new Date();
+            const log_json = JSON.stringify(log);
+            const month = logdate.toLocaleString('en-US', { month: '2-digit'});
+            const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
+            const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
+            if (config_file_interval=='1D')
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
+            else{
+                if (config_file_interval=='1M')
+                    filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+                else
+                    filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+            }
+            fs.appendFile(process.cwd() + ConfigGetInit('PATH_LOG') + filename, log_json + '\r\n', 'utf8', (err) => {
+                if (err) {
+                    console.log(err);
+                    console.log(log);
+                    resolve(null);
+                }
+                else
+                    resolve(null);
+            });
         }
         catch(err){
             console.log(err);
             console.log(log);
+            resolve(null);
         }
-        const month = logdate.toLocaleString('en-US', { month: '2-digit'});
-        const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
-        const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-        if (config_file_interval=='1D')
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-        else{
-            if (config_file_interval=='1M')
-                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-            else
-                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-        }
-        import('node:fs').then((fs) =>{
-            fs.appendFile(process.cwd() + ConfigGetInit('PATH_LOG') + filename, log + '\r\n', 'utf8', (err) => {
-                if (err) {
-                    //if error here log to console and continue
-                    console.log(err);
-                    resolve();
-                }
-                else
-                    resolve();
-            });
-        });
     });
 };
+/**
+ * Log date format
+ * @param {string} date_format 
+ * @returns {string}
+ */
 const logdate = (date_format) => {
-    let logdate = new Date();
+    const logdate = new Date();
     if (date_format!='' && typeof date_format!='undefined'){
         //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        logdate.format(date_format);
+        /**@ts-ignore */
+        return logdate.format(date_format);
     }
     else
-        logdate = logdate.toISOString();
-    return logdate;
+        return logdate.toISOString();
 };
+/**
+ * Log request error
+ * @param {Types.req} req 
+ * @param {number} statusCode 
+ * @param {string} statusMessage 
+ * @param {number} responsetime 
+ * @param {Types.error} err 
+ * @returns 
+ */
 const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
     return await new Promise((resolve) => {
         const log_json_server = {   logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
@@ -66,11 +92,18 @@ const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) =>
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_server));
     });
 };
+/**
+ * Log request Info
+ * @param {Types.req} req 
+ * @param {number} statusCode 
+ * @param {string} statusMessage 
+ * @param {number} responsetime 
+ * @returns {Promise.<null>}
+ */
 const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
     return await new Promise((resolve) => {
-        let log_level;
-        let log_json_server;  
-        let logtext;
+        let log_level = '';
+        let log_json_server = {};
         switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
             case '1':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
@@ -96,28 +129,28 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
             }
             case '2':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-                logtext = Object.assign({}, req);
+                /**@type{Types.req} */
+                const logtext_req = Object.assign({}, req);
                 const getCircularReplacer = () => {
                     const seen = new WeakSet();
-                    return (key, value) => {
+                    return (/**@type{*}*/key, /**@type{*}*/value) => {
                         if (typeof value === 'object' && value !== null) {
-                        if (seen.has(value)) {
-                            return;
-                        }
-                        seen.add(value);
+                            if (seen.has(value)) {
+                                return;
+                            }
+                            seen.add(value);
                         }
                         return value;
                     };
                 };
                 //remove password
-                if (logtext.body.password)
-                    logtext.body.password = null;
+                if (logtext_req.body.password)
+                    logtext_req.body.password = null;
                 //remove Basic authorization with password
-                logtext.rawHeaders.forEach((rawheader,index)=>{
+                logtext_req.rawHeaders.forEach((rawheader,index)=>{
                     if (rawheader.startsWith('Basic'))
-                        logtext.rawHeaders[index] = 'Basic ...';
+                        logtext_req.rawHeaders[index] = 'Basic ...';
                 });
-                logtext = 'req:' + JSON.stringify(logtext, getCircularReplacer());
                 log_json_server = { logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
                                     host:               req.host,
                                     ip:                 req.ip,
@@ -134,18 +167,24 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
                                     size_received:      req.socket.bytesRead,
                                     size_sent:          req.socket.bytesWritten,
                                     responsetime:       responsetime,
-                                    logtext:            logtext
+                                    logtext:            'req:' + JSON.stringify(logtext_req, getCircularReplacer())
                                     };
                 break;
             }
             default:{
                 //0 is default, other levels not implemented
-                return resolve();
+                return resolve(null);
             }
         }   
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST'), log_level, log_json_server));     
     });
 };
+/**
+ *  Log server
+ * @param {string} log_level 
+ * @param {string} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogServer = async (log_level, logtext) =>{
     return await new Promise((resolve) => {
         const log_json_server = {
@@ -155,16 +194,35 @@ const LogServer = async (log_level, logtext) =>{
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
     });
 };
+/**
+ * Log server Info
+ * @param {*} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogServerI = async (logtext)=>{
     return await new Promise((resolve) => {
         resolve(LogServer(ConfigGet('SERVICE_LOG', 'LEVEL_INFO'), logtext));
     });
 };
+/**
+ * Log server error
+ * @param {*} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogServerE = async (logtext)=>{
     return await new Promise((resolve) => {
         resolve(LogServer(ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), logtext));
     });
 };
+/**
+ * Log DB Info
+ * @param {number} app_id 
+ * @param {number} db 
+ * @param {string} sql 
+ * @param {object} parameters 
+ * @param {Types.db_query_result} result 
+ * @returns {Promise.<null>}
+ */
 const LogDBI = async (app_id, db, sql, parameters, result) => {
     return await new Promise((resolve) => {
         let log_json_db;
@@ -178,7 +236,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
                                 db:             db,
                                 sql:            sql,
                                 parameters:     JSON.stringify(parameters),
-                                logtext:        `Rows:${result.rows==undefined?result.length:result.rows.length}`
+                                logtext:        `Rows:${result.rows==undefined?result.affectedRows:result.rows.length}`
                                 };
                 break;
             }
@@ -196,13 +254,21 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
             }
             default:{
                 //0 is default, other levels not implemented
-                return resolve();
+                return resolve(null);
             }
         }
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_DB'), level_info, log_json_db));
     });
 };
-
+/**
+ * Log DB Error
+ * @param {number} app_id 
+ * @param {number} db 
+ * @param {string} sql 
+ * @param {object} parameters 
+ * @param {Types.db_query_result_error} result 
+ * @returns {Promise.<null>}
+ */
 const LogDBE = async (app_id, db, sql, parameters, result) => {
     return await new Promise((resolve) => {
         const log_json_db = {
@@ -216,6 +282,14 @@ const LogDBE = async (app_id, db, sql, parameters, result) => {
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_DB'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json_db));
     });
 };
+/**
+ * Log service Info
+ * @param {number} app_id 
+ * @param {string} service 
+ * @param {object} parameters 
+ * @param {string} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogServiceI = async (app_id, service, parameters, logtext) => {
     return await new Promise((resolve) => {         
         let log_json;
@@ -227,7 +301,7 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
                             app_id:     app_id,
                             service:    service,
                             parameters: parameters,
-                            logtext:    logtext.length
+                            logtext:    logtext
                             };    
                 break;
             }
@@ -243,12 +317,20 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
             }
             default:{
                 //0 is default, other levels not implemented
-                return resolve();
+                return resolve(null);
             }
         }
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE'), level_info, log_json));
     });
 };
+/**
+ * Log service Error
+ * @param {number} app_id 
+ * @param {string} service 
+ * @param {object} parameters 
+ * @param {string} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogServiceE = async (app_id, service, parameters, logtext) => {
     return await new Promise((resolve) => {    
         const log_json = {
@@ -261,6 +343,16 @@ const LogServiceE = async (app_id, service, parameters, logtext) => {
         return resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE'), ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), log_json));
     });
 };
+/**
+ * Log App
+ * @param {number} app_id 
+ * @param {string} level_info 
+ * @param {string} app_filename 
+ * @param {string} app_function_name 
+ * @param {number} app_line 
+ * @param {string} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
     const log_json ={
@@ -274,19 +366,42 @@ const LogApp = async (app_id, level_info, app_filename, app_function_name, app_l
     resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_APP'), level_info, log_json));
     });
 };
+/**
+ * Log App Info
+ * @param {number} app_id 
+ * @param {string} app_filename 
+ * @param {string} app_function_name 
+ * @param {number} app_line 
+ * @param {string} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
         resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
     });
 };
-
+/**
+ * Logg App Error
+ * @param {number} app_id 
+ * @param {string} app_filename 
+ * @param {string} app_function_name 
+ * @param {number} app_line 
+ * @param {string} logtext 
+ * @returns {Promise.<null>}
+ */
 const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
         resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
     });
 };
-
+/**
+ * Get log parameters
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ * @returns 
+ */
 const getLogParameters = (app_id, callBack) => {
+    /**@type{Types.admin_log_parameters} */
     const results = {};
     results.SERVICE_LOG_SCOPE_REQUEST = ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST');
     results.SERVICE_LOG_SCOPE_SERVER = ConfigGet('SERVICE_LOG', 'SCOPE_SERVER');
@@ -298,18 +413,23 @@ const getLogParameters = (app_id, callBack) => {
     results.SERVICE_LOG_DB_LEVEL = ConfigGet('SERVICE_LOG', 'DB_LEVEL');
     results.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
     results.SERVICE_LOG_LEVEL_ERROR = ConfigGet('SERVICE_LOG', 'LEVEL_ERROR');
-    results.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
-    
+    results.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');  
     results.SERVICE_LOG_FILE_INTERVAL = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
     return callBack(null, results);
 };
+/**
+ * Get logs
+ * @param {number} app_id 
+ * @param {Types.admin_log_data_parameters} data 
+ * @param {Types.callBack} callBack 
+ */
 const getLogs = async (app_id, data, callBack) => {
     const fs = await import('node:fs');
     let filename;
-    if (data.month <10)
+    if (Number(data.month) <10)
         data.month = '0' + data.month;
     if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
-        if (data.day <10)
+        if (Number(data.day) <10)
             data.day = '0' + data.day;
         filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
     }
@@ -318,6 +438,12 @@ const getLogs = async (app_id, data, callBack) => {
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
         else
             filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+    /**
+     * 
+     * @param {object} record 
+     * @param {string} search 
+     * @returns 
+     */
     const match = (record, search) =>{
         for (const value of Object.values(record)){
             if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
@@ -334,17 +460,19 @@ const getLogs = async (app_id, data, callBack) => {
     await fs.promises.readFile(`${process.cwd()}${ConfigGetInit('PATH_LOG')}${filename}`, 'utf8')
     .then(fileBuffer=>{
         //read log records in the file
-        let log_rows = fileBuffer.toString().split('\r\n');
+        /**@type{string[]} */
+        const log_rows_array = fileBuffer.toString().split('\r\n');
         //remove empty row and parse records to object
-        log_rows = log_rows.filter(record=>record.length>0).map(record=>{if (record.length>0)
+        /**@type{object[]} */
+        let log_rows_array_obj = log_rows_array.filter(record=>record.length>0).map(record=>{if (record.length>0)
                                             return JSON.parse(record);
                                           });
         //filter records
-        log_rows = log_rows.filter(record => {
+        log_rows_array_obj = log_rows_array_obj.filter(record => {
                 return (
                         (
                             (
-                             (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == data.select_app_id ||record.select_app_id ==null || data.select_app_id ==''))||
+                             (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == data.select_app_id ||data.select_app_id ==null))||
                              (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
                             ) &&
                          ((data.search==null || data.search=='null' || data.search=='')|| 
@@ -352,17 +480,21 @@ const getLogs = async (app_id, data, callBack) => {
                     );
         });
         //sort 
+        /**@type{number} */
         let order_by_num;
         if (data.order_by =='asc')
             order_by_num = 1;
         else   
             order_by_num = -1;
-        log_rows = log_rows.sort((first, second)=>{
+        log_rows_array_obj = log_rows_array_obj.sort((first, second)=>{
             let first_sort, second_sort;
             //sort default is connection_date if sort missing as argument
+            /**@ts-ignore */
             if (typeof first[data.sort==null?'logdate':data.sort] == 'number'){
                 //number sort
+                /**@ts-ignore */
                 first_sort = first[data.sort==null?'logdate':data.sort];
+                /**@ts-ignore */
                 second_sort = second[data.sort==null?'logdate':data.sort];
                 if (first_sort< second_sort )
                     return -1 * order_by_num;
@@ -373,6 +505,7 @@ const getLogs = async (app_id, data, callBack) => {
             }
             else{
                 //string sort with lowercase and localcompare
+                /**@ts-ignore */
                 first_sort = first[data.sort==null?'logdate':data.sort];
                 if (first_sort == undefined)
                     first_sort = 'undefined';
@@ -380,8 +513,10 @@ const getLogs = async (app_id, data, callBack) => {
                     first_sort = first_sort.toLowerCase();
                 if (second_sort == undefined)
                     second_sort = 'undefined';
-                else
+                else{
+                    /**@ts-ignore */
                     second_sort = second_sort.toLowerCase();
+                }
                 //using localeCompare as collation method
                 if (first_sort.localeCompare(second_sort)<0 )
                     return -1 * order_by_num;
@@ -391,29 +526,40 @@ const getLogs = async (app_id, data, callBack) => {
                     return 0;
             }
         });
-        callBack(null, log_rows);
+        callBack(null, log_rows_array_obj);
     })
     //return empty and not error
     .catch(()=>callBack(null, []));
 };
+/**
+ * Get status codes
+ * 
+ *  Status codes
+ *  Informational responses (100 – 199)
+ *  Successful responses    (200 – 299)
+ *  Redirection messages    (300 – 399)
+ *  Client error responses  (400 – 499)
+ *  Server error responses  (500 – 599)
+ *
+ *  nodejs codes:
+ *  100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
+ *  same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+ *  @returns {Promise.<object>}
+ */
 const getStatusCodes = async () =>{
-    /*
-    Status codes
-    Informational responses (100 – 199)
-    Successful responses    (200 – 299)
-    Redirection messages    (300 – 399)
-    Client error responses  (400 – 499)
-    Server error responses  (500 – 599)
-    */
-    //nodejs codes:
-	//100-103, 200-208, 226, 300-305, 307-308, 400-418, 421-426, 428-429, 431,451, 500-511
-    //same as used according to https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
-
     const {STATUS_CODES} = await import('node:http');
     return STATUS_CODES;
 };
+/**
+ * Get log stat
+ * @param {number} app_id 
+ * @param {*} data 
+ * @param {Types.callBack} callBack 
+ */
 const getLogsStats = async (app_id, data, callBack) => {
-    const logfiles =[];
+    /**@type{[Types.admin_log_stats_data]|[]} */
+    const logfiles = [];
+    /**@type{[Types.admin_log_stats_data]|[]} */
     const logstat = [];
     
     const fs = await import('node:fs');
@@ -447,11 +593,14 @@ const getLogsStats = async (app_id, data, callBack) => {
                             //add unique status codes to a set
                             log_status_codes.add(record_obj.statusCode);
                             log_days.add(day);
+                            /**@ts-ignore */
                             logfiles.push({ 
+                                chart:null,
                                 statusCode: record_obj.statusCode,
                                 year: data.year,
                                 month: data.month,
-                                day: day});
+                                day: Number(day),
+                                amount: null});
                         }                        
                     }
                 }
@@ -462,29 +611,39 @@ const getLogsStats = async (app_id, data, callBack) => {
     //sort the set using ES6 spread operator
     [...log_status_codes].sort().forEach(code=>{
         //save chart 1 without days and sum amount per month
+        /**@ts-ignore */
         logstat.push({
             chart: 1,
             statusCode: code,
             year: data.year,
             month: data.month,
             day: null,
+            /**@ts-ignore */
             amount: logfiles.filter(log=>log.statusCode==code).length
         });
     });
     [...log_days].sort().forEach(day=>{
         //save chart2 with days and sum amount per day
+        /**@ts-ignore */
         logstat.push({
             chart: 2,
             statusCode: null,
             year: data.year,
             month: data.month,
             day: day,
+            /**@ts-ignore */
             amount: logfiles.filter(log=>log.day == day).length
         });
     });
     return callBack(null, logstat);
 };
+/**
+ * Get log files
+ * @param {number} app_id 
+ * @param {Types.callBack} callBack 
+ */
 const getFiles = (app_id, callBack) => {
+    /**@type{[{id:number, filename:string}]|[]} */
     const logfiles =[];
     import('node:fs').then((fs) =>{
         fs.readdir(process.cwd() + ConfigGetInit('PATH_LOG'), (err, files) => {
@@ -504,7 +663,8 @@ const getFiles = (app_id, callBack) => {
                     file.indexOf('DB_ERROR_')==0||
                     file.indexOf('SERVICE_ERROR_')==0||
                     file.indexOf('SERVICE_INFO_')==0)
-                logfiles.push({'id': i++, 'filename':file});
+                /**@ts-ignore */
+                logfiles.push({id: i++, filename:file});
             });
             return callBack(null, logfiles);
         });
