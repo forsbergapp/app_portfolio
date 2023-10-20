@@ -15,8 +15,10 @@
  * @property {string} body.broadcast_type                           - Broadcast parameter
  * @property {string} body.broadcast_message                        - Broadcast parameter
  * @property {string} body.demo_password                            - Admin parameter
+ * @property {string|null} body.password
  * @property {string} baseUrl
  * @property {string} hostname
+ * @property {string} host                                          - Admin log parameter
  * @property {string} path
  * @property {string} originalUrl
  * @property {string} ip
@@ -24,6 +26,7 @@
  * @property {function} get
  * @property {string} protocol
  * @property {string} httpVersion
+ * @property {[string]} rawHeaders
  * @property {object} params
  * @property {string} params.sub
  * @property {string} params.info
@@ -34,11 +37,16 @@
  * @property {number} query.select_app_id                           - Admin parameter
  * @property {number} query.year                                    - Admin parameter
  * @property {number} query.month                                   - Admin parameter
+ * @property {string} query.day                                     - Admin parameter
  * @property {number} query.limit                                   - Admin parameter
  * @property {string} query.order_by                                - Admin parameter
  * @property {sort_broadcast} query.sort                            - Admin parameter
  * @property {string} query.count_logged_in                         - Admin parameter
  * @property {number} query.optional                                - Admin parameter
+ * @property {string} query.logscope                                - Admin log parameter
+ * @property {string} query.loglevel                                - Admin log parameter
+ * @property {string} query.search                                  - Admin log parameter
+ * @property {string} query.code                                    - Admin log parameter
  * @property {(string|number|*)} query.app_user_id
  * @property {(string|number|*)} query.client_id
  * @property {(string|number|*)} query.user_account_id
@@ -736,8 +744,50 @@
  * @property {string}       sql
  */
 
-
 /**
+ * Log parameters
+ * @typedef{object}         admin_log_parameters
+ * @property{string}        SERVICE_LOG_SCOPE_REQUEST
+ * @property{string}        SERVICE_LOG_SCOPE_SERVER
+ * @property{string}        SERVICE_LOG_SCOPE_SERVICE
+ * @property{string}        SERVICE_LOG_SCOPE_APP
+ * @property{string}        SERVICE_LOG_SCOPE_DB
+ * @property{string}        SERVICE_LOG_REQUEST_LEVEL
+ * @property{string}        SERVICE_LOG_SERVICE_LEVEL
+ * @property{string}        SERVICE_LOG_DB_LEVEL
+ * @property{string}        SERVICE_LOG_LEVEL_VERBOSE
+ * @property{string}        SERVICE_LOG_LEVEL_ERROR
+ * @property{string}        SERVICE_LOG_LEVEL_INFO
+ * @property{string}        SERVICE_LOG_FILE_INTERVAL
+ */
+/**
+ * Log data parameter 
+ * @typedef{object}         admin_log_data_parameters
+ * @property {number}       app_id
+ * @property {number}       select_app_id
+ * @property {string}       logscope
+ * @property {string}       loglevel
+ * @property {string}       search
+ * @property {string|null}  sort
+ * @property {string}       order_by
+ * @property {string}       year
+ * @property {string}       month
+ * @property {string}       day
+ */
+/**
+ * Log stats data
+ * @typedef {object}        admin_log_stats_data
+ * @property {number|null}  chart
+ * @property {number|null}  statusCode
+ * @property {number}       year
+ * @property {number}       month
+ * @property {number|null}  day
+ * @property {number|null}  amount
+ */
+/**
+ * DB query result
+ * @typedef {db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
+ * @typedef {object}   db_query_result_error
  * INSERT:
  * DB result INSERT
  * @typedef {{insertId:number, rows:[], affectedRows:number, rowsAffected:number}}  db_result_insert
@@ -788,6 +838,8 @@
  * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_result_setting
  * DB result getUserSettingsByUserId
  * @typedef {{id:number, description:string, settings_json:string, date_created:string, date_modified:string, user_account_app_user_account_id:number, user_account_app_app_id:number}} db_result_getUserSettingsByUserId
+ * DB result getMessage
+ * @typedef {{code:number, message_level_id: number, message_type_id:number, language_id:number, lang_code:string, text:string, app_id:number}} db_result_getMessage
  * USER:
  * DB result getDemousers
  * @typedef {{id:number}} db_result_getDemousers
