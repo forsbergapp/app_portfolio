@@ -527,21 +527,7 @@ const format_json_date = (db_date, short) => {
 
 const mobile = () =>{
     return (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent));
-   };
-   
-const checkbox_value = (checkbox) => {
-    if (checkbox.checked)
-        return 'YES';
-    else
-        return 'NO';
 };
-const checkbox_checked = (checkbox) => {
-    if (checkbox == 1)
-        return 'YES';
-    else
-        return 'NO';
-};
-
 const image_format = (image) => {
     if (image == '' || image == null )
         return '';
@@ -3838,7 +3824,7 @@ export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
        getTimezoneOffset, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
-       get_null_or_value, mobile, checkbox_value, checkbox_checked, image_format,
+       get_null_or_value, mobile, image_format,
        list_image_format_src, recreate_img, set_avatar, boolean_to_number, number_to_boolean,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
