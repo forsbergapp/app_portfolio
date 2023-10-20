@@ -806,7 +806,8 @@ const getModule = async (app_id, module_config, callBack) =>{
         else{
             const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
             /**@type{Types.report_create_parameters} */
-            const data = {  reportid:       module_config.reportid,
+            const data = {  app_id:         app_id,
+                            reportid:       module_config.reportid,
                             uid_view:       module_config.uid_view,
                             reportname:     module_config.reportname,
                             ip:             module_config.ip,
@@ -814,7 +815,8 @@ const getModule = async (app_id, module_config, callBack) =>{
                             accept_language:module_config.accept_language,
                             latitude:       result_geodata.latitude,
                             longitude:      result_geodata.longitude,
-                            url:            module_config.url};
+                            url:            module_config.url,
+                            report:         null};
             const report = await createReport(app_id, data);
             app = {app:report, map:false, map_styles:null};
             app_module_type = 'REPORT';
