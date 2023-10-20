@@ -67,14 +67,14 @@ const getReportSettings = () => {
                 theme_year          	: 'theme_year_' + get_theme_id('year'),
                 coltitle            	: document.getElementById('setting_select_report_coltitle').value,
                 highlight           	: document.getElementById('setting_select_report_highlight_row').value,
-                show_weekday        	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_weekday')),
-                show_calendartype   	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_calendartype')),
-                show_notes          	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_notes')),
-                show_gps   	       		: common.checkbox_value(document.getElementById('setting_checkbox_report_show_gps')),
-                show_timezone       	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_timezone')),
-                            
-                header_img_src      	: document.getElementById('setting_reportheader_img').src,
-                footer_img_src      	: document.getElementById('setting_reportfooter_img').src,
+                show_weekday        	: Number(document.getElementById('setting_checkbox_report_show_weekday').checked),
+                show_calendartype   	: Number(document.getElementById('setting_checkbox_report_show_calendartype').checked),
+                show_notes          	: Number(document.getElementById('setting_checkbox_report_show_notes').checked),
+                show_gps   	       		: Number(document.getElementById('setting_checkbox_report_show_gps').checked),
+                show_timezone       	: Number(document.getElementById('setting_checkbox_report_show_timezone')),
+                
+                header_img_src      	: (document.getElementById('setting_reportheader_img').src??null)==null?null:document.getElementById('setting_reportheader_img').src,
+				footer_img_src      	: (document.getElementById('setting_reportfooter_img').src??null)==null?null:document.getElementById('setting_reportfooter_img').src,
 
                 header_txt1         	: document.getElementById('setting_input_reportheader1').value,
                 header_txt2         	: document.getElementById('setting_input_reportheader2').value,
@@ -101,10 +101,10 @@ const getReportSettings = () => {
                 iqamat_asr          	: document.getElementById('setting_select_report_iqamat_title_asr').value,
                 iqamat_maghrib      	: document.getElementById('setting_select_report_iqamat_title_maghrib').value,
                 iqamat_isha         	: document.getElementById('setting_select_report_iqamat_title_isha').value,
-                show_imsak          	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_imsak')),
-                show_sunset         	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_sunset')),
-                show_midnight       	: common.checkbox_value(document.getElementById('setting_checkbox_report_show_midnight')),
-                show_fast_start_end 	: document.getElementById('setting_select_report_show_fast_start_end').value,
+                show_imsak          	: Number(document.getElementById('setting_checkbox_report_show_imsak').checked),
+                show_sunset         	: Number(document.getElementById('setting_checkbox_report_show_sunset').checked),
+                show_midnight       	: Number(document.getElementById('setting_checkbox_report_show_midnight').checked),
+                show_fast_start_end 	: Number(document.getElementById('setting_select_report_show_fast_start_end').value),
                 
                 timetable_class			: 'timetable_class',
                 timetable_month         : 'timetable_month_class', //class to add for month

@@ -316,6 +316,7 @@
 /**
  * Report create parameters
  * @typedef {object}        report_create_parameters
+ * @property {number}       app_id
  * @property {string|null}  reportid
  * @property {number|null}  uid_view
  * @property {string|null}  reportname
@@ -325,6 +326,7 @@
  * @property {string}       latitude
  * @property {string}       longitude
  * @property {string|null}  url
+ * @property {string|null}  report
  */
 /**
  * Info page data
