@@ -636,6 +636,17 @@
  */
 
 /**
+ * @typedef {object}    pool_connection_4_result
+ * @property {object}   outBinds
+ * @property {[number]} outBinds.insertId
+ * @property {string}   lastRowid
+ * @property {number}   insertId
+ * @property {number}   affectedRows
+ * @property {number}   rowsAffected
+ * @property {[*]}      rows
+ */
+
+/**
  * @typedef {object|null}   pool_4
  * @property {string}       pool_id_app
  */
@@ -790,13 +801,22 @@
  * @typedef {object}   db_query_result_error
  * INSERT:
  * DB result INSERT
- * @typedef {{insertId:number, rows:[], affectedRows:number, rowsAffected:number}}  db_result_insert
+ * @typedef {{  insertId:number, 
+ *              rows:[], 
+ *              affectedRows:number, 
+ *              rowsAffected:number}}  db_result_insert
  * DELETE:
- * @typedef {{rows:[], affectedRows:number, rowsAffected:number}}                   db_result_delete
+ * @typedef {{  rows:[], 
+ *              affectedRows:number, 
+ *              rowsAffected:number}}  db_result_delete
  * UPDATE:
- * @typedef {{rows:[], affectedRows:number, rowsAffected:number}}                   db_result_update
+ * @typedef {{  rows:[], 
+ *              affectedRows:number, 
+ *              rowsAffected:number}}  db_result_update
  * SELECT:
- * @typedef {{rows:[], affectedRows:number, rowsAffected:number}}                   db_result_select
+ * @typedef {{  rows:[], 
+ *              affectedRows:number,
+ *              rowsAffected:number}}  db_result_select
  * DB result DB Info
  * @typedef {{  database_use:   number,
  *              database_name:  string,

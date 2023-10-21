@@ -304,39 +304,14 @@ const create = (app_id, data, callBack) => {
 							provider_last_name: data.provider_last_name,
 							provider_image: data.provider_image,
 							provider_Ximage_url: data.provider_image_url,
-							provider_email: data.provider_email
+							provider_email: data.provider_email,
+							RETURN_ID:true
 						};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
-					switch (ConfigGet('SERVICE_DB', 'USE')){
-						case '1':
-						case '2':
-						case '3':{
-							return callBack(null, result);
-						}
-						case '4':{
-							//Fetch id from rowid returned from Oracle
-							//sample output:
-							//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-							//remove "" before and after
-							const lastRowid = JSON.stringify(result.lastRowid).replace(/"/g, '');
-							sql = `SELECT id "insertId"
-									FROM ${db_schema()}.user_account
-									WHERE rowid = :lastRowid`;
-							parameters = {
-											lastRowid: lastRowid
-										};
-							db_execute(app_id, sql, parameters, null, (err, result_id2)=>{
-								if (err)
-									return callBack(err, null);
-								else
-									return callBack(null, result_id2[0]);
-							});
-							break;
-						}
-					}
+					return callBack(null, result);
 			});
 		}
 		else

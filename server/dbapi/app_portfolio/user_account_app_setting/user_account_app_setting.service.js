@@ -1,9 +1,8 @@
 const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
-const createUserSetting = (app_id, initial, data, callBack) => {
+const createUserSetting = (app_id, data, callBack) => {
 		let sql;
 		let parameters;
-		//insert user settings if first time and no user settings exists already
 		sql = `INSERT INTO ${db_schema()}.user_account_app_setting(
 				description, 
 				settings_json,
@@ -12,19 +11,7 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 				user_account_app_user_account_id,
 				user_account_app_app_id
 				)
-				SELECT  :description,
-					    :settings_json,
-						CURRENT_TIMESTAMP,
-						CURRENT_TIMESTAMP,
-						:user_account_id,
-						:app_id
-				FROM ${db_schema()}.user_account ua
-				WHERE ua.id = :user_account_id
-				AND NOT EXISTS (SELECT null
-									FROM ${db_schema()}.user_account_app_setting aus2
-									WHERE aus2.user_account_app_user_account_id = ua.id
-									AND aus2.user_account_app_app_id = :app_id
-									AND :initial_setting = 1)`;
+				VALUES(:description,:settings_json,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:user_account_id,:app_id)`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			if (ConfigGet('SERVICE_DB', 'USE')=='3')
 				sql = sql + ' RETURNING id';
@@ -33,46 +20,13 @@ const createUserSetting = (app_id, initial, data, callBack) => {
 							settings_json: JSON.stringify(data.settings_json),
 							user_account_id: data.user_account_id,
 							app_id: app_id,
-							initial_setting: initial
+							RETURN_ID:true
 						};
 			db_execute(app_id, sql, parameters, null, (err, result)=>{
 				if (err)
 					return callBack(err, null);
 				else
-					switch (ConfigGet('SERVICE_DB', 'USE')){
-						case '1':
-						case '2':
-						case '3':{
-							return callBack(null, result);
-						}
-						case '4':{
-							if (initial==1){
-								//user logged in and if user setting is created or not
-								//not used here
-								return callBack(null, result);
-							}									
-							else{
-								//Fetch id from rowid returned from Oracle
-								//sample output:
-								//{"lastRowid":"AAAWwdAAAAAAAdHAAC","rowsAffected":1}
-								//remove "" before and after
-								const lastRowid = JSON.stringify(result.lastRowid).replace(/"/g,'');
-								sql = `SELECT id "insertId"
-										FROM ${db_schema()}.user_account_app_setting
-										WHERE rowid = :lastRowid`;
-								parameters = {
-												lastRowid: lastRowid
-											};
-								db_execute(app_id, sql, parameters, null, (err, result_id2)=>{
-									if (err)
-										return callBack(err, null);
-									else
-										return callBack(null, result_id2[0]);
-								});
-							}
-							break;
-						}
-					}
+					return callBack(null, result);
 			});
 		});
 	};

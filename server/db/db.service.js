@@ -19,7 +19,7 @@ const POOL_DB =[
                   [1, null, null], //MySQL pools        [db number, dba pool object, apps pool object]
                   [2, null, null], //MariaDB pools      [db number, dba pool object, apps pool object]
                   [3, null, null], //PostgreSQL pools   [db number, dba pool object, apps pool object]
-                  [4, null, null]  //Oracle pools       [db number, dba pool object, apps pool object]
+                  [4, null, null]  //Oracle pools       [db number, dba pool object {pool_id_dba: 0}, apps pool object {pool_id_app: 0}]
                ];                     
 
 if (ConfigGet('SERVICE_DB', 'USE')=='4'){
@@ -183,9 +183,9 @@ const pool_start = async (dbparameters) =>{
             else{
                POOL_DB.map(db=>{if (db[0]==dbparameters.use) 
                                  if (db[2])
-                                    db[2].push({pool_id_app:dbparameters.pool_id});
+                                    db[2].push({pool_id_app:dbparameters.pool_id?.toString()});
                                  else
-                                    db[2] = [{pool_id_app: dbparameters.pool_id}];
+                                    db[2] = [{pool_id_app: dbparameters.pool_id?.toString()}];
                               });
                /**@ts-ignore */
                createpoolOracle(dbparameters.pool_id.toString());
@@ -254,11 +254,14 @@ const pool_get = (pool_id, db_use, dba) => {
 };
 
 /**
- * Get pool for given database
+ * Execute query for given database
  * @param {number} pool_id 
- * @param {number} db_use 
+ * @param {number} db_use     - 1/2 MariaDB + MySQL use MySQL npm module
+ *                            - 3 PostgreSQL
+ *                            - 4 Oracle
  * @param {string} sql
- * @param {object} parameters
+ * @param {*} parameters      - can have an extra RETURN_ID key used for Oracle
+ *                            - to add extra RETURNING clause to SQL, syntax specific for Oracle
  * @param {number} dba 
  * @returns 
  */
@@ -267,8 +270,9 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
       switch (db_use){
          case 1:
          case 2:{
-            //Both MySQL and MariaDB use MySQL npm module
             try {
+               if ('RETURN_ID' in parameters)
+                  delete parameters.RETURN_ID;
                /**@ts-ignore */
                pool_get(pool_id, db_use, dba).getConnection((/**@type{Types.error}*/err, /**@type{Types.pool_connection_1_2}*/conn) => {
                   if (err)
@@ -315,6 +319,8 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             break;
          }
          case 3:{
+            if ('RETURN_ID' in parameters)
+               delete parameters.RETURN_ID;
             /**
              * @param {string} parameterizedSql
              * @param {object} params
@@ -404,24 +410,38 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         /**@ts-ignore */
                         parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
                   });
-                  /**@ts-ignore */
-                  pool4.execute(sql, parameters, (/**@type{Types.error}*/err, /**@type{Types.db_result_insert|Types.db_result_delete|Types.db_result_update|Types.db_result_select}*/result) => {
-                     if (err) {
-                        return reject(err);
-                     }
-                     else{
-                        pool4.close();
-                        if (result.rowsAffected){
-                           //add custom key using same name as other databases
-                           /**@ts-ignore */
-                           result.affectedRows = result.rowsAffected;
+                  
+                  if ('RETURN_ID' in parameters){
+                     delete parameters.RETURN_ID;
+                     sql += ' RETURNING id INTO :insertId';
+                     Object.assign(parameters, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
+                  }
+                  try {
+                     pool4.execute(sql, parameters, (/**@type{Types.error}*/err, /**@type{Types.pool_connection_4_result}*/result) => {
+                        if (err) {
+                           return reject(err);
                         }
-                        if (result.rows)
-                           return resolve(result.rows);
-                        else
-                           return resolve(result);
-                     }
-                  });
+                        else{
+                           pool4.close();
+                           //add common attributes
+                           if (result.outBinds){
+                              result.insertId = result.outBinds.insertId[0];
+                           }
+                           if (result.rowsAffected){
+                              //add custom key using same name as other databases
+                              /**@ts-ignore */
+                              result.affectedRows = result.rowsAffected;
+                           }
+                           if (result.rows)
+                              return resolve(result.rows);
+                           else
+                              return resolve(result);
+                        }
+                     });
+                  } catch (err) {
+                     return reject(err);   
+                  }
+                  
                })
                .catch(err=>{
                   return reject(err);
