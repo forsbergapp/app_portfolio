@@ -319,8 +319,11 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
             break;
          }
          case 3:{
-            if ('RETURN_ID' in parameters)
+            // add RETURNING statement to get insertId
+            if ('RETURN_ID' in parameters){
                delete parameters.RETURN_ID;
+               sql += ' RETURNING id ';
+            }
             /**
              * @param {string} parameterizedSql
              * @param {object} params
@@ -410,7 +413,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         /**@ts-ignore */
                         parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
                   });
-                  
+                  // add RETURNING statement to get insertId
                   if ('RETURN_ID' in parameters){
                      delete parameters.RETURN_ID;
                      sql += ' RETURNING id INTO :insertId';

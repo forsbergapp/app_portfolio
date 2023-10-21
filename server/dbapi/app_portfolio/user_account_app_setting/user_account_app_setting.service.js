@@ -13,8 +13,6 @@ const createUserSetting = (app_id, data, callBack) => {
 				)
 				VALUES(:description,:settings_json,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:user_account_id,:app_id)`;
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-			if (ConfigGet('SERVICE_DB', 'USE')=='3')
-				sql = sql + ' RETURNING id';
 			parameters = {
 							description: data.description,
 							settings_json: JSON.stringify(data.settings_json),
