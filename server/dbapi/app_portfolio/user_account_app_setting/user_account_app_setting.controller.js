@@ -7,17 +7,40 @@ const createUserSetting = (req, res) => {
 					settings_json: 		req.body.settings_json,
 					user_account_id:	getNumberValue(req.body.user_account_id)
 				};
-	service.createUserSetting(getNumberValue(req.query.app_id), req.query.initial, data, (err,results) => {
-		if (err)
-			return res.status(500).send(
-				err
-			);
-		else
-			return res.status(200).json({
-				id: results.insertId,
-				data: results
-			});
-	});
+	const call_service = ()=> {
+		service.createUserSetting(getNumberValue(req.query.app_id), data, (err,results) => {
+			if (err)
+				res.status(500).send(
+					err
+				);
+			else
+				res.status(200).json({
+					id: results.insertId,
+					data: results
+				});
+		});
+	};
+	//Check if first time
+	if (getNumberValue(req.query.initial)==1){
+		service.getUserSettingsByUserId(getNumberValue(req.query.app_id), getNumberValue(req.body.user_account_id), (err, results) =>{
+			if (err)
+				res.status(500).send(
+					err
+				);
+			else
+				if (results.length==0){
+					//no user settings found, ok to create initial user setting
+					call_service();
+				}
+				else
+					res.status(200).json({
+						id: null,
+						data: null
+					});
+		});
+	}
+	else
+		call_service();
 };
 const getUserSettingsByUserId = (req, res) => {
 	service.getUserSettingsByUserId(getNumberValue(req.query.app_id), req.params.id, (err, results) =>{
