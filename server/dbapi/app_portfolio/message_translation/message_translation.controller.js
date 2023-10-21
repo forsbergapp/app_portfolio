@@ -10,7 +10,7 @@ const getMessage = (req, res) => {
 			});
 		}
 		return res.status(200).json(
-			result
+			result[0]
 		);
 	});
 };
