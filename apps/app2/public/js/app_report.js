@@ -193,7 +193,7 @@ const isToday = (checkdate) => {
             (checkdate.getFullYear() == today.getFullYear());
 };
 const set_prayer_method = async() => {
-	return new Promise( (resolve, reject) => {
+	return new Promise( (resolve) => {
 		/* see more in PrayTimes module
 		original
 		// Calculation Methods
@@ -314,7 +314,7 @@ const set_prayer_method = async() => {
 			});
 		}	
 		app_common.APP_GLOBAL['module_praytimes_methods']=praytime_methods;
-		resolve();
+		resolve(null);
 	});
 };
 
@@ -376,9 +376,11 @@ const getstyle = (img_src, align) => {
 //show column with correct class and correct format
 //for both day and month timetable
 const show_col = (timetable, col, year, month, day, calendartype, show_fast_start_end, timezone, calendar_hijri_type, hijri_adjustment, locale, number_system, value, format) => {
-
-	const display_value = localTime(value, locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system, format);
-	//const display_value = convertnumberlocale(value.toString(), ':', locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system);
+	let display_value ='';
+	if (value=='-----')
+		display_value = value;
+	else
+		display_value = localTime(value, locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system, format);
 	if (((show_fast_start_end==1 && col=='fajr') ||
 		(show_fast_start_end==2 && col=='imsak') ||
 		(show_fast_start_end==3 && col=='fajr') ||

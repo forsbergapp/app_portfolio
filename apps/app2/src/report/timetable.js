@@ -613,9 +613,11 @@ const getstyle = (img_src, align) => {
  * @returns 
  */
 const show_col = (timetable, col, year, month, day, calendartype, show_fast_start_end, timezone, calendar_hijri_type, hijri_adjustment, locale, number_system, value, format) => {
-
-	const display_value = localTime(value, locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system, format);
-	//const display_value = convertnumberlocale(value.toString(), ':', locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system);
+	let display_value ='';
+	if (value=='-----')
+		display_value = value;
+	else
+		display_value = localTime(value, locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system, format);
 	if (((show_fast_start_end==1 && col=='fajr') ||
 		(show_fast_start_end==2 && col=='imsak') ||
 		(show_fast_start_end==3 && col=='fajr') ||

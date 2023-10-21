@@ -71,7 +71,7 @@ const getReportSettings = () => {
                 show_calendartype   	: Number(document.getElementById('setting_checkbox_report_show_calendartype').checked),
                 show_notes          	: Number(document.getElementById('setting_checkbox_report_show_notes').checked),
                 show_gps   	       		: Number(document.getElementById('setting_checkbox_report_show_gps').checked),
-                show_timezone       	: Number(document.getElementById('setting_checkbox_report_show_timezone')),
+                show_timezone       	: Number(document.getElementById('setting_checkbox_report_show_timezone').checked),
                 
                 header_img_src      	: (document.getElementById('setting_reportheader_img').src??null)==null?null:document.getElementById('setting_reportheader_img').src,
 				footer_img_src      	: (document.getElementById('setting_reportfooter_img').src??null)==null?null:document.getElementById('setting_reportfooter_img').src,
