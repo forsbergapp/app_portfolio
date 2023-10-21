@@ -284,9 +284,6 @@ const create = (app_id, data, callBack) => {
 							:provider_image,
 							:provider_Ximage_url,
 							:provider_email) `;				
-			if (ConfigGet('SERVICE_DB', 'USE') == '3') {
-				sql = sql + ' RETURNING id ';
-			}
 			parameters = {
 							bio: data.bio,
 							private: data.private,
@@ -319,7 +316,7 @@ const create = (app_id, data, callBack) => {
         
     };
 const activateUser = (app_id, id, verification_type, verification_code, auth, callBack) => {
-		let sql = `UPDATE ${db_schema()}.user_account
+		const sql = `UPDATE ${db_schema()}.user_account
 					SET active = 1,
 						verification_code = :auth,
 						email = CASE 
@@ -337,9 +334,6 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id
 					AND verification_code = :verification_code `;
-		if (ConfigGet('SERVICE_DB', 'USE')=='3'){
-			sql = sql + ' RETURNING id';
-		}
 		const parameters ={
 						auth: auth,
 						verification_type: verification_type,
@@ -360,9 +354,6 @@ const updateUserVerificationCode = (app_id, id, verification_code, callBack) => 
 					  active = 0,
 					  date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		if (ConfigGet('SERVICE_DB', 'USE')=='3'){
-			sql = sql + ' RETURNING id';
-		}
 		const parameters ={
 						verification_code: verification_code,
 						id: id   
