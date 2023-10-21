@@ -479,7 +479,7 @@ const set_prayer_method = async(app_id, locale) => {
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
 		const praytime_methods = {};
-        getSettings(app_id, locale, 'METHOD', (/**@type{Types.error}*/err, /**@type{Types.db_result_setting[]}*/result_settings) => {
+        getSettings(app_id, locale, 'METHOD', (/**@type{Types.error}*/err, /**@type{Types.db_result_setting_getSettings[]}*/result_settings) => {
             if (err)
                 reject(err);
             else{

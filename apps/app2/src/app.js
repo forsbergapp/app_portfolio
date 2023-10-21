@@ -1,4 +1,4 @@
-/** @module apps/app4 */
+/** @module apps/app2 */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
@@ -10,7 +10,7 @@ const {render_app_with_data, render_app_html} = await import(`file://${process.c
  * Get themes
  * @param {number} app_id
  * @param {string} locale
- * @param {Types.db_result_setting[]} settings
+ * @param {Types.db_result_setting_getSettings[]} settings
  * @returns {[string|null,string|null,string|null]}
  */
 const themes = (app_id, locale, settings) =>{
@@ -80,7 +80,7 @@ const themes = (app_id, locale, settings) =>{
  * Get places
  * @param {number} app_id
  * @param {string} locale
- * @param {Types.db_result_setting[]} settings
+ * @param {Types.db_result_setting_getSettings[]} settings
  * @returns {string}
  */
 const places = (app_id, locale, settings) => {
@@ -297,7 +297,7 @@ const createApp = (app_id, username, locale) => {
         };
         if (username!=null){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
-                getProfileUser(app_id, null, username, null, (/**@type{Types.error}*/err,/**@type{Types.db_result_ProfileUser}*/result)=>{
+                getProfileUser(app_id, null, username, null, (/**@type{Types.error}*/err,/**@type{Types.db_result_user_account_getProfileUser}*/result)=>{
                     if (result)
                         main(app_id);
                     else{
