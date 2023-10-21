@@ -1,6 +1,18 @@
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/app */
 
-const getApp = (app_id, id,lang_code, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} lang_code 
+ * @returns {Promise.<Types.db_result_app_getApp[]>}
+ */
+const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
 						app_name "app_name",
 						url "url",
@@ -39,19 +51,19 @@ const getApp = (app_id, id,lang_code, callBack) => {
 					:id = 0)
 				AND enabled = 1
 				ORDER BY 1`;
-		const parameters = {	lang_code1: get_locale(lang_code, 1),
-						lang_code2: get_locale(lang_code, 2),
-						lang_code3: get_locale(lang_code, 3),
-						id: id};
-		
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		const parameters = {lang_code1: get_locale(lang_code, 1),
+							lang_code2: get_locale(lang_code, 2),
+							lang_code3: get_locale(lang_code, 3),
+							id: id};
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getAppsAdmin = (app_id, lang_code, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ * @returns {Promise.<Types.db_result_app_getAppAdmin[]>}
+ */
+const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
 						a.app_name "app_name",
 						a.url "url",
@@ -77,59 +89,53 @@ const getAppsAdmin = (app_id, lang_code, callBack) => {
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3)
 							};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
+/**
+ * 
+ * @param {number} app_id 
+ * @returns {Promise.<Types.db_result_app_getAppAdmin[]>}
+ */
 const getAppsAdminId = async (app_id) => {
-	return new Promise((resolve, reject) => {
-		const sql = `SELECT a.id "id"
-					FROM ${db_schema()}.app a
-				ORDER BY 1`;
-		const parameters = {};
-
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				reject(err);
-			else
-				resolve(result);
-		});
-	});
-
+	const sql = `SELECT a.id "id"
+				FROM ${db_schema()}.app a
+			ORDER BY 1`;
+	const parameters = {};
+	return await db_execute_promise(app_id, sql, parameters, null);
 };
-
-const getAppName = (app_id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @returns {Promise.<Types.db_result_app_getAppName[]>}
+ */
+const getAppName = async (app_id) => {
 	const sql = `SELECT a.app_name "app_name"
 				   FROM ${db_schema()}.app a
 				  WHERE a.id = :app_id`;
-	const parameters = {  app_id: app_id};
-	db_execute(app_id, sql, parameters, null, (err, result)=>{
-		if (err)
-			return callBack(err, null);
-		else
-			return callBack(null, result);
-	});
+	const parameters = { app_id: app_id};
+	return await db_execute_promise(app_id, sql, parameters, null);
 };
-const updateAppAdmin = (app_id, id, body, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {Types.db_parameter_app_updateAppAdmin} data
+ * @returns {Promise.<Types.db_result_app_updateAppAdmin[]>}
+ */
+const updateAppAdmin = async (app_id, id, data) => {
 		const sql = `UPDATE ${db_schema()}.app
-				  SET app_name = :app_name,
-					  url = :url,
-				 	  logo = :logo,
-					  enabled = :enabled
-				WHERE id = :id`;
-		const parameters = {	app_name: body.app_name,
-						url: body.url,
-						logo: body.logo,
-						enabled: body.enabled,
-						id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+						SET app_name = :app_name,
+							url = :url,
+							logo = :logo,
+							enabled = :enabled,
+							app_category_id = :app_category_id
+					WHERE id = :id`;
+		const parameters = {app_name: data.app_name,
+							url: data.url,
+							logo: data.logo,
+							enabled: data.enabled,
+							app_category_id: data.app_category_id,
+							id: id};
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getApp, getAppsAdmin, getAppsAdminId, getAppName, updateAppAdmin};

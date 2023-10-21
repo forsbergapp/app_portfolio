@@ -1132,7 +1132,8 @@ const button_save = async (item) => {
                                      app_name: x[i].children[1].children[0].value,
                                      url: x[i].children[2].children[0].value,
                                      logo: x[i].children[3].children[0].value,
-                                     enabled: x[i].children[4].children[0].checked});
+                                     enabled: x[i].children[4].children[0].checked,
+                                     app_category_id: x[i].children[5].children[0].value});
             }
         }
         //save changes in list_app_parameter
@@ -1257,10 +1258,12 @@ const update_record = async (table,
                         parameters.enabled=true;
                     }
                 }
-                json_data = {   app_name:   parameters.app_name,
-                                url:        parameters.url,
-                                logo:       parameters.logo,
-                                enabled:    parameters.enabled==true?1:0};
+                json_data = {   app_name:       parameters.app_name,
+                                url:            parameters.url,
+                                logo:           parameters.logo,
+                                enabled:        parameters.enabled==true?1:0,
+                                app_category_id:parameters.app_category_id
+                            };
                 path = `/apps/admin/${parameters.id}?`;
                 break;
             }
