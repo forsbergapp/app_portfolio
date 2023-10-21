@@ -218,7 +218,7 @@ const render_common_html = async (app_id, module, app_config) =>{
             const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
             return new Promise((resolve)=>{
                 /** @type {string}*/
-                let user_locales;
+                let user_locales='';
                 getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_result_locale_getLocales[]}*/ result_user_locales) => {
                     result_user_locales.forEach((locale, i) => {
                         user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
