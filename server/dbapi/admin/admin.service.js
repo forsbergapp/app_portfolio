@@ -410,17 +410,11 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * Create user setting
        * @param {number} user_setting_app_id 
        * @param {object} data 
-       * @param {number} i 
        * @returns 
        */
-		const create_setting = async (user_setting_app_id, data, i) => {
+		const create_setting = async (user_setting_app_id, data) => {
 			return new Promise((resolve, reject) => {
-            let initial;
-            if (i==0)
-               initial = 1;
-            else
-               initial = 0;
-            createUserSetting(user_setting_app_id, initial, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+            createUserSetting(user_setting_app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
 					if (err)
 						reject(err);
 					else{
@@ -468,7 +462,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                                              settings_json: settings_no_app_id,
                                              user_account_id: demo_user.id
                                            };	
-				await create_setting(user_setting_app_id, json_data_user_setting, i);
+				await create_setting(user_setting_app_id, json_data_user_setting);
 			}
 		}
 		let records_user_account_like = 0;

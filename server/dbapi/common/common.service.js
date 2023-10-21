@@ -170,10 +170,10 @@ const db_limit_rows = (sql, limit_type = null) => {
  */
 const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 	import(`file://${process.cwd()}/server/db/db.service.js`).then(({db_query}) => {
-		db_query(app_id, parseInt(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
+		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{Types.db_query_result}*/result)=> {
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBI}) => {
-				LogDBI(app_id, parseInt(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
+				LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
 				.then(()=>{
 					return callBack(null, result);});
 				});
@@ -181,7 +181,7 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 		.catch((/**@type{Types.error}*/error)=>{
 			const database_error = 'DATABASE ERROR';
 			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBE}) => {
-				LogDBE(app_id, parseInt(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
+				LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
 				.then(()=>{
 					const app_code = get_app_code(error.errorNum, 
 						error.message, 
