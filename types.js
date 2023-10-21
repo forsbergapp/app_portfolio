@@ -1,21 +1,6 @@
 /**
  * Request
  * @typedef {Object} req
- * @property {object} params
- * @property {number} params.user_account_id                        - Admin parameter
- * @property {string} params.info                                   - Info parameter
- * @property {string} params.sub                                    - App showparam parameter
- * @property {object} body
- * @property {string} body.value                                    - Server parameter
- * @property {string} body.config_no                                - Server parameter
- * @property {config} body.config_json                              - Server parameter
- * @property {number} body.app_id
- * @property {number} body.client_id                                - Broadcast parameter
- * @property {number} body.client_id_current                        - Broadcast parameter
- * @property {string} body.broadcast_type                           - Broadcast parameter
- * @property {string} body.broadcast_message                        - Broadcast parameter
- * @property {string} body.demo_password                            - Admin parameter
- * @property {string|null} body.password
  * @property {string} baseUrl
  * @property {string} hostname
  * @property {string} host                                          - Admin log parameter
@@ -27,10 +12,30 @@
  * @property {string} protocol
  * @property {string} httpVersion
  * @property {[string]} rawHeaders
+ * params
  * @property {object} params
- * @property {string} params.sub
- * @property {string} params.info
- * 
+ * @property {number} params.user_account_id                        - Admin parameter
+ * @property {string} params.info                                   - Info parameter
+ * @property {string} params.sub                                    - App showparam parameter
+ * @property {string} params.id                                     - app portfolio parameter
+ * body
+ * @property {object} body
+ * @property {string} body.value                                    - Server parameter
+ * @property {string} body.config_no                                - Server parameter
+ * @property {config} body.config_json                              - Server parameter
+ * @property {number} body.app_id
+ * @property {number} body.client_id                                - Broadcast parameter
+ * @property {number} body.client_id_current                        - Broadcast parameter
+ * @property {string} body.broadcast_type                           - Broadcast parameter
+ * @property {string} body.broadcast_message                        - Broadcast parameter
+ * @property {string} body.demo_password                            - Admin parameter
+ * @property {string|null} body.password
+ * @property {string} body.app_name                                 - app portfolio parameter
+ * @property {string} body.url                                      - app portfolio parameter
+ * @property {string} body.logo                                     - app portfolio parameter
+ * @property {string} body.enabled                                  - app portfolio parameter
+ * @property {number} body.app_category_id                          - app portfolio parameter
+ * query
  * @property {object} query
  * @property {(string|number|*)} query.id
  * @property {(string|number|*)} query.app_id
@@ -82,6 +87,7 @@
  *              referer:string,
  *              'X-Request-Id':string,
  *              'X-Correlation-Id':string}} headers
+ * socket
  * @property {object} socket
  * @property {string} socket.bytesRead
  * @property {string} socket.bytesWritten
@@ -250,7 +256,7 @@
 /**
  * App render common info settings
  * @typedef {object} render_common_settings
- * @property {db_result_setting[]} settings - db result
+ * @property {db_result_setting_getSettings[]} settings - db result
  * @property {string} user_timezones        - HTML option format
  * @property {string} user_directions       - HTML option format
  * @property {string} user_arabic_scripts   - HTML option format
@@ -798,25 +804,25 @@
 /**
  * DB query result
  * @typedef {db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
- * @typedef {object}   db_query_result_error
- * INSERT:
+ * @typedef {object}                    db_query_result_error
  * DB result INSERT
  * @typedef {{  insertId:number, 
  *              rows:[], 
  *              affectedRows:number, 
  *              rowsAffected:number}}  db_result_insert
- * DELETE:
+ * DB result DELETE
  * @typedef {{  rows:[], 
  *              affectedRows:number, 
  *              rowsAffected:number}}  db_result_delete
- * UPDATE:
+ * DB result UPDATE
  * @typedef {{  rows:[], 
  *              affectedRows:number, 
  *              rowsAffected:number}}  db_result_update
- * SELECT:
+ * DB result SELECT
  * @typedef {{  rows:[], 
  *              affectedRows:number,
  *              rowsAffected:number}}  db_result_select
+ * ADMIN
  * DB result DB Info
  * @typedef {{  database_use:   number,
  *              database_name:  string,
@@ -824,54 +830,69 @@
  *              database_schema:string,
  *              hostname:       string,
  *              connections:    number,
- *              started:        string}} db_result_DBInfo
+ *              started:        string}} db_result_admin_DBInfo
  * DB result DB Info space
  * @typedef {{  table_name:     string,
  *              total_size:     number,
  *              data_used:      number,
  *              data_free:      number,
- *              pct_used:       number}} db_result_DBInfoSpace
+ *              pct_used:       number}} db_result_admin_DBInfoSpace
  * DB result DB Info space sum
  * @typedef {{  total_size:     number,
  *              data_used:      number,
  *              data_free:      number,
- *              pct_used:       number}} db_result_DBInfoSpaceSum
+ *              pct_used:       number}} db_result_admin_DBInfoSpaceSum
+ * 
+ * Syntax typedef parameters and result
+ * parameter:
+ *  db_parameter_[TABLE]_[function name]
+ * result:
+ *  db_result_[TABLE]_[function name]
+ * APP
  * DB result app
- * @typedef {{app_name:string, url:string}} db_result_app
- * DB result app_name 
- * @typedef {{app_name:string}} db_result_app_name
- * DB result app_objects
- * @typedef {{object_item_name:string, text:string}} db_result_app_object_item
- * DB result app_parameter
- * @typedef {{app_id: number, parameter_type_id:number, parameter_name:string, parameter_value :string, parameter_comment:string}} db_result_app_parameter
- * DB result getAppDBParametersAdmin
- * @typedef {{id: number, db_user:string, db_password:string}} db_result_getAppDBParametersAdmin
- * DB result country
- * @typedef {{id:string, group_name:string, country_code:string, flag_emoji:string, text:string}} db_result_country
- * DB result identity provider
- * @typedef {{id:string, provider_name:string}} db_result_identity_provider
- * DB result locale
- * @typedef {{locale: String, text:string}} db_result_locale
- * DB result parameter
- * @typedef {{parameter_name:string, parameter_value:string}} db_result_parameter
- * DB result setting
- * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_result_setting
- * DB result getUserSettingsByUserId
- * @typedef {{id:number, description:string, settings_json:string, date_created:string, date_modified:string, user_account_app_user_account_id:number, user_account_app_app_id:number}} db_result_getUserSettingsByUserId
- * DB result getMessage
- * @typedef {{code:number, message_level_id: number, message_type_id:number, language_id:number, lang_code:string, text:string, app_id:number}} db_result_getMessage
- * USER:
- * DB result getDemousers
- * @typedef {{id:number}} db_result_getDemousers
- * DB result Checklogin
- * @typedef {{login:number}} db_result_Checklogin
- * DB result UserAppRoleAdmin
- * @typedef {{app_role_id:number}} db_result_UserAppRoleAdmin
- * DB result UserRoleAdmin
- * @typedef {{app_role_id:number, icon:string}} db_result_UserRoleAdmin
- * DB result ProfileUser
+ * @typedef {{app_name:string, url:string, logo:string, enabled:number, app_category_id:number}} db_parameter_app_updateAppAdmin
+ * @typedef {{id:number, app_name:string, url:string, logo:string, app_description:string, app_category:string}} db_result_app_getApp
+ * @typedef {{id:number, app_name:string, url:string, logo:string, enabled:number, app_category_id:number, app_category_text:string}} db_result_app_getAppAdmin
+ * @typedef {{id:number}} db_result_app_getAppsAdminId
+ * @typedef {{app_name:string}} db_result_app_getAppName
+ * @typedef {db_result_update} db_result_app_updateAppAdmin
+ * APP CATEGORY
+ * APP LOG
+ * APP OBJECTS
+ * @typedef {{object_item_name:string, text:string}} db_result_app_object_getObjects
+ * APP PARAMETER
+ * @typedef {{app_id: number, parameter_type_id:number, parameter_name:string, parameter_value :string, parameter_comment:string}} db_result_app_parameter_getAppStartParameters
+ * @typedef {{id: number, db_user:string, db_password:string}} db_result_app_parameter_getAppDBParametersAdmin
+ * @typedef {{parameter_name:string, parameter_value:string}} db_result_app_parameter_getParameters_server 
+ * APP ROLE
+ * COUNTRY
+ * @typedef {{id:string, group_name:string, country_code:string, flag_emoji:string, text:string}} db_result_country_getCountries
+ * IDENTITY PROVIDER
+ * @typedef {{id:string, provider_name:string}} db_result_identity_provider_getIdentityProviders
+ * LANGUAGE
+ * @typedef {{locale: String, text:string}} db_result_locale_getLocales
+ * MESSAGE TRANSLATION
+ * @typedef {{code:number, message_level_id: number, message_type_id:number, language_id:number, lang_code:string, text:string, app_id:number}} db_result_message_translation_getMessage
+ * PARAMETER TYPE
+ * PROFILE SEARCH
+ * SETTING
+ * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_result_setting_getSettings
+ * USER ACCOUNT
+ * @typedef {{id:number}} db_result_user_account_getDemousers
+ * @typedef {{app_role_id:number}} db_result_user_account_UserAppRoleAdmin
+ * @typedef {{app_role_id:number, icon:string}} db_result_user_account_UserRoleAdmin
  * @typedef {{  id:string, bio:string, private:number|null, user_level:string, date_created:string, username:string, avatar:string, 
  *              identity_provider_id:string, provider_id:string, provider_first_name:string, provider_last_name:string, provider_image:string, provider_image_url:string,
- *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_result_ProfileUser
+ *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_result_user_account_getProfileUser
+ * USER ACCOUNT APP
+ * USER ACCOUNT APP SETTING
+ * @typedef {{id:number, description:string, settings_json:string, date_created:string, date_modified:string, user_account_app_user_account_id:number, user_account_app_app_id:number}} db_result_user_account_app_setting_getUserSettingsByUserId
+ * USER ACCOUNT APP SETTING LIKE
+ * USER ACCOUNT APP SETTING VIEW
+ * USER ACCOUNT EVENT
+ * USER ACCOUNT FOLLOW
+ * USER ACCOUNT LIKE
+ * USER ACCOUNT LOGON
+ * @typedef {{login:number}} db_result_user_account_logon_Checklogin
  */
 export {};

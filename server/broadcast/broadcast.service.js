@@ -270,7 +270,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             let i=0;
             connected_clients_no_res.map(client=>{
                 if (client.system_admin==0)
-                    getUserRoleAdmin(app_id, client.user_account_id, dba, (/**@type{Types.error}*/err, /**@type{Types.db_result_UserRoleAdmin}*/result_app_role)=>{
+                    getUserRoleAdmin(app_id, client.user_account_id, dba, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_UserRoleAdmin}*/result_app_role)=>{
                         if (err)
                             callBack(err, null);
                         else{

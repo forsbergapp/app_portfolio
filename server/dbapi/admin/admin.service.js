@@ -79,7 +79,7 @@ const DBStart = async () => {
          .then(()=>{
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
                //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),(/**@type{Types.error}*/err, /**@type{Types.db_result_getAppDBParametersAdmin[]}*/result_apps) =>{
+               getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),(/**@type{Types.error}*/err, /**@type{Types.db_result_app_parameter_getAppDBParametersAdmin[]}*/result_apps) =>{
                   if (err)
                      throw err;
                   else {
@@ -168,7 +168,7 @@ const DBInfo = async (app_id, callBack) => {
                   database: db_use,
                   Xdatabase_schema: db_schema()
                   };
-   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfo[]}*/result)=>{
+   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfo[]}*/result)=>{
       if (err)
          return callBack(err, null);
       else{
@@ -238,7 +238,7 @@ const DBInfoSpace = async (app_id, callBack) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfoSpace[]}*/result)=>{
+   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpace[]}*/result)=>{
       if (err)
          return callBack(err, null);
       else
@@ -293,7 +293,7 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfoSpaceSum[]}*/result)=>{
+   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result)=>{
       if (err)
          return callBack(err, null);
       else
@@ -540,7 +540,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
 			return new Promise((resolve, reject) => {
-				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_getUserSettingsByUserId[]}*/results_settings) => {
+				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings) => {
 					if (err)
 						reject(err);
 					else{
@@ -568,7 +568,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
 			return new Promise((resolve, reject) => {
-				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_getUserSettingsByUserId[]}*/results_settings) => {
+				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings) => {
 					if (err)
 						reject(err);
 					else{
@@ -695,7 +695,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
  */
 const demo_delete = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers, deleteUser})=>{
-		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_getDemousers[]}*/result_demo_users) =>{
+		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers[]}*/result_demo_users) =>{
 			if (err) {
             return callBack(err, null);
 			}
@@ -738,7 +738,7 @@ const demo_delete = async (app_id, callBack)=> {
  */
 const demo_get = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers})=>{
-		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_getDemousers}*/result_demo_users) =>{
+		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/result_demo_users) =>{
 			if (err)
             return callBack(err, null);
          else

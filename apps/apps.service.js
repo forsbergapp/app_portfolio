@@ -219,7 +219,7 @@ const render_common_html = async (app_id, module, app_config) =>{
             return new Promise((resolve)=>{
                 /** @type {string}*/
                 let user_locales;
-                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_result_locale[]}*/ result_user_locales) => {
+                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_result_locale_getLocales[]}*/ result_user_locales) => {
                     result_user_locales.forEach((locale, i) => {
                         user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
                     });
@@ -233,7 +233,7 @@ const render_common_html = async (app_id, module, app_config) =>{
         const promisegetSettings = async () =>{
             const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
             return new Promise((resolve)=>{
-                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Types.db_result_setting[]}*/ settings) => {
+                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Types.db_result_setting_getSettings[]}*/ settings) => {
                     let option;
                     for (const setting of settings) {
                         option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
@@ -362,7 +362,7 @@ const render_common_html = async (app_id, module, app_config) =>{
 const countries = (app_id, locale) => {
     return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_result_country[]}*/ results)  => {
+            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_result_country_getCountries[]}*/ results)  => {
                 /** @type {string}*/
                 let select_countries;
                 if (err){
@@ -377,7 +377,7 @@ const countries = (app_id, locale) => {
                     select_countries  =`<option value='' id='' label='…' selected='selected'>…
                                         </option>`;
             
-                    results.map( (/** @type Types.db_result_country}*/ countries_map, /** @type {number}*/ i) => {
+                    results.map( (/** @type Types.db_result_country_getCountries}*/ countries_map, /** @type {number}*/ i) => {
                         if (i === 0){
                         select_countries += `<optgroup label=${countries_map.group_name} />`;
                         current_group_name = countries_map.group_name;
@@ -412,7 +412,15 @@ const countries = (app_id, locale) => {
 const get_module_with_init = async (app_info, callBack) => {
     /**@type {[string, string][]} */
     const render_variables = [];
-    const return_with_parameters = (/** @type{string}*/ module, /** @type{(string|null)}*/ countries, /** @type{Types.db_result_app_parameter[]|null}*/ app_parameters, /** @type{number}*/ first_time)=>{
+    /**
+     * 
+     * @param {string} module 
+     * @param {string|null} countries 
+     * @param {Types.db_result_app_parameter_getAppStartParameters[]|null} app_parameters 
+     * @param {number} first_time 
+     * @returns 
+     */
+    const return_with_parameters = (module, countries, app_parameters, first_time)=>{
 
         /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
@@ -436,7 +444,7 @@ const get_module_with_init = async (app_info, callBack) => {
                                                             app_service: app_service_parameters,
                                                             app: app_parameters
                                                         })]);
-        return render_app_with_data(app_info.module, render_variables);
+        return render_app_with_data(module, render_variables);
     };
     
     if (app_info.system_admin_only==1){
@@ -446,29 +454,28 @@ const get_module_with_init = async (app_info, callBack) => {
     else{
         const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-        getAppName(app_info.app_id, ( /** @type {string}*/ err,/** @type{Types.db_result_app_name[]}*/result_app_name) =>{
-            if (err)
-                callBack(err, null);
-            else{
-                //fetch parameters for common_app_id and current app_id
-                getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter[]}*/app_parameters) =>{
-                    if (err)
-                        callBack(err, null);
+        getAppName(app_info.app_id)
+        .then((/** @type{Types.db_result_app_getAppName[]}*/result_app_name) =>{
+            //fetch parameters for common_app_id and current app_id
+            getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/app_parameters) =>{
+                if (err)
+                    callBack(err, null);
+                else{
+                    render_variables.push(['APP_NAME',result_app_name[0].app_name]);
+                    if (app_info.map == true)
+                        //fetch countries and return map styles
+                        countries(app_info.app_id, app_info.locale).then((countries)=>{
+                            callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
+                        });
                     else{
-                        render_variables.push(['APP_NAME',result_app_name[0].app_name]);
-                        if (app_info.map == true)
-                            //fetch countries and return map styles
-                            countries(app_info.app_id, app_info.locale).then((countries)=>{
-                                callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
-                            });
-                        else{
-                            //no countries or map styles
-                            callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
-                        }
+                        //no countries or map styles
+                        callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
                     }
-                });
-                
-            }
+                }
+            });
+        })
+        .catch((/**@type{Types.error}*/err)=>{
+            callBack(err, null);
         });
     }        
 };
@@ -518,7 +525,7 @@ const createMail = async (app_id, data) =>{
                 if (err)
                     reject(err);
                 else{                
-                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), (/** @type {string}*/ err, /** @type {Types.db_result_parameter[]}*/ result)=>{
+                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result)=>{
                         if (err) {                
                             reject(err);
                         }
@@ -600,53 +607,55 @@ const createMail = async (app_id, data) =>{
  * @param {Types.callBack} callBack   - CallBack with error and success info or null in both info parameter is unknown
  */
 const getInfo = async (app_id, info, lang_code, callBack) => {
+    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
     /** @type {Types.callBack} callBack */
     const get_parameters = (app_id, callBack) => {
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`).then(({getApp}) => {
-            getApp(app_id, app_id, lang_code, (/** @type {string}*/ err, /** @type{Types.db_result_app[]}*/result_app)=>{
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({getParameters_server}) =>{
-                    getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_result_parameter[]}> }*/result)=>{
-                        //app_parameter table
-                        let db_info_email_policy;
-                        let db_info_email_disclaimer;
-                        let db_info_email_terms;
-                        let db_info_link_policy_url;
-                        let db_info_link_disclaimer_url;
-                        let db_info_link_terms_url;
-                        let db_info_link_about_url;
-                        if (err)
-                            callBack(err, null);
-                        else{
-                            for (const parameter of result){
-                                if (parameter.parameter_name=='INFO_EMAIL_POLICY')
-                                    db_info_email_policy = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
-                                    db_info_email_disclaimer = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_EMAIL_TERMS')
-                                    db_info_email_terms = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
-                                    db_info_link_policy_url = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                                    db_info_link_disclaimer_url = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
-                                    db_info_link_terms_url = parameter.parameter_value;
-                                if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
-                                    db_info_link_about_url = parameter.parameter_value;
-                            }
-                            callBack(null, {app_name: result_app[0].app_name,
-                                            app_url: result_app[0].url,
-                                            info_email_policy: db_info_email_policy,
-                                            info_email_disclaimer: db_info_email_disclaimer,
-                                            info_email_terms: db_info_email_terms,
-                                            info_link_policy_url: db_info_link_policy_url,
-                                            info_link_disclaimer_url: db_info_link_disclaimer_url,
-                                            info_link_terms_url: db_info_link_terms_url,
-                                            info_link_about_url: db_info_link_about_url
-                                            });
-                        }
-                    });
-                });
+        getApp(app_id, app_id, lang_code)
+        .then((/** @type{Types.db_result_app_getApp[]}*/result_app)=> {
+            getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_result_app_parameter_getParameters_server[]}> }*/result)=>{
+                //app_parameter table
+                let db_info_email_policy;
+                let db_info_email_disclaimer;
+                let db_info_email_terms;
+                let db_info_link_policy_url;
+                let db_info_link_disclaimer_url;
+                let db_info_link_terms_url;
+                let db_info_link_about_url;
+                if (err)
+                    callBack(err, null);
+                else{
+                    for (const parameter of result){
+                        if (parameter.parameter_name=='INFO_EMAIL_POLICY')
+                            db_info_email_policy = parameter.parameter_value;
+                        if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
+                            db_info_email_disclaimer = parameter.parameter_value;
+                        if (parameter.parameter_name=='INFO_EMAIL_TERMS')
+                            db_info_email_terms = parameter.parameter_value;
+                        if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
+                            db_info_link_policy_url = parameter.parameter_value;
+                        if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                            db_info_link_disclaimer_url = parameter.parameter_value;
+                        if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
+                            db_info_link_terms_url = parameter.parameter_value;
+                        if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
+                            db_info_link_about_url = parameter.parameter_value;
+                    }
+                    callBack(null, {app_name: result_app[0].app_name,
+                                    app_url: result_app[0].url,
+                                    info_email_policy: db_info_email_policy,
+                                    info_email_disclaimer: db_info_email_disclaimer,
+                                    info_email_terms: db_info_email_terms,
+                                    info_link_policy_url: db_info_link_policy_url,
+                                    info_link_disclaimer_url: db_info_link_disclaimer_url,
+                                    info_link_terms_url: db_info_link_terms_url,
+                                    info_link_about_url: db_info_link_about_url
+                                    });
+                }
             });
+        })
+        .catch((/**@type{Types.error}*/error)=> {   
+            callBack(error, null); 
         });
     };
     const info_html1 = `<!DOCTYPE html>
@@ -790,7 +799,7 @@ const getModule = async (app_id, module_config, callBack) =>{
 
             const callGetObjects = async () =>{
                 return new Promise((resolve)=>{
-                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_result_app_object_item[]}*/ result_objects) => {
+                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_result_app_object_getObjects[]}*/ result_objects) => {
                         /**@type {[string, string][]} */
                         const render_variables = [];
                         for (const row of result_objects){
@@ -1018,7 +1027,7 @@ const getMaintenance = (app_id) => {
 const providers_buttons = async (app_id) =>{
     const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
     return new Promise((resolve, reject)=>{
-        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Types.db_result_identity_provider[]}*/result)=>{
+        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
             if (err)
                 reject(err);
             else{

@@ -6,6 +6,8 @@ import * as Types from './../../../types.js';
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
 
 /**
  * Get app code derived from database error
@@ -72,7 +74,7 @@ const record_not_found = (res, app_id, lang_code) => {
 			getMessage( app_id, 
 						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 						20400, 
-						lang_code, (/**@type{Types.error}*/err,/**@type{Types.db_result_getMessage}*/results_message)  => {
+						lang_code, (/**@type{Types.error}*/err,/**@type{Types.db_result_message_translation_getMessage}*/results_message)  => {
 							res.status(404).send(
 								err ?? results_message.text
 							);
@@ -202,7 +204,47 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 		});
 	});
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} sql 
+ * @param {object} parameters 
+ * @param {number} dba 
+ * @returns {Promise.<Types.error|{}>}
+ */
+ const db_execute_promise = async (app_id, sql, parameters, dba) =>{
+	return new Promise ((resolve, reject)=>{
+		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
+		.then((/**@type{Types.db_query_result}*/result)=> {
+			LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
+			.then(()=>{
+				resolve(result);
+			});
+		})
+		.catch((/**@type{Types.error}*/error)=>{
+			const database_error = 'DATABASE ERROR';
+			LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
+			.then(()=>{
+				const app_code = get_app_code(error.errorNum, 
+					error.message, 
+					error.code, 
+					error.errno, 
+					error.sqlMessage);
+				if (app_code != null)
+					reject(error);
+				else{
+					//return full error to admin
+					if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+						reject(error);
+					else
+						reject(database_error);
+				}
+			});
+		});
+	});
+};
+
 export{
 		get_app_code, record_not_found, get_locale,
-		db_schema,  db_limit_rows, db_execute
+		db_schema,  db_limit_rows, db_execute, db_execute_promise
 };

@@ -13,7 +13,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {Types.res} res 
  */
 const DBInfo = (req, res) => {
-	service.DBInfo(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfo}*/results) =>{
+	service.DBInfo(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfo}*/results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -30,7 +30,7 @@ const DBInfo = (req, res) => {
  * @param {Types.res} res 
  */
 const DBInfoSpace = (req, res) => {
-	service.DBInfoSpace(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfoSpace}*/results) =>{
+	service.DBInfoSpace(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpace}*/results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -47,7 +47,7 @@ const DBInfoSpace = (req, res) => {
  * @param {Types.res} res 
  */
 const DBInfoSpaceSum = (req, res) => {
-	service.DBInfoSpaceSum(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_DBInfoSpaceSum}*/results) =>{
+	service.DBInfoSpaceSum(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpaceSum}*/results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -97,7 +97,7 @@ const demo_delete = async (req, res)=> {
  * @param {Types.res} res 
  */
 const demo_get = async (req, res)=> {
-	service.demo_get(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_getDemousers}*/results) =>{
+	service.demo_get(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/results) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
