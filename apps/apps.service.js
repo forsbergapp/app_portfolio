@@ -579,7 +579,7 @@ const createMail = async (app_id, data) =>{
                                 'from':               email_from,
                                 'to':                 data.to,
                                 'subject':            '❂❂❂❂❂❂',
-                                'html':               render_app_with_data( email, render_variables)
+                                'html':               render_app_with_data( email.app, render_variables)
                             });
                         }
                     });
