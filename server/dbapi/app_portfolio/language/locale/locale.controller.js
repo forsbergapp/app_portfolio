@@ -8,14 +8,14 @@ const getLocales = (req, res) => {
 		lang_code ='en';
 	else
 		lang_code = req.params.lang_code;
-	service.getLocales(getNumberValue(req.query.app_id), lang_code,(err, results) =>{
+	service.getLocales(getNumberValue(req.query.app_id), lang_code,(err, result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
 		return res.status(200).json({
-			locales: results
+			locales: result
 		});
 	});
 };

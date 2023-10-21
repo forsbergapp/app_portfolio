@@ -5,7 +5,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getParameterTypeAdmin = (req, res) => {
 	if (typeof req.query.id == 'undefined')
 		req.query.id = null;
-	service.getParameterTypeAdmin(getNumberValue(req.query.app_id), getNumberValue(req.query.id), req.query.lang_code, (err, results) =>{
+	service.getParameterTypeAdmin(getNumberValue(req.query.app_id), getNumberValue(req.query.id), req.query.lang_code, (err, result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
@@ -13,7 +13,7 @@ const getParameterTypeAdmin = (req, res) => {
 		}
 		else
 			return res.status(200).json({
-				data: results
+				data: result
 			});
 	});
 };

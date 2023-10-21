@@ -362,7 +362,7 @@ const render_common_html = async (app_id, module, app_config) =>{
 const countries = (app_id, locale) => {
     return new Promise((resolve) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_result_country_getCountries[]}*/ results)  => {
+            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_result_country_getCountries[]}*/ result)  => {
                 /** @type {string}*/
                 let select_countries;
                 if (err){
@@ -377,7 +377,7 @@ const countries = (app_id, locale) => {
                     select_countries  =`<option value='' id='' label='…' selected='selected'>…
                                         </option>`;
             
-                    results.map( (/** @type Types.db_result_country_getCountries}*/ countries_map, /** @type {number}*/ i) => {
+                    result.map( (/** @type Types.db_result_country_getCountries}*/ countries_map, /** @type {number}*/ i) => {
                         if (i === 0){
                         select_countries += `<optgroup label=${countries_map.group_name} />`;
                         current_group_name = countries_map.group_name;
