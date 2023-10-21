@@ -77,7 +77,7 @@ const getParameter = (app_id, data_app_id, parameter_name, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0].parameter_value);
+				return callBack(null, result);
 		});
 	};
 const setParameter_admin = (app_id, data, callBack) => {

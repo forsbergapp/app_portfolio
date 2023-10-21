@@ -402,20 +402,20 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
  */
 const getLogParameters = (app_id, callBack) => {
     /**@type{Types.admin_log_parameters} */
-    const results = {};
-    results.SERVICE_LOG_SCOPE_REQUEST = ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST');
-    results.SERVICE_LOG_SCOPE_SERVER = ConfigGet('SERVICE_LOG', 'SCOPE_SERVER');
-    results.SERVICE_LOG_SCOPE_SERVICE = ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE');
-    results.SERVICE_LOG_SCOPE_APP = ConfigGet('SERVICE_LOG', 'SCOPE_APP');
-    results.SERVICE_LOG_SCOPE_DB = ConfigGet('SERVICE_LOG', 'SCOPE_DB');
-    results.SERVICE_LOG_REQUEST_LEVEL = ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL');
-    results.SERVICE_LOG_SERVICE_LEVEL = ConfigGet('SERVICE_LOG', 'SERVICE_LEVEL');
-    results.SERVICE_LOG_DB_LEVEL = ConfigGet('SERVICE_LOG', 'DB_LEVEL');
-    results.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-    results.SERVICE_LOG_LEVEL_ERROR = ConfigGet('SERVICE_LOG', 'LEVEL_ERROR');
-    results.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');  
-    results.SERVICE_LOG_FILE_INTERVAL = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-    return callBack(null, results);
+    const result = {};
+    result.SERVICE_LOG_SCOPE_REQUEST = ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST');
+    result.SERVICE_LOG_SCOPE_SERVER = ConfigGet('SERVICE_LOG', 'SCOPE_SERVER');
+    result.SERVICE_LOG_SCOPE_SERVICE = ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE');
+    result.SERVICE_LOG_SCOPE_APP = ConfigGet('SERVICE_LOG', 'SCOPE_APP');
+    result.SERVICE_LOG_SCOPE_DB = ConfigGet('SERVICE_LOG', 'SCOPE_DB');
+    result.SERVICE_LOG_REQUEST_LEVEL = ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL');
+    result.SERVICE_LOG_SERVICE_LEVEL = ConfigGet('SERVICE_LOG', 'SERVICE_LEVEL');
+    result.SERVICE_LOG_DB_LEVEL = ConfigGet('SERVICE_LOG', 'DB_LEVEL');
+    result.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
+    result.SERVICE_LOG_LEVEL_ERROR = ConfigGet('SERVICE_LOG', 'LEVEL_ERROR');
+    result.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');  
+    result.SERVICE_LOG_FILE_INTERVAL = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
+    return callBack(null, result);
 };
 /**
  * Get logs

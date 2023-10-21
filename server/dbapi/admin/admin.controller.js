@@ -6,22 +6,32 @@ import * as Types from './../../../types.js';
 const service = await import('./admin.service.js');
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-
+const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
  * DB Info
  * @param {Types.req} req 
  * @param {Types.res} res 
  */
 const DBInfo = (req, res) => {
-	service.DBInfo(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfo}*/results) =>{
+	service.DBInfo(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
-		return res.status(200).json({
-			data: results
-		});
+		else{
+			const db_use = ConfigGet('SERVICE_DB', 'USE');
+			if (db_use == 4){
+				const hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
+								' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
+				result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
+				result[0].hostname = hostname;
+			}
+			return res.status(200).json({
+				data: result[0]
+			});
+		}
+		
 	});	
 };
 /**
@@ -30,14 +40,14 @@ const DBInfo = (req, res) => {
  * @param {Types.res} res 
  */
 const DBInfoSpace = (req, res) => {
-	service.DBInfoSpace(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpace}*/results) =>{
+	service.DBInfoSpace(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpace}*/result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
 		return res.status(200).json({
-			data: results
+			data: result
 		});
 	});
 };
@@ -47,14 +57,14 @@ const DBInfoSpace = (req, res) => {
  * @param {Types.res} res 
  */
 const DBInfoSpaceSum = (req, res) => {
-	service.DBInfoSpaceSum(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpaceSum}*/results) =>{
+	service.DBInfoSpaceSum(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
 		return res.status(200).json({
-			data: results
+			data: result[0]
 		});
 	});
 };
@@ -65,13 +75,13 @@ const DBInfoSpaceSum = (req, res) => {
  */
 
 const demo_add = async (req, res)=> {
-	service.demo_add(getNumberValue(req.query.app_id), req.body.demo_password, req.query.lang_code, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/results) =>{
+	service.demo_add(getNumberValue(req.query.app_id), req.body.demo_password, req.query.lang_code, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
-		return res.status(200).json(results);
+		return res.status(200).json(result);
 	});
 };
 /**
@@ -97,14 +107,14 @@ const demo_delete = async (req, res)=> {
  * @param {Types.res} res 
  */
 const demo_get = async (req, res)=> {
-	service.demo_get(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/results) =>{
+	service.demo_get(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
 		return res.status(200).json({
-			data: results
+			data: result
 		});
 	});
 };
@@ -114,13 +124,13 @@ const demo_get = async (req, res)=> {
  * @param {Types.res} res 
  */
 const install_db = (req, res) =>{
-	service.install_db(getNumberValue(req.query.app_id),getNumberValue(req.query.optional), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/results) =>{
+	service.install_db(getNumberValue(req.query.app_id),getNumberValue(req.query.optional), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json(results);
+			return res.status(200).json(result);
 	});
 };
 /**
@@ -129,13 +139,13 @@ const install_db = (req, res) =>{
  * @param {Types.res} res 
  */
 const install_db_check = (req, res) =>{
-	service.install_db_check(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/results) =>{
+	service.install_db_check(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json(results);
+			return res.status(200).json(result);
 	});
 };
 /**
@@ -144,13 +154,13 @@ const install_db_check = (req, res) =>{
  * @param {Types.res} res 
  */
 const install_db_delete = (req, res) =>{
-	service.install_db_delete(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/results) =>{
+	service.install_db_delete(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json(results);
+			return res.status(200).json(result);
 	});
 };
 

@@ -1738,7 +1738,7 @@ const timetable = async (timetable_parameters) => {
                                     client_latitude:    timetable_parameters.latitude,
                                     user_account_id:    timetable_parameters.uid_view,
                                     user_setting_id:    getNumberValue(user_setting_id)};
-			insertUserSettingView(timetable_parameters.app_id, data_ViewStat, (/**@type{Types.error}*/err,results) => {
+			insertUserSettingView(timetable_parameters.app_id, data_ViewStat, (/**@type{Types.error}*/err,result) => {
 				if (err)
 					resolve('');
 				else
