@@ -58,7 +58,7 @@ const createApp = (app_id, username, locale) => {
         if (username!=null){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, username, null, (/**@type{Types.error}*/err,/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
-                    if (result)
+                    if (result[0])
                         main(app_id);
                     else{
                         //redirect to /

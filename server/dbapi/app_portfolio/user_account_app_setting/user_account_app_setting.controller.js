@@ -8,27 +8,27 @@ const createUserSetting = (req, res) => {
 					user_account_id:	getNumberValue(req.body.user_account_id)
 				};
 	const call_service = ()=> {
-		service.createUserSetting(getNumberValue(req.query.app_id), data, (err,results) => {
+		service.createUserSetting(getNumberValue(req.query.app_id), data, (err,result) => {
 			if (err)
 				res.status(500).send(
 					err
 				);
 			else
 				res.status(200).json({
-					id: results.insertId,
-					data: results
+					id: result.insertId,
+					data: result
 				});
 		});
 	};
 	//Check if first time
 	if (getNumberValue(req.query.initial)==1){
-		service.getUserSettingsByUserId(getNumberValue(req.query.app_id), getNumberValue(req.body.user_account_id), (err, results) =>{
+		service.getUserSettingsByUserId(getNumberValue(req.query.app_id), getNumberValue(req.body.user_account_id), (err, result) =>{
 			if (err)
 				res.status(500).send(
 					err
 				);
 			else
-				if (results.length==0){
+				if (result.length==0){
 					//no user settings found, ok to create initial user setting
 					call_service();
 				}
@@ -43,16 +43,16 @@ const createUserSetting = (req, res) => {
 		call_service();
 };
 const getUserSettingsByUserId = (req, res) => {
-	service.getUserSettingsByUserId(getNumberValue(req.query.app_id), req.params.id, (err, results) =>{
+	service.getUserSettingsByUserId(getNumberValue(req.query.app_id), req.params.id, (err, result) =>{
 		if (err)
 			return res.status(500).send(
 				err
 			);
 		else
-			if (results)
+			if (result)
 				return res.status(200).json({
-					count: results.length,
-					items: results
+					count: result.length,
+					items: result
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
@@ -61,17 +61,16 @@ const getUserSettingsByUserId = (req, res) => {
 	});
 };
 const getProfileUserSetting = (req, res) => {
-	service.getProfileUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) =>{
+	service.getProfileUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, result) =>{
 		if (err) {
 			return res.status(500).send(
 				err
 			);
 		}
 		else
-			if (results)
+			if (result[0])
 				return res.status(200).json({
-					count: results.length,
-					items: results
+					items: result[0]
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
@@ -80,17 +79,17 @@ const getProfileUserSetting = (req, res) => {
 	});
 };
 const getProfileUserSettings = (req, res) => {
-	service.getProfileUserSettings(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.id), (err, results) =>{
+	service.getProfileUserSettings(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.id), (err, result) =>{
 		if (err) {
 			return res.status(500).send(
 				err
 			);
 		}
 		else
-			if (results)
+			if (result)
 				return res.status(200).json({
-					count: results.length,
-					items: results
+					count: result.length,
+					items: result
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
@@ -99,17 +98,17 @@ const getProfileUserSettings = (req, res) => {
 	});
 };
 const getProfileUserSettingDetail = (req, res) => {
-	service.getProfileUserSettingDetail(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.detailchoice), (err, results) => {
+	service.getProfileUserSettingDetail(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.detailchoice), (err, result) => {
 		if (err) {
 			return res.status(500).send(
 				err
 			);
 		}
 		else{
-			if (results)
+			if (result)
 				return res.status(200).json({
-					count: results.length,
-					items: results
+					count: result.length,
+					items: result
 				});
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
@@ -119,17 +118,17 @@ const getProfileUserSettingDetail = (req, res) => {
 	});
 };
 const getProfileTopSetting = (req, res) => {
-	service.getProfileTopSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.statchoice), (err, results) => {
+	service.getProfileTopSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.statchoice), (err, result) => {
 		if (err) {
 			return res.status(500).send(
 				err
 			);
 		}
 		else{
-			if (results)
+			if (result)
 				return res.status(200).json({
-					count: results.length,
-					items: results
+					count: result.length,
+					items: result
 				}); 
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
@@ -139,7 +138,7 @@ const getProfileTopSetting = (req, res) => {
 	});
 };
 const getUserSetting = (req, res) => {
-	service.getUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) =>{
+	service.getUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, result) =>{
 		if (err) {
 			return res.status(500).send(
 				err
@@ -148,7 +147,7 @@ const getUserSetting = (req, res) => {
 		else{
 			//send without {} so the variablename is not sent
 			return res.status(200).json(
-				results[0]
+				result[0]
 			);
 		}
 	});
@@ -157,16 +156,16 @@ const updateUserSetting = (req, res) => {
 	const data = {	description:		req.body.description,
 					settings_json: 		req.body.settings_json,
 					user_account_id:	getNumberValue(req.body.user_account_id)};
-	service.updateUserSetting(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id), (err, results) =>{
+	service.updateUserSetting(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id), (err, result) =>{
 		if (err) {
 			return res.status(500).send(
 				err
 			);
 		}
 		else{
-			if (results)
+			if (result)
 				return res.status(200).json(
-					results
+					result
 				);
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
@@ -176,16 +175,16 @@ const updateUserSetting = (req, res) => {
 	});
 };
 const deleteUserSetting = (req, res) => {
-	service.deleteUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, results) =>{
+	service.deleteUserSetting(getNumberValue(req.query.app_id), getNumberValue(req.params.id), (err, result) =>{
 		if (err) {
 			return res.status(500).send(
 				err
 			);
 		}
 		else{
-			if (results)
+			if (result)
 				return res.status(200).json(
-					results
+					result
 				);
 			else
 				import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {

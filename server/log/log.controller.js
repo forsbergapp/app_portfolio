@@ -13,14 +13,14 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {Types.res} res 
  */
 const getLogParameters = (req, res) => {
-	service.getLogParameters(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, results) =>{
+	service.getLogParameters(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, result) =>{
 		if (err)
 			return res.status(500).send({
 				data: err
 			});
 		else
 			return res.status(200).json({
-				data: results
+				data: result
 			});
 	});
 };
@@ -42,15 +42,15 @@ const getLogs = (req, res) => {
 					month:			req.query.month.toString(),
 					day:			req.query.day,
 					};
-	service.getLogs(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, results) =>{
+	service.getLogs(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, result) =>{
 		if (err)
 			return res.status(500).send(
 				err
 			);
 		else{
-			if (results.length>0)
+			if (result.length>0)
 				return res.status(200).json({
-					data: results
+					data: result
 				});
 			else{
 				return res.status(404).send(
@@ -85,15 +85,15 @@ const getLogsStats = async (req, res) => {
 					year: 			getNumberValue(req.query.year),
 					month:			getNumberValue(req.query.month)
 					};
-	service.getLogsStats(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, results) =>{
+	service.getLogsStats(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, result) =>{
 		if (err)
 			return res.status(500).send(
 				err
 			);
 		else{
-			if (results.length>0)
+			if (result.length>0)
 				return res.status(200).json({
-					data: results
+					data: result
 				});
 			else{
 				return res.status(404).send(
@@ -109,15 +109,15 @@ const getLogsStats = async (req, res) => {
  * @param {Types.res} res 
  */
 const getFiles = (req, res) => {
-	service.getFiles(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, results) =>{
+	service.getFiles(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, result) =>{
 		if (err)
 			return res.status(500).send(
 				err
 			);
 		else{
-			if (results.length>0)
+			if (result.length>0)
 				return res.status(200).json({
-					data: results
+					data: result
 				});
 			else{
 				return res.status(404).send(

@@ -398,7 +398,7 @@ const getUserByUserId = (app_id, id, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     };
 const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
@@ -471,7 +471,7 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     };
 const searchProfileUser = (app_id, username, callBack) => {
@@ -676,7 +676,7 @@ const checkPassword = (app_id, id, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     };
 const updatePassword = (app_id, id, data, callBack) => {
@@ -800,7 +800,7 @@ const userLogin = (app_id, data, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     };
 const updateSigninProvider = (app_id, id, data, callBack) => {
@@ -833,7 +833,7 @@ const updateSigninProvider = (app_id, id, data, callBack) => {
 				if (err)
 					return callBack(err, null);
 				else
-					return callBack(null, result[0]);
+					return callBack(null, result);
 			});
 		}
 		else
@@ -888,7 +888,7 @@ const getEmailUser = (app_id, email, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     };
 const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
@@ -918,7 +918,7 @@ const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
 	};
 	const getDemousers = (app_id, callBack) => {

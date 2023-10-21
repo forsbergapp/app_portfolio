@@ -93,7 +93,7 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 			if (err)
 				return callBack(err, null);
 			else
-				return callBack(null, result[0]);
+				return callBack(null, result);
 		});
     };
 const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {

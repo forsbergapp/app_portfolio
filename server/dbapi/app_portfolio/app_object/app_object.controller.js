@@ -7,14 +7,14 @@ const getObjects = (req, res) => {
 		req.query.object=null;
 	if (typeof req.query.object_name =='undefined')
 		req.query.object_name=null;
-	service.getObjects(getNumberValue(req.query.app_id), req.params.lang_code, req.query.object, req.query.object_name, (err, results) =>{
+	service.getObjects(getNumberValue(req.query.app_id), req.params.lang_code, req.query.object, req.query.object_name, (err, result) =>{
 		if (err) {
 			return res.status(500).send({
 				data: err
 			});
 		}
 		return res.status(200).json({
-			data: results
+			data: result
 		});
 	});
 };

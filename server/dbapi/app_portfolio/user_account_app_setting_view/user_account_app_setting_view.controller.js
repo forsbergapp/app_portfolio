@@ -9,15 +9,15 @@ const insertUserSettingView = (req, res) => {
                     client_latitude:    req.body.client_latitude,
                     user_account_id:    getNumberValue(req.body.user_account_id),
                     user_setting_id:    getNumberValue(req.body.user_setting_id)};
-    service.insertUserSettingView(getNumberValue(req.query.app_id), data, (err,results) => {
+    service.insertUserSettingView(getNumberValue(req.query.app_id), data, (err,result) => {
         if (err) {
             return res.status(500).send(
                 err
             );
         }
         return res.status(200).json({
-            count: results.affectedRows,
-            items: Array(results)
+            count: result.affectedRows,
+            items: Array(result)
         });
     });
 };

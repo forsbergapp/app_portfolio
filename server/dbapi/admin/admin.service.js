@@ -172,13 +172,7 @@ const DBInfo = async (app_id, callBack) => {
       if (err)
          return callBack(err, null);
       else{
-         if (db_use == 4){
-            const hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
-                           ' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
-            result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
-            result[0].hostname = hostname;
-         }
-         return callBack(null, result[0]);
+         return callBack(null, result);
       }
    });
 };
@@ -297,7 +291,7 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
       if (err)
          return callBack(err, null);
       else
-         return callBack(null, result[0]);
+         return callBack(null, result);
    });
 };
 /**
@@ -395,13 +389,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_app = async (app_id, user_account_id) =>{
 			return new Promise((resolve, reject) => {
-				createUserAccountApp(app_id, user_account_id,  (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+				createUserAccountApp(app_id, user_account_id,  (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 					if (err)
 						reject(err);
 					else{
-						if (results.affectedRows == 1)
+						if (result.affectedRows == 1)
 							records_user_account_app++;
-						resolve(results);
+						resolve(result);
 					}
 				});
 			});
@@ -414,13 +408,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_setting = async (user_setting_app_id, data) => {
 			return new Promise((resolve, reject) => {
-            createUserSetting(user_setting_app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+            createUserSetting(user_setting_app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 					if (err)
 						reject(err);
 					else{
-						if (results.affectedRows == 1)
+						if (result.affectedRows == 1)
 							records_user_account_app_setting++;
-						resolve(results);
+						resolve(result);
 					}
             });
 			});
@@ -481,13 +475,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_likeuser = async (app_id, id, id_like ) =>{
 			return new Promise((resolve, reject) => {
-				likeUser(app_id, id, id_like, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+				likeUser(app_id, id, id_like, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 					if (err)
 						reject(err);
 					else{
-						if (results.affectedRows == 1)
+						if (result.affectedRows == 1)
 							records_user_account_like++;
-						resolve(results);
+						resolve(result);
 					}
 				});
 			});
@@ -500,13 +494,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_view = async (app_id, data ) =>{
 			return new Promise((resolve, reject) => {
-				insertUserAccountView(app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+				insertUserAccountView(app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 					if (err)
 						reject(err);
 					else{
-						if (results.affectedRows == 1)
+						if (result.affectedRows == 1)
 							records_user_account_view++;
-						resolve(results);
+						resolve(result);
 					}
 				});
 			});
@@ -520,13 +514,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_follow = async (app_id, id, id_follow ) =>{
 			return new Promise((resolve, reject) => {
-				followUser(app_id, id, id_follow, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+				followUser(app_id, id, id_follow, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 					if (err)
 						reject(err);
 					else{
-						if (results.affectedRows == 1)
+						if (result.affectedRows == 1)
 							records_user_account_follow++;
-						resolve(results);
+						resolve(result);
 					}
 				});
 			});
@@ -545,13 +539,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 						reject(err);
 					else{
 						const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
-						likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+						likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 							if (err)
 								reject(err);
 							else{
-								if (results.affectedRows == 1)
+								if (result.affectedRows == 1)
 									records_user_account_setting_like++;
-								resolve(results);
+								resolve(result);
 							}
 						});
 					}
@@ -585,13 +579,13 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                                                    client_user_agent: null,
                                                    client_longitude: null,
                                                    client_latitude: null
-															}, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/results) => {
+															}, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
 							if (err)
 								reject(err);
 							else{
-								if (results.affectedRows == 1)
+								if (result.affectedRows == 1)
 									records_user_account_setting_view++;
-								resolve(results);
+								resolve(result);
 							}
 						});
 					}
