@@ -20,13 +20,6 @@ const DBInfo = (req, res) => {
 			});
 		}
 		else{
-			const db_use = ConfigGet('SERVICE_DB', 'USE');
-			if (db_use == 4){
-				const hostname = JSON.parse(result[0].hostname.toLowerCase()).public_domain_name + 
-								' (' + JSON.parse(result[0].hostname.toLowerCase()).outbound_ip_address + ')';
-				result[0].database_schema += ' (' + JSON.parse(result[0].hostname.toLowerCase()).database_name + ')';
-				result[0].hostname = hostname;
-			}
 			return res.status(200).json({
 				data: result[0]
 			});
