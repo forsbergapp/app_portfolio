@@ -50,6 +50,7 @@
  * @property {number} query.optional                                - Admin parameter
  * @property {string} query.logscope                                - Admin log parameter
  * @property {string} query.loglevel                                - Admin log parameter
+ * @property {string} query.offset                                  - Admin log parameter
  * @property {string} query.search                                  - Admin log parameter
  * @property {string} query.code                                    - Admin log parameter
  * @property {(string|number|*)} query.app_user_id
@@ -802,6 +803,7 @@
  * @property {number|null}  amount
  */
 /**
+ * DATABASE
  * DB query result
  * @typedef {db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
  * @typedef {object}                    db_query_result_error
@@ -849,7 +851,6 @@
  * result:
  *  db_result_[TABLE]_[function name]
  * APP
- * DB result app
  * @typedef {{app_name:string, url:string, logo:string, enabled:number, app_category_id:number}} db_parameter_app_updateAppAdmin
  * @typedef {{id:number, app_name:string, url:string, logo:string, app_description:string, app_category:string}} db_result_app_getApp
  * @typedef {{id:number, app_name:string, url:string, logo:string, enabled:number, app_category_id:number, app_category_text:string}} db_result_app_getAppAdmin
@@ -857,7 +858,45 @@
  * @typedef {{app_name:string}} db_result_app_getAppName
  * @typedef {db_result_update} db_result_app_updateAppAdmin
  * APP CATEGORY
+ * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_category_getAppCategoryAdmin
  * APP LOG
+ * @typedef {{  app_id:number,
+ *              app_module:string,
+ *              app_module_type:string,
+ *              app_module_request:string,
+ *              app_module_result:string,
+ *              app_user_id:number, 
+ *              user_language:string,
+ *              user_timezone:string,
+ *              user_number_system:string,
+ *              user_platform:string,
+ *              client_latitude:string,
+ *              client_longitude:string,
+ *              server_remote_addr:string,
+ *              server_user_agent:string,
+ *              server_http_host:string,
+ *              server_http_accept_language:string}} db_parameter_app_log_createLog
+ * @typedef {db_result_insert} db_result_app_log_createLog
+ * @typedef {{  id:number,
+ *              app_id:number,
+ *              app_module:string,
+ *              app_module_type:string,
+ *              app_module_request:string,
+ *              app_module_result:string,
+ *              app_user_id:number,
+ *              user_language:string,
+ *              user_timezone:string,
+ *              user_number_system:string,
+ *              user_platform:string,
+ *              client_latitude:string,
+ *              client_longitude:string,
+ *              server_remote_addr:string,
+ *              server_user_agent:string,
+ *              server_http_host:string,
+ *              server_http_accept_language:string,
+ *              date_created:string,
+ *              total_rows:number}} db_result_app_log_getLogsAdmin
+ * @typedef {{chart:number, app_id:number, year:number, month:number, day:number, amount:number}} db_result_app_log_getStatUniqueVisitorAdmin
  * APP OBJECTS
  * @typedef {{object_item_name:string, text:string}} db_result_app_object_getObjects
  * APP PARAMETER
