@@ -858,7 +858,7 @@ const getModule = async (app_id, module_config, callBack) =>{
                             server_http_accept_language : module_config.accept_language,
                             client_latitude : result_geodata.latitude,
                             client_longitude : result_geodata.longitude
-                        }, ()  => {
+                        }).then(()=> {
                             return callBack(null, module);
                 });
             });

@@ -1,9 +1,19 @@
-const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/app_log */
 
-const createLog = (app_id, data, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.db_parameter_app_log_createLog} data 	-app_module_result max 4000 characters
+ * @returns {Promise.<Types.db_result_app_log_createLog[]|null>}
+ */
+const createLog = async (app_id, data) => {
 	if (ConfigGet('SERVICE_AUTH', 'ENABLE_DBLOG')=='1'){
-		//max 4000 characters can be saved
 		if (data.app_module_result!=null)
 			data.app_module_result = data.app_module_result.substr(0,3999);
 		const sql = `INSERT INTO ${db_schema()}.app_log(
@@ -59,18 +69,24 @@ const createLog = (app_id, data, callBack) => {
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	}
 	else
-		return callBack(null, null);
+		return (null);
 };
-
-const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, limit, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} data_app_id 
+ * @param {number} year 
+ * @param {number} month 
+ * @param {number} sort 
+ * @param {string} order_by 
+ * @param {number} offset 
+ * @param {number} limit 
+ * @returns {Promise.<Types.db_result_app_log_getLogsAdmin[]>}
+ */
+const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, offset, limit) => {
 		/* 	sort in UI:
 			1=ID
 			2=APP ID
@@ -130,14 +146,17 @@ const getLogsAdmin = (app_id, data_app_id, year, month, sort, order_by, offset, 
 							month:month,
 							offset:offset,
 							limit:limit};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getStatUniqueVisitorAdmin = (app_id, data_app_id, year, month, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} data_app_id 
+ * @param {number} year 
+ * @param {number} month 
+ * @returns {Promise.<Types.db_result_app_log_getStatUniqueVisitorAdmin[]>}
+ */
+const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		
 		const sql = `SELECT t.chart "chart",
 		              t.app_id "app_id",
@@ -174,11 +193,6 @@ const getStatUniqueVisitorAdmin = (app_id, data_app_id, year, month, callBack) =
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,
 							month_log: month};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{createLog, getLogsAdmin, getStatUniqueVisitorAdmin};
