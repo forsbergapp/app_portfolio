@@ -1,6 +1,17 @@
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/app_category */
 
-const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} lang_code 
+ * @returns {Promise.<Types.db_result_app_category_getAppCategoryAdmin[]>}
+ */
+const getAppCategoryAdmin = async (app_id, id, lang_code) => {
 		const sql = `SELECT ac.id "id",
 					  ac.category_name "category_name",
 					  act.text "app_category_text"
@@ -23,11 +34,6 @@ const getAppCategoryAdmin = (app_id, id, lang_code, callBack) => {
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3),
 							id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getAppCategoryAdmin};
