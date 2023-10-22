@@ -149,13 +149,55 @@ const DBInfo = async (app_id, callBack) => {
          break;
       }
       case '4':{
+         /*
+         Oracle Cloud syntax for v$pdbs.cloud_identity: 
+         {
+            "DATABASE_NAME" : "[DATABASE NAME]",
+            "REGION" : "[REGION]",
+            "TENANT_OCID" : "[TENANT_OCID]",
+            "DATABASE_OCID" : "[DATABASE_OCID]",
+            "COMPARTMENT_OCID" : "[iCOMPARTMENT_OCID]",
+            "OUTBOUND_IP_ADDRESS" :
+            [
+               "[IP ADDRESS]"
+            ],
+            "PUBLIC_DOMAIN_NAME" : "[DOMAIN NAME]",
+            "TENANT_ACCOUNT_NAME" : "[ACCOUNT NAME]",
+            "AUTOSCALABLE_STORAGE" : [AUTOSCALABLE_STORAGE],
+            "BASE_SIZE" : [SIZE],
+            "INFRASTRUCTURE" : "[INFRASTRUCTURE]",
+            "SERVICE" : "[SERVICE]",
+            "APPLICATIONS" :
+            [
+               "ODI",
+               "ORDS",
+               "DATABASEACTIONS",
+               "OMLMOD",
+               "APEX",
+               "OML"
+            ],
+            "AVAILABILITY_DOMAIN" : "[AVAILABILITY_DOMAIN]"
+            }
+         */
          sql = `SELECT :database "database_use",
                         (SELECT product
                            FROM product_component_version) "database_name", 
                         (SELECT version_full
                            FROM product_component_version) "version", 
-                        :Xdatabase_schema "database_schema",
-                        (SELECT cloud_identity
+                        (SELECT CASE 
+                                WHEN cloud_identity IS NULL THEN 
+                                    :Xdatabase_schema
+                                ELSE 
+                                    :Xdatabase_schema ||' ('|| REPLACE(JSON_QUERY(cloud_identity, '$.DATABASE_NAME'), CHR(34), NULL) || ')'
+                                END CASE
+                           FROM v$pdbs) "database_schema",
+                        (SELECT  CASE 
+                                 WHEN cloud_identity IS NULL THEN
+                                    sys_context('USERENV','SERVER_HOST')
+                                 ELSE
+                                    REPLACE(JSON_QUERY(cloud_identity, '$.PUBLIC_DOMAIN_NAME'), CHR(34), NULL) ||
+                                    ' ('|| REPLACE(JSON_QUERY(cloud_identity, '$.OUTBOUND_IP_ADDRESS[0]'), CHR(34), NULL) ||')'
+                                 END CASE
                            FROM v$pdbs) "hostname", 
                         (SELECT COUNT(*) 
                            FROM v$session) "connections",
