@@ -25,8 +25,6 @@ const POOL_DB =[
 if (ConfigGet('SERVICE_DB', 'USE')=='4'){
    ORACLEDB.autoCommit = true;
    ORACLEDB.fetchAsString = [ ORACLEDB.CLOB ];
-   ORACLEDB.initOracleClient({ libDir: ConfigGet('SERVICE_DB', 'DB4_LIBDIR'),
-                                 configDir: ConfigGet('SERVICE_DB', 'DB4_CONFIGDIR')});
    ORACLEDB.outFormat = ORACLEDB.OUT_FORMAT_OBJECT;
 }
 /**
@@ -232,16 +230,18 @@ const pool_get = (pool_id, db_use, dba) => {
    let pool;
    try {
       if (dba==1)
-         return POOL_DB.filter(db=>db[0]==db_use)[0][1];
+         if (db_use==4){
+            /**@ts-ignore */
+            return POOL_DB.filter(db=>db[0]==db_use)[0][1].pool_id_dba;
+         }
+         else
+            return POOL_DB.filter(db=>db[0]==db_use)[0][1];
       else{
          pool = POOL_DB.filter(db=>db[0]==db_use)[0];
          if (pool[2])
             if (db_use==4){
-               if (pool[2][pool_id])
-                  /**@ts-ignore */
-                  return pool[2][pool_id].pool_id_app;
-               else
-                  return null;
+               /**@ts-ignore */
+               return pool[2][pool_id].pool_id_app;
             }
             else
                return pool[2][pool_id];
@@ -395,8 +395,10 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          }
          case 4:{
             try{
+               const db_pool_id = pool_get(pool_id, db_use, dba);
                /**@ts-ignore */
-               ORACLEDB.getConnection(pool_get(pool_id, db_use, dba)).then((pool4)=>{
+               const pool4 = ORACLEDB.getPool(db_pool_id);
+               pool4.getConnection().then((pool)=>{
                   /*
                   Fix CLOB column syntax to avoid ORA-01461 for these columns:
                      APP_ACCOUNT.SCREENSHOT
@@ -419,32 +421,28 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      sql += ' RETURNING id INTO :insertId';
                      Object.assign(parameters, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
                   }
-                  try {
-                     pool4.execute(sql, parameters, (/**@type{Types.error}*/err, /**@type{Types.pool_connection_4_result}*/result) => {
-                        if (err) {
-                           return reject(err);
+                  /**@ts-ignore */
+                  pool.execute(sql, parameters, (/**@type{Types.error}*/err, /**@type{Types.pool_connection_4_result}*/result) => {
+                     if (err) {
+                        return reject(err);
+                     }
+                     else{
+                        pool.close();
+                        //add common attributes
+                        if (result.outBinds){
+                           result.insertId = result.outBinds.insertId[0];
                         }
-                        else{
-                           pool4.close();
-                           //add common attributes
-                           if (result.outBinds){
-                              result.insertId = result.outBinds.insertId[0];
-                           }
-                           if (result.rowsAffected){
-                              //add custom key using same name as other databases
-                              /**@ts-ignore */
-                              result.affectedRows = result.rowsAffected;
-                           }
-                           if (result.rows)
-                              return resolve(result.rows);
-                           else
-                              return resolve(result);
+                        if (result.rowsAffected){
+                           //add custom key using same name as other databases
+                           /**@ts-ignore */
+                           result.affectedRows = result.rowsAffected;
                         }
-                     });
-                  } catch (err) {
-                     return reject(err);   
-                  }
-                  
+                        if (result.rows)
+                           return resolve(result.rows);
+                        else
+                           return resolve(result);
+                     }
+                  });
                })
                .catch(err=>{
                   return reject(err);
