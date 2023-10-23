@@ -796,21 +796,13 @@ const getModule = async (app_id, module_config, callBack) =>{
             config_ui = true;
             //get translation data
             const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
-
-            const callGetObjects = async () =>{
-                return new Promise((resolve)=>{
-                    getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON', (/** @type {string}*/ err, /** @type{Types.db_result_app_object_getObjects[]}*/ result_objects) => {
-                        /**@type {[string, string][]} */
-                        const render_variables = [];
-                        for (const row of result_objects){
-                            render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
-                        }
-                        app.app = render_app_with_data(app.app, render_variables);
-                        resolve(app.app);
-                    });
-                });
-            };
-            await callGetObjects();
+            const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON');
+            /**@type {[string, string][]} */
+            const render_variables = [];
+            for (const row of result_objects){
+                render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
+            }
+            app.app = render_app_with_data(app.app, render_variables);
         }
         else{
             const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);

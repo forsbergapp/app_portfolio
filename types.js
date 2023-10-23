@@ -18,6 +18,7 @@
  * @property {string} params.info                                   - Info parameter
  * @property {string} params.sub                                    - App showparam parameter
  * @property {string} params.id                                     - app portfolio parameter
+ * @property {string} params.lang_code                              - app portfolio parameter
  * body
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
@@ -69,6 +70,8 @@
  * @property {number|null} query.uid_view                           - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
+ * @property {string} query.object                                  - app portfolio parameter
+ * @property {string} query.object_name                             - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
  * @property {string} query.identity_provider_id
@@ -896,7 +899,14 @@
  *              total_rows:number}} db_result_app_log_getLogsAdmin
  * @typedef {{chart:number, app_id:number, year:number, month:number, day:number, amount:number}} db_result_app_log_getStatUniqueVisitorAdmin
  * APP OBJECTS
- * @typedef {{object_item_name:string, text:string}} db_result_app_object_getObjects
+ * @typedef {{  object:string, 
+ *              app_id:number, 
+ *              object_name:string, 
+ *              object_item_name:string, 
+ *              subitem_name:string,
+ *              lang_code:string,
+ *              id:number,
+ *              text:string}} db_result_app_object_getObjects
  * APP PARAMETER
  * @typedef {{app_id: number, parameter_type_id:number, parameter_name:string, parameter_value :string, parameter_comment:string}} db_result_app_parameter_getAppStartParameters
  * @typedef {{id: number, db_user:string, db_password:string}} db_result_app_parameter_getAppDBParametersAdmin

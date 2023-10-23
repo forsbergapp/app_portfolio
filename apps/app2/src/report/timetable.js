@@ -1062,23 +1062,14 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
 	 * @returns 
 	 */
 	const fetch_translation = async (locale, first) => {
-        return new Promise ((resolve, reject)=> {
-            //show translation using first or second language
-            getObjects(app_id, locale, 'APP_OBJECT_ITEM', 'REPORT', (/**@type{Types.error}*/err, result_app_object_items) => {
-                if (err){
-                    reject(err);
-                }
-                else{
-                    for (const app_object_item of result_app_object_items){
-                        if (first == true)
-                            REPORT_GLOBAL['first_language'][app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-                        else
-                            REPORT_GLOBAL['second_language'][app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-                    }
-                    resolve('');
-                } 
-            });
-        });
+		//show translation using first or second language
+		const result_app_object_items = await getObjects(app_id, locale, 'APP_OBJECT_ITEM', 'REPORT');	
+		for (const app_object_item of result_app_object_items){
+			if (first == true)
+				REPORT_GLOBAL['first_language'][app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+			else
+				REPORT_GLOBAL['second_language'][app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+		}
 	};
 	await fetch_translation(locale, true).then(() => {
 		if (locale_second =='0'){

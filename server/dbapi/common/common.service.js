@@ -74,7 +74,7 @@ const record_not_found = (res, app_id, lang_code) => {
 			getMessage( app_id, 
 						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 						20400, 
-						lang_code, (/**@type{Types.error}*/err,/**@type{Types.db_result_message_translation_getMessage}*/result_message)  => {
+						lang_code, (/**@type{Types.error}*/err,/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)  => {
 							res.status(404).send(
 								err ?? result_message[0].text
 							);
