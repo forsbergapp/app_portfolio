@@ -3,9 +3,8 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getNumberValue, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * 
@@ -96,8 +95,8 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 												 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 											 )) t
 				WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
-					AND   t.object = COALESCE(:object, t.object)
-					AND   t.object_name = COALESCE(:Xobject_Xname, t.object_name)
+					AND   ((t.object = :object) OR :object IS NULL)
+					AND   ((t.object_name = :Xobject_Xname) OR :Xobject_Xname IS NULL)
 			ORDER BY 1, 2, 3, 4, 5, 6`;
 		const parameters = {
 						common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),

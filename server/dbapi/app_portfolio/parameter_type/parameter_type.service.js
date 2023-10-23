@@ -17,7 +17,7 @@ const getParameterTypeAdmin = (app_id, id, lang_code, callBack) => {
 																   AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 																 )
 											)
-				WHERE id = COALESCE(:id, id)
+				WHERE ((id = :id) OR :id IS NULL)
 				ORDER BY 1`;
 		const parameters = {lang_code1: get_locale(lang_code, 1),
 							lang_code2: get_locale(lang_code, 2),
