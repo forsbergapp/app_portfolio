@@ -457,21 +457,21 @@ const get_module_with_init = async (app_info, callBack) => {
         getAppName(app_info.app_id)
         .then((/** @type{Types.db_result_app_getAppName[]}*/result_app_name) =>{
             //fetch parameters for common_app_id and current app_id
-            getAppStartParameters(app_info.app_id, (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/app_parameters) =>{
-                if (err)
-                    callBack(err, null);
+            getAppStartParameters(app_info.app_id)
+            .then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/app_parameters)=>{
+                render_variables.push(['APP_NAME',result_app_name[0].app_name]);
+                if (app_info.map == true)
+                    //fetch countries and return map styles
+                    countries(app_info.app_id, app_info.locale).then((countries)=>{
+                        callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
+                    });
                 else{
-                    render_variables.push(['APP_NAME',result_app_name[0].app_name]);
-                    if (app_info.map == true)
-                        //fetch countries and return map styles
-                        countries(app_info.app_id, app_info.locale).then((countries)=>{
-                            callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
-                        });
-                    else{
-                        //no countries or map styles
-                        callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
-                    }
+                    //no countries or map styles
+                    callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
                 }
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                callBack(error, null);
             });
         })
         .catch((/**@type{Types.error}*/err)=>{
@@ -525,70 +525,69 @@ const createMail = async (app_id, data) =>{
                 if (err)
                     reject(err);
                 else{                
-                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result)=>{
-                        if (err) {                
-                            reject(err);
-                        }
-                        else{
-                            for (const parameter of result){
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
-                                    db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
+                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+                    .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
+                        for (const parameter of result_parameters){
+                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
+                                db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
+                                db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
+                                db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
+                                db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
 
-                                if (parameter.parameter_name=='SERVICE_MAIL_HOST')
-                                    db_SERVICE_MAIL_HOST = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_PORT')
-                                    db_SERVICE_MAIL_PORT = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
-                                    db_SERVICE_MAIL_SECURE = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
-                                    db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
-                                if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
-                                    db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
-                            }
-                            /** @type {string} */
-                            let email_from = '';
-                            switch (parseInt(data.emailtype)){
-                                case 1:{
-                                    email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-                                    break;
-                                }
-                                case 2:{
-                                    email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-                                    break;
-                                }
-                                case 3:{
-                                    email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
-                                    break;
-                                }
-                                case 4:{
-                                    email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-                                    break;
-                                }
-                            }
-                            /** @type {[string, string][]} */
-                            const render_variables = [];
-                            render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
-                            render_variables.push(['Verification_code',data.verificationCode]);
-                            render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
-
-                            resolve ({
-                                'email_host':         db_SERVICE_MAIL_HOST,
-                                'email_port':         db_SERVICE_MAIL_PORT,
-                                'email_secure':       db_SERVICE_MAIL_SECURE,
-                                'email_auth_user':    db_SERVICE_MAIL_USERNAME,
-                                'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
-                                'from':               email_from,
-                                'to':                 data.to,
-                                'subject':            '❂❂❂❂❂❂',
-                                'html':               render_app_with_data( email.app, render_variables)
-                            });
+                            if (parameter.parameter_name=='SERVICE_MAIL_HOST')
+                                db_SERVICE_MAIL_HOST = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_PORT')
+                                db_SERVICE_MAIL_PORT = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
+                                db_SERVICE_MAIL_SECURE = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
+                                db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
+                            if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
+                                db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
                         }
+                        /** @type {string} */
+                        let email_from = '';
+                        switch (parseInt(data.emailtype)){
+                            case 1:{
+                                email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                                break;
+                            }
+                            case 2:{
+                                email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+                                break;
+                            }
+                            case 3:{
+                                email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+                                break;
+                            }
+                            case 4:{
+                                email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+                                break;
+                            }
+                        }
+                        /** @type {[string, string][]} */
+                        const render_variables = [];
+                        render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
+                        render_variables.push(['Verification_code',data.verificationCode]);
+                        render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
+
+                        resolve ({
+                            'email_host':         db_SERVICE_MAIL_HOST,
+                            'email_port':         db_SERVICE_MAIL_PORT,
+                            'email_secure':       db_SERVICE_MAIL_SECURE,
+                            'email_auth_user':    db_SERVICE_MAIL_USERNAME,
+                            'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
+                            'from':               email_from,
+                            'to':                 data.to,
+                            'subject':            '❂❂❂❂❂❂',
+                            'html':               render_app_with_data( email.app, render_variables)
+                        });
+                    })
+                    .catch((/**@type{Types.error}*/err)=>{
+                        reject(err);
                     });
                 }
             });
@@ -613,7 +612,8 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
     const get_parameters = (app_id, callBack) => {
         getApp(app_id, app_id, lang_code)
         .then((/** @type{Types.db_result_app_getApp[]}*/result_app)=> {
-            getParameters_server(app_id, app_id, (/** @type {string}*/ err, /** @type{Types.db_result_app_parameter_getParameters_server[]}> }*/result)=>{
+            getParameters_server(app_id, app_id)
+            .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
                 //app_parameter table
                 let db_info_email_policy;
                 let db_info_email_disclaimer;
@@ -622,39 +622,38 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                 let db_info_link_disclaimer_url;
                 let db_info_link_terms_url;
                 let db_info_link_about_url;
-                if (err)
-                    callBack(err, null);
-                else{
-                    for (const parameter of result){
-                        if (parameter.parameter_name=='INFO_EMAIL_POLICY')
-                            db_info_email_policy = parameter.parameter_value;
-                        if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
-                            db_info_email_disclaimer = parameter.parameter_value;
-                        if (parameter.parameter_name=='INFO_EMAIL_TERMS')
-                            db_info_email_terms = parameter.parameter_value;
-                        if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
-                            db_info_link_policy_url = parameter.parameter_value;
-                        if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                            db_info_link_disclaimer_url = parameter.parameter_value;
-                        if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
-                            db_info_link_terms_url = parameter.parameter_value;
-                        if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
-                            db_info_link_about_url = parameter.parameter_value;
-                    }
-                    callBack(null, {app_name: result_app[0].app_name,
-                                    app_url: result_app[0].url,
-                                    info_email_policy: db_info_email_policy,
-                                    info_email_disclaimer: db_info_email_disclaimer,
-                                    info_email_terms: db_info_email_terms,
-                                    info_link_policy_url: db_info_link_policy_url,
-                                    info_link_disclaimer_url: db_info_link_disclaimer_url,
-                                    info_link_terms_url: db_info_link_terms_url,
-                                    info_link_about_url: db_info_link_about_url
-                                    });
+                for (const parameter of result_parameters){
+                    if (parameter.parameter_name=='INFO_EMAIL_POLICY')
+                        db_info_email_policy = parameter.parameter_value;
+                    if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
+                        db_info_email_disclaimer = parameter.parameter_value;
+                    if (parameter.parameter_name=='INFO_EMAIL_TERMS')
+                        db_info_email_terms = parameter.parameter_value;
+                    if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
+                        db_info_link_policy_url = parameter.parameter_value;
+                    if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                        db_info_link_disclaimer_url = parameter.parameter_value;
+                    if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
+                        db_info_link_terms_url = parameter.parameter_value;
+                    if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
+                        db_info_link_about_url = parameter.parameter_value;
                 }
+                callBack(null, {app_name: result_app[0].app_name,
+                                app_url: result_app[0].url,
+                                info_email_policy: db_info_email_policy,
+                                info_email_disclaimer: db_info_email_disclaimer,
+                                info_email_terms: db_info_email_terms,
+                                info_link_policy_url: db_info_link_policy_url,
+                                info_link_disclaimer_url: db_info_link_disclaimer_url,
+                                info_link_terms_url: db_info_link_terms_url,
+                                info_link_about_url: db_info_link_about_url
+                                });
+            })
+            .catch((/**@type{Types.error}*/err)=> {
+                callBack(err, null);
             });
         })
-        .catch((/**@type{Types.error}*/error)=> {   
+        .catch((/**@type{Types.error}*/error)=> {
             callBack(error, null); 
         });
     };

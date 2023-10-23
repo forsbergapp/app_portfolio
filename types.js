@@ -19,6 +19,7 @@
  * @property {string} params.sub                                    - App showparam parameter
  * @property {string} params.id                                     - app portfolio parameter
  * @property {string} params.lang_code                              - app portfolio parameter
+ * @property {string} params.app_id                                 - app portfolio parameter
  * body
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
@@ -36,6 +37,10 @@
  * @property {string} body.logo                                     - app portfolio parameter
  * @property {string} body.enabled                                  - app portfolio parameter
  * @property {number} body.app_category_id                          - app portfolio parameter
+ * @property {number} body.parameter_type_id                        - app portfolio parameter
+ * @property {string} body.parameter_value                          - app portfolio parameter
+ * @property {string} body.parameter_comment                        - app portfolio parameter
+ * @property {string} body.parameter_name                           - app portfolio parameter
  * query
  * @property {object} query
  * @property {(string|number|*)} query.id
@@ -908,9 +913,34 @@
  *              id:number,
  *              text:string}} db_result_app_object_getObjects
  * APP PARAMETER
- * @typedef {{app_id: number, parameter_type_id:number, parameter_name:string, parameter_value :string, parameter_comment:string}} db_result_app_parameter_getAppStartParameters
- * @typedef {{id: number, db_user:string, db_password:string}} db_result_app_parameter_getAppDBParametersAdmin
- * @typedef {{parameter_name:string, parameter_value:string}} db_result_app_parameter_getParameters_server 
+ * @typedef {{  app_id:number, 
+ *              parameter_type_id:number, 
+ *              parameter_type_name:string, 
+ *              parameter_name:string, 
+ *              parameter_value:string,
+ *              parameter_comment:string}} db_result_app_parameter_getParameters_server
+ * @typedef {{  app_id:number, 
+ *              parameter_type_id:number, 
+ *              parameter_type_name:string, 
+ *              parameter_type_text:string, 
+ *              parameter_name:string, 
+ *              parameter_value:string, 
+ *              parameter_comment:string}} db_result_app_parameter_getParametersAllAdmin
+ * @typedef {{  parameter_value:string}} db_result_app_parameter_getParameter
+ * @typedef {{  app_id: number, 
+ *              parameter_type_id:number, 
+ *              parameter_name:string, 
+ *              parameter_value:string, 
+ *              parameter_comment:string}} db_parameter_app_parameter_setParameter_admin
+ * @typedef {   db_result_update} db_result_app_parameter_setParameter_admin
+ * @typedef {{  id: number, 
+ *              db_user:string, 
+ *              db_password:string}} db_result_app_parameter_getAppDBParametersAdmin
+ * @typedef {{  app_id:number, 
+ *              parameter_type_id:number, 
+ *              parameter_name:string, 
+ *              parameter_value:string, 
+ *              parameter_comment:string}} db_result_app_parameter_getAppStartParameters
  * APP ROLE
  * COUNTRY
  * @typedef {{id:string, group_name:string, country_code:string, flag_emoji:string, text:string}} db_result_country_getCountries

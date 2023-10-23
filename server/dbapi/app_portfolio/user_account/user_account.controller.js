@@ -1,3 +1,8 @@
+/** @module server/dbapi/app_portfolio/user_account */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
 const service = await import('./user_account.service.js');
 const { default: {genSaltSync, hashSync, compareSync} } = await import('bcryptjs');
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -150,12 +155,12 @@ const userSignup = (req, res) => {
             else{
                 if (req.body.provider_id == null ) {
                     //send email for local users only
-                    getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP', (err, parameter)=>{
+                    getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
+                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                         //send email SIGNUP
                         sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], result.insertId, req.body.verification_code, req.body.email, 
                                       req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
                             if (err) {
-                                //return res from userSignup
                                 return res.status(500).send(
                                     err
                                 );
@@ -167,6 +172,11 @@ const userSignup = (req, res) => {
                                     data: result
                                 });
                         });  
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        return res.status(500).send(
+                            error
+                        );
                     });
                 }
                 else
@@ -293,7 +303,8 @@ const passwordResetUser = (req, res) => {
                                                     err
                                                 );
                                             else{
-                                                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET', (err, parameter)=>{
+                                                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET')
+                                                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                                                     //send email PASSWORD_RESET
                                                     sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], result[0].id, new_code, email, 
                                                                   req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -308,6 +319,11 @@ const passwordResetUser = (req, res) => {
                                                                 id: result[0].id
                                                             });  
                                                     });
+                                                })
+                                                .catch((/**@type{Types.error}*/error)=>{
+                                                    return res.status(500).send(
+                                                        error
+                                                    );
                                                 });
                                             }
                                         });
@@ -523,7 +539,8 @@ const updateUserLocal = (req, res) => {
                                 else{
                                     if (results_update){
                                         if (send_email){
-                                            getParameter(req.query.app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL',  (err, parameter)=>{
+                                            getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
+                                            .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                                                 //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                                 sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], getNumberValue(req.params.id), req.body.verification_code, req.body.new_email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -537,6 +554,11 @@ const updateUserLocal = (req, res) => {
                                                             sent_change_email: 1
                                                         });
                                                 });
+                                            })
+                                            .catch((/**@type{Types.error}*/error)=> {
+                                                return res.status(500).send(
+                                                    error
+                                                );
                                             });
                                         }
                                         else    
@@ -842,7 +864,8 @@ const userLogin = (req, res) => {
                                                 err
                                             );
                                         else{
-                                            getParameter(req.query.app_id, ConfigGet('SERVER', 'APP_COMMON_APP_ID'),'SERVICE_MAIL_TYPE_UNVERIFIED',  (err, parameter)=>{
+                                            getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
+                                            .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                                                 //send email UNVERIFIED
                                                 sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], result_login[0].id, new_code, result_login[0].email, 
                                                               req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (err)=>{
@@ -866,6 +889,11 @@ const userLogin = (req, res) => {
                                                         });
                                                     }
                                                 });
+                                            })
+                                            .catch((/**@type{Types.error}*/error)=> {
+                                                return res.status(500).send(
+                                                    error
+                                                );
                                             });
                                         }
                                     });
