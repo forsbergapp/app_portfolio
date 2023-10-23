@@ -41,7 +41,7 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
         });
 };
 const getUsersAdmin = (req, res) => {
-    service.getUsersAdmin(getNumberValue(req.query.app_id), req.query.search, getNumberValue(req.query.sort), getNumberValue(req.query.order_by), getNumberValue(req.query.offset), getNumberValue(req.query.limit), (err, result) => {
+    service.getUsersAdmin(getNumberValue(req.query.app_id), req.query.search, getNumberValue(req.query.sort), req.query.order_by, getNumberValue(req.query.offset), getNumberValue(req.query.limit), (err, result) => {
         if (err) {
             return res.status(500).send(
                 err
