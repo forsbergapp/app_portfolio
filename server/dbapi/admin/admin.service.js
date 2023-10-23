@@ -78,6 +78,7 @@ const DBStart = async () => {
          await pool_db(db_use, dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
          const { getAppDBParametersAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
          //app_id inparameter for log, all apps will be returned
+         /**@type{Types.db_result_app_parameter_getAppDBParametersAdmin[]} */
          const result_apps = await getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
          //get app id, db username and db password
          for (const app  of result_apps){

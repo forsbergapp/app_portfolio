@@ -1,4 +1,4 @@
-/** @module server/dbapi/app_portfolio/app_log */
+/** @module server/dbapi/app_portfolio/app_object */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
@@ -108,6 +108,6 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 						object : object,
 						Xobject_Xname: object_name
 						};
-		return db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getObjects};
