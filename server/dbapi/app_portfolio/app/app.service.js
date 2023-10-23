@@ -4,6 +4,7 @@
 import * as Types from './../../../../types.js';
 
 const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {getNumberValue, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * 
@@ -46,14 +47,15 @@ const getApp = async (app_id, id,lang_code) => {
 																			AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 																		)
 												)
-				WHERE (id= COALESCE(:id, id)
+				WHERE ( ((id = :id) OR :id IS NULL)
 					OR 
-					:id = 0)
+					:id = :common_app_id)
 				AND enabled = 1
 				ORDER BY 1`;
 		const parameters = {lang_code1: get_locale(lang_code, 1),
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3),
+							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 							id: id};
 		return await db_execute_promise(app_id, sql, parameters, null);
 	};

@@ -28,7 +28,7 @@ const getAppCategoryAdmin = async (app_id, id, lang_code) => {
 																	 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 																 )
 											)
-				WHERE ac.id = COALESCE(:id, ac.id)
+				WHERE ((ac.id = :id) OR :id IS NULL)
 				ORDER BY 1`;
 		const parameters = {lang_code1: get_locale(lang_code, 1),
 							lang_code2: get_locale(lang_code, 2),
