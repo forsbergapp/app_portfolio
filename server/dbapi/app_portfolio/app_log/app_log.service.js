@@ -160,34 +160,30 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		
 		const sql = `SELECT t.chart "chart",
 		              t.app_id "app_id",
-					  t.year_log "year",
-					  t.month_log "month",
+					  :year_log "year",
+					  :month_log "month",
 					  t.day_log "day",
 					  COUNT(DISTINCT t.server_remote_addr) 	"amount"
 				 FROM (SELECT 1										chart,
 							  app_id,
-					          EXTRACT(YEAR FROM date_created)		year_log,
-					          EXTRACT(MONTH FROM date_created) 		month_log,
 					          NULL 									day_log,
 					          server_remote_addr
 						 FROM ${db_schema()}.app_log
-						WHERE EXTRACT(YEAR FROM date_created) = :year_log
+						 WHERE EXTRACT(YEAR FROM date_created) = :year_log
 						  AND EXTRACT(MONTH FROM date_created) = :month_log
 						UNION ALL
 					   SELECT 2										chart,
 					   		  NULL 									app_id,
-							  EXTRACT(YEAR FROM date_created) 		year_log,
-							  EXTRACT(MONTH FROM date_created) 		month_log,
 							  EXTRACT(DAY FROM date_created) 		day_log,
 							  server_remote_addr
 						 FROM ${db_schema()}.app_log
-						WHERE app_id = COALESCE(:app_id_log, app_id)
+						 WHERE ((app_id = :app_id_log) OR :app_id_log IS NULL)
 						  AND EXTRACT(YEAR FROM date_created) = :year_log
 						  AND EXTRACT(MONTH FROM date_created) = :month_log) t
 				GROUP BY t.chart,
 				         t.app_id,
-						 t.year_log,
-						 t.month_log,
+						 3,
+						 4,
 						 t.day_log
 				ORDER BY 1, 5`;
 		const parameters = {app_id_log: data_app_id,
