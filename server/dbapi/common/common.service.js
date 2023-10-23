@@ -155,7 +155,7 @@ const db_limit_rows = (sql, limit_type = null) => {
 				}
 				case null:{
 					//use app function limit
-					return sql + ' OFFSET :offset FETCH NEXT :limit ROWS ONLY';
+					return sql + ' OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
 				}
 			}
 		else
