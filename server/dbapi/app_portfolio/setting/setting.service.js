@@ -32,7 +32,7 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                     ON str.setting_id = s.id
             WHERE st.setting_type_name LIKE COALESCE(:setting_type_name, st.setting_type_name)
               AND s.setting_type_id = st.id  
-              AND (st.app_id = COALESCE(:app_id, st.app_id)
+              AND (((st.app_id = :app_id) OR :app_id IS NULL)
                    OR
                    st.app_id = :common_app_id)
           ORDER BY 1, 2, 3`;

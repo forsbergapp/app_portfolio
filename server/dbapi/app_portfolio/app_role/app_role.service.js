@@ -5,7 +5,7 @@ const getAppRoleAdmin = (app_id, id, callBack) => {
 							ar.role_name "role_name",
 							ar.icon "icon"
 					   FROM ${db_schema()}.app_role ar
-					  WHERE ar.id = COALESCE(:id, ar.id)
+					  WHERE ((ar.id = :id) OR :id IS NULL)
 					 ORDER BY 1`;
         
 		const parameters = {id: id};

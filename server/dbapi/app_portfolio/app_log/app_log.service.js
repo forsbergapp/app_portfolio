@@ -136,7 +136,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 					  date_created "date_created",
 					  count(*) over() "total_rows"
 				 FROM ${db_schema()}.app_log
-				WHERE app_id = COALESCE(:app_id, app_id)
+				WHERE ((app_id = :app_id) OR :app_id IS NULL)
 				  AND EXTRACT(year from date_created) = :year
 				  AND EXTRACT(month from date_created) = :month
 				ORDER BY ${sort} ${order_by} `;
