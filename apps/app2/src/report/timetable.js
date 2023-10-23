@@ -1692,8 +1692,9 @@ const timetable = async (timetable_parameters) => {
 	const reporttype = Number(urlParams.get('type'));
     const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
 	return await new Promise((resolve) => {
-		getAppStartParameters(timetable_parameters.app_id, (/** @type {string}*/ err, /** @type {Types.db_result_app_parameter[]}*/parameters) =>{
-			for (const parameter of parameters) {
+		getAppStartParameters(timetable_parameters.app_id)
+		.then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/result_parameters)=> {
+			for (const parameter of result_parameters) {
 				if (parameter.parameter_name=='APP_COPYRIGHT')
 					REPORT_GLOBAL['app_copyright'] = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')

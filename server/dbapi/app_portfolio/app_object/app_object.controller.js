@@ -1,4 +1,4 @@
-/** @module server/dbapi/app_portfolio/app_log */
+/** @module server/dbapi/app_portfolio/app_object */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
@@ -15,12 +15,12 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getObjects = (req, res) => {
 	service.getObjects(getNumberValue(req.query.app_id), req.params.lang_code, req.query.object ?? null, req.query.object_name ?? null)
 	.then((result)=> {
-		return res.status(200).json({
+		res.status(200).json({
 			data: result
 		});
 	})
 	.catch((error)=> {
-		return res.status(500).send({
+		res.status(500).send({
 			data: error
 		});
 	});
