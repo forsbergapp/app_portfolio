@@ -15,24 +15,15 @@ const ConfigGet = async (parameter)=>{
 const initPDFService = async () => {
     if (!BROWSER)
         BROWSER = await puppeteer.launch({  pipe:true,
-                                            headless: true,
+                                            headless: 'new',
                                             executablePath: await ConfigGet('EXECUTABLE_PATH'),
                                             ignoreHTTPSErrors: true,
                                             ignoreDefaultArgs: ['--enable-automation'],
-                                            args: [ '--ignore-certificate-errors',
-                                                    '--disable-gpu',
-                                                    '--disable-3d-apis',
+                                            args: [ '--disable-3d-apis',
                                                     '--disable-accelerated-video',
-                                                    '--disable-background-mode',
-                                                    '--disable-plugins',
-                                                    '--disable-plugins-discovery',
-                                                    '--disable-preconnect',
-                                                    '--disable-translate',
-                                                    '--dns-prefetch-disable',
-                                                    '--no-experiments',
-                                                    '--no-pings',
                                                     '--disable-audio-input',
                                                     '--disable-audio-output',
+                                                    '--disable-background-mode',
                                                     '--disable-background-networking',
                                                     '--disable-breakpad',
                                                     '--disable-component-update',
@@ -41,6 +32,7 @@ const initPDFService = async () => {
                                                     '--disable-demo-mode',
                                                     '--disable-extensions',
                                                     '--disable-file-system',
+                                                    '--disable-gpu',
                                                     '--disable-ios-password-suggestions',
                                                     '--disable-lcd-text',
                                                     '--disable-local-storage',
@@ -52,13 +44,21 @@ const initPDFService = async () => {
                                                     '--disable-permissions-api',
                                                     '--disable-pinch',
                                                     '--disable-playback-api',
+                                                    '--disable-plugins',
+                                                    '--disable-plugins-discovery',
+                                                    '--disable-preconnect',
                                                     '--disable-speech-api',
                                                     '--disable-system-font-check',
                                                     '--disable-test-root-certs',
                                                     '--disable-touch-drag-drop',
+                                                    '--disable-translate',
                                                     '--disable-webgl',
-                                                    '--no-default-browser-check',
+                                                    '--dns-prefetch-disable',
                                                     '--hide-crash-restore-bubble',
+                                                    '--ignore-certificate-errors',
+                                                    '--no-experiments',
+                                                    '--no-default-browser-check',
+                                                    '--no-pings',
                                                     '--user-data-dir=' + process.cwd() + await ConfigGet('TMP_DIR')]
         }).catch(error=>{
             console.log(error);
@@ -71,6 +71,7 @@ const getPDF = async (message) => {
     .catch(error=>{
         throw error;
     });
+    
     const user_agent = await ConfigGet('USER_AGENT');
     const accept_language = await ConfigGet('ACCEPT_LANGUAGE');
     const pdf_timeout = await ConfigGet('PDF_TIMEOUT');
@@ -83,79 +84,46 @@ const getPDF = async (message) => {
     const margin_bottom = await ConfigGet('MARGIN_BOTTOM');
     const margin_left = await ConfigGet('MARGIN_LEFT');
     const margin_right = await ConfigGet('MARGIN_RIGHT');
-    const pdf_empty_sizecheck = await ConfigGet('PDF_EMPTY_SIZE_CHECK');
-    const pdf_wait_attempts = await ConfigGet('PDF_WAIT_ATTEMPTS');
-    const pdf_wait_interval = await ConfigGet('PDF_WAIT_INTERVAL');
-    return await new Promise((resolve, reject) => {
-        BROWSER.newPage().then((webPage) => {
-            webPage.setRequestInterception(true).then(()=>{
-                webPage.on('request', interceptedRequest => {
-                    const data = {
-                        'headers': {
-                            ...interceptedRequest.headers(),
-                            'User-Agent': user_agent,
-                            'Accept-Language': accept_language
-                        },
-                    };
-                    interceptedRequest.continue(data);
-                });
 
-                webPage.goto(message.url, {
-                    waitUntil: ['networkidle2'],
-                    timeout: pdf_timeout,
-                }).then(() => {
-                    let width_viewport;
-                    let height_viewport;
-                    if (message.ps=='A4'){
-                        width_viewport = a4_width_viewport;
-                        height_viewport = a4_height_viewport;
-                        }
-                    if (message.ps=='Letter'){
-                        width_viewport = letter_width_viewport;
-                        height_viewport = letter_height_viewport;
-                    }
-                    webPage.setViewport({width:             width_viewport,
-                                        height:             height_viewport,
-                                        deviceScaleFactor:  device_scalefactor,
-                                        }).then(() => {
-                    let wait_count=0;
-                    const waitpdf = () => {
-                        setTimeout(() => {
-                            wait_count++;
-                            webPage.pdf({   printBackground:        true,
-                                            format:                 message.ps,
-                                            displayHeaderFooter:    message.hf,
-                                            margin: {   top:    margin_top,
-                                                        bottom: margin_bottom,
-                                                        left:   margin_left,
-                                                        right:  margin_right
-                                            }}).then((pdf) => {
-                                                    if (pdf.toString().length < pdf_empty_sizecheck)
-                                                        //try PDF_WAIT_ATTEMPTS * PDF_WAIT_INTERVAL = total time
-                                                        //ex. 20 * 500 = 10 seconds
-                                                        if (wait_count> pdf_wait_attempts)
-                                                            resolve(null);
-                                                        else{
-                                                            //continue recursive call until PDF created with content
-                                                            waitpdf();
-                                                        }
-                                                    else
-                                                        webPage.close().then(() => {
-                                                            //if closing browser and not only page:
-                                                            //BROWSER.close();
-                                                            resolve(pdf);
-                                                        });
-                                                    });    
-                        }, pdf_wait_interval);
-                    };
-                    waitpdf();
-                    });
-                })
-                .catch(error=>{
-                    reject(error);
-                });
-            });
-        });
+    const webPage = await BROWSER.newPage();
+    await webPage.setJavaScriptEnabled(true);
+    await webPage.setRequestInterception(true);
+    webPage.on('request', interceptedRequest => {
+        const data = {
+            'headers': {
+                ...interceptedRequest.headers(),
+                'User-Agent': user_agent,
+                'Accept-Language': accept_language
+            },
+        };
+        interceptedRequest.continue(data);
     });
+    await webPage.goto(message.url, {
+        waitUntil: ['networkidle2'],
+        timeout: pdf_timeout,
+    });
+    let width_viewport;
+    let height_viewport;
+    if (message.ps=='A4'){
+        width_viewport = a4_width_viewport;
+        height_viewport = a4_height_viewport;
+        }
+    if (message.ps=='Letter'){
+        width_viewport = letter_width_viewport;
+        height_viewport = letter_height_viewport;
+    }
+    await webPage.setViewport({ width:             width_viewport,
+                                height:             height_viewport,
+                                deviceScaleFactor:  device_scalefactor,
+                            });
+    const pdf = await webPage.pdf({ printBackground:        true,
+                                    format:                 message.ps,
+                                    displayHeaderFooter:    message.hf,
+                                    margin: {   top:    margin_top,
+                                                bottom: margin_bottom,
+                                                left:   margin_left,
+                                                right:  margin_right
+                                    }});
+    return pdf;
 };
 export{getPDF};
