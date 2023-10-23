@@ -1,4 +1,4 @@
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -114,7 +114,7 @@ const setParameterValue_admin = (app_id, data, callBack) => {
 				return callBack(null, result);
 		});
 	};
-const getAppDBParametersAdmin = (app_id, callBack) => {
+const getAppDBParametersAdmin = app_id => {
 		const db_user = 'SERVICE_DB_APP_USER';
 		const db_password = 'SERVICE_DB_APP_PASSWORD';
 
@@ -131,12 +131,7 @@ const getAppDBParametersAdmin = (app_id, callBack) => {
 				ORDER BY 1, 3`;
 		const parameters = {db_user: db_user,
 							db_password: db_password};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return db_execute_promise(app_id, sql, parameters, null);
 	};
 const getAppStartParameters = (app_id, callBack) => {
 	//return parameters for given app_id or COMMON_APP_ID
