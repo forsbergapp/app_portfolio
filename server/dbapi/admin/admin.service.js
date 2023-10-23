@@ -75,23 +75,15 @@ const DBStart = async () => {
          user = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_USER`)}`;
          password = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
          dba = 0;
-         await pool_db(db_use, dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-         .then(()=>{
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`).then(({ getAppDBParametersAdmin }) => {
-               //app_id inparameter for log, all apps will be returned
-               getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),(/**@type{Types.error}*/err, /**@type{Types.db_result_app_parameter_getAppDBParametersAdmin[]}*/result_apps) =>{
-                  if (err)
-                     throw err;
-                  else {
-                     //get app id, db username and db password
-                     for (const app  of result_apps){
-                        if (app.id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-                           pool_db(db_use, dba, app.db_user, app.db_password, app.id);
-                     }
-                  }
-               });
-            });
-         });
+         await pool_db(db_use, dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
+         const { getAppDBParametersAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+         //app_id inparameter for log, all apps will be returned
+         const result_apps = await getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
+         //get app id, db username and db password
+         for (const app  of result_apps){
+            if (app.id != getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+               await pool_db(db_use, dba, app.db_user, app.db_password, app.id);
+         }
       }  
    }
 };
