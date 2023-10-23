@@ -1,8 +1,21 @@
+/** @module server/dbapi/app_portfolio/app_log */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-const getObjects = (app_id, lang_code, object, object_name, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ * @param {string} object 
+ * @param {string} object_name 
+ * @returns {Promise.<Types.db_result_app_object_getObjects[]>}
+ */
+const getObjects = async (app_id, lang_code, object, object_name) => {
 		const sql = ` SELECT 	object "object", 
 						app_id "app_id", 
 						object_name "object_name", 
@@ -95,11 +108,6 @@ const getObjects = (app_id, lang_code, object, object_name, callBack) => {
 						object : object,
 						Xobject_Xname: object_name
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getObjects};
