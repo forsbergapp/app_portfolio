@@ -14,7 +14,7 @@ const getUserAccountLogonAdmin = (app_id, user_account_id, app_id_select, callBa
 					  date_created "date_created"
 				 FROM ${db_schema()}.user_account_logon
 				WHERE user_account_id = :user_account_id
-				  AND app_id = COALESCE(:app_id_select,app_id)
+				  AND ((app_id = :app_id_select) OR :app_id_select IS NULL)
 				ORDER BY 9 DESC`;
 		const parameters = {
 						user_account_id: user_account_id,
