@@ -27,13 +27,14 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.se
  * @param {string} code 
  * @param {string} errno 
  * @param {*} sqlMessage 
- * @returns (number|null)
+ * @returns (string|null)
+ * 
  */
 const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 	const app_error_code = getNumberValue(JSON.stringify(errno) ?? JSON.stringify(errorNum));
     //check if user defined exception
     if (app_error_code >= 20000){
-        return app_error_code;
+        return app_error_code.toString();
     } 
     else{
 		const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
@@ -48,11 +49,11 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 			let app_message_code = null;
 			//check constraints errors, must be same name in mySQL and Oracle
 			if (text_check.toUpperCase().includes('USER_ACCOUNT_EMAIL_UN'))
-				app_message_code = 20200;
+				app_message_code = '20200';
 			if (text_check.toUpperCase().includes('USER_ACCOUNT_PROVIDER_ID_UN'))
-				app_message_code = 20201;
+				app_message_code = '20201';
 			if (text_check.toUpperCase().includes('USER_ACCOUNT_USERNAME_UN'))
-				app_message_code = 20203;
+				app_message_code = '20203';
 			if (app_message_code != null)
 				return app_message_code;
 			else
@@ -71,14 +72,20 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 const record_not_found = (res, app_id, lang_code) => {
 	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`).then(({ getMessage }) => {
-			getMessage( app_id, 
-						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-						20400, 
-						lang_code, (/**@type{Types.error}*/err,/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)  => {
-							res.status(404).send(
-								err ?? result_message[0].text
-							);
-						});
+			getMessage( app_id,
+						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+						'20400',
+						lang_code)
+			.then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+				res.status(404).send(
+					result_message[0].text
+				);
+			})
+			.catch((/**@type{Types.error}*/error)=>{
+				return res.status(500).send(
+					error
+				);
+			});
 		});
 	});
 };
