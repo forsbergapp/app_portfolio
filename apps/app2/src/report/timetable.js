@@ -479,27 +479,27 @@ const set_prayer_method = async(app_id, locale) => {
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
 		const praytime_methods = {};
-        getSettings(app_id, locale, 'METHOD', (/**@type{Types.error}*/err, /**@type{Types.db_result_setting_getSettings[]}*/result_settings) => {
-            if (err)
-                reject(err);
-            else{
-                for (const setting of result_settings){
-                    const prayer_value = set_prayer_value(setting.data3,setting.data4,setting.data5);
-					//ES6 object spread 
-					Object.assign(praytime_methods, {[setting.data.toUpperCase()]:{
-														name:  setting.text,
-														params: { 	fajr: setting.data2,
-																	...prayer_value.isha,
-																	...prayer_value.maghrib,
-																	...prayer_value.midnight
-																}
-														}
-													});
-                }
-                REPORT_GLOBAL['module_praytimes_methods']=praytime_methods;
-                resolve(null);
-            }
-        });
+        getSettings(app_id, locale, 'METHOD')
+		.then((/**@type{Types.db_result_setting_getSettings[]}*/result_settings)=>{
+			for (const setting of result_settings){
+				const prayer_value = set_prayer_value(setting.data3,setting.data4,setting.data5);
+				//ES6 object spread 
+				Object.assign(praytime_methods, {[setting.data.toUpperCase()]:{
+													name:  setting.text,
+													params: { 	fajr: setting.data2,
+																...prayer_value.isha,
+																...prayer_value.maghrib,
+																...prayer_value.midnight
+															}
+													}
+												});
+			}
+			REPORT_GLOBAL['module_praytimes_methods']=praytime_methods;
+			resolve(null);
+		})
+		.catch((/**@type{Types.error}*/error)=>{
+			reject(error);
+		});
 	});
 };
 

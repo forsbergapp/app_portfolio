@@ -1,9 +1,21 @@
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/setting */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
-    if (typeof setting_type_name=='undefined' ||setting_type_name=='')
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ * @param {string|null} setting_type_name 
+ * @returns {Promise.<Types.db_result_setting_getSettings[]>}
+ */
+const getSettings = async (app_id, lang_code, setting_type_name) => {
+     if (setting_type_name=='')
           setting_type_name = null;
      const sql = `SELECT st.app_id "app_id",
                    st.setting_type_name "setting_type_name",
@@ -36,22 +48,15 @@ const getSettings = (app_id, lang_code, setting_type_name, callBack) => {
                    OR
                    st.app_id = :common_app_id)
           ORDER BY 1, 2, 3`;
-	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {          
-          const parameters = {
-                              lang_code1: get_locale(lang_code, 1),
-                              lang_code2: get_locale(lang_code, 2),
-                              lang_code3: get_locale(lang_code, 3),
-                              app_id : app_id,
-                              common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-                              setting_type_name: setting_type_name
-                              };
-          db_execute(app_id, sql, parameters, null, (err, result)=>{
-               if (err)
-                    return callBack(err, null);
-               else
-                    return callBack(null, result);
-          });
-     });
-     
+	const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+     const parameters = {
+                         lang_code1: get_locale(lang_code, 1),
+                         lang_code2: get_locale(lang_code, 2),
+                         lang_code3: get_locale(lang_code, 3),
+                         app_id : app_id,
+                         common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
+                         setting_type_name: setting_type_name
+                         };
+     return await db_execute_promise(app_id, sql, parameters, null);
 };
 export{getSettings};

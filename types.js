@@ -79,6 +79,7 @@
  * @property {number} query.data_app_id                             - app portfolio parameter
  * @property {string} query.object                                  - app portfolio parameter
  * @property {string} query.object_name                             - app portfolio parameter
+ * @property {string} query.setting_type                            - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
  * @property {string} query.identity_provider_id
@@ -1001,14 +1002,14 @@
  * @typedef {db_result_insert} db_result_profile_search_insertProfileSearch
  * SETTING
  * @typedef {{  app_id:number, 
- *              id:string, 
  *              setting_type_name:string, 
- *              text:string, 
+ *              id:string,
  *              data:string, 
  *              data2:string|null, 
  *              data3:string|null, 
  *              data4:string|null, 
- *              data5:string|null}} db_result_setting_getSettings
+ *              data5:string|null,
+ *              text:string}} db_result_setting_getSettings
  * USER ACCOUNT
  * @typedef {{  id:number}} db_result_user_account_getDemousers
  * @typedef {{  app_role_id:number}} db_result_user_account_UserAppRoleAdmin
