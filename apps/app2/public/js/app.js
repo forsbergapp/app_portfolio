@@ -2271,7 +2271,11 @@ const setEvents = () => {
     document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup(); }, false);
     
     if (document.querySelector('#identity_provider_login'))
-        document.querySelector('#identity_provider_login').addEventListener('click', (event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
+        document.querySelector('#identity_provider_login').addEventListener('click', (event) => {
+            if (!event.target.id)
+                ProviderSignIn_app(
+                    event.target.parentElement.classList.contains('common_login_button')==true?event.target.parentElement:event.target);
+                });
     
     //dialogue profile
     document.getElementById('common_profile_main_btn_following').addEventListener('click', () => { profile_detail_app(1, null, true, null, show_profile_function); }, false);

@@ -106,7 +106,11 @@ const setEvents = () => {
     document.getElementById('common_signup_button').addEventListener('click', () => { common.user_signup(); }, false);
 
     if (document.querySelector('#identity_provider_login'))
-        document.querySelector('#identity_provider_login').addEventListener('click', (event) => { ProviderSignIn_app(event.target.id==''?event.target.parentElement:event.target); });
+        document.querySelector('#identity_provider_login').addEventListener('click', (event) => {
+            if (!event.target.id)
+                ProviderSignIn_app(
+                    event.target.parentElement.classList.contains('common_login_button')==true?event.target.parentElement:event.target);
+                });
 
     //dialogue user edit    
     document.getElementById('common_user_edit_btn_user_delete_account').addEventListener('click', () => { user_delete_app(); }, false);

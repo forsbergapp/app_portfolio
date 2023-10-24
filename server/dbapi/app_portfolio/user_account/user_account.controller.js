@@ -1019,7 +1019,7 @@ const providerSignIn = (req, res) => {
                 //if provider user not found then create user and one user setting
                 //avatar not used by providers, set default null
                 data_user.avatar = req.body.avatar ?? null;
-                data_user.avatar = req.body.provider_image ?? null;
+                data_user.provider_image = req.body.provider_image ?? null;
                 service.create(getNumberValue(req.query.app_id), data_user, (err, results_create) => {
                     if (err) {
                         return res.status(500).send(
