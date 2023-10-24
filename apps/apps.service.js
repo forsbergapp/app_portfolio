@@ -226,51 +226,46 @@ const render_common_html = async (app_id, module, app_config) =>{
         });
     }
     if (app_config.render_settings){
-        const promisegetSettings = async () =>{
-            const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
-            return new Promise((resolve)=>{
-                getSettings(app_id, app_config.locale, null, (/** @type {string}*/ err, /** @type {Types.db_result_setting_getSettings[]}*/ settings) => {
-                    let option;
-                    for (const setting of settings) {
-                        option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
-                        switch (setting.setting_type_name){
-                            //static content
-                            case 'TIMEZONE':{
-                                user_timezones += option;
-                                break;
-                            }
-                            //will be translated in app
-                            case 'DIRECTION':{
-                                user_directions += option;
-                                break;
-                            }
-                            //static content
-                            case 'ARABIC_SCRIPT':{
-                                user_arabic_scripts += option;
-                                break;
-                            }
-                            //map styles
-                            case 'MAP_STYLE':{
-                                map_styles.push({  id:setting.id, 
-                                                    description:setting.text, 
-                                                    data:setting.data, 
-                                                    data2:setting.data2, 
-                                                    data3:setting.data3, 
-                                                    data4:setting.data4, 
-                                                    session_map_layer:null});
-                                break;
-                            }
-                        }
-                    }
-                    resolve ({  settings: settings, 
-                                user_timezones: user_timezones, 
-                                user_directions: user_directions, 
-                                user_arabic_scripts: user_arabic_scripts,
-                                map_styles: app_config.map==true?map_styles:null});
-                });
-            });
-        };
-        settings = await promisegetSettings();
+        const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
+        /** @type {Types.db_result_setting_getSettings[]}*/
+        const settings_db = await getSettings(app_id, app_config.locale, null);
+        let option;
+        for (const setting of settings_db) {
+            option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
+            switch (setting.setting_type_name){
+                //static content
+                case 'TIMEZONE':{
+                    user_timezones += option;
+                    break;
+                }
+                //will be translated in app
+                case 'DIRECTION':{
+                    user_directions += option;
+                    break;
+                }
+                //static content
+                case 'ARABIC_SCRIPT':{
+                    user_arabic_scripts += option;
+                    break;
+                }
+                //map styles
+                case 'MAP_STYLE':{
+                    map_styles.push({  id:setting.id, 
+                                        description:setting.text, 
+                                        data:setting.data, 
+                                        data2:setting.data2, 
+                                        data3:setting.data3, 
+                                        data4:setting.data4, 
+                                        session_map_layer:null});
+                    break;
+                }
+            }
+        }
+        settings = {settings: settings_db, 
+                    user_timezones: user_timezones, 
+                    user_directions: user_directions, 
+                    user_arabic_scripts: user_arabic_scripts,
+                    map_styles: app_config.map==true?map_styles:null};
     }               
     return new Promise((resolve, reject)=>{
         /**@type {[string, string][]} */
