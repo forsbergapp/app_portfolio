@@ -1,6 +1,19 @@
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/message_translation */
 
-const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} data_app_id 
+ * @param {string} code 
+ * @param {string} lang_code 
+ * @returns {Promise.<Types.db_result_message_translation_getMessage[]>}
+ */
+const getMessage = async (app_id, data_app_id, code, lang_code) => {
 		const sql = `SELECT m.code "code",
 					  m.message_level_id "message_level_id",
 					  m.message_type_id "message_type_id",
@@ -31,12 +44,7 @@ const getMessage = (app_id, data_app_id, code, lang_code, callBack) => {
 						lang_code2: get_locale(lang_code, 2),
 						lang_code3: get_locale(lang_code, 3)
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 
 export{getMessage};
