@@ -1,6 +1,16 @@
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/identity_provider */
 
-const getIdentityProviders = (app_id, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @returns {Promise.<Types.db_result_identity_provider_getIdentityProviders[]>}
+ */
+const getIdentityProviders = async app_id => {
 		const sql = `SELECT id "id",
 							provider_name "provider_name",
 							api_src "api_src",
@@ -11,11 +21,6 @@ const getIdentityProviders = (app_id, callBack) => {
 					  WHERE enabled = 1
 					 ORDER BY identity_provider_order ASC`;
 		const parameters = {};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getIdentityProviders};

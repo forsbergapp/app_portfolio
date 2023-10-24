@@ -811,8 +811,8 @@
 /**
  * DATABASE
  * DB query result
- * @typedef {db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
- * @typedef {object}                    db_query_result_error
+ * @typedef {   db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
+ * @typedef {   object}                    db_query_result_error
  * DB result INSERT
  * @typedef {{  insertId:number, 
  *              rows:[], 
@@ -857,12 +857,27 @@
  * result:
  *  db_result_[TABLE]_[function name]
  * APP
- * @typedef {{app_name:string, url:string, logo:string, enabled:number, app_category_id:number}} db_parameter_app_updateAppAdmin
- * @typedef {{id:number, app_name:string, url:string, logo:string, app_description:string, app_category:string}} db_result_app_getApp
- * @typedef {{id:number, app_name:string, url:string, logo:string, enabled:number, app_category_id:number, app_category_text:string}} db_result_app_getAppAdmin
- * @typedef {{id:number}} db_result_app_getAppsAdminId
- * @typedef {{app_name:string}} db_result_app_getAppName
- * @typedef {db_result_update} db_result_app_updateAppAdmin
+ * @typedef {{  app_name:string, 
+ *              url:string, 
+ *              logo:string, 
+ *              enabled:number, 
+ *              app_category_id:number}} db_parameter_app_updateAppAdmin
+ * @typedef {{  id:number, 
+ *              app_name:string, 
+ *              url:string, 
+ *              logo:string, 
+ *              app_description:string, 
+ *              app_category:string}} db_result_app_getApp
+ * @typedef {{  id:number, 
+ *              app_name:string, 
+ *              url:string, 
+ *              logo:string, 
+ *              enabled:number, 
+ *              app_category_id:number, 
+ *              app_category_text:string}} db_result_app_getAppAdmin
+ * @typedef {{  id:number}} db_result_app_getAppsAdminId
+ * @typedef {{  app_name:string}} db_result_app_getAppName
+ * @typedef {   db_result_update} db_result_app_updateAppAdmin
  * APP CATEGORY
  * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_category_getAppCategoryAdmin
  * APP LOG
@@ -882,7 +897,7 @@
  *              server_user_agent:string,
  *              server_http_host:string,
  *              server_http_accept_language:string}} db_parameter_app_log_createLog
- * @typedef {db_result_insert} db_result_app_log_createLog
+ * @typedef {   db_result_insert} db_result_app_log_createLog
  * @typedef {{  id:number,
  *              app_id:number,
  *              app_module:string,
@@ -902,7 +917,12 @@
  *              server_http_accept_language:string,
  *              date_created:string,
  *              total_rows:number}} db_result_app_log_getLogsAdmin
- * @typedef {{chart:number, app_id:number, year:number, month:number, day:number, amount:number}} db_result_app_log_getStatUniqueVisitorAdmin
+ * @typedef {{  chart:number, 
+ *              app_id:number, 
+ *              year:number, 
+ *              month:number, 
+ *              day:number, 
+ *              amount:number}} db_result_app_log_getStatUniqueVisitorAdmin
  * APP OBJECTS
  * @typedef {{  object:string, 
  *              app_id:number, 
@@ -942,34 +962,80 @@
  *              parameter_value:string, 
  *              parameter_comment:string}} db_result_app_parameter_getAppStartParameters
  * APP ROLE
+ * @typedef {{  id:number, 
+ *              role_nae:string, 
+ *              icon:string}} db_result_app_role_getAppRoleAdmin
  * COUNTRY
- * @typedef {{id:string, group_name:string, country_code:string, flag_emoji:string, text:string}} db_result_country_getCountries
+ * @typedef {{  id:string, 
+ *              group_name:string, 
+ *              country_code:string, 
+ *              flag_emoji:string, 
+ *              text:string}} db_result_country_getCountries
  * IDENTITY PROVIDER
- * @typedef {{id:string, provider_name:string}} db_result_identity_provider_getIdentityProviders
- * LANGUAGE
- * @typedef {{locale: String, text:string}} db_result_locale_getLocales
+ * @typedef {{  id:string, 
+ *              provider_name:string}} db_result_identity_provider_getIdentityProviders
+ * LOCALE
+ * @typedef {{  locale: string, text:string}} db_result_locale_getLocales
+ * 
  * MESSAGE TRANSLATION
- * @typedef {{code:number, message_level_id: number, message_type_id:number, language_id:number, lang_code:string, text:string, app_id:number}} db_result_message_translation_getMessage
+ * @typedef {{  code:number, 
+ *              message_level_id:number, 
+ *              message_type_id:number, 
+ *              language_id:number, 
+ *              lang_code:string, 
+ *              text:string, 
+ *              app_id:number}} db_result_message_translation_getMessage
  * PARAMETER TYPE
  * PROFILE SEARCH
  * SETTING
- * @typedef {{app_id:number, id:string, setting_type_name:string, text:string, data:string, data2:string|null, data3:string|null, data4:string|null, data5:string|null}} db_result_setting_getSettings
+ * @typedef {{  app_id:number, 
+ *              id:string, 
+ *              setting_type_name:string, 
+ *              text:string, 
+ *              data:string, 
+ *              data2:string|null, 
+ *              data3:string|null, 
+ *              data4:string|null, 
+ *              data5:string|null}} db_result_setting_getSettings
  * USER ACCOUNT
- * @typedef {{id:number}} db_result_user_account_getDemousers
- * @typedef {{app_role_id:number}} db_result_user_account_UserAppRoleAdmin
- * @typedef {{app_role_id:number, icon:string}} db_result_user_account_UserRoleAdmin
- * @typedef {{  id:string, bio:string, private:number|null, user_level:string, date_created:string, username:string, avatar:string, 
- *              identity_provider_id:string, provider_id:string, provider_first_name:string, provider_last_name:string, provider_image:string, provider_image_url:string,
- *              count_following:number, count_followed:number, count_likes:number, count_liked:number, count_views:number, followed:number, liked:number}} db_result_user_account_getProfileUser
+ * @typedef {{  id:number}} db_result_user_account_getDemousers
+ * @typedef {{  app_role_id:number}} db_result_user_account_UserAppRoleAdmin
+ * @typedef {{  app_role_id:number, 
+ *              icon:string}} db_result_user_account_UserRoleAdmin
+ * @typedef {{  id:string, 
+ *              bio:string, 
+ *              private:number|null, 
+ *              user_level:string, 
+ *              date_created:string, 
+ *              username:string, avatar:string, 
+ *              identity_provider_id:string, 
+ *              provider_id:string, 
+ *              provider_first_name:string, 
+ *              provider_last_name:string, 
+ *              provider_image:string, 
+ *              provider_image_url:string,
+ *              count_following:number, 
+ *              count_followed:number, 
+ *              count_likes:number, 
+ *              count_liked:number, 
+ *              count_views:number, 
+ *              followed:number, 
+ *              liked:number}} db_result_user_account_getProfileUser
  * USER ACCOUNT APP
  * USER ACCOUNT APP SETTING
- * @typedef {{id:number, description:string, settings_json:string, date_created:string, date_modified:string, user_account_app_user_account_id:number, user_account_app_app_id:number}} db_result_user_account_app_setting_getUserSettingsByUserId
+ * @typedef {{  id:number, 
+ *              description:string, 
+ *              settings_json:string, 
+ *              date_created:string, 
+ *              date_modified:string, 
+ *              user_account_app_user_account_id:number, 
+ *              user_account_app_app_id:number}} db_result_user_account_app_setting_getUserSettingsByUserId
  * USER ACCOUNT APP SETTING LIKE
  * USER ACCOUNT APP SETTING VIEW
  * USER ACCOUNT EVENT
  * USER ACCOUNT FOLLOW
  * USER ACCOUNT LIKE
  * USER ACCOUNT LOGON
- * @typedef {{login:number}} db_result_user_account_logon_Checklogin
+ * @typedef {{  login:number}} db_result_user_account_logon_Checklogin
  */
 export {};
