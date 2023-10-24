@@ -400,16 +400,16 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                               provider_image_url:     null,
                               provider_email:         null
 									};
-					create(app_id, data, (/**@type{Types.error}*/err, /**@type{Types.db_result_insert}*/results_create) => {
-						if (err)
-							reject(err);
-						else{
-							demo_user.id = results_create.insertId;
-							records_user_account++;
-							if (records_user_account == demo_users.length)
-								resolve(null);
-						}
-					});
+					create(app_id, data)
+               .then((/**@type{Types.db_result_insert}*/results_create)=> {
+                  demo_user.id = results_create.insertId;
+                  records_user_account++;
+                  if (records_user_account == demo_users.length)
+                     resolve(null);
+               })
+               .catch((/**@type{Types.error}*/err)=> {
+                  reject(err);
+               });
 				};
 				for (const demo_user of demo_users){
 					create_update_id(demo_user);
@@ -724,40 +724,37 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
  */
 const demo_delete = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers, deleteUser})=>{
-		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers[]}*/result_demo_users) =>{
-			if (err) {
-            return callBack(err, null);
-			}
-			else{
-				let deleted_user = 0;
-				if (result_demo_users.length>0){
-					const delete_user = async () => {
-						return new Promise((resolve)=>{
-							for (const user of result_demo_users){
-								deleteUser(app_id, user.id,  (/**@type{Types.error}*/err) =>{
-									if (err) {
-										resolve(err);
-									}
-									else{
-										deleted_user++;
-										if (deleted_user == result_demo_users.length)
-											resolve(null);
-									}
-								});
-							}
-						});
-					};
-					delete_user().then(()=>{
-                  if (err)
-                     return callBack(err, null);
-                  else
-                     return callBack(null, {'info': [{'count': deleted_user}]});
-					});
-				}
-				else
-               return callBack(null, {'info': [{'count': result_demo_users.length}]});
-			}
-		});
+		getDemousers(app_id)
+      .then((/**@type{Types.db_result_user_account_getDemousers[]}*/result_demo_users) =>{
+         let deleted_user = 0;
+         if (result_demo_users.length>0){
+            const delete_users = async () => {
+               for (const user of result_demo_users){
+                  await deleteUser(app_id, user.id)
+                  .then(()=>{
+                     deleted_user++;
+                     if (deleted_user == result_demo_users.length)
+                        return null;
+                  })
+                  .catch((/**@type{Types.error}*/error)=>{
+                     throw error;
+                  });
+               }
+            };
+            delete_users()
+            .then(()=>{
+               return callBack(null, {'info': [{'count': deleted_user}]});
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               return callBack(error, null);
+            });
+         }
+         else
+            return callBack(null, {'info': [{'count': result_demo_users.length}]});         
+     })
+     .catch((/**@type{Types.error}*/error)=>{
+         callBack(error, null);
+     });
 	});
 };
 /**
@@ -767,12 +764,13 @@ const demo_delete = async (app_id, callBack)=> {
  */
 const demo_get = async (app_id, callBack)=> {
 	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers})=>{
-		getDemousers(app_id, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/result_demo_users) =>{
-			if (err)
-            return callBack(err, null);
-         else
-            return callBack(null, result_demo_users);
-		});
+		getDemousers(app_id)
+      .then((/**@type{Types.db_result_user_account_getDemousers}*/result_demo_users) =>{
+         callBack(null, result_demo_users);
+      })
+      .catch((/**@type{Types.error}*/error)=>{
+         callBack(error, null);
+      });
 	});
 };
 /**
