@@ -21,6 +21,7 @@
  * @property {string} params.lang_code                              - app portfolio parameter
  * @property {string} params.app_id                                 - app portfolio parameter
  * @property {string} params.code                                   - app portfolio parameter
+ * @property {string} params.statchoice                             - app portfolio parameter
  * body
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
@@ -32,7 +33,7 @@
  * @property {string} body.broadcast_type                           - Broadcast parameter
  * @property {string} body.broadcast_message                        - Broadcast parameter
  * @property {string} body.demo_password                            - Admin parameter
- * @property {string|null} body.password
+ * @property {string} body.password
  * @property {string} body.app_name                                 - app portfolio parameter
  * @property {string} body.url                                      - app portfolio parameter
  * @property {string} body.logo                                     - app portfolio parameter
@@ -42,6 +43,35 @@
  * @property {string} body.parameter_value                          - app portfolio parameter
  * @property {string} body.parameter_comment                        - app portfolio parameter
  * @property {string} body.parameter_name                           - app portfolio parameter
+ * @property {number} body.app_role_id                              - app portfolio parameter
+ * @property {number} body.active                                   - app portfolio parameter
+ * @property {number} body.user_level                               - app portfolio parameter
+ * @property {number} body.private                                  - app portfolio parameter
+ * @property {string} body.username                                 - app portfolio parameter
+ * @property {string} body.bio                                      - app portfolio parameter
+ * @property {string} body.email                                    - app portfolio parameter
+ * @property {string} body.email_unverified                         - app portfolio parameter
+ * @property {string} body.password_reminder                        - app portfolio parameter
+ * @property {string} body.new_password                             - app portfolio parameter
+ * @property {string} body.new_email                                - app portfolio parameter
+ * @property {string} body.avatar                                   - app portfolio parameter
+ * @property {string} body.user_language                            - app portfolio parameter
+ * @property {string} body.user_timezone                            - app portfolio parameter
+ * @property {string} body.user_number_system                       - app portfolio parameter
+ * @property {string} body.user_platform                            - app portfolio parameter
+ * @property {string} body.client_latitude                          - app portfolio parameter
+ * @property {string} body.client_longitude                         - app portfolio parameter
+ * @property {number} body.user_account_id                          - app portfolio parameter
+ * @property {number} body.identity_provider_id                     - app portfolio parameter
+ * @property {string} body.provider_first_name                      - app portfolio parameter
+ * @property {string} body.provider_last_name                       - app portfolio parameter
+ * @property {string} body.provider_image                           - app portfolio parameter
+ * @property {string} body.provider_image_url                       - app portfolio parameter
+ * @property {string} body.provider_email                           - app portfolio parameter
+ * @property {string|null} body.provider_id                         - app portfolio parameter
+ * @property {string} body.verification_code                        - app portfolio parameter
+ * @property {string} body.verification_type                        - app portfolio parameter
+ * @property {string} body.auth                                     - app portfolio parameter
  * query
  * @property {object} query
  * @property {(string|number|*)} query.id
@@ -80,9 +110,10 @@
  * @property {string} query.object                                  - app portfolio parameter
  * @property {string} query.object_name                             - app portfolio parameter
  * @property {string} query.setting_type                            - app portfolio parameter
+ * @property {string} query.detailchoice                            - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
- * @property {string} query.identity_provider_id
+ * @property {number} query.identity_provider_id
  * @property {0|1|2|3|4|5|6|7} query.config_type_no - Server parameter
  * @property {  'SERVER'|
  *              'SERVICE_AUTH'|
@@ -555,7 +586,7 @@
  * @property {number} id
  * @property {number} app_id
  * @property {number} user_account_id
- * @property {string} identity_provider_id
+ * @property {number} identity_provider_id
  * @property {number} system_admin
  * @property {string} connection_date
  * @property {string} gps_latitude
@@ -571,7 +602,7 @@
  *              'app_role_icon':number|string,
  *              'app_role_id':number|string,
  *              'user_account_id':number,
- *              'identity_provider_id':string,
+ *              'identity_provider_id':number,
  *              'system_admin':number,
  *              'connection_date':string,
  *              'gps_latitude':string,
@@ -1011,29 +1042,186 @@
  *              data5:string|null,
  *              text:string}} db_result_setting_getSettings
  * USER ACCOUNT
- * @typedef {{  id:number}} db_result_user_account_getDemousers
- * @typedef {{  app_role_id:number}} db_result_user_account_UserAppRoleAdmin
- * @typedef {{  app_role_id:number, 
- *              icon:string}} db_result_user_account_UserRoleAdmin
- * @typedef {{  id:string, 
- *              bio:string, 
- *              private:number|null, 
- *              user_level:string, 
- *              date_created:string, 
- *              username:string, avatar:string, 
- *              identity_provider_id:string, 
- *              provider_id:string, 
- *              provider_first_name:string, 
- *              provider_last_name:string, 
- *              provider_image:string, 
+ * @typedef {{  id:number,
+ *              avatar:string,
+ *              app_role_id:number,
+ *              app_role_icon:string,
+ *              active:number,
+ *              user_level:number,
+ *              private:number,
+ *              username:string,
+ *              bio:string,
+ *              email:string,
+ *              email_unverified:string,
+ *              password:string,
+ *              password_reminder:string,
+ *              verification_code:string,
+ *              identity_provider_id:number,
+ *              provider_name:string,
+ *              provider_id:string,
+ *              provider_first_name:string,
+ *              provider_last_name:string,
+ *              provider_image:string,
  *              provider_image_url:string,
- *              count_following:number, 
- *              count_followed:number, 
- *              count_likes:number, 
- *              count_liked:number, 
- *              count_views:number, 
- *              followed:number, 
+ *              provider_email:string,
+ *              date_created:string,
+ *              date_modified:string}}  db_result_user_account_getUsersAdmin
+ * @typedef {{  app_role_id:number}} db_result_user_account_getUserAppRoleAdmin
+ * @typedef {{  identity_provider_id:number,
+ *              provider_name:string,
+ *              count_user:number}} db_result_user_account_getStatCountAdmin
+ * @typedef {{  app_role_id:number,
+ *              active:number,
+ *              user_level:number,
+ *              private:number,
+ *              username:string,
+ *              bio:string,
+ *              email:string,
+ *              email_unverified:string,
+ *              password:string,
+ *              password_reminder:string,
+ *              verification_code:string}} db_parameter_user_account_updateUserSuperAdmin
+ * @typedef {   db_result_update} db_result_user_account_updateUserSuperAdmin
+ * @typedef {{  bio:string|null,
+ *              private: number|null,
+ *              user_level:number|null,
+ *              username:string|null,
+ *              password:string|null,
+ *              password_reminder:string|null,
+ *              email:string|null,
+ *              email_unverified:string|null,
+ *              avatar:string|null,
+ *              verification_code:string|null,
+ *              active:number,
+ *              identity_provider_id:number|null,
+ *              provider_id:string|null,
+ *              provider_first_name:string|null,
+ *              provider_last_name:string|null,
+ *              provider_image:string|null,
+ *              provider_image_url:string|null,
+ *              provider_email:string|null}} db_parameter_user_account_create
+ * @typedef {   db_result_insert} db_result_user_account_create
+ * @typedef {   db_result_update} db_result_user_account_activateUser
+ * @typedef {   db_result_update} db_result_user_account_updateUserVerificationCode
+ * @typedef {{  id:number,
+ *              bio:string|null
+ *              last_logontime:string,
+ *              private: number|null,
+ *              user_level:number|null,
+ *              username:string|null,
+ *              password:string|null,
+ *              password_reminder:string|null,
+ *              email:string|null,
+ *              email_unverified:string|null,
+ *              avatar:string|null,
+ *              verification_code:string|null,
+ *              active:number,
+ *              identity_provider_id:number|null,
+ *              provider_id:string|null,
+ *              provider_first_name:string|null,
+ *              provider_last_name:string|null,
+ *              provider_image:string|null,
+ *              provider_image_url:string|null,
+ *              provider_email:string|null,
+ *              date_created:string,
+ *              date_modified:string}} db_result_user_account_getUserByUserId
+ * @typedef {{  id:string,
+ *              bio:string|null,
+ *              private:number|null,
+ *              user_level:string,
+ *              date_created:string,
+ *              username:string, 
+ *              avatar:string,
+ *              identity_provider_id:number|null,
+ *              provider_id:string|null,
+ *              provider_first_name:string|null,
+ *              provider_last_name:string|null,
+ *              provider_image:string|null,
+ *              provider_image_url:string|null,
+ *              count_following:number,
+ *              count_followed:number,
+ *              count_likes:number,
+ *              count_liked:number,
+ *              count_views:number,
+ *              followed:number,
  *              liked:number}} db_result_user_account_getProfileUser
+ * @typedef {{  id:number,
+ *              username:string,
+ *              avatar:string,
+ *              identity_provider_id:number|null,
+ *              provider_id:string|null,
+ *              provider_first_name:string|null,
+ *              provider_image:string|null,
+ *              provider_image_url:string|null}} db_result_user_account_searchProfileUser
+ * @typedef {{  detail:string,
+ *              id:number,
+ *              provider_id:string,
+ *              avatar:string,
+ *              provider_image:string,
+ *              provider_image_url:string,
+ *              username:string,
+ *              provider_first_name:string}} db_result_user_account_getProfileDetail
+ * @typedef {{  top:string,
+ *              id:number,
+ *              identity_provider_id:number|null,
+ *              provider_id:string|null,
+ *              avatar:string,
+ *              provider_image:string|null,
+ *              provider_image_url:string|null,
+ *              username:string,
+ *              provider_first_name:string|null}} db_result_user_account_getProfileTop
+ * @typedef {{  password:string}} db_result_user_account_checkPassword
+ * @typedef {{  new_password:string,
+ *              auth:string}} db_parameter_user_account_updatePassword
+ * @typedef {{  db_result_update}} db_result_user_account_updatePassword
+ * @typedef {{  bio:string,
+ *              private:number,
+ *              username:string,
+ *              password:string,
+ *              password_reminder:string,
+ *              email:string,
+ *              new_email:string,
+ *              avatar:string,
+ *              verification_code:string}} db_parameter_user_account_updateUserLocal
+ * @typedef {{  db_result_update}} db_result_user_account_updateUserLocal
+ * @typedef {{  bio:string|null,
+ *              private: number|null,
+ *              username:string|null}} db_parameter_user_account_updateUserCommon
+ * @typedef {{  db_result_update}} db_result_user_account_updateUserCommon
+ * @typedef {{  db_result_delete}} db_result_user_account_deleteUser
+ * @typedef {{  id:number,
+ *              bio:string|null,
+ *              username:string,
+ *              password:string,
+ *              email:string,
+ *              active:number,
+ *              avatar:string,
+ *              app_role_id:number}} db_result_user_account_userLogin
+ * @typedef {{  db_result_update}} db_result_user_account_updateSigninProvider
+ * @typedef {{  id:string,
+ *              bio:string|null,
+ *              last_logontime:string,
+ *              username:string, 
+ *              password:string, 
+ *              password_reminder:string, 
+ *              email:string, 
+ *              avatar:string,
+ *              verification_code:string, 
+ *              active:number, 
+ *              identity_provider_id:number|null,
+ *              provider_id:string|null,
+ *              provider_first_name:string|null,
+ *              provider_last_name:string|null,
+ *              provider_image:string|null,
+ *              provider_image_url:string|null,
+ *              provider_image_email:string|null,
+ *              date_created:string
+ *              date_modified:string}} db_result_user_account_providerSignIn
+ * @typedef {{  id:number,
+ *              email:string}} db_result_user_account_getEmailUser
+ * @typedef {{  app_role_id:number,
+ *              icon:string}} db_result_user_account_getUserRoleAdmin
+ * @typedef {{  id:number}} db_result_user_account_getDemousers 
  * USER ACCOUNT APP
  * USER ACCOUNT APP SETTING
  * @typedef {{  id:number, 

@@ -1,5 +1,16 @@
+/** @module server/dbapi/app_portfolio/user_account */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * Checks password between 10 and 100 characters
+ * @param {string} password 
+ * @returns {boolean}
+ */
 const password_length_wrong = (password) => {
     if (password.length < 10 || password.length > 100){
         //'Password 10 - 100 characters'
@@ -8,9 +19,18 @@ const password_length_wrong = (password) => {
     else
         return false;
 };
+/**
+ * Generate random verification code between 100000 and 999999
+ * @returns {string}
+ */
 const verification_code = () => {
-    return Math.floor(100000 + Math.random() * 900000);
+    return Math.floor(100000 + Math.random() * 900000).toString();
 };
+/**
+ * 
+ * @param {Types.db_parameter_user_account_create} data 
+ * @returns 
+ */
 const data_validation = (data) => {
 	data.username = data.username ?? null;
 	data.bio = data.bio ?? null;
@@ -77,9 +97,12 @@ const data_validation = (data) => {
 								else
 									return null;
 					}
-																											
-						
 };
+/**
+ * 
+ * @param {Types.db_parameter_user_account_create} data 
+ * @returns {object|null}
+ */
 const validation_before_insert = (data) => {
 	const error_code = data_validation(data);
 	if (error_code==null)
@@ -87,6 +110,11 @@ const validation_before_insert = (data) => {
 	else
 		return {'errorNum' : error_code};
 };
+/**
+ * 
+ * @param {*} data 
+ * @returns {object|null}
+ */
 const validation_before_update = (data) => {
 	const error_code = data_validation(data);
 	if (error_code==null)
@@ -95,10 +123,20 @@ const validation_before_update = (data) => {
 		return {'errorNum' : error_code};
 };
 
-const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} search 
+ * @param {string} sort 
+ * @param {string} order_by 
+ * @param {number} offset 
+ * @param {number} limit 
+ * @returns {Promise.<Types.db_result_user_account_getUsersAdmin[]>}
+ */
+const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 		let sql;
-		sql = `SELECT ua.avatar "avatar",
-		              ua.id "id",
+		sql = `SELECT ua.id "id",
+					  ua.avatar "avatar",
 					  ua.app_role_id "app_role_id",
 					  (SELECT ap_user.icon
 						 FROM ${db_schema()}.app_role ap_user
@@ -144,27 +182,28 @@ const getUsersAdmin = (app_id, search, sort, order_by, offset, limit, callBack) 
 							offset: offset ?? 0,
 							limit: limit ?? parseInt(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')),
 							};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
     };
-const getUserAppRoleAdmin = (app_id, id, callBack) => {
-		const sql = `SELECT app_role_id "app_role_id"
-					   FROM ${db_schema()}.user_account
-					  WHERE id = :id`;
-		const parameters = {id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	};
-const getStatCountAdmin = (app_id, callBack) => {
-		const sql = `SELECT ua.identity_provider_id "identity_provider_id",
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_getUserAppRoleAdmin[]>}
+ */
+const getUserAppRoleAdmin = async (app_id, id) => {
+	const sql = `SELECT app_role_id "app_role_id"
+				   FROM ${db_schema()}.user_account
+				  WHERE id = :id`;
+	const parameters = {id: id};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @returns {Promise.<Types.db_result_user_account_getStatCountAdmin[]>}
+ */
+const getStatCountAdmin = async app_id => {
+	const sql = `SELECT ua.identity_provider_id "identity_provider_id",
 						CASE 
 						WHEN ip.provider_name IS NULL THEN 
 							NULL
@@ -172,151 +211,157 @@ const getStatCountAdmin = (app_id, callBack) => {
 							ip.provider_name 
 						END "provider_name",
 						COUNT(*) "count_users"
-				 FROM ${db_schema()}.user_account ua
-					  LEFT OUTER JOIN ${db_schema()}.identity_provider ip
+				   FROM ${db_schema()}.user_account ua
+						LEFT OUTER JOIN ${db_schema()}.identity_provider ip
 						ON ip.id = ua.identity_provider_id
-				GROUP BY ua.identity_provider_id, ip.provider_name
-				ORDER BY ua.identity_provider_id`;
-		const parameters = {};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const updateUserSuperAdmin = (app_id, id, data, callBack) => {
-		let sql;
-		let parameters;
-		if (data.email_unverified =='')
-			data.email_unverified = null;
-		if (data.bio=='')
-			data.bio = null;
-		if (data.password_reminder=='')
-			data.password_reminder = null;
-		if (data.verification_code=='')
-			data.verification_code = null;
-		const error_code = validation_before_update(data);
-		if (error_code==null){
-			sql = `UPDATE ${db_schema()}.user_account
-					SET app_role_id = :app_role_id,
-						active = :active,
-						user_level = :user_level,
-						private = :private,
-						username = :username,
-						bio = :bio,
-						email = :email,
-						email_unverified = :email_unverified,
-						password = :password,
-						password_reminder = :password_reminder,
-						verification_code = :verification_code
-					WHERE id = :id`;
-			parameters = {id: id,
-						app_role_id: data.app_role_id,
-						active: data.active,
-						user_level: data.user_level,
-						private: data.private,
-						username: data.username,
+				  GROUP BY ua.identity_provider_id, ip.provider_name
+				  ORDER BY ua.identity_provider_id`;
+	const parameters = {};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {Types.db_parameter_user_account_updateUserSuperAdmin} data 
+ * @returns {Promise.<Types.db_result_user_account_updateUserSuperAdmin>}
+ */
+const updateUserSuperAdmin = async (app_id, id, data) => {
+	let sql;
+	let parameters;
+	if (data.email_unverified =='')
+		data.email_unverified = null;
+	if (data.bio=='')
+		data.bio = null;
+	if (data.password_reminder=='')
+		data.password_reminder = null;
+	if (data.verification_code=='')
+		data.verification_code = null;
+	const error_code = validation_before_update(data);
+	if (error_code==null){
+		sql = `UPDATE ${db_schema()}.user_account
+				SET app_role_id = :app_role_id,
+					active = :active,
+					user_level = :user_level,
+					private = :private,
+					username = :username,
+					bio = :bio,
+					email = :email,
+					email_unverified = :email_unverified,
+					password = :password,
+					password_reminder = :password_reminder,
+					verification_code = :verification_code
+				WHERE id = :id`;
+		parameters = {id: id,
+					app_role_id: data.app_role_id,
+					active: data.active,
+					user_level: data.user_level,
+					private: data.private,
+					username: data.username,
+					bio: data.bio,
+					email: data.email,
+					email_unverified: data.email_unverified,
+					password: data.password,
+					password_reminder: data.password_reminder,
+					verification_code: data.verification_code
+					};
+		return await db_execute_promise(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.db_parameter_user_account_create} data 
+ * @returns {Promise.<Types.db_result_user_account_create>}
+ */
+const create = async (app_id, data) => {
+	let sql;
+	let parameters;
+	if (typeof data.provider_id != 'undefined' && 
+		data.provider_id != '' && 
+		data.provider_id){
+		//generate local username for provider 1
+		data.username = `${data.provider_first_name}${Date.now()}`;
+	}
+	const error_code = validation_before_insert(data);
+	if (error_code==null){
+		sql = `INSERT INTO ${db_schema()}.user_account(
+					bio,
+					private,
+					user_level,
+					date_created,
+					date_modified,
+					username,
+					password,
+					password_reminder,
+					email,
+					avatar,
+					verification_code,
+					active,
+					identity_provider_id,
+					provider_id,
+					provider_first_name,
+					provider_last_name,
+					provider_image,
+					provider_image_url,
+					provider_email)
+				VALUES( :bio,
+						:private,
+						:user_level,
+						CURRENT_TIMESTAMP,
+						CURRENT_TIMESTAMP,
+						:username,
+						:password,
+						:Xpassword_reminder,
+						:email,
+						:avatar,
+						:verification_code,
+						:active,
+						:identity_provider_id,
+						:provider_id,
+						:provider_first_name,
+						:provider_last_name,
+						:provider_image,
+						:provider_Ximage_url,
+						:provider_email) `;				
+		parameters = {
 						bio: data.bio,
-						email: data.email,
-						email_unverified: data.email_unverified,
+						private: data.private,
+						user_level: data.user_level,
+						username: data.username,
 						password: data.password,
-						password_reminder: data.password_reminder,
-						verification_code: data.verification_code
-						};
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		}
-		else
-			callBack(error_code, null);
-    };
-const create = (app_id, data, callBack) => {
-		let sql;
-		let parameters;
-		if (typeof data.provider_id != 'undefined' && 
-			data.provider_id != '' && 
-			data.provider_id){
-            //generate local username for provider 1
-            data.username = `${data.provider_first_name}${Date.now()}`;
-        }
-		const error_code = validation_before_insert(data);
-		if (error_code==null){
-			sql = `INSERT INTO ${db_schema()}.user_account(
-						bio,
-						private,
-						user_level,
-						date_created,
-						date_modified,
-						username,
-						password,
-						password_reminder,
-						email,
-						avatar,
-						verification_code,
-						active,
-						identity_provider_id,
-						provider_id,
-						provider_first_name,
-						provider_last_name,
-						provider_image,
-						provider_image_url,
-						provider_email)
-					VALUES( :bio,
-							:private,
-							:user_level,
-							CURRENT_TIMESTAMP,
-							CURRENT_TIMESTAMP,
-							:username,
-							:password,
-							:Xpassword_reminder,
-							:email,
-							:avatar,
-							:verification_code,
-							:active,
-							:identity_provider_id,
-							:provider_id,
-							:provider_first_name,
-							:provider_last_name,
-							:provider_image,
-							:provider_Ximage_url,
-							:provider_email) `;				
-			parameters = {
-							bio: data.bio,
-							private: data.private,
-							user_level: data.user_level,
-							username: data.username,
-							password: data.password,
-							Xpassword_reminder: data.password_reminder,
-							email: data.email,
-							avatar: data.avatar,
-							verification_code: data.verification_code,
-							active: data.active,
-							identity_provider_id: data.identity_provider_id,
-							provider_id: data.provider_id,
-							provider_first_name: data.provider_first_name,
-							provider_last_name: data.provider_last_name,
-							provider_image: data.provider_image,
-							provider_Ximage_url: data.provider_image_url,
-							provider_email: data.provider_email,
-							RETURN_ID:true
-						};
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		}
-		else
-			callBack(error_code, null);
-        
-    };
-const activateUser = (app_id, id, verification_type, verification_code, auth, callBack) => {
-		const sql = `UPDATE ${db_schema()}.user_account
+						Xpassword_reminder: data.password_reminder,
+						email: data.email,
+						avatar: data.avatar,
+						verification_code: data.verification_code,
+						active: data.active,
+						identity_provider_id: data.identity_provider_id,
+						provider_id: data.provider_id,
+						provider_first_name: data.provider_first_name,
+						provider_last_name: data.provider_last_name,
+						provider_image: data.provider_image,
+						provider_Ximage_url: data.provider_image_url,
+						provider_email: data.provider_email,
+						RETURN_ID:true
+					};
+			return await db_execute_promise(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;      
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} verification_type 
+ * @param {string} verification_code 
+ * @param {string} auth 
+ * @returns {Promise.<Types.db_result_user_account_activateUser>}
+ */
+const activateUser = async (app_id, id, verification_type, verification_code, auth) => {
+	const sql = `UPDATE ${db_schema()}.user_account
 					SET active = 1,
 						verification_code = :auth,
 						email = CASE 
@@ -333,40 +378,42 @@ const activateUser = (app_id, id, verification_type, verification_code, auth, ca
 											END,
 						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id
-					AND verification_code = :verification_code `;
-		const parameters ={
+				AND verification_code = :verification_code `;
+	const parameters ={
 						auth: auth,
 						verification_type: verification_type,
 						id: id,
 						verification_code: verification_code
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const updateUserVerificationCode = (app_id, id, verification_code, callBack) => {
-		let sql;
-		sql = `UPDATE ${db_schema()}.user_account
-				  SET verification_code = :verification_code,
-					  active = 0,
-					  date_modified = CURRENT_TIMESTAMP
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} verification_code 
+ * @returns {Promise.<Types.db_result_user_account_updateUserVerificationCode>}
+ */
+const updateUserVerificationCode = async (app_id, id, verification_code) => {
+	const sql = `UPDATE ${db_schema()}.user_account
+					SET verification_code = :verification_code,
+						active = 0,
+						date_modified = CURRENT_TIMESTAMP
 				WHERE id = :id `;
-		const parameters ={
+	const parameters ={
 						verification_code: verification_code,
 						id: id   
 					}; 
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const getUserByUserId = (app_id, id, callBack) => {
-		const sql = `SELECT	u.id "id",
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_getUserByUserId[]>}
+ */
+const getUserByUserId = async (app_id, id) => {
+	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
 							FROM ${db_schema()}.user_account_logon ul
@@ -374,8 +421,6 @@ const getUserByUserId = (app_id, id, callBack) => {
 							AND ul.result=1) "last_logontime",
 						u.private "private",
 						u.user_level "user_level",
-						u.date_created "date_created",
-						u.date_modified "date_modified",
 						u.username "username",
 						u.password "password",
 						u.password_reminder "password_reminder",
@@ -390,19 +435,24 @@ const getUserByUserId = (app_id, id, callBack) => {
 						u.provider_last_name "provider_last_name",
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
-						u.provider_email "provider_email"
-				 FROM   ${db_schema()}.user_account u
-				WHERE   u.id = :id `;
-		const parameters = {id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
-		const sql = `SELECT	u.id "id",
+						u.provider_email "provider_email",
+						u.date_created "date_created",
+						u.date_modified "date_modified"
+				FROM   ${db_schema()}.user_account u
+			WHERE   u.id = :id `;
+	const parameters = {id: id};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} username 
+ * @param {number} id_current_user
+ * @returns {Promise.<Types.db_result_user_account_getProfileUser[]>}
+ */
+const getProfileUser = async (app_id, id, username, id_current_user) => {
+	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT 1
 						   FROM ${db_schema()}.user_account ua_current
@@ -461,328 +511,341 @@ const getProfileUser = (app_id, id, username, id_current_user, callBack) => {
 							   FROM ${db_schema()}.user_account_app uap
 							  WHERE uap.user_account_id = u.id
 								AND uap.app_id = :app_id)`;
-		const parameters ={
-			user_accound_id_current_user: id_current_user,
-			id: id,
-			username: username,
-			app_id: app_id
-		}; 
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const searchProfileUser = (app_id, username, callBack) => {
-		let sql;
-		sql= `SELECT	u.id "id",
-						u.username "username",
-						u.avatar "avatar",
-						u.identity_provider_id "identity_provider_id",
-						u.provider_id "provider_id",
-						u.provider_first_name "provider_first_name",
-						u.provider_image "provider_image",
-						u.provider_image_url "provider_image_url"
-				FROM ${db_schema()}.user_account u
-				WHERE (u.username LIKE :username
-						OR
-						u.provider_first_name LIKE :provider_first_name)
-				AND u.active = 1 
-				AND EXISTS(SELECT NULL
-								FROM ${db_schema()}.user_account_app uap
-							WHERE uap.user_account_id = u.id
-								AND uap.app_id = :app_id)`;
-		sql = db_limit_rows(sql, 1);
-		const parameters = {
+	const parameters ={
+						user_accound_id_current_user: id_current_user,
+						id: id,
+						username: username,
+						app_id: app_id
+					}; 
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} username
+ * @returns {Promise.<Types.db_result_user_account_searchProfileUser[]>}
+ */
+const searchProfileUser = async (app_id, username) => {
+	let sql;
+	sql= `SELECT	u.id "id",
+					u.username "username",
+					u.avatar "avatar",
+					u.identity_provider_id "identity_provider_id",
+					u.provider_id "provider_id",
+					u.provider_first_name "provider_first_name",
+					u.provider_image "provider_image",
+					u.provider_image_url "provider_image_url"
+			FROM ${db_schema()}.user_account u
+		   WHERE (u.username LIKE :username
+					OR
+					u.provider_first_name LIKE :provider_first_name)
+			 AND u.active = 1 
+			 AND EXISTS(SELECT NULL
+						  FROM ${db_schema()}.user_account_app uap
+						 WHERE uap.user_account_id = u.id
+						   AND uap.app_id = :app_id)`;
+	sql = db_limit_rows(sql, 1);
+	const parameters = {
 						username: '%' + username + '%',
 						provider_first_name: '%' + username + '%',
 						app_id: app_id
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const getProfileDetail = (app_id, id, detailchoice, callBack) => {
-		let sql;
-		sql = `SELECT detail "detail",
-		              id "id",
-					  provider_id "provider_id",
-					  avatar "avatar",
-					  provider_image "provider_image",
-					  provider_image_url "provider_image_url",
-					  username "username",
-					  provider_first_name "provider_first_name"
-				 FROM (SELECT 'FOLLOWING' detail,
-							  u.id,
-							  u.provider_id,
-							  u.avatar,
-							  u.provider_image,
-							  u.provider_image_url,
-							  u.username,
-							  u.provider_first_name
-						 FROM ${db_schema()}.user_account_follow u_follow,
-							  ${db_schema()}.user_account u
-						WHERE u_follow.user_account_id = :user_account_id
-						  AND u.id = u_follow.user_account_id_follow
-						  AND u.active = 1
-						  AND 1 = :detailchoice
-					   UNION ALL
-					   SELECT 'FOLLOWED' detail,
-							  u.id,
-							  u.provider_id,
-							  u.avatar,
-							  u.provider_image,
-							  u.provider_image_url,
-							  u.username,
-							  u.provider_first_name
-						 FROM ${db_schema()}.user_account_follow u_followed,
-							  ${db_schema()}.user_account u
-						WHERE u_followed.user_account_id_follow = :user_account_id
-						  AND u.id = u_followed.user_account_id
-						  AND u.active = 1
-						  AND 2 = :detailchoice
-					   UNION ALL
-					   SELECT 'LIKE_USER' detail,
-							  u.id,
-							  u.provider_id,
-							  u.avatar,
-							  u.provider_image,
-							  u.provider_image_url,
-							  u.username,
-							  u.provider_first_name
-						 FROM ${db_schema()}.user_account_like u_like,
-							  ${db_schema()}.user_account u
-						WHERE u_like.user_account_id = :user_account_id
-						  AND u.id = u_like.user_account_id_like
-						  AND u.active = 1
-						  AND 3 = :detailchoice
-					   UNION ALL
-					   SELECT 'LIKED_USER' detail,
-							  u.id,
-							  u.provider_id,
-							  u.avatar,
-							  u.provider_image,
-							  u.provider_image_url,
-							  u.username,
-							  u.provider_first_name
-						 FROM ${db_schema()}.user_account_like u_liked,
-							  ${db_schema()}.user_account u
-						WHERE u_liked.user_account_id_like = :user_account_id
-						  AND u.id = u_liked.user_account_id
-						  AND u.active = 1
-						  AND 4 = :detailchoice) t
-					ORDER BY 1, COALESCE(username, provider_first_name) `;
-		sql = db_limit_rows(sql,1);
-		const parameters ={
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {number} detailchoice
+ * @returns {Promise.<Types.db_result_user_account_getProfileDetail[]>}
+ */
+const getProfileDetail = async (app_id, id, detailchoice) => {
+	let sql;
+	sql = `SELECT 	detail "detail",
+					id "id",
+					provider_id "provider_id",
+					avatar "avatar",
+					provider_image "provider_image",
+					provider_image_url "provider_image_url",
+					username "username",
+					provider_first_name "provider_first_name"
+			 FROM (SELECT 	'FOLLOWING' detail,
+							u.id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name
+					 FROM ${db_schema()}.user_account_follow u_follow,
+						  ${db_schema()}.user_account u
+				    WHERE u_follow.user_account_id = :user_account_id
+ 					  AND u.id = u_follow.user_account_id_follow
+					  AND u.active = 1
+					  AND 1 = :detailchoice
+				    UNION ALL
+				   SELECT 	'FOLLOWED' detail,
+							u.id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name
+					 FROM ${db_schema()}.user_account_follow u_followed,
+						  ${db_schema()}.user_account u
+					WHERE u_followed.user_account_id_follow = :user_account_id
+ 					  AND u.id = u_followed.user_account_id
+					  AND u.active = 1
+					  AND 2 = :detailchoice
+				    UNION ALL
+				   SELECT	'LIKE_USER' detail,
+							u.id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name
+					 FROM ${db_schema()}.user_account_like u_like,
+						  ${db_schema()}.user_account u
+				    WHERE u_like.user_account_id = :user_account_id
+ 					  AND u.id = u_like.user_account_id_like
+					  AND u.active = 1
+					  AND 3 = :detailchoice
+				    UNION ALL
+				   SELECT	'LIKED_USER' detail,
+							u.id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name
+					 FROM ${db_schema()}.user_account_like u_liked,
+						  ${db_schema()}.user_account u
+				    WHERE u_liked.user_account_id_like = :user_account_id
+  					  AND u.id = u_liked.user_account_id
+					  AND u.active = 1
+					  AND 4 = :detailchoice) t
+				ORDER BY 1, COALESCE(username, provider_first_name) `;
+	sql = db_limit_rows(sql,1);
+	const parameters ={
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const getProfileTop = (app_id, statchoice, callBack) => {
-		let sql;
-		sql = `SELECT top "top", 
-					  id "id", 
-					  identity_provider_id "identity_provider_id", 
-					  provider_id "provider_id", 
-					  avatar "avatar",
-					  provider_image "provider_image",
-					  provider_image_url "provider_image_url",
-					  username "username",
-					  provider_first_name "provider_first_name",
-					  count "count"
-				FROM (SELECT 'VISITED' top,
-							  u.id,
-							  u.identity_provider_id,
-							  u.provider_id,
-							  u.avatar,
-							  u.provider_image,
-							  u.provider_image_url,
-							  u.username,
-							  u.provider_first_name,
-							  (SELECT COUNT(u_visited.user_account_id_view)
-							     FROM ${db_schema()}.user_account_view u_visited
-							    WHERE u_visited.user_account_id_view = u.id) count
-						FROM ${db_schema()}.user_account u
-					   WHERE u.active = 1
-						 AND u.private <> 1
-						 AND 1 = :statchoice
-					  UNION ALL
-					  SELECT 'FOLLOWING' top,
-							 u.id,
-							 u.identity_provider_id,
-							 u.provider_id,
-							 u.avatar,
-							 u.provider_image,
-							 u.provider_image_url,
-							 u.username,
-							 u.provider_first_name,
-							 (SELECT COUNT(u_follow.user_account_id_follow)
-							    FROM ${db_schema()}.user_account_follow u_follow
-							   WHERE u_follow.user_account_id_follow = u.id) count
-						FROM ${db_schema()}.user_account u
-					   WHERE u.active = 1
-						 AND u.private <> 1
-						 AND 2 = :statchoice
-					  UNION ALL
-					  SELECT 'LIKE_USER' top,
-							 u.id,
-							 u.identity_provider_id,
-							 u.provider_id,
-							 u.avatar,
-							 u.provider_image,
-							 u.provider_image_url,
-							 u.username,
-							 u.provider_first_name,
-							 (SELECT COUNT(u_like.user_account_id_like)
-							 	FROM ${db_schema()}.user_account_like u_like
-							   WHERE u_like.user_account_id_like = u.id) count
-						FROM ${db_schema()}.user_account u
-					   WHERE  u.active = 1
-						 AND  u.private <> 1
-						 AND  3 = :statchoice) t
-				WHERE EXISTS(SELECT NULL
-							   FROM ${db_schema()}.user_account_app uap
-							  WHERE uap.user_account_id = t.id
-								AND uap.app_id = :app_id)
-				ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
-		sql = db_limit_rows(sql,2);
-		const parameters = {
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} statchoice 
+ * @returns {Promise.<Types.db_result_user_account_getProfileTop[]>}
+ */
+const getProfileTop = async (app_id, statchoice) => {
+	let sql;
+	sql = `SELECT	top "top", 
+					id "id", 
+					identity_provider_id "identity_provider_id", 
+					provider_id "provider_id", 
+					avatar "avatar",
+					provider_image "provider_image",
+					provider_image_url "provider_image_url",
+					username "username",
+					provider_first_name "provider_first_name",
+					count "count"
+			 FROM (SELECT 	'VISITED' top,
+							u.id,
+							u.identity_provider_id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name,
+							(SELECT COUNT(u_visited.user_account_id_view)
+							   FROM ${db_schema()}.user_account_view u_visited
+							  WHERE u_visited.user_account_id_view = u.id) count
+				     FROM ${db_schema()}.user_account u
+				    WHERE u.active = 1
+					  AND u.private <> 1
+					  AND 1 = :statchoice
+				    UNION ALL
+				   SELECT 	'FOLLOWING' top,
+							u.id,
+							u.identity_provider_id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name,
+							(SELECT COUNT(u_follow.user_account_id_follow)
+							   FROM ${db_schema()}.user_account_follow u_follow
+							  WHERE u_follow.user_account_id_follow = u.id) count
+					 FROM ${db_schema()}.user_account u
+				    WHERE u.active = 1
+  					  AND u.private <> 1
+					  AND 2 = :statchoice
+				    UNION ALL
+				   SELECT 	'LIKE_USER' top,
+							u.id,
+							u.identity_provider_id,
+							u.provider_id,
+							u.avatar,
+							u.provider_image,
+							u.provider_image_url,
+							u.username,
+							u.provider_first_name,
+							(SELECT COUNT(u_like.user_account_id_like)
+							   FROM ${db_schema()}.user_account_like u_like
+						      WHERE u_like.user_account_id_like = u.id) count
+					 FROM ${db_schema()}.user_account u
+					WHERE  u.active = 1
+ 					  AND  u.private <> 1
+					  AND  3 = :statchoice) t
+			WHERE EXISTS(SELECT NULL
+						   FROM ${db_schema()}.user_account_app uap
+						  WHERE uap.user_account_id = t.id
+						    AND uap.app_id = :app_id)
+		    ORDER BY 1,10 DESC, COALESCE(username, provider_first_name) `;
+	sql = db_limit_rows(sql,2);
+	const parameters = {
 						statchoice: statchoice,
 						app_id: app_id
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const checkPassword = (app_id, id, callBack) => {
-		const sql = `SELECT password "password"
-				 FROM ${db_schema()}.user_account
-				WHERE id = :id `;
-		const parameters = {id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const updatePassword = (app_id, id, data, callBack) => {
-		let sql;
-		let parameters;
-		const error_code = validation_before_update(data);
-		if (error_code==null){
-			sql = `UPDATE ${db_schema()}.user_account
-					  SET password = :new_password,
-						  verification_code = null
-					WHERE id = :id  
-					  AND verification_code = :auth
-					  AND verification_code IS NOT NULL`;
-			parameters ={
-							new_password: data.new_password,
-							id: id,
-							auth: data.auth
-						}; 
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		}
-		else
-			callBack(error_code, null);
-    };
-const updateUserLocal = (app_id, data, search_id, callBack) => {
-		let sql;
-		let parameters;
-		const error_code = validation_before_update(data);
-		if (error_code==null){
-			sql = `UPDATE ${db_schema()}.user_account
-					  SET bio = :bio,
-						  private = :private,
-						  username = :username,
-						  password = :password,
-						  password_reminder = :Xpassword_reminder,
-						  email = :email,
-						  email_unverified = :new_email,
-						  avatar = :avatar,
-						  verification_code = :verification_code,
-						  date_modified = CURRENT_TIMESTAMP
-					WHERE id = :id `;
-			parameters ={
-				bio: data.bio,
-				private: data.private,
-				username: data.username,
-				password: data.password,
-				Xpassword_reminder: data.password_reminder,
-				email: data.email,
-				new_email: data.new_email,
-				avatar: data.avatar,
-				verification_code: data.verification_code,
-				id: search_id
-			}; 
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		}
-		else
-			callBack(error_code, null);
-    };
-const updateUserCommon = (app_id, data, id, callBack) => {
-		let sql;
-		let parameters;
-		const error_code = validation_before_update(data);
-		if (error_code==null){
-			sql = `UPDATE ${db_schema()}.user_account
-					  SET username = :username,
-						  bio = :bio,
-						  private = :private,
-						  date_modified = CURRENT_TIMESTAMP
-					WHERE id = :id `;
-			parameters ={	username: data.username,
-							bio: data.bio,
-							private: data.private,
-							id: id
-						};
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		}
-		else
-			callBack(error_code, null);
-    };
-const deleteUser = (app_id, id, callBack) => {
-		const sql = `DELETE FROM ${db_schema()}.user_account
-					WHERE id = :id `;
-		const parameters = {id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const userLogin = (app_id, data, callBack) => {
-		const sql = `SELECT	id "id",
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id
+ * @returns {Promise.<Types.db_result_user_account_checkPassword[]>}
+ */
+const checkPassword = async (app_id, id) => {
+	const sql = `SELECT password "password"
+				   FROM ${db_schema()}.user_account
+				  WHERE id = :id `;
+	const parameters = {id: id};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {*} data 
+ * @returns {Promise.<Types.db_result_user_account_updatePassword>}
+ */
+const updatePassword = async (app_id, id, data) => {
+	let sql;
+	let parameters;
+	const error_code = validation_before_update(data);
+	if (error_code==null){
+		sql = `UPDATE ${db_schema()}.user_account
+					SET password = :new_password,
+						verification_code = null
+				  WHERE id = :id  
+					AND verification_code = :auth
+					AND verification_code IS NOT NULL`;
+		parameters ={
+						new_password: data.new_password,
+						id: id,
+						auth: data.auth
+					}; 
+		return await db_execute_promise(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} data 
+ * @param {number} search_id
+ * @returns {Promise.<Types.db_result_user_account_updateUserLocal>}
+ */
+const updateUserLocal = async (app_id, data, search_id) => {
+	let sql;
+	let parameters;
+	const error_code = validation_before_update(data);
+	if (error_code==null){
+		sql = `UPDATE ${db_schema()}.user_account
+					SET bio = :bio,
+						private = :private,
+						username = :username,
+						password = :password,
+						password_reminder = :Xpassword_reminder,
+						email = :email,
+						email_unverified = :new_email,
+						avatar = :avatar,
+						verification_code = :verification_code,
+						date_modified = CURRENT_TIMESTAMP
+				  WHERE id = :id `;
+		parameters ={
+						bio: data.bio,
+						private: data.private,
+						username: data.username,
+						password: data.password,
+						Xpassword_reminder: data.password_reminder,
+						email: data.email,
+						new_email: data.new_email,
+						avatar: data.avatar,
+						verification_code: data.verification_code,
+						id: search_id
+					}; 
+		return await db_execute_promise(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} data 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_updateUserCommon>}
+ */
+const updateUserCommon = async (app_id, data, id) => {
+	let sql;
+	let parameters;
+	const error_code = validation_before_update(data);
+	if (error_code==null){
+		sql = `UPDATE ${db_schema()}.user_account
+					SET username = :username,
+						bio = :bio,
+						private = :private,
+						date_modified = CURRENT_TIMESTAMP
+				  WHERE id = :id `;
+		parameters ={	username: data.username,
+						bio: data.bio,
+						private: data.private,
+						id: id
+					};
+		return await db_execute_promise(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_deleteUser>}
+ */
+const deleteUser = async (app_id, id) => {
+	const sql = `DELETE FROM ${db_schema()}.user_account
+				  WHERE id = :id `;
+	const parameters = {id: id};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} data
+ * @returns {Promise.<Types.db_result_user_account_userLogin[]>}
+ */
+const userLogin = async (app_id, data) => {
+	const sql = `SELECT	id "id",
 						bio "bio",
 						username "username",
 						password "password",
@@ -790,64 +853,65 @@ const userLogin = (app_id, data, callBack) => {
 						active "active",
 						avatar "avatar",
 						app_role_id "app_role_id"
-					FROM ${db_schema()}.user_account
-				WHERE username = :username 
+				   FROM ${db_schema()}.user_account
+				  WHERE username = :username 
 					AND provider_id IS NULL`;
-		const parameters ={
+	const parameters ={
 						username: data.username
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const updateSigninProvider = (app_id, id, data, callBack) => {
-		let sql;
-		let parameters;
-		const error_code = validation_before_update(data);
-		if (error_code==null){
-			sql = `UPDATE ${db_schema()}.user_account
-					  SET identity_provider_id = :identity_provider_id,
-						  provider_id = :provider_id,
-						  provider_first_name = :provider_first_name,
-						  provider_last_name = :provider_last_name,
-						  provider_image = :provider_image,
-						  provider_image_url = :provider_Ximage_url,
-						  provider_email = :provider_email,
-						  date_modified = CURRENT_TIMESTAMP
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {Types.db_parameter_user_account_create} data
+ * @returns {Promise.<Types.db_result_user_account_updateSigninProvider>}
+ */
+const updateSigninProvider = async (app_id, id, data) => {
+	let parameters;
+	const error_code = validation_before_update(data);
+	if (error_code==null){
+		const sql = `UPDATE ${db_schema()}.user_account
+						SET identity_provider_id = :identity_provider_id,
+							provider_id = :provider_id,
+							provider_first_name = :provider_first_name,
+							provider_last_name = :provider_last_name,
+							provider_image = :provider_image,
+							provider_image_url = :provider_Ximage_url,
+							provider_email = :provider_email,
+							date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id
-					  AND active =1 `;
-			parameters ={
-							identity_provider_id: data.identity_provider_id,
-							provider_id: data.provider_id,
-							provider_first_name: data.provider_first_name,
-							provider_last_name: data.provider_last_name,
-							provider_image: data.provider_image,
-							provider_Ximage_url: data.provider_image_url,
-							provider_email: data.provider_email,
-							id: id
-						};
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		}
-		else
-			callBack(error_code, null);
-    };
-const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
-		const sql = `SELECT	u.id "id",
+						AND active =1 `;
+		parameters ={
+						identity_provider_id: data.identity_provider_id,
+						provider_id: data.provider_id,
+						provider_first_name: data.provider_first_name,
+						provider_last_name: data.provider_last_name,
+						provider_image: data.provider_image,
+						provider_Ximage_url: data.provider_image_url,
+						provider_email: data.provider_email,
+						id: id
+					};
+		return await db_execute_promise(app_id, sql, parameters);
+	}
+	else
+		throw error_code;
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} identity_provider_id 
+ * @param {number} search_id
+ * @returns {Promise.<Types.db_result_user_account_providerSignIn[]>}
+ */
+const providerSignIn = async (app_id, identity_provider_id, search_id) => {
+	const sql = `SELECT	u.id "id",
 						u.bio "bio",
 						(SELECT MAX(ul.date_created)
 							FROM ${db_schema()}.user_account_logon ul
 							WHERE ul.user_account_id = u.id
 							AND ul.result=1) "last_logontime",
-						u.date_created "date_created",
-						u.date_modified "date_modified",
 						u.username "username",
 						u.password "password",
 						u.password_reminder "password_reminder",
@@ -861,82 +925,83 @@ const providerSignIn = (app_id, identity_provider_id, search_id, callBack) => {
 						u.provider_last_name "provider_last_name",
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
-						u.provider_email "provider_email"
-					FROM ${db_schema()}.user_account u
-					WHERE u.provider_id = :provider_id
-					AND u.identity_provider_id = :identity_provider_id`;
-		const parameters = {
+						u.provider_email "provider_email",
+						u.date_created "date_created",
+						u.date_modified "date_modified"
+				FROM ${db_schema()}.user_account u
+				WHERE u.provider_id = :provider_id
+				AND u.identity_provider_id = :identity_provider_id`;
+	const parameters = {
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const getEmailUser = (app_id, email, callBack) => {
-		const sql = `SELECT id "id",
-					  email "email"
-				 FROM ${db_schema()}.user_account
-				WHERE email = :email `;
-		const parameters ={
-						email: email
-					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-    };
-const getUserRoleAdmin = (app_id, user_account_id, dba, callBack) => {
-		if (user_account_id =='' || typeof user_account_id == 'undefined')
-			user_account_id = null;
-		const sql = `SELECT app_role_id "app_role_id",
-					  COALESCE(ar.icon,ar_user.icon) "icon"
-				 FROM ${db_schema()}.user_account ua
-				      LEFT OUTER JOIN ${db_schema()}.app_role ar
-				      ON ar.id = ua.app_role_id,
-					  ${db_schema()}.app_role ar_user
-				WHERE ua.id = :id 
-				 AND  ar_user.id = :id_user_icon
-				 AND :id IS NOT NULL
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} email 
+ * @returns {Promise.<Types.db_result_user_account_getEmailUser[]>}
+ */
+const getEmailUser = async (app_id, email) => {
+	const sql = `SELECT id "id",
+						email "email"
+				   FROM ${db_schema()}.user_account
+				  WHERE email = :email `;
+	const parameters ={
+					email: email
+				};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @param {number} dba 
+ * @returns {Promise.<Types.db_result_user_account_getUserRoleAdmin[]>}
+ */
+const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
+	if (user_account_id =='' || typeof user_account_id == 'undefined')
+		user_account_id = null;
+	const sql = `SELECT app_role_id "app_role_id",
+						COALESCE(ar.icon,ar_user.icon) "icon"
+				   FROM ${db_schema()}.user_account ua
+						LEFT OUTER JOIN ${db_schema()}.app_role ar
+						ON ar.id = ua.app_role_id,
+						${db_schema()}.app_role ar_user
+				  WHERE ua.id = :id 
+					AND ar_user.id = :id_user_icon
+					AND :id IS NOT NULL
 				UNION ALL
-			   SELECT NULL "app_role_id",
-			          ar.icon "icon"
-				 FROM ${db_schema()}.app_role ar
-				WHERE ar.id = :id_user_icon
-				  AND :id IS NULL`;
-		const parameters ={
-						id: user_account_id,
-						id_user_icon: 2
-					};
-		//use pool column 2 for system admin
-		db_execute(app_id, sql, parameters, dba, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	};
-	const getDemousers = (app_id, callBack) => {
-		const sql = `SELECT id "id"
-				 FROM ${db_schema()}.user_account
+				 SELECT	NULL "app_role_id",
+						ar.icon "icon"
+				   FROM ${db_schema()}.app_role ar
+				  WHERE ar.id = :id_user_icon
+					AND :id IS NULL`;
+	const parameters ={
+					id: user_account_id,
+					id_user_icon: 2
+				};
+	//use pool column 2 for system admin
+	return await db_execute_promise(app_id, sql, parameters, dba);
+};
+/**
+ * 
+ * @param {number} app_id
+ * @returns {Promise.<Types.db_result_user_account_getDemousers[]>}
+ */
+const getDemousers = async app_id => {
+	const sql = `SELECT id "id"
+					FROM ${db_schema()}.user_account
 				WHERE user_level = :demo_level`;
-		const parameters ={
-						demo_level: 2
-					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
-	};
+	const parameters ={
+					demo_level: 2
+				};
+	return await db_execute_promise(app_id, sql, parameters, null);
+};
 
 export{	password_length_wrong, verification_code,
+		/* database functions */
 		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
 		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
 		searchProfileUser, getProfileDetail, getProfileTop, checkPassword, updatePassword,
