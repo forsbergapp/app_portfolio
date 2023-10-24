@@ -270,19 +270,19 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
             let i=0;
             connected_clients_no_res.map(client=>{
                 if (client.system_admin==0)
-                    getUserRoleAdmin(app_id, client.user_account_id, dba, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_UserRoleAdmin[]}*/result_app_role)=>{
-                        if (err)
-                            callBack(err, null);
-                        else{
-                            if (result_app_role[0]){
-                                client.app_role_id = result_app_role[0].app_role_id;
-                                client.app_role_icon = result_app_role[0].icon;
-                            }
-                            if (i== connected_clients_no_res.length - 1) 
-                                callBack(null, sort_and_return(sort));
-                            else
-                                i++;
+                    getUserRoleAdmin(app_id, client.user_account_id, dba)
+                    .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
+                        if (result_app_role[0]){
+                            client.app_role_id = result_app_role[0].app_role_id;
+                            client.app_role_icon = result_app_role[0].icon;
                         }
+                        if (i== connected_clients_no_res.length - 1) 
+                            callBack(null, sort_and_return(sort));
+                        else
+                            i++;
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        callBack(error, null);
                     });
                 else{
                     client.app_role_id = '';
