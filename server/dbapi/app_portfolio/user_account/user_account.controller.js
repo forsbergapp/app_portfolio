@@ -425,7 +425,7 @@ const getProfileUser = (req, res) => {
     });
 };
 const searchProfileUser = (req, res) => {
-    service.searchProfileUser(getNumberValue(req.query.app_id), req.query.search, (err, result) => {
+    service.searchProfileUser(getNumberValue(req.query.app_id), req.query.search, (err, result_search) => {
         if (err) {
             return res.status(500).send(
                 err
@@ -433,30 +433,32 @@ const searchProfileUser = (req, res) => {
         }
         else{
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
+                /**@type{Types.db_parameter_profile_search_insertProfileSearch} */
                 const data = {  user_account_id:    req.body.user_account_id,
                                 search:             req.query.search,
                                 client_ip:          req.ip,
                                 client_user_agent:  req.headers['user-agent'],
                                 client_longitude:   req.body.client_longitude,
                                 client_latitude:    req.body.client_latitude};
-                insertProfileSearch(getNumberValue(req.query.app_id), data, (err) => {
-                    if (err) {
-                        return res.status(500).send(
-                            err
-                        );
+                insertProfileSearch(getNumberValue(req.query.app_id), data)
+                .then(()=>{
+                    if (result_search.length>0)
+                        res.status(200).json({
+                            count: result_search.length,
+                            items: result_search
+                        });
+                    else {
+                        //return silent message if not found, no popup message
+                        res.status(200).json({
+                            count: 0,
+                            items: null
+                        });
                     }
-                    else{
-                        if (result)
-                            return res.status(200).json({
-                                count: result.length,
-                                items: result
-                            });
-                        else {
-                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                return record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
-                            });
-                        }
-                    }
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    return res.status(500).send(
+                        error
+                    );
                 });
             });
         }

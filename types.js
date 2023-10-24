@@ -988,7 +988,17 @@
  *              text:string, 
  *              app_id:number}} db_result_message_translation_getMessage
  * PARAMETER TYPE
+ * @typedef {{  id:number,
+ *              parameter_type_name:string,
+ *              parameter_type_text:string}} db_result_parameter_type_getParameterTypeAdmin
  * PROFILE SEARCH
+ * @typedef {{  user_account_id:number,
+ *              search:string,
+ *              client_ip:string,
+ *              client_user_agent:string,
+ *              client_longitude:string,
+ *              client_latitude:string}} db_parameter_profile_search_insertProfileSearch
+ * @typedef {db_result_insert} db_result_profile_search_insertProfileSearch
  * SETTING
  * @typedef {{  app_id:number, 
  *              id:string, 

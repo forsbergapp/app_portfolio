@@ -1,6 +1,17 @@
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/profile_search */
 
-const insertProfileSearch = (app_id, data, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.db_parameter_profile_search_insertProfileSearch} data 
+ * @returns {Promise.<Types.db_result_profile_search_insertProfileSearch[]>}
+ */
+const insertProfileSearch = async (app_id, data) => {
 		const sql = `INSERT INTO ${db_schema()}.profile_search(
 								user_account_id, search, client_ip, client_user_agent, client_longitude, client_latitude, date_created)
 					VALUES(:user_account_id,:search,:client_ip,:client_user_agent,:client_longitude,:client_latitude, CURRENT_TIMESTAMP)`;
@@ -12,11 +23,6 @@ const insertProfileSearch = (app_id, data, callBack) => {
 						client_longitude: data.client_longitude,
 						client_latitude: data.client_latitude
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{insertProfileSearch};

@@ -1,6 +1,18 @@
-const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/parameter_type */
 
-const getParameterTypeAdmin = (app_id, id, lang_code, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} lang_code 
+ * @returns {Promise.<Types.db_result_parameter_type_getParameterTypeAdmin[]>}
+ */
+const getParameterTypeAdmin = async (app_id, id, lang_code) => {
 		const sql = `SELECT pt.id "id",
 					  pt.parameter_type_name "parameter_type_name",
 					  ptt.text "parameter_type_text"
@@ -23,11 +35,6 @@ const getParameterTypeAdmin = (app_id, id, lang_code, callBack) => {
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3),
 							id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getParameterTypeAdmin};
