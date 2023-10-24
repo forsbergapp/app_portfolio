@@ -79,12 +79,18 @@ const checked_error = (app_id, lang_code, err, res) =>{
             getMessage( app_id,
                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         app_code, 
-                        lang_code, (err,result_message)  => {
-                                    return res.status(400).send(
-                                        err ?? result_message[0].text
-                                    );
-                        });
-            }
+                        lang_code)
+            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                res.status(400).send(
+                    result_message[0].text
+                );
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                return res.status(500).send(
+                    error
+                );
+            });
+        }
         else
             return res.status(500).send(
                 err
@@ -138,13 +144,19 @@ const userSignup = (req, res) => {
     }
     if (service.password_length_wrong(req.body.password))
         getMessage(getNumberValue(req.query.app_id),
-                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-                    20106, 
-                    req.query.lang_code, (err,result_message)  => {
-                        return res.status(400).send(
-                            err ?? result_message[0].text
-                        );
-                    });
+                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                    '20106',
+                    req.query.lang_code)
+        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+            res.status(400).send(
+                result_message[0].text
+            );
+        })
+        .catch((/**@type{Types.error}*/error)=>{
+            return res.status(500).send(
+                error
+            );
+        });
     else{
         if (req.body.password)
             req.body.password = hashSync(req.body.password, salt);
@@ -509,12 +521,18 @@ const updateUserLocal = (req, res) => {
                         service.password_length_wrong(req.body.new_password))
                             getMessage( getNumberValue(req.query.app_id),
                                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                        20106, 
-                                        req.query.lang_code, (err,result_message)  => {
-                                                return res.status(400).send(
-                                                    err ?? result_message[0].text
-                                                );
-                                        });
+                                        '20106',
+                                        req.query.lang_code)
+                            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                                res.status(400).send(
+                                    result_message[0].text
+                                );
+                            })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                return res.status(500).send(
+                                    error
+                                );
+                            });
                     else{
                         if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '') {
                             req.body.password = hashSync(req.body.new_password, salt);
@@ -623,40 +641,58 @@ const updateUserLocal = (req, res) => {
                 else {
                     res.statusMessage = 'invalid password attempt for user id:' + req.params.id;
                     //invalid password
-                    getMessage(getNumberValue(req.query.app_id),
+                    getMessage( getNumberValue(req.query.app_id),
                                 getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                20401, 
-                                req.query.lang_code, (err,result_message)  => {
-                                    return res.status(400).send(
-                                        err ?? result_message[0].text
-                                    );
-                                });
+                                '20401',
+                                req.query.lang_code)
+                    .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                        res.status(400).send(
+                            result_message[0].text
+                        );
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        return res.status(500).send(
+                            error
+                        );
+                    });
                 }
             } 
             else {
                 //user not found
                 getMessage( getNumberValue(req.query.app_id),
                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            20305, 
-                            req.query.lang_code, (err,result_message)  => {
-                                return res.status(404).send(
-                                    err ?? result_message[0].text
-                                );
-                            });
+                            '20305',
+                            req.query.lang_code)
+                .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                    res.status(404).send(
+                        result_message[0].text
+                    );
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    return res.status(500).send(
+                        error
+                    );
+                });
             }
         }
     });
 };
 const updatePassword = (req, res) => {
     if (service.password_length_wrong(req.body.new_password))
-        getMessage(getNumberValue(req.query.app_id),
+        getMessage( getNumberValue(req.query.app_id),
                     getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                    20106, 
-                    req.query.lang_code, (err,result_message)  => {
-                        return res.status(400).send(
-                            err ?? result_message[0].text
-                        );
-                    });
+                    '20106',
+                    req.query.lang_code)
+        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+            res.status(400).send(
+                result_message[0].text
+            );
+        })
+        .catch((/**@type{Types.error}*/error)=>{
+            return res.status(500).send(
+                error
+            );
+        });
     else{
         const salt = genSaltSync(10);
         const data = {  new_password:   hashSync(req.body.new_password, salt),
@@ -790,24 +826,36 @@ const deleteUser = (req, res) => {
                                     //invalid password
                                     getMessage( getNumberValue(req.query.app_id),
                                                 getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                20401, 
-                                                req.query.lang_code, (err,result_message)  => {
-                                                        return res.status(400).send(
-                                                            err ?? result_message[0].text
-                                                        );
-                                                });
+                                                '20401',
+                                                req.query.lang_code)
+                                    .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                                        res.status(400).send(
+                                            result_message[0].text
+                                        );
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>{
+                                        return res.status(500).send(
+                                            error
+                                        );
+                                    });
                                 } 
                             }
                             else{
                                 //user not found
                                 getMessage( getNumberValue(req.query.app_id),
                                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                            20305, 
-                                            req.query.lang_code, (err,result_message)  => {
-                                                return res.status(404).send(
-                                                    err ?? result_message[0].text
-                                                );
-                                            });
+                                            '20305',
+                                            req.query.lang_code)
+                                .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                                    res.status(404).send(
+                                        result_message[0].text
+                                    );
+                                })
+                                .catch((/**@type{Types.error}*/error)=>{
+                                    return res.status(500).send(
+                                        error
+                                    );
+                                });
                             }
                         }
                     });
@@ -815,14 +863,20 @@ const deleteUser = (req, res) => {
             }
             else{
                 //user not found
-                getMessage(getNumberValue(req.query.app_id),
+                getMessage( getNumberValue(req.query.app_id),
                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            20305, 
-                            req.query.lang_code, (err,result_message)  => {
-                                return res.status(404).send(
-                                    err ?? result_message[0].text
-                                );
-                            });
+                            '20305',
+                            req.query.lang_code)
+                .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                    res.status(404).send(
+                        result_message[0].text
+                    );
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    return res.status(500).send(
+                        error
+                    );
+                });
             }
         }
     });
@@ -935,11 +989,17 @@ const userLogin = (req, res) => {
                             //Username or password not found
                             getMessage( getNumberValue(req.query.app_id),
                                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                        20300, 
-                                        req.query.lang_code, (err,result_message)  => {
-                                                return res.status(400).send(
-                                                    err ?? result_message[0].text
-                                                );
+                                        '20300',
+                                        req.query.lang_code)
+                            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                                res.status(400).send(
+                                    result_message[0].text
+                                );
+                            })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                return res.status(500).send(
+                                    error
+                                );
                             });
                         }
                     });
@@ -949,11 +1009,17 @@ const userLogin = (req, res) => {
                 //User not found
                 getMessage( getNumberValue(req.query.app_id),
                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            20305, 
-                            req.query.lang_code, (err,result_message)  => {
-                                return res.status(404).send(
-                                    err ?? result_message[0].text
-                                );
+                            '20305',
+                            req.query.lang_code)
+                .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                    res.status(404).send(
+                        result_message[0].text
+                    );
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    return res.status(500).send(
+                        error
+                    );
                 });
             }
         }

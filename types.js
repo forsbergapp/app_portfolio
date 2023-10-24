@@ -20,6 +20,7 @@
  * @property {string} params.id                                     - app portfolio parameter
  * @property {string} params.lang_code                              - app portfolio parameter
  * @property {string} params.app_id                                 - app portfolio parameter
+ * @property {string} params.code                                   - app portfolio parameter
  * body
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
@@ -75,6 +76,7 @@
  * @property {number|null} query.uid_view                           - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
+ * @property {number} query.data_app_id                             - app portfolio parameter
  * @property {string} query.object                                  - app portfolio parameter
  * @property {string} query.object_name                             - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
@@ -978,7 +980,7 @@
  * @typedef {{  locale: string, text:string}} db_result_locale_getLocales
  * 
  * MESSAGE TRANSLATION
- * @typedef {{  code:number, 
+ * @typedef {{  code:string, 
  *              message_level_id:number, 
  *              message_type_id:number, 
  *              language_id:number, 
