@@ -1,6 +1,17 @@
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/app_role */
 
-const getAppRoleAdmin = (app_id, id, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_app_role_getAppRoleAdmin[]>}
+ */
+const getAppRoleAdmin = async (app_id, id) => {
         const sql = `SELECT ar.id "id",
 							ar.role_name "role_name",
 							ar.icon "icon"
@@ -9,11 +20,6 @@ const getAppRoleAdmin = (app_id, id, callBack) => {
 					 ORDER BY 1`;
         
 		const parameters = {id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{getAppRoleAdmin};

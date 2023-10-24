@@ -203,7 +203,7 @@ const render_app_with_data = (app, data)=>{
  */
 const render_common_html = async (app_id, module, app_config) =>{
     /** @type {string}*/
-    let user_locales;
+    let user_locales='';
     /** @type {Types.render_common_settings}*/
     let settings;
     let user_timezones = '';
@@ -214,20 +214,16 @@ const render_common_html = async (app_id, module, app_config) =>{
     /** @type {[string, string][]} */
     const render_variables = [];
     if (app_config.render_locales){
-        const promisegetLocales = async () =>{
-            const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
-            return new Promise((resolve)=>{
-                /** @type {string}*/
-                let user_locales='';
-                getLocales(app_id, app_config.locale, (/** @type {string}*/ err, /** @type {Types.db_result_locale_getLocales[]}*/ result_user_locales) => {
-                    result_user_locales.forEach((locale, i) => {
-                        user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
-                    });
-                resolve(user_locales);
-                });
+        const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);            
+        await getLocales(app_id, app_config.locale)
+        .then((/**@type{Types.db_result_locale_getLocales[]} */result_user_locales)=> {
+            result_user_locales.forEach((locale, i) => {
+                user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
             });
-        };
-        user_locales = await promisegetLocales();
+        })
+        .catch((/**@type{Types.error}*/error)=>{
+            throw error;
+        });
     }
     if (app_config.render_settings){
         const promisegetSettings = async () =>{
@@ -360,44 +356,41 @@ const render_common_html = async (app_id, module, app_config) =>{
  * @returns {Promise<string>}   - HTML in option format
  */
 const countries = (app_id, locale) => {
-    return new Promise((resolve) => {
+    return new Promise((resolve, reject) => {
         import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
-            getCountries(app_id, locale, ( /** @type {string}*/ err, /** @type {Types.db_result_country_getCountries[]}*/ result)  => {
+            getCountries(app_id, locale)
+            .then((/** @type {Types.db_result_country_getCountries[]}*/ result)=>{
                 /** @type {string}*/
                 let select_countries;
-                if (err){
-                    resolve (
-                                `<option value='' id='' label='…' selected='selected'>…
-                                </option>`
-                            );
-                }     
-                else{
-                    /** @type {string}*/
-                    let current_group_name;
-                    select_countries  =`<option value='' id='' label='…' selected='selected'>…
-                                        </option>`;
-            
-                    result.map( (/** @type Types.db_result_country_getCountries}*/ countries_map, /** @type {number}*/ i) => {
-                        if (i === 0){
+                /** @type {string}*/
+                let current_group_name;
+                select_countries  =`<option value='' id='' label='…' selected='selected'>…
+                                    </option>`;
+        
+                result.map( (/** @type Types.db_result_country_getCountries}*/ countries_map, /** @type {number}*/ i) => {
+                    if (i === 0){
+                    select_countries += `<optgroup label=${countries_map.group_name} />`;
+                    current_group_name = countries_map.group_name;
+                    }
+                    else{
+                    if (countries_map.group_name !== current_group_name){
                         select_countries += `<optgroup label=${countries_map.group_name} />`;
                         current_group_name = countries_map.group_name;
-                        }
-                        else{
-                        if (countries_map.group_name !== current_group_name){
-                            select_countries += `<optgroup label=${countries_map.group_name} />`;
-                            current_group_name = countries_map.group_name;
-                        }
-                        select_countries +=
-                        `<option value=${i}
-                                id=${countries_map.id} 
-                                country_code=${countries_map.country_code} 
-                                flag_emoji=${countries_map.flag_emoji} 
-                                group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
-                        </option>`;
-                        }
-                    });
-                    resolve (select_countries);
-                }
+                    }
+                    select_countries +=
+                    `<option value=${i}
+                            id=${countries_map.id} 
+                            country_code=${countries_map.country_code} 
+                            flag_emoji=${countries_map.flag_emoji} 
+                            group_name=${countries_map.group_name}>${countries_map.flag_emoji} ${countries_map.text}
+                    </option>`;
+                    }
+                });
+                resolve (select_countries);
+            })
+            .catch((/**@type{Types.error}*/error)=> {
+                //ignore error here
+                reject (error);
             });
         });
     });
@@ -1018,22 +1011,22 @@ const getMaintenance = (app_id) => {
 const providers_buttons = async (app_id) =>{
     const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
     return new Promise((resolve, reject)=>{
-        getIdentityProviders(app_id, (/** @type {string}*/ err, /**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
-            if (err)
-                reject(err);
-            else{
-                let html = '';
-                for (const provider of result){
-                    html += `<button class='common_login_button common_login_provider_button' >
-                                <div class='common_login_provider_id'>${provider.id}</div>
-                                <div class='common_login_provider_name'>${provider.provider_name}</div>
-                            </button>`;
-                }
-                if (html)
-                    resolve(`<div id='identity_provider_login'>${html}</div>`);
-                else
-                    resolve('');
+        getIdentityProviders(app_id)
+        .then((/**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
+            let html = '';
+            for (const provider of result){
+                html += `<button class='common_login_button common_login_provider_button' >
+                            <div class='common_login_provider_id'>${provider.id}</div>
+                            <div class='common_login_provider_name'>${provider.provider_name}</div>
+                        </button>`;
             }
+            if (html)
+                resolve(`<div id='identity_provider_login'>${html}</div>`);
+            else
+                resolve('');
+        })
+        .catch ((/**@type{Types.error} */err)=>{
+            reject(err);
         });
     });	
 };
