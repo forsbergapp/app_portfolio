@@ -15,9 +15,9 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getParameterTypeAdmin = (req, res) => {
 	service.getParameterTypeAdmin(getNumberValue(req.query.app_id), getNumberValue(req.query.id), req.query.lang_code)
 	.then((/**@type{Types.db_result_parameter_type_getParameterTypeAdmin[]}*/result)=>{
-		res.status(200).json(
-			result[0]
-		);
+		res.status(200).json({
+			data: result
+		});
 	})
 	.catch((/**@type{Types.error}*/error)=>{
 		res.status(500).send({
