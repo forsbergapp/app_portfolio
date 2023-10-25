@@ -142,6 +142,7 @@ const updateUserSuperAdmin = (req, res) => {
                             email:              req.body.email,
                             email_unverified:   req.body.email_unverified,
                             password:           req.body.password,
+                            password_new:       null,
                             password_reminder:  req.body.password_reminder,
                             verification_code:  req.body.verification_code,
                             provider_id:        result[0].provider_id,
@@ -189,94 +190,76 @@ const updateUserSuperAdmin = (req, res) => {
  * @param {Types.res} res 
  */
 const userSignup = (req, res) => {
-    const salt = genSaltSync(10);
     /**@type{string|null} */
     let verification_code = null;
     if (typeof req.body.provider_id == 'undefined') {
         //generate verification code for local users only
         verification_code = service.verification_code();
     }
-    if (service.password_length_wrong(req.body.password))
-        getMessage(getNumberValue(req.query.app_id),
-                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                    '20106',
-                    req.query.lang_code)
-        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
-            res.status(400).send(
-                result_message[0].text
-            );
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            res.status(500).send(
-                error
-            );
-        });
-    else{
-        /**@type{Types.db_parameter_user_account_create} */
-        const data = {  bio:                    req.body.bio,
-                        private:                req.body.private,
-                        user_level:             req.body.user_level,
-                        username:               req.body.username,
-                        password:               hashSync(req.body.password, salt),
-                        password_reminder:      req.body.password_reminder,
-                        email:                  req.body.email,
-                        email_unverified:       null,
-                        avatar:                 req.body.avatar,
-                        verification_code:      verification_code,
-                        active:                 getNumberValue(req.body.active),
-                        identity_provider_id:   getNumberValue(req.body.identity_provider_id),
-                        provider_id:            req.body.provider_id ?? null,
-                        provider_first_name:    req.body.provider_first_name,
-                        provider_last_name:     req.body.provider_last_name,
-                        provider_image:         req.body.provider_image,
-                        provider_image_url:     req.body.provider_image_url,
-                        provider_email:         req.body.provider_email
-                    };
-        service.create(getNumberValue(req.query.app_id), data)
-        .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
-            if (req.body.provider_id == null ) {
-                //send email for local users only
-                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
-                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                    //send email SIGNUP
-                    sendUserEmail(  getNumberValue(req.query.app_id), 
-                                    parameter[0].parameter_value, 
-                                    req.headers['host'], 
-                                    result_create.insertId, 
-                                    verification_code, 
-                                    req.body.email, 
-                                    (/**@type{Types.error}*/err)=>{
-                        if (err) {
-                            res.status(500).send(
-                                err
-                            );
-                        } 
-                        else
-                            res.status(200).json({
-                                accessToken: accessToken(getNumberValue(req.query.app_id)),
-                                id: result_create.insertId,
-                                data: result_create
-                            });
-                    });  
-                })
-                .catch((/**@type{Types.error}*/error)=>{
-                    res.status(500).send(
-                        error
-                    );
-                });
-            }
-            else
-                res.status(200).json({
-                    accessToken: accessToken(getNumberValue(req.query.app_id)),
-                    id: result_create.insertId,
-                    data: result_create
-                });
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            checked_error(getNumberValue(req.query.app_id), req.query.lang_code, error, res);
-        });
-            
-    }
+    /**@type{Types.db_parameter_user_account_create} */
+    const data = {  bio:                    req.body.bio,
+                    private:                req.body.private,
+                    user_level:             req.body.user_level,
+                    username:               req.body.username,
+                    password:               hashSync(req.body.password, genSaltSync(10)),
+                    password_new:           null,
+                    password_reminder:      req.body.password_reminder,
+                    email:                  req.body.email,
+                    email_unverified:       null,
+                    avatar:                 req.body.avatar,
+                    verification_code:      verification_code,
+                    active:                 getNumberValue(req.body.active),
+                    identity_provider_id:   getNumberValue(req.body.identity_provider_id),
+                    provider_id:            req.body.provider_id ?? null,
+                    provider_first_name:    req.body.provider_first_name,
+                    provider_last_name:     req.body.provider_last_name,
+                    provider_image:         req.body.provider_image,
+                    provider_image_url:     req.body.provider_image_url,
+                    provider_email:         req.body.provider_email
+                };
+    service.create(getNumberValue(req.query.app_id), data)
+    .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
+        if (req.body.provider_id == null ) {
+            //send email for local users only
+            getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
+            .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                //send email SIGNUP
+                sendUserEmail(  getNumberValue(req.query.app_id), 
+                                parameter[0].parameter_value, 
+                                req.headers['host'], 
+                                result_create.insertId, 
+                                verification_code, 
+                                req.body.email, 
+                                (/**@type{Types.error}*/err)=>{
+                    if (err) {
+                        res.status(500).send(
+                            err
+                        );
+                    } 
+                    else
+                        res.status(200).json({
+                            accessToken: accessToken(getNumberValue(req.query.app_id)),
+                            id: result_create.insertId,
+                            data: result_create
+                        });
+                });  
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                res.status(500).send(
+                    error
+                );
+            });
+        }
+        else
+            res.status(200).json({
+                accessToken: accessToken(getNumberValue(req.query.app_id)),
+                id: result_create.insertId,
+                data: result_create
+            });
+    })
+    .catch((/**@type{Types.error}*/error)=>{
+        checked_error(getNumberValue(req.query.app_id), req.query.lang_code, error, res);
+    });
 };
 /**
  * 
@@ -627,149 +610,103 @@ const getProfileTop = (req, res) => {
  * @param {Types.req} req 
  * @param {Types.res} res 
  */
-const updateUserLocal = (req, res) => {
-    const salt = genSaltSync(10);
-    // get provider column used to validate and password to compare
-    service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id))
-    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+const updateUserLocal = async (req, res) => {
+    try{
+        // get provider column used to validate and password to compare
+        /**@type{Types.db_result_user_account_getUserByUserId[]}*/
+        const result_user = await service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id));
         if (result_user[0]) {
             /**@ts-ignore */
-            const result = compareSync(req.body.password, result_user[0].password);
-            if (result) {
-                if (typeof req.body.new_password !== 'undefined' && 
-                    req.body.new_password != '' &&
-                    service.password_length_wrong(req.body.new_password))
-                        getMessage( getNumberValue(req.query.app_id),
-                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                    '20106',
-                                    req.query.lang_code)
-                        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
-                            res.status(400).send(
-                                result_message[0].text
-                            );
-                        })
-                        .catch((/**@type{Types.error}*/error)=>{
-                            res.status(500).send(
-                                error
-                            );
-                        });
-                else{
-                    let password = '';
-                    if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '')
-                        password = hashSync(req.body.new_password, salt);
-                    else
-                        if (req.body.password)
-                            password = hashSync(req.body.password, salt);
-                    /**
-                     * 
-                     * @param {boolean} send_email 
-                     */
-                    const updateLocal = send_email => {
-                        const verification_code = send_email==true?service.verification_code():null;
-                        /**@type{Types.db_parameter_user_account_updateUserLocal} */
-                        const data = {  bio:                req.body.bio,
-                                        private:            req.body.private,
-                                        username:           req.body.username,
-                                        password:           password,
-                                        password_reminder:  req.body.password_reminder,
-                                        email:              req.body.email,
-                                        email_unverified:   req.body.new_email,
-                                        avatar:             req.body.avatar,
-                                        verification_code:  verification_code,
-                                        provider_id:        result_user[0].provider_id
-                                        };
-                        service.updateUserLocal(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id))
-                        .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
-                            if (result_update){
-                                if (send_email){
-                                    getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
-                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                        //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                        sendUserEmail(  getNumberValue(req.query.app_id), 
-                                                        parameter[0].parameter_value, 
-                                                        req.headers['host'], 
-                                                        getNumberValue(req.params.id), 
-                                                        verification_code, 
-                                                        req.body.new_email, 
-                                                        (/**@type{Types.error}*/err)=>{
-                                            if (err) {
-                                                res.status(500).send(
-                                                    err
-                                                );
-                                            } 
-                                            else
-                                                res.status(200).json({
-                                                    sent_change_email: 1
-                                                });
-                                        });
-                                    })
-                                    .catch((/**@type{Types.error}*/error)=> {
-                                        res.status(500).send(
-                                            error
-                                        );
-                                    });
-                                }
-                                else    
-                                    res.status(200).json({
-                                        sent_change_email: 0
-                                    });
-                            } 
-                            else{
-                                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                    record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
-                                });
-                            }
-                        })
-                        .catch((/**@type{Types.error}*/error)=>{
-                            checked_error(req.query.app_id, req.query.lang_code, error, res);
-                        });
-                    };
-                    if (typeof req.body.new_email != 'undefined' && 
-                        req.body.new_email!='' &&
-                        req.body.new_email!= null)
-                        getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(req.params.id), 'EMAIL_VERIFIED_CHANGE_EMAIL')
-                        .then((/**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/result_user_event)=>{
-                            if ((result_user_event[0] && 
-                                (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
-                                    typeof result_user_event == 'undefined'){
-                                    //no change email in progress or older than at least 1 day
-                                    /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
-                                    const eventData = {
-                                        user_account_id: getNumberValue(req.params.id),
-                                        event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                                        event_status: 'INPROGRESS',
-                                        user_language: req.body.user_language,
-                                        user_timezone: req.body.user_timezone,
-                                        user_number_system: req.body.user_number_system,
-                                        user_platform: req.body.user_platform,
-                                        server_remote_addr : req.ip,
-                                        server_user_agent : req.headers['user-agent'],
-                                        server_http_host : req.headers['host'],
-                                        server_http_accept_language : req.headers['accept-language'],
-                                        client_latitude : req.body.client_latitude,
-                                        client_longitude : req.body.client_longitude
-                                    };
-                                    insertUserEvent(getNumberValue(req.query.app_id), eventData)
-                                    .then(()=>{
-                                        updateLocal(true);
-                                    })
-                                    .catch((/**@type{Types.error}*/error)=> {
-                                        res.status(500).json({
-                                            error
-                                        });
-                                    });
-                                }
-                                else
-                                    updateLocal(false);
-                        })
-                        .catch((/**@type{Types.error}*/error)=>{
-                            res.status(500).json({
-                                error
-                            });
-                        });
-                    else
-                        updateLocal(false);
+            if (compareSync(req.body.password, result_user[0].password)){
+                let password = '';
+                const salt = genSaltSync(10);
+                if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '')
+                    password = hashSync(req.body.new_password, salt);
+                else
+                    if (req.body.password)
+                        password = hashSync(req.body.password, salt);
+
+                let send_email=false;
+                if (req.body.new_email && req.body.new_email!=''){
+                    /**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/
+                    const result_user_event = await getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(req.params.id), 'EMAIL_VERIFIED_CHANGE_EMAIL');
+                    if ((result_user_event[0] && 
+                        (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
+                            result_user_event.length == 0)
+                        send_email=true;
                 }
+                /**@type{Types.db_parameter_user_account_updateUserLocal} */
+                const data = {  bio:                req.body.bio,
+                                private:            req.body.private,
+                                username:           req.body.username,
+                                password:           password,
+                                password_new:       (req.body.new_password && req.body.new_password!='')==true?req.body.new_password:null,
+                                password_reminder:  (req.body.password_reminder && req.body.password_reminder!='')==true?req.body.password_reminder:null,
+                                email:              req.body.email,
+                                email_unverified:   (req.body.new_email && req.body.new_email!='')==true?req.body.new_email:null,
+                                avatar:             req.body.avatar,
+                                verification_code:  send_email==true?service.verification_code():null,
+                                provider_id:        result_user[0].provider_id
+                            };
+                service.updateUserLocal(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id))
+                .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
+                    if (result_update){
+                        if (send_email){
+                            //no change email in progress or older than at least 1 day
+                            /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
+                            const eventData = {
+                                user_account_id: getNumberValue(req.params.id),
+                                event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                                event_status: 'INPROGRESS',
+                                user_language: req.body.user_language,
+                                user_timezone: req.body.user_timezone,
+                                user_number_system: req.body.user_number_system,
+                                user_platform: req.body.user_platform,
+                                server_remote_addr : req.ip,
+                                server_user_agent : req.headers['user-agent'],
+                                server_http_host : req.headers['host'],
+                                server_http_accept_language : req.headers['accept-language'],
+                                client_latitude : req.body.client_latitude,
+                                client_longitude : req.body.client_longitude
+                            };
+                            insertUserEvent(getNumberValue(req.query.app_id), eventData)
+                            .then(()=>{
+                                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
+                                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
+                                    sendUserEmail(  getNumberValue(req.query.app_id), 
+                                                    parameter[0].parameter_value, 
+                                                    req.headers['host'], 
+                                                    getNumberValue(req.params.id), 
+                                                    data.verification_code, 
+                                                    req.body.new_email, 
+                                                    (/**@type{Types.error}*/err)=>{
+                                        if (err)
+                                            res.status(500).send(
+                                                err
+                                            );
+                                        else
+                                            res.status(200).json({
+                                                sent_change_email: 1
+                                            });
+                                    });
+                                });
+                            });
+                        }
+                        else
+                            res.status(200).json({
+                                sent_change_email: 0
+                            });
+                    }
+                    else{
+                        import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                            record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
+                        });
+                    }
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    checked_error(req.query.app_id, req.query.lang_code, error, res);
+                });
             } 
             else {
                 res.statusMessage = 'invalid password attempt for user id:' + req.params.id;
@@ -781,11 +718,6 @@ const updateUserLocal = (req, res) => {
                 .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
                     res.status(400).send(
                         result_message[0].text
-                    );
-                })
-                .catch((/**@type{Types.error}*/error)=>{
-                    res.status(500).send(
-                        error
                     );
                 });
             }
@@ -800,87 +732,64 @@ const updateUserLocal = (req, res) => {
                 res.status(404).send(
                     result_message[0].text
                 );
-            })
-            .catch((/**@type{Types.error}*/error)=>{
-                res.status(500).send(
-                    error
-                );
             });
-        }
-    })
-    .catch((/**@type{Types.error}*/error)=>{
+        }    
+    }
+    catch (/**@type{Types.error}*/error){
         res.status(500).send(
             error
         );
-    });
+    }
 };
 /**
  * 
  * @param {Types.req} req 
  * @param {Types.res} res 
  */
-const updatePassword = (req, res) => {
-    if (service.password_length_wrong(req.body.new_password))
-        getMessage( getNumberValue(req.query.app_id),
-                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                    '20106',
-                    req.query.lang_code)
-        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
-            res.status(400).send(
-                result_message[0].text
-            );
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            res.status(500).send(
-                error
-            );
-        });
-    else{
-        const salt = genSaltSync(10);
-        /**@type{Types.db_parameter_user_account_updatePassword} */
-        const data = {  new_password:   hashSync(req.body.new_password, salt),
-                        auth:           req.body.auth};
-        service.updatePassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
-        .then((/**@type{Types.db_result_user_account_updatePassword}*/result_update)=>{
-            if (result_update) {
-                /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
-                const eventData = {
-                    user_account_id: getNumberValue(req.params.id),
-                    event: 'PASSWORD_RESET',
-                    event_status: 'SUCCESSFUL',
-                    user_language: req.body.user_language,
-                    user_timezone: req.body.user_timezone,
-                    user_number_system: req.body.user_number_system,
-                    user_platform: req.body.user_platform,
-                    server_remote_addr : req.ip,
-                    server_user_agent : req.headers['user-agent'],
-                    server_http_host : req.headers['host'],
-                    server_http_accept_language : req.headers['accept-language'],
-                    client_latitude : req.body.client_latitude,
-                    client_longitude : req.body.client_longitude
-                };
-                insertUserEvent(getNumberValue(req.query.app_id), eventData)
-                .then(()=>{
-                    res.status(200).send(
-                        result_update
-                    );
-                })
-                .catch(()=> {
-                    res.status(200).json({
-                        sent: 0
-                    });
+const updatePassword = (req, res) => {    
+    /**@type{Types.db_parameter_user_account_updatePassword} */
+    const data = {  new_password:   hashSync(req.body.new_password, genSaltSync(10)),
+                    auth:           req.body.auth};
+    service.updatePassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
+    .then((/**@type{Types.db_result_user_account_updatePassword}*/result_update)=>{
+        if (result_update) {
+            /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
+            const eventData = {
+                user_account_id: getNumberValue(req.params.id),
+                event: 'PASSWORD_RESET',
+                event_status: 'SUCCESSFUL',
+                user_language: req.body.user_language,
+                user_timezone: req.body.user_timezone,
+                user_number_system: req.body.user_number_system,
+                user_platform: req.body.user_platform,
+                server_remote_addr : req.ip,
+                server_user_agent : req.headers['user-agent'],
+                server_http_host : req.headers['host'],
+                server_http_accept_language : req.headers['accept-language'],
+                client_latitude : req.body.client_latitude,
+                client_longitude : req.body.client_longitude
+            };
+            insertUserEvent(getNumberValue(req.query.app_id), eventData)
+            .then(()=>{
+                res.status(200).send(
+                    result_update
+                );
+            })
+            .catch(()=> {
+                res.status(200).json({
+                    sent: 0
                 });
-            }
-            else{
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                    record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
-                });
-            }
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            checked_error(req.query.app_id, req.query.lang_code, error, res);
-        });
-    }
+            });
+        }
+        else{
+            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
+            });
+        }
+    })
+    .catch((/**@type{Types.error}*/error)=>{
+        checked_error(req.query.app_id, req.query.lang_code, error, res);
+    });
 };
 /**
  * 
@@ -1198,6 +1107,7 @@ const providerSignIn = (req, res) => {
                             user_level:             null,
                             username:               null,
                             password:               null,
+                            password_new:           null,
                             password_reminder:      null,
                             email_unverified:       null,
                             email:                  null,
