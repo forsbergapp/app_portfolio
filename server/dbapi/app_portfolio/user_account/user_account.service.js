@@ -8,16 +8,16 @@ const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${pr
 
 /**
  * Checks password between 10 and 100 characters
- * @param {string} password 
- * @returns {boolean}
+ * @param {Types.db_parameter_user_account_updatePassword} data 
+ * @returns {object|null}
  */
-const password_length_wrong = (password) => {
-    if (password.length < 10 || password.length > 100){
+const data_validation_password = (data) => {
+    if (data.new_password.length < 10 || data.new_password.length > 100){
         //'Password 10 - 100 characters'
-        return true;
+		return {'errorNum' : 20106};
     }
     else
-        return false;
+        return null;
 };
 /**
  * Generate random verification code between 100000 and 999999
@@ -69,6 +69,7 @@ const data_validation = data => {
 	
 	if (data.provider_id != null){
 		data.password = null;
+		data.password_new = null;
 		data.password_reminder = null;
 		data.email = null;
 		data.email_unverified = null;
@@ -107,18 +108,27 @@ const data_validation = data => {
 					}
 					else{
 						//Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
-						const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
-						if (data.email != null && 
-							data.email.slice(-10) != '@localhost' 
-							/**@ts-ignore */
-							&& data.email!= data.email.match(email_regexp)[0]){
+						/**
+						 * 
+						 * @param {string} email 
+						 * @returns 
+						 */
+						const email_ok = email =>{
+							const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
+							try {
+								/**@ts-ignore */
+								return email == email.match(email_regexp)[0];	
+							} catch (error) {
+								return false;
+							}
+							
+						};
+						if (data.email != null && data.email.slice(-10) != '@localhost' && email_ok(data.email)==false){
 							//'not valid email' (ignore emails that ends with '@localhost')
 							return {'errorNum' : 20105};
 						}
 						else
-							if (data.email_unverified != null && 
-								/**@ts-ignore */
-								data.email_unverified != data.email_unverified.match(email_regexp)[0]){
+							if (data.email_unverified != null && email_ok(data.email_unverified)==false){
 								//'not valid email'
 								return {'errorNum' : 20105};
 							}
@@ -128,7 +138,12 @@ const data_validation = data => {
 									return {'errorNum' : 20107};
 								}
 								else
-									return null;
+									if (data.provider_id == null && 
+										((data.password !=null && data.password.length <10 && data.password.length > 100) || 
+										(data.password_new !=null && data.password_new.length <10 && data.password_new.length > 100)))
+										return {'errorNum' : 20106};
+									else
+										return null;
 					}
 };
 /**
@@ -745,18 +760,23 @@ const checkPassword = async (app_id, id) => {
  * @returns {Promise.<Types.db_result_user_account_updatePassword>}
  */
 const updatePassword = async (app_id, id, data) => {
-	const sql = `UPDATE ${db_schema()}.user_account
-					SET password = :new_password,
-						verification_code = null
-					WHERE id = :id  
-					AND verification_code = :auth
-					AND verification_code IS NOT NULL`;
-	const parameters ={
-						new_password: data.new_password,
-						id: id,
-						auth: data.auth
-					}; 
-	return await db_execute_promise(app_id, sql, parameters, null);
+	const error_code = data_validation_password(data);
+	if (error_code==null){
+		const sql = `UPDATE ${db_schema()}.user_account
+						SET password = :new_password,
+							verification_code = null
+						WHERE id = :id  
+						AND verification_code = :auth
+						AND verification_code IS NOT NULL`;
+		const parameters ={
+							new_password: data.new_password,
+							id: id,
+							auth: data.auth
+						}; 
+		return await db_execute_promise(app_id, sql, parameters, null);
+	}
+	else
+		throw error_code;
 };
 /**
  * 
@@ -999,7 +1019,7 @@ const getDemousers = async app_id => {
 	return await db_execute_promise(app_id, sql, parameters, null);
 };
 
-export{	password_length_wrong, verification_code,
+export{	verification_code,
 		/* database functions */
 		getUsersAdmin, getUserAppRoleAdmin, getStatCountAdmin, updateUserSuperAdmin, create,
 		activateUser, updateUserVerificationCode, getUserByUserId, getProfileUser,
