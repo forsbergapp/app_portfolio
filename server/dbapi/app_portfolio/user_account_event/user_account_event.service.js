@@ -1,6 +1,17 @@
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/user_account_event */
 
-const insertUserEvent = (app_id, data, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.db_parameter_user_account_event_insertUserEvent} data 
+ * @returns {Promise.<Types.db_result_user_account_event_insertUserEvent[]>}
+ */
+const insertUserEvent = async (app_id, data) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_event(
 							user_account_id, event_id, event_status_id,
 							date_created, date_modified,
@@ -31,14 +42,16 @@ const insertUserEvent = (app_id, data, callBack) => {
 						event : data.event,
 						event_status : data.event_status
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getLastUserEvent = (app_id, user_account_id, event, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @param {string} event 
+ * @returns {Promise.<Types.db_result_user_account_event_getLastUserEvent[]>}
+ */
+const getLastUserEvent = async (app_id, user_account_id, event) => {
 		const sql = `SELECT uae.user_account_id "user_account_id",
 							uae.event_id "event_id",
 							e.event_name "event_name",
@@ -64,11 +77,6 @@ const getLastUserEvent = (app_id, user_account_id, event, callBack) => {
 						user_account_id: user_account_id,
 						event : event
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{insertUserEvent, getLastUserEvent};
