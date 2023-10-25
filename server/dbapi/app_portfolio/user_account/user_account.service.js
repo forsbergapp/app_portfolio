@@ -28,10 +28,38 @@ const verification_code = () => {
 };
 /**
  * 
- * @param {Types.db_parameter_user_account_create} data 
- * @returns 
+ * @param {	Types.db_parameter_user_account_updateUserCommon} data 
+ * @returns {object|null}
  */
-const data_validation = (data) => {
+ const data_validation_common = data => {
+	data.username = data.username ?? null;
+	data.bio = data.bio ?? null;
+	if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
+		//'username 5 - 100 characters'
+		return {'errorNum' : 20100};
+	}
+	else
+		if (data.username != null &&
+			(data.username.indexOf(' ') > -1 || 
+			data.username.indexOf('?') > -1 ||
+			data.username.indexOf('/') > -1 ||
+			data.username.indexOf('+') > -1 ||
+			data.username.indexOf('"') > -1 ||
+			data.username.indexOf('\'\'') > -1)){
+			//'not valid username'
+			return {'errorNum' : 20101};
+		}
+		else
+			return null;
+ };
+/**
+ * 
+ * @param {	Types.db_parameter_user_account_create|
+ * 			Types.db_parameter_user_account_updateUserLocal|
+ *         	Types.db_parameter_user_account_updateUserSuperAdmin} data 
+ * @returns {object|null}
+ */
+const data_validation = data => {
 	data.username = data.username ?? null;
 	data.bio = data.bio ?? null;
 	data.password_reminder = data.password_reminder ?? null;
@@ -49,7 +77,7 @@ const data_validation = (data) => {
 	}
     if (data.username != null && (data.username.length < 5 || data.username.length > 100)){
 		//'username 5 - 100 characters'
-		return 20100;
+		return {'errorNum' : 20100};
 	}
 	else 
 		if (data.username != null &&
@@ -60,69 +88,49 @@ const data_validation = (data) => {
 			data.username.indexOf('"') > -1 ||
 			data.username.indexOf('\'\'') > -1)){
 			//'not valid username'
-			return 20101;
+			return {'errorNum' : 20101};
 		}
 		else
 			if (data.bio != null && data.bio.length > 100){
 				//'bio max 100 characters'
-				return 20102;
+				return {'errorNum' : 20102};
 			}
 			else 
 				if (data.email != null && data.email.length > 100){
 					//'email max 100 characters'
-					return 20103;
+					return {'errorNum' : 20103};
 				}
 				else
 					if (data.password_reminder != null && data.password_reminder.length > 100){
 						//'reminder max 100 characters'
-						return 20104;
+						return {'errorNum' : 20104};
 					}
 					else{
 						//Email validation: sequence of non-whitespace characters, followed by an @, followed by more non-whitespace characters, a dot, and more non-whitespace.
 						const email_regexp = /[^\s@]+@[^\s@]+\.[^\s@]+/gi;
-						if (data.email != null && data.email.slice(-10) != '@localhost' && data.email!=data.email.match(email_regexp)[0]){
+						if (data.email != null && 
+							data.email.slice(-10) != '@localhost' 
+							/**@ts-ignore */
+							&& data.email!= data.email.match(email_regexp)[0]){
 							//'not valid email' (ignore emails that ends with '@localhost')
-							return 20105;
+							return {'errorNum' : 20105};
 						}
 						else
-							if (data.email_unverified != null && data.email_unverified != data.email_unverified.match(email_regexp)[0]){
+							if (data.email_unverified != null && 
+								/**@ts-ignore */
+								data.email_unverified != data.email_unverified.match(email_regexp)[0]){
 								//'not valid email'
-								return 20105;
+								return {'errorNum' : 20105};
 							}
 							else
 								if (data.provider_id == null && (data.username == null || data.password==null || data.email==null)){
 									//'Username, password and email are required'
-									return 20107;
+									return {'errorNum' : 20107};
 								}
 								else
 									return null;
 					}
 };
-/**
- * 
- * @param {Types.db_parameter_user_account_create} data 
- * @returns {object|null}
- */
-const validation_before_insert = (data) => {
-	const error_code = data_validation(data);
-	if (error_code==null)
-		return null;
-	else
-		return {'errorNum' : error_code};
-};
-/**
- * 
- * @param {*} data 
- * @returns {object|null}
- */
-const validation_before_update = (data) => {
-	const error_code = data_validation(data);
-	if (error_code==null)
-		return null;
-	else
-		return {'errorNum' : error_code};
-};
-
 /**
  * 
  * @param {number} app_id 
@@ -237,7 +245,7 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 		data.password_reminder = null;
 	if (data.verification_code=='')
 		data.verification_code = null;
-	const error_code = validation_before_update(data);
+	const error_code = data_validation(data);
 	if (error_code==null){
 		sql = `UPDATE ${db_schema()}.user_account
 				SET app_role_id = :app_role_id,
@@ -285,7 +293,7 @@ const create = async (app_id, data) => {
 		//generate local username for provider 1
 		data.username = `${data.provider_first_name}${Date.now()}`;
 	}
-	const error_code = validation_before_insert(data);
+	const error_code = data_validation(data);
 	if (error_code==null){
 		sql = `INSERT INTO ${db_schema()}.user_account(
 					bio,
@@ -357,7 +365,7 @@ const create = async (app_id, data) => {
  * @param {number} id 
  * @param {string} verification_type 
  * @param {string} verification_code 
- * @param {string} auth 
+ * @param {string|null} auth 
  * @returns {Promise.<Types.db_result_user_account_activateUser>}
  */
 const activateUser = async (app_id, id, verification_type, verification_code, auth) => {
@@ -447,7 +455,7 @@ const getUserByUserId = async (app_id, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {string} username 
+ * @param {string|null} username 
  * @param {number} id_current_user
  * @returns {Promise.<Types.db_result_user_account_getProfileUser[]>}
  */
@@ -733,41 +741,34 @@ const checkPassword = async (app_id, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @param {*} data 
+ * @param {Types.db_parameter_user_account_updatePassword} data 
  * @returns {Promise.<Types.db_result_user_account_updatePassword>}
  */
 const updatePassword = async (app_id, id, data) => {
-	let sql;
-	let parameters;
-	const error_code = validation_before_update(data);
-	if (error_code==null){
-		sql = `UPDATE ${db_schema()}.user_account
+	const sql = `UPDATE ${db_schema()}.user_account
 					SET password = :new_password,
 						verification_code = null
-				  WHERE id = :id  
+					WHERE id = :id  
 					AND verification_code = :auth
 					AND verification_code IS NOT NULL`;
-		parameters ={
+	const parameters ={
 						new_password: data.new_password,
 						id: id,
 						auth: data.auth
 					}; 
-		return await db_execute_promise(app_id, sql, parameters, null);
-	}
-	else
-		throw error_code;
+	return await db_execute_promise(app_id, sql, parameters, null);
 };
 /**
  * 
  * @param {number} app_id 
- * @param {*} data 
+ * @param {Types.db_parameter_user_account_updateUserLocal} data 
  * @param {number} search_id
  * @returns {Promise.<Types.db_result_user_account_updateUserLocal>}
  */
 const updateUserLocal = async (app_id, data, search_id) => {
 	let sql;
 	let parameters;
-	const error_code = validation_before_update(data);
+	const error_code = data_validation(data);
 	if (error_code==null){
 		sql = `UPDATE ${db_schema()}.user_account
 					SET bio = :bio,
@@ -776,7 +777,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						password = :password,
 						password_reminder = :Xpassword_reminder,
 						email = :email,
-						email_unverified = :new_email,
+						email_unverified = :email_unverified,
 						avatar = :avatar,
 						verification_code = :verification_code,
 						date_modified = CURRENT_TIMESTAMP
@@ -788,7 +789,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						password: data.password,
 						Xpassword_reminder: data.password_reminder,
 						email: data.email,
-						new_email: data.new_email,
+						email_unverified: data.email_unverified,
 						avatar: data.avatar,
 						verification_code: data.verification_code,
 						id: search_id
@@ -801,14 +802,14 @@ const updateUserLocal = async (app_id, data, search_id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {*} data 
+ * @param {Types.db_parameter_user_account_updateUserCommon} data 
  * @param {number} id 
  * @returns {Promise.<Types.db_result_user_account_updateUserCommon>}
  */
 const updateUserCommon = async (app_id, data, id) => {
 	let sql;
 	let parameters;
-	const error_code = validation_before_update(data);
+	const error_code = data_validation_common(data);
 	if (error_code==null){
 		sql = `UPDATE ${db_schema()}.user_account
 					SET username = :username,
@@ -841,7 +842,7 @@ const deleteUser = async (app_id, id) => {
 /**
  * 
  * @param {number} app_id 
- * @param {*} data
+ * @param {Types.db_parameter_user_account_userLogin} data
  * @returns {Promise.<Types.db_result_user_account_userLogin[]>}
  */
 const userLogin = async (app_id, data) => {
@@ -870,7 +871,7 @@ const userLogin = async (app_id, data) => {
  */
 const updateSigninProvider = async (app_id, id, data) => {
 	let parameters;
-	const error_code = validation_before_update(data);
+	const error_code = data_validation(data);
 	if (error_code==null){
 		const sql = `UPDATE ${db_schema()}.user_account
 						SET identity_provider_id = :identity_provider_id,
@@ -961,8 +962,6 @@ const getEmailUser = async (app_id, email) => {
  * @returns {Promise.<Types.db_result_user_account_getUserRoleAdmin[]>}
  */
 const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
-	if (user_account_id =='' || typeof user_account_id == 'undefined')
-		user_account_id = null;
 	const sql = `SELECT app_role_id "app_role_id",
 						COALESCE(ar.icon,ar_user.icon) "icon"
 				   FROM ${db_schema()}.user_account ua

@@ -1075,12 +1075,14 @@
  *              user_level:number,
  *              private:number,
  *              username:string,
- *              bio:string,
+ *              bio:string|null,
  *              email:string,
- *              email_unverified:string,
+ *              email_unverified:string|null,
  *              password:string,
- *              password_reminder:string,
- *              verification_code:string}} db_parameter_user_account_updateUserSuperAdmin
+ *              password_reminder:string|null,
+ *              verification_code:string|null,
+ *              provider_id: string|null,
+ *              avatar:string|null}} db_parameter_user_account_updateUserSuperAdmin
  * @typedef {   db_result_update} db_result_user_account_updateUserSuperAdmin
  * @typedef {{  bio:string|null,
  *              private: number|null,
@@ -1173,22 +1175,24 @@
  * @typedef {{  password:string}} db_result_user_account_checkPassword
  * @typedef {{  new_password:string,
  *              auth:string}} db_parameter_user_account_updatePassword
- * @typedef {{  db_result_update}} db_result_user_account_updatePassword
+ * @typedef {   db_result_update} db_result_user_account_updatePassword
  * @typedef {{  bio:string,
  *              private:number,
  *              username:string,
  *              password:string,
  *              password_reminder:string,
  *              email:string,
- *              new_email:string,
+ *              email_unverified:string,
  *              avatar:string,
- *              verification_code:string}} db_parameter_user_account_updateUserLocal
- * @typedef {{  db_result_update}} db_result_user_account_updateUserLocal
+ *              verification_code:string|null,
+ *              provider_id:string|null}} db_parameter_user_account_updateUserLocal
+ * @typedef {   db_result_update} db_result_user_account_updateUserLocal
  * @typedef {{  bio:string|null,
  *              private: number|null,
  *              username:string|null}} db_parameter_user_account_updateUserCommon
- * @typedef {{  db_result_update}} db_result_user_account_updateUserCommon
- * @typedef {{  db_result_delete}} db_result_user_account_deleteUser
+ * @typedef {   db_result_update} db_result_user_account_updateUserCommon
+ * @typedef {   db_result_delete} db_result_user_account_deleteUser
+ * @typedef {{  username:string}} db_parameter_user_account_userLogin
  * @typedef {{  id:number,
  *              bio:string|null,
  *              username:string,
@@ -1197,8 +1201,8 @@
  *              active:number,
  *              avatar:string,
  *              app_role_id:number}} db_result_user_account_userLogin
- * @typedef {{  db_result_update}} db_result_user_account_updateSigninProvider
- * @typedef {{  id:string,
+ * @typedef {   db_result_update} db_result_user_account_updateSigninProvider
+ * @typedef {{  id:number,
  *              bio:string|null,
  *              last_logontime:string,
  *              username:string, 
@@ -1234,6 +1238,28 @@
  * USER ACCOUNT APP SETTING LIKE
  * USER ACCOUNT APP SETTING VIEW
  * USER ACCOUNT EVENT
+ * @typedef {{  user_account_id:number,
+ *              user_language:string,
+ *              user_timezone:string,
+ *              user_number_system:string,
+ *              user_platform:string,
+ *              client_latitude:string,
+ *              client_longitude:string,
+ *              server_remote_addr:string,
+ *              server_user_agent:string,
+ *              server_http_host:string,
+ *              server_http_accept_language:string,
+ *              event:string,
+ *              event_status:string}} db_parameter_user_account_event_insertUserEvent
+ * @typedef {   db_result_insert} db_result_user_account_event_insertUserEvent
+ * @typedef {{  user_account_id:number,
+ *              event_id:number,
+ *              event_name:string,
+ *              event_status_id:number,
+ *              status_name:string,
+ *              date_created:string,
+ *              date_modified:string,
+ *              current_timestamp:string}} db_result_user_account_event_getLastUserEvent
  * USER ACCOUNT FOLLOW
  * USER ACCOUNT LIKE
  * USER ACCOUNT LOGON
