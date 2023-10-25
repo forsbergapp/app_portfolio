@@ -21,16 +21,11 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {string} emailtype 
  * @param {string} host 
  * @param {number} userid 
- * @param {string} verification_code 
+ * @param {string|null} verification_code 
  * @param {string} email 
- * @param {string} ip 
- * @param {string} authorization 
- * @param {string} headers_user_agent 
- * @param {string} headers_accept_language 
- * @param {*} callBack 
+ * @param {Types.callBack} callBack 
  */
-const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, 
-                             ip, authorization, headers_user_agent, headers_accept_language, callBack) => {
+const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, callBack) => {
     const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
     const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
     
@@ -133,42 +128,60 @@ const getStatCountAdmin = (req, res) => {
  * @param {Types.res} res 
  */
 const updateUserSuperAdmin = (req, res) => {
-    /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
-    const data = {  app_role_id:        getNumberValue(req.body.app_role_id),
-                    active:             getNumberValue(req.body.active),
-                    user_level:         getNumberValue(req.body.user_level),
-                    private:            getNumberValue(req.body.private),
-                    username:           req.body.username,
-                    bio:                req.body.bio,
-                    email:              req.body.email,
-                    email_unverified:   req.body.email_unverified,
-                    password:           req.body.password,
-                    password_reminder:  req.body.password_reminder,
-                    verification_code:  req.body.verification_code};
-    service.updateUserSuperAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
-    .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result)=>{
-        if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
-        //delete admin app from user if user is not an admin anymore
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-            deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.app_id), (/**@type{Types.error}*/err) =>{
-                if (err)
-                    res.status(500).send(
-                        err
-                    );
-                else
-                    res.status(200).json({
-                        data: result
+    // get avatar and provider column used to validate
+    service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id))
+    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result)=>{
+        if (result[0]) {
+            /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
+            const data = {  app_role_id:        getNumberValue(req.body.app_role_id),
+                            active:             getNumberValue(req.body.active),
+                            user_level:         getNumberValue(req.body.user_level),
+                            private:            getNumberValue(req.body.private),
+                            username:           req.body.username,
+                            bio:                req.body.bio,
+                            email:              req.body.email,
+                            email_unverified:   req.body.email_unverified,
+                            password:           req.body.password,
+                            password_reminder:  req.body.password_reminder,
+                            verification_code:  req.body.verification_code,
+                            provider_id:        result[0].provider_id,
+                            avatar:             result[0].avatar};
+            service.updateUserSuperAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
+            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result)=>{
+                if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
+                //delete admin app from user if user is not an admin anymore
+                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                    deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.app_id), (/**@type{Types.error}*/err) =>{
+                        if (err)
+                            res.status(500).send(
+                                err
+                            );
+                        else
+                            res.status(200).json({
+                                data: result
+                            });
                     });
+                });
+            else
+                res.status(200).json({
+                    data: result
+                });
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                checked_error(getNumberValue(req.query.app_id), req.query.lang_code, error, res);
             });
-        });
-    else
-        res.status(200).json({
-            data: result
-        });
+        }
+        else
+            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
+            });
     })
     .catch((/**@type{Types.error}*/error)=>{
-        checked_error(getNumberValue(req.query.app_id), req.query.lang_code, error, res);
+        res.status(500).send(
+            error
+        );
     });
+    
 };
 /**
  * 
@@ -177,10 +190,11 @@ const updateUserSuperAdmin = (req, res) => {
  */
 const userSignup = (req, res) => {
     const salt = genSaltSync(10);
+    /**@type{string|null} */
+    let verification_code = null;
     if (typeof req.body.provider_id == 'undefined') {
-        req.body.provider_id = null;
         //generate verification code for local users only
-        req.body.verification_code = service.verification_code();
+        verification_code = service.verification_code();
     }
     if (service.password_length_wrong(req.body.password))
         getMessage(getNumberValue(req.query.app_id),
@@ -208,10 +222,10 @@ const userSignup = (req, res) => {
                         email:                  req.body.email,
                         email_unverified:       null,
                         avatar:                 req.body.avatar,
-                        verification_code:      req.body.verification_code,
+                        verification_code:      verification_code,
                         active:                 getNumberValue(req.body.active),
                         identity_provider_id:   getNumberValue(req.body.identity_provider_id),
-                        provider_id:            req.body.provider_id,
+                        provider_id:            req.body.provider_id ?? null,
                         provider_first_name:    req.body.provider_first_name,
                         provider_last_name:     req.body.provider_last_name,
                         provider_image:         req.body.provider_image,
@@ -219,14 +233,19 @@ const userSignup = (req, res) => {
                         provider_email:         req.body.provider_email
                     };
         service.create(getNumberValue(req.query.app_id), data)
-        .then((/**@type{Types.db_result_user_account_create}*/result)=>{
+        .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
             if (req.body.provider_id == null ) {
                 //send email for local users only
                 getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
                 .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                     //send email SIGNUP
-                    sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], result.insertId, req.body.verification_code, req.body.email, 
-                                  req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (/**@type{Types.error}*/err)=>{
+                    sendUserEmail(  getNumberValue(req.query.app_id), 
+                                    parameter[0].parameter_value, 
+                                    req.headers['host'], 
+                                    result_create.insertId, 
+                                    verification_code, 
+                                    req.body.email, 
+                                    (/**@type{Types.error}*/err)=>{
                         if (err) {
                             res.status(500).send(
                                 err
@@ -235,8 +254,8 @@ const userSignup = (req, res) => {
                         else
                             res.status(200).json({
                                 accessToken: accessToken(getNumberValue(req.query.app_id)),
-                                id: result.insertId,
-                                data: result
+                                id: result_create.insertId,
+                                data: result_create
                             });
                     });  
                 })
@@ -249,8 +268,8 @@ const userSignup = (req, res) => {
             else
                 res.status(200).json({
                     accessToken: accessToken(getNumberValue(req.query.app_id)),
-                    id: result.insertId,
-                    data: result
+                    id: result_create.insertId,
+                    data: result_create
                 });
         })
         .catch((/**@type{Types.error}*/error)=>{
@@ -272,12 +291,12 @@ const activateUser = (req, res) => {
         auth_new_password = service.verification_code();
     }
     service.activateUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.body.verification_type), req.body.verification_code, auth_new_password)
-    .then((/**@type{Types.db_result_user_account_activateUser}*/result)=>{
+    .then((/**@type{Types.db_result_user_account_activateUser}*/result_activate)=>{
         if (auth_new_password == null){
-            if (result.affectedRows==1 && getNumberValue(req.body.verification_type)==4){
+            if (result_activate.affectedRows==1 && getNumberValue(req.body.verification_type)==4){
                 //new email verified
+                /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
                 const eventData = {
-                    app_id : getNumberValue(req.query.app_id),
                     user_account_id: getNumberValue(req.params.id),
                     event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                     event_status: 'SUCCESSFUL',
@@ -292,22 +311,23 @@ const activateUser = (req, res) => {
                     client_latitude : req.body.client_latitude,
                     client_longitude : req.body.client_longitude
                 };
-                insertUserEvent(getNumberValue(req.query.app_id), eventData, (/**@type{Types.error}*/err)=>{
-                    if (err)
-                        res.status(500).send(
-                            err
-                        );
-                    else
-                        res.status(200).json({
-                            count: result.affectedRows,
-                            items: Array(result)
-                        });
+                insertUserEvent(getNumberValue(req.query.app_id), eventData)
+                .then((/**@type{Types.db_result_user_account_event_insertUserEvent}*/result_insert)=>{
+                    res.status(200).json({
+                        count: result_insert.affectedRows,
+                        items: Array(result_insert)
+                    });
+                })
+                .catch((/**@type{Types.error}*/error)=> {
+                    res.status(500).send(
+                        error
+                    );
                 });
             }
             else
                 res.status(200).json({
-                    count: result.affectedRows,
-                    items: Array(result)
+                    count: result_activate.affectedRows,
+                    items: Array(result_activate)
                 });
         }
         else{
@@ -315,10 +335,10 @@ const activateUser = (req, res) => {
             //email was verified and activated with data token, but now the password will be updated
             //using accessToken and authentication code
             res.status(200).json({
-                count: result.affectedRows,
+                count: result_activate.affectedRows,
                 auth: auth_new_password,
                 accessToken: accessToken(getNumberValue(req.query.app_id)),
-                items: Array(result)
+                items: Array(result_activate)
             });
         }
     })
@@ -331,81 +351,87 @@ const activateUser = (req, res) => {
  * @param {Types.req} req 
  * @param {Types.res} res 
  */
-const passwordResetUser = (req, res) => {
+const passwordResetUser = async (req, res) => {
     const email = req.body.email ?? '';
     if (email !='')
         service.getEmailUser(getNumberValue(req.query.app_id), email)
-        .then((/**@type{Types.db_result_user_account_getEmailUser[]}*/result)=>{
-            if (result[0]){
-                getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(result[0].id), 'PASSWORD_RESET', (/**@type{Types.error}*/err, result_user_event)=>{
-                    if (err)
+        .then((/**@type{Types.db_result_user_account_getEmailUser[]}*/result_emailuser)=>{
+            if (result_emailuser[0]){
+                getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
+                .then((/**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/result_user_event)=>{
+                    if (result_user_event[0] &&
+                        result_user_event[0].status_name == 'INPROGRESS' &&
+                        (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) < 1)
                         res.status(200).json({
                             sent: 0
                         });
-                    else
-                        if (result_user_event &&
-                            result_user_event.status_name == 'INPROGRESS' &&
-                            (result_user_event.current_timestamp - result_user_event.date_created)/ (1000 * 60 * 60 * 24) < 1)
+                    else{
+                        /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
+                        const eventData = {
+                                            user_account_id: result_emailuser[0].id,
+                                            event: 'PASSWORD_RESET',
+                                            event_status: 'INPROGRESS',
+                                            user_language: req.body.user_language,
+                                            user_timezone: req.body.user_timezone,
+                                            user_number_system: req.body.user_number_system,
+                                            user_platform: req.body.user_platform,
+                                            server_remote_addr : req.ip,
+                                            server_user_agent : req.headers['user-agent'],
+                                            server_http_host : req.headers['host'],
+                                            server_http_accept_language : req.headers['accept-language'],
+                                            client_latitude : req.body.client_latitude,
+                                            client_longitude : req.body.client_longitude
+                                        };
+                        insertUserEvent(getNumberValue(req.query.app_id), eventData)
+                        .then(()=>{
+                            const new_code = service.verification_code();
+                            service.updateUserVerificationCode(getNumberValue(req.query.app_id), result_emailuser[0].id, new_code)
+                            .then(()=>{
+                                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET')
+                                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                    //send email PASSWORD_RESET
+                                    sendUserEmail(  getNumberValue(req.query.app_id), 
+                                                    parameter[0].parameter_value, 
+                                                    req.headers['host'], 
+                                                    result_emailuser[0].id, 
+                                                    new_code, 
+                                                    email, 
+                                                    (/**@type{Types.error}*/err)=>{
+                                        if (err) {
+                                            res.status(500).send(
+                                                err
+                                            );
+                                        } 
+                                        else
+                                            res.status(200).json({
+                                                sent: 1,
+                                                id: result_emailuser[0].id
+                                            });  
+                                    });
+                                })
+                                .catch((/**@type{Types.error}*/error)=>{
+                                    res.status(500).send(
+                                        error
+                                    );
+                                });
+                            })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                res.status(500).send(
+                                    error
+                                );
+                            });
+                        })
+                        .catch(()=> {
                             res.status(200).json({
                                 sent: 0
                             });
-                        else{
-                            const eventData = {
-                                app_id : getNumberValue(req.query.app_id),
-                                user_account_id: result[0].id,
-                                event: 'PASSWORD_RESET',
-                                event_status: 'INPROGRESS',
-                                user_language: req.body.user_language,
-                                user_timezone: req.body.user_timezone,
-                                user_number_system: req.body.user_number_system,
-                                user_platform: req.body.user_platform,
-                                server_remote_addr : req.ip,
-                                server_user_agent : req.headers['user-agent'],
-                                server_http_host : req.headers['host'],
-                                server_http_accept_language : req.headers['accept-language'],
-                                client_latitude : req.body.client_latitude,
-                                client_longitude : req.body.client_longitude
-                            };
-                            insertUserEvent(getNumberValue(req.query.app_id), eventData, (/**@type{Types.error}*/err)=>{
-                                if (err)
-                                    res.status(200).json({
-                                        sent: 0
-                                    });
-                                else{
-                                    const new_code = service.verification_code();
-                                    service.updateUserVerificationCode(getNumberValue(req.query.app_id), result[0].id, new_code)
-                                    .then(()=>{
-                                        getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET')
-                                        .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                            //send email PASSWORD_RESET
-                                            sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], result[0].id, new_code, email, 
-                                                            req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (/**@type{Types.error}*/err)=>{
-                                                if (err) {
-                                                    res.status(500).send(
-                                                        err
-                                                    );
-                                                } 
-                                                else
-                                                    res.status(200).json({
-                                                        sent: 1,
-                                                        id: result[0].id
-                                                    });  
-                                            });
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=>{
-                                            res.status(500).send(
-                                                error
-                                            );
-                                        });
-                                    })
-                                    .catch((/**@type{Types.error}*/error)=>{
-                                        res.status(500).send(
-                                            error
-                                        );
-                                    });
-                                }
-                            });
-                        }    
+                        });
+                    }
+                })            
+                .catch((/**@type{Types.error}*/error)=>{
+                    res.status(500).send(
+                        error
+                    );
                 });
             }
             else
@@ -457,19 +483,19 @@ const getUserByUserId = (req, res) => {
  */
 const getProfileUser = (req, res) => {
     service.getProfileUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.params.id)==null?req.query.search:null, getNumberValue(req.query.id))
-    .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
-        if (result[0]){
-            if (result[0].id == getNumberValue(req.query.id)) {
+    .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
+        if (result_getProfileUser[0]){
+            if (result_getProfileUser[0].id == getNumberValue(req.query.id)) {
                 //send without {} so the variablename is not sent
                 res.status(200).json(
-                    result[0]
+                    result_getProfileUser[0]
                 );
             }
             else{
                 import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
                     const data = {  user_account_id:        getNumberValue(req.params.id),
                                                             //set user id when username is searched
-                                    user_account_id_view:   getNumberValue(req.params.id) ?? result[0].id,
+                                    user_account_id_view:   getNumberValue(req.params.id) ?? result_getProfileUser[0].id,
                                     client_ip:              req.ip,
                                     client_user_agent:      req.headers['user-agent'],
                                     client_longitude:       req.body.client_longitude,
@@ -483,7 +509,7 @@ const getProfileUser = (req, res) => {
                         else{
                             //send without {} so the variablename is not sent
                             res.status(200).json(
-                                result[0]
+                                result_getProfileUser[0]
                             );
                         }
                     });
@@ -603,10 +629,12 @@ const getProfileTop = (req, res) => {
  */
 const updateUserLocal = (req, res) => {
     const salt = genSaltSync(10);
-    service.checkPassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id))
-    .then((/**@type{Types.db_result_user_account_checkPassword[]}*/result_password)=>{
-        if (result_password[0]) {
-            const result = compareSync(req.body.password, result_password[0].password);
+    // get provider column used to validate and password to compare
+    service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id))
+    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+        if (result_user[0]) {
+            /**@ts-ignore */
+            const result = compareSync(req.body.password, result_user[0].password);
             if (result) {
                 if (typeof req.body.new_password !== 'undefined' && 
                     req.body.new_password != '' &&
@@ -626,23 +654,30 @@ const updateUserLocal = (req, res) => {
                             );
                         });
                 else{
-                    if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '') {
-                        req.body.password = hashSync(req.body.new_password, salt);
-                    } else {
+                    let password = '';
+                    if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '')
+                        password = hashSync(req.body.new_password, salt);
+                    else
                         if (req.body.password)
-                            req.body.password = hashSync(req.body.password, salt);
-                    }
-                    const updateLocal = (send_email) => {
+                            password = hashSync(req.body.password, salt);
+                    /**
+                     * 
+                     * @param {boolean} send_email 
+                     */
+                    const updateLocal = send_email => {
+                        const verification_code = send_email==true?service.verification_code():null;
                         /**@type{Types.db_parameter_user_account_updateUserLocal} */
                         const data = {  bio:                req.body.bio,
                                         private:            req.body.private,
                                         username:           req.body.username,
-                                        password:           req.body.password,
+                                        password:           password,
                                         password_reminder:  req.body.password_reminder,
                                         email:              req.body.email,
-                                        new_email:          req.body.new_email,
+                                        email_unverified:   req.body.new_email,
                                         avatar:             req.body.avatar,
-                                        verification_code:  req.body.verification_code};
+                                        verification_code:  verification_code,
+                                        provider_id:        result_user[0].provider_id
+                                        };
                         service.updateUserLocal(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id))
                         .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
                             if (result_update){
@@ -650,8 +685,13 @@ const updateUserLocal = (req, res) => {
                                     getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
                                     .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                                         //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                        sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], getNumberValue(req.params.id), req.body.verification_code, req.body.new_email, 
-                                                      req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (/**@type{Types.error}*/err)=>{
+                                        sendUserEmail(  getNumberValue(req.query.app_id), 
+                                                        parameter[0].parameter_value, 
+                                                        req.headers['host'], 
+                                                        getNumberValue(req.params.id), 
+                                                        verification_code, 
+                                                        req.body.new_email, 
+                                                        (/**@type{Types.error}*/err)=>{
                                             if (err) {
                                                 res.status(500).send(
                                                     err
@@ -687,17 +727,14 @@ const updateUserLocal = (req, res) => {
                     if (typeof req.body.new_email != 'undefined' && 
                         req.body.new_email!='' &&
                         req.body.new_email!= null)
-                        getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(req.params.id), 'EMAIL_VERIFIED_CHANGE_EMAIL', (/**@type{Types.error}*/err, result_user_event)=>{
-                            if (err)
-                                res.status(500).json({
-                                    err
-                                });
-                            else
-                                if ((result_user_event && (result_user_event.current_timestamp - result_user_event.date_created)/ (1000 * 60 * 60 * 24) >= 1)||
+                        getLastUserEvent(getNumberValue(req.query.app_id), getNumberValue(req.params.id), 'EMAIL_VERIFIED_CHANGE_EMAIL')
+                        .then((/**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/result_user_event)=>{
+                            if ((result_user_event[0] && 
+                                (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
                                     typeof result_user_event == 'undefined'){
                                     //no change email in progress or older than at least 1 day
+                                    /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
                                     const eventData = {
-                                        app_id : getNumberValue(req.query.app_id),
                                         user_account_id: getNumberValue(req.params.id),
                                         event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
                                         event_status: 'INPROGRESS',
@@ -712,22 +749,26 @@ const updateUserLocal = (req, res) => {
                                         client_latitude : req.body.client_latitude,
                                         client_longitude : req.body.client_longitude
                                     };
-                                    insertUserEvent(getNumberValue(req.query.app_id), eventData, (/**@type{Types.error}*/err)=>{
-                                        if (err)
-                                            res.status(500).json({
-                                                err
-                                            });
-                                        else{
-                                            req.body.verification_code = service.verification_code();
-                                            updateLocal(true);
-                                        }
+                                    insertUserEvent(getNumberValue(req.query.app_id), eventData)
+                                    .then(()=>{
+                                        updateLocal(true);
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=> {
+                                        res.status(500).json({
+                                            error
+                                        });
                                     });
                                 }
                                 else
-                                    updateLocal();
+                                    updateLocal(false);
+                        })
+                        .catch((/**@type{Types.error}*/error)=>{
+                            res.status(500).json({
+                                error
+                            });
                         });
                     else
-                        updateLocal();
+                        updateLocal(false);
                 }
             } 
             else {
@@ -802,8 +843,8 @@ const updatePassword = (req, res) => {
         service.updatePassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
         .then((/**@type{Types.db_result_user_account_updatePassword}*/result_update)=>{
             if (result_update) {
+                /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
                 const eventData = {
-                    app_id : getNumberValue(req.query.app_id),
                     user_account_id: getNumberValue(req.params.id),
                     event: 'PASSWORD_RESET',
                     event_status: 'SUCCESSFUL',
@@ -818,15 +859,16 @@ const updatePassword = (req, res) => {
                     client_latitude : req.body.client_latitude,
                     client_longitude : req.body.client_longitude
                 };
-                insertUserEvent(getNumberValue(req.query.app_id), eventData, (/**@type{Types.error}*/err)=>{
-                    if (err)
-                        res.status(200).json({
-                            sent: 0
-                        });
-                    else
-                        res.status(200).send(
-                            result_update
-                        );
+                insertUserEvent(getNumberValue(req.query.app_id), eventData)
+                .then(()=>{
+                    res.status(200).send(
+                        result_update
+                    );
+                })
+                .catch(()=> {
+                    res.status(200).json({
+                        sent: 0
+                    });
                 });
             }
             else{
@@ -994,6 +1036,7 @@ const deleteUser = (req, res) => {
  * @param {Types.res} res 
  */
 const userLogin = (req, res) => {
+    /**@type{Types.db_parameter_user_account_userLogin} */
     const data =    {   username: req.body.username};
     service.userLogin(getNumberValue(req.query.app_id), data)
     .then((/**@type{Types.db_result_user_account_userLogin[]}*/result_login)=>{
@@ -1024,8 +1067,13 @@ const userLogin = (req, res) => {
                                     getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
                                         .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
                                             //send email UNVERIFIED
-                                            sendUserEmail(getNumberValue(req.query.app_id), parameter[0].parameter_value, req.headers['host'], result_login[0].id, new_code, result_login[0].email, 
-                                                          req.ip, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], (/**@type{Types.error}*/err)=>{
+                                            sendUserEmail(  getNumberValue(req.query.app_id), 
+                                                            parameter[0].parameter_value, 
+                                                            req.headers['host'], 
+                                                            result_login[0].id, 
+                                                            new_code, 
+                                                            result_login[0].email, 
+                                                            (/**@type{Types.error}*/err)=>{
                                                 if (err) {
                                                     res.status(500).send(
                                                         err
@@ -1151,6 +1199,7 @@ const providerSignIn = (req, res) => {
                             username:               null,
                             password:               null,
                             password_reminder:      null,
+                            email_unverified:       null,
                             email:                  null,
                             avatar:                 null,
                             verification_code:      null,
