@@ -686,7 +686,6 @@ const show_users = () =>{
 
 };
 const search_users = (sort=8, order_by='ASC', focus=true) => {
-    let json;
 
     if (common.check_input(document.getElementById('list_user_account_search_input').value, 100, false) == false)
         return null;
@@ -701,7 +700,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
         if (err)
             document.getElementById('list_user_account').innerHTML = '';
         else{
-            json = JSON.parse(result);
+            const result_obj = JSON.parse(result);
             let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
                             <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
                                 <div>${common.ICONS['user_avatar']}</div>
@@ -786,9 +785,11 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             }
             else
                 input_readonly = 'readonly=\'true\'';
-            for (let i = 0; i < json.data.length; i++) {
+            let i = 0;
+            for (const user of result_obj.data) {
+                i++;
                 let list_user_account_current_user_row='';
-                if (json.data[i].id==common.COMMON_GLOBAL['user_account_id'])
+                if (user.id==common.COMMON_GLOBAL['user_account_id'])
                     list_user_account_current_user_row = 'list_current_user_row';
                 else
                     list_user_account_current_user_row ='';
@@ -796,80 +797,80 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
                 `<div id='list_user_account_row_${i}' data-changed-record='0' class='list_user_account_row ${list_user_account_current_user_row}' >
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>
-                            <img class='list_user_account_avatar' ${common.list_image_format_src(json.data[i].avatar)}/>
+                            <img class='list_user_account_avatar' ${common.list_image_format_src(user.avatar)}/>
                         </div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${json.data[i].id}</div>
+                        <div class='list_readonly'>${user.id}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit ${lov_class}' value='${common.get_null_or_value(json.data[i].app_role_id)}'/>
+                        <input ${input_readonly} type=text class='list_edit ${lov_class}' value='${common.get_null_or_value(user.app_role_id)}'/>
                         ${lov_div}
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${json.data[i].app_role_icon}</div>
+                        <div class='list_readonly'>${user.app_role_icon}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(json.data[i].active)}'/>
+                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(user.active)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(json.data[i].user_level)}'/>
+                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(user.user_level)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].private)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.private)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].username)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.username)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].bio)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.bio)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].email)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.email)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].email_unverified)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.email_unverified)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].password)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' placeholder='******'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].password_reminder)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.password_reminder)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(json.data[i].verification_code)}'/>
+                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.verification_code)}'/>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].identity_provider)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.identity_provider)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_name)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.provider_name)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_id)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.provider_id)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_first_name)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.provider_first_name)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_last_name)}</div>                        
+                        <div class='list_readonly'>${common.get_null_or_value(user.provider_last_name)}</div>                        
                     </div>
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>
-                            <img class='list_user_account_avatar' ${common.list_image_format_src(json.data[i].provider_image)}/>
+                            <img class='list_user_account_avatar' ${common.list_image_format_src(user.provider_image)}/>
                         </div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_image_url)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.provider_image_url)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].provider_email)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.provider_email)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].date_created)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.date_created)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].date_modified)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user.date_modified)}</div>
                     </div>
                 </div>`;
             }
@@ -1123,31 +1124,31 @@ const button_save = async (item) => {
     if (item=='apps_save'){
         //save changes in list_apps
         let x = document.querySelectorAll('.list_apps_row');
-        for (let i=0;i<x.length;i++){
-            if (x[i].getAttribute('data-changed-record')=='1'){
+        for (const record of x){
+            if (record.getAttribute('data-changed-record')=='1'){
                 await update_record('app',
-                                    x[i],
+                                    record,
                                     item,
-                                    {id: x[i].children[0].children[0].innerHTML,
-                                     app_name: x[i].children[1].children[0].value,
-                                     url: x[i].children[2].children[0].value,
-                                     logo: x[i].children[3].children[0].value,
-                                     enabled: x[i].children[4].children[0].checked,
-                                     app_category_id: x[i].children[5].children[0].value});
+                                    {id: record.children[0].children[0].innerHTML,
+                                     app_name: record.children[1].children[0].value,
+                                     url: record.children[2].children[0].value,
+                                     logo: record.children[3].children[0].value,
+                                     enabled: record.children[4].children[0].checked,
+                                     app_category_id: record.children[5].children[0].value});
             }
         }
         //save changes in list_app_parameter
         x = document.querySelectorAll('.list_app_parameter_row');
-        for (let i=0;i<x.length;i++){
-            if (x[i].getAttribute('data-changed-record')=='1'){
+        for (const record of x){
+            if (record.getAttribute('data-changed-record')=='1'){
                 await update_record('app_parameter',
-                                    x[i],
+                                    record,
                                     item,
-                                    {app_id: x[i].children[0].children[0].innerHTML,
-                                     parameter_type_id: x[i].children[1].children[0].value,
-                                     parameter_name:  x[i].children[3].children[0].innerHTML,
-                                     parameter_value: x[i].children[4].children[0].value,
-                                     parameter_comment: x[i].children[5].children[0].value
+                                    {app_id: record.children[0].children[0].innerHTML,
+                                     parameter_type_id: record.children[1].children[0].value,
+                                     parameter_name:  record.children[3].children[0].innerHTML,
+                                     parameter_value: record.children[4].children[0].value,
+                                     parameter_comment: record.children[5].children[0].value
                                     });
             }
         }
@@ -1156,23 +1157,23 @@ const button_save = async (item) => {
         if (item == 'users_save'){
             //save changes in list_user_account
             const x = document.querySelectorAll('.list_user_account_row');
-            for (let i=0;i<x.length;i++){
-                if (x[i].getAttribute('data-changed-record')=='1'){
+            for (const record of x){
+                if (record.getAttribute('data-changed-record')=='1'){
                     await update_record('user_account',
-                                        x[i],
+                                        record,
                                         item,
-                                        {id: x[i].children[1].children[0].innerHTML,
-                                         app_role_id: x[i].children[2].children[0].value,
-                                         active: x[i].children[4].children[0].value,
-                                         user_level: x[i].children[5].children[0].value,
-                                         private: x[i].children[6].children[0].value,
-                                         username: x[i].children[7].children[0].value,
-                                         bio: x[i].children[8].children[0].value,
-                                         email: x[i].children[9].children[0].value,
-                                         email_unverified: x[i].children[10].children[0].value,
-                                         password: x[i].children[11].children[0].value,
-                                         password_reminder: x[i].children[12].children[0].value,
-                                         verification_code: x[i].children[13].children[0].value
+                                        {id: record.children[1].children[0].innerHTML,
+                                         app_role_id: record.children[2].children[0].value,
+                                         active: record.children[4].children[0].value,
+                                         user_level: record.children[5].children[0].value,
+                                         private: record.children[6].children[0].value,
+                                         username: record.children[7].children[0].value,
+                                         bio: record.children[8].children[0].value,
+                                         email: record.children[9].children[0].value,
+                                         email_unverified: record.children[10].children[0].value,
+                                         password: record.children[11].children[0].value,
+                                         password_reminder: record.children[12].children[0].value,
+                                         verification_code: record.children[13].children[0].value
                                         });
                 }
             }
@@ -1244,7 +1245,7 @@ const update_record = async (table,
                                 bio:                parameters.bio,
                                 email:              parameters.email,
                                 email_unverified:   parameters.email_unverified,
-                                password:           parameters.password,
+                                password_new:       parameters.password,
                                 password_reminder:  parameters.password_reminder,
                                 verification_code:  parameters.verification_code};
                 path = `/user_account/admin/${parameters.id}?`;

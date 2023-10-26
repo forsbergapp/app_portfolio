@@ -382,8 +382,8 @@ a:active {
 	z-index:51;
 }
 #common_dialogue_user_verify,
-#common_dialogue_user_new_password,
-#common_dialogue_user_new_password{
+#common_dialogue_user_password_new,
+#common_dialogue_user_password_new{
 	z-index:52;
 }
 /*DIALOGUE MESSAGE*/
@@ -452,14 +452,14 @@ a:active {
 	height:40px;
 	border: 1px solid;
 }
-#common_user_new_password_icon{
+#common_user_password_new_icon{
 	font-size: 30px;
     height: 30px;
 }
-#common_user_new_password_auth{
+#common_user_password_new_auth{
 	display: none;
 }
-#common_user_new_password{
+#common_user_password_new{
 	margin-top: 40px;
 }
 /*Dialogue login/signup/forgot*/
@@ -488,7 +488,7 @@ a:active {
 	height: 40px;
 	margin: 0 auto;
 }
-.common_login_input, .common_signup_input, .common_forgot_input, .common_new_password_input{
+.common_login_input, .common_signup_input, .common_forgot_input, .common_password_new_input{
 	border-radius: 16px;
 	height:40px;
 	width:100%;

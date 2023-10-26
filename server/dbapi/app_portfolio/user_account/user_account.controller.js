@@ -4,7 +4,7 @@
 import * as Types from './../../../../types.js';
 
 const service = await import('./user_account.service.js');
-const { default: {genSaltSync, hashSync, compareSync} } = await import('bcryptjs');
+const { default: {compareSync} } = await import('bcryptjs');
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`);
 const { createUserAccountApp } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
@@ -141,12 +141,13 @@ const updateUserSuperAdmin = (req, res) => {
                             bio:                req.body.bio,
                             email:              req.body.email,
                             email_unverified:   req.body.email_unverified,
-                            password:           req.body.password,
-                            password_new:       null,
+                            password:           null,
+                            password_new:       req.body.password_new==''?null:req.body.password_new,
                             password_reminder:  req.body.password_reminder,
                             verification_code:  req.body.verification_code,
                             provider_id:        result[0].provider_id,
-                            avatar:             result[0].avatar};
+                            avatar:             result[0].avatar,
+                            admin:              1};
             service.updateUserSuperAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
             .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result)=>{
                 if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
@@ -201,8 +202,8 @@ const userSignup = (req, res) => {
                     private:                req.body.private,
                     user_level:             req.body.user_level,
                     username:               req.body.username,
-                    password:               hashSync(req.body.password, genSaltSync(10)),
-                    password_new:           null,
+                    password:               null,
+                    password_new:           req.body.password,
                     password_reminder:      req.body.password_reminder,
                     email:                  req.body.email,
                     email_unverified:       null,
@@ -215,7 +216,8 @@ const userSignup = (req, res) => {
                     provider_last_name:     req.body.provider_last_name,
                     provider_image:         req.body.provider_image,
                     provider_image_url:     req.body.provider_image_url,
-                    provider_email:         req.body.provider_email
+                    provider_email:         req.body.provider_email,
+                    admin:                  0
                 };
     service.create(getNumberValue(req.query.app_id), data)
     .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
@@ -268,14 +270,14 @@ const userSignup = (req, res) => {
  */
 const activateUser = (req, res) => {
     /**@type{string|null} */
-    let auth_new_password = null;
+    let auth_password_new = null;
     if (getNumberValue(req.body.verification_type) == 3){
         //reset password
-        auth_new_password = service.verification_code();
+        auth_password_new = service.verification_code();
     }
-    service.activateUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.body.verification_type), req.body.verification_code, auth_new_password)
+    service.activateUser(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.body.verification_type), req.body.verification_code, auth_password_new)
     .then((/**@type{Types.db_result_user_account_activateUser}*/result_activate)=>{
-        if (auth_new_password == null){
+        if (auth_password_new == null){
             if (result_activate.affectedRows==1 && getNumberValue(req.body.verification_type)==4){
                 //new email verified
                 /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
@@ -319,7 +321,7 @@ const activateUser = (req, res) => {
             //using accessToken and authentication code
             res.status(200).json({
                 count: result_activate.affectedRows,
-                auth: auth_new_password,
+                auth: auth_password_new,
                 accessToken: accessToken(getNumberValue(req.query.app_id)),
                 items: Array(result_activate)
             });
@@ -618,14 +620,6 @@ const updateUserLocal = async (req, res) => {
         if (result_user[0]) {
             /**@ts-ignore */
             if (compareSync(req.body.password, result_user[0].password)){
-                let password = '';
-                const salt = genSaltSync(10);
-                if (typeof req.body.new_password !== 'undefined' && req.body.new_password != '')
-                    password = hashSync(req.body.new_password, salt);
-                else
-                    if (req.body.password)
-                        password = hashSync(req.body.password, salt);
-
                 let send_email=false;
                 if (req.body.new_email && req.body.new_email!=''){
                     /**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/
@@ -639,14 +633,15 @@ const updateUserLocal = async (req, res) => {
                 const data = {  bio:                req.body.bio,
                                 private:            req.body.private,
                                 username:           req.body.username,
-                                password:           password,
-                                password_new:       (req.body.new_password && req.body.new_password!='')==true?req.body.new_password:null,
+                                password:           req.body.password,
+                                password_new:       (req.body.password_new && req.body.password_new!='')==true?req.body.password_new:null,
                                 password_reminder:  (req.body.password_reminder && req.body.password_reminder!='')==true?req.body.password_reminder:null,
                                 email:              req.body.email,
                                 email_unverified:   (req.body.new_email && req.body.new_email!='')==true?req.body.new_email:null,
                                 avatar:             req.body.avatar,
                                 verification_code:  send_email==true?service.verification_code():null,
-                                provider_id:        result_user[0].provider_id
+                                provider_id:        result_user[0].provider_id,
+                                admin:              0
                             };
                 service.updateUserLocal(getNumberValue(req.query.app_id), data, getNumberValue(req.params.id))
                 .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
@@ -748,7 +743,8 @@ const updateUserLocal = async (req, res) => {
  */
 const updatePassword = (req, res) => {    
     /**@type{Types.db_parameter_user_account_updatePassword} */
-    const data = {  new_password:   hashSync(req.body.new_password, genSaltSync(10)),
+    const data = {                  
+                    password_new:   req.body.password_new,
                     auth:           req.body.auth};
     service.updatePassword(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
     .then((/**@type{Types.db_result_user_account_updatePassword}*/result_update)=>{
@@ -1120,7 +1116,8 @@ const providerSignIn = (req, res) => {
                             provider_last_name:     req.body.provider_last_name,
                             provider_image:         req.body.provider_image,
                             provider_image_url:     req.body.provider_image_url,
-                            provider_email:         req.body.provider_email};
+                            provider_email:         req.body.provider_email,
+                            admin:                  0};
         const data_login = {user_account_id:        req.body.user_account_id,
                             app_id:                 req.body.app_id,
                             result:                 1,

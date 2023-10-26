@@ -7,12 +7,21 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.
 const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
+ * 
+ * @param {string|null} password 
+ * @returns {Promise.<string|null>}
+ */
+const set_password = async password =>{
+	const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
+	return password==null?null:hashSync(password, genSaltSync(10));
+};
+/**
  * Checks password between 10 and 100 characters
  * @param {Types.db_parameter_user_account_updatePassword} data 
  * @returns {object|null}
  */
 const data_validation_password = (data) => {
-    if (data.new_password.length < 10 || data.new_password.length > 100){
+    if (data.password_new == null || data.password_new.length < 10 || data.password_new.length > 100){
         //'Password 10 - 100 characters'
 		return {'errorNum' : 20106};
     }
@@ -133,15 +142,13 @@ const data_validation = data => {
 								return {'errorNum' : 20105};
 							}
 							else
-								if (data.provider_id == null && (data.username == null || data.password==null || data.email==null)){
+								if (data.provider_id == null && (data.username == null || (data.password_new??data.admin==1?data.admin:data.password)==null || data.email==null)){
 									//'Username, password and email are required'
 									return {'errorNum' : 20107};
 								}
 								else
-									if (data.provider_id == null && 
-										((data.password !=null && data.password.length <10 && data.password.length > 100) || 
-										(data.password_new !=null && data.password_new.length <10 && data.password_new.length > 100)))
-										return {'errorNum' : 20106};
+									if (data.provider_id == null && ((data.admin==1 && data.password_new != null) || data.admin==0))
+										return data_validation_password({password_new: data.password_new??data.password, auth:null});
 									else
 										return null;
 					}
@@ -271,7 +278,11 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 					bio = :bio,
 					email = :email,
 					email_unverified = :email_unverified,
-					password = :password,
+					password = 	CASE WHEN :password_new IS NULL THEN 
+									password 
+								ELSE 
+									:password_new 
+								END,
 					password_reminder = :password_reminder,
 					verification_code = :verification_code
 				WHERE id = :id`;
@@ -284,7 +295,7 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 					bio: data.bio,
 					email: data.email,
 					email_unverified: data.email_unverified,
-					password: data.password,
+					password_new: await set_password(data.password_new),
 					password_reminder: data.password_reminder,
 					verification_code: data.verification_code
 					};
@@ -336,7 +347,7 @@ const create = async (app_id, data) => {
 						CURRENT_TIMESTAMP,
 						CURRENT_TIMESTAMP,
 						:username,
-						:password,
+						:password_new,
 						:Xpassword_reminder,
 						:email,
 						:avatar,
@@ -354,7 +365,7 @@ const create = async (app_id, data) => {
 						private: data.private,
 						user_level: data.user_level,
 						username: data.username,
-						password: data.password,
+						password_new: await set_password(data.password_new),
 						Xpassword_reminder: data.password_reminder,
 						email: data.email,
 						avatar: data.avatar,
@@ -763,13 +774,13 @@ const updatePassword = async (app_id, id, data) => {
 	const error_code = data_validation_password(data);
 	if (error_code==null){
 		const sql = `UPDATE ${db_schema()}.user_account
-						SET password = :new_password,
+						SET password = :password_new,
 							verification_code = null
 						WHERE id = :id  
 						AND verification_code = :auth
 						AND verification_code IS NOT NULL`;
 		const parameters ={
-							new_password: data.new_password,
+							password_new: await set_password(data.password_new),
 							id: id,
 							auth: data.auth
 						}; 
@@ -794,7 +805,11 @@ const updateUserLocal = async (app_id, data, search_id) => {
 					SET bio = :bio,
 						private = :private,
 						username = :username,
-						password = :password,
+						password = 	CASE WHEN :password_new IS NULL THEN 
+										password 
+									ELSE 
+										:password_new 
+									END,
 						password_reminder = :Xpassword_reminder,
 						email = :email,
 						email_unverified = :email_unverified,
@@ -806,7 +821,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						bio: data.bio,
 						private: data.private,
 						username: data.username,
-						password: data.password,
+						password_new: await set_password(data.password_new),
 						Xpassword_reminder: data.password_reminder,
 						email: data.email,
 						email_unverified: data.email_unverified,
@@ -929,26 +944,14 @@ const updateSigninProvider = async (app_id, id, data) => {
 const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 	const sql = `SELECT	u.id "id",
 						u.bio "bio",
-						(SELECT MAX(ul.date_created)
-							FROM ${db_schema()}.user_account_logon ul
-							WHERE ul.user_account_id = u.id
-							AND ul.result=1) "last_logontime",
 						u.username "username",
-						u.password "password",
-						u.password_reminder "password_reminder",
-						u.email "email",
-						u.avatar "avatar",
-						u.verification_code "verification_code",
-						u.active "active",
 						u.identity_provider_id "identity_provider_id",
 						u.provider_id "provider_id",
 						u.provider_first_name "provider_first_name",
 						u.provider_last_name "provider_last_name",
 						u.provider_image "provider_image",
 						u.provider_image_url "provider_image_url",
-						u.provider_email "provider_email",
-						u.date_created "date_created",
-						u.date_modified "date_modified"
+						u.provider_email "provider_email"
 				FROM ${db_schema()}.user_account u
 				WHERE u.provider_id = :provider_id
 				AND u.identity_provider_id = :identity_provider_id`;
