@@ -182,7 +182,7 @@ const DBInfo = async (app_id, callBack) => {
                                     :Xdatabase_schema
                                 ELSE 
                                     :Xdatabase_schema ||' ('|| REPLACE(JSON_QUERY(cloud_identity, '$.DATABASE_NAME'), CHR(34), NULL) || ')'
-                                END CASE
+                                END
                            FROM v$pdbs) "database_schema",
                         (SELECT  CASE 
                                  WHEN cloud_identity IS NULL THEN
@@ -190,7 +190,7 @@ const DBInfo = async (app_id, callBack) => {
                                  ELSE
                                     REPLACE(JSON_QUERY(cloud_identity, '$.PUBLIC_DOMAIN_NAME'), CHR(34), NULL) ||
                                     ' ('|| REPLACE(JSON_QUERY(cloud_identity, '$.OUTBOUND_IP_ADDRESS[0]'), CHR(34), NULL) ||')'
-                                 END CASE
+                                 END
                            FROM v$pdbs) "hostname", 
                         (SELECT COUNT(*) 
                            FROM v$session) "connections",
