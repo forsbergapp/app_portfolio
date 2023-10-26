@@ -33,7 +33,6 @@
  * @property {string} body.broadcast_type                           - Broadcast parameter
  * @property {string} body.broadcast_message                        - Broadcast parameter
  * @property {string} body.demo_password                            - Admin parameter
- * @property {string} body.password
  * @property {string} body.app_name                                 - app portfolio parameter
  * @property {string} body.url                                      - app portfolio parameter
  * @property {string} body.logo                                     - app portfolio parameter
@@ -51,8 +50,9 @@
  * @property {string} body.bio                                      - app portfolio parameter
  * @property {string} body.email                                    - app portfolio parameter
  * @property {string} body.email_unverified                         - app portfolio parameter
+ * @property {string} body.password
+ * @property {string|null} body.password_new
  * @property {string} body.password_reminder                        - app portfolio parameter
- * @property {string} body.new_password                             - app portfolio parameter
  * @property {string} body.new_email                                - app portfolio parameter
  * @property {string} body.avatar                                   - app portfolio parameter
  * @property {string} body.user_language                            - app portfolio parameter
@@ -1078,19 +1078,20 @@
  *              bio:string|null,
  *              email:string,
  *              email_unverified:string|null,
- *              password:string,
- *              password_new:null,
+ *              password:string|null,
+ *              password_new:string|null,
  *              password_reminder:string|null,
  *              verification_code:string|null,
  *              provider_id: string|null,
- *              avatar:string|null}} db_parameter_user_account_updateUserSuperAdmin
+ *              avatar:string|null,
+ *              admin:number}} db_parameter_user_account_updateUserSuperAdmin
  * @typedef {   db_result_update} db_result_user_account_updateUserSuperAdmin
  * @typedef {{  bio:string|null,
  *              private: number|null,
  *              user_level:number|null,
  *              username:string|null,
- *              password:string|null,
- *              password_new:null,
+ *              password:null,
+ *              password_new:string|null,
  *              password_reminder:string|null,
  *              email:string|null,
  *              email_unverified:string|null,
@@ -1103,7 +1104,8 @@
  *              provider_last_name:string|null,
  *              provider_image:string|null,
  *              provider_image_url:string|null,
- *              provider_email:string|null}} db_parameter_user_account_create
+ *              provider_email:string|null,
+ *              admin:number}} db_parameter_user_account_create
  * @typedef {   db_result_insert} db_result_user_account_create
  * @typedef {   db_result_update} db_result_user_account_activateUser
  * @typedef {   db_result_update} db_result_user_account_updateUserVerificationCode
@@ -1114,6 +1116,7 @@
  *              user_level:number|null,
  *              username:string|null,
  *              password:string|null,
+ *              password_new:string|null,
  *              password_reminder:string|null,
  *              email:string|null,
  *              email_unverified:string|null,
@@ -1175,20 +1178,21 @@
  *              username:string,
  *              provider_first_name:string|null}} db_result_user_account_getProfileTop
  * @typedef {{  password:string}} db_result_user_account_checkPassword
- * @typedef {{  new_password:string,
- *              auth:string}} db_parameter_user_account_updatePassword
+ * @typedef {{  password_new:string|null,
+ *              auth:string|null}} db_parameter_user_account_updatePassword
  * @typedef {   db_result_update} db_result_user_account_updatePassword
  * @typedef {{  bio:string,
  *              private:number,
  *              username:string,
- *              password:string,
+ *              password:string|null, 
  *              password_new:string|null,
  *              password_reminder:string|null,
  *              email:string,
  *              email_unverified:string|null,
  *              avatar:string,
  *              verification_code:string|null,
- *              provider_id:string|null}} db_parameter_user_account_updateUserLocal
+ *              provider_id:string|null,
+ *              admin:number}} db_parameter_user_account_updateUserLocal
  * @typedef {   db_result_update} db_result_user_account_updateUserLocal
  * @typedef {{  bio:string|null,
  *              private: number|null,

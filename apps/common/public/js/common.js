@@ -415,13 +415,13 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                                         break;
                                     }
                                     case 'NEW_PASSWORD_CONFIRM':{
-                                        document.getElementById('common_user_edit_input_new_password_confirm').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_new_password_confirm').placeholder = json.data[i].text;    
+                                        document.getElementById('common_user_edit_input_password_new_confirm').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_password_new_confirm').placeholder = json.data[i].text;    
                                         break;
                                     }
                                     case 'NEW_PASSWORD':{
-                                        document.getElementById('common_user_edit_input_new_password').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_new_password').placeholder = json.data[i].text;    
+                                        document.getElementById('common_user_edit_input_password_new').placeholder = json.data[i].text;
+                                        document.getElementById('common_user_password_new').placeholder = json.data[i].text;    
                                         break;
                                     }
                                     case 'CONFIRM_QUESTION':{
@@ -712,7 +712,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
 
   local objects: 
   dialogue_verify_clear
-  dialogue_new_password_clear
+  dialogue_password_new_clear
   dialogue_user_edit_clear
   dialogue_forgot_clear
   dialogue_profile_clear
@@ -771,12 +771,12 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
                 document.getElementById('common_dialogue_profile').style.visibility = 'visible';
                 break;
             }
-        case 'NEW_PASSWORD':
+        case 'PASSWORD_NEW':
             {    
-                document.getElementById('common_user_new_password_auth').innerHTML=title;
-                document.getElementById('common_user_new_password').value='';
-                document.getElementById('common_user_new_password_confirm').value='';
-                document.getElementById('common_dialogue_user_new_password').style.visibility = 'visible';
+                document.getElementById('common_user_password_new_auth').innerHTML=title;
+                document.getElementById('common_user_password_new').value='';
+                document.getElementById('common_user_password_new_confirm').value='';
+                document.getElementById('common_dialogue_user_password_new').style.visibility = 'visible';
                 break;
             }
         case 'VERIFY':
@@ -940,11 +940,11 @@ const dialogue_verify_clear = () => {
     document.getElementById('common_user_verify_verification_char5').value = '';
     document.getElementById('common_user_verify_verification_char6').value = '';
 };
-const dialogue_new_password_clear = () => {
-    document.getElementById('common_dialogue_user_new_password').style.visibility = 'hidden';
-    document.getElementById('common_user_new_password_auth').innerHTML='';
-    document.getElementById('common_user_new_password').value='';
-    document.getElementById('common_user_new_password_confirm').value='';
+const dialogue_password_new_clear = () => {
+    document.getElementById('common_dialogue_user_password_new').style.visibility = 'hidden';
+    document.getElementById('common_user_password_new_auth').innerHTML='';
+    document.getElementById('common_user_password_new').value='';
+    document.getElementById('common_user_password_new_confirm').value='';
     COMMON_GLOBAL['user_account_id'] = '';
     COMMON_GLOBAL['rest_at'] = '';
 };
@@ -961,8 +961,8 @@ const dialogue_user_edit_clear = () => {
     document.getElementById('common_user_edit_input_new_email').value = '';
     document.getElementById('common_user_edit_input_password').value = '';
     document.getElementById('common_user_edit_input_password_confirm').value = '';
-    document.getElementById('common_user_edit_input_new_password').value = '';
-    document.getElementById('common_user_edit_input_new_password_confirm').value = '';
+    document.getElementById('common_user_edit_input_password_new').value = '';
+    document.getElementById('common_user_edit_input_password_new_confirm').value = '';
     document.getElementById('common_user_edit_input_password_reminder').value = '';
     //provider
     document.getElementById('common_user_edit_provider_id').innerHTML = '';
@@ -1024,8 +1024,8 @@ const dialogue_user_edit_remove_error = () => {
 
     document.getElementById('common_user_edit_input_password').classList.remove('common_input_error');
     document.getElementById('common_user_edit_input_password_confirm').classList.remove('common_input_error');
-    document.getElementById('common_user_edit_input_new_password').classList.remove('common_input_error');
-    document.getElementById('common_user_edit_input_new_password_confirm').classList.remove('common_input_error');
+    document.getElementById('common_user_edit_input_password_new').classList.remove('common_input_error');
+    document.getElementById('common_user_edit_input_password_new_confirm').classList.remove('common_input_error');
 
     document.getElementById('common_user_edit_input_password_reminder').classList.remove('common_input_error');
 };
@@ -1921,7 +1921,7 @@ const user_logoff = async () => {
     document.getElementById('common_profile_avatar_online_status').className='';
     dialogue_user_edit_clear();
     dialogue_verify_clear();
-    dialogue_new_password_clear();
+    dialogue_password_new_clear();
     dialogue_login_clear();
     dialogue_signup_clear();
     dialogue_forgot_clear();
@@ -1961,8 +1961,8 @@ const user_edit = async () => {
                     document.getElementById('common_user_edit_input_new_email').value = json.email_unverified;
                     document.getElementById('common_user_edit_input_password').value = '',
                         document.getElementById('common_user_edit_input_password_confirm').value = '',
-                        document.getElementById('common_user_edit_input_new_password').value = '';
-                    document.getElementById('common_user_edit_input_new_password_confirm').value = '';
+                        document.getElementById('common_user_edit_input_password_new').value = '';
+                    document.getElementById('common_user_edit_input_password_new_confirm').value = '';
 
                     document.getElementById('common_user_edit_input_password_reminder').value = json.password_reminder;
                 } else{
@@ -2003,15 +2003,15 @@ const user_update = async () => {
         const email = document.getElementById('common_user_edit_input_email').innerHTML;    
         const password = document.getElementById('common_user_edit_input_password').value;
         const password_confirm = document.getElementById('common_user_edit_input_password_confirm').value;
-        const new_password = document.getElementById('common_user_edit_input_new_password').value;
-        const new_password_confirm = document.getElementById('common_user_edit_input_new_password_confirm').value;
+        const password_new = document.getElementById('common_user_edit_input_password_new').value;
+        const password_new_confirm = document.getElementById('common_user_edit_input_password_new_confirm').value;
         const password_reminder = document.getElementById('common_user_edit_input_password_reminder').value;
         if (check_input(username) == false ||
             check_input(new_email) == false ||
             check_input(password) == false ||
             check_input(password_confirm) == false ||
-            check_input(new_password) == false ||
-            check_input(new_password_confirm) == false ||
+            check_input(password_new) == false ||
+            check_input(password_new_confirm) == false ||
             check_input(password_reminder) == false)
             return null;
 
@@ -2037,10 +2037,10 @@ const user_update = async () => {
             return null;
         }
         //check new passwords
-        if (new_password != new_password_confirm) {
+        if (password_new != password_new_confirm) {
             //New Password are entered but they are not the same
-            document.getElementById('common_user_edit_input_new_password').classList.add('common_input_error');
-            document.getElementById('common_user_edit_input_new_password_confirm').classList.add('common_input_error');
+            document.getElementById('common_user_edit_input_password_new').classList.add('common_input_error');
+            document.getElementById('common_user_edit_input_password_new_confirm').classList.add('common_input_error');
             show_message('ERROR', 20301, null, null);
             return null;
         }
@@ -2048,7 +2048,7 @@ const user_update = async () => {
                         bio:                bio,
                         private:            boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked),
                         password:           password,
-                        new_password:       new_password,
+                        password_new:       password_new,
                         password_reminder:  password_reminder,
                         email:              email,
                         new_email:          new_email==''?null:new_email,
@@ -2202,7 +2202,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                                 //FORGOT
                                 COMMON_GLOBAL['rest_at']	= json.accessToken;
                                 //show dialogue new password
-                                show_common_dialogue('NEW_PASSWORD', null, json.auth);
+                                show_common_dialogue('PASSWORD_NEW', null, json.auth);
                                 break;
                             }
                             case 4:{
@@ -2398,36 +2398,36 @@ const user_forgot = async () => {
     }
 };
 const updatePassword = () => {
-    const new_password = document.getElementById('common_user_new_password').value;
-    const new_password_confirm = document.getElementById('common_user_new_password_confirm').value;
-    const user_new_password_auth = document.getElementById('common_user_new_password_auth').innerHTML;
-    const json_data = { new_password:   new_password,
-                        auth:           user_new_password_auth,
+    const password_new = document.getElementById('common_user_password_new').value;
+    const password_new_confirm = document.getElementById('common_user_password_new_confirm').value;
+    const user_password_new_auth = document.getElementById('common_user_password_new_auth').innerHTML;
+    const json_data = { password_new:   password_new,
+                        auth:           user_password_new_auth,
                         ...get_uservariables()
                      };
-    if (check_input(new_password) == false ||
-        check_input(new_password_confirm) == false)
+    if (check_input(password_new) == false ||
+        check_input(password_new_confirm) == false)
         return;
     else{
-        if (new_password == '') {
+        if (password_new == '') {
             //"Please enter password"
-            document.getElementById('common_user_new_password').classList.add('common_input_error');
+            document.getElementById('common_user_password_new').classList.add('common_input_error');
             show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
             return null;
         }
-        if (new_password != new_password_confirm) {
+        if (password_new != password_new_confirm) {
             //Password not the same
             show_message('ERROR', 20301, null, null, COMMON_GLOBAL['common_app_id']);
             return null;
         }
-        const old_button = document.getElementById('common_user_new_password_icon').innerHTML;
-        document.getElementById('common_user_new_password_icon').innerHTML = APP_SPINNER;
+        const old_button = document.getElementById('common_user_password_new_icon').innerHTML;
+        document.getElementById('common_user_password_new_icon').innerHTML = APP_SPINNER;
         FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err) => {
-            document.getElementById('common_user_new_password_icon').innerHTML = old_button;
+            document.getElementById('common_user_password_new_icon').innerHTML = old_button;
             if (err)
                 null;
             else{
-                dialogue_new_password_clear();
+                dialogue_password_new_clear();
                 show_common_dialogue('LOGIN');
             }
         });
@@ -3502,9 +3502,9 @@ const assign_icons = () => {
     document.getElementById('common_forgot_button').innerHTML = ICONS['app_sendmail'];
     document.getElementById('common_forgot_close').innerHTML = ICONS['app_close'];
     //dialogue new password
-    document.getElementById('common_user_new_password_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_new_password_cancel').innerHTML = ICONS['app_cancel'];
-    document.getElementById('common_user_new_password_ok').innerHTML = ICONS['app_close'];
+    document.getElementById('common_user_password_new_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_password_new_cancel').innerHTML = ICONS['app_cancel'];
+    document.getElementById('common_user_password_new_ok').innerHTML = ICONS['app_close'];
     //dialogue user edit
     document.getElementById('common_user_edit_btn_avatar_img').innerHTML = ICONS['user_avatar_edit'];
     document.getElementById('common_user_edit_private').innerHTML = ICONS['app_private'];
@@ -3520,8 +3520,8 @@ const assign_icons = () => {
     document.getElementById('common_user_edit_input_new_email_icon').innerHTML = ICONS['app_email'];
     document.getElementById('common_user_edit_input_password_icon').innerHTML = ICONS['user_password'];
     document.getElementById('common_user_edit_input_password_confirm_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_edit_input_new_password_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_edit_input_new_password_confirm_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_edit_input_password_new_icon').innerHTML = ICONS['user_password'];
+    document.getElementById('common_user_edit_input_password_new_confirm_icon').innerHTML = ICONS['user_password'];
     document.getElementById('common_user_edit_input_password_reminder_icon').innerHTML = ICONS['user_account_reminder'];
     document.getElementById('common_user_edit_label_last_logontime').innerHTML = ICONS['user_last_logontime'];
     document.getElementById('common_user_edit_label_account_created').innerHTML = ICONS['user_account_created'];
@@ -3635,8 +3635,8 @@ const set_events = () => {
     //dialogue message
     document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
     //dialogue new password
-    document.getElementById('common_user_new_password_cancel').addEventListener('click', () => { dialogue_new_password_clear(); }, false);
-    document.getElementById('common_user_new_password_ok').addEventListener('click', () => { updatePassword(); }, false);
+    document.getElementById('common_user_password_new_cancel').addEventListener('click', () => { dialogue_password_new_clear(); }, false);
+    document.getElementById('common_user_password_new_ok').addEventListener('click', () => { updatePassword(); }, false);
     //dialogue lov
     document.getElementById('common_lov_search_input').addEventListener('keyup', (event) => {lov_keys(event);});
     document.getElementById('common_lov_search_icon').addEventListener('click', () => {lov_filter(document.getElementById('common_lov_search_input').value);});

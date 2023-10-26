@@ -928,7 +928,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_login_input, 
 .common_signup_input, 
 .common_forgot_input, 
-.common_new_password_input{
+.common_password_new_input{
 	border: 1px solid var(--app_theme_input_border_color);
 }
 #common_profile_search_list_wrap{
