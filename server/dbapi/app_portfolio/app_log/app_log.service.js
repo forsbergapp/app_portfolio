@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const { getNumberValue, ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -69,7 +69,7 @@ const createLog = async (app_id, data) => {
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute_promise(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), sql, parameters, null);
 	}
 	else
 		return (null);
