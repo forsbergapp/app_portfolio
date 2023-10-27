@@ -1,5 +1,9 @@
 /**
  * Request
+ * @typedef {*} req_verbose
+ */
+/**
+ * Request
  * @typedef {Object} req
  * @property {string} baseUrl
  * @property {string} hostname
@@ -851,19 +855,23 @@
  * @typedef {{  insertId:number, 
  *              rows:[], 
  *              affectedRows:number, 
- *              rowsAffected:number}}  db_result_insert
+ *              rowsAffected:number,
+ *              length:number}}  db_result_insert
  * DB result DELETE
  * @typedef {{  rows:[], 
  *              affectedRows:number, 
- *              rowsAffected:number}}  db_result_delete
+ *              rowsAffected:number,
+ *              length:number}}  db_result_delete
  * DB result UPDATE
  * @typedef {{  rows:[], 
  *              affectedRows:number, 
- *              rowsAffected:number}}  db_result_update
+ *              rowsAffected:number,
+ *              length:number}}  db_result_update
  * DB result SELECT
  * @typedef {{  rows:[], 
  *              affectedRows:number,
- *              rowsAffected:number}}  db_result_select
+ *              rowsAffected:number,
+ *              length:number}}  db_result_select
  * ADMIN
  * DB result DB Info
  * @typedef {{  database_use:   number,
