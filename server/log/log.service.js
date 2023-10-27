@@ -129,7 +129,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
             }
             case '2':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-                /**@type{Types.req} */
+                /**@type{Types.req_verbose} */
                 const logtext_req = Object.assign({}, req);
                 const getCircularReplacer = () => {
                     const seen = new WeakSet();
@@ -147,7 +147,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
                 if (logtext_req.body.password)
                     logtext_req.body.password = null;
                 //remove Basic authorization with password
-                logtext_req.rawHeaders.forEach((rawheader,index)=>{
+                logtext_req.rawHeaders.forEach((/**@type{string}*/rawheader,/**@type{number}*/index)=>{
                     if (rawheader.startsWith('Basic'))
                         logtext_req.rawHeaders[index] = 'Basic ...';
                 });
@@ -236,7 +236,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
                                 db:             db,
                                 sql:            sql,
                                 parameters:     JSON.stringify(parameters),
-                                logtext:        `Rows:${result.rows==undefined?result.affectedRows:result.rows.length}`
+                                logtext:        `Rows:${result.affectedRows?result.affectedRows:result.length}`
                                 };
                 break;
             }
