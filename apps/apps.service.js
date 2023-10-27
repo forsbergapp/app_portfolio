@@ -818,7 +818,7 @@ const getModule = async (app_id, module_config, callBack) =>{
      */
     const log = module => {
         //if app admin then log, system does not log in database
-        if (ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+        if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
                 createLog(app_id,
                         { app_id : app_id,
