@@ -973,79 +973,78 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
  */
 const timetable_user_setting_get = async (app_id, user_setting_id, callBack) => {
     const { getUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.service.js`);
-	getUserSetting(app_id, user_setting_id, (/**@type{Types.error}*/err, result_user_setting) =>{
-		if (err){
-			callBack(err, null);
-		}
-		else{
-			const user_setting = JSON.parse(result_user_setting[0].settings_json);
-			/**@type{type_settings_report} */
-			const settings_report = {  	locale              	: user_setting.regional_language_locale,  
-										timezone            	: user_setting.regional_timezone,
-										number_system       	: user_setting.regional_number_system,
-										direction           	: user_setting.regional_layout_direction,
-										second_locale       	: user_setting.regional_second_language_locale,
-										coltitle            	: user_setting.regional_column_title,
-										arabic_script       	: user_setting.regional_arabic_script,
-										calendartype        	: user_setting.regional_calendar_type,
-										calendar_hijri_type 	: user_setting.regional_calendar_hijri_type,
+	getUserSetting(app_id, user_setting_id)
+	.then((/**@type{Types.db_result_user_account_app_setting_getUserSetting[]}*/result_user_setting)=>{
+		const user_setting = JSON.parse(result_user_setting[0].settings_json);
+		/**@type{type_settings_report} */
+		const settings_report = {  	locale              	: user_setting.regional_language_locale,  
+									timezone            	: user_setting.regional_timezone,
+									number_system       	: user_setting.regional_number_system,
+									direction           	: user_setting.regional_layout_direction,
+									second_locale       	: user_setting.regional_second_language_locale,
+									coltitle            	: user_setting.regional_column_title,
+									arabic_script       	: user_setting.regional_arabic_script,
+									calendartype        	: user_setting.regional_calendar_type,
+									calendar_hijri_type 	: user_setting.regional_calendar_hijri_type,
 
-										/* app ui user_setting
-										user_setting.gps_map_type
-										user_setting.gps_country_id		
-										user_setting.gps_city_id		
-										user_setting.gps_popular_place_id
-										*/              
-										place               	: user_setting.description,
-										gps_lat             	: parseFloat(user_setting.gps_lat_text),
-										gps_long            	: parseFloat(user_setting.gps_long_text),
-										
-										theme_day           	: 'theme_day_' + user_setting.design_theme_day_id,
-										theme_month         	: 'theme_month_' + user_setting.design_theme_month_id,
-										theme_year          	: 'theme_year_' + user_setting.design_theme_year_id,
-										papersize				: user_setting.design_paper_size,
-										highlight           	: user_setting.design_row_highlight,
-										show_weekday        	: getNumberValue(user_setting.design_column_weekday_checked),
-										show_calendartype   	: getNumberValue(user_setting.design_column_calendartype_checked),
-										show_notes          	: getNumberValue(user_setting.design_column_notes_checked),
-										show_gps   	       		: getNumberValue(user_setting.design_column_gps_checked),
-										show_timezone       	: getNumberValue(user_setting.design_column_timezone_checked),
-													
-										header_img_src      	: (user_setting.image_header_image_img??null)==null?null:user_setting.image_header_image_img,
-										footer_img_src      	: (user_setting.image_footer_image_img??null)==null?null:user_setting.image_footer_image_img,
+									/* app ui user_setting
+									user_setting.gps_map_type
+									user_setting.gps_country_id		
+									user_setting.gps_city_id		
+									user_setting.gps_popular_place_id
+									*/              
+									place               	: user_setting.description,
+									gps_lat             	: parseFloat(user_setting.gps_lat_text),
+									gps_long            	: parseFloat(user_setting.gps_long_text),
+									
+									theme_day           	: 'theme_day_' + user_setting.design_theme_day_id,
+									theme_month         	: 'theme_month_' + user_setting.design_theme_month_id,
+									theme_year          	: 'theme_year_' + user_setting.design_theme_year_id,
+									papersize				: user_setting.design_paper_size,
+									highlight           	: user_setting.design_row_highlight,
+									show_weekday        	: getNumberValue(user_setting.design_column_weekday_checked),
+									show_calendartype   	: getNumberValue(user_setting.design_column_calendartype_checked),
+									show_notes          	: getNumberValue(user_setting.design_column_notes_checked),
+									show_gps   	       		: getNumberValue(user_setting.design_column_gps_checked),
+									show_timezone       	: getNumberValue(user_setting.design_column_timezone_checked),
+												
+									header_img_src      	: (user_setting.image_header_image_img??null)==null?null:user_setting.image_header_image_img,
+									footer_img_src      	: (user_setting.image_footer_image_img??null)==null?null:user_setting.image_footer_image_img,
 
-										header_txt1         	: user_setting.text_header_1_text,
-										header_txt2         	: user_setting.text_header_2_text,
-										header_txt3         	: user_setting.text_header_3_text,
-										header_align      		: (user_setting.text_header_align??null)==null?null:user_setting.text_header_align,
-										footer_txt1         	: user_setting.text_footer_1_text,
-										footer_txt2         	: user_setting.text_footer_2_text,
-										footer_txt3    	   		: user_setting.text_footer_3_text,
-										footer_align			: (user_setting.text_footer_align??null)==null?null:user_setting.text_footer_align,
+									header_txt1         	: user_setting.text_header_1_text,
+									header_txt2         	: user_setting.text_header_2_text,
+									header_txt3         	: user_setting.text_header_3_text,
+									header_align      		: (user_setting.text_header_align??null)==null?null:user_setting.text_header_align,
+									footer_txt1         	: user_setting.text_footer_1_text,
+									footer_txt2         	: user_setting.text_footer_2_text,
+									footer_txt3    	   		: user_setting.text_footer_3_text,
+									footer_align			: (user_setting.text_footer_align??null)==null?null:user_setting.text_footer_align,
 
-										method              	: user_setting.prayer_method,
-										asr                 	: user_setting.prayer_asr_method,
-										highlat             	: user_setting.prayer_high_latitude_adjustment,
-										format              	: user_setting.prayer_time_format,
-										hijri_adj           	: getNumberValue(user_setting.prayer_hijri_date_adjustment),
-										iqamat_fajr         	: user_setting.prayer_fajr_iqamat,
-										iqamat_dhuhr        	: user_setting.prayer_dhuhr_iqamat,
-										iqamat_asr          	: user_setting.prayer_asr_iqamat,
-										iqamat_maghrib      	: user_setting.prayer_maghrib_iqamat,
-										iqamat_isha         	: user_setting.prayer_isha_iqamat,
-										show_imsak          	: getNumberValue(user_setting.prayer_column_imsak_checked),
-										show_sunset         	: getNumberValue(user_setting.prayer_column_sunset_checked),
-										show_midnight       	: getNumberValue(user_setting.prayer_column_midnight_checked),
-										show_fast_start_end 	: getNumberValue(user_setting.prayer_column_fast_start_end),
-										
-										timetable_class			: 'timetable_class',
-										timetable_month         : 'timetable_month_class',
-										timetable_year_month    : 'timetable_year_month',
-										reporttype_year_month  	: 'MONTH'
-									};
-			callBack(null, settings_report);
-		} 
-    });
+									method              	: user_setting.prayer_method,
+									asr                 	: user_setting.prayer_asr_method,
+									highlat             	: user_setting.prayer_high_latitude_adjustment,
+									format              	: user_setting.prayer_time_format,
+									hijri_adj           	: getNumberValue(user_setting.prayer_hijri_date_adjustment),
+									iqamat_fajr         	: user_setting.prayer_fajr_iqamat,
+									iqamat_dhuhr        	: user_setting.prayer_dhuhr_iqamat,
+									iqamat_asr          	: user_setting.prayer_asr_iqamat,
+									iqamat_maghrib      	: user_setting.prayer_maghrib_iqamat,
+									iqamat_isha         	: user_setting.prayer_isha_iqamat,
+									show_imsak          	: getNumberValue(user_setting.prayer_column_imsak_checked),
+									show_sunset         	: getNumberValue(user_setting.prayer_column_sunset_checked),
+									show_midnight       	: getNumberValue(user_setting.prayer_column_midnight_checked),
+									show_fast_start_end 	: getNumberValue(user_setting.prayer_column_fast_start_end),
+									
+									timetable_class			: 'timetable_class',
+									timetable_month         : 'timetable_month_class',
+									timetable_year_month    : 'timetable_year_month',
+									reporttype_year_month  	: 'MONTH'
+								};
+		callBack(null, settings_report);
+	})
+	.catch((/**@type{Types.error}*/error)=>{
+		callBack(error, null);
+	});
 };
 /**
  * Timetable translate settings
@@ -1109,38 +1108,37 @@ const timetable_day_user_settings_get = async (app_id, user_account_id, callBack
 	const user_settings = [];
 
     const { getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.service.js`);
-    getUserSettingsByUserId(app_id, user_account_id, (/**@type{Types.error}*/err, result_user_settings) => {
-		if (err)
-			callBack(err, null);
-		else{
-			for (const user_setting of result_user_settings) {
-				//use settings that can be used on a day timetable showing different user settings
-				//would be difficult to consider all settings on same page using
-				//different texts, images, second languages, directions, column titles, 
-				//arabic script, themes or what columns to display, for these use current users setting
-                const settings = JSON.parse(user_setting.settings_json);
-				user_settings.push(
-					{
-					'description' : settings.description,
-					'regional_language_locale' : settings.regional_language_locale,
-					'regional_timezone' : settings.regional_timezone,
-					'regional_number_system' : settings.regional_number_system,
-					'regional_calendar_hijri_type' : settings.regional_calendar_hijri_type,
-					'gps_lat_text' : parseFloat(settings.gps_lat_text),
-					'gps_long_text' : parseFloat(settings.gps_long_text),
-					'prayer_method' : settings.prayer_method,
-					'prayer_asr_method' : settings.prayer_asr_method,
-					'prayer_high_latitude_adjustment' : settings.prayer_high_latitude_adjustment,
-					'prayer_time_format' : settings.prayer_time_format,
-					'prayer_hijri_date_adjustment' : settings.prayer_hijri_date_adjustment
-					}
-				);
-			}
-			callBack(null, user_settings);
+    getUserSettingsByUserId(app_id, user_account_id)
+	.then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_user_settings)=>{
+		for (const user_setting of result_user_settings) {
+			//use settings that can be used on a day timetable showing different user settings
+			//would be difficult to consider all settings on same page using
+			//different texts, images, second languages, directions, column titles, 
+			//arabic script, themes or what columns to display, for these use current users setting
+			const settings = JSON.parse(user_setting.settings_json);
+			user_settings.push(
+				{
+				'description' : settings.description,
+				'regional_language_locale' : settings.regional_language_locale,
+				'regional_timezone' : settings.regional_timezone,
+				'regional_number_system' : settings.regional_number_system,
+				'regional_calendar_hijri_type' : settings.regional_calendar_hijri_type,
+				'gps_lat_text' : parseFloat(settings.gps_lat_text),
+				'gps_long_text' : parseFloat(settings.gps_long_text),
+				'prayer_method' : settings.prayer_method,
+				'prayer_asr_method' : settings.prayer_asr_method,
+				'prayer_high_latitude_adjustment' : settings.prayer_high_latitude_adjustment,
+				'prayer_time_format' : settings.prayer_time_format,
+				'prayer_hijri_date_adjustment' : settings.prayer_hijri_date_adjustment
+				}
+			);
 		}
+		callBack(null, user_settings);
+	})
+	.catch((/**@type{Types.error}*/error)=>{
+		callBack(error, null);
 	});
 };
-
 /**
  * Timetable header row
  * @param {number} 				report_type 

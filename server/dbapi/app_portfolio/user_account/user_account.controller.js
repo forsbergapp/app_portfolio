@@ -130,8 +130,8 @@ const getStatCountAdmin = (req, res) => {
 const updateUserSuperAdmin = (req, res) => {
     // get avatar and provider column used to validate
     service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id))
-    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result)=>{
-        if (result[0]) {
+    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+        if (result_user[0]) {
             /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
             const data = {  app_role_id:        getNumberValue(req.body.app_role_id),
                             active:             getNumberValue(req.body.active),
@@ -145,29 +145,31 @@ const updateUserSuperAdmin = (req, res) => {
                             password_new:       req.body.password_new==''?null:req.body.password_new,
                             password_reminder:  req.body.password_reminder,
                             verification_code:  req.body.verification_code,
-                            provider_id:        result[0].provider_id,
-                            avatar:             result[0].avatar,
+                            provider_id:        result_user[0].provider_id,
+                            avatar:             result_user[0].avatar,
                             admin:              1};
             service.updateUserSuperAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
-            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result)=>{
-                if (req.body.app_role_id!=0 && req.body.app_role_id!=1)
-                //delete admin app from user if user is not an admin anymore
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-                    deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.app_id), (/**@type{Types.error}*/err) =>{
-                        if (err)
-                            res.status(500).send(
-                                err
-                            );
-                        else
+            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
+                if (req.body.app_role_id!=0 && req.body.app_role_id!=1){
+                    //delete admin app from user if user is not an admin anymore
+                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                        deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.app_id))
+                        .then(()=>{
                             res.status(200).json({
-                                data: result
+                                data: result_update
                             });
+                        })
+                        .catch((/**@type{Types.error}*/error)=>{
+                            res.status(500).send(
+                                error
+                            );
+                        }); 
                     });
-                });
-            else
-                res.status(200).json({
-                    data: result
-                });
+                }
+                else
+                    res.status(200).json({
+                        data: result_update
+                    });
             })
             .catch((/**@type{Types.error}*/error)=>{
                 checked_error(getNumberValue(req.query.app_id), req.query.lang_code, error, res);
@@ -957,77 +959,76 @@ const userLogin = (req, res) => {
             if (compareSync(req.body.password, result_login[0].password)) {
                 if ((getNumberValue(req.query.app_id) == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
                         getNumberValue(req.query.app_id) != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                    createUserAccountApp(getNumberValue(req.query.app_id), result_login[0].id, (/**@type{Types.error}*/err) => {
-                        if (err) {
-                            res.status(500).send(
-                                err
-                            );
+                    createUserAccountApp(getNumberValue(req.query.app_id), result_login[0].id)
+                    .then(()=>{
+                        //if user not activated then send email with new verification code
+                        const new_code = service.verification_code();
+                        if (result_login[0].active == 0){
+                            service.updateUserVerificationCode(getNumberValue(req.query.app_id), result_login[0].id, new_code)
+                            .then(()=>{
+                                getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
+                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                        //send email UNVERIFIED
+                                        sendUserEmail(  getNumberValue(req.query.app_id), 
+                                                        parameter[0].parameter_value, 
+                                                        req.headers['host'], 
+                                                        result_login[0].id, 
+                                                        new_code, 
+                                                        result_login[0].email, 
+                                                        (/**@type{Types.error}*/err)=>{
+                                            if (err) {
+                                                res.status(500).send(
+                                                    err
+                                                );
+                                            }
+                                            else{
+                                                data.access_token = accessToken(req.query.app_id);
+                                                insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
+                                                    if (err)
+                                                        res.status(500).send(
+                                                            err
+                                                        );
+                                                    else
+                                                        res.status(200).json({
+                                                            accessToken: data.access_token,
+                                                            items: Array(result_login[0])
+                                                        });
+                                                });
+                                            }
+                                        });
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=> {
+                                        res.status(500).send(
+                                            error
+                                        );
+                                    });
+                            })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                res.status(500).send(
+                                    error
+                                );
+                            });
                         }
                         else{
-                            //if user not activated then send email with new verification code
-                            const new_code = service.verification_code();
-                            if (result_login[0].active == 0){
-                                service.updateUserVerificationCode(getNumberValue(req.query.app_id), result_login[0].id, new_code)
-                                .then(()=>{
-                                    getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
-                                        .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                            //send email UNVERIFIED
-                                            sendUserEmail(  getNumberValue(req.query.app_id), 
-                                                            parameter[0].parameter_value, 
-                                                            req.headers['host'], 
-                                                            result_login[0].id, 
-                                                            new_code, 
-                                                            result_login[0].email, 
-                                                            (/**@type{Types.error}*/err)=>{
-                                                if (err) {
-                                                    res.status(500).send(
-                                                        err
-                                                    );
-                                                }
-                                                else{
-                                                    data.access_token = accessToken(req.query.app_id);
-                                                    insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
-                                                        if (err)
-                                                            res.status(500).send(
-                                                                err
-                                                            );
-                                                        else
-                                                            res.status(200).json({
-                                                                accessToken: data.access_token,
-                                                                items: Array(result_login[0])
-                                                            });
-                                                    });
-                                                }
-                                            });
-                                        })
-                                        .catch((/**@type{Types.error}*/error)=> {
-                                            res.status(500).send(
-                                                error
-                                            );
-                                        });
-                                })
-                                .catch((/**@type{Types.error}*/error)=>{
+                            data.access_token = accessToken(req.query.app_id);
+                            insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
+                                if (err)
                                     res.status(500).send(
-                                        error
+                                        err
                                     );
-                                });
-                            }
-                            else{
-                                data.access_token = accessToken(req.query.app_id);
-                                insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
-                                    if (err)
-                                        res.status(500).send(
-                                            err
-                                        );
-                                    else
-                                        res.status(200).json({
-                                            accessToken: data.access_token,
-                                            items: Array(result_login[0])
-                                        });
-                                });
-                            }
+                                else
+                                    res.status(200).json({
+                                        accessToken: data.access_token,
+                                        items: Array(result_login[0])
+                                    });
+                            });
                         }
-                    });
+                     })
+                     .catch((/**@type{Types.error}*/error)=>{
+                        res.status(500).send(
+                            error
+                        );
+                     });
                 }
                 else{
                     res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + req.body.username;
@@ -1130,29 +1131,28 @@ const providerSignIn = (req, res) => {
             service.updateSigninProvider(getNumberValue(req.query.app_id), result_signin[0].id, data_user)
             .then(()=>{
                 data_login.user_account_id = result_signin[0].id;
-                createUserAccountApp(getNumberValue(req.query.app_id), result_signin[0].id, (/**@type{Types.error}*/err) => {
-                    if (err) {
-                        res.status(500).send(
-                            err
-                        );
-                    }
-                    else{
-                        data_login.access_token = accessToken(req.query.app_id);
-                        insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (/**@type{Types.error}*/err) => {
-                            if (err) {
-                                res.status(500).send(
-                                    err
-                                );
-                            }
-                            else
-                                res.status(200).json({
-                                    count: result_signin.length,
-                                    accessToken: data_login.access_token,
-                                    items: result_signin,
-                                    userCreated: 0
-                                });
-                        });
-                    }
+                createUserAccountApp(getNumberValue(req.query.app_id), result_signin[0].id)
+                .then(()=>{
+                    data_login.access_token = accessToken(req.query.app_id);
+                    insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (/**@type{Types.error}*/err) => {
+                        if (err) {
+                            res.status(500).send(
+                                err
+                            );
+                        }
+                        else
+                            res.status(200).json({
+                                count: result_signin.length,
+                                accessToken: data_login.access_token,
+                                items: result_signin,
+                                userCreated: 0
+                            });
+                    });
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    res.status(500).send(
+                        error
+                    );
                 });
             })
             .catch((/**@type{Types.error}*/error)=>{
@@ -1166,14 +1166,9 @@ const providerSignIn = (req, res) => {
             service.create(getNumberValue(req.query.app_id), data_user)
             .then((/**@type{Types.db_result_user_account_create} */result_create)=>{
                 data_login.user_account_id = result_create.insertId;
-                    createUserAccountApp(getNumberValue(req.query.app_id), result_create.insertId, (/**@type{Types.error}*/err) => {
-                        if (err) {
-                            res.status(500).send(
-                                err
-                            );
-                        }
-                        else{
-                            service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id))
+                    createUserAccountApp(getNumberValue(req.query.app_id), result_create.insertId)
+                    .then(()=>{
+                        service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id))
                             .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
                                 data_login.access_token = accessToken(getNumberValue(req.query.app_id));
                                     insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (/**@type{Types.error}*/err) => {
@@ -1196,7 +1191,11 @@ const providerSignIn = (req, res) => {
                                     error
                                 );
                             });
-                        }
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        res.status(500).send(
+                            error
+                        );
                     });
             })
             .catch((/**@type{Types.error}*/error)=>{
