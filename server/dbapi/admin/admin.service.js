@@ -91,10 +91,10 @@ const DBStart = async () => {
 /**
  * 
  * @param {number} app_id 
- * @param {Types.callBack} callBack 
+ * @returns {Promise.<Types.db_result_admin_DBInfo[]>}
  */
-const DBInfo = async (app_id, callBack) => {
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const DBInfo = async (app_id) => {
+   const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
    const db_use = ConfigGet('SERVICE_DB', 'USE');
    switch (db_use){
@@ -203,21 +203,15 @@ const DBInfo = async (app_id, callBack) => {
                   database: db_use,
                   Xdatabase_schema: db_schema()
                   };
-   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfo[]}*/result)=>{
-      if (err)
-         return callBack(err, null);
-      else{
-         return callBack(null, result);
-      }
-   });
+   return await db_execute_promise(app_id, sql, parameters, DBA);
 };
 /**
  * 
  * @param {number} app_id 
- * @param {Types.callBack} callBack 
+ * @returns {Promise.<Types.db_result_admin_DBInfoSpace[]>}
  */
-const DBInfoSpace = async (app_id, callBack) => {
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const DBInfoSpace = async (app_id) => {
+   const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
    switch (ConfigGet('SERVICE_DB', 'USE')){
       case '1':
@@ -267,20 +261,15 @@ const DBInfoSpace = async (app_id, callBack) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpace[]}*/result)=>{
-      if (err)
-         return callBack(err, null);
-      else
-         return callBack(null, result);
-   });
+   return await db_execute_promise(app_id, sql, parameters, DBA);
 };
 /**
  * 
  * @param {number} app_id 
- * @param {Types.callBack} callBack
+ * @returns {Promise.<Types.db_result_admin_DBInfoSpaceSum[]>}
  */
-const DBInfoSpaceSum = async (app_id, callBack) => {
-   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const DBInfoSpaceSum = async (app_id) => {
+   const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
    switch (ConfigGet('SERVICE_DB', 'USE')){
       case '1':
@@ -322,12 +311,7 @@ const DBInfoSpaceSum = async (app_id, callBack) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result)=>{
-      if (err)
-         return callBack(err, null);
-      else
-         return callBack(null, result);
-   });
+   return await db_execute_promise(app_id, sql, parameters, DBA);
 };
 /**
  * Create demo users with user settings from /scripts/demo/demo.json
@@ -778,18 +762,11 @@ const demo_get = async (app_id, callBack)=> {
  * @param {number} app_id 
  * @param {string} sql 
  * @param {object} parameters 
- * @returns 
+ * @returns {Promise.<Types.db_query_result>}
  */
 const install_db_execute_statement = async (app_id, sql, parameters) => {
-   const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-   return new Promise((resolve, reject) =>{
-      db_execute(app_id, sql, parameters, DBA, (/**@type{Types.error}*/err, /**@type{*}*/result)=>{
-         if (err)
-            reject(err);
-         else
-            resolve(result);
-      });
-   });
+   const {db_execute_promise} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   return await db_execute_promise(app_id, sql, parameters, DBA);
 };
 /**
  * Install get files

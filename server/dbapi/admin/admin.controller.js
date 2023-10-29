@@ -6,26 +6,23 @@ import * as Types from './../../../types.js';
 const service = await import('./admin.service.js');
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
  * DB Info
  * @param {Types.req} req 
  * @param {Types.res} res 
  */
 const DBInfo = (req, res) => {
-	service.DBInfo(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
-		if (err) {
-			return res.status(500).send({
-				data: err
-			});
-		}
-		else{
-			return res.status(200).json({
-				data: result[0]
-			});
-		}
-		
-	});	
+	service.DBInfo(getNumberValue(req.query.app_id))
+	.then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
+		res.status(200).json({
+			data: result[0]
+		});
+	})
+	.catch((/**@type{Types.error}*/error)=>{
+		res.status(500).send({
+			data: error
+		});
+	});
 };
 /**
  * DB Info space
@@ -33,14 +30,15 @@ const DBInfo = (req, res) => {
  * @param {Types.res} res 
  */
 const DBInfoSpace = (req, res) => {
-	service.DBInfoSpace(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpace}*/result) =>{
-		if (err) {
-			return res.status(500).send({
-				data: err
-			});
-		}
-		return res.status(200).json({
+	service.DBInfoSpace(getNumberValue(req.query.app_id))
+	.then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
+		res.status(200).json({
 			data: result
+		});
+	})
+	.catch((/**@type{Types.error}*/error)=>{
+		res.status(500).send({
+			data: error
 		});
 	});
 };
@@ -50,14 +48,15 @@ const DBInfoSpace = (req, res) => {
  * @param {Types.res} res 
  */
 const DBInfoSpaceSum = (req, res) => {
-	service.DBInfoSpaceSum(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
-		if (err) {
-			return res.status(500).send({
-				data: err
-			});
-		}
-		return res.status(200).json({
+	service.DBInfoSpaceSum(getNumberValue(req.query.app_id))
+	.then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
+		res.status(200).json({
 			data: result[0]
+		});
+	})
+	.catch((/**@type{Types.error}*/error)=>{
+		res.status(500).send({
+			data: error
 		});
 	});
 };
