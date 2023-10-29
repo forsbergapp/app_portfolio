@@ -424,15 +424,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_app = async (app_id, user_account_id) =>{
 			return new Promise((resolve, reject) => {
-				createUserAccountApp(app_id, user_account_id,  (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-					if (err)
-						reject(err);
-					else{
-						if (result.affectedRows == 1)
-							records_user_account_app++;
-						resolve(result);
-					}
-				});
+				createUserAccountApp(app_id, user_account_id)
+            .then((/**@type{Types.db_result_insert}*/result)=>{
+               if (result.affectedRows == 1)
+                  records_user_account_app++;
+               resolve(result);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
+            });
 			});
 		};
       /**
@@ -443,14 +443,14 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_setting = async (user_setting_app_id, data) => {
 			return new Promise((resolve, reject) => {
-            createUserSetting(user_setting_app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-					if (err)
-						reject(err);
-					else{
-						if (result.affectedRows == 1)
+            createUserSetting(user_setting_app_id, data)
+            .then((/**@type{Types.db_result_user_account_app_setting_createUserSetting}*/result)=>{
+               if (result.affectedRows == 1)
 							records_user_account_app_setting++;
 						resolve(result);
-					}
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
             });
 			});
 		};
@@ -569,22 +569,22 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
 			return new Promise((resolve, reject) => {
-				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings) => {
-					if (err)
-						reject(err);
-					else{
-						const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
-						likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-							if (err)
-								reject(err);
-							else{
-								if (result.affectedRows == 1)
-									records_user_account_setting_like++;
-								resolve(result);
-							}
-						});
-					}
-				});
+				getUserSettingsByUserId(app_id, user1)
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings)=>{
+               const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
+               likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
+                  if (err)
+                     reject(err);
+                  else{
+                     if (result.affectedRows == 1)
+                        records_user_account_setting_like++;
+                     resolve(result);
+                  }
+               });              
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
+            });
 			});
 		};
       /**
@@ -597,11 +597,9 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
 			return new Promise((resolve, reject) => {
-				getUserSettingsByUserId(app_id, user1, (/**@type{Types.error}*/err,/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings) => {
-					if (err)
-						reject(err);
-					else{
-						//choose random setting from user
+				getUserSettingsByUserId(app_id, user1)
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings)=>{
+               //choose random setting from user
 						const random_index = Math.floor(1 + Math.random() * results_settings.length -1);
 						let user_account_id;
 						if (social_type == 'SETTINGS_VIEW')
@@ -623,8 +621,10 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 								resolve(result);
 							}
 						});
-					}
-				});
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
+            });
 			});
 		};
 		for (const social_type of social_types){

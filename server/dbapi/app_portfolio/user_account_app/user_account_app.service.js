@@ -1,6 +1,17 @@
-const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/user_account_app */
 
-const createUserAccountApp = (app_id, user_account_id, callBack) => {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @returns {Promise.<Types.db_result_insert>}
+ */
+const createUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_app(
 							app_id, user_account_id, date_created)
 						SELECT :app_id, ua.id, CURRENT_TIMESTAMP
@@ -14,14 +25,15 @@ const createUserAccountApp = (app_id, user_account_id, callBack) => {
 						app_id: app_id,
 						user_account_id: user_account_id
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getUserAccountApps = (app_id, user_account_id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @returns 
+ */
+const getUserAccountApps = async (app_id, user_account_id) => {
 		const sql = `SELECT uap.app_id "app_id",
 							a.app_name "app_name",
 							a.url "url",
@@ -35,14 +47,15 @@ const getUserAccountApps = (app_id, user_account_id, callBack) => {
 		const parameters = {
 						user_account_id: user_account_id
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getUserAccountApp = (app_id, user_account_id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @returns 
+ */
+const getUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `SELECT preference_locale "preference_locale",
 							setting_preference_timezone_id "setting_preference_timezone_id",
 							setting_preference_direction_id "setting_preference_direction_id",
@@ -55,14 +68,16 @@ const getUserAccountApp = (app_id, user_account_id, callBack) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @param {*} data 
+ * @returns {Promise.<Types.db_result_update>}
+ */
+const updateUserAccountApp = async (app_id, user_account_id, data) => {
 		const sql = `UPDATE ${db_schema()}.user_account_app
 						SET preference_locale = :preference_locale,
 							setting_preference_timezone_id = :setting_preference_timezone_id,
@@ -79,14 +94,16 @@ const updateUserAccountApp = (app_id, user_account_id, data, callBack) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const deleteUserAccountApps = (app_id, user_account_id, data_app_id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} user_account_id 
+ * @param {number} data_app_id 
+ * @returns {Promise.<Types.db_result_delete>}
+ */
+const deleteUserAccountApps = async (app_id, user_account_id, data_app_id) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_app
 					WHERE user_account_id = :user_account_id
 					AND app_id = :app_id`;
@@ -94,11 +111,6 @@ const deleteUserAccountApps = (app_id, user_account_id, data_app_id, callBack) =
 						user_account_id: user_account_id,
 						app_id: data_app_id
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps};

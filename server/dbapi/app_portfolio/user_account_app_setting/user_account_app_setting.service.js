@@ -1,34 +1,42 @@
-const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+/** @module server/dbapi/app_portfolio/user_account_app_setting */
 
-const createUserSetting = (app_id, data, callBack) => {
-		let sql;
-		let parameters;
-		sql = `INSERT INTO ${db_schema()}.user_account_app_setting(
-				description, 
-				settings_json,
-				date_created,
-				date_modified,
-				user_account_app_user_account_id,
-				user_account_app_app_id
-				)
-				VALUES(:description,:settings_json,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:user_account_id,:app_id)`;
-		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-			parameters = {
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../../../types.js';
+
+const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.db_parameter_user_account_app_setting_createUserSetting} data 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_createUserSetting>}
+ */
+const createUserSetting = async (app_id, data) => {
+		const sql = `INSERT INTO ${db_schema()}.user_account_app_setting(
+						description, 
+						settings_json,
+						date_created,
+						date_modified,
+						user_account_app_user_account_id,
+						user_account_app_app_id
+						)
+					VALUES(:description,:settings_json,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:user_account_id,:app_id)`;
+			const parameters = {
 							description: data.description,
 							settings_json: JSON.stringify(data.settings_json),
 							user_account_id: data.user_account_id,
 							app_id: app_id,
 							RETURN_ID:true
 						};
-			db_execute(app_id, sql, parameters, null, (err, result)=>{
-				if (err)
-					return callBack(err, null);
-				else
-					return callBack(null, result);
-			});
-		});
+			return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getUserSetting = (app_id, id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_getUserSetting[]>}
+ */
+const getUserSetting = async (app_id, id) => {
 		const sql = `SELECT	id "id",
 							description "description",
 							settings_json "settings_json",
@@ -39,14 +47,15 @@ const getUserSetting = (app_id, id, callBack) => {
 					   FROM ${db_schema()}.user_account_app_setting 
 					  WHERE id = :id `;
 		const parameters = {id: id};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getUserSettingsByUserId = (app_id, id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_getUserSettingsByUserId[]>}
+ */
+const getUserSettingsByUserId = async (app_id, id) => {
 		const sql = `SELECT	id "id",
 						description "description",
 						settings_json "settings_json",
@@ -61,14 +70,15 @@ const getUserSettingsByUserId = (app_id, id, callBack) => {
 						user_account_id: id,
 						app_id: app_id
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getProfileUserSetting = (app_id, id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileUserSetting[]>}
+ */
+const getProfileUserSetting = async (app_id, id) => {
 		const sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
 						 FROM ${db_schema()}.user_account_app_setting_like u_like,
 						   	  ${db_schema()}.user_account_app_setting us
@@ -89,16 +99,16 @@ const getProfileUserSetting = (app_id, id, callBack) => {
 						id: id,
 						app_id: app_id
 					}; 
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
     };
-const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
-		if (id_current_user=='')
-			id_current_user = null;
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {number} id_current_user 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileUserSettings[]>}
+ */
+const getProfileUserSettings = async (app_id, id, id_current_user) => {
 		const sql = `SELECT us.id "id",
 					  		us.description "description",
 					  		us.user_account_app_user_account_id "user_account_app_user_account_id",
@@ -124,14 +134,16 @@ const getProfileUserSettings = (app_id, id, id_current_user, callBack) => {
 						user_account_id: id,
 						app_id: app_id
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {number} detailchoice 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileUserSettingDetail[]>}
+ */
+const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
 		let sql;
 		sql = `SELECT detail "detail", 
 					  id "id", 
@@ -188,14 +200,15 @@ const getProfileUserSettingDetail = (app_id, id, detailchoice, callBack) => {
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
     };
-const getProfileTopSetting = (app_id, statchoice, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} statchoice 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileTopSetting[]>}
+ */
+const getProfileTopSetting = async (app_id, statchoice) => {
 		let sql;
 		sql = `SELECT top "top", 
 					  id "id", 
@@ -254,14 +267,16 @@ const getProfileTopSetting = (app_id, statchoice, callBack) => {
 						app_id: app_id,
 						statchoice: statchoice,
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
     };
-const updateUserSetting = (app_id, data, id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {Types.db_parameter_user_account_app_setting_updateUserSetting} data 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_updateUserSetting>}
+ */
+const updateUserSetting = async (app_id, data, id) => {
 		const sql = `UPDATE ${db_schema()}.user_account_app_setting
 						SET description = :description,
 							settings_json = :settings_json,
@@ -276,25 +291,21 @@ const updateUserSetting = (app_id, data, id, callBack) => {
 						app_id: app_id,
 						id: id
 					};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
-const deleteUserSetting = (app_id, id, callBack) => {
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @returns {Promise.<Types.db_result_user_account_app_setting_deleteUserSetting>}
+ */
+const deleteUserSetting = async (app_id, id) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_app_setting
 					WHERE id = :id `;
 		const parameters = {
 						id: id
 						};
-		db_execute(app_id, sql, parameters, null, (err, result)=>{
-			if (err)
-				return callBack(err, null);
-			else
-				return callBack(null, result);
-		});
+		return await db_execute_promise(app_id, sql, parameters, null);
 	};
 export{	createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
 		getProfileUserSettingDetail, getProfileTopSetting, updateUserSetting, deleteUserSetting};
