@@ -76,6 +76,12 @@
  * @property {string} body.verification_code                        - app portfolio parameter
  * @property {string} body.verification_type                        - app portfolio parameter
  * @property {string} body.auth                                     - app portfolio parameter
+ * @property {number} body.setting_preference_direction_id          - app portfolio parameter
+ * @property {number} body.setting_preference_arabic_script_id      - app portfolio parameter
+ * @property {number} body.setting_preference_timezone_id           - app portfolio parameter
+ * @property {string} body.preference_locale                        - app portfolio parameter
+ * @property {string} body.description                              - app portfolio parameter
+ * @property {object} body.settings_json                            - app portfolio parameter
  * query
  * @property {object} query
  * @property {(string|number|*)} query.id
@@ -115,6 +121,7 @@
  * @property {string} query.object_name                             - app portfolio parameter
  * @property {string} query.setting_type                            - app portfolio parameter
  * @property {string} query.detailchoice                            - app portfolio parameter
+ * @property {number} query.initial                                 - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
  * @property {number} query.identity_provider_id
@@ -1243,6 +1250,17 @@
  * @typedef {{  id:number}} db_result_user_account_getDemousers 
  * USER ACCOUNT APP
  * USER ACCOUNT APP SETTING
+ * @typedef {{  description:string,
+ *              settings_json:object,
+ *              user_account_id:number}} db_parameter_user_account_app_setting_createUserSetting
+ * @typedef {   db_result_insert} db_result_user_account_app_setting_createUserSetting
+ * @typedef {{  id:number,
+ *              description:string,
+ *              settings_json:string,
+ *              date_created:string,
+ *              date_modified:string,
+ *              user_account_app_user_account_id:number,
+ *              user_account_app_id: number}} db_result_user_account_app_setting_getUserSetting
  * @typedef {{  id:number, 
  *              description:string, 
  *              settings_json:string, 
@@ -1250,6 +1268,39 @@
  *              date_modified:string, 
  *              user_account_app_user_account_id:number, 
  *              user_account_app_app_id:number}} db_result_user_account_app_setting_getUserSettingsByUserId
+ * @typedef {{  count_user_setting_likes:number,
+ *              count_user_setting_liked:number}} db_result_user_account_app_setting_getProfileUserSetting
+ * @typedef {{  id:number,
+ *              description:string,
+ *              user_account_app_user_account_id:number,
+ *              settings_json:string,
+ *              count_likes:number,
+ *              count_views:number,
+ *              liked:number}} db_result_user_account_app_setting_getProfileUserSettings
+ * @typedef {{  detail:string,
+ *              id:number,
+ *              identity_provider_id:number,
+ *              provider_id:string,
+ *              avatar:string,
+ *              provider_image:string,
+ *              provider_image_url:string,
+ *              username:string,
+ *              provider_first_name:string}} db_result_user_account_app_setting_getProfileUserSettingDetail
+ * @typedef {{  top:string,
+ *              id:number,
+ *              iidentity_provider_id:number,
+ *              provider_id:string,
+ *              avatar:string,
+ *              provider_image:string,
+ *              provider_image_url:string,
+ *              username:string,
+ *              provider_first_name:string,
+ *              count:number}} db_result_user_account_app_setting_getProfileTopSetting
+ * @typedef {{  description:string,
+ *              settings_json:object,
+ *              user_account_id:number}} db_parameter_user_account_app_setting_updateUserSetting
+ * @typedef {   db_result_update} db_result_user_account_app_setting_updateUserSetting
+ * @typedef {   db_result_delete} db_result_user_account_app_setting_deleteUserSetting
  * USER ACCOUNT APP SETTING LIKE
  * USER ACCOUNT APP SETTING VIEW
  * USER ACCOUNT EVENT
