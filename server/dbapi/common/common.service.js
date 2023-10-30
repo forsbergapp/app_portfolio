@@ -23,10 +23,10 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.se
  *	'ORA-00001: unique constraint (APP_PORTFOLIO.USER_ACCOUNT_USERNAME_UN) violated'
  *
  * @param {number} errorNum 
- * @param {*} message 
+ * @param {object} message 
  * @param {string} code 
  * @param {string} errno 
- * @param {*} sqlMessage 
+ * @param {object} sqlMessage 
  * @returns (string|null)
  * 
  */
@@ -96,7 +96,7 @@ const record_not_found = (res, app_id, lang_code) => {
  * 3 = ex zh from zh-hant-cn
  * @param {string} lang_code 
  * @param {number} part 
- * @returns 
+ * @returns {string|null}
  */
 const get_locale = (lang_code, part) => {
 	if (lang_code==null)
@@ -118,6 +118,8 @@ const get_locale = (lang_code, part) => {
 				else
 					return lang_code;
 			}
+			default:
+				return null;
 		}
 };
 /**
@@ -128,39 +130,39 @@ const db_schema = () => ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'US
 
 /**
  * Limit SQL rows
- * limit_type 1	Env limit LIMIT_LIST_SEARCH
- * limit_type 2 Env limit LIMIT_LIST_PROFILE_TOP
- * limit_type 3 App function limit
+ * limit_type 1		Env limit LIMIT_LIST_SEARCH
+ * limit_type 2 	Env limit LIMIT_LIST_PROFILE_TOP
+ * limit_type null 	App function limit
  * @param {string} sql 
- * @param {number|null} limit_type 
- * @returns 
+ * @param {1|2|null} limit_type 
+ * @returns {string}
  */
 const db_limit_rows = (sql, limit_type = null) => {
-	const db_use = ConfigGet('SERVICE_DB', 'USE');
-	if (db_use == '1' || db_use == '2' || db_use == '3')
+	const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
+	if (db_use == 1 || db_use == 2 || db_use == 3)
 		switch (limit_type){
 			case 1:{
-				return sql + ` LIMIT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')} `;
+				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} `;
 			}
 			case 2:{
-				return sql + ` LIMIT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} `;
+				return sql + ` LIMIT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP'))} `;
 			}
-			case null:{
+			default:{
 				return sql + ' LIMIT :limit OFFSET :offset';	
 			}
 		}
 	else 
-		if (db_use == '4')
+		if (db_use == 4)
 			switch (limit_type){
 				case 1:{
 					//use env limit
-					return sql + ` FETCH NEXT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))} ROWS ONLY`;
 				}
 				case 2:{
 					//use env limit
-					return sql + ` FETCH NEXT ${ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP')} ROWS ONLY`;
+					return sql + ` FETCH NEXT ${getNumberValue(ConfigGet('SERVICE_DB', 'LIMIT_LIST_PROFILE_TOP'))} ROWS ONLY`;
 				}
-				case null:{
+				default:{
 					//use app function limit
 					return sql + ' OFFSET :offset ROWS FETCH NEXT :limit ROWS ONLY';
 				}
