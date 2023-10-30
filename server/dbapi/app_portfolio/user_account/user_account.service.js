@@ -4,7 +4,7 @@
 import * as Types from './../../../../types.js';
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -212,7 +212,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 							offset: offset ?? 0,
 							limit: limit ?? parseInt(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')),
 							};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
     };
 /**
  * 
@@ -225,7 +225,7 @@ const getUserAppRoleAdmin = async (app_id, id) => {
 				   FROM ${db_schema()}.user_account
 				  WHERE id = :id`;
 	const parameters = {id: id};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -247,7 +247,7 @@ const getStatCountAdmin = async app_id => {
 				  GROUP BY ua.identity_provider_id, ip.provider_name
 				  ORDER BY ua.identity_provider_id`;
 	const parameters = {};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -299,7 +299,7 @@ const updateUserSuperAdmin = async (app_id, id, data) => {
 					password_reminder: data.password_reminder,
 					verification_code: data.verification_code
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	}
 	else
 		throw error_code;
@@ -380,7 +380,7 @@ const create = async (app_id, data) => {
 						provider_email: data.provider_email,
 						RETURN_ID:true
 					};
-			return await db_execute_promise(app_id, sql, parameters, null);
+			return await db_execute(app_id, sql, parameters, null);
 	}
 	else
 		throw error_code;      
@@ -419,7 +419,7 @@ const activateUser = async (app_id, id, verification_type, verification_code, au
 						id: id,
 						verification_code: verification_code
 					};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -438,7 +438,7 @@ const updateUserVerificationCode = async (app_id, id, verification_code) => {
 						verification_code: verification_code,
 						id: id   
 					}; 
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -475,7 +475,7 @@ const getUserByUserId = async (app_id, id) => {
 				FROM   ${db_schema()}.user_account u
 			WHERE   u.id = :id `;
 	const parameters = {id: id};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -551,7 +551,7 @@ const getProfileUser = async (app_id, id, username, id_current_user) => {
 						username: username,
 						app_id: app_id
 					}; 
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -584,7 +584,7 @@ const searchProfileUser = async (app_id, username) => {
 						provider_first_name: '%' + username + '%',
 						app_id: app_id
 					};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -668,7 +668,7 @@ const getProfileDetail = async (app_id, id, detailchoice) => {
 						user_account_id: id,
 						detailchoice: detailchoice
 					}; 
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -748,7 +748,7 @@ const getProfileTop = async (app_id, statchoice) => {
 						statchoice: statchoice,
 						app_id: app_id
 					};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -761,7 +761,7 @@ const checkPassword = async (app_id, id) => {
 				   FROM ${db_schema()}.user_account
 				  WHERE id = :id `;
 	const parameters = {id: id};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -784,7 +784,7 @@ const updatePassword = async (app_id, id, data) => {
 							id: id,
 							auth: data.auth
 						}; 
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	}
 	else
 		throw error_code;
@@ -829,7 +829,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						verification_code: data.verification_code,
 						id: search_id
 					}; 
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	}
 	else
 		throw error_code;
@@ -857,7 +857,7 @@ const updateUserCommon = async (app_id, data, id) => {
 						private: data.private,
 						id: id
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	}
 	else
 		throw error_code;
@@ -872,7 +872,7 @@ const deleteUser = async (app_id, id) => {
 	const sql = `DELETE FROM ${db_schema()}.user_account
 				  WHERE id = :id `;
 	const parameters = {id: id};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -895,7 +895,7 @@ const userLogin = async (app_id, data) => {
 	const parameters ={
 						username: data.username
 					};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -929,7 +929,7 @@ const updateSigninProvider = async (app_id, id, data) => {
 						provider_email: data.provider_email,
 						id: id
 					};
-		return await db_execute_promise(app_id, sql, parameters);
+		return await db_execute(app_id, sql, parameters);
 	}
 	else
 		throw error_code;
@@ -959,7 +959,7 @@ const providerSignIn = async (app_id, identity_provider_id, search_id) => {
 						provider_id: search_id,
 						identity_provider_id: identity_provider_id
 					};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -975,7 +975,7 @@ const getEmailUser = async (app_id, email) => {
 	const parameters ={
 					email: email
 				};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -1005,7 +1005,7 @@ const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
 					id_user_icon: 2
 				};
 	//use pool column 2 for system admin
-	return await db_execute_promise(app_id, sql, parameters, dba);
+	return await db_execute(app_id, sql, parameters, dba);
 };
 /**
  * 
@@ -1019,7 +1019,7 @@ const getDemousers = async app_id => {
 	const parameters ={
 					demo_level: 2
 				};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 
 export{	verification_code,

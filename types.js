@@ -82,6 +82,7 @@
  * @property {string} body.preference_locale                        - app portfolio parameter
  * @property {string} body.description                              - app portfolio parameter
  * @property {object} body.settings_json                            - app portfolio parameter
+ * @property {number} body.user_setting_id                          - app portfolio parameter
  * query
  * @property {object} query
  * @property {(string|number|*)} query.id
@@ -1302,7 +1303,16 @@
  * @typedef {   db_result_update} db_result_user_account_app_setting_updateUserSetting
  * @typedef {   db_result_delete} db_result_user_account_app_setting_deleteUserSetting
  * USER ACCOUNT APP SETTING LIKE
+ * @typedef {   db_result_insert} db_result_user_account_app_setting_like_likeUserSetting
+ * @typedef {   db_result_delete} db_result_user_account_app_setting_like_unlikeUserSetting
  * USER ACCOUNT APP SETTING VIEW
+ * @typedef {{  client_ip:string,
+ *              client_user_agent:string,
+ *              client_longitude:string,
+ *              client_latitude:string,
+ *              user_account_id:number,
+ *              user_setting_id:number}} db_parameter_user_account_app_setting_view_insertUserSettingView
+ * @typedef {   db_result_insert} db_result_user_account_app_setting_view_insertUserSettingView
  * USER ACCOUNT EVENT
  * @typedef {{  user_account_id:number,
  *              user_language:string,
@@ -1327,8 +1337,38 @@
  *              date_modified:string,
  *              current_timestamp:string}} db_result_user_account_event_getLastUserEvent
  * USER ACCOUNT FOLLOW
+ * @typedef {   db_result_insert} db_result_user_account_follow_followUser
+ * @typedef {   db_result_delete} db_result_user_account_follow_unfollowUser
  * USER ACCOUNT LIKE
+ * @typedef {   db_result_insert} db_result_user_account_like_likeUser
+ * @typedef {   db_result_delete} db_result_user_account_like_unlikeUser
  * USER ACCOUNT LOGON
+ * @typedef {{  user_account_id:number,
+ *              app_id:number,
+ *              result:number,
+ *              access_token:string,
+ *              client_ip:string,
+ *              client_user_agent:string,
+ *              client_longitude:string,
+ *              client_latitude:string,
+ *              date_created:string}} db_result_user_account_logon_getUserAccountLogonAdmin
  * @typedef {{  login:number}} db_result_user_account_logon_Checklogin
+ * @typedef {{  access_token:string,
+ *              user_account_id:number,
+ *              app_id:number,
+ *              result:number,
+ *              client_ip:string,
+ *              client_user_agent:string,
+ *              client_longitude:string,
+ *              client_latitude:string}} db_parameter_user_account_logon_insertUserAccountLogon
+ * @typedef {   db_result_insert} db_result_user_account_logon_insertUserAccountLogon
+ * USER ACCOUNT VIEW
+ * @typedef {{  user_account_id:number,
+ *              user_account_id_view:number,
+ *              client_ip:string,
+ *              client_user_agent:string,
+ *              client_longitude:string,
+ *              client_latitude:string}} db_parameter_user_account_view_insertUserAccountView
+ * @typedef {   db_result_insert} db_result_user_account_view_insertUserAccountView
  */
 export {};

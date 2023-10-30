@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -25,7 +25,7 @@ const createUserAccountApp = async (app_id, user_account_id) => {
 						app_id: app_id,
 						user_account_id: user_account_id
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -47,7 +47,7 @@ const getUserAccountApps = async (app_id, user_account_id) => {
 		const parameters = {
 						user_account_id: user_account_id
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -68,7 +68,7 @@ const getUserAccountApp = async (app_id, user_account_id) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -94,7 +94,7 @@ const updateUserAccountApp = async (app_id, user_account_id, data) => {
 						user_account_id: user_account_id,
 						app_id: app_id
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -111,6 +111,6 @@ const deleteUserAccountApps = async (app_id, user_account_id, data_app_id) => {
 						user_account_id: user_account_id,
 						app_id: data_app_id
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps};

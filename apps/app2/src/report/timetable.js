@@ -1728,69 +1728,70 @@ const timetable = async (timetable_parameters) => {
                                     client_latitude:    timetable_parameters.latitude,
                                     user_account_id:    timetable_parameters.uid_view,
                                     user_setting_id:    getNumberValue(user_setting_id)};
-			insertUserSettingView(timetable_parameters.app_id, data_ViewStat, (/**@type{Types.error}*/err,result) => {
-				if (err)
-					resolve('');
-				else
-					timetable_user_setting_get(timetable_parameters.app_id, user_setting_id, (err, user_setting) =>{
-						if (err)
-							resolve('');
-						else{
-							render_variables.push(['BODY_CLASSNAME',user_setting.arabic_script]);
-							render_variables.push(['REPORT_PAPER_CLASSNAME',user_setting.papersize]);
-							timetable_translate_settings(timetable_parameters.app_id, user_setting.locale, user_setting.second_locale).then(() => {
-								if (err)
-									resolve('');
-								else
-									import('praytimes').then(({default: prayTimes}) => {
-										//set current date for report month
-										REPORT_GLOBAL['session_currentDate'] = new Date();
-										REPORT_GLOBAL['session_CurrentHijriDate'] = new Array();
-										//get Hijri date from initial Gregorian date
-										REPORT_GLOBAL['session_CurrentHijriDate'][0] = 
-											Number(new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
-																REPORT_GLOBAL['session_currentDate'].getMonth(),
-																REPORT_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-										REPORT_GLOBAL['session_CurrentHijriDate'][1] = 
-											Number(new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
-																REPORT_GLOBAL['session_currentDate'].getMonth(),
-																REPORT_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-										set_prayer_method(timetable_parameters.app_id, user_setting.locale).then(() => {
-											if (reporttype==0){
-												timetable_day_user_settings_get(timetable_parameters.app_id, user_account_id, (err, user_settings_parameters) =>{
-													if (err)
-														resolve('');
-													else{
-														render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_setting, user_settings_parameters)]);
-														getQRCode(timetable_parameters.url).then((qrcode)=>{
-															render_variables.push(['REPORT_QRCODE',qrcode]);
-															resolve(render_app_with_data(timetable_parameters.report, render_variables));
-														});
-													}
-												});
-											}
-											else
-												if (reporttype==1){
-													render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_setting)]);
+			insertUserSettingView(timetable_parameters.app_id, data_ViewStat)
+			.then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
+				timetable_user_setting_get(timetable_parameters.app_id, user_setting_id, (err, user_setting) =>{
+					if (err)
+						resolve('');
+					else{
+						render_variables.push(['BODY_CLASSNAME',user_setting.arabic_script]);
+						render_variables.push(['REPORT_PAPER_CLASSNAME',user_setting.papersize]);
+						timetable_translate_settings(timetable_parameters.app_id, user_setting.locale, user_setting.second_locale).then(() => {
+							if (err)
+								resolve('');
+							else
+								import('praytimes').then(({default: prayTimes}) => {
+									//set current date for report month
+									REPORT_GLOBAL['session_currentDate'] = new Date();
+									REPORT_GLOBAL['session_CurrentHijriDate'] = new Array();
+									//get Hijri date from initial Gregorian date
+									REPORT_GLOBAL['session_CurrentHijriDate'][0] = 
+										Number(new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
+															REPORT_GLOBAL['session_currentDate'].getMonth(),
+															REPORT_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+									REPORT_GLOBAL['session_CurrentHijriDate'][1] = 
+										Number(new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
+															REPORT_GLOBAL['session_currentDate'].getMonth(),
+															REPORT_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+									set_prayer_method(timetable_parameters.app_id, user_setting.locale).then(() => {
+										if (reporttype==0){
+											timetable_day_user_settings_get(timetable_parameters.app_id, user_account_id, (err, user_settings_parameters) =>{
+												if (err)
+													resolve('');
+												else{
+													render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_setting, user_settings_parameters)]);
 													getQRCode(timetable_parameters.url).then((qrcode)=>{
 														render_variables.push(['REPORT_QRCODE',qrcode]);
 														resolve(render_app_with_data(timetable_parameters.report, render_variables));
 													});
 												}
-												else 
-													if (reporttype==2){
-														render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_setting)]);
-														getQRCode(timetable_parameters.url).then((qrcode)=>{
-															render_variables.push(['REPORT_QRCODE',qrcode]);
-															resolve(render_app_with_data(timetable_parameters.report, render_variables));
-														});
-													}
-										});
+											});
+										}
+										else
+											if (reporttype==1){
+												render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_setting)]);
+												getQRCode(timetable_parameters.url).then((qrcode)=>{
+													render_variables.push(['REPORT_QRCODE',qrcode]);
+													resolve(render_app_with_data(timetable_parameters.report, render_variables));
+												});
+											}
+											else 
+												if (reporttype==2){
+													render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_setting)]);
+													getQRCode(timetable_parameters.url).then((qrcode)=>{
+														render_variables.push(['REPORT_QRCODE',qrcode]);
+														resolve(render_app_with_data(timetable_parameters.report, render_variables));
+													});
+												}
 									});
-									
-							});
-						}
-					});
+								});
+								
+						});
+					}
+				});
+			})
+			.catch(()=>{
+				resolve('');
 			});
 		});
 	});

@@ -94,7 +94,7 @@ const DBStart = async () => {
  * @returns {Promise.<Types.db_result_admin_DBInfo[]>}
  */
 const DBInfo = async (app_id) => {
-   const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
    const db_use = ConfigGet('SERVICE_DB', 'USE');
    switch (db_use){
@@ -203,7 +203,7 @@ const DBInfo = async (app_id) => {
                   database: db_use,
                   Xdatabase_schema: db_schema()
                   };
-   return await db_execute_promise(app_id, sql, parameters, DBA);
+   return await db_execute(app_id, sql, parameters, DBA);
 };
 /**
  * 
@@ -211,7 +211,7 @@ const DBInfo = async (app_id) => {
  * @returns {Promise.<Types.db_result_admin_DBInfoSpace[]>}
  */
 const DBInfoSpace = async (app_id) => {
-   const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
    switch (ConfigGet('SERVICE_DB', 'USE')){
       case '1':
@@ -261,7 +261,7 @@ const DBInfoSpace = async (app_id) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   return await db_execute_promise(app_id, sql, parameters, DBA);
+   return await db_execute(app_id, sql, parameters, DBA);
 };
 /**
  * 
@@ -269,7 +269,7 @@ const DBInfoSpace = async (app_id) => {
  * @returns {Promise.<Types.db_result_admin_DBInfoSpaceSum[]>}
  */
 const DBInfoSpaceSum = async (app_id) => {
-   const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
    let sql;
    switch (ConfigGet('SERVICE_DB', 'USE')){
       case '1':
@@ -311,7 +311,7 @@ const DBInfoSpaceSum = async (app_id) => {
       }
    }
    const parameters = {db_schema: db_schema()};
-   return await db_execute_promise(app_id, sql, parameters, DBA);
+   return await db_execute(app_id, sql, parameters, DBA);
 };
 /**
  * Create demo users with user settings from /scripts/demo/demo.json
@@ -494,34 +494,34 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_likeuser = async (app_id, id, id_like ) =>{
 			return new Promise((resolve, reject) => {
-				likeUser(app_id, id, id_like, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-					if (err)
-						reject(err);
-					else{
-						if (result.affectedRows == 1)
-							records_user_account_like++;
-						resolve(result);
-					}
-				});
+				likeUser(app_id, id, id_like)
+            .then((/**@type{Types.db_result_user_account_like_likeUser}*/result) => {
+               if (result.affectedRows == 1)
+                  records_user_account_like++;
+               resolve(result);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
+            });
 			});
 		};
       /**
        * Create user account view
        * @param {number} app_id 
-       * @param {object} data 
+       * @param {Types.db_parameter_user_account_view_insertUserAccountView} data 
        * @returns 
        */
 		const create_user_account_view = async (app_id, data ) =>{
 			return new Promise((resolve, reject) => {
-				insertUserAccountView(app_id, data, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-					if (err)
-						reject(err);
-					else{
-						if (result.affectedRows == 1)
-							records_user_account_view++;
-						resolve(result);
-					}
-				});
+				insertUserAccountView(app_id, data)
+            .then((/**@type{Types.db_result_user_account_view_insertUserAccountView}*/result) => {
+               if (result.affectedRows == 1)
+						records_user_account_view++;
+               resolve(result);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
+            });
 			});
 		};
       /**
@@ -533,15 +533,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        */
 		const create_user_account_follow = async (app_id, id, id_follow ) =>{
 			return new Promise((resolve, reject) => {
-				followUser(app_id, id, id_follow, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-					if (err)
-						reject(err);
-					else{
-						if (result.affectedRows == 1)
-							records_user_account_follow++;
-						resolve(result);
-					}
-				});
+				followUser(app_id, id, id_follow)
+            .then((/**@type{Types.db_result_user_account_follow_followUser}*/result)=>{
+               if (result.affectedRows == 1)
+                  records_user_account_follow++;
+               resolve(result);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+               reject(error);
+            });
 			});
 		};
       /**
@@ -556,15 +556,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 				getUserSettingsByUserId(app_id, user1)
             .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings)=>{
                const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
-               likeUserSetting(app_id, user2, results_settings[random_settings_index].id, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-                  if (err)
-                     reject(err);
-                  else{
-                     if (result.affectedRows == 1)
-                        records_user_account_setting_like++;
-                     resolve(result);
-                  }
-               });              
+               likeUserSetting(app_id, user2, results_settings[random_settings_index].id)
+               .then((/**@type{Types.db_result_user_account_app_setting_like_likeUserSetting}*/result) => {
+                  if (result.affectedRows == 1)
+                     records_user_account_setting_like++;
+                  resolve(result);
+               })
+               .catch((/**@type{Types.error}*/error)=>{
+                  reject(error);
+               });
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -596,15 +596,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                                                    client_user_agent: null,
                                                    client_longitude: null,
                                                    client_latitude: null
-															}, (/**@type{Types.error}*/err,/**@type{Types.db_result_insert}*/result) => {
-							if (err)
-								reject(err);
-							else{
-								if (result.affectedRows == 1)
-									records_user_account_setting_view++;
-								resolve(result);
-							}
-						});
+															})
+                  .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
+                     if (result.affectedRows == 1)
+								records_user_account_setting_view++;
+							resolve(result);
+                  })
+                  .catch((/**@type{Types.error}*/error)=>{
+                     reject(error);
+                  });
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -765,8 +765,8 @@ const demo_get = async (app_id, callBack)=> {
  * @returns {Promise.<Types.db_query_result>}
  */
 const install_db_execute_statement = async (app_id, sql, parameters) => {
-   const {db_execute_promise} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-   return await db_execute_promise(app_id, sql, parameters, DBA);
+   const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+   return await db_execute(app_id, sql, parameters, DBA);
 };
 /**
  * Install get files

@@ -4,7 +4,7 @@
 import * as Types from './../../../../types.js';
 
 const { getNumberValue, ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -69,7 +69,7 @@ const createLog = async (app_id, data) => {
 						server_http_host: data.server_http_host,
 						server_http_accept_language: data.server_http_accept_language
 					};
-		return await db_execute_promise(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), sql, parameters, null);
+		return await db_execute(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), sql, parameters, null);
 	}
 	else
 		return (null);
@@ -146,7 +146,7 @@ const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, of
 							month:month,
 							offset:offset,
 							limit:limit};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -189,6 +189,6 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,
 							month_log: month};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{createLog, getLogsAdmin, getStatUniqueVisitorAdmin};
