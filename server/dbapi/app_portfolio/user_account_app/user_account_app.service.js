@@ -9,7 +9,7 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns {Promise.<Types.db_result_insert>}
+ * @returns {Promise.<Types.db_result_user_account_app_createUserAccountApp>}
  */
 const createUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_app(
@@ -31,7 +31,7 @@ const createUserAccountApp = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns 
+ * @returns {Promise.<Types.db_result_user_account_app_getUserAccountApps[]>}
  */
 const getUserAccountApps = async (app_id, user_account_id) => {
 		const sql = `SELECT uap.app_id "app_id",
@@ -53,7 +53,7 @@ const getUserAccountApps = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @returns 
+ * @returns {Promise.<Types.db_result_user_account_app_getUserAccountApp[]>}
  */
 const getUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `SELECT preference_locale "preference_locale",
@@ -74,8 +74,8 @@ const getUserAccountApp = async (app_id, user_account_id) => {
  * 
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @param {*} data 
- * @returns {Promise.<Types.db_result_update>}
+ * @param {Types.db_parameter_user_account_app_updateUserAccountApp} data 
+ * @returns {Promise.<Types.db_result_user_account_app_updateUserAccountApp>}
  */
 const updateUserAccountApp = async (app_id, user_account_id, data) => {
 		const sql = `UPDATE ${db_schema()}.user_account_app
@@ -101,7 +101,7 @@ const updateUserAccountApp = async (app_id, user_account_id, data) => {
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @param {number} data_app_id 
- * @returns {Promise.<Types.db_result_delete>}
+ * @returns {Promise.<Types.db_result_user_account_app_deleteUserAccountApps>}
  */
 const deleteUserAccountApps = async (app_id, user_account_id, data_app_id) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_app
