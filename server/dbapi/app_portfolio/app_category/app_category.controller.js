@@ -15,12 +15,12 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getAppCategoryAdmin = (req, res) => {
 	service.getAppCategoryAdmin(getNumberValue(req.query.app_id), getNumberValue(req.query.id), req.query.lang_code)
 	.then((result)=> {
-		return res.status(200).json({
+		res.status(200).json({
 			data: result
 		});
 	})
 	.catch((error)=> {
-		return res.status(500).send({
+		res.status(500).send({
 			data: error
 		});
 	});

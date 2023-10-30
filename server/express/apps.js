@@ -149,13 +149,13 @@ const req_report_param = req =>{return{ reportid:               req.query.report
                 res.end();
             }
             else
-                return res.send(app_result);
+                res.send(app_result);
         });
     });
     app.get('/:sub',(/** @type{Types.req}*/req, /** @type{Types.res}*/res, /**@type{function}*/next) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
         if (getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) == app_id)
-            return res.redirect('/');
+            res.redirect('/');
         else
             if (ConfigGetApp(app_id, 'SHOWPARAM') == 1 && req.params.sub !== '' && !req.params.sub.startsWith('/apps'))
                 getApp(req_app_param(req), app_id, req.params.sub, (/**@type{Types.error}*/err, /**@type{string}*/app_result)=>{
@@ -168,9 +168,9 @@ const req_report_param = req =>{return{ reportid:               req.query.report
                     else{
                         //if app_result=null means here redirect to /
                         if (app_result==null)
-                            return res.redirect('/');
+                            res.redirect('/');
                         else
-                            return res.send(app_result);
+                            res.send(app_result);
                     }
                 });
             else
