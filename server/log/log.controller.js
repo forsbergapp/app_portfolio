@@ -15,11 +15,11 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getLogParameters = (req, res) => {
 	service.getLogParameters(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, result) =>{
 		if (err)
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json({
+			res.status(200).json({
 				data: result
 			});
 	});
@@ -44,16 +44,16 @@ const getLogs = (req, res) => {
 					};
 	service.getLogs(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, result) =>{
 		if (err)
-			return res.status(500).send(
+			res.status(500).send(
 				err
 			);
 		else{
 			if (result.length>0)
-				return res.status(200).json({
+				res.status(200).json({
 					data: result
 				});
 			else{
-				return res.status(404).send(
+				res.status(404).send(
 					'Record not found'
 				);
 			}
@@ -68,7 +68,7 @@ const getLogs = (req, res) => {
 const getStatusCodes = async (req, res) =>{
 	const status_codes = await service.getStatusCodes();
 	service.getStatusCodes().then(()=>{
-		return res.status(200).json({
+		res.status(200).json({
 			status_codes: status_codes
 		});
 	});
@@ -87,16 +87,16 @@ const getLogsStats = async (req, res) => {
 					};
 	service.getLogsStats(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err, result) =>{
 		if (err)
-			return res.status(500).send(
+			res.status(500).send(
 				err
 			);
 		else{
 			if (result.length>0)
-				return res.status(200).json({
+				res.status(200).json({
 					data: result
 				});
 			else{
-				return res.status(404).send(
+				res.status(404).send(
 					'Record not found'
 				);
 			}
@@ -111,16 +111,16 @@ const getLogsStats = async (req, res) => {
 const getFiles = (req, res) => {
 	service.getFiles(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, result) =>{
 		if (err)
-			return res.status(500).send(
+			res.status(500).send(
 				err
 			);
 		else{
 			if (result.length>0)
-				return res.status(200).json({
+				res.status(200).json({
 					data: result
 				});
 			else{
-				return res.status(404).send(
+				res.status(404).send(
 					'Record not found'
 				);
 			}
