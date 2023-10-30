@@ -266,7 +266,6 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                   if (err)
                      return reject (err);
                   else{
-                     conn.release();
                      //change json parameters to [] syntax with bind variable names
                      //common syntax: connection.query("UPDATE [table] SET [column] = :title", { title: "value" });
                      //mysql syntax: connection.query("UPDATE [table] SET [column] = ?", ["value"];
@@ -284,6 +283,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                            return reject (err);
                         }
                         else{
+                           conn.release();
                            //convert blob buffer to string if any column is a BLOB type
                            if (result.length>0){
                               for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
@@ -344,31 +344,31 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                pool_get(pool_id, db_use, dba).connect().then((/**@type{Types.pool_connection_3}*/pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
                   .then((/**@type{Types.pool_connection_3_result}*/result) => {
-                  pool3.release();
-                  //add common attributes
-                  if (result.command == 'INSERT' && result.rows.length>0)
-                     result.insertId = result.rows[0].id;
-                  if (result.command == 'INSERT' ||
-                     result.command == 'DELETE' ||
-                     result.command == 'UPDATE'){
-                     result.affectedRows = result.rowCount;
-                  }
-                  //convert blob buffer to string if any column is a BYTEA type
-                  if (result.rows.length>0){
-                     for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
-                        if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
-                           for (let i=0;i<result.rows.length;i++){
-                              if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
-                                 if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
-                                    result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+                     pool3.release();
+                     //add common attributes
+                     if (result.command == 'INSERT' && result.rows.length>0)
+                        result.insertId = result.rows[0].id;
+                     if (result.command == 'INSERT' ||
+                        result.command == 'DELETE' ||
+                        result.command == 'UPDATE'){
+                        result.affectedRows = result.rowCount;
+                     }
+                     //convert blob buffer to string if any column is a BYTEA type
+                     if (result.rows.length>0){
+                        for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
+                           if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
+                              for (let i=0;i<result.rows.length;i++){
+                                 if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
+                                    if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
+                                       result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
+                              }
                            }
                         }
                      }
-                  }
-                  if (result.command == 'SELECT')
-                     return resolve(result.rows);
-                  else
-                     return resolve(result);
+                     if (result.command == 'SELECT')
+                        return resolve(result.rows);
+                     else
+                        return resolve(result);
                   })
                   .catch((/**@type{Types.error}*/err) => {
                      return reject(err);
