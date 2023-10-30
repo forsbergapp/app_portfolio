@@ -95,7 +95,7 @@ const getReportSettings = () => {
                 asr                 	: document.getElementById('setting_select_asr').value,
                 highlat             	: document.getElementById('setting_select_highlatitude').value,
                 format              	: document.getElementById('setting_select_timeformat').value,
-                hijri_adj           	: document.getElementById('setting_select_hijri_adjustment').value,
+                hijri_adj           	: Number(document.getElementById('setting_select_hijri_adjustment').value),
                 iqamat_fajr         	: document.getElementById('setting_select_report_iqamat_title_fajr').value,
                 iqamat_dhuhr        	: document.getElementById('setting_select_report_iqamat_title_dhuhr').value,
                 iqamat_asr          	: document.getElementById('setting_select_report_iqamat_title_asr').value,
