@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -57,6 +57,6 @@ const getSettings = async (app_id, lang_code, setting_type_name) => {
                          common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
                          setting_type_name: setting_type_name
                          };
-     return await db_execute_promise(app_id, sql, parameters, null);
+     return await db_execute(app_id, sql, parameters, null);
 };
 export{getSettings};

@@ -175,51 +175,9 @@ const db_limit_rows = (sql, limit_type = null) => {
  * @param {string} sql 
  * @param {object} parameters 
  * @param {number} dba 
- * @param {Types.callBack} callBack 
- */
-const db_execute = (app_id, sql, parameters, dba, callBack) =>{
-	import(`file://${process.cwd()}/server/db/db.service.js`).then(({db_query}) => {
-		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
-		.then((/**@type{Types.db_query_result}*/result)=> {
-			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBI}) => {
-				LogDBI(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, result)
-				.then(()=>{
-					return callBack(null, result);});
-				});
-			})
-		.catch((/**@type{Types.error}*/error)=>{
-			const database_error = 'DATABASE ERROR';
-			import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogDBE}) => {
-				LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
-				.then(()=>{
-					const app_code = get_app_code(error.errorNum, 
-						error.message, 
-						error.code, 
-						error.errno, 
-						error.sqlMessage);
-					if (app_code != null)
-						return callBack(error, null);
-					else{
-						//return full error to admin
-						if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-							return callBack(error, null);
-						else
-							return callBack(database_error, null);
-					}
-				});	
-			});
-		});
-	});
-};
-/**
- * 
- * @param {number} app_id 
- * @param {string} sql 
- * @param {object} parameters 
- * @param {number} dba 
  * @returns {Promise.<Types.error|{}>}
  */
- const db_execute_promise = async (app_id, sql, parameters, dba) =>{
+ const db_execute = async (app_id, sql, parameters, dba) =>{
 	return new Promise ((resolve, reject)=>{
 		db_query(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, dba)
 		.then((/**@type{Types.db_query_result}*/result)=> {
@@ -253,5 +211,5 @@ const db_execute = (app_id, sql, parameters, dba, callBack) =>{
 
 export{
 		get_app_code, record_not_found, get_locale,
-		db_schema,  db_limit_rows, db_execute, db_execute_promise
+		db_schema,  db_limit_rows, db_execute
 };

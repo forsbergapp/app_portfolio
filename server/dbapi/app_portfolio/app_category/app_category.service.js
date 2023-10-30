@@ -2,7 +2,7 @@
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
-const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -34,6 +34,6 @@ const getAppCategoryAdmin = async (app_id, id, lang_code) => {
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3),
 							id: id};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{getAppCategoryAdmin};

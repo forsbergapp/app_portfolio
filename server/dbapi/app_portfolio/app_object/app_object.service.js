@@ -4,7 +4,7 @@
 import * as Types from './../../../../types.js';
 
 const {getNumberValue, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -107,6 +107,6 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 						object : object,
 						Xobject_Xname: object_name
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{getObjects};

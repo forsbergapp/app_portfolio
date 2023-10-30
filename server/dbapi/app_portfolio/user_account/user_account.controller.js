@@ -487,18 +487,17 @@ const getProfileUser = (req, res) => {
                                     client_user_agent:      req.headers['user-agent'],
                                     client_longitude:       req.body.client_longitude,
                                     client_latitude:        req.body.client_latitude};
-                    insertUserAccountView(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
-                        if (err) {
-                            res.status(500).send(
-                                err
-                            );
-                        }
-                        else{
-                            //send without {} so the variablename is not sent
-                            res.status(200).json(
-                                result_getProfileUser[0]
-                            );
-                        }
+                    insertUserAccountView(getNumberValue(req.query.app_id), data)
+                    .then(()=>{
+                        //send without {} so the variablename is not sent
+                        res.status(200).json(
+                            result_getProfileUser[0]
+                        );
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        res.status(500).send(
+                            error
+                        );
                     });
                 });
             }
@@ -983,16 +982,17 @@ const userLogin = (req, res) => {
                                             }
                                             else{
                                                 data.access_token = accessToken(req.query.app_id);
-                                                insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
-                                                    if (err)
-                                                        res.status(500).send(
-                                                            err
-                                                        );
-                                                    else
-                                                        res.status(200).json({
-                                                            accessToken: data.access_token,
-                                                            items: Array(result_login[0])
-                                                        });
+                                                insertUserAccountLogon(getNumberValue(req.query.app_id), data)
+                                                .then(()=>{
+                                                    res.status(200).json({
+                                                        accessToken: data.access_token,
+                                                        items: Array(result_login[0])
+                                                    });
+                                                })
+                                                .catch((/**@type{Types.error}*/error)=>{
+                                                    res.status(500).send(
+                                                        error
+                                                    );
                                                 });
                                             }
                                         });
@@ -1011,16 +1011,17 @@ const userLogin = (req, res) => {
                         }
                         else{
                             data.access_token = accessToken(req.query.app_id);
-                            insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
-                                if (err)
-                                    res.status(500).send(
-                                        err
-                                    );
-                                else
-                                    res.status(200).json({
-                                        accessToken: data.access_token,
-                                        items: Array(result_login[0])
-                                    });
+                            insertUserAccountLogon(getNumberValue(req.query.app_id), data)
+                            .then(()=>{
+                                res.status(200).json({
+                                    accessToken: data.access_token,
+                                    items: Array(result_login[0])
+                                });
+                            })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                res.status(500).send(
+                                    error
+                                );
                             });
                         }
                      })
@@ -1039,14 +1040,9 @@ const userLogin = (req, res) => {
                 }
                 
             } else {
-                insertUserAccountLogon(getNumberValue(req.query.app_id), data, (/**@type{Types.error}*/err) => {
-                    if (err) {
-                        res.status(500).send(
-                            err
-                        );
-                    }
-                    else{
-                        res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + req.body.username;
+                insertUserAccountLogon(getNumberValue(req.query.app_id), data)
+                .then(()=>{
+                    res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + req.body.username;
                         //Username or password not found
                         getMessage( getNumberValue(req.query.app_id),
                                     getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
@@ -1062,7 +1058,11 @@ const userLogin = (req, res) => {
                                 error
                             );
                         });
-                    }
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    res.status(500).send(
+                        error
+                    );
                 });
             }
         } else{
@@ -1134,19 +1134,19 @@ const providerSignIn = (req, res) => {
                 createUserAccountApp(getNumberValue(req.query.app_id), result_signin[0].id)
                 .then(()=>{
                     data_login.access_token = accessToken(req.query.app_id);
-                    insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (/**@type{Types.error}*/err) => {
-                        if (err) {
-                            res.status(500).send(
-                                err
-                            );
-                        }
-                        else
-                            res.status(200).json({
-                                count: result_signin.length,
-                                accessToken: data_login.access_token,
-                                items: result_signin,
-                                userCreated: 0
-                            });
+                    insertUserAccountLogon(getNumberValue(req.query.app_id), data_login)
+                    .then(()=>{
+                        res.status(200).json({
+                            count: result_signin.length,
+                            accessToken: data_login.access_token,
+                            items: result_signin,
+                            userCreated: 0
+                        });
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        res.status(500).send(
+                            error
+                        );
                     });
                 })
                 .catch((/**@type{Types.error}*/error)=>{
@@ -1171,19 +1171,19 @@ const providerSignIn = (req, res) => {
                         service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id))
                             .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
                                 data_login.access_token = accessToken(getNumberValue(req.query.app_id));
-                                    insertUserAccountLogon(getNumberValue(req.query.app_id), data_login, (/**@type{Types.error}*/err) => {
-                                        if (err) {
-                                            res.status(500).send(
-                                                err
-                                            );
-                                        }
-                                        else
-                                            res.status(200).json({
-                                                count: result_signin2.length,
-                                                accessToken: data_login.access_token,
-                                                items: result_signin2,
-                                                userCreated: 1
-                                            });
+                                    insertUserAccountLogon(getNumberValue(req.query.app_id), data_login)
+                                    .then(()=>{
+                                        res.status(200).json({
+                                            count: result_signin2.length,
+                                            accessToken: data_login.access_token,
+                                            items: result_signin2,
+                                            userCreated: 1
+                                        });
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>{
+                                        res.status(500).send(
+                                            error
+                                        );
                                     });
                             })
                             .catch((/**@type{Types.error}*/error)=>{
