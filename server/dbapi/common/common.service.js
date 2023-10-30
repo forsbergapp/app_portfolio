@@ -82,7 +82,7 @@ const record_not_found = (res, app_id, lang_code) => {
 				);
 			})
 			.catch((/**@type{Types.error}*/error)=>{
-				return res.status(500).send(
+				res.status(500).send(
 					error
 				);
 			});

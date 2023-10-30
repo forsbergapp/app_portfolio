@@ -69,11 +69,11 @@ const DBInfoSpaceSum = (req, res) => {
 const demo_add = async (req, res)=> {
 	service.demo_add(getNumberValue(req.query.app_id), req.body.demo_password, req.query.lang_code, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
 		if (err) {
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		}
-		return res.status(200).json(result);
+		res.status(200).json(result);
 	});
 };
 /**
@@ -84,11 +84,11 @@ const demo_add = async (req, res)=> {
 const demo_delete = async (req, res)=> {
 	service.demo_delete(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
 		if (err) {
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		}
-		return res.status(200).json({
+		res.status(200).json({
 			count_deleted: result_demo_users_length
 		});
 	});
@@ -101,11 +101,11 @@ const demo_delete = async (req, res)=> {
 const demo_get = async (req, res)=> {
 	service.demo_get(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/result) =>{
 		if (err) {
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		}
-		return res.status(200).json({
+		res.status(200).json({
 			data: result
 		});
 	});
@@ -118,11 +118,11 @@ const demo_get = async (req, res)=> {
 const install_db = (req, res) =>{
 	service.install_db(getNumberValue(req.query.app_id),getNumberValue(req.query.optional), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
 		if (err)
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json(result);
+			res.status(200).json(result);
 	});
 };
 /**
@@ -133,11 +133,11 @@ const install_db = (req, res) =>{
 const install_db_check = (req, res) =>{
 	service.install_db_check(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
 		if (err)
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json(result);
+			res.status(200).json(result);
 	});
 };
 /**
@@ -148,11 +148,11 @@ const install_db_check = (req, res) =>{
 const install_db_delete = (req, res) =>{
 	service.install_db_delete(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
 		if (err)
-			return res.status(500).send({
+			res.status(500).send({
 				data: err
 			});
 		else
-			return res.status(200).json(result);
+			res.status(200).json(result);
 	});
 };
 

@@ -15,12 +15,12 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getApp = (req, res) => {
 	service.getApp(getNumberValue(req.query.app_id), getNumberValue(req.query.id), req.query.lang_code)
 	.then((result)=> {
-		return res.status(200).json({
+		res.status(200).json({
 			data: result
 		});
 	})
 	.catch((error)=> {
-		return res.status(500).send({
+		res.status(500).send({
 			data: error
 		});
 	});
@@ -33,12 +33,12 @@ const getApp = (req, res) => {
 const getAppsAdmin = (req, res) => {
 	service.getAppsAdmin(getNumberValue(req.query.app_id), req.query.lang_code)
 	.then((result)=> {
-		return res.status(200).json({
+		res.status(200).json({
 			data: result
 		});
 	})
 	.catch((error)=> {
-		return res.status(500).send({
+		res.status(500).send({
 			data: error
 		});
 	});
@@ -57,12 +57,12 @@ const updateAppAdmin = (req, res) => {
 					app_category_id:getNumberValue(req.body.app_category_id)};
 	service.updateAppAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
 	.then((result)=> {
-		return res.status(200).json({
+		res.status(200).json({
 			data: result
 		});
 	})
 	.catch((error)=> {
-		return res.status(500).send({
+		res.status(500).send({
 			data: error
 		});
 	});
