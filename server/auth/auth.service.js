@@ -214,15 +214,15 @@ const checkAccessToken = async (app_id, user_account_id, ip, authorization)=>{
                     //check access token belongs to user_account.id, app_id and ip saved when logged in
                     //and if app_id=0 then check user is admin
                     import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`).then(({checkLogin}) => {
-                        checkLogin(app_id, user_account_id, authorization.replace('Bearer ',''), ip, (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
-                            if (err)
-                                reject(err);
-                            else{
-                                if (result.length==1)
-                                    resolve(true);
-                                else
-                                    resolve(false);
-                            }
+                        checkLogin(app_id, user_account_id, authorization.replace('Bearer ',''), ip)
+                        .then((/**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
+                            if (result.length==1)
+                                resolve(true);
+                            else
+                                resolve(false);
+                            })
+                        .catch((/**@type{Types.error}*/error)=>{
+                            reject(error);
                         });
                     });
                 }

@@ -652,16 +652,16 @@
  * @property {number}       dba
  * @property {string}       user
  * @property {string}       password
- * @property {string}       database
- * @property {string}       charset                 - DB 1+2 MariaDB/MySQL
- * @property {number}       connectionLimit         - DB 1+2 MariaDB/MySQL
+ * @property {string|null}  database
+ * @property {string|null}  charset                 - DB 1+2 MariaDB/MySQL
+ * @property {number|null}  connectionLimit         - DB 1+2 MariaDB/MySQL
  * @property {number}       connectionTimeoutMillis - DB 3 PostgreSQL
  * @property {number}       idleTimeoutMillis       - DB 3 PostgreSQL
  * @property {number}       max                     - DB 3 PostgreSQL
- * @property {string}       connectString           - DB 4 Oracle
- * @property {number}       poolMin                 - DB 4 Oracle
- * @property {number}       poolMax                 - DB 4 Oracle
- * @property {number}       poolIncrement           - DB 4 Oracle
+ * @property {string|null}  connectString           - DB 4 Oracle
+ * @property {number|null}  poolMin                 - DB 4 Oracle
+ * @property {number|null}  poolMax                 - DB 4 Oracle
+ * @property {number|null}  poolIncrement           - DB 4 Oracle
  */
 /**
  * @typedef {object}    pool_connection_1_2
@@ -783,11 +783,17 @@
  * 
  */
 /**
+ * 
+ * @typedef {   [number|null,
+ *              string, 
+ *              number|null][]} database_script_files
+ */
+/**
  * Install JSON
  * @typedef {object}        install_database_script
- * @property {number|null}  db
+ * @property {number|null}  db                  -if null then execute in all databases
  * @property {string}       script
- * @property {number}       [optional]
+ * @property {number}       [optional]          -installs if optional=1
  */
 /**
  * Uninstall JSON
@@ -1250,6 +1256,23 @@
  *              icon:string}} db_result_user_account_getUserRoleAdmin
  * @typedef {{  id:number}} db_result_user_account_getDemousers 
  * USER ACCOUNT APP
+ * @typedef {   db_result_insert} db_result_user_account_app_createUserAccountApp
+ * @typedef {{  app_id:number,
+ *              app_name:string,
+ *              url_:string,
+ *              logo:string,
+ *              date_created:string}} db_result_user_account_app_getUserAccountApps
+ * @typedef {{  preference_locale:string,
+ *              setting_preference_timezone_id:number,
+ *              setting_preference_direction_id:number,
+ *              setting_preference_arabic_script_id:number,
+ *              date_created:string}} db_result_user_account_app_getUserAccountApp
+ * @typedef {{  preference_locale:string,
+ *              setting_preference_timezone_id:number,
+ *              setting_preference_direction_id:number,
+ *              setting_preference_arabic_script_id:number}} db_parameter_user_account_app_updateUserAccountApp
+ * @typedef {   db_result_update} db_result_user_account_app_updateUserAccountApp
+ * @typedef {   db_result_delete} db_result_user_account_app_deleteUserAccountApps
  * USER ACCOUNT APP SETTING
  * @typedef {{  description:string,
  *              settings_json:object,
@@ -1363,12 +1386,12 @@
  *              client_latitude:string}} db_parameter_user_account_logon_insertUserAccountLogon
  * @typedef {   db_result_insert} db_result_user_account_logon_insertUserAccountLogon
  * USER ACCOUNT VIEW
- * @typedef {{  user_account_id:number,
+ * @typedef {{  user_account_id:number|null,
  *              user_account_id_view:number,
- *              client_ip:string,
- *              client_user_agent:string,
- *              client_longitude:string,
- *              client_latitude:string}} db_parameter_user_account_view_insertUserAccountView
+ *              client_ip:string|null,
+ *              client_user_agent:string|null,
+ *              client_longitude:string|null,
+ *              client_latitude:string|null}} db_parameter_user_account_view_insertUserAccountView
  * @typedef {   db_result_insert} db_result_user_account_view_insertUserAccountView
  */
 export {};

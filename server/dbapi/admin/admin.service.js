@@ -322,7 +322,6 @@ const DBInfoSpaceSum = async (app_id) => {
  * @param {Types.callBack} callBack
  */
 const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
-	const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
 	const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
 	const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
 	const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
@@ -356,7 +355,6 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		let records_user_account = 0;
 		let records_user_account_app = 0;
 		let records_user_account_app_setting = 0;
-		const password_encrypted = hashSync(demo_password, genSaltSync(10));
       /**
        * Create demo users
        * @param {[Types.demo_user]} demo_users 
@@ -365,13 +363,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		const create_users = async (demo_users) =>{
 			return await new Promise((resolve, reject)=>{
 				const create_update_id = (/**@type{Types.demo_user}*/demo_user)=>{
-					const email = `demo${++email_index}@localhost`;
+               /**@type{Types.db_parameter_user_account_create}*/
 					const data = { username:               demo_user.username,
                               bio:                    demo_user.bio,
                               avatar:                 demo_user.avatar,
-                              password:               password_encrypted,
-                              password_reminder:      '',
-                              email:                  email,
+                              password:               null,
+                              password_new:           demo_password,
+                              password_reminder:      null,
+                              email:                  `demo${++email_index}@localhost`,
+                              email_unverified:       null,
                               active:                 1,
                               private:                0,
                               user_level:             2,
@@ -382,7 +382,8 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                               provider_last_name:     null,
                               provider_image:         null,
                               provider_image_url:     null,
-                              provider_email:         null
+                              provider_email:         null,
+                              admin:                  1
 									};
 					create(app_id, data)
                .then((/**@type{Types.db_result_insert}*/results_create)=> {
@@ -404,15 +405,15 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * Create user account app
        * @param {number} app_id 
        * @param {number|undefined} user_account_id 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_user_account_app = async (app_id, user_account_id) =>{
 			return new Promise((resolve, reject) => {
 				createUserAccountApp(app_id, user_account_id)
-            .then((/**@type{Types.db_result_insert}*/result)=>{
+            .then((/**@type{Types.db_result_user_account_app_createUserAccountApp}*/result)=>{
                if (result.affectedRows == 1)
                   records_user_account_app++;
-               resolve(result);
+               resolve(null);
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -423,7 +424,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * Create user setting
        * @param {number} user_setting_app_id 
        * @param {object} data 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_setting = async (user_setting_app_id, data) => {
 			return new Promise((resolve, reject) => {
@@ -431,7 +432,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
             .then((/**@type{Types.db_result_user_account_app_setting_createUserSetting}*/result)=>{
                if (result.affectedRows == 1)
 							records_user_account_app_setting++;
-						resolve(result);
+						resolve(null);
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -490,7 +491,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * @param {number} app_id 
        * @param {number} id 
        * @param {number} id_like 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_likeuser = async (app_id, id, id_like ) =>{
 			return new Promise((resolve, reject) => {
@@ -498,7 +499,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
             .then((/**@type{Types.db_result_user_account_like_likeUser}*/result) => {
                if (result.affectedRows == 1)
                   records_user_account_like++;
-               resolve(result);
+               resolve(null);
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -509,7 +510,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * Create user account view
        * @param {number} app_id 
        * @param {Types.db_parameter_user_account_view_insertUserAccountView} data 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_user_account_view = async (app_id, data ) =>{
 			return new Promise((resolve, reject) => {
@@ -517,7 +518,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
             .then((/**@type{Types.db_result_user_account_view_insertUserAccountView}*/result) => {
                if (result.affectedRows == 1)
 						records_user_account_view++;
-               resolve(result);
+               resolve(null);
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -529,7 +530,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * @param {number} app_id 
        * @param {number} id 
        * @param {number} id_follow 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_user_account_follow = async (app_id, id, id_follow ) =>{
 			return new Promise((resolve, reject) => {
@@ -537,7 +538,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
             .then((/**@type{Types.db_result_user_account_follow_followUser}*/result)=>{
                if (result.affectedRows == 1)
                   records_user_account_follow++;
-               resolve(result);
+               resolve(null);
             })
             .catch((/**@type{Types.error}*/error)=>{
                reject(error);
@@ -549,7 +550,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * @param {number} app_id 
        * @param {number} user1 
        * @param {number} user2 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
 			return new Promise((resolve, reject) => {
@@ -560,7 +561,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                .then((/**@type{Types.db_result_user_account_app_setting_like_likeUserSetting}*/result) => {
                   if (result.affectedRows == 1)
                      records_user_account_setting_like++;
-                  resolve(result);
+                  resolve(null);
                })
                .catch((/**@type{Types.error}*/error)=>{
                   reject(error);
@@ -577,7 +578,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
        * @param {number} user1 
        * @param {number} user2 
        * @param {string} social_type 
-       * @returns 
+       * @returns {Promise.<null>}
        */
 		const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
 			return new Promise((resolve, reject) => {
@@ -600,7 +601,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                   .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
                      if (result.affectedRows == 1)
 								records_user_account_setting_view++;
-							resolve(result);
+							resolve(null);
                   })
                   .catch((/**@type{Types.error}*/error)=>{
                      reject(error);
@@ -770,84 +771,26 @@ const install_db_execute_statement = async (app_id, sql, parameters) => {
 };
 /**
  * Install get files
- * @param {string} json_type 
- * @returns 
+ * @param {'install'|'uninstall'} json_type 
+ * @returns {Promise.<Types.database_script_files>}
  */
 const install_db_get_files = async (json_type) =>{
-   let files;
-   let app_installed = 1;
    const fs = await import('node:fs');
-   if (json_type == 'install')
-      files = [
-      /*
-         /scripts/install_database.json syntax:
-         contanins one statement for app_portfolio user with <APP_PASSWORD/> in "install"
-         {
-            "install": [
-               {"db": 1, "script": "[filename]"},
-               {"db": 2, "script": "[filename]"},
-               {"db": 3, "script": "[filename]"},
-               {"db": 4, "script": "[filename]"},
-               {"db": null, "script": "[filename]"}, //execute in all databases
-               {"db": null, "script": "[filename]", "optional":1}, //installs if optional is chosen
-            ]
-         } 
-      */
-      [0, '/scripts/install_database.json'],
-      /*
-         /apps/admin/scripts/install_database.json and /apps/app[app_id]/scripts/install_database.json syntax:
-         contanins one statement for app_admin or app[app_id] user with <APP_PASSWORD/> in "users"
-         {
-            "install": [
-               {"db": 1, "script": "[filename]"},
-               {"db": 2, "script": "[filename]"},
-               {"db": 3, "script": "[filename]"},
-               {"db": 4, "script": "[filename]"},
-               {"db": null, "script": "[filename]"} //execute in all databases
-            ],
-            "users":[
-               {"db": 1, "app_id": 0, "sql": "[sql]"},
-               {"db": 2, "app_id": 0, "sql": "[sql]"},
-               {"db": 3, "app_id": 0, "sql": "[sql]"},
-               {"db": 4, "app_id": 0, "sql": "[sql]"}
-            ]
-         }
-      */
-      [1, '/apps/admin/scripts/install_database.json']
+   let app_id = 1;
+   /**@type{Types.database_script_files} */
+   const files = [
+      //add main script with id 0 and without app_id
+      [0, `/scripts/${json_type}_database.json`, null],
+      //add admin script with id 1 and without app_id
+      [1, `/apps/admin/scripts/${json_type}_database.json`, null]
    ];
-   else
-      files  = [
-      /*
-         /scripts/uninstall_database.json syntax:
-         {
-            "uninstall": [
-               {"db": 1, "sql": "[sql]"},
-               {"db": 2, "sql": "[sql]"},
-               {"db": 3, "sql": "[sql]"},
-               {"db": 4, "sql": "[sql]"}
-            ]
-         } 
-      */
-      [0, '/scripts/uninstall_database.json'],
-      /*
-         /apps/admin/scripts/uninstall_database.json and /apps/app[app_id]/scripts/uninstall_database.json syntax:
-         {
-            "uninstall": [
-               {"db": 1, "sql": "[sql]"},
-               {"db": 2, "sql": "[sql]"},
-               {"db": 3, "sql": "[sql]"},
-               {"db": 4, "sql": "[sql]"}
-               {"db": null, "sql": "[sql]"}  //deletes data, can be ignored if database is dropped
-            ]
-         }
-      */
-      [1, '/apps/admin/scripts/uninstall_database.json']
-   ];
+   //Loop file directories /apps/app + id until not found anymore and return files found
    while (true){
       try {
-         await fs.promises.access(`${process.cwd()}/apps/app${app_installed}/scripts/${json_type}_database.json`);   
-         files.push([app_installed + 1, `/apps/app${app_installed}/scripts/${json_type}_database.json`, app_installed]);
-         app_installed += 1; 
+         await fs.promises.access(`${process.cwd()}/apps/app${app_id}/scripts/${json_type}_database.json`);   
+         //add app script, first index not used for apps, save app id instead
+         files.push([null, `/apps/app${app_id}/scripts/${json_type}_database.json`, app_id]);
+         app_id += 1; 
       } catch (error) {
          return files;
       }
@@ -906,7 +849,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
          const install_json = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
          const install_obj = JSON.parse(install_json);
          //filter for current database or for all databases and optional rows
-         install_obj.install = install_obj.install.filter((/**@type{Types.install_database_script}*/row) => 
+         install_obj.install = install_obj.install.filter((/**@type{Types.install_database_script|Types.install_database_app_script}*/row) => 
                (('optional' in row)==false || (('optional' in row) && row.optional==optional)) && 
                (row.db == ConfigGet('SERVICE_DB', 'USE') || row.db == null));
          for (const install_row of install_obj.install){
@@ -954,6 +897,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
                      if (sql.toUpperCase().includes('CREATE DATABASE')){
                            //remove database name in dba pool
                            await pool_close(null, db_use, DBA);
+                           /**@type{Types.pool_parameters} */
                            const json_data = {
                                  use:                       db_use,
                                  pool_id:                   null,
@@ -962,19 +906,19 @@ const install_db = async (app_id, optional=null, callBack)=> {
                                  dba:                       DBA,
                                  user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
                                  password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                                 database:                  '',
+                                 database:                  null,
                                  //db 1 + 2 parameters
                                  charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                                 connnectionLimit:          getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                                 connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                                  // db 3 parameters
                                  connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
                                  idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
                                  max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
-                                 // db 4 parameters
-                                 connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-                                 poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
-                                 poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-                                 poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+                                 // db 4 parameters not used here
+                                 connectString:             null,
+                                 poolMin:                   null,
+                                 poolMax:                   null,
+                                 poolIncrement:             null
                               };
                            await pool_start(json_data);
                      }
@@ -982,6 +926,7 @@ const install_db = async (app_id, optional=null, callBack)=> {
                         if (change_system_admin_pool == true){
                            //add database name in dba pool
                            await pool_close(null, db_use, DBA);
+                           /**@type{Types.pool_parameters} */
                            const json_data = {
                               use:                       db_use,
                               pool_id:                   null,
@@ -993,16 +938,16 @@ const install_db = async (app_id, optional=null, callBack)=> {
                               database:                  ConfigGet('SERVICE_DB', `DB${db_use}_NAME`),
                               //db 1 + 2 parameters
                               charset:                   ConfigGet('SERVICE_DB', `DB${db_use}_CHARACTERSET`),
-                              connnectionLimit:          getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
+                              connectionLimit:           getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTION_LIMIT`)),
                               // db 3 parameters
                               connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
                               idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
                               max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
-                              // db 4 parameters
-                              connectString:             ConfigGet('SERVICE_DB', `DB${db_use}_CONNECTSTRING`),
-                              poolMin:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MIN`)),
-                              poolMax:                   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_MAX`)),
-                              poolIncrement:             getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_POOL_INCREMENT`))
+                              // db 4 parameters not used here
+                              connectString:             null,
+                              poolMin:                   null,
+                              poolMax:                   null,
+                              poolIncrement:             null
                            };
                            await pool_start(json_data);
                            //change to database value for the rest of the function
@@ -1093,24 +1038,34 @@ const install_db_delete = async (app_id, callBack)=> {
    try {
       for (const file of  files){
          const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
-         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{Types.uninstall_database_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')));
+         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{Types.uninstall_database_script|Types.uninstall_database_app_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')));
          for (const sql_row of uninstall_sql){
             if (db_use=='3')
                if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                   //add database name in dba pool
                   await pool_close(null, db_use, DBA);
+                  /**@type{Types.pool_parameters} */
                   const json_data = {
-                     use:                     db_use,
-                     pool_id:                 null,
-                     port:                    getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
-                     host:                    ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
-                     dba:                     DBA,
-                     user:                    ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
-                     password:                ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
-                     database:                '',
-                     connectionTimeoutMillis: getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
-                     idleTimeoutMillis:       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
-                     max:                     getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`))
+                     use:                       db_use,
+                     pool_id:                   null,
+                     port:                      getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_PORT`)),
+                     host:                      ConfigGet('SERVICE_DB', `DB${db_use}_HOST`),
+                     dba:                       DBA,
+                     user:                      ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_USER`),
+                     password:                  ConfigGet('SERVICE_DB', `DB${db_use}_SYSTEM_ADMIN_PASS`),
+                     database:                  null,
+                     //db 1 + 2 not used here
+                     charset:                   null,
+                     connectionLimit:           null,
+                     //db 3
+                     connectionTimeoutMillis:   getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_CONNECTION`)),
+                     idleTimeoutMillis:         getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_TIMEOUT_IDLE`)),
+                     max:                       getNumberValue(ConfigGet('SERVICE_DB', `DB${db_use}_MAX`)),
+                     //db 4 not used here
+                     connectString:             null,
+                     poolMin:                   null,
+                     poolMax:                   null,
+                     poolIncrement:             null
                   };
                   await pool_start(json_data);
                }

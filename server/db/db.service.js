@@ -78,40 +78,28 @@ const pool_start = async (dbparameters) =>{
    return new Promise((resolve, reject) => {
       switch(dbparameters.use){
          case 1:
-         case 2:{
-            if (dbparameters.dba==1)
-               POOL_DB.map(db=>{ if (db[0]==dbparameters.use) 
-                                    db[1]=MYSQL.createPool({
-                                          host: dbparameters.host,
-                                          port: dbparameters.port,
-                                          user: dbparameters.user,
-                                          password: dbparameters.password,
-                                          database: dbparameters.database,
-                                          charset: dbparameters.charset,
-                                          connectionLimit: dbparameters.connectionLimit
-               });
-               resolve(null);
-            });
-            else{
-               /**@type{object} */
-               const mysql_pool = MYSQL.createPool({
-                                    host: dbparameters.host,
-                                    port: dbparameters.port,
-                                    user: dbparameters.user,
-                                    password: dbparameters.password,
-                                    database: dbparameters.database,
-                                    charset: dbparameters.charset,
-                                    connectionLimit: dbparameters.connectionLimit
-                                 });
-               POOL_DB.map(db=>{if (db[0]==dbparameters.use)
-                  if (db[2])
-                     db[2].push(mysql_pool);
+         case 2:{            
+            /**@type{object} */
+            const mysql_pool = MYSQL.createPool({
+                                 host: dbparameters.host,
+                                 port: dbparameters.port,
+                                 user: dbparameters.user,
+                                 password: dbparameters.password,
+                                 database: dbparameters.database==null?'':dbparameters.database,
+                                 charset: dbparameters.charset==null?'':dbparameters.charset,
+                                 connectionLimit: dbparameters.connectionLimit==null?0:dbparameters.connectionLimit
+                              });
+            POOL_DB.map(db=>
+               {if (db[0]==dbparameters.use)
+                  if (dbparameters.dba==1)
+                     db[1]= mysql_pool;
                   else
-                     db[2] = [mysql_pool];
-               });
-               resolve(null);
-            }
-               
+                     if (db[2])
+                        db[2].push(mysql_pool);
+                     else
+                        db[2] = [mysql_pool];
+            });
+            resolve(null);
             break;
          }
          case 3:{
@@ -122,7 +110,7 @@ const pool_start = async (dbparameters) =>{
                      password: dbparameters.password,
                      host: dbparameters.host,
                      port: dbparameters.port,
-                     database: dbparameters.database,
+                     database: dbparameters.database==null?'':dbparameters.database,
                      connectionTimeoutMillis: dbparameters.connectionTimeoutMillis,
                      idleTimeoutMillis: dbparameters.idleTimeoutMillis,
                      max: dbparameters.max
@@ -159,10 +147,10 @@ const pool_start = async (dbparameters) =>{
                ORACLEDB.createPool({	
                   user: dbparameters.user,
                   password: dbparameters.password,
-                  connectString: dbparameters.connectString,
-                  poolMin: dbparameters.poolMin,
-                  poolMax: dbparameters.poolMax,
-                  poolIncrement: dbparameters.poolIncrement,
+                  connectString: dbparameters.connectString==null?'':dbparameters.connectString,
+                  poolMin: dbparameters.poolMin==null?0:dbparameters.poolMin,
+                  poolMax: dbparameters.poolMax==null?0:dbparameters.poolMax,
+                  poolIncrement: dbparameters.poolIncrement==null?0:dbparameters.poolIncrement,
                   poolAlias: poolAlias
                }, (err) => {
                   if (err)
