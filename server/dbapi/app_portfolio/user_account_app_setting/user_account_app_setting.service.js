@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -28,7 +28,7 @@ const createUserSetting = async (app_id, data) => {
 							app_id: app_id,
 							RETURN_ID:true
 						};
-			return await db_execute_promise(app_id, sql, parameters, null);
+			return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -47,7 +47,7 @@ const getUserSetting = async (app_id, id) => {
 					   FROM ${db_schema()}.user_account_app_setting 
 					  WHERE id = :id `;
 		const parameters = {id: id};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -70,7 +70,7 @@ const getUserSettingsByUserId = async (app_id, id) => {
 						user_account_id: id,
 						app_id: app_id
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -99,7 +99,7 @@ const getProfileUserSetting = async (app_id, id) => {
 						id: id,
 						app_id: app_id
 					}; 
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
     };
 /**
  * 
@@ -134,7 +134,7 @@ const getProfileUserSettings = async (app_id, id, id_current_user) => {
 						user_account_id: id,
 						app_id: app_id
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -200,7 +200,7 @@ const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
 						app_id: app_id,
 						detailchoice: detailchoice
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
     };
 /**
  * 
@@ -267,7 +267,7 @@ const getProfileTopSetting = async (app_id, statchoice) => {
 						app_id: app_id,
 						statchoice: statchoice,
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
     };
 /**
  * 
@@ -291,7 +291,7 @@ const updateUserSetting = async (app_id, data, id) => {
 						app_id: app_id,
 						id: id
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -305,7 +305,7 @@ const deleteUserSetting = async (app_id, id) => {
 		const parameters = {
 						id: id
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{	createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
 		getProfileUserSettingDetail, getProfileTopSetting, updateUserSetting, deleteUserSetting};

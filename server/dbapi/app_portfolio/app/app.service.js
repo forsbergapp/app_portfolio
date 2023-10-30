@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 const {getNumberValue, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
@@ -57,7 +57,7 @@ const getApp = async (app_id, id,lang_code) => {
 							lang_code3: get_locale(lang_code, 3),
 							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 							id: id};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -91,7 +91,7 @@ const getAppsAdmin = async (app_id, lang_code) => {
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3)
 							};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -103,7 +103,7 @@ const getAppsAdminId = async (app_id) => {
 				FROM ${db_schema()}.app a
 			ORDER BY 1`;
 	const parameters = {};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -115,7 +115,7 @@ const getAppName = async (app_id) => {
 				   FROM ${db_schema()}.app a
 				  WHERE a.id = :app_id`;
 	const parameters = { app_id: app_id};
-	return await db_execute_promise(app_id, sql, parameters, null);
+	return await db_execute(app_id, sql, parameters, null);
 };
 /**
  * 
@@ -138,6 +138,6 @@ const updateAppAdmin = async (app_id, id, data) => {
 							enabled: data.enabled,
 							app_category_id: data.app_category_id,
 							id: id};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{getApp, getAppsAdmin, getAppsAdminId, getAppName, updateAppAdmin};

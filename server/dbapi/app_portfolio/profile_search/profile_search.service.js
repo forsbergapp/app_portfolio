@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -23,6 +23,6 @@ const insertProfileSearch = async (app_id, data) => {
 						client_longitude: data.client_longitude,
 						client_latitude: data.client_latitude
 						};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{insertProfileSearch};

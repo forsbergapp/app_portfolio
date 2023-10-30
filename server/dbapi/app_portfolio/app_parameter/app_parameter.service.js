@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -30,7 +30,7 @@ const getParameters_server = async (app_id, data_app_id) => {
 		const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 		const parameters = {app_id: data_app_id,
 							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -68,7 +68,7 @@ const getParametersAllAdmin = async (app_id, data_app_id, lang_code) => {
 							lang_code2: get_locale(lang_code, 2),
 							lang_code3: get_locale(lang_code, 3),
 							app_id: data_app_id};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -86,7 +86,7 @@ const getParameter = async (app_id, data_app_id, parameter_name) => {
 					 ORDER BY 1`;
 		const parameters = {app_id: data_app_id,
 							parameter_name:parameter_name};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -106,7 +106,7 @@ const setParameter_admin = async (app_id, data) => {
 							parameter_comment: data.parameter_comment,
 							app_id: data.app_id,
 							parameter_name: data.parameter_name};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -130,7 +130,7 @@ const getAppDBParametersAdmin = async app_id => {
 				ORDER BY 1, 3`;
 		const parameters = {db_user: db_user,
 							db_password: db_password};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -154,7 +154,7 @@ const getAppStartParameters = async app_id => {
 		const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
 		const parameters = {app_id: app_id,
 							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{
 		getParameters_server, getParametersAllAdmin, getParameter, setParameter_admin, 

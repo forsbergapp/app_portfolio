@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../../types.js';
 
-const {db_execute_promise, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
  * 
@@ -42,7 +42,7 @@ const insertUserEvent = async (app_id, data) => {
 						event : data.event,
 						event_status : data.event_status
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 /**
  * 
@@ -77,6 +77,6 @@ const getLastUserEvent = async (app_id, user_account_id, event) => {
 						user_account_id: user_account_id,
 						event : event
 					};
-		return await db_execute_promise(app_id, sql, parameters, null);
+		return await db_execute(app_id, sql, parameters, null);
 	};
 export{insertUserEvent, getLastUserEvent};
