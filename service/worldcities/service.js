@@ -75,14 +75,19 @@ const getCitySearch = async (search, limit) => {
     const match = (col, search) =>{
         //compare without diacritics and use lower case
         const col_check = col.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-        const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-        return col_check.search(search_check);
+        const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();            
+        return col_check.search(search_check)>-1;
     };
-    cities = cities.filter((city,index)=> (index<=limit || limit==0) &&
-                                            (match(city.city, search) >-1|| 
-                                            match(city.city_ascii, search) > -1|| 
-                                            match(city.country, search) > -1 ||
-                                            match(city.admin_name, search) > -1));
+    let count_limit = 0;
+    cities = cities.filter((city)=>{if ((count_limit<limit || limit==0) && (match(city.city, search)||
+                                                                            match(city.city_ascii, search)||
+                                                                            match(city.country, search)||
+                                                                            match(city.admin_name, search))){
+                                        count_limit++;
+                                        return true;
+                                    }
+                                    else
+                                        return false;});
     //sort
     cities = cities.sort((first, second)=>{
         const first_sort = first.country.toLowerCase() +  first.city.toLowerCase() + first.admin_name.toLowerCase();

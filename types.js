@@ -1,64 +1,9 @@
 /**
- * Request service
- * @typedef {object}        req_service
- * @property {string}       url
- * 
- * @property {{ authorization:string,
- *              'accept-language':string}}       headers
- * 
- * @property {object}       query
- * @property {number|null}  query.app_id
- * @property {string}       query.latitude
- * @property {string}       query.longitude
- * @property {string|null}  query.ip
- * @property {number}       query.limit
- * 
- * @property {{ search:string,
- *              country:string}} params
- */
-/**
- * Response service
- * @typedef {object}    res_service
- * @property {function} setHeader
- * @property {function} setEncoding
- * @property {number}   statusCode
- * @property {function} write
- * @property {function} end
- * 
- * @property {object}   headers
- * @property {string}   headers.location
- */
-
-/**
- * Service message queue
- * @typedef {{  message_id:string,
- *              service:string,
- *              message:object|null}}  service_message_queue_publish
- */
-/**
- * Service message queue
- * @typedef {{  message_id:string|null,
- *              service:string|null,
- *              message:object|null,
- *              start:string|null,
- *              finished:string|null,
- *              result:*}}  service_message_queue_consume
- */
-/**
- * Service message queue
- * @typedef {{  message_id:string,
- *              service:string,
- *              message:object,
- *              start:string,
- *              result:*}}  service_message_queue_error
- */
-
-/**
- * Request verbose
+ * Server/Apps - Request verbose
  * @typedef {*} req_verbose
  */
 /**
- * Request
+ * Server/apps - Request
  * @typedef {Object} req
  * @property {string} baseUrl
  * @property {string} hostname
@@ -203,11 +148,29 @@
  * @property {string} socket.bytesWritten
  */
 /**
- * Request id
+ * Server/Apps - Response
+ * @typedef {Object} res
+ * @property {function} status
+ * @property {number} statusCode
+ * @property {(Error|string|number|null|object)} statusMessage
+ * @property {function} type
+ * @property {function} end
+ * @property {function} send
+ * @property {function} redirect 
+ * @property {function} getHeader
+ * @property {function} setHeader
+ * @property {function} removeHeader
+ * @property {function} on
+ * @property {function} write
+ * @property {function} flush           - Used for EventSource
+ */
+
+/**
+ * Server/Service/apps - Request id
  * @typedef {string|number|null|undefined} req_id_number
  */
 /**
- * Request app params
+ * Apps - Request app params
  * @typedef {Object} req_app_parameters
  * @property {string} ip
  * @property {string} method
@@ -217,7 +180,7 @@
  * @property {object} body
  */
 /**
- * Request report params
+ * Apps - Request report params
  * @typedef {Object}        req_report_parameters
  * @property {string}       reportid
  * @property {string}       messagequeue
@@ -234,7 +197,7 @@
  * @property {object}       body
  */
 /**
- * Request log params
+ * Server - Request log params
  * @typedef {Object} req_log_parameters
  * @property {string} host
  * @property {string} ip
@@ -252,25 +215,9 @@
  * @property {string} socket.bytesWritten
  */
 
+
 /**
- * Response
- * @typedef {Object} res
- * @property {function} status
- * @property {number} statusCode
- * @property {(Error|string|number|null|object)} statusMessage
- * @property {function} type
- * @property {function} end
- * @property {function} send
- * @property {function} redirect 
- * @property {function} getHeader
- * @property {function} setHeader
- * @property {function} removeHeader
- * @property {function} on
- * @property {function} write
- * @property {function} flush           - Used for EventSource
- */
-/**
- * Express
+ * Server - Express
  * @typedef {object} express
  * @property {function} use
  * @property {function} get
@@ -279,22 +226,22 @@
  * @property {function} listen
  */
 /**
- * Callback with error and result
+ * Server - Callback with error and result
  * @callback callBack
  * @param {(Error|string|number|null|unknown)} error
  * @param {(boolean|string|object|null|*)} result
  */
 /**
- * Error stack
+ * Server - Error stack
  * @typedef {string} error_stack
  */
 /**
- * Error 
+ * Server/Apps/Service - Error 
  * @typedef {Object.<Error | null , undefined>} error
  */
 
 /**
- * Email param data
+ * Apps - Email param data
  * @typedef {object} email_param_data
  * @property {string} emailtype         - [1-4], 1=SIGNUP, 2=UNVERIFIED, 3=PASSWORD RESET (FORGOT), 4=CHANGE EMAIL
  * @property {string} host              
@@ -304,7 +251,7 @@
  */
 
 /**
- * Email return data
+ * Apps - Email return data
  * @typedef {object} email_return_data
  * @property {string} email_host
  * @property {string} email_port
@@ -317,7 +264,7 @@
  * @property {string} html
  */
 /**
- * App config
+ * Apps - App config
  *
  * @typedef {object} app_config                  - app configuration
  * @property {string} locale                     - locale
@@ -332,7 +279,7 @@
  * @property {boolean} render_provider_buttons   - render provider buttons, true/false
  */
 /**
- * App info
+ * Apps - App info
  * @typedef {object} app_info               - app info
  * @property {number} app_id                - app id
  * @property {string} locale                - locale
@@ -347,7 +294,7 @@
  * @property {string} module                - HTML
  */
 /**
- * App module config info
+ * Apps - App module config info
  * 
  * @typedef {object} module_config
  * @property {string} module_type       - APP or REPORT
@@ -364,7 +311,7 @@
  * @property {object} body              - request body
  */
 /**
- * App render common info settings
+ * Apps - App render common info settings
  * @typedef {object} render_common_settings
  * @property {db_result_setting_getSettings[]} settings - db result
  * @property {string} user_timezones        - HTML option format
@@ -373,14 +320,14 @@
  * @property {map_styles} map_styles        - HTML option format                   - HTML option format
  */
 /**
- * App render common items for apps with locales and settings
+ * Apps - App render common items for apps with locales and settings
  * @typedef {object} render_common
  * @property {string} app                         - HTML
  * @property {string} locales                     - HTML option format
  * @property {render_common_settings} settings    
  */
 /**
- * App common parameters
+ * Apps - App common parameters
  * @typedef {object}        app_service_parameters
  * @property {number}       app_id
  * @property {string}       app_datatoken
@@ -399,14 +346,14 @@
  * @property {number}       first_time
  */
 /**
- * App create
+ * Apps - App create
  * @typedef {object} app_create
  * @property {string} app                         - HTML
  * @property {boolean} map     
  * @property {map_styles} map_styles
  */
 /**
- * App create empty
+ * Apps - App create empty
  * @typedef {object} app_create_empty
  * @property {null} app                         - HTML
  * @property {null} map     
@@ -414,11 +361,11 @@
  */
 
 /**
- * App request parameter
+ * Apps - App request parameter
  * @typedef {string} app_parameter
  */
 /**
- * App map styles
+ * Apps - App map styles
  * @typedef {object|null} map_styles
  * @property {string} id
  * @property {string} description
@@ -429,7 +376,7 @@
  * @property {string|null} session_map_layer
  */
 /**
- * Report query parameters
+ * Apps - Report query parameters
  * @typedef {object} report_query_parameters
  * @property {string} module
  * @property {string} ps
@@ -438,7 +385,7 @@
  */
 
 /**
- * Report create parameters
+ * Apps - Report create parameters
  * @typedef {object}        report_create_parameters
  * @property {number}       app_id
  * @property {string|null}  reportid
@@ -453,7 +400,7 @@
  * @property {string|null}  report
  */
 /**
- * Info page data
+ * Apps - Info page data
  * @typedef {object} info_page_data
  * @property {string} app_name
  * @property {string} app_url
@@ -466,13 +413,13 @@
  * @property {string} info_link_about_url
  */
 /**
- * Access control
+ * Server - Access control
  * @typedef {object} access_control
  * @property {number} statusCode
  * @property {string} statusMessage
  */
 /**
- * Config init
+ * Server - Config init
  * @typedef {{  ['CONFIGURATION']:string, 
  *              ['CREATED']:string, 
  *              ['MODIFIED']:string,
@@ -486,11 +433,11 @@
  *              ['FILE_CONFIG_APPS']:string}} config_init
 */
 /**
- * Config files
+ * Server - Config files
  * @typedef {[number, string]} config_files
  */
 /**
- * Config init parameter
+ * Server - Config init parameter
  * @typedef {   'CONFIGURATION'|
  *              'CREATED'|
  *              'MODIFIED'|
@@ -505,16 +452,16 @@
  */
 
 /**
- * Config type no
+ * Server - Config type no
  * @typedef {0|1|2|3|4|5|6|7} config_type_no
  */
 /**
- * Config group
+ * Server - Config group
  * @typedef {'SERVER'|'SERVICE_AUTH'|'SERVICE_BROADCAST'|'SERVICE_DB'|'SERVICE_LOG'} config_group
  */
 
 /**
- * Config
+ * Server - Config
  * @typedef  {{ ['SERVER']:[{   HTTPS_KEY:string,
  *                              HTTPS_CERT:string,
  *                              PORT:string,
@@ -617,7 +564,7 @@
  *              ['content-security-policy']:string}} config
  */
 /**
- * Config apps
+ * Server/Service - Config apps
  * @typedef  {object} config_apps
  * @property {function} filter
  * @property {function} reduce
@@ -636,19 +583,19 @@
  * @property {string} [ACCESS_EXPIRE]
  */
 /**
- * Config user
+ * Server - Config user
  * @typedef {{  ['username']:string, 
  *              ['password']:string, 
  *              ['created']:string,
  *              ['modified']:string}} config_user
  */
 /**
- * Config user parameter
+ * Server - Config user parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
  */
 
 /**
- * Broadcast client
+ * Server - Broadcast client
  * @typedef {object} broadcast_connect_list
  * @property {number} id
  * @property {number} app_id
@@ -663,7 +610,7 @@
  * @property {res}    response
  */
 /**
- * Broadcast client
+ * Server - Broadcast client
  * @typedef {{  'id':number,
  *              'app_id':number,
  *              'app_role_icon':number|string,
@@ -679,6 +626,7 @@
  */
 
 /**
+ * Server Broadcast sort
  * @typedef {   'id'|
  *              'app_id'|
  *              'app_role_icon'|
@@ -695,10 +643,12 @@
  */
 
 /**
+ * Server - pool db
  * @typedef {[number, object|null, [object|pool_4|null]|null]} pool_db
  */
 
 /**
+ * Server - pool parameters
  * @typedef {object}        pool_parameters
  * @property {number}       use
  * @property {number|null}  pool_id
@@ -719,6 +669,7 @@
  * @property {number|null}  poolIncrement           - DB 4 Oracle
  */
 /**
+ * Server - pool connection 1 + 2
  * @typedef {object}    pool_connection_1_2
  * @property {function} release
  * @property {function} query
@@ -727,15 +678,18 @@
  * @property {function} escape
  */
 /**
+ * Server - pool connection 1 + 2 result
  * @typedef {*}         pool_connection_1_2_result
  */
 
 /**
+ * Server - pool connection 3
  * @typedef {object}    pool_connection_3
  * @property {function} release
  * @property {function} query
  */
 /**
+ * Server - pool connection 3 result
  * @typedef {object}    pool_connection_3_result
  * @property {string}   command
  * @property {number}   insertId
@@ -745,11 +699,13 @@
  * @property {[*]}      rows
  */
 /**
+ * Server - pool connection 3 fields
  * @typedef {[{ type:number, 
  *              name:string}]}    pool_connection_3_fields
  */
 
 /**
+ * Server - pool connection 4 result
  * @typedef {object}    pool_connection_4_result
  * @property {object}   outBinds
  * @property {[number]} outBinds.insertId
@@ -761,22 +717,27 @@
  */
 
 /**
+ * Server - pool 4
  * @typedef {object|null}   pool_4
  * @property {string}       pool_id_app
  */
 
 /**
+ * Server - admin install result
  * @typedef {[object]}  admin_db_install_result - Log variable with object with any key
  */
 /**
+ * Server - admin install db check
  * @typedef {object}  admin_db_install_db_check
  * @property {1|0}    installed
  */
 /**
+ * Server - admin install delete result
  * @typedef {object}  admin_db_install_delete_result
  * @property {[{count:number}, {count_fail:number}]}    info
  */
 /**
+ * Server - admin demo user
  * @typedef {object}    demo_user
  * @property {number}   [id]
  * @property {string}   username
@@ -838,45 +799,45 @@
  * 
  */
 /**
- * 
+ * Server - admin install script files
  * @typedef {   [number|null,
  *              string, 
  *              number|null][]} database_script_files
  */
 /**
- * Install JSON
+ * Server - admin Install JSON
  * @typedef {object}        install_database_script
  * @property {number|null}  db                  -if null then execute in all databases
  * @property {string}       script
  * @property {number}       [optional]          -installs if optional=1
  */
 /**
- * Uninstall JSON
+ * Server - admin Uninstall JSON
  * @typedef {object}        uninstall_database_script
  * @property {number|null}  db
  * @property {string}       sql
  */
 /**
- * Install JSON app
+ * Server - admin Install JSON app
  * @typedef {object}        install_database_app_script
  * @property {number|null}  db
  * @property {string}       sql
  */
 /**
- * Install JSON app user
+ * Server - admin Install JSON app user
  * @typedef {object}        install_database_app_user_script
  * @property {number}       db
  * @property {string}       sql
  */
 /**
- * Uninstall JSON app
+ * Server - admin Uninstall JSON app
  * @typedef {object}        uninstall_database_app_script
  * @property {number|null}  db
  * @property {string}       sql
  */
 
 /**
- * Log parameters
+ * Server - Log parameters
  * @typedef{object}         admin_log_parameters
  * @property{string}        SERVICE_LOG_SCOPE_REQUEST
  * @property{string}        SERVICE_LOG_SCOPE_SERVER
@@ -892,7 +853,7 @@
  * @property{string}        SERVICE_LOG_FILE_INTERVAL
  */
 /**
- * Log data parameter 
+ * Server - Log data parameter 
  * @typedef{object}         admin_log_data_parameters
  * @property {number}       app_id
  * @property {number}       select_app_id
@@ -906,7 +867,15 @@
  * @property {string}       day
  */
 /**
- * Log stats data
+ * Server - log parameters get log stats
+ * @typedef {object} log_parameter_getLogStats
+ * @property {number} app_id
+ * @property {number} code
+ * @property {number} year
+ * @property {number} month
+ */
+/**
+ * Server - Log stats data
  * @typedef {object}        admin_log_stats_data
  * @property {number|null}  chart
  * @property {number|null}  statusCode
@@ -915,8 +884,9 @@
  * @property {number|null}  day
  * @property {number|null}  amount
  */
+
 /**
- * DATABASE
+ * Server - DATABASE
  * DB query result
  * @typedef {   db_result_insert|db_result_delete|db_result_update|db_result_select}   db_query_result
  * @typedef {   object}                    db_query_result_error
@@ -1448,5 +1418,54 @@
  *              client_longitude:string|null,
  *              client_latitude:string|null}} db_parameter_user_account_view_insertUserAccountView
  * @typedef {   db_result_insert} db_result_user_account_view_insertUserAccountView
+ */
+
+/**
+ * Service - Request
+ * @typedef {object}        req_service
+ * @property {string}       url
+ * 
+ * @property {{ authorization:string,
+ *              'accept-language':string}}       headers
+ * 
+ * @property {object}       query
+ * @property {number|null}  query.app_id
+ * @property {string}       query.latitude
+ * @property {string}       query.longitude
+ * @property {string|null}  query.ip
+ * @property {number}       query.limit
+ * 
+ * @property {{ search:string,
+ *              country:string}} params
+ */
+/**
+ * Service - Response
+ * @typedef {object}    res_service
+ * @property {function} setHeader
+ * @property {function} setEncoding
+ * @property {number}   statusCode
+ * @property {function} write
+ * @property {function} end
+ * 
+ * @property {object}   headers
+ * @property {string}   headers.location
+ */
+
+/**
+ * Service - message queue
+ * @typedef {{  message_id:string,
+ *              service:string,
+ *              message:object|null}}  service_message_queue_publish
+ * @typedef {{  message_id:string|null,
+ *              service:string|null,
+ *              message:object|null,
+ *              start:string|null,
+ *              finished:string|null,
+ *              result:*}}  service_message_queue_consume
+ * @typedef {{  message_id:string,
+ *              service:string,
+ *              message:object,
+ *              start:string,
+ *              result:*}}  service_message_queue_error
  */
 export {};
