@@ -80,6 +80,7 @@ const getStatusCodes = async (req, res) =>{
  * @param {Types.res} res 
  */
 const getLogsStats = async (req, res) => {
+	/**@type{Types.log_parameter_getLogStats} */
 	const data = {	app_id:			getNumberValue(req.query.select_app_id),
 					code:			getNumberValue(req.query.code),
 					year: 			getNumberValue(req.query.year),
