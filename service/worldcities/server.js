@@ -1,16 +1,28 @@
-const service = await import('./service.js');
-const { MicroserviceServer, IAM} = await import(`file://${process.cwd()}/service/service.service.js`);
+/** @module server/express/service/worldcities */
 
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
+const service = await import('./service.js');
+const { getNumberValue, MicroserviceServer, IAM} = await import(`file://${process.cwd()}/service/service.service.js`);
+/**
+ * Starts the server
+ */
 const startserver = async () =>{
 	const request = await MicroserviceServer('WORLDCITIES');
-	request.server.createServer(request.options, (req, res) => {
-		req.query = {};
-		req.params = {};
+	request.server.createServer(request.options, (/**@type{Types.req_service}*/req, /**@type{Types.res_service}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Content-Type',  'application/json; charset=utf-8');
 		const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
-		req.query.app_id = params.get('app_id');
+		req.query = {	app_id:null,
+						latitude:'',
+						longitude:'',
+						ip:'',
+						limit:0};
+		req.params = {	search:'',
+						country:''};
+		req.query.app_id = getNumberValue(params.get('app_id'));
 		switch (true){
 			case req.url.startsWith('/worldcities/city/search/'):{
 				req.params.search = req.url.substring('/worldcities/city/search/'.length, req.url.indexOf('?'));
@@ -18,8 +30,8 @@ const startserver = async () =>{
 					req.query.limit = Number(params.get('limit'));
 				else
 					req.query.limit = 0;
-				IAM(req.query.app_id, req.headers.authorization).then(result=>{
-					if (result == 1)
+				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+					if (result)
 						getCitySearch(req, res);
 					else
 					{
@@ -31,8 +43,8 @@ const startserver = async () =>{
 				break;
 			}
 			case req.url.startsWith('/worldcities/city/random'):{
-				IAM(req.query.app_id, req.headers.authorization).then(result=>{
-					if (result == 1)
+				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+					if (result)
 						getCityRandom(req, res);
 					else
 					{
@@ -45,8 +57,8 @@ const startserver = async () =>{
 			}
 			case req.url.startsWith('/worldcities/country/'):{
 				req.params.country = req.url.substring('/worldcities/country/'.length, req.url.indexOf('?'));
-				IAM(req.query.app_id, req.headers.authorization).then(result=>{
-					if (result == 1)
+				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+					if (result)
 						getCities(req, res);
 					else
 					{
@@ -61,6 +73,7 @@ const startserver = async () =>{
 				res.end();
 				break;
 		}
+
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE WORLDCITIES PORT ${request.port} `);
 	});
@@ -69,6 +82,11 @@ const startserver = async () =>{
 		console.log(err);
 	});
 };
+/**
+ * 
+ * @param {Types.req_service} req 
+ * @param {Types.res_service} res 
+ */
 const getCities = async (req, res) => {
 	try {
 		const cities = await service.getCities(req.params.country);
@@ -80,6 +98,11 @@ const getCities = async (req, res) => {
 	}
 	res.end();
 };
+/**
+ * 
+ * @param {Types.req_service} req 
+ * @param {Types.res_service} res 
+ */
 const getCityRandom = async (req, res) => {
 	try {
 		const city = await service.getCityRandom();
@@ -91,6 +114,11 @@ const getCityRandom = async (req, res) => {
 	}
 	res.end();
 };
+/**
+ * 
+ * @param {Types.req_service} req 
+ * @param {Types.res_service} res 
+ */
 const getCitySearch = async (req, res) => {
 	try {
 		const city = await service.getCitySearch(decodeURI(req.params.search), req.query.limit);
@@ -103,3 +131,4 @@ const getCitySearch = async (req, res) => {
 	res.end();
 };
 startserver();
+export{startserver};

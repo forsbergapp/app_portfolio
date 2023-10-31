@@ -1,3 +1,13 @@
+/** @module server/express/service/geolocation */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
+/**
+ * 
+ * @param {'IP'|'PLACE'} geotype 
+ * @returns {*}
+ */
 const getGeodataEmpty = (geotype) => {
 	switch (geotype){
 		case 'IP':{
@@ -48,6 +58,14 @@ const getGeodataEmpty = (geotype) => {
 		default: return null;
 	}
 };
+/**
+ * 
+ * @param {'IP'|'PLACE'} cachetype 
+ * @param {string|null} ip 
+ * @param {string} latitude 
+ * @param {string} longitude 
+ * @returns {Promise.<*>}
+ */
 const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     const fs = await import('node:fs');
     let geodata_cache;
@@ -68,9 +86,21 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
             case 'PLACE':{
                 geodata_cache = await fs.promises.readFile(`${process.cwd()}/service/geolocation/geodata_cache_place.json`, 'utf8');
                 geodata_cache =  geodata_cache.split('\r\n');
+                /**
+                 * 
+                 * @param {string} v 
+                 * @param {number} d 
+                 * @returns {string}
+                 */
                 const getFixed = (v, d) => {
                     return (Math.floor(Number(v) * Math.pow(10, d)) / Math.pow(10, d)).toFixed(d);
                 };
+                /**
+                 * 
+                 * @param {string} number_row 
+                 * @param {string} number_search 
+                 * @returns {boolean}
+                 */
                 const check_aprox = (number_row, number_search) =>{
                     //check aproximate value range -+ 0.07
                     if ((Number(number_row) >= Number(number_search) - 0.07) &&
@@ -100,6 +130,11 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     }
     
 };
+/**
+ * 
+ * @param {'IP'|'PLACE'} cachetype 
+ * @param {*} geodata 
+ */
 const writeCacheGeodata = async (cachetype, geodata) =>{
     const fs = await import('node:fs');
     switch (cachetype){
@@ -118,6 +153,12 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
         }
     }
 };
+/**
+ * 
+ * @param {string} url 
+ * @param {string} language 
+ * @returns 
+ */
 const getGeodata = async (url, language) => {
     const http = await import('node:http');
     return new Promise((resolve) =>{
@@ -133,7 +174,7 @@ const getGeodata = async (url, language) => {
         
         const request = http.request(url, options, res =>{
             let responseBody = '';
-            res.setEncoding('UTF8');
+            res.setEncoding('utf8');
             res.on('data', (chunk) =>{
                 responseBody += chunk;
             });

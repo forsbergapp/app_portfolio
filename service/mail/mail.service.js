@@ -1,20 +1,26 @@
-const nodemailer = await import('nodemailer');
+/** @module server/express/service/mail */
 
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
+const nodemailer = await import('nodemailer');
+/**
+ * 
+ * @param {{
+ *          email_host:         string,
+ *          email_port:         number,
+ *          email_secure:       boolean,
+ *          email_auth_user:    string,
+ *          email_auth_pass:    string,
+ *          from:               string,
+ *          to:                 string,
+ *          subject:            string,
+ *          html:               string
+ *      }} data 
+ * @returns {Promise.<object>}
+ */
 const sendEmail = async (data) => {
     return new Promise((resolve, reject)=>{
-        /*
-        {
-            "email_host":         [host],
-            "email_port":         [port],
-            "email_secure":       [secure],
-            "email_auth_user":    [user],
-            "email_auth_pass":    [password],
-            "from":               [email from ],
-            "to":                 [email to],
-            "subject":            [subject],
-            "html":               [html email]
-        };
-        */
         const transporter = nodemailer.createTransport({
             host: data.email_host,
             port: data.email_port,
@@ -26,6 +32,12 @@ const sendEmail = async (data) => {
             debug: false,
             logger: false
         });
+        /**@type{{  from:string,
+         *          to:string,
+         *          subject:string,
+         *          html:string,
+         *          encoding:string,
+         *          textEncoding:*}} */
         const message = {
             from: `"${data.from}" <${data.email_auth_user}>`,
             to: data.to,
