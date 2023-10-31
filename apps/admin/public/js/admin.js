@@ -1,6 +1,6 @@
 const common = await import('common');
 const app_secure = await import('app_secure');
-common.COMMON_GLOBAL['rest_admin_at'] = '';
+common.COMMON_GLOBAL.rest_admin_at = '';
 
 const admin_login_nav = (target) => {
     document.getElementById('admin_login_title').classList.remove('login_nav_button_selected');
@@ -26,7 +26,7 @@ const clear_login = () => {
     document.getElementById('system_admin_login_password_confirm').style.display = 'none';
 };
 const admin_logoff_app = () => {
-    common.COMMON_GLOBAL['rest_admin_at'] = '';
+    common.COMMON_GLOBAL.rest_admin_at = '';
     document.getElementById('common_user_menu_default_avatar').innerHTML = '';
     const clear_common = () => {
         app_secure.delete_globals();
@@ -38,9 +38,9 @@ const admin_logoff_app = () => {
         document.querySelector('#menu_open').style.visibility = 'hidden';
         document.getElementById('admin_secure').style.visibility = 'hidden';
     };
-    if (common.COMMON_GLOBAL['system_admin'] == 1) {
+    if (common.COMMON_GLOBAL.system_admin == 1) {
         clear_common();
-        common.COMMON_GLOBAL['system_admin'] = 0;
+        common.COMMON_GLOBAL.system_admin = 0;
     }
     else
         common.user_logoff().then(() => {
@@ -51,11 +51,11 @@ const admin_login = async () => {
     const old_button = document.getElementById('admin_login_button').innerHTML;
     if (document.getElementById('system_admin_login').style.display == 'block') {
         if (document.getElementById('system_admin_login_username_input').value == '') {
-            common.show_message('INFO', null, null, common.ICONS['app_system_admin'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
+            common.show_message('INFO', null, null, common.ICONS.app_system_admin + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
             return;
         }
         if (document.getElementById('system_admin_login_password_input').value == '') {
-            common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
+            common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
             return;
         }
         if (common.check_input(document.getElementById('system_admin_login_username_input').value, 100, true) == false ||
@@ -63,23 +63,23 @@ const admin_login = async () => {
             return;
         //no : in username
         if (document.getElementById('system_admin_login_username_input').value.indexOf(':') > -1) {
-            common.show_message('INFO', null, null, common.ICONS['app_system_admin'] + ' ":" ' + common.ICONS['message_error'], common.COMMON_GLOBAL['common_app_id']);
+            common.show_message('INFO', null, null, common.ICONS.app_system_admin + ' ":" ' + common.ICONS.message_error, common.COMMON_GLOBAL.common_app_id);
             return;
         }
         //no : in username
         if (document.getElementById('system_admin_login_password_input').value.indexOf(':') > -1) {
-            common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ":" ' + common.ICONS['message_error'], common.COMMON_GLOBAL['common_app_id']);
+            common.show_message('INFO', null, null, common.ICONS.user_password + ' ":" ' + common.ICONS.message_error, common.COMMON_GLOBAL.common_app_id);
             return;
         }
         //if first time then password confirm is shown
         if (document.getElementById('system_admin_login_password_confirm').style.display == 'block') {
             if (document.getElementById('system_admin_login_password_confirm_input').value == '') {
-                common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
+                common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
                 return;
             }
             if (document.getElementById('system_admin_login_password_input').value !=
                 document.getElementById('system_admin_login_password_confirm_input').value) {
-                common.show_message('INFO', null, null, common.ICONS['user_password'] + ' <> ' + common.ICONS['user_password'], common.COMMON_GLOBAL['common_app_id']);
+                common.show_message('INFO', null, null, common.ICONS.user_password + ' <> ' + common.ICONS.user_password, common.COMMON_GLOBAL.common_app_id);
                 return;
             }
         }
@@ -91,12 +91,12 @@ const admin_login = async () => {
                 null;
             else{
                 json = JSON.parse(result_login);
-                common.COMMON_GLOBAL['rest_admin_at'] = json.token_at;
-                common.COMMON_GLOBAL['system_admin'] = 1;
+                common.COMMON_GLOBAL.rest_admin_at = json.token_at;
+                common.COMMON_GLOBAL.system_admin = 1;
                 common.updateOnlineStatus();
                 common.dialogue_close('dialogue_admin_login').then(() => {
-                    document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS['app_system_admin'];
-                    document.getElementById('common_user_menu_username').innerHTML = common.ICONS['app_system_admin'];
+                    document.getElementById('common_user_menu_default_avatar').innerHTML = common.ICONS.app_system_admin;
+                    document.getElementById('common_user_menu_username').innerHTML = common.ICONS.app_system_admin;
                     document.querySelector('#menu').style.visibility = 'visible';
                     document.querySelector('#menu_open').style.visibility = 'visible';
                     document.querySelector('#common_user_preferences').style.display = 'none';
@@ -156,7 +156,7 @@ const setEvents = () => {
     document.getElementById('admin_login_nav').addEventListener('click', (event) => { admin_login_nav(event.target); }, true);
 
 
-    if (common.COMMON_GLOBAL['system_admin_only'] == 1)
+    if (common.COMMON_GLOBAL.system_admin_only == 1)
         common.set_event_user_menu();
     else {
         //common
@@ -194,17 +194,17 @@ const admin_exception = (error) => {
 };
 const init_app = (system_admin_only) => {
     //SET ICONS
-    document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
-    document.getElementById('common_message_cancel').innerHTML = common.ICONS['app_cancel'];
+    document.getElementById('common_message_close').innerHTML = common.ICONS.app_close;
+    document.getElementById('common_message_cancel').innerHTML = common.ICONS.app_cancel;
 
-    document.getElementById('menu_open').innerHTML = common.ICONS['app_menu_open'];
+    document.getElementById('menu_open').innerHTML = common.ICONS.app_menu_open;
 
-    document.getElementById('send_broadcast_send').innerHTML = common.ICONS['app_send'];
-    document.getElementById('send_broadcast_close').innerHTML = common.ICONS['app_close'];
-    document.getElementById('common_lov_close').innerHTML = common.ICONS['app_close'];
+    document.getElementById('send_broadcast_send').innerHTML = common.ICONS.app_send;
+    document.getElementById('send_broadcast_close').innerHTML = common.ICONS.app_close;
+    document.getElementById('common_lov_close').innerHTML = common.ICONS.app_close;
 
-    document.getElementById('send_broadcast_title').innerHTML = common.ICONS['app_broadcast'];
-    document.getElementById('client_id_label').innerHTML = common.ICONS['user'];
+    document.getElementById('send_broadcast_title').innerHTML = common.ICONS.app_broadcast;
+    document.getElementById('client_id_label').innerHTML = common.ICONS.user;
 
     //SET EVENTLISTENERS
     document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
@@ -215,29 +215,29 @@ const init_app = (system_admin_only) => {
     document.getElementById('send_broadcast_close').addEventListener('click', () => { app_secure.closeBroadcast(); }, false);
 
     //MENU ITEMS
-    document.getElementById('menu_close').innerHTML = common.ICONS['app_menu_close'];
+    document.getElementById('menu_close').innerHTML = common.ICONS.app_menu_close;
     //DASHBOARD
-    document.getElementById('menu_1').innerHTML = common.ICONS['app_chart'];
+    document.getElementById('menu_1').innerHTML = common.ICONS.app_chart;
     //USER STAT
-    document.getElementById('menu_2').innerHTML = common.ICONS['app_users'] + common.ICONS['app_log'];
+    document.getElementById('menu_2').innerHTML = common.ICONS.app_users + common.ICONS.app_log;
     //USERS
-    document.getElementById('menu_3').innerHTML = common.ICONS['app_users'];
+    document.getElementById('menu_3').innerHTML = common.ICONS.app_users;
     //APP ADMIN
-    document.getElementById('menu_4').innerHTML = common.ICONS['app_apps'] + common.ICONS['app_settings'];
+    document.getElementById('menu_4').innerHTML = common.ICONS.app_apps + common.ICONS.app_settings;
     //MONITOR
-    document.getElementById('menu_5').innerHTML = common.ICONS['app_log'];
+    document.getElementById('menu_5').innerHTML = common.ICONS.app_log;
     //PARAMETER
-    document.getElementById('menu_6').innerHTML = common.ICONS['app_server'] + common.ICONS['app_settings'];
+    document.getElementById('menu_6').innerHTML = common.ICONS.app_server + common.ICONS.app_settings;
     //INSTALLATION 
-    document.getElementById('menu_7').innerHTML = common.ICONS['app_server'] + common.ICONS['app_install'];
+    document.getElementById('menu_7').innerHTML = common.ICONS.app_server + common.ICONS.app_install;
     //DATABASE
-    document.getElementById('menu_8').innerHTML = common.ICONS['app_server'] + common.ICONS['app_database'];
+    document.getElementById('menu_8').innerHTML = common.ICONS.app_server + common.ICONS.app_database;
     //'BACKUP/RESTORE'
-    document.getElementById('menu_9').innerHTML = common.ICONS['app_server'] + common.ICONS['app_backup'] + common.ICONS['app_restore'];
+    document.getElementById('menu_9').innerHTML = common.ICONS.app_server + common.ICONS.app_backup + common.ICONS.app_restore;
     //SERVER
-    document.getElementById('menu_10').innerHTML = common.ICONS['app_server'];
+    document.getElementById('menu_10').innerHTML = common.ICONS.app_server;
     //LOGOUT
-    document.getElementById('menu_11').innerHTML = common.ICONS['app_logoff'];
+    document.getElementById('menu_11').innerHTML = common.ICONS.app_logoff;
 
     document.getElementById('menu_secure').addEventListener('click', (event) => {
         let target_id;
@@ -272,29 +272,29 @@ const init_app = (system_admin_only) => {
     document.getElementById('common_user_direction_select').addEventListener('change', (event) => { app_secure.fix_pagination_buttons(event.target.value); }, false);
     setEvents();
     if (system_admin_only == 0)
-        if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-            common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, ()=>{});
+        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+            common.common_translate_ui(common.COMMON_GLOBAL.user_locale, null, ()=>{});
 };
 const init = (parameters) => {
     //show admin login as default
     admin_login_nav(document.getElementById('admin_login_title'));
-    common.COMMON_GLOBAL['exception_app_function'] = admin_exception;
+    common.COMMON_GLOBAL.exception_app_function = admin_exception;
     common.init_common(parameters).then(()=>{
-        document.getElementById('admin_login_title').innerHTML = common.ICONS['user'];
-        document.getElementById('system_admin_login_title').innerHTML = common.ICONS['app_system_admin'];
-        document.getElementById('system_admin_login_username_icon').innerHTML = common.ICONS['app_system_admin'];
-        document.getElementById('system_admin_login_password_icon').innerHTML = common.ICONS['user_password'];
+        document.getElementById('admin_login_title').innerHTML = common.ICONS.user;
+        document.getElementById('system_admin_login_title').innerHTML = common.ICONS.app_system_admin;
+        document.getElementById('system_admin_login_username_icon').innerHTML = common.ICONS.app_system_admin;
+        document.getElementById('system_admin_login_password_icon').innerHTML = common.ICONS.user_password;
 
-        document.getElementById('admin_login_button').innerHTML = common.ICONS['app_login'];
+        document.getElementById('admin_login_button').innerHTML = common.ICONS.app_login;
 
-        document.getElementById('common_message_close').innerHTML = common.ICONS['app_close'];
-        document.getElementById('admin_login_username_icon').innerHTML = common.ICONS['user'];
-        document.getElementById('admin_login_password_icon').innerHTML = common.ICONS['user_password'];
+        document.getElementById('common_message_close').innerHTML = common.ICONS.app_close;
+        document.getElementById('admin_login_username_icon').innerHTML = common.ICONS.user;
+        document.getElementById('admin_login_password_icon').innerHTML = common.ICONS.user_password;
         if (parameters.app_service.first_time == 1) {
-            document.getElementById('admin_first_time').innerHTML = common.ICONS['app_init'];
+            document.getElementById('admin_first_time').innerHTML = common.ICONS.app_init;
             document.getElementById('admin_first_time').style.display = 'block';
             document.getElementById('system_admin_login_password_confirm').style.display = 'block';
-            document.getElementById('system_admin_login_password_icon_confirm').innerHTML = common.ICONS['user_password'];
+            document.getElementById('system_admin_login_password_icon_confirm').innerHTML = common.ICONS.user_password;
         }
 
         if (parameters.app_service.system_admin_only == 1) {

@@ -89,13 +89,13 @@ const COMMON = {
 const config_files = () => {
     return [
             [0, SERVER_CONFIG_INIT_PATH],
-            [1, CONFIG_INIT['FILE_CONFIG_SERVER']],
-            [2, CONFIG_INIT['FILE_CONFIG_AUTH_BLOCKIP']],
-            [3, CONFIG_INIT['FILE_CONFIG_AUTH_USERAGENT']],
-            [4, CONFIG_INIT['FILE_CONFIG_AUTH_POLICY']],
-            [5, CONFIG_INIT['PATH_LOG']],
-            [6, CONFIG_INIT['FILE_CONFIG_AUTH_USER']],
-            [7, CONFIG_INIT['FILE_CONFIG_APPS']]
+            [1, CONFIG_INIT.FILE_CONFIG_SERVER],
+            [2, CONFIG_INIT.FILE_CONFIG_AUTH_BLOCKIP],
+            [3, CONFIG_INIT.FILE_CONFIG_AUTH_USERAGENT],
+            [4, CONFIG_INIT.FILE_CONFIG_AUTH_POLICY],
+            [5, CONFIG_INIT.PATH_LOG],
+            [6, CONFIG_INIT.FILE_CONFIG_AUTH_USER],
+            [7, CONFIG_INIT.FILE_CONFIG_APPS]
            ];
 };
 /**
@@ -268,7 +268,7 @@ const DefaultConfig = async () => {
                         JSON.parse(config_json[6])];
     //set server parameters
     //update path
-    config_obj[0]['SERVER'].map(row=>{
+    config_obj[0].SERVER.map(row=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY'){
                 row.HTTPS_KEY = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -279,16 +279,16 @@ const DefaultConfig = async () => {
         } 
     });
     //generate hash
-    config_obj[0]['SERVICE_AUTH'].map(row=>{
+    config_obj[0].SERVICE_AUTH.map(row=>{
         for (const key of Object.keys(row))
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
             }
     });
     //set created for user
-    config_obj[4]['created'] = new Date().toISOString();
+    config_obj[4].created = new Date().toISOString();
     //generate hash for apps
-    config_obj[5]['APPS'].map(row=>{
+    config_obj[5].APPS.map(row=>{
         row.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
@@ -428,8 +428,8 @@ const ConfigMaintenanceSet = (value, callBack) => {
             else{
                 /**@type{Types.config_init} */
                 const config_init = JSON.parse(fileBuffer.toString());
-                config_init['MAINTENANCE'] = value;
-                config_init['MODIFIED'] = new Date().toISOString();
+                config_init.MAINTENANCE = value;
+                config_init.MODIFIED = new Date().toISOString();
                 //maintenance in this config file is only updated so no need for backup files
                 fs.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, JSON.stringify(config_init, undefined, 2),  'utf8', (err) => {
                     if (err)
@@ -453,7 +453,7 @@ const ConfigMaintenanceGet = (callBack) => {
             if (err)
                 callBack(err, null);
             else
-                callBack(null, JSON.parse(fileBuffer.toString())['MAINTENANCE']);
+                callBack(null, JSON.parse(fileBuffer.toString()).MAINTENANCE);
         });
     });
 };
@@ -531,10 +531,10 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
             if (first_time){
                 if (config_no == 1){
                     //add metadata to server config
-                    config_json['configuration'] = app_portfolio_title;
-                    config_json['comment'] = '';
-                    config_json['created'] = new Date().toISOString();
-                    config_json['modified'] = '';
+                    config_json.configuration = app_portfolio_title;
+                    config_json.comment = '';
+                    config_json.created = new Date().toISOString();
+                    config_json.modified = '';
                 }
                 await write_config(config_no, config_file, JSON.stringify(config_json, undefined, 2)).then(() => {
                     callBack(null, null);
@@ -553,10 +553,10 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                     await fs.promises.writeFile(process.cwd() + `${config_file}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, old_config,  'utf8');
                     if (config_no == 1){
                         //add metadata to server config
-                        config_json['configuration'] = app_portfolio_title;
-                        config_json['comment'] = '';
-                        config_json['created'] = JSON.parse(old_config)['created'];
-                        config_json['modified'] = new Date().toISOString();
+                        config_json.configuration = app_portfolio_title;
+                        config_json.comment = '';
+                        config_json.created = JSON.parse(old_config).created;
+                        config_json.modified = new Date().toISOString();
                     }  
                     await write_config(config_no, config_file, JSON.stringify(config_json, undefined, 2)).then(() => {
                         callBack(null, null);
@@ -573,7 +573,7 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
  * @returns {boolean}
  */
 const CheckFirstTime = () => {
-    if (CONFIG_USER['username']=='')
+    if (CONFIG_USER.username=='')
         return true;
     else
         return false;
@@ -587,9 +587,9 @@ const CheckFirstTime = () => {
  */
 const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
     const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
-    CONFIG_USER['username'] = admin_name;
-    CONFIG_USER['password'] = hashSync(admin_password, genSaltSync(10));
-    CONFIG_USER['modified'] = new Date().toISOString();
+    CONFIG_USER.username = admin_name;
+    CONFIG_USER.password = hashSync(admin_password, genSaltSync(10));
+    CONFIG_USER.modified = new Date().toISOString();
     import('node:fs').then((fs) => {
         fs.writeFile(process.cwd() + config_files()[6][1], JSON.stringify(CONFIG_USER, undefined, 2),  'utf8', (err) => {
             if (err)
@@ -629,11 +629,11 @@ const Info = async (callBack) => {
                     'version': os.version()
                     };
     const process_json = { 
-                            'memoryusage_rss' : process.memoryUsage()['rss'],
-                            'memoryusage_heaptotal' : process.memoryUsage()['heapTotal'],
-                            'memoryusage_heapused' : process.memoryUsage()['heapUsed'],
-                            'memoryusage_external' : process.memoryUsage()['external'],
-                            'memoryusage_arraybuffers' : process.memoryUsage()['arrayBuffers'],
+                            'memoryusage_rss' : process.memoryUsage().rss,
+                            'memoryusage_heaptotal' : process.memoryUsage().heapTotal,
+                            'memoryusage_heapused' : process.memoryUsage().heapUsed,
+                            'memoryusage_external' : process.memoryUsage().external,
+                            'memoryusage_arraybuffers' : process.memoryUsage().arrayBuffers,
                             'uptime' : process.uptime(),
                             'version' : process.version,
                             'path' : process.cwd(),

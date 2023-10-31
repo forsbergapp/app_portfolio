@@ -360,7 +360,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
         object_parameter ='';
     else
         object_parameter = `object=${object}`;
-    if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
+    if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
         path = `/app_object/admin/${lang_code}?${object_parameter}`;
     }
     else{
@@ -453,7 +453,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
             }
             //translate locales
             json = '';
-            if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
+            if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
                 path = `/language/locale/admin/${lang_code}?`;
             }
             else{
@@ -496,13 +496,13 @@ const format_json_date = (db_date, short) => {
         let options;
         if (short)
             options = {
-                timeZone: COMMON_GLOBAL['user_timezone'],
+                timeZone: COMMON_GLOBAL.user_timezone,
                 year: 'numeric',
                 month: 'long'
             };
         else
             options = {
-                timeZone: COMMON_GLOBAL['user_timezone'],
+                timeZone: COMMON_GLOBAL.user_timezone,
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -520,7 +520,7 @@ const format_json_date = (db_date, short) => {
             db_date.substr(14, 2), //min
             db_date.substr(17, 2) //sec
         ));
-        const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL['user_locale'], options);
+        const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL.user_locale, options);
         return format_date;
     }
 };
@@ -572,7 +572,7 @@ const convert_image = async (image_url, image_width, image_height) => {
                 elem.height = image_height;
                 const ctx = elem.getContext('2d');
                 ctx.drawImage(el.target, 0, 0, elem.width, elem.height);
-                resolve(ctx.canvas.toDataURL(COMMON_GLOBAL['image_file_mime_type']));    
+                resolve(ctx.canvas.toDataURL(COMMON_GLOBAL.image_file_mime_type));
             };
         }
     });
@@ -607,22 +607,22 @@ const show_image = (item_img, item_input, image_width, image_height) => {
     const file = document.getElementById(item_input).files[0];
     const reader = new FileReader();
 
-    const allowedExtensions = [COMMON_GLOBAL['image_file_allowed_type1'],
-                               COMMON_GLOBAL['image_file_allowed_type2'],
-                               COMMON_GLOBAL['image_file_allowed_type3'],
-                               COMMON_GLOBAL['image_file_allowed_type4'],
-                               COMMON_GLOBAL['image_file_allowed_type5']
+    const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
+                               COMMON_GLOBAL.image_file_allowed_type2,
+                               COMMON_GLOBAL.image_file_allowed_type3,
+                               COMMON_GLOBAL.image_file_allowed_type4,
+                               COMMON_GLOBAL.image_file_allowed_type5
                               ];
     const { name: fileName, size: fileSize } = file;
     const fileExtension = fileName.split('.').pop();
     if (!allowedExtensions.includes(fileExtension)){
         //File type not allowed
-        show_message('ERROR', 20307, null,null, COMMON_GLOBAL['common_app_id']);
+        show_message('ERROR', 20307, null,null, COMMON_GLOBAL.common_app_id);
     }
     else
-        if (fileSize > COMMON_GLOBAL['image_file_max_size']){
+        if (fileSize > COMMON_GLOBAL.image_file_max_size){
             //File size too large
-            show_message('ERROR', 20308, null, null, COMMON_GLOBAL['common_app_id']);
+            show_message('ERROR', 20308, null, null, COMMON_GLOBAL.common_app_id);
         }
         else {
             reader.onloadend = (event) => {
@@ -649,9 +649,9 @@ const check_input = (text, text_length=100, nodb_message=false) => {
                 if (text.includes('"') || text.includes('\\')){
                     //not valid text
                     if (nodb_message==true)
-                        show_message('INFO', null, null, COMMON_GLOBAL['icon_message_error'], COMMON_GLOBAL['app_id']);
+                        show_message('INFO', null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
                     else
-                        show_message('ERROR', 20309, null, null, COMMON_GLOBAL['common_app_id']);
+                        show_message('ERROR', 20309, null, null, COMMON_GLOBAL.common_app_id);
                     return false;
                 }
             }
@@ -659,9 +659,9 @@ const check_input = (text, text_length=100, nodb_message=false) => {
         } catch (error) {
             //not valid text
             if (nodb_message==true)
-                show_message('INFO', null, null, COMMON_GLOBAL['icon_message_error'], COMMON_GLOBAL['app_id']);
+                show_message('INFO', null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
             else
-                show_message('ERROR', 20309, null, null, COMMON_GLOBAL['common_app_id']);
+                show_message('ERROR', 20309, null, null, COMMON_GLOBAL.common_app_id);
             return false;
         }
         try {
@@ -669,9 +669,9 @@ const check_input = (text, text_length=100, nodb_message=false) => {
             if (text.length>text_length){
                 //text too long
                 if (nodb_message==true)
-                    show_message('INFO', null, null, COMMON_GLOBAL['icon_message_error'], COMMON_GLOBAL['app_id']);
+                    show_message('INFO', null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
                 else
-                    show_message('ERROR', 20310, null, null, COMMON_GLOBAL['common_app_id']);
+                    show_message('ERROR', 20310, null, null, COMMON_GLOBAL.common_app_id);
                 return false;
             }
         } catch (error) {
@@ -685,9 +685,9 @@ const get_uservariables = () => {
                 user_timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone,
                 user_number_system: Intl.NumberFormat().resolvedOptions().numberingSystem,
                 user_platform:      navigator.platform,
-                client_latitude:    COMMON_GLOBAL['client_latitude'],
-                client_longitude:   COMMON_GLOBAL['client_longitude'],
-                client_place:       COMMON_GLOBAL['client_place']
+                client_latitude:    COMMON_GLOBAL.client_latitude,
+                client_longitude:   COMMON_GLOBAL.client_longitude,
+                client_place:       COMMON_GLOBAL.client_place
             };
 };
 const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
@@ -702,7 +702,7 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
             }
         }    
     } catch (error) {
-        exception(COMMON_GLOBAL['exception_app_function'], error);
+        exception(COMMON_GLOBAL.exception_app_function, error);
     }
     
     return null;
@@ -742,7 +742,7 @@ const dialogue_close = async (dialogue) => {
     return new Promise(resolve=>{
         const animationDuration = 400;
         let soundDuration;
-        if (COMMON_GLOBAL['app_sound']==1){
+        if (COMMON_GLOBAL.app_sound==1){
             //add sound effect if needed
             const meepmeep = document.createElement('audio');
             meepmeep.src = '/common/audio/meepmeep.ogg';
@@ -945,8 +945,8 @@ const dialogue_password_new_clear = () => {
     document.getElementById('common_user_password_new_auth').innerHTML='';
     document.getElementById('common_user_password_new').value='';
     document.getElementById('common_user_password_new_confirm').value='';
-    COMMON_GLOBAL['user_account_id'] = '';
-    COMMON_GLOBAL['rest_at'] = '';
+    COMMON_GLOBAL.user_account_id = '';
+    COMMON_GLOBAL.rest_at = '';
 };
 const dialogue_user_edit_clear = () => {
     document.getElementById('common_dialogue_user_edit').style.visibility = 'hidden';
@@ -1050,7 +1050,7 @@ const lov_show = (lov, function_event) => {
     let service;
     switch (lov){
         case 'PARAMETER_TYPE':{
-            document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_settings']  + ' ' + ICONS['app_type'];
+            document.getElementById('common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_settings  + ' ' + ICONS.app_type;
             lov_column_value = 'parameter_type_text';            
             path = '/parameter_type/admin?';
             service = 'DB_API';
@@ -1058,7 +1058,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'SERVER_LOG_FILES':{
-            document.getElementById('common_lov_title').innerHTML = ICONS['app_server'] + ' ' + ICONS['app_file_path'];
+            document.getElementById('common_lov_title').innerHTML = ICONS.app_server + ' ' + ICONS.app_file_path;
             lov_column_value = 'filename';
             path = '/log/files?';
             service = 'LOG';
@@ -1066,7 +1066,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_CATEGORY':{
-            document.getElementById('common_lov_title').innerHTML = ICONS['app_apps'] + ' ' + ICONS['app_type'];
+            document.getElementById('common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_type;
             lov_column_value = 'app_category_text';
             path = '/app_category/admin?';
             service = 'DB_API';
@@ -1074,7 +1074,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_ROLE':{
-            document.getElementById('common_lov_title').innerHTML = ICONS['app_role'];
+            document.getElementById('common_lov_title').innerHTML = ICONS.app_role;
             lov_column_value = 'icon';
             path = '/app_role/admin?';
             service = 'DB_API';
@@ -1386,7 +1386,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
     path += `${document.getElementById('common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
-    if (parseInt(COMMON_GLOBAL['user_account_id']) || 0 !== 0) {
+    if (parseInt(COMMON_GLOBAL.user_account_id) || 0 !== 0) {
         switch (detailchoice) {
             case 0:
                 {
@@ -1476,8 +1476,8 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                     for (let i = 0; i < json.count; i++) {
                         //id for username list, app_id for app list
                         if (detailchoice==5 && typeof json.items[i].id =='undefined'){
-                            if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id'])
-                                delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS['app_delete']}</div>`;
+                            if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
+                                delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS.app_delete}</div>`;
                                 
                             //App list in app 0
                             html += 
@@ -1529,7 +1529,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                             if (event.target.classList.contains('common_profile_detail_list_app_name'))
                                 window.open(event.target.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
                             else
-                                if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL['user_account_id']){
+                                if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id){
                                     if (event.target.parentNode.classList.contains('common_profile_detail_list_app_delete'))
                                         user_account_app_delete(null, 
                                                                 document.getElementById('common_profile_id').innerHTML,
@@ -1567,21 +1567,21 @@ const search_profile = (click_function) => {
         let json_data;
         if (check_input(searched_username) == false)
             return;
-        if (COMMON_GLOBAL['user_account_id']!=''){
+        if (COMMON_GLOBAL.user_account_id!=''){
             //search using access token with logged in user_account_id
             path = `/user_account/profile/username/searchA?search=${encodeURI(searched_username)}`;
             token = 1;
-            json_data = {   user_account_id:    COMMON_GLOBAL['user_account_id'],
-                            client_latitude:    COMMON_GLOBAL['client_latitude'],
-                            client_longitude:   COMMON_GLOBAL['client_longitude']
+            json_data = {   user_account_id:    COMMON_GLOBAL.user_account_id,
+                            client_latitude:    COMMON_GLOBAL.client_latitude,
+                            client_longitude:   COMMON_GLOBAL.client_longitude
                         };
         }
         else{
             //search using data token without logged in user_account_id
             path = `/user_account/profile/username/searchD?search=${encodeURI(searched_username)}`;
             token = 0;
-            json_data = {   client_latitude:    COMMON_GLOBAL['client_latitude'],
-                            client_longitude:   COMMON_GLOBAL['client_longitude']
+            json_data = {   client_latitude:    COMMON_GLOBAL.client_latitude,
+                            client_longitude:   COMMON_GLOBAL.client_longitude
                         };
         }
         FFB ('DB_API', path, 'POST', token, json_data, (err, result) => {
@@ -1633,24 +1633,24 @@ const profile_show = async (user_account_id_other = null, username = null, callB
     let path;
 
     show_common_dialogue('PROFILE');
-    if (user_account_id_other == null && COMMON_GLOBAL['user_account_id'] == '' && username == null) {
+    if (user_account_id_other == null && COMMON_GLOBAL.user_account_id == '' && username == null) {
         return callBack(null,null);
     } else {
         if (user_account_id_other !== null) {
             user_account_id_search = user_account_id_other;
-            path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
+            path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL.user_account_id}`;
         } else
         if (username !== null) {
             user_account_id_search = '';
-            path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL['user_account_id']}`;
+            path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL.user_account_id}`;
         } else {
-            user_account_id_search = COMMON_GLOBAL['user_account_id'];
-            path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL['user_account_id']}`;
+            user_account_id_search = COMMON_GLOBAL.user_account_id;
+            path = `/user_account/profile/id/${user_account_id_search}?id=${COMMON_GLOBAL.user_account_id}`;
         }
         //PROFILE MAIN
         const json_data ={  
-                            client_latitude:    COMMON_GLOBAL['client_latitude'],
-                            client_longitude:   COMMON_GLOBAL['client_longitude']
+                            client_latitude:    COMMON_GLOBAL.client_latitude,
+                            client_longitude:   COMMON_GLOBAL.client_longitude
                         };
         FFB ('DB_API', path, 'POST', 0, json_data, (err, result) => {
             if (err)
@@ -1702,7 +1702,7 @@ const profile_show = async (user_account_id_other = null, username = null, callB
                     document.getElementById('common_profile_info_likes_count').innerHTML = json.count_likes;
                     document.getElementById('common_profile_info_liked_count').innerHTML = json.count_liked;
                 }    
-                if (COMMON_GLOBAL['user_account_id'] =='')
+                if (COMMON_GLOBAL.user_account_id =='')
                     setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
                 else
                     checkOnline('common_profile_avatar_online_status', json.id);
@@ -1719,8 +1719,8 @@ const profile_close = () => {
 const profile_update_stat = async (callBack) => {
     const profile_id = document.getElementById('common_profile_id');
     const json_data ={  
-                        client_latitude:    COMMON_GLOBAL['client_latitude'],
-                        client_longitude:   COMMON_GLOBAL['client_longitude']
+                        client_latitude:    COMMON_GLOBAL.client_latitude,
+                        client_longitude:   COMMON_GLOBAL.client_longitude
                     };
     //get updated stat for given user
     //to avoid update in stat set searched by same user
@@ -1856,16 +1856,16 @@ const user_login = async (username, password, callBack) => {
 
     if (username == '') {
         //"Please enter username"
-        show_message('ERROR', 20303, null, null, COMMON_GLOBAL['common_app_id']);
+        show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
         return callBack('ERROR', null);
     }
     if (password == '') {
         //"Please enter password"
-        show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
+        show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
         return callBack('ERROR', null);
     }
     // ES6 object spread operator for user variables
-    const json_data = { app_id:    COMMON_GLOBAL['app_id'],
+    const json_data = { app_id:    COMMON_GLOBAL.app_id,
                         username:  encodeURI(username),
                         password:  encodeURI(password),
                         ...get_uservariables()
@@ -1877,17 +1877,17 @@ const user_login = async (username, password, callBack) => {
         else{
             profile_close();
             json = JSON.parse(result);
-            COMMON_GLOBAL['user_account_id'] = json.items[0].id;
-            COMMON_GLOBAL['user_identity_provider_id'] = '';
-            COMMON_GLOBAL['user_app_role_id'] = json.items[0].app_role_id;
-            COMMON_GLOBAL['rest_at']	= json.accessToken;
+            COMMON_GLOBAL.user_account_id = json.items[0].id;
+            COMMON_GLOBAL.user_identity_provider_id = '';
+            COMMON_GLOBAL.user_app_role_id = json.items[0].app_role_id;
+            COMMON_GLOBAL.rest_at	= json.accessToken;
             updateOnlineStatus();
             user_preference_get(() =>{
                 if (json.items[0].active==0){
                     const function_cancel_event = () => { dialogue_verify_clear();
-                                                          exception(COMMON_GLOBAL['exception_app_function'], null);
+                                                          exception(COMMON_GLOBAL.exception_app_function, null);
                                                         };
-                    show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, ICONS['app_logoff'], function_cancel_event);
+                    show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, ICONS.app_logoff, function_cancel_event);
                     return callBack('ERROR', null);
                 }
                 else{
@@ -1905,8 +1905,8 @@ const user_login = async (username, password, callBack) => {
 };
 const user_logoff = async () => {
     //remove access token
-    COMMON_GLOBAL['rest_at'] ='';
-    COMMON_GLOBAL['user_account_id'] = '';
+    COMMON_GLOBAL.rest_at ='';
+    COMMON_GLOBAL.user_account_id = '';
     
     set_avatar(null, document.getElementById('common_user_menu_avatar_img')); 
     //clear logged in info
@@ -1936,12 +1936,12 @@ const user_logoff = async () => {
 const user_edit = async () => {
     let json;
     //get user from REST API
-    FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
+    FFB ('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{
             json = JSON.parse(result);
-            if (COMMON_GLOBAL['user_account_id'] == json.id) {
+            if (COMMON_GLOBAL.user_account_id == json.id) {
                 document.getElementById('common_user_edit_local').style.display = 'none';
                 document.getElementById('common_user_edit_provider').style.display = 'none';
                 document.getElementById('common_dialogue_user_edit').style.visibility = 'visible';
@@ -1982,7 +1982,7 @@ const user_edit = async () => {
                 set_avatar(json.avatar ?? json.provider_image, document.getElementById('common_user_menu_avatar_img'));
             } else {
                 //User not found
-                show_message('ERROR', 20305, null, null, COMMON_GLOBAL['common_app_id']);
+                show_message('ERROR', 20305, null, null, COMMON_GLOBAL.common_app_id);
             }
         }
     });
@@ -2027,13 +2027,13 @@ const user_update = async () => {
         if (password == '') {
             //"Please enter password"
             document.getElementById('common_user_edit_input_password').classList.add('common_input_error');
-            show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
+            show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
         if (password != password_confirm) {
             //Password not the same
             document.getElementById('common_user_edit_input_password_confirm').classList.add('common_input_error');
-            show_message('ERROR', 20301, null, null, COMMON_GLOBAL['common_app_id']);
+            show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
         //check new passwords
@@ -2055,14 +2055,14 @@ const user_update = async () => {
                         avatar:             avatar,
                         ...get_uservariables()
                     };
-        path = `/user_account/${COMMON_GLOBAL['user_account_id']}?`;
+        path = `/user_account/${COMMON_GLOBAL.user_account_id}?`;
     } else {
         json_data = {   provider_id:    document.getElementById('common_user_edit_provider_id').innerHTML,
                         username:       username,
                         bio:            bio,
                         private:        boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)
                     };
-        path = `/user_account/common/${COMMON_GLOBAL['user_account_id']}?`;
+        path = `/user_account/common/${COMMON_GLOBAL.user_account_id}?`;
     }
     const old_button = document.getElementById('common_user_edit_btn_user_update').innerHTML;
     let json;
@@ -2079,7 +2079,7 @@ const user_update = async () => {
             document.getElementById('common_user_menu_username').innerHTML = username;
             if (json.sent_change_email == 1){
                 const function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
-                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS['app_cancel'], function_cancel_event);
+                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, function_cancel_event);
             }
             else
                 dialogue_user_edit_clear();
@@ -2110,17 +2110,17 @@ const user_signup = () => {
                      };
     if (username == '') {
         //"Please enter username"
-        show_message('ERROR', 20303, null, null, COMMON_GLOBAL['common_app_id']);
+        show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
         return null;
     }
     if (password == '') {
         //"Please enter password"
-        show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
+        show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
         return null;
     }
     if (password != password_confirm) {
         //Password not the same
-        show_message('ERROR', 20301, null, null, COMMON_GLOBAL['common_app_id']);
+        show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
         return null;
     }
 
@@ -2133,12 +2133,12 @@ const user_signup = () => {
         }
         else{
             const json = JSON.parse(result);
-            COMMON_GLOBAL['rest_at'] = json.accessToken;
-            COMMON_GLOBAL['user_account_id'] = json.id;
+            COMMON_GLOBAL.rest_at = json.accessToken;
+            COMMON_GLOBAL.user_account_id = json.id;
             const function_cancel_event = () => { dialogue_verify_clear();
-                                                  exception(COMMON_GLOBAL['exception_app_function'], null);
+                                                  exception(COMMON_GLOBAL.exception_app_function, null);
                                                 };
-            show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS['app_logoff'], function_cancel_event);
+            show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, function_cancel_event);
         }
     });
 };
@@ -2176,7 +2176,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             verification_type:  verification_type,
                             ...get_uservariables()
                         };
-            FFB ('DB_API', `/user_account/activate/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 0, json_data, (err, result) => {
+            FFB ('DB_API', `/user_account/activate/${COMMON_GLOBAL.user_account_id}?`, 'PUT', 0, json_data, (err, result) => {
                 document.getElementById('common_user_verify_email').innerHTML = old_button;
                 if (err){    
                     return callBack(err, null);
@@ -2200,7 +2200,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             }
                             case 3:{
                                 //FORGOT
-                                COMMON_GLOBAL['rest_at']	= json.accessToken;
+                                COMMON_GLOBAL.rest_at	= json.accessToken;
                                 //show dialogue new password
                                 show_common_dialogue('PASSWORD_NEW', null, json.auth);
                                 break;
@@ -2228,7 +2228,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             document.getElementById('common_user_verify_verification_char5').classList.add('common_input_error');
                             document.getElementById('common_user_verify_verification_char6').classList.add('common_input_error');
                             //code not valid
-                            show_message('ERROR', 20306, null, null, COMMON_GLOBAL['common_app_id']);
+                            show_message('ERROR', 20306, null, null, COMMON_GLOBAL.common_app_id);
                             return callBack('ERROR', null);
                         }
                 }
@@ -2251,10 +2251,10 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             if (user_local==true && password == '') {
                 //"Please enter password"
                 document.getElementById('common_user_edit_input_password').classList.add('common_input_error');
-                show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
+                show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
                 return null;
             }
-            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL['app_id']);
+            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
             return callBack('CONFIRM',null);
         }
         case 1:{
@@ -2265,7 +2265,7 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             const json_data = { password: password};
 
-            FFB ('DB_API', `/user_account/${COMMON_GLOBAL['user_account_id']}?`, 'DELETE', 1, json_data, (err) => {
+            FFB ('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'DELETE', 1, json_data, (err) => {
                 document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
@@ -2303,7 +2303,7 @@ const user_function = (user_function, callBack) => {
             }
     }
 
-    if (COMMON_GLOBAL['user_account_id'] == '')
+    if (COMMON_GLOBAL.user_account_id == '')
         show_common_dialogue('LOGIN');
     else {
         if (check_div.children[0].style.display == 'block') {
@@ -2311,7 +2311,7 @@ const user_function = (user_function, callBack) => {
         } else {
             method = 'DELETE';
         }
-        FFB ('DB_API', `${path}/${COMMON_GLOBAL['user_account_id']}?`, method, 1, json_data, (err) => {
+        FFB ('DB_API', `${path}/${COMMON_GLOBAL.user_account_id}?`, method, 1, json_data, (err) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -2353,7 +2353,7 @@ const user_function = (user_function, callBack) => {
 const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event) => {
     switch (choice){
         case null:{
-            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL['app_id']);
+            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
             break;
         }
         case 1:{
@@ -2389,9 +2389,9 @@ const user_forgot = async () => {
             else{
                 const json = JSON.parse(result);
                 if (json.sent == 1){
-                    COMMON_GLOBAL['user_account_id'] = json.id;
+                    COMMON_GLOBAL.user_account_id = json.id;
                     const function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
-                    show_common_dialogue('VERIFY', 'FORGOT', email, ICONS['app_cancel'], function_cancel_event);
+                    show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, function_cancel_event);
                 }
             }
         });
@@ -2412,17 +2412,17 @@ const updatePassword = () => {
         if (password_new == '') {
             //"Please enter password"
             document.getElementById('common_user_password_new').classList.add('common_input_error');
-            show_message('ERROR', 20304, null, null, COMMON_GLOBAL['common_app_id']);
+            show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
         if (password_new != password_new_confirm) {
             //Password not the same
-            show_message('ERROR', 20301, null, null, COMMON_GLOBAL['common_app_id']);
+            show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
         const old_button = document.getElementById('common_user_password_new_icon').innerHTML;
         document.getElementById('common_user_password_new_icon').innerHTML = APP_SPINNER;
-        FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL['user_account_id']}?`, 'PUT', 1, json_data, (err) => {
+        FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id}?`, 'PUT', 1, json_data, (err) => {
             document.getElementById('common_user_password_new_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -2434,7 +2434,7 @@ const updatePassword = () => {
     }
 };
 const user_preference_save = async () => {
-    if (COMMON_GLOBAL['user_preference_save']==true && COMMON_GLOBAL['user_account_id'] != ''){
+    if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != ''){
         const json_data =
             {  
                 preference_locale: document.getElementById('common_user_locale_select').value,
@@ -2442,7 +2442,7 @@ const user_preference_save = async () => {
                 setting_preference_direction_id: document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id,
                 setting_preference_arabic_script_id: document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id
             };
-        await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'PATCH', 1, json_data, (err) => {
+        await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id}?`, 'PATCH', 1, json_data, (err) => {
             if (err)
                 null;
             else{
@@ -2453,7 +2453,7 @@ const user_preference_save = async () => {
     
 };
 const user_preference_get = async (callBack) => {
-    await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL['user_account_id']}?`, 'GET', 1, null, (err, result) => {
+    await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id}?`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{
@@ -2463,7 +2463,7 @@ const user_preference_get = async (callBack) => {
                 user_preferences_set_default_globals('LOCALE');
             }
             else{
-                COMMON_GLOBAL['user_locale'] = json.items[0].preference_locale;
+                COMMON_GLOBAL.user_locale = json.items[0].preference_locale;
             }
             //timezone
             if (json.items[0].setting_preference_timezone_id==null){
@@ -2471,14 +2471,14 @@ const user_preference_get = async (callBack) => {
             }
             else{
                 SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.getElementById('common_user_timezone_select'), 0);
-                COMMON_GLOBAL['user_timezone'] = document.getElementById('common_user_timezone_select').value;
+                COMMON_GLOBAL.user_timezone = document.getElementById('common_user_timezone_select').value;
             }
             //direction
             SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.getElementById('common_user_direction_select'), 0);
-            COMMON_GLOBAL['user_direction'] = document.getElementById('common_user_direction_select').value;
+            COMMON_GLOBAL.user_direction = document.getElementById('common_user_direction_select').value;
             //arabic script
             SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.getElementById('common_user_arabic_script_select'), 0);
-            COMMON_GLOBAL['user_arabic_script'] = document.getElementById('common_user_arabic_script_select').value;
+            COMMON_GLOBAL.user_arabic_script = document.getElementById('common_user_arabic_script_select').value;
             user_preferences_update_select();
             return callBack(null, null);
         }
@@ -2487,19 +2487,19 @@ const user_preference_get = async (callBack) => {
 const user_preferences_set_default_globals = (preference) => {
     switch (preference){
         case 'LOCALE':{
-            COMMON_GLOBAL['user_locale']         = navigator.language.toLowerCase();
+            COMMON_GLOBAL.user_locale         = navigator.language.toLowerCase();
             break;
         }
         case 'TIMEZONE':{
-            COMMON_GLOBAL['user_timezone']       = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            COMMON_GLOBAL.user_timezone       = Intl.DateTimeFormat().resolvedOptions().timeZone;
             break;
         }
         case 'DIRECTION':{
-            COMMON_GLOBAL['user_direction']      = '';
+            COMMON_GLOBAL.user_direction      = '';
             break;
         }
         case 'ARABIC_SCRIPT':{
-            COMMON_GLOBAL['user_arabic_script']  = '';
+            COMMON_GLOBAL.user_arabic_script  = '';
             break;
         }
     }
@@ -2508,22 +2508,22 @@ const user_preferences_update_select = () => {
     set_user_account_app_settings();
     //don't save changes now, just execute other code
     //or it would save preferences 4 times
-    COMMON_GLOBAL['user_preference_save'] = false;
+    COMMON_GLOBAL.user_preference_save = false;
     document.getElementById('common_user_locale_select').dispatchEvent(new Event('change'));
 	document.getElementById('common_user_timezone_select').dispatchEvent(new Event('change'));
 	document.getElementById('common_user_direction_select').dispatchEvent(new Event('change'));
 	document.getElementById('common_user_arabic_script_select').dispatchEvent(new Event('change'));
-    COMMON_GLOBAL['user_preference_save'] = true;
+    COMMON_GLOBAL.user_preference_save = true;
 };
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
 const ProviderUser_update = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) => {
     convert_image(profile_image_url, 
-                  COMMON_GLOBAL['image_avatar_width'],
-                  COMMON_GLOBAL['image_avatar_height']).then((profile_image)=>{
+                  COMMON_GLOBAL.image_avatar_width,
+                  COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
         let json;
-        const json_data ={  app_id:                 COMMON_GLOBAL['app_id'],
+        const json_data ={  app_id:                 COMMON_GLOBAL.app_id,
                             active:                 1,
                             identity_provider_id:   identity_provider_id,
                             provider_id:            profile_id,
@@ -2539,9 +2539,9 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                 return callBack(err, null);
             else{
                 json = JSON.parse(result);
-                COMMON_GLOBAL['rest_at'] = json.accessToken;
-                COMMON_GLOBAL['user_account_id'] = json.items[0].id;
-                COMMON_GLOBAL['user_identity_provider_id'] = json.items[0].identity_provider_id;
+                COMMON_GLOBAL.rest_at = json.accessToken;
+                COMMON_GLOBAL.user_account_id = json.items[0].id;
+                COMMON_GLOBAL.user_identity_provider_id = json.items[0].identity_provider_id;
                 updateOnlineStatus();
                 user_preference_get(() =>{
                     dialogue_login_clear();
@@ -2592,57 +2592,57 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
         if (checkconnected()) {
             import('leaflet').then(({L})=>{
                 //save library in variable for optimization
-                COMMON_GLOBAL['module_leaflet_library'] = L;
-                COMMON_GLOBAL['module_leaflet_session_map'] = '';
-                COMMON_GLOBAL['module_leaflet_session_map'] = COMMON_GLOBAL['module_leaflet_library'].map(containervalue).setView([latitude, longitude], COMMON_GLOBAL['module_leaflet_zoom']);
+                COMMON_GLOBAL.module_leaflet_library = L;
+                COMMON_GLOBAL.module_leaflet_session_map = '';
+                COMMON_GLOBAL.module_leaflet_session_map = COMMON_GLOBAL.module_leaflet_library.map(containervalue).setView([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                 map_setstyle(stylevalue).then(()=>{
                     //disable doubleclick in event dblclick since e.preventdefault() does not work
-                    COMMON_GLOBAL['module_leaflet_session_map'].doubleClickZoom.disable(); 
+                    COMMON_GLOBAL.module_leaflet_session_map.doubleClickZoom.disable(); 
         
                     //add scale
                     //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
-                    COMMON_GLOBAL['module_leaflet_library'].control.scale({position: 'topright'}).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                    COMMON_GLOBAL.module_leaflet_library.control.scale({position: 'topright'}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
 
                     //add custom HTML inside div with class .leaflet-control
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
                     //add search button with expand content country select, city select and search input
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' href='#' title='Search' role='button'>${ICONS['app_search']}
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' href='#' title='Search' role='button'>${ICONS.app_search}
                                                     <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_country'>
-                                                            ${COMMON_GLOBAL['module_leaflet_countries']}
+                                                            ${COMMON_GLOBAL.module_leaflet_countries}
                                                         </select>
                                                         <select id='common_module_leaflet_select_city'  >
                                                             <option value='' id='' label='…' selected='selected'>…</option>
                                                         </select>
                                                         <div id='common_module_leaflet_search_input_row'>
                                                             <input id='common_module_leaflet_search_input' type='text' />
-                                                            <div id='common_module_leaflet_search_icon'>${ICONS['app_search']}</div>
+                                                            <div id='common_module_leaflet_search_icon'>${ICONS.app_search}</div>
                                                         </div>
                                                         <div id='common_module_leaflet_search_list_wrap'>
                                                         </div>
                                                     </div>
                                                  </div>`;
                     //add fullscreen button
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' href='#' title='Fullscreen' role='button'>${ICONS['app_fullscreen']}
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' href='#' title='Fullscreen' role='button'>${ICONS.app_fullscreen}
                                                  </div>`;
-                    if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
+                    if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
                         //add my location button
-                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button' href='#' title='My location' role='button'>${ICONS['map_my_location']}
+                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button' href='#' title='My location' role='button'>${ICONS.map_my_location}
                                                     </div>`;
                     }
                     //add layers button with pop out div
                     let map_styles_options ='';
-                    for (const map_style_option of COMMON_GLOBAL['module_leaflet_map_styles']){
+                    for (const map_style_option of COMMON_GLOBAL.module_leaflet_map_styles){
                         map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
                     }
-                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' href='#' title='Layer' role='button'>${ICONS['map_layer']}
+                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' href='#' title='Layer' role='button'>${ICONS.map_layer}
                                                     <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_mapstyle' >
                                                             ${map_styles_options}
                                                         </select>
                                                     </div>
                                                 </div>`;
-                    SearchAndSetSelectedIndex(COMMON_GLOBAL['module_leaflet_style'], document.getElementById('common_module_leaflet_select_mapstyle'),1);
+                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.getElementById('common_module_leaflet_select_mapstyle'),1);
 
                     //add event on map countries
                     const select_country = document.querySelector('#common_module_leaflet_select_country');
@@ -2661,11 +2661,11 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                         const latitude_selected = select_city[select_city.selectedIndex].getAttribute('latitude');
                         map_update( longitude_selected, 
                                     latitude_selected, 
-                                    COMMON_GLOBAL['module_leaflet_zoom_city'], 
+                                    COMMON_GLOBAL.module_leaflet_zoom_city,
                                     select_city.options[select_city.selectedIndex].text, 
                                     null, 
-                                    COMMON_GLOBAL['module_leaflet_marker_div_city'], 
-                                    COMMON_GLOBAL['module_leaflet_flyto']).then(()=> {
+                                    COMMON_GLOBAL.module_leaflet_marker_div_city,
+                                    COMMON_GLOBAL.module_leaflet_flyto).then(()=> {
                             map_toolbar_reset();
                         });
                     }, false);
@@ -2688,8 +2688,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                     if (doubleclick_event){
                         map_setevent('dblclick', (e) => {
                             if (e.originalEvent.target.id == 'mapid'){
-                                const lng = e.latlng['lng'];
-                                const lat = e.latlng['lat'];
+                                const lng = e.latlng.lng;
+                                const lat = e.latlng.lat;
                                 //Update GPS position
                                 get_place_from_gps(lng, lat).then((gps_place) => {
                                     map_update(lng,
@@ -2697,8 +2697,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                                 '', //do not change zoom 
                                                 gps_place,
                                                 null,
-                                                COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                                                COMMON_GLOBAL['module_leaflet_jumpto']);
+                                                COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                                COMMON_GLOBAL.module_leaflet_jumpto);
                                 });
                             }
                         });
@@ -2741,7 +2741,7 @@ const map_country = (lang_code) =>{
                         </option>`;
                     }
                 }
-                COMMON_GLOBAL['module_leaflet_countries'] = html;
+                COMMON_GLOBAL.module_leaflet_countries = html;
                 if (document.querySelector('#common_module_leaflet_select_country')){
                     const select_country = document.getElementById('common_module_leaflet_select_country');
                     const current_country = document.getElementById('common_module_leaflet_select_country')[document.getElementById('common_module_leaflet_select_country').selectedIndex].id;
@@ -2797,11 +2797,11 @@ const map_show_search_on_map = (city)=>{
                         city.querySelector('.common_module_leaflet_search_list_country a').innerHTML;
     map_update( longitude,
                 latitude,
-                COMMON_GLOBAL['module_leaflet_zoom_city'],
+                COMMON_GLOBAL.module_leaflet_zoom_city,
                 place,
                 null,
-                COMMON_GLOBAL['module_leaflet_marker_div_city'],
-                COMMON_GLOBAL['module_leaflet_jumpto']);
+                COMMON_GLOBAL.module_leaflet_marker_div_city,
+                COMMON_GLOBAL.module_leaflet_jumpto);
     map_toolbar_reset();
 };
 const map_control_toggle_expand = (item) =>{
@@ -2830,14 +2830,14 @@ const map_click_event = (event, containervalue) =>{
             break;
         }
         case 'common_module_leaflet_control_my_location_id':{
-            if (COMMON_GLOBAL['client_latitude']!='' && COMMON_GLOBAL['client_longitude']!=''){
-                map_update( COMMON_GLOBAL['client_longitude'],
-                            COMMON_GLOBAL['client_latitude'],
-                            COMMON_GLOBAL['module_leaflet_zoom'],
-                            COMMON_GLOBAL['client_place'],
+            if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
+                map_update( COMMON_GLOBAL.client_longitude,
+                            COMMON_GLOBAL.client_latitude,
+                            COMMON_GLOBAL.module_leaflet_zoom,
+                            COMMON_GLOBAL.client_place,
                             null,
-                            COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                            COMMON_GLOBAL['module_leaflet_jumpto']);
+                            COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                            COMMON_GLOBAL.module_leaflet_jumpto);
                 const select_country = document.querySelector('#common_module_leaflet_select_country');
                 select_country.selectedIndex = 0;
                 map_toolbar_reset();
@@ -2852,9 +2852,9 @@ const map_click_event = (event, containervalue) =>{
         }
         default:{
             if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
-                COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() + 1);
+                COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
             if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
-                COMMON_GLOBAL['module_leaflet_session_map'].setZoom(COMMON_GLOBAL['module_leaflet_session_map'].getZoom() - 1);
+                COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
             break;
         }
     }
@@ -2862,14 +2862,14 @@ const map_click_event = (event, containervalue) =>{
 const map_resize = async () => {
     if (checkconnected()) {
         //fixes not rendering correct showing map div
-        COMMON_GLOBAL['module_leaflet_session_map'].invalidateSize();
+        COMMON_GLOBAL.module_leaflet_session_map.invalidateSize();
     }
 };
 const map_line_removeall = () => {
-    if(COMMON_GLOBAL['module_leaflet_session_map_layer'])
-        for (let i=0;i<COMMON_GLOBAL['module_leaflet_session_map_layer'].length;i++)
-            COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(COMMON_GLOBAL['module_leaflet_session_map_layer'][i]);
-            COMMON_GLOBAL['module_leaflet_session_map_layer']=[];
+    if(COMMON_GLOBAL.module_leaflet_session_map_layer)
+        for (let i=0;i<COMMON_GLOBAL.module_leaflet_session_map_layer.length;i++)
+            COMMON_GLOBAL.module_leaflet_session_map.removeLayer(COMMON_GLOBAL.module_leaflet_session_map_layer[i]);
+            COMMON_GLOBAL.module_leaflet_session_map_layer=[];
 };
 const map_line_create = (id, title, text_size, from_longitude, from_latitude, to_longitude, to_latitude, color, width, opacity) => {
     if (checkconnected()) {
@@ -2891,37 +2891,37 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
             'weight': width,
             'opacity': opacity
         };
-        const layer = COMMON_GLOBAL['module_leaflet_library'].geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
-        if(!COMMON_GLOBAL['module_leaflet_session_map_layer'])
-            COMMON_GLOBAL['module_leaflet_session_map_layer']=[];
-            COMMON_GLOBAL['module_leaflet_session_map_layer'].push(layer);
+        const layer = COMMON_GLOBAL.module_leaflet_library.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+        if(!COMMON_GLOBAL.module_leaflet_session_map_layer)
+            COMMON_GLOBAL.module_leaflet_session_map_layer=[];
+            COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
     }
 };
 const map_setevent = (event, function_event) => {
     if (checkconnected()) {
         //also creates event:
-        //COMMON_GLOBAL['module_leaflet_library'].DomEvent.addListener(COMMON_GLOBAL['module_leaflet_session_map'], 'dblclick', function_event);
-        COMMON_GLOBAL['module_leaflet_session_map'].on(event, function_event);
+        //COMMON_GLOBAL.module_leaflet_library.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
+        COMMON_GLOBAL.module_leaflet_session_map.on(event, function_event);
     }
 };
 const map_setstyle = async (mapstyle) => {
     return await new Promise ((resolve) => {
         if (checkconnected()) {
-            for (const map_style of COMMON_GLOBAL['module_leaflet_map_styles']){
+            for (const map_style of COMMON_GLOBAL.module_leaflet_map_styles){
                 if (map_style.session_map_layer)
-                    COMMON_GLOBAL['module_leaflet_session_map'].removeLayer(map_style.session_map_layer);
+                    COMMON_GLOBAL.module_leaflet_session_map.removeLayer(map_style.session_map_layer);
             }
             //mapstyle_record [{id, description, data, data2, data3, data4, data5, session_map_layer});
-            const mapstyle_record = COMMON_GLOBAL['module_leaflet_map_styles'].filter(map_style=>map_style.data==mapstyle)[0];
+            const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
             if (mapstyle_record.data3)
-                mapstyle_record.session_map_layer = COMMON_GLOBAL['module_leaflet_library'].tileLayer(mapstyle_record.data2, {
+                mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet_library.tileLayer(mapstyle_record.data2, {
                     maxZoom: mapstyle_record.data3,
                     attribution: mapstyle_record.data4
-                }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
             else
-                mapstyle_record.session_map_layer = COMMON_GLOBAL['module_leaflet_library'].tileLayer(mapstyle_record.data2, {
+                mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet_library.tileLayer(mapstyle_record.data2, {
                     attribution: mapstyle_record.data4
-                }).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
             resolve();
         }  
         else
@@ -2939,28 +2939,28 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                 switch (Number(to_method)){
                     case 0:{
                         if (zoomvalue == '')
-                            COMMON_GLOBAL['module_leaflet_session_map'].setView(new COMMON_GLOBAL['module_leaflet_library'].LatLng(latitude, longitude));
+                            COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet_library.LatLng(latitude, longitude));
                         else
-                            COMMON_GLOBAL['module_leaflet_session_map'].setView(new COMMON_GLOBAL['module_leaflet_library'].LatLng(latitude, longitude), zoomvalue);
+                            COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet_library.LatLng(latitude, longitude), zoomvalue);
                         break;
                     }
                     case 1:{
-                        COMMON_GLOBAL['module_leaflet_session_map'].flyTo([latitude, longitude], COMMON_GLOBAL['module_leaflet_zoom']);
+                        COMMON_GLOBAL.module_leaflet_session_map.flyTo([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                         break;
                     }
-                    //also have COMMON_GLOBAL['module_leaflet_session_map'].panTo(new COMMON_GLOBAL['module_leaflet_library'].LatLng({lng: longitude, lat: latitude}));
+                    //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet_library.LatLng({lng: longitude, lat: latitude}));
                 }
             };
             const map_update_text = (timezone_text) => {
                 const popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
-                                   <div id="common_module_leaflet_popup_sub_title">${ICONS['regional_timezone'] + ICONS['gps_position']}</div>
+                                   <div id="common_module_leaflet_popup_sub_title">${ICONS.regional_timezone + ICONS.gps_position}</div>
                                    <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
                                    <div id="common_module_leaflet_popup_sub_title_gps">${latitude + ', ' + longitude}</div>`;
-                COMMON_GLOBAL['module_leaflet_library'].popup({ offset: [0, COMMON_GLOBAL['module_leaflet_popup_offset']], closeOnClick: false })
+                COMMON_GLOBAL.module_leaflet_library.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
                             .setLatLng([latitude, longitude])
                             .setContent(popuptext)
-                            .openOn(COMMON_GLOBAL['module_leaflet_session_map']);
-                const marker = COMMON_GLOBAL['module_leaflet_library'].marker([latitude, longitude]).addTo(COMMON_GLOBAL['module_leaflet_session_map']);
+                            .openOn(COMMON_GLOBAL.module_leaflet_session_map);
+                const marker = COMMON_GLOBAL.module_leaflet_library.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
                 //setting id so apps can customize if necessary
                 marker._icon.id = marker_id;
                 resolve(timezone_text);
@@ -2984,39 +2984,39 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     switch (authorization_type){
         case 0:{
             //data token authorization check
-            authorization = `Bearer ${COMMON_GLOBAL['rest_dt']}`;
-            bff_path = COMMON_GLOBAL['rest_resource_bff'];
+            authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
+            bff_path = COMMON_GLOBAL.rest_resource_bff;
             break;
         }
         case 1:{
             //user admin and superadmin authorization
-            authorization = `Bearer ${COMMON_GLOBAL['rest_at']}`;
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'])
-                bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/admin`;
+            authorization = `Bearer ${COMMON_GLOBAL.rest_at}`;
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id)
+                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/admin`;
             else
-                bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/access`;
+                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/access`;
             break;
         }
         case 2:{
             //systemadmin authorization
-            authorization = `Bearer ${COMMON_GLOBAL['rest_admin_at']}`;
-            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/systemadmin`;
+            authorization = `Bearer ${COMMON_GLOBAL.rest_admin_at}`;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
             break;
         }
         case 3:{
             //admin login authorization post
             authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
             json_data = null;
-            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/auth`;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/auth`;
             break;
         }
         case 4:{
             //broadcast connect authorization
-            authorization = `Bearer ${COMMON_GLOBAL['rest_dt']}`;
+            authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
             //use query to send authorization since EventSource does not support headers
             path += `&authorization=${authorization}`;
             json_data = null;
-            bff_path = `${COMMON_GLOBAL['rest_resource_bff']}/noauth`;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/noauth`;
             break;
         }
     }
@@ -3038,10 +3038,10 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
                         },
                 body: JSON.stringify(json_data)
             };
-    path += `&lang_code=${COMMON_GLOBAL['user_locale']}`;
+    path += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     const encodedparameters = toBase64(path);
-    let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL['app_id']}&parameters=${encodedparameters}`;
-    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL['user_account_id']}`;
+    let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id}&parameters=${encodedparameters}`;
+    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id}`;
     if (service=='BROADCAST' && authorization_type==4){
         callBack(null, new EventSource(url));
     }
@@ -3060,37 +3060,37 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
                 }
                 case 400:{
                     //Bad request
-                    show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                    show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
                     callBack(result, null);
                     break;
                 }
                 case 404:{
                     //Not found
-                    show_message('INFO', null,null, result, COMMON_GLOBAL['app_id']);
+                    show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
                     callBack(result, null);
                     break;
                 }
                 case 401:{
                     //Unauthorized, token expired
-                    exception(COMMON_GLOBAL['exception_app_function'], result);
+                    exception(COMMON_GLOBAL.exception_app_function, result);
                     callBack(result, null);
                     break;
                 }
                 case 403:{
                     //Forbidden, not allowed to login or register new user
-                    show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL['app_id']);
+                    show_message('INFO', null,null, JSON.parse(result).message, COMMON_GLOBAL.app_id);
                     callBack(result, null);
                     break;
                 }
                 case 500:{
                     //Unknown error
-                    exception(COMMON_GLOBAL['exception_app_function'], result);
+                    exception(COMMON_GLOBAL.exception_app_function, result);
                     callBack(result, null);
                     break;
                 }
                 case 503:{
                     //Service unavailable or other error in microservice
-                    exception(COMMON_GLOBAL['exception_app_function'], result);
+                    exception(COMMON_GLOBAL.exception_app_function, result);
                     callBack(result, null);
                     break;
                 }
@@ -3112,8 +3112,8 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
   ----------------------- */
 const broadcast_init = () => {
     //broadcast
-    document.getElementById('common_broadcast_close').innerHTML = ICONS['app_broadcast_close'];
-    document.getElementById('common_broadcast_info_title').innerHTML = ICONS['app_alert'];
+    document.getElementById('common_broadcast_close').innerHTML = ICONS.app_broadcast_close;
+    document.getElementById('common_broadcast_info_title').innerHTML = ICONS.app_alert;
     connectOnline();
 };
 const maintenance_countdown = (remaining) => {
@@ -3128,15 +3128,15 @@ const show_broadcast = (broadcast_message) => {
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (COMMON_GLOBAL['user_account_id'] !='' && COMMON_GLOBAL['user_account_id'] !=null)
-                exception(COMMON_GLOBAL['exception_app_function'], null);
-            document.getElementById('common_maintenance_message').innerHTML = ICONS['app_maintenance'];
+            if (COMMON_GLOBAL.user_account_id !='' && COMMON_GLOBAL.user_account_id !=null)
+                exception(COMMON_GLOBAL.exception_app_function, null);
+            document.getElementById('common_maintenance_message').innerHTML = ICONS.app_maintenance;
             show_maintenance(message);
             break;
         
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL['service_broadcast_client_ID'] = JSON.parse(message).client_id;
+            COMMON_GLOBAL.service_broadcast_client_ID = JSON.parse(message).client_id;
             break;
         }
         case 'CHAT':
@@ -3197,36 +3197,36 @@ const reconnect = () => {
 const updateOnlineStatus = () => {
     let token_type='';
     let path='';
-    if (COMMON_GLOBAL['system_admin']==1){
+    if (COMMON_GLOBAL.system_admin==1){
         path =   '/broadcast/connection/SystemAdmin'+ 
-                `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
-                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`;
+                `?client_id=${COMMON_GLOBAL.service_broadcast_client_ID}`+
+                `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type=2;
     }
     else{
         path =   '/broadcast/connection'+ 
-                `?client_id=${COMMON_GLOBAL['service_broadcast_client_ID']}`+
-                `&identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`;
+                `?client_id=${COMMON_GLOBAL.service_broadcast_client_ID}`+
+                `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type=0;
     }
     FFB ('BROADCAST', path, 'PATCH', token_type, null, () => {});
 };
 const connectOnline = async () => {
     FFB ('BROADCAST', '/broadcast/connection/connect' +
-                      `?identity_provider_id=${COMMON_GLOBAL['user_identity_provider_id']}` +
-                      `&system_admin=${COMMON_GLOBAL['system_admin']}&latitude=${COMMON_GLOBAL['client_latitude']}&longitude=${COMMON_GLOBAL['client_longitude']}`, 
+                      `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                      `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
          'GET', 4, null, (err, result_eventsource) => {
         if (err)
             reconnect();
         else{
-            COMMON_GLOBAL['service_broadcast_eventsource'] = result_eventsource;
-            COMMON_GLOBAL['service_broadcast_eventsource'].onmessage = (event) => {
+            COMMON_GLOBAL.service_broadcast_eventsource = result_eventsource;
+            COMMON_GLOBAL.service_broadcast_eventsource.onmessage = (event) => {
                 show_broadcast(event.data);
             };
-            COMMON_GLOBAL['service_broadcast_eventsource'].onerror = () => {
-                COMMON_GLOBAL['service_broadcast_eventsource'].close();
+            COMMON_GLOBAL.service_broadcast_eventsource.onerror = () => {
+                COMMON_GLOBAL.service_broadcast_eventsource.close();
                 reconnect();
             };
         }
@@ -3248,12 +3248,12 @@ const get_place_from_gps = async (longitude, latitude) => {
         let tokentype;
         const path = `/place?longitude=${longitude}&latitude=${latitude}`;
 
-        if (COMMON_GLOBAL['system_admin']==1){
+        if (COMMON_GLOBAL.system_admin==1){
             //system admin
             tokentype = 2;
         }
         else 
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id']){
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
                 //admin
                 tokentype = 1;
             }
@@ -3282,12 +3282,12 @@ const get_gps_from_ip = async () => {
         let tokentype;
         const path = '/ip?';
         
-        if (COMMON_GLOBAL['system_admin']==1 && COMMON_GLOBAL['rest_admin_at']){
+        if (COMMON_GLOBAL.system_admin==1 && COMMON_GLOBAL.rest_admin_at){
             //system admin
             tokentype = 2;
         }
         else
-            if (COMMON_GLOBAL['app_id']==COMMON_GLOBAL['common_app_id'] && COMMON_GLOBAL['rest_at']){
+            if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.rest_at){
                 //admin
                 tokentype = 1;
             }
@@ -3300,12 +3300,12 @@ const get_gps_from_ip = async () => {
                 resolve(null);
             else{
                 const json = JSON.parse(result);
-                COMMON_GLOBAL['client_latitude']  = json.geoplugin_latitude;
-                COMMON_GLOBAL['client_longitude'] = json.geoplugin_longitude;
+                COMMON_GLOBAL.client_latitude  = json.geoplugin_latitude;
+                COMMON_GLOBAL.client_longitude = json.geoplugin_longitude;
                 if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
-                    COMMON_GLOBAL['client_place'] = '';
+                    COMMON_GLOBAL.client_place = '';
                 else
-                    COMMON_GLOBAL['client_place'] = json.geoplugin_city + ', ' +
+                    COMMON_GLOBAL.client_place = json.geoplugin_city + ', ' +
                                                            json.geoplugin_regionName + ', ' +
                                                            json.geoplugin_countryName;
                 resolve();
@@ -3439,153 +3439,153 @@ const exception = (app_exception_function, error) => {
   ----------------------- */
 const set_app_service_parameters = async (parameters) => {
     //app info
-    COMMON_GLOBAL['common_app_id']= parseInt(parameters.common_app_id);
-    COMMON_GLOBAL['app_id'] = parameters.app_id;
+    COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
+    COMMON_GLOBAL.app_id = parameters.app_id;
     // app sound
-    COMMON_GLOBAL['app_sound']= parseInt(parameters.app_sound);
+    COMMON_GLOBAL.app_sound= parseInt(parameters.app_sound);
 
     //rest 
-    COMMON_GLOBAL['rest_resource_server'] = parameters.rest_resource_server;
-    COMMON_GLOBAL['rest_resource_bff'] = parameters.rest_resource_bff;
+    COMMON_GLOBAL.rest_resource_server = parameters.rest_resource_server;
+    COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
     //client credentials
-    COMMON_GLOBAL['rest_dt'] = parameters.app_datatoken;
+    COMMON_GLOBAL.rest_dt = parameters.app_datatoken;
 
     //system admin
-    COMMON_GLOBAL['system_admin'] = 0;
-    COMMON_GLOBAL['system_admin_only'] = parameters.system_admin_only;
+    COMMON_GLOBAL.system_admin = 0;
+    COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
 
     //user info
-    COMMON_GLOBAL['user_identity_provider_id']='';
-    COMMON_GLOBAL['user_account_id'] = '';
+    COMMON_GLOBAL.user_identity_provider_id='';
+    COMMON_GLOBAL.user_account_id = '';
     
     //client info
-    COMMON_GLOBAL['client_latitude']  = parameters.client_latitude;
-    COMMON_GLOBAL['client_longitude'] = parameters.client_longitude;
-    COMMON_GLOBAL['client_place']     = parameters.client_place;
+    COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
+    COMMON_GLOBAL.client_longitude = parameters.client_longitude;
+    COMMON_GLOBAL.client_place     = parameters.client_place;
     
-    if (COMMON_GLOBAL['system_admin_only']==0){
+    if (COMMON_GLOBAL.system_admin_only==0){
         user_preferences_set_default_globals('LOCALE');
         user_preferences_set_default_globals('TIMEZONE');
         user_preferences_set_default_globals('DIRECTION');
         user_preferences_set_default_globals('ARABIC_SCRIPT');
     }
-    COMMON_GLOBAL['ui'] = parameters.ui;
-    if (COMMON_GLOBAL['ui']==true){
-        COMMON_GLOBAL['module_leaflet_countries']   = parameters.countries;
-        COMMON_GLOBAL['module_leaflet_map_styles']  = parameters.map_styles;
-        COMMON_GLOBAL['user_locale']                = parameters.locale;
-        COMMON_GLOBAL['user_timezone']              = Intl.DateTimeFormat().resolvedOptions().timeZone;
-        COMMON_GLOBAL['user_direction']             = '';
-        COMMON_GLOBAL['user_arabic_script']         = '';
+    COMMON_GLOBAL.ui = parameters.ui;
+    if (COMMON_GLOBAL.ui==true){
+        COMMON_GLOBAL.module_leaflet_countries   = parameters.countries;
+        COMMON_GLOBAL.module_leaflet_map_styles  = parameters.map_styles;
+        COMMON_GLOBAL.user_locale                = parameters.locale;
+        COMMON_GLOBAL.user_timezone              = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        COMMON_GLOBAL.user_direction             = '';
+        COMMON_GLOBAL.user_arabic_script         = '';
     }  
 };
 const assign_icons = () => {
     //dialogue user verify
-    document.getElementById('common_user_verify_email_icon').innerHTML = ICONS['app_email'];
+    document.getElementById('common_user_verify_email_icon').innerHTML = ICONS.app_email;
     //dialogue login
-    document.getElementById('common_login_tab1').innerHTML = ICONS['app_login'];
-    document.getElementById('common_login_tab2').innerHTML = ICONS['app_signup'];
-    document.getElementById('common_login_tab3').innerHTML = ICONS['app_forgot'];
-    document.getElementById('common_login_button').innerHTML = ICONS['app_login'];
-    document.getElementById('common_login_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_login_tab1').innerHTML = ICONS.app_login;
+    document.getElementById('common_login_tab2').innerHTML = ICONS.app_signup;
+    document.getElementById('common_login_tab3').innerHTML = ICONS.app_forgot;
+    document.getElementById('common_login_button').innerHTML = ICONS.app_login;
+    document.getElementById('common_login_close').innerHTML = ICONS.app_close;
     //dialogue signup
-    document.getElementById('common_signup_tab1').innerHTML = ICONS['app_login'];
-    document.getElementById('common_signup_tab2').innerHTML = ICONS['app_signup'];
-    document.getElementById('common_signup_tab3').innerHTML = ICONS['app_forgot'];
-    document.getElementById('common_signup_button').innerHTML = ICONS['app_signup'];
-    document.getElementById('common_signup_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_signup_tab1').innerHTML = ICONS.app_login;
+    document.getElementById('common_signup_tab2').innerHTML = ICONS.app_signup;
+    document.getElementById('common_signup_tab3').innerHTML = ICONS.app_forgot;
+    document.getElementById('common_signup_button').innerHTML = ICONS.app_signup;
+    document.getElementById('common_signup_close').innerHTML = ICONS.app_close;
     //dialogue forgot
-    document.getElementById('common_forgot_tab1').innerHTML = ICONS['app_login'];
-    document.getElementById('common_forgot_tab2').innerHTML = ICONS['app_signup'];
-    document.getElementById('common_forgot_tab3').innerHTML = ICONS['app_forgot'];
-    document.getElementById('common_forgot_button').innerHTML = ICONS['app_sendmail'];
-    document.getElementById('common_forgot_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_forgot_tab1').innerHTML = ICONS.app_login;
+    document.getElementById('common_forgot_tab2').innerHTML = ICONS.app_signup;
+    document.getElementById('common_forgot_tab3').innerHTML = ICONS.app_forgot;
+    document.getElementById('common_forgot_button').innerHTML = ICONS.app_sendmail;
+    document.getElementById('common_forgot_close').innerHTML = ICONS.app_close;
     //dialogue new password
-    document.getElementById('common_user_password_new_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_password_new_cancel').innerHTML = ICONS['app_cancel'];
-    document.getElementById('common_user_password_new_ok').innerHTML = ICONS['app_close'];
+    document.getElementById('common_user_password_new_icon').innerHTML = ICONS.user_password;
+    document.getElementById('common_user_password_new_cancel').innerHTML = ICONS.app_cancel;
+    document.getElementById('common_user_password_new_ok').innerHTML = ICONS.app_close;
     //dialogue user edit
-    document.getElementById('common_user_edit_btn_avatar_img').innerHTML = ICONS['user_avatar_edit'];
-    document.getElementById('common_user_edit_private').innerHTML = ICONS['app_private'];
-    document.getElementById('common_user_edit_btn_user_update').innerHTML = ICONS['app_update'];
-    document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = ICONS['user_delete_account'];
-    document.getElementById('common_user_edit_close').innerHTML = ICONS['app_close'];
-    document.getElementById('common_user_edit_label_provider').innerHTML = ICONS['provider'];
-    document.getElementById('common_user_edit_label_provider_id').innerHTML = ICONS['provider_id'];
-    document.getElementById('common_user_edit_label_provider_email').innerHTML = ICONS['app_email'];
-    document.getElementById('common_user_edit_input_username_icon').innerHTML = ICONS['user'];
-    document.getElementById('common_user_edit_input_bio_icon').innerHTML = ICONS['user_profile'];
-    document.getElementById('common_user_edit_input_email_icon').innerHTML = ICONS['app_email'];
-    document.getElementById('common_user_edit_input_new_email_icon').innerHTML = ICONS['app_email'];
-    document.getElementById('common_user_edit_input_password_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_edit_input_password_confirm_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_edit_input_password_new_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_edit_input_password_new_confirm_icon').innerHTML = ICONS['user_password'];
-    document.getElementById('common_user_edit_input_password_reminder_icon').innerHTML = ICONS['user_account_reminder'];
-    document.getElementById('common_user_edit_label_last_logontime').innerHTML = ICONS['user_last_logontime'];
-    document.getElementById('common_user_edit_label_account_created').innerHTML = ICONS['user_account_created'];
-    document.getElementById('common_user_edit_label_account_modified').innerHTML = ICONS['user_account_modified'];
+    document.getElementById('common_user_edit_btn_avatar_img').innerHTML = ICONS.user_avatar_edit;
+    document.getElementById('common_user_edit_private').innerHTML = ICONS.app_private;
+    document.getElementById('common_user_edit_btn_user_update').innerHTML = ICONS.app_update;
+    document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = ICONS.user_delete_account;
+    document.getElementById('common_user_edit_close').innerHTML = ICONS.app_close;
+    document.getElementById('common_user_edit_label_provider').innerHTML = ICONS.provider;
+    document.getElementById('common_user_edit_label_provider_id').innerHTML = ICONS.provider_id;
+    document.getElementById('common_user_edit_label_provider_email').innerHTML = ICONS.app_email;
+    document.getElementById('common_user_edit_input_username_icon').innerHTML = ICONS.user;
+    document.getElementById('common_user_edit_input_bio_icon').innerHTML = ICONS.user_profile;
+    document.getElementById('common_user_edit_input_email_icon').innerHTML = ICONS.app_email;
+    document.getElementById('common_user_edit_input_new_email_icon').innerHTML = ICONS.app_email;
+    document.getElementById('common_user_edit_input_password_icon').innerHTML = ICONS.user_password;
+    document.getElementById('common_user_edit_input_password_confirm_icon').innerHTML = ICONS.user_password;
+    document.getElementById('common_user_edit_input_password_new_icon').innerHTML = ICONS.user_password;
+    document.getElementById('common_user_edit_input_password_new_confirm_icon').innerHTML = ICONS.user_password;
+    document.getElementById('common_user_edit_input_password_reminder_icon').innerHTML = ICONS.user_account_reminder;
+    document.getElementById('common_user_edit_label_last_logontime').innerHTML = ICONS.user_last_logontime;
+    document.getElementById('common_user_edit_label_account_created').innerHTML = ICONS.user_account_created;
+    document.getElementById('common_user_edit_label_account_modified').innerHTML = ICONS.user_account_modified;
     //dialogue message
-    document.getElementById('common_message_cancel').innerHTML = ICONS['app_cancel'];
-    document.getElementById('common_message_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_message_cancel').innerHTML = ICONS.app_cancel;
+    document.getElementById('common_message_close').innerHTML = ICONS.app_close;
     //dialog lov
-    document.getElementById('common_lov_search_icon').innerHTML = ICONS['app_search'];
+    document.getElementById('common_lov_search_icon').innerHTML = ICONS.app_search;
     //profile detail
-    document.getElementById('common_profile_detail_header_following').innerHTML = ICONS['user_follows'];
-    document.getElementById('common_profile_detail_header_followed').innerHTML = ICONS['user_followed'];
-    document.getElementById('common_profile_detail_header_like').innerHTML = ICONS['user_like'];
-    document.getElementById('common_profile_detail_header_liked_heart').innerHTML = ICONS['user_like'];
-    document.getElementById('common_profile_detail_header_liked_users').innerHTML =  ICONS['user_followed'];
+    document.getElementById('common_profile_detail_header_following').innerHTML = ICONS.user_follows;
+    document.getElementById('common_profile_detail_header_followed').innerHTML = ICONS.user_followed;
+    document.getElementById('common_profile_detail_header_like').innerHTML = ICONS.user_like;
+    document.getElementById('common_profile_detail_header_liked_heart').innerHTML = ICONS.user_like;
+    document.getElementById('common_profile_detail_header_liked_users').innerHTML =  ICONS.user_followed;
     //profile info search
-    document.getElementById('common_profile_search_icon').innerHTML = ICONS['app_search'];
+    document.getElementById('common_profile_search_icon').innerHTML = ICONS.app_search;
     //profile info
-    document.getElementById('common_profile_joined_date_icon').innerHTML = ICONS['user_account_created'];
-    document.getElementById('common_profile_follow_follow').innerHTML = ICONS['user_follow_user'];
-    document.getElementById('common_profile_follow_followed').innerHTML = ICONS['user_followed_user'];
-    document.getElementById('common_profile_like_like').innerHTML = ICONS['user_like'];
-    document.getElementById('common_profile_like_unlike').innerHTML = ICONS['user_unlike'];
-    document.getElementById('common_profile_info_view_count_icon').innerHTML = ICONS['user_views'];
-    document.getElementById('common_profile_main_btn_following').innerHTML = ICONS['user_follows'];
-    document.getElementById('common_profile_main_btn_followed').innerHTML = ICONS['user_followed'];
-    document.getElementById('common_profile_main_btn_likes').innerHTML = ICONS['user_like'];
-    document.getElementById('common_profile_main_btn_liked_heart').innerHTML = ICONS['user_like'];
-    document.getElementById('common_profile_main_btn_liked_users').innerHTML = ICONS['user_followed'];
+    document.getElementById('common_profile_joined_date_icon').innerHTML = ICONS.user_account_created;
+    document.getElementById('common_profile_follow_follow').innerHTML = ICONS.user_follow_user;
+    document.getElementById('common_profile_follow_followed').innerHTML = ICONS.user_followed_user;
+    document.getElementById('common_profile_like_like').innerHTML = ICONS.user_like;
+    document.getElementById('common_profile_like_unlike').innerHTML = ICONS.user_unlike;
+    document.getElementById('common_profile_info_view_count_icon').innerHTML = ICONS.user_views;
+    document.getElementById('common_profile_main_btn_following').innerHTML = ICONS.user_follows;
+    document.getElementById('common_profile_main_btn_followed').innerHTML = ICONS.user_followed;
+    document.getElementById('common_profile_main_btn_likes').innerHTML = ICONS.user_like;
+    document.getElementById('common_profile_main_btn_liked_heart').innerHTML = ICONS.user_like;
+    document.getElementById('common_profile_main_btn_liked_users').innerHTML = ICONS.user_followed;
     
-    document.getElementById('common_profile_private_title').innerHTML = ICONS['app_private'];
-    document.getElementById('common_profile_avatar_online_status').innerHTML = ICONS['app_online'];
+    document.getElementById('common_profile_private_title').innerHTML = ICONS.app_private;
+    document.getElementById('common_profile_avatar_online_status').innerHTML = ICONS.app_online;
     //profile top
-    document.getElementById('common_profile_top_row1_1').innerHTML = ICONS['user_views'];
-    document.getElementById('common_profile_top_row1_2').innerHTML = ICONS['user_follows'];
-    document.getElementById('common_profile_top_row1_3').innerHTML = ICONS['user_like'] + ICONS['user_follows'];
-    document.getElementById('common_profile_home').innerHTML = ICONS['user_profile_top'];
-    document.getElementById('common_profile_close').innerHTML = ICONS['app_close'];
+    document.getElementById('common_profile_top_row1_1').innerHTML = ICONS.user_views;
+    document.getElementById('common_profile_top_row1_2').innerHTML = ICONS.user_follows;
+    document.getElementById('common_profile_top_row1_3').innerHTML = ICONS.user_like + ICONS.user_follows;
+    document.getElementById('common_profile_home').innerHTML = ICONS.user_profile_top;
+    document.getElementById('common_profile_close').innerHTML = ICONS.app_close;
 
     //profile button top
     if (document.getElementById('common_profile_btn_top'))
-        document.getElementById('common_profile_btn_top').innerHTML = ICONS['user_profile_top'];
+        document.getElementById('common_profile_btn_top').innerHTML = ICONS.user_profile_top;
 
     //window info
-    document.getElementById('common_window_info_btn_close').innerHTML = ICONS['app_close'];
-    document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = ICONS['app_zoomout'];
-    document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = ICONS['app_zoomin'];
-    document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  ICONS['app_left'];
-    document.getElementById('common_window_info_toolbar_btn_right').innerHTML = ICONS['app_right'];
-    document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  ICONS['app_up'];
-    document.getElementById('common_window_info_toolbar_btn_down').innerHTML = ICONS['app_down'];
-    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS['app_fullscreen'];
+    document.getElementById('common_window_info_btn_close').innerHTML = ICONS.app_close;
+    document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = ICONS.app_zoomout;
+    document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = ICONS.app_zoomin;
+    document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  ICONS.app_left;
+    document.getElementById('common_window_info_toolbar_btn_right').innerHTML = ICONS.app_right;
+    document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  ICONS.app_up;
+    document.getElementById('common_window_info_toolbar_btn_down').innerHTML = ICONS.app_down;
+    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS.app_fullscreen;
     
     //user menu
-    //document.getElementById('common_user_menu_dropdown_profile').innerHTML = ICONS['button_default_icon_profile'];
-    document.getElementById('common_user_menu_dropdown_edit').innerHTML = ICONS['app_edit'];
-    document.getElementById('common_user_menu_dropdown_log_out').innerHTML = ICONS['app_logoff'];
-    document.getElementById('common_user_menu_dropdown_signup').innerHTML = ICONS['app_signup'];
-    document.getElementById('common_user_menu_dropdown_log_in').innerHTML = ICONS['app_login'];
-    document.getElementById('common_user_menu_default_avatar').innerHTML = ICONS['user_avatar'];
-    document.getElementById('common_user_preference_locale').innerHTML = ICONS['regional_locale'];
-    document.getElementById('common_user_preference_timezone').innerHTML = ICONS['regional_timezone'];
-    document.getElementById('common_user_preference_direction').innerHTML = ICONS['regional_direction'];        
-    document.getElementById('common_user_preference_arabic_script').innerHTML = ICONS['regional_script'];
+    //document.getElementById('common_user_menu_dropdown_profile').innerHTML = ICONS.button_default_icon_profile;
+    document.getElementById('common_user_menu_dropdown_edit').innerHTML = ICONS.app_edit;
+    document.getElementById('common_user_menu_dropdown_log_out').innerHTML = ICONS.app_logoff;
+    document.getElementById('common_user_menu_dropdown_signup').innerHTML = ICONS.app_signup;
+    document.getElementById('common_user_menu_dropdown_log_in').innerHTML = ICONS.app_login;
+    document.getElementById('common_user_menu_default_avatar').innerHTML = ICONS.user_avatar;
+    document.getElementById('common_user_preference_locale').innerHTML = ICONS.regional_locale;
+    document.getElementById('common_user_preference_timezone').innerHTML = ICONS.regional_timezone;
+    document.getElementById('common_user_preference_direction').innerHTML = ICONS.regional_direction;
+    document.getElementById('common_user_preference_arabic_script').innerHTML = ICONS.regional_script;
 };
 const set_event_user_menu = () =>{
     //user menu also for system admin
@@ -3715,14 +3715,14 @@ const set_events = () => {
     //define globals and save settings here, in apps define what should happen when changing
     if (document.getElementById('common_user_locale_select'))
         document.getElementById('common_user_locale_select').addEventListener('change', (event) => { 
-                                                                                    COMMON_GLOBAL['user_locale'] = event.target.value;
+                                                                                    COMMON_GLOBAL.user_locale = event.target.value;
                                                                                     //change navigator.language, however when logging out default navigator.language will be set
                                                                                     //commented at the moment
-                                                                                    //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL['user_locale'], writable: true}});
+                                                                                    //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
                                                                                     user_preference_save();
                                                                                 }, false);
     if (document.getElementById('common_user_timezone_select'))
-        document.getElementById('common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL['user_timezone'] = event.target.value;
+        document.getElementById('common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_timezone = event.target.value;
                                                                                                 user_preference_save().then(()=>{
                                                                                                     if (document.getElementById('common_dialogue_user_edit').style.visibility == 'visible') {
                                                                                                         dialogue_user_edit_clear();
@@ -3733,11 +3733,11 @@ const set_events = () => {
     //define also in app if needed to adjust ui
     if (document.getElementById('common_user_direction_select'))
         document.getElementById('common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
-                                                                                                COMMON_GLOBAL['user_direction'] = event.target.value;  
+                                                                                                COMMON_GLOBAL.user_direction = event.target.value;  
                                                                                                 user_preference_save();
                                                                                                 }, false);
     if (document.getElementById('common_user_arabic_script_select'))
-        document.getElementById('common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL['user_arabic_script'] = event.target.value;
+        document.getElementById('common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_arabic_script = event.target.value;
                                                                                                     user_preference_save();
                                                                                                     }, false);
     
@@ -3747,55 +3747,55 @@ const set_events = () => {
     //dialogue user edit
     document.getElementById('common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
     document.getElementById('common_user_edit_btn_avatar_img').addEventListener('click', () => { document.getElementById('common_user_edit_input_avatar_img').click(); }, false);
-    document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL['image_avatar_width'], COMMON_GLOBAL['image_avatar_height']); }, false);
+    document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height); }, false);
     document.getElementById('common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
 };
 const set_user_account_app_settings = () =>{
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_locale'], document.getElementById('common_user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_timezone'], document.getElementById('common_user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_direction'], document.getElementById('common_user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL['user_arabic_script'], document.getElementById('common_user_arabic_script_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.getElementById('common_user_locale_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.getElementById('common_user_timezone_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.getElementById('common_user_direction_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.getElementById('common_user_arabic_script_select'), 1);
 };
 const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
-    for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL['common_app_id'])){
+    for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL.common_app_id)){
         switch (parameter.parameter_name){
-            case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL['image_file_allowed_type1'] = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL['image_file_allowed_type2'] = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL['image_file_allowed_type3'] = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL['image_file_allowed_type4'] = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL['image_file_allowed_type5'] = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL['image_file_mime_type'] = parameter.parameter_value;break;}
-            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL['image_file_max_size'] = parameter.parameter_value;break;}
-            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL['image_avatar_width'] = parameter.parameter_value;break;}
-            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL['image_avatar_height'] = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL['module_leaflet_flyto'] = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL['module_leaflet_jumpto'] = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL['module_leaflet_popup_offset'] = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL['module_leaflet_style'] = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_ZOOM'                  :{COMMON_GLOBAL['module_leaflet_zoom'] = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_ZOOM_CITY'             :{COMMON_GLOBAL['module_leaflet_zoom_city'] = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_ZOOM_PP'               :{COMMON_GLOBAL['module_leaflet_zoom_pp'] = parseInt(parameter.parameter_value);break;}
-            case 'MODULE_LEAFLET_MARKER_DIV_GPS'        :{COMMON_GLOBAL['module_leaflet_marker_div_gps'] = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_MARKER_DIV_CITY'       :{COMMON_GLOBAL['module_leaflet_marker_div_city'] = parameter.parameter_value;break;}
-            case 'MODULE_LEAFLET_MARKER_DIV_PP'         :{COMMON_GLOBAL['module_leaflet_marker_div_pp'] = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL.image_file_allowed_type1 = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL.image_file_allowed_type2 = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL.image_file_allowed_type3 = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE4'             :{COMMON_GLOBAL.image_file_allowed_type4 = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_ALLOWED_TYPE5'             :{COMMON_GLOBAL.image_file_allowed_type5 = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_MIME_TYPE'                 :{COMMON_GLOBAL.image_file_mime_type = parameter.parameter_value;break;}
+            case 'IMAGE_FILE_MAX_SIZE'                  :{COMMON_GLOBAL.image_file_max_size = parameter.parameter_value;break;}
+            case 'IMAGE_AVATAR_WIDTH'                   :{COMMON_GLOBAL.image_avatar_width = parameter.parameter_value;break;}
+            case 'IMAGE_AVATAR_HEIGHT'                  :{COMMON_GLOBAL.image_avatar_height = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_FLYTO'                 :{COMMON_GLOBAL.module_leaflet_flyto = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_JUMPTO'                :{COMMON_GLOBAL.module_leaflet_jumpto = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_POPUP_OFFSET'          :{COMMON_GLOBAL.module_leaflet_popup_offset = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_STYLE'                 :{COMMON_GLOBAL.module_leaflet_style = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_ZOOM'                  :{COMMON_GLOBAL.module_leaflet_zoom = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_ZOOM_CITY'             :{COMMON_GLOBAL.module_leaflet_zoom_city = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_ZOOM_PP'               :{COMMON_GLOBAL.module_leaflet_zoom_pp = parseInt(parameter.parameter_value);break;}
+            case 'MODULE_LEAFLET_MARKER_DIV_GPS'        :{COMMON_GLOBAL.module_leaflet_marker_div_gps = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_MARKER_DIV_CITY'       :{COMMON_GLOBAL.module_leaflet_marker_div_city = parameter.parameter_value;break;}
+            case 'MODULE_LEAFLET_MARKER_DIV_PP'         :{COMMON_GLOBAL.module_leaflet_marker_div_pp = parameter.parameter_value;break;}
         }
     }
 };
 
 const init_common = async (parameters) => {
     return new Promise((resolve) =>{
-        if (COMMON_GLOBAL['app_id'] ==null)
+        if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(parameters.app_service);
-        if (COMMON_GLOBAL['app_id'] == COMMON_GLOBAL['common_app_id']){
+        if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
             //admin app
             broadcast_init();
-            if (COMMON_GLOBAL['system_admin_only']==1){
+            if (COMMON_GLOBAL.system_admin_only==1){
                 resolve();
             }
             else{
                 set_app_parameters(parameters.app);
-                if (COMMON_GLOBAL['ui']){
+                if (COMMON_GLOBAL.ui){
                     assign_icons();
                     set_events();
                     set_user_account_app_settings();
@@ -3809,7 +3809,7 @@ const init_common = async (parameters) => {
             //other apps
             broadcast_init();
             set_app_parameters(parameters.app);
-            if (COMMON_GLOBAL['ui']){
+            if (COMMON_GLOBAL.ui){
                 assign_icons();
                 set_events();
                 set_user_account_app_settings();

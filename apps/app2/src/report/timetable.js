@@ -87,7 +87,7 @@ const { insertUserSettingView} = await import(`file://${process.cwd()}/server/db
  */
 /**
  * Times
- * @typedef	{{[index: string]:any}}	type_times
+ * @typedef	{{[index: string]:number}}	type_times
  * @property{number}	day
  * @property{number}	fajr
  * @property{number}	dhuhr
@@ -111,101 +111,177 @@ const { insertUserSettingView} = await import(`file://${process.cwd()}/server/db
  * @property {string}	prayer_time_format
  * @property {string}	prayer_hijri_date_adjustment
  */
-
-/**@type{*} */
+/**@type{{	app_copyright:string,
+ * 			'module_easy.qrcode_width':number|null,
+ * 			'module_easy.qrcode_height':number|null,
+ * 			'module_easy.qrcode_color_dark':string,
+ * 			'module_easy.qrcode_color_light':string,
+ * 			'module_easy.qrcode_background_color':string,
+ * 			session_currentDate:Date,
+ * 			session_CurrentHijriDate:[number, number, number],
+ * 			module_praytimes_methods:{[index:string]:{	name:string,
+ *														params:{fajr:string, 
+ *																isha:string|null, 
+ *																maghrib:string|null, 
+ *																midnight:string|null
+ *															}
+ *													}
+ *									},
+ * 			regional_def_calendar_lang:string,
+ * 			regional_def_locale_ext_prefix:string,
+ * 			regional_def_locale_ext_number_system:string,
+ * 			regional_def_locale_ext_calendar:string,
+ * 			regional_def_calendar_type_greg:string,
+ * 			regional_def_calendar_number_system:string,
+ * 			first_language:{[key: string]:string,
+ * 							coltitle_transliteration_imsak: string,
+ *							coltitle_transliteration_fajr: string,
+ *							coltitle_transliteration_fajr_iqamat: string,
+ *							coltitle_transliteration_sunrise: string,
+ *							coltitle_transliteration_dhuhr: string,
+ *							coltitle_transliteration_dhuhr_iqamat: string,
+ *							coltitle_transliteration_asr: string,
+ *							coltitle_transliteration_asr_iqamat: string,
+ *							coltitle_transliteration_sunset: string,
+ *							coltitle_transliteration_maghrib: string,
+ *							coltitle_transliteration_maghrib_iqamat: string,
+ *							coltitle_transliteration_isha: string,
+ *							coltitle_transliteration_isha_iqamat: string,
+ *							coltitle_transliteration_midnight: string,
+ *							timetable_title: string,
+ *							coltitle_day: string,
+ *							coltitle_weekday: string,
+ *							coltitle_weekday_tr: string,
+ *							coltitle_caltype_hijri: string,
+ *							coltitle_caltype_gregorian: string,
+ *							coltitle_imsak: string,
+ *							coltitle_fajr: string,
+ *							coltitle_fajr_iqamat: string,
+ *							coltitle_sunrise: string,
+ *							coltitle_dhuhr: string,
+ *							coltitle_dhuhr_iqamat: string,
+ *							coltitle_asr: string,
+ *							coltitle_asr_iqamat: string,
+ *							coltitle_sunset: string,
+ *							coltitle_maghrib: string,
+ *							coltitle_maghrib_iqamat: string,
+ *							coltitle_isha: string,
+ *							coltitle_isha_iqamat: string,
+ *							coltitle_midnight: string,
+ *							coltitle_notes: string,
+ *							timezone_text: string,
+ *							gps_lat_text: string,
+ *							gps_long_text: string},
+ * 			second_language:{	[key: string]:string,
+ *								timetable_title: string,
+ *								coltitle_day: string,
+ *								coltitle_weekday: string,
+ *								coltitle_weekday_tr: string,
+ *								coltitle_caltype_hijri: string,
+ *								coltitle_caltype_gregorian: string,
+ *								coltitle_imsak: string,
+ *								coltitle_fajr: string,
+ *								coltitle_fajr_iqamat: string,
+ *								coltitle_sunrise: string,
+ *								coltitle_dhuhr: string,
+ *								coltitle_dhuhr_iqamat: string,
+ *								coltitle_asr: string,
+ *								coltitle_asr_iqamat: string,
+ *								coltitle_sunset: string,
+ *								coltitle_maghrib: string,
+ *								coltitle_maghrib_iqamat: string,
+ *								coltitle_isha: string,
+ *								coltitle_isha_iqamat: string,
+ *								coltitle_midnight: string,
+ *								coltitle_notes: string}
+ * 			}} */
 const REPORT_GLOBAL = {
-    'app_copyright':'',
+    app_copyright:'',
     'module_easy.qrcode_width': null,
     'module_easy.qrcode_height':null,
     'module_easy.qrcode_color_dark':'',
     'module_easy.qrcode_color_light':'',
     'module_easy.qrcode_background_color':'',
 
-    'session_currentDate':null,
-    'session_CurrentHijriDate':null,
-    'module_praytimes_methods':{'':{	name:null,
-										params:{fajr:null, 
-												isha:null, 
-												maghrib:null, 
-												midnight:null}
-									}
-								},
-	'regional_def_calendar_lang':'',
-	'regional_def_locale_ext_prefix':'',
-	'regional_def_locale_ext_number_system':'',
-	'regional_def_locale_ext_calendar':'',
-	'regional_def_calendar_type_greg':'',
-	'regional_def_calendar_number_system':'',
-	'first_language':{
-						'coltitle_transliteration_imsak': 'Imsak',
-						'coltitle_transliteration_fajr': 'Fajr',
-						'coltitle_transliteration_fajr_iqamat': 'Iqamat',
-						'coltitle_transliteration_sunrise': 'Shoorok',
-						'coltitle_transliteration_dhuhr': 'Dhuhr',
-						'coltitle_transliteration_dhuhr_iqamat': 'Iqamat',
-						'coltitle_transliteration_asr': 'Asr',
-						'coltitle_transliteration_asr_iqamat': 'Iqamat',
-						'coltitle_transliteration_sunset': 'Sunset',
-						'coltitle_transliteration_maghrib': 'Maghrib',
-						'coltitle_transliteration_maghrib_iqamat': 'Iqamat',
-						'coltitle_transliteration_isha': 'Isha',
-						'coltitle_transliteration_isha_iqamat': 'Iqamat',
-						'coltitle_transliteration_midnight': 'Midnight',
-						'timetable_title': 'Timetable',
-						'coltitle_day': 'Day',
-						'coltitle_weekday': 'Weekday',
-						'coltitle_weekday_tr': '',
-						'coltitle_caltype_hijri': 'Hijri',
-						'coltitle_caltype_gregorian': 'Gregorian',
-						'coltitle_imsak': 'Imsak',
-						'coltitle_fajr': 'Dawn',
-						'coltitle_fajr_iqamat': 'Iqamat',
-						'coltitle_sunrise': 'Sunrise',
-						'coltitle_dhuhr': 'Noon',
-						'coltitle_dhuhr_iqamat': 'Iqamat',
-						'coltitle_asr': 'Afternoon',
-						'coltitle_asr_iqamat': 'Iqamat',
-						'coltitle_sunset': 'Sunset',
-						'coltitle_maghrib': 'Sunset',
-						'coltitle_maghrib_iqamat': 'Iqamat',
-						'coltitle_isha': 'Night',
-						'coltitle_isha_iqamat': 'Iqamat',
-						'coltitle_midnight': 'Midnight',
-						'coltitle_notes': 'Notes',
-						'timezone_text': '🌐',
-						'gps_lat_text':'📍',
-						'gps_long_text':''
+    session_currentDate:new Date(),
+    session_CurrentHijriDate:[0,0,0],
+    module_praytimes_methods:{},
+	regional_def_calendar_lang:'',
+	regional_def_locale_ext_prefix:'',
+	regional_def_locale_ext_number_system:'',
+	regional_def_locale_ext_calendar:'',
+	regional_def_calendar_type_greg:'',
+	regional_def_calendar_number_system:'',
+	first_language:{
+						coltitle_transliteration_imsak: 'Imsak',
+						coltitle_transliteration_fajr: 'Fajr',
+						coltitle_transliteration_fajr_iqamat: 'Iqamat',
+						coltitle_transliteration_sunrise: 'Shoorok',
+						coltitle_transliteration_dhuhr: 'Dhuhr',
+						coltitle_transliteration_dhuhr_iqamat: 'Iqamat',
+						coltitle_transliteration_asr: 'Asr',
+						coltitle_transliteration_asr_iqamat: 'Iqamat',
+						coltitle_transliteration_sunset: 'Sunset',
+						coltitle_transliteration_maghrib: 'Maghrib',
+						coltitle_transliteration_maghrib_iqamat: 'Iqamat',
+						coltitle_transliteration_isha: 'Isha',
+						coltitle_transliteration_isha_iqamat: 'Iqamat',
+						coltitle_transliteration_midnight: 'Midnight',
+						timetable_title: 'Timetable',
+						coltitle_day: 'Day',
+						coltitle_weekday: 'Weekday',
+						coltitle_weekday_tr: '',
+						coltitle_caltype_hijri: 'Hijri',
+						coltitle_caltype_gregorian: 'Gregorian',
+						coltitle_imsak: 'Imsak',
+						coltitle_fajr: 'Dawn',
+						coltitle_fajr_iqamat: 'Iqamat',
+						coltitle_sunrise: 'Sunrise',
+						coltitle_dhuhr: 'Noon',
+						coltitle_dhuhr_iqamat: 'Iqamat',
+						coltitle_asr: 'Afternoon',
+						coltitle_asr_iqamat: 'Iqamat',
+						coltitle_sunset: 'Sunset',
+						coltitle_maghrib: 'Sunset',
+						coltitle_maghrib_iqamat: 'Iqamat',
+						coltitle_isha: 'Night',
+						coltitle_isha_iqamat: 'Iqamat',
+						coltitle_midnight: 'Midnight',
+						coltitle_notes: 'Notes',
+						timezone_text: '🌐',
+						gps_lat_text:'📍',
+						gps_long_text:''
 					},
 	//second language objects that are displayed are column titles
 	//transliterated column titles are used by first language
-	'second_language':{
-						'timetable_title': 'Timetable',
-						'coltitle_day': 'Day',
-						'coltitle_weekday': 'Weekday',
-						'coltitle_weekday_tr': '',
-						'coltitle_caltype_hijri': 'Hijri',
-						'coltitle_caltype_gregorian': 'Gregorian',
-						'coltitle_imsak': 'Imsak',
-						'coltitle_fajr': 'Dawn',
-						'coltitle_fajr_iqamat': 'Iqamat',
-						'coltitle_sunrise': 'Sunrise',
-						'coltitle_dhuhr': 'Noon',
-						'coltitle_dhuhr_iqamat': 'Iqamat',
-						'coltitle_asr': 'Afternoon',
-						'coltitle_asr_iqamat': 'Iqamat',
-						'coltitle_sunset': 'Sunset',
-						'coltitle_maghrib': 'Sunset',
-						'coltitle_maghrib_iqamat': 'Iqamat',
-						'coltitle_isha': 'Night',
-						'coltitle_isha_iqamat': 'Iqamat',
-						'coltitle_midnight': 'Midnight',
-						'coltitle_notes': 'Notes'
+	second_language:{
+						timetable_title: 'Timetable',
+						coltitle_day: 'Day',
+						coltitle_weekday: 'Weekday',
+						coltitle_weekday_tr: '',
+						coltitle_caltype_hijri: 'Hijri',
+						coltitle_caltype_gregorian: 'Gregorian',
+						coltitle_imsak: 'Imsak',
+						coltitle_fajr: 'Dawn',
+						coltitle_fajr_iqamat: 'Iqamat',
+						coltitle_sunrise: 'Sunrise',
+						coltitle_dhuhr: 'Noon',
+						coltitle_dhuhr_iqamat: 'Iqamat',
+						coltitle_asr: 'Afternoon',
+						coltitle_asr_iqamat: 'Iqamat',
+						coltitle_sunset: 'Sunset',
+						coltitle_maghrib: 'Sunset',
+						coltitle_maghrib_iqamat: 'Iqamat',
+						coltitle_isha: 'Night',
+						coltitle_isha_iqamat: 'Iqamat',
+						coltitle_midnight: 'Midnight',
+						coltitle_notes: 'Notes'
 					}
 };
 Object.seal(REPORT_GLOBAL);
 /**
  * Get timezone offset in hours compared with UTC
- * @param {string} local_timezone 
+ * @param {string} local_timezone
  * @returns {number}
  */
 const getTimezoneOffset = (local_timezone) =>{
@@ -280,74 +356,74 @@ const getColumnTitles = (transliteration = 0, calendartype, locale, second_local
 					notes: ''};
 	if (transliteration == 1){
 		//set only these values for transliterad column titles
-		coltitle['imsak'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_imsak;
-		coltitle['fajr'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_fajr;
-		coltitle['fajr_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_fajr_iqamat;
-		coltitle['sunrise'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_sunrise;
-		coltitle['dhuhr'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_dhuhr;
-		coltitle['dhuhr_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_dhuhr_iqamat;
-		coltitle['asr'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_asr;
-		coltitle['asr_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_asr_iqamat;
-		coltitle['sunset'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_sunset;
-		coltitle['maghrib'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_maghrib;
-		coltitle['maghrib_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_maghrib_iqamat;
-		coltitle['isha'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_isha;
-		coltitle['isha_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_isha_iqamat;
-		coltitle['midnight'] = REPORT_GLOBAL['first_language'].coltitle_transliteration_midnight;
+		coltitle.imsak = REPORT_GLOBAL.first_language.coltitle_transliteration_imsak;
+		coltitle.fajr = REPORT_GLOBAL.first_language.coltitle_transliteration_fajr;
+		coltitle.fajr_iqamat = REPORT_GLOBAL.first_language.coltitle_transliteration_fajr_iqamat;
+		coltitle.sunrise = REPORT_GLOBAL.first_language.coltitle_transliteration_sunrise;
+		coltitle.dhuhr = REPORT_GLOBAL.first_language.coltitle_transliteration_dhuhr;
+		coltitle.dhuhr_iqamat = REPORT_GLOBAL.first_language.coltitle_transliteration_dhuhr_iqamat;
+		coltitle.asr = REPORT_GLOBAL.first_language.coltitle_transliteration_asr;
+		coltitle.asr_iqamat = REPORT_GLOBAL.first_language.coltitle_transliteration_asr_iqamat;
+		coltitle.sunset = REPORT_GLOBAL.first_language.coltitle_transliteration_sunset;
+		coltitle.maghrib = REPORT_GLOBAL.first_language.coltitle_transliteration_maghrib;
+		coltitle.maghrib_iqamat = REPORT_GLOBAL.first_language.coltitle_transliteration_maghrib_iqamat;
+		coltitle.isha = REPORT_GLOBAL.first_language.coltitle_transliteration_isha;
+		coltitle.isha_iqamat = REPORT_GLOBAL.first_language.coltitle_transliteration_isha_iqamat;
+		coltitle.midnight = REPORT_GLOBAL.first_language.coltitle_transliteration_midnight;
 		}
 	else {
 		if (locale==first_locale){
-			coltitle['day'] = REPORT_GLOBAL['first_language'].coltitle_day;
-			coltitle['weekday'] = REPORT_GLOBAL['first_language'].coltitle_weekday;
+			coltitle.day = REPORT_GLOBAL.first_language.coltitle_day;
+			coltitle.weekday = REPORT_GLOBAL.first_language.coltitle_weekday;
 			if (second_locale == '0' || second_locale == null)
-				coltitle['weekday_tr'] = '';	
+				coltitle.weekday_tr = '';	
 			else
-				coltitle['weekday_tr'] = REPORT_GLOBAL['second_language'].coltitle_weekday;
+				coltitle.weekday_tr = REPORT_GLOBAL.second_language.coltitle_weekday;
 			if (calendartype == 'GREGORIAN') {
-				coltitle['caltype'] = REPORT_GLOBAL['first_language'].coltitle_caltype_hijri;
+				coltitle.caltype = REPORT_GLOBAL.first_language.coltitle_caltype_hijri;
 			} else {
-				coltitle['caltype'] = REPORT_GLOBAL['first_language'].coltitle_caltype_gregorian;
+				coltitle.caltype = REPORT_GLOBAL.first_language.coltitle_caltype_gregorian;
 			}
-			coltitle['imsak'] = REPORT_GLOBAL['first_language'].coltitle_imsak;
-			coltitle['fajr'] = REPORT_GLOBAL['first_language'].coltitle_fajr;
-			coltitle['fajr_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_fajr_iqamat;
-			coltitle['sunrise'] = REPORT_GLOBAL['first_language'].coltitle_sunrise;
-			coltitle['dhuhr'] = REPORT_GLOBAL['first_language'].coltitle_dhuhr;
-			coltitle['dhuhr_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_dhuhr_iqamat;
-			coltitle['asr'] = REPORT_GLOBAL['first_language'].coltitle_asr;
-			coltitle['asr_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_asr_iqamat;
-			coltitle['sunset'] = REPORT_GLOBAL['first_language'].coltitle_sunset;
-			coltitle['maghrib'] = REPORT_GLOBAL['first_language'].coltitle_maghrib;
-			coltitle['maghrib_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_maghrib_iqamat;
-			coltitle['isha'] = REPORT_GLOBAL['first_language'].coltitle_isha;
-			coltitle['isha_iqamat'] = REPORT_GLOBAL['first_language'].coltitle_isha_iqamat;
-			coltitle['midnight'] = REPORT_GLOBAL['first_language'].coltitle_midnight;
-			coltitle['notes'] = REPORT_GLOBAL['first_language'].coltitle_notes;
+			coltitle.imsak = REPORT_GLOBAL.first_language.coltitle_imsak;
+			coltitle.fajr = REPORT_GLOBAL.first_language.coltitle_fajr;
+			coltitle.fajr_iqamat = REPORT_GLOBAL.first_language.coltitle_fajr_iqamat;
+			coltitle.sunrise = REPORT_GLOBAL.first_language.coltitle_sunrise;
+			coltitle.dhuhr = REPORT_GLOBAL.first_language.coltitle_dhuhr;
+			coltitle.dhuhr_iqamat = REPORT_GLOBAL.first_language.coltitle_dhuhr_iqamat;
+			coltitle.asr = REPORT_GLOBAL.first_language.coltitle_asr;
+			coltitle.asr_iqamat = REPORT_GLOBAL.first_language.coltitle_asr_iqamat;
+			coltitle.sunset = REPORT_GLOBAL.first_language.coltitle_sunset;
+			coltitle.maghrib = REPORT_GLOBAL.first_language.coltitle_maghrib;
+			coltitle.maghrib_iqamat = REPORT_GLOBAL.first_language.coltitle_maghrib_iqamat;
+			coltitle.isha = REPORT_GLOBAL.first_language.coltitle_isha;
+			coltitle.isha_iqamat = REPORT_GLOBAL.first_language.coltitle_isha_iqamat;
+			coltitle.midnight = REPORT_GLOBAL.first_language.coltitle_midnight;
+			coltitle.notes = REPORT_GLOBAL.first_language.coltitle_notes;
 		}
 		else{
-			coltitle['day'] = REPORT_GLOBAL['second_language'].coltitle_day;
-			coltitle['weekday'] = REPORT_GLOBAL['second_language'].coltitle_weekday;
-			coltitle['weekday_tr'] = '';
+			coltitle.day = REPORT_GLOBAL.second_language.coltitle_day;
+			coltitle.weekday = REPORT_GLOBAL.second_language.coltitle_weekday;
+			coltitle.weekday_tr = '';
 			if (calendartype == 'GREGORIAN') {
-				coltitle['caltype'] = REPORT_GLOBAL['second_language'].coltitle_caltype_hijri;
+				coltitle.caltype = REPORT_GLOBAL.second_language.coltitle_caltype_hijri;
 			} else {
-				coltitle['caltype'] = REPORT_GLOBAL['second_language'].coltitle_caltype_gregorian;
+				coltitle.caltype = REPORT_GLOBAL.second_language.coltitle_caltype_gregorian;
 			}
-			coltitle['imsak'] = REPORT_GLOBAL['second_language'].coltitle_imsak;
-			coltitle['fajr'] = REPORT_GLOBAL['second_language'].coltitle_fajr;
-			coltitle['fajr_iqamat'] = REPORT_GLOBAL['second_language'].coltitle_fajr_iqamat;
-			coltitle['sunrise'] = REPORT_GLOBAL['second_language'].coltitle_sunrise;
-			coltitle['dhuhr'] = REPORT_GLOBAL['second_language'].coltitle_dhuhr;
-			coltitle['dhuhr_iqamat'] = REPORT_GLOBAL['second_language'].coltitle_dhuhr_iqamat;
-			coltitle['asr'] = REPORT_GLOBAL['second_language'].coltitle_asr;
-			coltitle['asr_iqamat'] = REPORT_GLOBAL['second_language'].coltitle_asr_iqamat;
-			coltitle['sunset'] = REPORT_GLOBAL['second_language'].coltitle_sunset;
-			coltitle['maghrib'] = REPORT_GLOBAL['second_language'].coltitle_maghrib;
-			coltitle['maghrib_iqamat'] = REPORT_GLOBAL['second_language'].coltitle_maghrib_iqamat;
-			coltitle['isha'] = REPORT_GLOBAL['second_language'].coltitle_isha;
-			coltitle['isha_iqamat'] = REPORT_GLOBAL['second_language'].coltitle_isha_iqamat;
-			coltitle['midnight'] = REPORT_GLOBAL['second_language'].coltitle_midnight;
-			coltitle['notes'] = REPORT_GLOBAL['second_language'].coltitle_notes;
+			coltitle.imsak = REPORT_GLOBAL.second_language.coltitle_imsak;
+			coltitle.fajr = REPORT_GLOBAL.second_language.coltitle_fajr;
+			coltitle.fajr_iqamat = REPORT_GLOBAL.second_language.coltitle_fajr_iqamat;
+			coltitle.sunrise = REPORT_GLOBAL.second_language.coltitle_sunrise;
+			coltitle.dhuhr = REPORT_GLOBAL.second_language.coltitle_dhuhr;
+			coltitle.dhuhr_iqamat = REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat;
+			coltitle.asr = REPORT_GLOBAL.second_language.coltitle_asr;
+			coltitle.asr_iqamat = REPORT_GLOBAL.second_language.coltitle_asr_iqamat;
+			coltitle.sunset = REPORT_GLOBAL.second_language.coltitle_sunset;
+			coltitle.maghrib = REPORT_GLOBAL.second_language.coltitle_maghrib;
+			coltitle.maghrib_iqamat = REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat;
+			coltitle.isha = REPORT_GLOBAL.second_language.coltitle_isha;
+			coltitle.isha_iqamat = REPORT_GLOBAL.second_language.coltitle_isha_iqamat;
+			coltitle.midnight = REPORT_GLOBAL.second_language.coltitle_midnight;
+			coltitle.notes = REPORT_GLOBAL.second_language.coltitle_notes;
 		}
 		}
 	return coltitle;
@@ -400,7 +476,7 @@ const set_prayer_method = async(app_id, locale) => {
 		},
 		modified here with more methods that are saved in database and will look like this:
 		
-		REPORT_GLOBAL['module_praytimes_methods'] = {
+		REPORT_GLOBAL.module_praytimes_methods = {
 			ALGERIAN: {
 				name: 'Algerian Ministry of Religious Affairs and Wakfs',
 				params: { fajr: 18, isha: 17 } },
@@ -458,43 +534,43 @@ const set_prayer_method = async(app_id, locale) => {
 		};
 		*/
 		/**
-		 * Set prayer value for isha, maghrib and midnight
+		 * Set prayer value for fajr, isha, maghrib and midnight
+		 * @param {string|null} fajr_data 
 		 * @param {string|null} isha_data 
 		 * @param {string|null} maghrib_data 
 		 * @param {string|null} midnight_data 
-		 * @returns {{isha:object,maghrib:object,midnight:object}}}
+		 * @returns {{fajr:object, isha:object,maghrib:object,midnight:object}}}
 		 */
-		const set_prayer_value = (isha_data, maghrib_data, midnight_data) => {
+		const set_prayer_value = (fajr_data, isha_data, maghrib_data, midnight_data) => {
 			let isha;
 			//first two parameters always have values		
 			//check if integer or number with decimal 
 			if (/^\d+$/.test(isha_data??'') ||
 				/^\d+\.\d+$/.test(isha_data??'')){
-				isha = {isha:Number(isha_data)};
+				isha = {isha:getNumberValue(isha_data)};
 			}			
 			else
 				isha = {isha:isha_data};
-			return {isha: isha,
-					maghrib: (maghrib_data==null || maghrib_data=='')?{}:{maghrib: maghrib_data},
+			return {fajr: {fajr: getNumberValue(fajr_data)},
+					isha: isha,
+					maghrib: (maghrib_data==null || maghrib_data=='')?{}:{maghrib: getNumberValue(maghrib_data)},
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
-		const praytime_methods = {};
         getSettings(app_id, locale, 'METHOD')
 		.then((/**@type{Types.db_result_setting_getSettings[]}*/result_settings)=>{
 			for (const setting of result_settings){
-				const prayer_value = set_prayer_value(setting.data3,setting.data4,setting.data5);
+				const prayer_value = set_prayer_value(setting.data2, setting.data3,setting.data4,setting.data5);
 				//ES6 object spread 
-				Object.assign(praytime_methods, {[setting.data.toUpperCase()]:{
-													name:  setting.text,
-													params: { 	fajr: setting.data2,
-																...prayer_value.isha,
-																...prayer_value.maghrib,
-																...prayer_value.midnight
-															}
-													}
-												});
+				Object.assign(REPORT_GLOBAL.module_praytimes_methods, {[setting.data.toUpperCase()]:{
+																				name:  setting.text,
+																				params: { 	...prayer_value.fajr,
+																							...prayer_value.isha,
+																							...prayer_value.maghrib,
+																							...prayer_value.midnight
+																						}
+																				}
+																			});
 			}
-			REPORT_GLOBAL['module_praytimes_methods']=praytime_methods;
 			resolve(null);
 		})
 		.catch((/**@type{Types.error}*/error)=>{
@@ -521,13 +597,14 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 		const date_temp = new Date(year,month,day);
 		date_temp.setDate(date_temp.getDate() + hijri_adj);
 		const ramadan_day = date_temp.toLocaleString(	
-				REPORT_GLOBAL['regional_def_calendar_lang'] + 
-				REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-				REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
+				REPORT_GLOBAL.regional_def_calendar_lang + 
+				REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+				REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 				calendar_hijri_type + 
-				REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+				REPORT_GLOBAL.regional_def_locale_ext_number_system +
+				REPORT_GLOBAL.regional_def_calendar_number_system, 
 				/**@ts-ignore */
-				REPORT_GLOBAL['regional_def_calendar_number_system'], options_calendartype);
+				options_calendartype);
 		return Number(ramadan_day) == 9;
 	}
 	else
@@ -556,33 +633,33 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
     */
     prayTimes.prototype.init(settings_method);
 	//use methods without modifying original code
-	if (REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib && 
-		REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.midnight)
+	if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib && 
+		REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
 		prayTimes.prototype.adjust({asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
-									isha:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.isha,
-									maghrib:  REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib,
-									midnight: REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.midnight} );
+									fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+									isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
+									maghrib:  REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib,
+									midnight: REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
 	else
-		if (REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib)
+		if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib)
 			prayTimes.prototype.adjust({asr:      settings_asr,
 										highLats: settings_highlat,
-										fajr:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
-										isha:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.isha,
-										maghrib:  REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.maghrib} );
+										fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+										isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
+										maghrib:  REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib} );
 		else
-			if (REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.midnight)
+			if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
 				prayTimes.prototype.adjust({asr:      settings_asr,
 											highLats: settings_highlat,
-											fajr:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
-											isha:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.isha,
-											midnight: REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.midnight} );
+											fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+											isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
+											midnight: REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
 			else
 				prayTimes.prototype.adjust({asr:      settings_asr,
 											highLats: settings_highlat,
-											fajr:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.fajr,
-											isha:     REPORT_GLOBAL['module_praytimes_methods'][settings_method].params.isha} );
+											fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+											isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha} );
 };
 /**
  * Get style for header and footer
@@ -598,42 +675,58 @@ const getstyle = (img_src, align) => {
  * for both day and month timetable
  * @param {number} timetable 
  * @param {string} col 
- * @param {number} year 
- * @param {number} month 
- * @param {number} day 
- * @param {string} calendartype 
- * @param {number} show_fast_start_end 
- * @param {string} timezone 
- * @param {string} calendar_hijri_type 
- * @param {number} hijri_adjustment 
- * @param {string} locale 
- * @param {string} number_system 
  * @param {string|number} value 
- * @param {string} format 
+ * @param {{year: 					number,
+			month: 					number,
+			day:					number,
+			calendartype:			string,
+			show_fast_start_end:	number,
+			timezone:				string,
+			calendar_hijri_type:	string,
+			hijri_adjustment:		number,
+			locale:					string,
+			number_system:			string,
+			format:					string}} col_data
  * @returns 
  */
-const show_col = (timetable, col, year, month, day, calendartype, show_fast_start_end, timezone, calendar_hijri_type, hijri_adjustment, locale, number_system, value, format) => {
+const show_col = (timetable, col, value, col_data) => {
 	let display_value ='';
 	if (value=='-----')
 		display_value = value;
 	else
-		display_value = localTime(getNumberValue(value), locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + number_system, format);
-	if (((show_fast_start_end==1 && col=='fajr') ||
-		(show_fast_start_end==2 && col=='imsak') ||
-		(show_fast_start_end==3 && col=='fajr') ||
-		(show_fast_start_end==4 && col=='imsak')) &&
-		is_ramadan_day(year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adjustment)){
+		display_value = localTime(getNumberValue(value), 	col_data.locale + 
+															REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+															REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+															col_data.number_system, 
+															col_data.format);
+	if (((col_data.show_fast_start_end==1 && col=='fajr') ||
+		(col_data.show_fast_start_end==2 && col=='imsak') ||
+		(col_data.show_fast_start_end==3 && col=='fajr') ||
+		(col_data.show_fast_start_end==4 && col=='imsak')) &&
+		is_ramadan_day(	col_data.year, 
+						col_data.month, 
+						col_data.day, 
+						col_data.timezone, 
+						col_data.calendartype, 
+						col_data.calendar_hijri_type, 
+						col_data.hijri_adjustment)){
 		if (timetable==0)
 			return `<div class='timetable_month_data_col timetable_data_fast_start'>${display_value}</div>`;
 		if (timetable==1)
 			return `<div class="timetable_data_fast_start">${display_value}</div>`;
 		}
 	else
-		if (((show_fast_start_end==1 && col=='maghrib') ||
-			(show_fast_start_end==2 && col=='maghrib') ||
-			(show_fast_start_end==3 && col=='isha') ||
-			(show_fast_start_end==4 && col=='isha')) && 
-			is_ramadan_day(year, month, day, timezone, calendartype, calendar_hijri_type, hijri_adjustment)){
+		if (((col_data.show_fast_start_end==1 && col=='maghrib') ||
+			(col_data.show_fast_start_end==2 && col=='maghrib') ||
+			(col_data.show_fast_start_end==3 && col=='isha') ||
+			(col_data.show_fast_start_end==4 && col=='isha')) && 
+			is_ramadan_day(	col_data.year, 
+							col_data.month, 
+							col_data.day, 
+							col_data.timezone, 
+							col_data.calendartype, 
+							col_data.calendar_hijri_type, 
+							col_data.hijri_adjustment)){
 			if (timetable==0)
 				return `<div class='timetable_month_data_col timetable_data_fast_end'>${display_value}</div>`;
 			if (timetable==1)
@@ -682,8 +775,8 @@ const timetable_headers = (reporttype, settings) => {
 	if (settings.second_locale!='0'){
 		//show second locale except weekdays, they are already displayed on first header row
 		const second_locale_titles = getColumnTitles(0, settings.calendartype, settings.second_locale, null, settings.locale);
-		second_locale_titles['weekday']='';
-		second_locale_titles['weekday_tr']='';
+		second_locale_titles.weekday='';
+		second_locale_titles.weekday_tr='';
 		html +=  create_header_row(reporttype, second_locale_titles, settings);
 	}
 	return html;
@@ -841,23 +934,23 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 			switch(column){
 			case 'caltype':{
 				if (settings.calendartype=='GREGORIAN'){
-					const date_temp = new Date(year,month,data['day']);
+					const date_temp = new Date(year,month,data.day);
 					date_temp.setDate(date_temp.getDate() + settings.hijri_adj);
 					html += `<div class='timetable_month_data_col timetable_month_data_calendartype'>${date_temp.toLocaleDateString(settings.locale + 
-																										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
+																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										settings.calendar_hijri_type + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										/**@ts-ignore */
 																										settings.number_system, options_calendartype)}</div>`;
 				}
 				else{							
 					/**@ts-ignore */
 					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(settings.locale + 
-																										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
-																										REPORT_GLOBAL['regional_def_calendar_type_greg'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
+																										REPORT_GLOBAL.regional_def_calendar_type_greg + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										/**@ts-ignore */
 																										settings.number_system, options_calendartype)}</div>`;							
 				}
@@ -865,36 +958,36 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				}
 			case 'day':
 				html += `<div class='timetable_month_data_col'>${data[column].toLocaleString(settings.locale + 
-																										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										settings.number_system)}</div>`;
 				break;
 			case 'weekday':
 			case 'weekday_tr':{
 				if (settings.calendartype=='GREGORIAN'){
-					const date_temp = new Date(year,month,data['day']);
+					const date_temp = new Date(year,month,data.day);
 					date_temp.setDate(date_temp.getDate() + settings.hijri_adj);
 					html += `<div class='timetable_month_data_col timetable_month_data_date'>${date_temp.toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
-																										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
+																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										/**@ts-ignore */
 																										settings.calendar_hijri_type, options_weekday)}</div>`;
 					}
 				else{							
 					/**@ts-ignore */
 					html += `<div class='timetable_month_data_col timetable_month_data_date'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(column=='weekday'?settings.locale:settings.second_locale + 
-																										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
-																										REPORT_GLOBAL['regional_def_calendar_type_greg'], 
+																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
+																										REPORT_GLOBAL.regional_def_calendar_type_greg, 
 																										/**@ts-ignore */
 																										options_weekday)}</div>`;
 				}
 				break;
 				}
 			case 'fajr_iqamat':{
-				iqamat = calculateIqamat(settings.iqamat_fajr, data['fajr']);
-				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+				iqamat = calculateIqamat(settings.iqamat_fajr, data.fajr);
+				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										settings.number_system, 
 																										settings.format, 
 																										iqamat.hours, 
@@ -902,9 +995,9 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;
 				}
 			case 'dhuhr_iqamat':{
-				iqamat = calculateIqamat(settings.iqamat_dhuhr, data['dhuhr']);
-				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+				iqamat = calculateIqamat(settings.iqamat_dhuhr, data.dhuhr);
+				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										settings.number_system, 
 																										settings.format, 
 																										iqamat.hours, 
@@ -912,9 +1005,9 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;
 				}
 			case 'asr_iqamat':{
-				iqamat = calculateIqamat(settings.iqamat_asr, data['asr']);
-				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+				iqamat = calculateIqamat(settings.iqamat_asr, data.asr);
+				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										settings.number_system, 
 																										settings.format, 
 																										iqamat.hours, 
@@ -922,9 +1015,9 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;
 				}
 			case 'maghrib_iqamat':{
-				iqamat = calculateIqamat(settings.iqamat_maghrib, data['maghrib']);
-				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+				iqamat = calculateIqamat(settings.iqamat_maghrib, data.maghrib);
+				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										settings.number_system, 
 																										settings.format, 
 																										iqamat.hours, 
@@ -932,9 +1025,9 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;                    
 				}
 			case 'isha_iqamat':{
-				iqamat = calculateIqamat(settings.iqamat_isha, data['isha']);
-				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-																										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+				iqamat = calculateIqamat(settings.iqamat_isha, data.isha);
+				html += `<div class='timetable_month_data_col'>${localTime(null, settings.locale + 		REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																										settings.number_system, 
 																										settings.format, 
 																										iqamat.hours, 
@@ -946,20 +1039,18 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
 				break;
 				}
 			default:{
-				html += show_col(	0, 
-									column, 
-									year, 
-									month, 
-									data['day'], 
-									settings.calendartype, 
-									settings.show_fast_start_end, 
-									settings.timezone, 
-									settings.calendar_hijri_type, 
-									settings.hijri_adj, 
-									settings.locale, 
-									settings.number_system, 
-									data[column], 
-									settings.format);
+				const show_col_data = {	year: 					year,
+										month: 					month,
+										day:					data.day,
+										calendartype:			settings.calendartype,
+										show_fast_start_end:	settings.show_fast_start_end,
+										timezone:				settings.timezone,
+										calendar_hijri_type:	settings.calendar_hijri_type,
+										hijri_adjustment:		settings.hijri_adj,
+										locale:					settings.locale,
+										number_system:			settings.number_system,
+										format:					settings.format};
+				html += show_col(0, column, data[column], show_col_data);
 				break;
 				}
 			}
@@ -1064,37 +1155,38 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
 	 */
 	const fetch_translation = async (locale, first) => {
 		//show translation using first or second language
+		/**@type{Types.db_result_app_object_getObjects[]} */
 		const result_app_object_items = await getObjects(app_id, locale, 'APP_OBJECT_ITEM', 'REPORT');	
 		for (const app_object_item of result_app_object_items){
 			if (first == true)
-				REPORT_GLOBAL['first_language'][app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+				REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
 			else
-				REPORT_GLOBAL['second_language'][app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+				REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
 		}
 	};
 	await fetch_translation(locale, true).then(() => {
 		if (locale_second =='0'){
-			REPORT_GLOBAL['second_language'].timetable_title = '';
-			REPORT_GLOBAL['second_language'].coltitle_day = '';
-			REPORT_GLOBAL['second_language'].coltitle_weekday = '';
-			REPORT_GLOBAL['second_language'].coltitle_weekday_tr = '';
-			REPORT_GLOBAL['second_language'].coltitle_caltype_hijri = '';
-			REPORT_GLOBAL['second_language'].coltitle_caltype_gregorian = '';
-			REPORT_GLOBAL['second_language'].coltitle_imsak = '';
-			REPORT_GLOBAL['second_language'].coltitle_fajr = '';
-			REPORT_GLOBAL['second_language'].coltitle_fajr_iqamat = '';
-			REPORT_GLOBAL['second_language'].coltitle_sunrise = '';
-			REPORT_GLOBAL['second_language'].coltitle_dhuhr = '';
-			REPORT_GLOBAL['second_language'].coltitle_dhuhr_iqamat = '';
-			REPORT_GLOBAL['second_language'].coltitle_asr = '';
-			REPORT_GLOBAL['second_language'].coltitle_asr_iqamat = '';
-			REPORT_GLOBAL['second_language'].coltitle_sunset = '';
-			REPORT_GLOBAL['second_language'].coltitle_maghrib = '';
-			REPORT_GLOBAL['second_language'].coltitle_maghrib_iqamat = '';
-			REPORT_GLOBAL['second_language'].coltitle_isha = '';
-			REPORT_GLOBAL['second_language'].coltitle_isha_iqamat = '';
-			REPORT_GLOBAL['second_language'].coltitle_midnight = '';
-			REPORT_GLOBAL['second_language'].coltitle_notes = '';
+			REPORT_GLOBAL.second_language.timetable_title = '';
+			REPORT_GLOBAL.second_language.coltitle_day = '';
+			REPORT_GLOBAL.second_language.coltitle_weekday = '';
+			REPORT_GLOBAL.second_language.coltitle_weekday_tr = '';
+			REPORT_GLOBAL.second_language.coltitle_caltype_hijri = '';
+			REPORT_GLOBAL.second_language.coltitle_caltype_gregorian = '';
+			REPORT_GLOBAL.second_language.coltitle_imsak = '';
+			REPORT_GLOBAL.second_language.coltitle_fajr = '';
+			REPORT_GLOBAL.second_language.coltitle_fajr_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_sunrise = '';
+			REPORT_GLOBAL.second_language.coltitle_dhuhr = '';
+			REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_asr = '';
+			REPORT_GLOBAL.second_language.coltitle_asr_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_sunset = '';
+			REPORT_GLOBAL.second_language.coltitle_maghrib = '';
+			REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_isha = '';
+			REPORT_GLOBAL.second_language.coltitle_isha_iqamat = '';
+			REPORT_GLOBAL.second_language.coltitle_midnight = '';
+			REPORT_GLOBAL.second_language.coltitle_notes = '';
 		}
 	});
 	await fetch_translation(locale_second, false);
@@ -1152,15 +1244,15 @@ const create_header_row = (report_type, col_titles, settings) => {
 	switch (report_type){
 		case 0:{
 			return `<div class='timetable_day_timetable_header_row'>
-						${settings.show_imsak==1?`<div>${col_titles['imsak']}</div>`:''}
-						${`<div>${col_titles['fajr']}</div>`}
-						${`<div>${col_titles['sunrise']}</div>`}
-						${`<div>${col_titles['dhuhr']}</div>`}
-						${`<div>${col_titles['asr']}</div>`}
-						${settings.show_sunset==1?`<div>${col_titles['sunset']}</div>`:''}
-						${`<div>${col_titles['maghrib']}</div>`}
-						${`<div>${col_titles['isha']}</div>`}
-						${settings.show_midnight==1?`<div>${col_titles['midnight']}</div>`:''}
+						${settings.show_imsak==1?`<div>${col_titles.imsak}</div>`:''}
+						${`<div>${col_titles.fajr}</div>`}
+						${`<div>${col_titles.sunrise}</div>`}
+						${`<div>${col_titles.dhuhr}</div>`}
+						${`<div>${col_titles.asr}</div>`}
+						${settings.show_sunset==1?`<div>${col_titles.sunset}</div>`:''}
+						${`<div>${col_titles.maghrib}</div>`}
+						${`<div>${col_titles.isha}</div>`}
+						${settings.show_midnight==1?`<div>${col_titles.midnight}</div>`:''}
 					</div>`;
 		}
 		case 1:{
@@ -1171,25 +1263,25 @@ const create_header_row = (report_type, col_titles, settings) => {
 			 */
 			const get_div_col = data => `<div class='timetable_month_data_header_col'>${data}</div>`;
 			return `<div class='timetable_month_data_row timetable_month_data_header_row'>
-						${get_div_col(col_titles['day'])}
-						${settings.show_weekday==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles['weekday']):''}
-						${settings.second_locale !='0' && settings.show_weekday==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles['weekday_tr']):''}
-						${settings.show_calendartype==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles['caltype']):''}
-						${settings.show_imsak==1?get_div_col(col_titles['imsak']):''}
-						${get_div_col(col_titles['fajr'])}
-						${settings.iqamat_fajr!='0'?get_div_col(col_titles['fajr_iqamat']):''}
-						${get_div_col(col_titles['sunrise'])}
-						${get_div_col(col_titles['dhuhr'])}
-						${settings.iqamat_dhuhr!='0'?get_div_col(col_titles['dhuhr_iqamat']):''}
-						${get_div_col(col_titles['asr'])}
-						${settings.iqamat_asr!='0'?get_div_col(col_titles['asr_iqamat']):''}
-						${settings.show_sunset==1?get_div_col(col_titles['sunset']):''}
-						${get_div_col(col_titles['maghrib'])}
-						${settings.iqamat_maghrib!='0'?get_div_col(col_titles['maghrib_iqamat']):''}
-						${get_div_col(col_titles['isha'])}
-						${settings.iqamat_isha!='0'?get_div_col(col_titles['isha_iqamat']):''}
-						${settings.show_midnight==1?get_div_col(col_titles['midnight']):''}
-						${settings.show_notes==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles['notes']):''}
+						${get_div_col(col_titles.day)}
+						${settings.show_weekday==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles.weekday):''}
+						${settings.second_locale !='0' && settings.show_weekday==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles.weekday_tr):''}
+						${settings.show_calendartype==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles.caltype):''}
+						${settings.show_imsak==1?get_div_col(col_titles.imsak):''}
+						${get_div_col(col_titles.fajr)}
+						${settings.iqamat_fajr!='0'?get_div_col(col_titles.fajr_iqamat):''}
+						${get_div_col(col_titles.sunrise)}
+						${get_div_col(col_titles.dhuhr)}
+						${settings.iqamat_dhuhr!='0'?get_div_col(col_titles.dhuhr_iqamat):''}
+						${get_div_col(col_titles.asr)}
+						${settings.iqamat_asr!='0'?get_div_col(col_titles.asr_iqamat):''}
+						${settings.show_sunset==1?get_div_col(col_titles.sunset):''}
+						${get_div_col(col_titles.maghrib)}
+						${settings.iqamat_maghrib!='0'?get_div_col(col_titles.maghrib_iqamat):''}
+						${get_div_col(col_titles.isha)}
+						${settings.iqamat_isha!='0'?get_div_col(col_titles.isha_iqamat):''}
+						${settings.show_midnight==1?get_div_col(col_titles.midnight):''}
+						${settings.show_notes==1 && settings.reporttype_year_month=='MONTH'?get_div_col(col_titles.notes):''}
 					</div>`;
 		}
 		default:
@@ -1216,20 +1308,20 @@ const displayDay = (prayTimes, settings, user_settings) => {
 					day: 'numeric'};
 					
 
-	const date_current = new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
-									REPORT_GLOBAL['session_currentDate'].getMonth(),
-									REPORT_GLOBAL['session_currentDate'].getDate());
+	const date_current = new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+									REPORT_GLOBAL.session_currentDate.getMonth(),
+									REPORT_GLOBAL.session_currentDate.getDate());
 	const date_title4 = date_current.toLocaleDateString(settings.locale + 
-									REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-									REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 									/**@ts-ignore */
 									settings.number_system, options).toLocaleUpperCase();
 	date_current.setDate(date_current.getDate() + settings.hijri_adj);
 	const date_title5 = date_current.toLocaleDateString(settings.locale + 
-									REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-									REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
+									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+									REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 									settings.calendar_hijri_type + 
-									REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 									/**@ts-ignore */
 									settings.number_system, options_hijri).toLocaleUpperCase();
 	
@@ -1251,17 +1343,28 @@ const displayDay = (prayTimes, settings, user_settings) => {
 								user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
 			let day_html = '';
 			const timezone_offset = getTimezoneOffset(user_timezone);
-			times = prayTimes.prototype.getTimes(REPORT_GLOBAL['session_currentDate'], [user_gps_latitude, user_gps_longitude], timezone_offset, 0, 'Float');
-			const col_imsak = settings.show_imsak == 1?show_col(1, 'imsak', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['imsak'], user_format):''; 
-			const col_fajr = show_col(1, 'fajr', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['fajr'], user_format);
-			const col_sunrise = show_col(1, 'sunrise', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['sunrise'], user_format);
-			const col_dhuhr = show_col(1, 'dhuhr', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['dhuhr'], user_format);
-			const col_asr = show_col(1, 'asr', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['asr'], user_format);
-			const col_sunset = settings.show_sunset == 1?show_col(1, 'sunset', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment,user_locale, user_number_system, times['sunset'], user_format):'';
-			const col_maghrib = show_col(1, 'maghrib', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['maghrib'], user_format);
-			const col_isha = show_col(1, 'isha', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['isha'], user_format);
-			const col_midnight = settings.show_midnight == 1? show_col(1, 'midnight', REPORT_GLOBAL['session_currentDate'].getFullYear(), REPORT_GLOBAL['session_currentDate'].getMonth(), REPORT_GLOBAL['session_currentDate'].getDate(), 'GREGORIAN', settings.show_fast_start_end, user_timezone, user_calendar_hijri_type, user_hijri_adjustment, user_locale, user_number_system, times['midnight'], user_format):'';
-			
+			times = prayTimes.prototype.getTimes(REPORT_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], timezone_offset, 0, 'Float');
+
+			const show_col_data = {	year: 					REPORT_GLOBAL.session_currentDate.getFullYear(),
+									month: 					REPORT_GLOBAL.session_currentDate.getMonth(),
+									day:					REPORT_GLOBAL.session_currentDate.getDate(),
+									calendartype:			'GREGORIAN',
+									show_fast_start_end:	settings.show_fast_start_end, 
+									timezone:				user_timezone, 
+									calendar_hijri_type:	user_calendar_hijri_type, 
+									hijri_adjustment:		user_hijri_adjustment,
+									locale:					user_locale, 
+									number_system:			user_number_system, 
+									format:					user_format};
+			const col_imsak = settings.show_imsak == 1?show_col(1, 'imsak', times.imsak, show_col_data ):''; 
+			const col_fajr = show_col(1, 'fajr', times.fajr, show_col_data);
+			const col_sunrise = show_col(1, 'sunrise', times.sunrise, show_col_data);
+			const col_dhuhr = show_col(1, 'dhuhr', times.dhuhr, show_col_data);
+			const col_asr = show_col(1, 'asr', times.asr, show_col_data);
+			const col_sunset = settings.show_sunset == 1?show_col(1, 'sunset', times.sunset, show_col_data):'';
+			const col_maghrib = show_col(1, 'maghrib', times.maghrib, show_col_data);
+			const col_isha = show_col(1, 'isha', times.isha, show_col_data);
+			const col_midnight = settings.show_midnight == 1? show_col(1, 'midnight', times.midnight, show_col_data):'';
 
 			day_html +=
 				`<div class='timetable_day_timetable_row_data ${isToday(date_current)==true?'timetable_day_today_row':''}'>
@@ -1270,14 +1373,14 @@ const displayDay = (prayTimes, settings, user_settings) => {
 				<div class='timetable_day_timetable_footer'>
 					<div class='timetable_day_timetable_footer_row'>
 						<div>${user_place}</div>
-						<div>${settings.show_gps == 1? REPORT_GLOBAL['first_language'].gps_lat_text:''}</div>
-						<div>${settings.show_gps == 1? user_gps_latitude.toLocaleString(user_locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + user_number_system):''}</div>
-						<div>${settings.show_gps == 1? REPORT_GLOBAL['first_language'].gps_long_text:''}</div>
-						<div>${settings.show_gps == 1? user_gps_longitude.toLocaleString(user_locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + user_number_system):''}</div>
+						<div>${settings.show_gps == 1? REPORT_GLOBAL.first_language.gps_lat_text:''}</div>
+						<div>${settings.show_gps == 1? user_gps_latitude.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
+						<div>${settings.show_gps == 1? REPORT_GLOBAL.first_language.gps_long_text:''}</div>
+						<div>${settings.show_gps == 1? user_gps_longitude.toLocaleString(user_locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + user_number_system):''}</div>
 					</div>
 					${settings.show_timezone == 1?`<div class='timetable_day_timetable_footer_row'>
 														<div class='timetable_day_current_time'></div>
-														<div class='timetable_day_timezone'>${REPORT_GLOBAL['first_language'].timezone_text + ' ' + user_timezone}</div>
+														<div class='timetable_day_timezone'>${REPORT_GLOBAL.first_language.timezone_text + ' ' + user_timezone}</div>
 													</div>`:''}
 				</div>`;
 			return day_html;
@@ -1332,7 +1435,7 @@ const displayDay = (prayTimes, settings, user_settings) => {
 					${timetable_headers(0, settings)}
 					${timetable_data()}
 				</div>
-				<div class='copyright'>${REPORT_GLOBAL['app_copyright']}</div>
+				<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
 				<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
 					<div>${settings.footer_txt1}</div>
 					<div>${settings.footer_txt2}</div>
@@ -1381,13 +1484,13 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 				}
 		}
 		if (settings.calendartype=='GREGORIAN'){
-			const month_gregorian = REPORT_GLOBAL['session_currentDate'].getMonth();
-			const year_greogrian = REPORT_GLOBAL['session_currentDate'].getFullYear();
+			const month_gregorian = REPORT_GLOBAL.session_currentDate.getMonth();
+			const year_greogrian = REPORT_GLOBAL.session_currentDate.getFullYear();
 			return {month:			month_gregorian,
 					year:			year_greogrian,
 					title:			new Date(year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
-										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 										settings.number_system, 
 										/**@ts-ignore */
 										options).toLocaleUpperCase(),
@@ -1397,8 +1500,8 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 					endDate_hijri: 	[0,0,0]};
 		}	
 		else{
-			const month_hijri = REPORT_GLOBAL['session_CurrentHijriDate'][0];
-			const year_hijri = REPORT_GLOBAL['session_CurrentHijriDate'][1];
+			const month_hijri = REPORT_GLOBAL.session_CurrentHijriDate[0];
+			const year_hijri = REPORT_GLOBAL.session_CurrentHijriDate[1];
 			/**@type{[number, number, number]} */
 			const date_hijri 	= [year_hijri,month_hijri,1];
 			/**@type{[number, number, number]} */
@@ -1413,10 +1516,10 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 					month:			month_hijri,
 					year:			year_hijri,
 					title:			new Date(title_date[0],title_date[1]-1,title_date[2]).toLocaleDateString(settings.locale + 
-										REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-										REPORT_GLOBAL['regional_def_locale_ext_calendar'] + 
+										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 										settings.calendar_hijri_type + 
-										REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 										settings.number_system, 
 										/**@ts-ignore */
 										options).toLocaleUpperCase(),
@@ -1479,7 +1582,7 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 			} 
 			if (settings.calendartype=='HIJRI'){
 				/**@type{[number, number, number]} */
-				const display_date = getGregorian([data.year,data.month,times['day']], settings.hijri_adj);
+				const display_date = getGregorian([data.year,data.month,times.day], settings.hijri_adj);
 				month_html += `<div class='${'timetable_month_data_row ' + row_class}'>
 									${makeTableRow(times, items, data.year, data.month, settings, display_date)}
 								</div>`;
@@ -1508,7 +1611,7 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 				</div>`:''}
 				<div id='timetable_month_data_header' class='display_font'>
 					<div id='timetable_month_data_header_title1'>${data.title}</div>
-					<div id='timetable_month_data_header_title2'>${REPORT_GLOBAL['first_language'].timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL['second_language'].timetable_title:''}</div>
+					<div id='timetable_month_data_header_title2'>${REPORT_GLOBAL.first_language.timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL.second_language.timetable_title:''}</div>
 				</div>
 				<div id='timetable_month_data' class='${month_data_class}'>
 					${timetable_headers(1, settings)}
@@ -1521,16 +1624,16 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 							<div >${settings.place}</div>
 							${settings.show_gps == 1?
 								`
-								<div >${REPORT_GLOBAL['first_language'].gps_lat_text}</div>
-								<div >${settings.gps_lat.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system)}</div>
-								<div >${REPORT_GLOBAL['first_language'].gps_long_text}</div>
-								<div >${settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system)}</div>`
+								<div >${REPORT_GLOBAL.first_language.gps_lat_text}</div>
+								<div >${settings.gps_lat.toLocaleString(settings.locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + settings.number_system)}</div>
+								<div >${REPORT_GLOBAL.first_language.gps_long_text}</div>
+								<div >${settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + settings.number_system)}</div>`
 								:''}
 							${settings.show_timezone == 1?
-								`<div >${REPORT_GLOBAL['first_language'].timezone_text}</div>
+								`<div >${REPORT_GLOBAL.first_language.timezone_text}</div>
 								<div >${settings.timezone}</div>`
 								:''}
-							<div class='copyright'>${REPORT_GLOBAL['app_copyright']}</div>
+							<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
 						</div>
 					</div>
 				</div>
@@ -1548,8 +1651,8 @@ const displayMonth = (prayTimes, settings, year_class='') => {
  * @returns {string}
  */
 const displayYear = (prayTimes, settings) => {
-	const startmonth            = REPORT_GLOBAL['session_currentDate'].getMonth();
-	const starthijrimonth       = REPORT_GLOBAL['session_CurrentHijriDate'][0];
+	const startmonth            = REPORT_GLOBAL.session_currentDate.getMonth();
+	const starthijrimonth       = REPORT_GLOBAL.session_CurrentHijriDate[0];
 	
 	settings.reporttype_year_month        = 'YEAR';
 	
@@ -1582,27 +1685,27 @@ const displayYear = (prayTimes, settings) => {
 						useGrouping:false};
 	let year_title4 = '';
 	if (settings.calendartype=='GREGORIAN'){
-		year_title4 = REPORT_GLOBAL['session_currentDate'].getFullYear();
+		year_title4 = REPORT_GLOBAL.session_currentDate.getFullYear().toString();
 		/**@ts-ignore */
 		year_title4 = year_title4.toLocaleString(	settings.locale + 
-													REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-													REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 													settings.number_system, 
 													options_year);
 	}
 	else{
 		//HIJRI
-		year_title4 = REPORT_GLOBAL['session_CurrentHijriDate'][1];
+		year_title4 = REPORT_GLOBAL.session_CurrentHijriDate[1].toString();
 		/**@ts-ignore */
 		year_title4 = year_title4.toLocaleString(	settings.locale + 
-													REPORT_GLOBAL['regional_def_locale_ext_prefix'] + 
-													REPORT_GLOBAL['regional_def_locale_ext_number_system'] + 
+													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 													settings.number_system, 
 													options_year);
 	}
 	const months = new Array(12);
-	REPORT_GLOBAL['session_currentDate'].setMonth(startmonth);
-	REPORT_GLOBAL['session_CurrentHijriDate'][0] = starthijrimonth;
+	REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
+	REPORT_GLOBAL.session_CurrentHijriDate[0] = starthijrimonth;
 
 	//TIMETABLE
 	const year_timetable = ()=>{
@@ -1617,7 +1720,7 @@ const displayYear = (prayTimes, settings) => {
 					</div>
 					<div id='timetable_year_timetables_header' class='display_font'>
 						<div>${year_title4}</div>
-						<div>${REPORT_GLOBAL['first_language'].timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL['second_language'].timetable_title:''}</div>
+						<div>${REPORT_GLOBAL.first_language.timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL.second_language.timetable_title:''}</div>
 					</div>
 					<div id='timetable_year_timetables' ${timetable_class}'>
 						<div class='timetable_year_timetables_row'>
@@ -1643,13 +1746,19 @@ const displayYear = (prayTimes, settings) => {
 						<div id='timetable_year_timetables_footer_row'>
 							<div id='timetable_year_timetables_footer_col'>
 								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.place}</div>
-								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL['first_language'].gps_lat_text:''}</div>
-								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?settings.gps_lat.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
-								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL['first_language'].gps_long_text:''}</div>
-								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?settings.gps_long.toLocaleString(settings.locale + REPORT_GLOBAL['regional_def_locale_ext_prefix'] + REPORT_GLOBAL['regional_def_locale_ext_number_system'] + settings.number_system):''}</div>
-								<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?REPORT_GLOBAL['first_language'].timezone_text:''}</div>
+								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL.first_language.gps_lat_text:''}</div>
+								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?settings.gps_lat.toLocaleString(settings.locale + 
+																													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																													settings.number_system):''}</div>
+								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?REPORT_GLOBAL.first_language.gps_long_text:''}</div>
+								<div ${settings.show_gps == 1?'class=""':'class="hidden"'}>${settings.show_gps == 1?settings.gps_long.toLocaleString(settings.locale + 
+																													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																													settings.number_system):''}</div>
+								<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?REPORT_GLOBAL.first_language.timezone_text:''}</div>
 								<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?settings.timezone:''}</div>
-								<div class='copyright'>${REPORT_GLOBAL['app_copyright']}</div>
+								<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
 							</div>
 						</div>
 					</div>
@@ -1663,9 +1772,9 @@ const displayYear = (prayTimes, settings) => {
 	};
 	for (let monthindex = 1; monthindex <= 12; monthindex++) { 
 		if (settings.calendartype=='GREGORIAN')
-			REPORT_GLOBAL['session_currentDate'].setMonth(monthindex -1);
+			REPORT_GLOBAL.session_currentDate.setMonth(monthindex -1);
 		else
-			REPORT_GLOBAL['session_CurrentHijriDate'][0] = monthindex;
+			REPORT_GLOBAL.session_CurrentHijriDate[0] = monthindex;
 		months[monthindex-1] = displayMonth(prayTimes, settings, settings.timetable_year_month);
 	}
 	return year_timetable();
@@ -1709,19 +1818,19 @@ const timetable = async (timetable_parameters) => {
 		.then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/result_parameters)=> {
 			for (const parameter of result_parameters) {
 				if (parameter.parameter_name=='APP_COPYRIGHT')
-					REPORT_GLOBAL['app_copyright'] = parameter.parameter_value;
+					REPORT_GLOBAL.app_copyright = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-					REPORT_GLOBAL['regional_def_calendar_lang'] = parameter.parameter_value;
+					REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-					REPORT_GLOBAL['regional_def_locale_ext_prefix'] = parameter.parameter_value;
+					REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-					REPORT_GLOBAL['regional_def_locale_ext_number_system'] = parameter.parameter_value;
+					REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-					REPORT_GLOBAL['regional_def_locale_ext_calendar'] = parameter.parameter_value;
+					REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-					REPORT_GLOBAL['regional_def_calendar_type_greg'] = parameter.parameter_value;
+					REPORT_GLOBAL.regional_def_calendar_type_greg = parameter.parameter_value;
 				if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-					REPORT_GLOBAL['regional_def_calendar_number_system'] = parameter.parameter_value;
+					REPORT_GLOBAL.regional_def_calendar_number_system = parameter.parameter_value;
 				//QR
 				if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
 					REPORT_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
@@ -1758,18 +1867,18 @@ const timetable = async (timetable_parameters) => {
 								/**@ts-ignore */
 								import('praytimes').then(({default: prayTimes}) => {
 									//set current date for report month
-									REPORT_GLOBAL['session_currentDate'] = new Date();
-									REPORT_GLOBAL['session_CurrentHijriDate'] = new Array();
+									REPORT_GLOBAL.session_currentDate = new Date();
+									REPORT_GLOBAL.session_CurrentHijriDate = [0,0,0];
 									//get Hijri date from initial Gregorian date
-									REPORT_GLOBAL['session_CurrentHijriDate'][0] = 
-										parseInt(new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
-															REPORT_GLOBAL['session_currentDate'].getMonth(),
-															REPORT_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-									REPORT_GLOBAL['session_CurrentHijriDate'][1] = 
+									REPORT_GLOBAL.session_CurrentHijriDate[0] = 
+										parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+															REPORT_GLOBAL.session_currentDate.getMonth(),
+															REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+									REPORT_GLOBAL.session_CurrentHijriDate[1] = 
 										//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-										parseInt(new Date(	REPORT_GLOBAL['session_currentDate'].getFullYear(),
-															REPORT_GLOBAL['session_currentDate'].getMonth(),
-															REPORT_GLOBAL['session_currentDate'].getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+										parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+															REPORT_GLOBAL.session_currentDate.getMonth(),
+															REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
 									set_prayer_method(timetable_parameters.app_id, user_setting.locale).then(() => {
 										if (reporttype==0){
 											timetable_day_user_settings_get(timetable_parameters.app_id, user_account_id, (err, user_settings_parameters) =>{

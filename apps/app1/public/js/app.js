@@ -49,8 +49,8 @@ const setEvents = () => {
         document.getElementById( 'dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
     }, false );
     //second page
-    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_diagram_img']);}, false);
-    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL['img_datamodel_img']);}, false);
+    document.getElementById('info_diagram').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL.img_diagram_img);}, false);
+    document.getElementById('info_datamodel').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL.img_datamodel_img);}, false);
     
     document.getElementById( 'info_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
@@ -80,7 +80,7 @@ const setEvents = () => {
     document.getElementById('common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null); }, false);
     document.getElementById('common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null); }, false);
     document.getElementById('common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null); }, false);
-    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps', true, common.ICONS['sky_cloud'], null); }, false);
+    document.getElementById('common_profile_main_btn_cloud').addEventListener('click', () => { common.profile_detail(5, '/user_account_app/apps', true, common.ICONS.sky_cloud, null); }, false);
     //dialogue login/signup/forgot
     const input_username_login = document.getElementById('common_login_username');
     input_username_login.addEventListener('keyup', (event) => {
@@ -157,7 +157,7 @@ const app_theme_switch = () => {
 const get_apps = () => {
     let json;
     const old_button = document.getElementById('apps').innerHTML;
-    common.FFB ('DB_API', `/apps?id=${common.COMMON_GLOBAL['common_app_id']}`, 'GET', 0, null, (err, result) => {
+    common.FFB ('DB_API', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 0, null, (err, result) => {
         if (err)
             document.getElementById('apps').innerHTML = old_button;
         else{
@@ -297,19 +297,19 @@ const ProviderSignIn_app = async (provider_button) => {
 };
 const init_app = async () => {
     //start
-    document.getElementById('start_message').innerHTML = common.ICONS['app_info'];    
+    document.getElementById('start_message').innerHTML = common.ICONS.app_info;
     //theme switcher
     document.getElementById('app_theme_checkbox').checked = true;
     //info
-    document.getElementById('info_diagram_img').src=APP_GLOBAL['img_diagram_img_small'];
-    document.getElementById('info_datamodel_img').src=APP_GLOBAL['img_datamodel_img_small'];
-    document.getElementById('title1').innerHTML = common.ICONS['sky_cloud'] + common.ICONS['misc_model'];
-    document.getElementById('title2').innerHTML = common.ICONS['app_database'] + common.ICONS['misc_model'];
-    document.getElementById('info_message').innerHTML = common.ICONS['app_home'];
-    document.getElementById('contact_text').innerHTML = common.ICONS['app_email'];
-    document.querySelector('#app_copyright').innerHTML = APP_GLOBAL['app_copyright'];
-    document.getElementById('app_email').href='mailto:' + APP_GLOBAL['app_email'];
-    document.getElementById('app_email').innerHTML=APP_GLOBAL['app_email'];
+    document.getElementById('info_diagram_img').src=APP_GLOBAL.img_diagram_img_small;
+    document.getElementById('info_datamodel_img').src=APP_GLOBAL.img_datamodel_img_small;
+    document.getElementById('title1').innerHTML = common.ICONS.sky_cloud + common.ICONS.misc_model;
+    document.getElementById('title2').innerHTML = common.ICONS.app_database + common.ICONS.misc_model;
+    document.getElementById('info_message').innerHTML = common.ICONS.app_home;
+    document.getElementById('contact_text').innerHTML = common.ICONS.app_email;
+    document.querySelector('#app_copyright').innerHTML = APP_GLOBAL.app_copyright;
+    document.getElementById('app_email').href='mailto:' + APP_GLOBAL.app_email;
+    document.getElementById('app_email').innerHTML=APP_GLOBAL.app_email;
 
     //links
     document.getElementById('start_links').addEventListener('click', (event) => { 
@@ -322,18 +322,18 @@ const init_app = async () => {
             //info_link ends with an integer
             switch (event.target.id){
                 case 'info_link1':{
-                    common.show_window_info(1, APP_GLOBAL['info_link_policy_url']);
+                    common.show_window_info(1, APP_GLOBAL.info_link_policy_url);
                     break;
                 }
                 case 'info_link2':{
-                    common.show_window_info(1, APP_GLOBAL['info_link_disclaimer_url']);
+                    common.show_window_info(1, APP_GLOBAL.info_link_disclaimer_url);
                     break;
                 }
                 case 'info_link3':{
-                    common.show_window_info(1, APP_GLOBAL['info_link_terms_url']);
+                    common.show_window_info(1, APP_GLOBAL.info_link_terms_url);
                     break;
                 }case 'info_link4':{
-                    common.show_window_info(1, APP_GLOBAL['info_link_about_url']);
+                    common.show_window_info(1, APP_GLOBAL.info_link_about_url);
                     break;
                 }
             }
@@ -341,29 +341,29 @@ const init_app = async () => {
         
     }, false);
     
-    if (APP_GLOBAL['info_social_link1_url']==null)
+    if (APP_GLOBAL.info_social_link1_url==null)
         document.getElementById('social_link1').style.display = 'none';
     else
-        document.getElementById('social_link1').innerHTML = APP_GLOBAL['info_social_link1_icon'];
-    if (APP_GLOBAL['info_social_link2_url']==null)
+        document.getElementById('social_link1').innerHTML = APP_GLOBAL.info_social_link1_icon;
+    if (APP_GLOBAL.info_social_link2_url==null)
         document.getElementById('social_link2').style.display = 'none';
     else
-        document.getElementById('social_link2').innerHTML = APP_GLOBAL['info_social_link2_icon'];
-    if (APP_GLOBAL['info_social_link3_url']==null)
+        document.getElementById('social_link2').innerHTML = APP_GLOBAL.info_social_link2_icon;
+    if (APP_GLOBAL.info_social_link3_url==null)
         document.getElementById('social_link3').style.display = 'none';
     else
-        document.getElementById('social_link3').innerHTML = APP_GLOBAL['info_social_link3_icon'];
-    if (APP_GLOBAL['info_social_link4_url']==null)
+        document.getElementById('social_link3').innerHTML = APP_GLOBAL.info_social_link3_icon;
+    if (APP_GLOBAL.info_social_link4_url==null)
         document.getElementById('social_link4').style.display = 'none';
     else
-        document.getElementById('social_link4').innerHTML = APP_GLOBAL['info_social_link4_icon'];
-    document.getElementById('info_link1').innerHTML = APP_GLOBAL['info_link_policy_name'];
-    document.getElementById('info_link2').innerHTML = APP_GLOBAL['info_link_disclaimer_name'];
-    document.getElementById('info_link3').innerHTML = APP_GLOBAL['info_link_terms_name'];
-    document.getElementById('info_link4').innerHTML = APP_GLOBAL['info_link_about_name'];
+        document.getElementById('social_link4').innerHTML = APP_GLOBAL.info_social_link4_icon;
+    document.getElementById('info_link1').innerHTML = APP_GLOBAL.info_link_policy_name;
+    document.getElementById('info_link2').innerHTML = APP_GLOBAL.info_link_disclaimer_name;
+    document.getElementById('info_link3').innerHTML = APP_GLOBAL.info_link_terms_name;
+    document.getElementById('info_link4').innerHTML = APP_GLOBAL.info_link_about_name;
 
     //profile info
-    document.getElementById('common_profile_main_btn_cloud').innerHTML = common.ICONS['sky_cloud'];
+    document.getElementById('common_profile_main_btn_cloud').innerHTML = common.ICONS.sky_cloud;
     
     setEvents();
     common.zoom_info('');
@@ -371,45 +371,45 @@ const init_app = async () => {
 };
 
 const init = (parameters) => {
-    common.COMMON_GLOBAL['exception_app_function'] = app_exception;
+    common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         for (let i = 0; i < parameters.app.length; i++) {
             if (parameters.app[i].parameter_name=='APP_COPYRIGHT')
-                APP_GLOBAL['app_copyright'] =parameters.app[i].parameter_value;
+                APP_GLOBAL.app_copyright =parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='APP_EMAIL')
-                APP_GLOBAL['app_email'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.app_email = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
-                APP_GLOBAL['info_social_link1_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link1_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
-                APP_GLOBAL['info_social_link2_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link2_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
-                APP_GLOBAL['info_social_link3_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link3_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
-                APP_GLOBAL['info_social_link4_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link4_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                APP_GLOBAL['info_social_link1_icon'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link1_icon = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                APP_GLOBAL['info_social_link2_icon'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link2_icon = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                APP_GLOBAL['info_social_link3_icon'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link3_icon = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                APP_GLOBAL['info_social_link4_icon'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_social_link4_icon = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_POLICY_URL')
-                APP_GLOBAL['info_link_policy_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_policy_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                APP_GLOBAL['info_link_disclaimer_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_disclaimer_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_TERMS_URL')
-                APP_GLOBAL['info_link_terms_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_terms_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                APP_GLOBAL['info_link_about_url'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_about_url = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_POLICY_NAME')
-                APP_GLOBAL['info_link_policy_name'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_policy_name = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                APP_GLOBAL['info_link_disclaimer_name'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_disclaimer_name = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_TERMS_NAME')
-                APP_GLOBAL['info_link_terms_name'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_terms_name = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_NAME')
-                APP_GLOBAL['info_link_about_name'] = parameters.app[i].parameter_value;
+                APP_GLOBAL.info_link_about_name = parameters.app[i].parameter_value;
             if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
                 common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameters.app[i].parameter_value);
             if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
@@ -423,8 +423,8 @@ const init = (parameters) => {
         }
         init_app().then(()=>{
             document.getElementById('apps').innerHTML = common.APP_SPINNER;
-            if (common.COMMON_GLOBAL['user_locale'] != navigator.language.toLowerCase())
-                common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], null, ()=>{
+            if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+                common.common_translate_ui(common.COMMON_GLOBAL.user_locale, null, ()=>{
                         get_apps();
                 });
             else

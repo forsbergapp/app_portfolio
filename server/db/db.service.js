@@ -289,7 +289,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                               for (let dbcolumn=0;dbcolumn<fields.length; dbcolumn++){
                                  if (fields[dbcolumn].type == 252) { //BLOB
                                     for (let i=0;i<result.length;i++){
-                                       if (fields[dbcolumn]['name'] == Object.keys(result[i])[dbcolumn])
+                                       if (fields[dbcolumn].name == Object.keys(result[i])[dbcolumn])
                                           if (result[i][Object.keys(result[i])[dbcolumn]]!=null && result[i][Object.keys(result[i])[dbcolumn]]!='')
                                              result[i][Object.keys(result[i])[dbcolumn]] = Buffer.from(result[i][Object.keys(result[i])[dbcolumn]]).toString();
                                     }
@@ -358,7 +358,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         for (let dbcolumn=0;dbcolumn<result.fields.length; dbcolumn++){
                            if (result.fields[dbcolumn].dataTypeID == 17) { //BYTEA
                               for (let i=0;i<result.rows.length;i++){
-                                 if (result.fields[dbcolumn]['name'] == Object.keys(result.rows[i])[dbcolumn])
+                                 if (result.fields[dbcolumn].name == Object.keys(result.rows[i])[dbcolumn])
                                     if (result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!=null && result.rows[i][Object.keys(result.rows[i])[dbcolumn]]!='')
                                        result.rows[i][Object.keys(result.rows[i])[dbcolumn]] = Buffer.from(result.rows[i][Object.keys(result.rows[i])[dbcolumn]]).toString();
                               }
