@@ -553,7 +553,7 @@ const getStatusCodes = async () =>{
 /**
  * Get log stat
  * @param {number} app_id 
- * @param {*} data 
+ * @param {Types.log_parameter_getLogStats} data 
  * @param {Types.callBack} callBack 
  */
 const getLogsStats = async (app_id, data, callBack) => {
@@ -564,7 +564,7 @@ const getLogsStats = async (app_id, data, callBack) => {
     
     const fs = await import('node:fs');
     if (data.month <10)
-        data.month = '0' + data.month;
+        data.month = 0 + data.month;
     const files = await fs.promises.readdir(`${process.cwd()}${ConfigGetInit('PATH_LOG')}`);
     let sample;
     let day = '';
