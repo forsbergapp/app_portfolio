@@ -1,5 +1,60 @@
 /**
- * Request
+ * Request service
+ * @typedef {object}        req_service
+ * @property {string}       url
+ * 
+ * @property {{ authorization:string,
+ *              'accept-language':string}}       headers
+ * 
+ * @property {object}       query
+ * @property {number|null}  query.app_id
+ * @property {string}       query.latitude
+ * @property {string}       query.longitude
+ * @property {string|null}  query.ip
+ * @property {number}       query.limit
+ * 
+ * @property {{ search:string,
+ *              country:string}} params
+ */
+/**
+ * Response service
+ * @typedef {object}    res_service
+ * @property {function} setHeader
+ * @property {function} setEncoding
+ * @property {number}   statusCode
+ * @property {function} write
+ * @property {function} end
+ * 
+ * @property {object}   headers
+ * @property {string}   headers.location
+ */
+
+/**
+ * Service message queue
+ * @typedef {{  message_id:string,
+ *              service:string,
+ *              message:object|null}}  service_message_queue_publish
+ */
+/**
+ * Service message queue
+ * @typedef {{  message_id:string|null,
+ *              service:string|null,
+ *              message:object|null,
+ *              start:string|null,
+ *              finished:string|null,
+ *              result:*}}  service_message_queue_consume
+ */
+/**
+ * Service message queue
+ * @typedef {{  message_id:string,
+ *              service:string,
+ *              message:object,
+ *              start:string,
+ *              result:*}}  service_message_queue_error
+ */
+
+/**
+ * Request verbose
  * @typedef {*} req_verbose
  */
 /**
