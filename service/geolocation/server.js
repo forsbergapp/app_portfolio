@@ -1,24 +1,40 @@
-const service = await import('./service.js');
-const { MicroserviceServer, IAM } = await import(`file://${process.cwd()}/service/service.service.js`);
+/** @module server/express/service/geolocation */
 
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
+const service = await import('./service.js');
+const { getNumberValue, MicroserviceServer, IAM } = await import(`file://${process.cwd()}/service/service.service.js`);
+
+/**
+ * Starts the server
+ */
 const startserver = async () =>{
 	const request = await MicroserviceServer('GEOLOCATION');
-	
-	request.server.createServer(request.options, (req, res) => {
-		req.query = {};
-		req.params = {};
+	request.server.createServer(request.options, (/**@type{Types.req_service}*/req, /**@type{Types.res_service}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Content-Type',  'application/json; charset=utf-8');
+		/**
+		 * @typedef{{	app_id:number,
+		 * 				ip:string,
+		 * 				latitude:string,
+		 * 				longitude:string}}
+		 * @property {function} get
+		 */
 		const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
-		req.query.app_id = params.get('app_id');
-		req.query.ip = params.get('ip');
+		req.query = {	app_id:null,
+						latitude:'',
+						longitude:'',
+						ip:'',
+						limit:0};
+		req.query.app_id = getNumberValue(params.get('app_id'));
 		switch (req.url.substring(0, req.url.indexOf('?'))){
 			case '/geolocation/place':{
-				req.query.latitude = params.get('latitude');
-				req.query.longitude = params.get('longitude');
-				IAM(req.query.app_id, req.headers.authorization).then(result=>{
-					if (result == 1)
+				req.query.latitude = params.get('latitude') ?? '';
+				req.query.longitude = params.get('longitude') ?? '';
+				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+					if (result)
 						getPlace(req, res);
 					else
 					{
@@ -31,8 +47,8 @@ const startserver = async () =>{
 			}
 			case '/geolocation/ip':{
 				req.query.ip = params.get('ip');
-				IAM(req.query.app_id, req.headers.authorization).then(result=>{
-					if (result == 1)
+				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+					if (result)
 						getIp(req, res);
 					else
 					{
@@ -56,7 +72,11 @@ const startserver = async () =>{
 		console.log(err);
 	});
 };
-
+/**
+ * 
+ * @param {Types.req_service} req 
+ * @param {Types.res_service} res 
+ */
 const getPlace = async (req, res) => {
 	let geodata;
 	geodata = await service.getCacheGeodata('PLACE', null, req.query.latitude, req.query.longitude);
@@ -75,10 +95,15 @@ const getPlace = async (req, res) => {
 	}
 	res.end();
 };
+/**
+ * 
+ * @param {Types.req_service} req 
+ * @param {Types.res_service} res 
+ */
 const getIp = async (req, res) => {
 	let geodata;
 	let url;
-	geodata = await service.getCacheGeodata('IP', req.query.ip, null, null);
+	geodata = await service.getCacheGeodata('IP', req.query.ip, '', '');
 	if (geodata != null){
 		res.statusCode = 200;
 		res.write(geodata, 'utf8');
@@ -99,4 +124,4 @@ const getIp = async (req, res) => {
 	res.end();
 };
 startserver();
-export {startserver, getPlace, getIp};
+export {startserver};

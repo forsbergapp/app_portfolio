@@ -1,10 +1,21 @@
+/** @module server/express/service/pdf */
+
+// eslint-disable-next-line no-unused-vars
+import * as Types from './../../types.js';
+
 const puppeteer = await import('puppeteer');
 
+/**@type{*} */
 let BROWSER;
+/**
+ * 
+ * @param {string} parameter 
+ * @returns {Promise.<string|null>}
+ */
 const ConfigGet = async (parameter)=>{
     const fs = await import('node:fs');
-    let CONFIG = await fs.promises.readFile(`${process.cwd()}/service/pdf/config/config.json`, 'utf8');
-    CONFIG = JSON.parse(CONFIG)['PDF'];
+    const config_json = await fs.promises.readFile(`${process.cwd()}/service/pdf/config/config.json`, 'utf8');
+    const CONFIG = JSON.parse(config_json)['PDF'];
     for (const row of CONFIG){
         for (const key in row)
             if (key == parameter)
@@ -12,11 +23,14 @@ const ConfigGet = async (parameter)=>{
     }
     return null;
 };
+/**
+ * Init PDF service
+ */
 const initPDFService = async () => {
     if (!BROWSER)
         BROWSER = await puppeteer.launch({  pipe:true,
                                             headless: 'new',
-                                            executablePath: await ConfigGet('EXECUTABLE_PATH'),
+                                            executablePath: await ConfigGet('EXECUTABLE_PATH') ?? '',
                                             ignoreHTTPSErrors: true,
                                             ignoreDefaultArgs: ['--enable-automation'],
                                             args: [ '--disable-3d-apis',
@@ -65,7 +79,13 @@ const initPDFService = async () => {
             throw error;
         });
 };
-
+/**
+ * 
+ * @param {{ps:string,
+ *          hf:boolean,
+ *          url:string}} message 
+ * @returns 
+ */
 const getPDF = async (message) => {
     await initPDFService()
     .catch(error=>{
@@ -88,6 +108,7 @@ const getPDF = async (message) => {
     const webPage = await BROWSER.newPage();
     await webPage.setJavaScriptEnabled(true);
     await webPage.setRequestInterception(true);
+    /**@ts-ignore */
     webPage.on('request', interceptedRequest => {
         const data = {
             'headers': {
