@@ -21,7 +21,7 @@ const app_exception = (error) => {
 const getdocs = (docid = null) => {
     document.querySelector('#doc_list').innerHTML = common.APP_SPINNER;
     let html ='';
-    for (const doc of APP_GLOBAL['docs']) {
+    for (const doc of APP_GLOBAL.docs) {
         if (docid== doc.id || docid==null)
             html += `<div id='doc_list_item'>
                         <div id='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image_div'>
@@ -52,7 +52,7 @@ const init_app = async () => {
     }
 };
 const init = (parameters) => {
-    common.COMMON_GLOBAL['exception_app_function'] = app_exception;
+    common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app().then(() => {});
     });

@@ -7,7 +7,7 @@ const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
 const map_click_event = (event) =>{
-    common.map_click_event(event,   APP_GLOBAL['module_leaflet_map_container']);
+    common.map_click_event(event,   APP_GLOBAL.module_leaflet_map_container);
 };
 const init_map = async (framework)=>{
     let map_click_event_js;
@@ -71,31 +71,31 @@ const init_map = async (framework)=>{
         }
     }
     return new Promise((resolve)=>{
-        common.map_init(APP_GLOBAL['module_leaflet_map_container'], 
-                        common.COMMON_GLOBAL['module_leaflet_style'], 
-                        common.COMMON_GLOBAL['client_longitude'],
-                        common.COMMON_GLOBAL['client_latitude'],
+        common.map_init(APP_GLOBAL.module_leaflet_map_container,
+                        common.COMMON_GLOBAL.module_leaflet_style, 
+                        common.COMMON_GLOBAL.client_longitude,
+                        common.COMMON_GLOBAL.client_latitude,
                         map_click_event_js, 
                         true,
                         null).then(()=>{
             
-            common.map_update(  common.COMMON_GLOBAL['client_longitude'],
-                                common.COMMON_GLOBAL['client_latitude'],
-                                common.COMMON_GLOBAL['module_leaflet_zoom'],
-                                common.COMMON_GLOBAL['client_place'],
+            common.map_update(  common.COMMON_GLOBAL.client_longitude,
+                                common.COMMON_GLOBAL.client_latitude,
+                                common.COMMON_GLOBAL.module_leaflet_zoom,
+                                common.COMMON_GLOBAL.client_place,
                                 null,
-                                common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                                common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                                common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                common.COMMON_GLOBAL.module_leaflet_jumpto);
             resolve();
         });
     });
 };
 const init_app = async () =>{
-    APP_GLOBAL['module_leaflet_map_container']      ='mapid';
+    APP_GLOBAL.module_leaflet_map_container      ='mapid';
 
-    document.querySelector('#toolbar_btn_js').innerHTML = common.ICONS['app_javascript'];
-    document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS['app_vue'];
-    document.querySelector('#toolbar_btn_react').innerHTML = common.ICONS['app_react'];
+    document.querySelector('#toolbar_btn_js').innerHTML = common.ICONS.app_javascript;
+    document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS.app_vue;
+    document.querySelector('#toolbar_btn_react').innerHTML = common.ICONS.app_react;
     
     document.querySelector('#toolbar_top').addEventListener('click', (event) => {
         switch (event.target.id || event.target.parentNode.id){
@@ -119,7 +119,7 @@ const init = async (parameters) => {
     const {APP_SPINNER} = await import('common');
     document.querySelector('#loading').innerHTML = APP_SPINNER;
     return new Promise((resolve)=>{
-        common.COMMON_GLOBAL['exception_app_function'] = app_exception;
+        common.COMMON_GLOBAL.exception_app_function = app_exception;
         common.init_common(parameters).then(()=>{
             init_app().then(()=>{
                 document.querySelector('#loading').innerHTML = '';

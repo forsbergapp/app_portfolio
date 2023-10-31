@@ -230,7 +230,7 @@ const userSignup = (req, res) => {
                 //send email SIGNUP
                 sendUserEmail(  getNumberValue(req.query.app_id), 
                                 parameter[0].parameter_value, 
-                                req.headers['host'], 
+                                req.headers.host, 
                                 result_create.insertId, 
                                 verification_code, 
                                 req.body.email, 
@@ -293,7 +293,7 @@ const activateUser = (req, res) => {
                     user_platform: req.body.user_platform,
                     server_remote_addr : req.ip,
                     server_user_agent : req.headers['user-agent'],
-                    server_http_host : req.headers['host'],
+                    server_http_host : req.headers.host,
                     server_http_accept_language : req.headers['accept-language'],
                     client_latitude : req.body.client_latitude,
                     client_longitude : req.body.client_longitude
@@ -364,7 +364,7 @@ const passwordResetUser = async (req, res) => {
                                             user_platform: req.body.user_platform,
                                             server_remote_addr : req.ip,
                                             server_user_agent : req.headers['user-agent'],
-                                            server_http_host : req.headers['host'],
+                                            server_http_host : req.headers.host,
                                             server_http_accept_language : req.headers['accept-language'],
                                             client_latitude : req.body.client_latitude,
                                             client_longitude : req.body.client_longitude
@@ -379,7 +379,7 @@ const passwordResetUser = async (req, res) => {
                                     //send email PASSWORD_RESET
                                     sendUserEmail(  getNumberValue(req.query.app_id), 
                                                     parameter[0].parameter_value, 
-                                                    req.headers['host'], 
+                                                    req.headers.host, 
                                                     result_emailuser[0].id, 
                                                     new_code, 
                                                     email, 
@@ -660,7 +660,7 @@ const updateUserLocal = async (req, res) => {
                                 user_platform: req.body.user_platform,
                                 server_remote_addr : req.ip,
                                 server_user_agent : req.headers['user-agent'],
-                                server_http_host : req.headers['host'],
+                                server_http_host : req.headers.host,
                                 server_http_accept_language : req.headers['accept-language'],
                                 client_latitude : req.body.client_latitude,
                                 client_longitude : req.body.client_longitude
@@ -672,7 +672,7 @@ const updateUserLocal = async (req, res) => {
                                     //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                     sendUserEmail(  getNumberValue(req.query.app_id), 
                                                     parameter[0].parameter_value, 
-                                                    req.headers['host'], 
+                                                    req.headers.host, 
                                                     getNumberValue(req.params.id), 
                                                     data.verification_code, 
                                                     req.body.new_email, 
@@ -761,7 +761,7 @@ const updatePassword = (req, res) => {
                 user_platform: req.body.user_platform,
                 server_remote_addr : req.ip,
                 server_user_agent : req.headers['user-agent'],
-                server_http_host : req.headers['host'],
+                server_http_host : req.headers.host,
                 server_http_accept_language : req.headers['accept-language'],
                 client_latitude : req.body.client_latitude,
                 client_longitude : req.body.client_longitude
@@ -970,7 +970,7 @@ const userLogin = (req, res) => {
                                         //send email UNVERIFIED
                                         sendUserEmail(  getNumberValue(req.query.app_id), 
                                                         parameter[0].parameter_value, 
-                                                        req.headers['host'], 
+                                                        req.headers.host, 
                                                         result_login[0].id, 
                                                         new_code, 
                                                         result_login[0].email, 
