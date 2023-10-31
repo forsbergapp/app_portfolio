@@ -18,49 +18,49 @@ const common = await import('common');
 /* GLOBALS                */
 /*----------------------- */
 const APP_GLOBAL = {
-    'page':'',
-    'page_last':'',
-    'limit':'',
-    'previous_row':'',
-    'module_leaflet_map_container':'',
-    'service_log_scope_request':'',
-    'service_log_scope_server':'',
-    'service_log_scope_app':'',
-    'service_log_scope_service':'',
-    'service_log_scope_db':'',
-    'service_log_level_verbose':'',
-    'service_log_level_error':'',
-    'service_log_level_info':'',
-    'service_log_file_interval':'',
-    'service_log_file_path_server':'',
-    'service_log_destination':'',
-    'service_log_url_destination':'',
-    'service_log_url_destination_username':'',
-    'service_log_url_destination_password':'',
-    'service_log_date_format':''
+    page:'',
+    page_last:'',
+    limit:'',
+    previous_row:'',
+    module_leaflet_map_container:'',
+    service_log_scope_request:'',
+    service_log_scope_server:'',
+    service_log_scope_app:'',
+    service_log_scope_service:'',
+    service_log_scope_db:'',
+    service_log_level_verbose:'',
+    service_log_level_error:'',
+    service_log_level_info:'',
+    service_log_file_interval:'',
+    service_log_file_path_server:'',
+    service_log_destination:'',
+    service_log_url_destination:'',
+    service_log_url_destination_username:'',
+    service_log_url_destination_password:'',
+    service_log_date_format:''
 };
 Object.seal(APP_GLOBAL);
 const delete_globals = () => {
-    APP_GLOBAL['page'] = null;
-    APP_GLOBAL['page_last'] = null;
-    APP_GLOBAL['limit'] = null;
-    APP_GLOBAL['previous_row'] = null;
-    APP_GLOBAL['module_leaflet_map_container'] = null;
-    APP_GLOBAL['service_log_scope_request'] = null;
-    APP_GLOBAL['service_log_scope_server'] = null;
-    APP_GLOBAL['service_log_scope_app'] = null;
-    APP_GLOBAL['service_log_scope_service'] = null;
-    APP_GLOBAL['service_log_scope_db'] = null;
-    APP_GLOBAL['service_log_level_verbose'] = null;
-    APP_GLOBAL['service_log_level_error'] = null;
-    APP_GLOBAL['service_log_level_info'] = null;
-    APP_GLOBAL['service_log_destination'] = null;
-    APP_GLOBAL['service_log_url_destination'] = null;
-    APP_GLOBAL['service_log_url_destination_username'] = null;
-    APP_GLOBAL['service_log_url_destination_password'] = null;
-    APP_GLOBAL['service_log_file_interval'] = null;
-    APP_GLOBAL['service_log_file_path_server'] = null;
-    APP_GLOBAL['service_log_date_format'] = null;
+    APP_GLOBAL.page = null;
+    APP_GLOBAL.page_last = null;
+    APP_GLOBAL.limit = null;
+    APP_GLOBAL.previous_row = null;
+    APP_GLOBAL.module_leaflet_map_container = null;
+    APP_GLOBAL.service_log_scope_request = null;
+    APP_GLOBAL.service_log_scope_server = null;
+    APP_GLOBAL.service_log_scope_app = null;
+    APP_GLOBAL.service_log_scope_service = null;
+    APP_GLOBAL.service_log_scope_db = null;
+    APP_GLOBAL.service_log_level_verbose = null;
+    APP_GLOBAL.service_log_level_error = null;
+    APP_GLOBAL.service_log_level_info = null;
+    APP_GLOBAL.service_log_destination = null;
+    APP_GLOBAL.service_log_url_destination = null;
+    APP_GLOBAL.service_log_url_destination_username = null;
+    APP_GLOBAL.service_log_url_destination_password = null;
+    APP_GLOBAL.service_log_file_interval = null;
+    APP_GLOBAL.service_log_file_path_server = null;
+    APP_GLOBAL.service_log_date_format = null;
 };
 
 /*----------------------- */
@@ -177,7 +177,7 @@ const show_start = async (yearvalues) =>{
             let service;
             let url;
             let authorization_type;
-            if (common.COMMON_GLOBAL['system_admin']==1){
+            if (common.COMMON_GLOBAL.system_admin==1){
                 service = 'LOG';
                 url = `/log/logs_stat?select_app_id=${app_id}&code=${status_code}&year=${year}&month=${month}`;
                 authorization_type = 2;
@@ -227,7 +227,7 @@ const show_start = async (yearvalues) =>{
                             chart_colors += chart_color;
                         //add to legend below chart
                         let legend_text_chart1;
-                        if (common.COMMON_GLOBAL['system_admin']==1)
+                        if (common.COMMON_GLOBAL.system_admin==1)
                             legend_text_chart1 = SearchAndGetText(document.getElementById('select_status_codes'), stat.statusCode);
                         else
                             legend_text_chart1 = SearchAndGetText(document.getElementById('select_app_menu1'), stat.app_id);
@@ -273,7 +273,7 @@ const show_start = async (yearvalues) =>{
                                                                     <div id='box2_bar_data'>${html}</div>`;
                     //legend below chart
                     let legend_text_chart2;
-                    if (common.COMMON_GLOBAL['system_admin']==1){
+                    if (common.COMMON_GLOBAL.system_admin==1){
                         //as system admin you can filter http codes and application
                         legend_text_chart2 = document.getElementById('select_status_codes').options[document.getElementById('select_status_codes').selectedIndex].text;
                         const legend_text_chart2_apps = document.getElementById('select_app_menu1').options[document.getElementById('select_app_menu1').selectedIndex].text;
@@ -304,7 +304,7 @@ const show_start = async (yearvalues) =>{
                 if (err)
                     resolve();
                 else{
-                    let html = `<option value="">${common.ICONS['infinite']}</option>`;
+                    let html = `<option value="">${common.ICONS.infinite}</option>`;
                     const result_obj = JSON.parse(result);
                     for (const status_code of Object.entries(result_obj.status_codes)){
                         html += `<option value='${status_code[0]}'>${status_code[0]} - ${status_code[1]}</option>`;
@@ -315,19 +315,19 @@ const show_start = async (yearvalues) =>{
         });
     };
     let box_title1, box_title2;
-    if (common.COMMON_GLOBAL['system_admin']==1){
-        box_title1 = `${common.ICONS['app_internet']} ${common.ICONS['app_server']} ${common.ICONS['app_chart']}`;
-        box_title2 = `${common.ICONS['app_internet']} ${common.ICONS['app_server']} ${common.ICONS['regional_numbersystem']}`;
+    if (common.COMMON_GLOBAL.system_admin==1){
+        box_title1 = `${common.ICONS.app_internet} ${common.ICONS.app_server} ${common.ICONS.app_chart}`;
+        box_title2 = `${common.ICONS.app_internet} ${common.ICONS.app_server} ${common.ICONS.regional_numbersystem}`;
     }
     else{
-        box_title1 = `${common.ICONS['app_users']} ${common.ICONS['app_apps']} ${common.ICONS['app_chart']}`;
-        box_title2 = `${common.ICONS['app_users']} ${common.ICONS['app_apps']} ${common.ICONS['regional_numbersystem']}`;
+        box_title1 = `${common.ICONS.app_users} ${common.ICONS.app_apps} ${common.ICONS.app_chart}`;
+        box_title2 = `${common.ICONS.app_users} ${common.ICONS.app_apps} ${common.ICONS.regional_numbersystem}`;
     }
 
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
-                    <select id='select_status_codes'>${common.COMMON_GLOBAL['system_admin']==1?await get_status_codes():null}</select>
+                    <select id='select_status_codes'>${common.COMMON_GLOBAL.system_admin==1?await get_status_codes():null}</select>
                     <select id='select_app_menu1'>${await get_apps()}</select>
                     <select id='select_year_menu1'>${yearvalues}</select>
                     <select id='select_month_menu1'>${list_generate(12)}</select>
@@ -347,19 +347,19 @@ const show_start = async (yearvalues) =>{
             </div>
             <div id='menu_1_content_widget2' class='widget'>
                 <div id='menu_1_maintenance'>
-                    <div id='menu_1_maintenance_title'>${common.ICONS['app_maintenance']}</div>
+                    <div id='menu_1_maintenance_title'>${common.ICONS.app_maintenance}</div>
                     <div id='menu_1_maintenance_checkbox'>
                         <input id='menu_1_checkbox_maintenance' type='checkbox' class='common_switch_input' />
                         <label for='menu_1_checkbox_maintenance' class='common_switch_label'></label>
                     </div>
                 </div>
                 <div id='menu_1_broadcast'>
-                    <div id='menu_1_broadcast_title'>${common.ICONS['app_broadcast']}</div>
-                    <div id='menu_1_broadcast_button' class='chat_click'>${common.ICONS['app_chat']}</div>
+                    <div id='menu_1_broadcast_title'>${common.ICONS.app_broadcast}</div>
+                    <div id='menu_1_broadcast_button' class='chat_click'>${common.ICONS.app_chat}</div>
                 </div>
             </div>`;
             
-    if (common.COMMON_GLOBAL['system_admin']==1){
+    if (common.COMMON_GLOBAL.system_admin==1){
         document.getElementById('menu_1_maintenance').style.display = 'inline-block';
         document.getElementById('select_status_codes').style.display = 'inline-block';
     }
@@ -378,7 +378,7 @@ const show_start = async (yearvalues) =>{
     document.getElementById('select_year_menu1').addEventListener('change', () => { show_charts();}, false);
     document.getElementById('select_month_menu1').addEventListener('change', () => { show_charts();}, false);
 
-    if (common.COMMON_GLOBAL['system_admin']==1)
+    if (common.COMMON_GLOBAL.system_admin==1)
         check_maintenance();
     show_charts();
 };
@@ -388,11 +388,11 @@ const show_user_agent = (user_agent) => {
 const get_apps = async () => {
     return new Promise((resolve)=>{
         let json;
-        let html = `<option value="">${common.ICONS['infinite']}</option>`;
+        let html = `<option value="">${common.ICONS.infinite}</option>`;
         let url;
         let authorization_type;
         let service;
-        if (common.COMMON_GLOBAL['system_admin']==1){
+        if (common.COMMON_GLOBAL.system_admin==1){
             service = 'SERVER';
             url = '/config/systemadmin/apps?';
             authorization_type = 2;
@@ -407,7 +407,7 @@ const get_apps = async () => {
                 resolve();
             else{
                 json = JSON.parse(result);
-                if (common.COMMON_GLOBAL['system_admin']==1)
+                if (common.COMMON_GLOBAL.system_admin==1)
                     for (const app of json.data) {
                         html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
                     }
@@ -431,7 +431,7 @@ const sendBroadcast = () => {
     const broadcast_message = document.getElementById('send_broadcast_message').value;
 
     if (broadcast_message==''){
-        common.show_message('INFO', null, null, `${common.ICONS['message_text']}!`, common.COMMON_GLOBAL['app_id']);
+        common.show_message('INFO', null, null, `${common.ICONS.message_text}!`, common.COMMON_GLOBAL.app_id);
         return null;
     }
     
@@ -448,12 +448,12 @@ const sendBroadcast = () => {
         
     const json_data ={  app_id:             app_id==''?null:app_id,
                         client_id:          client_id==''?null:client_id,
-                        client_id_current:  common.COMMON_GLOBAL['service_broadcast_client_ID'],
+                        client_id_current:  common.COMMON_GLOBAL.service_broadcast_client_ID,
                         broadcast_type:     broadcast_type, 
                         broadcast_message:  broadcast_message};
     let path='';
     let token_type;
-    if (common.COMMON_GLOBAL['system_admin']==1){
+    if (common.COMMON_GLOBAL.system_admin==1){
         path = '/broadcast/message/SystemAdmin?';
         token_type = 2;
     }
@@ -466,9 +466,9 @@ const sendBroadcast = () => {
             null;
         else{
             if (Number(result) == 1)
-                common.show_message('INFO', null, null, `${common.ICONS['message_success']}`, common.COMMON_GLOBAL['app_id']);
+                common.show_message('INFO', null, null, `${common.ICONS.message_success}`, common.COMMON_GLOBAL.app_id);
             else
-                common.show_message('INFO', null, null, `${common.ICONS['message_fail']}`, common.COMMON_GLOBAL['app_id']);
+                common.show_message('INFO', null, null, `${common.ICONS.message_fail}`, common.COMMON_GLOBAL.app_id);
         }
     });
 };    
@@ -602,7 +602,7 @@ const count_users = async () => {
                                         <div>${common.get_null_or_value(json.data[i].identity_provider_id)}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
-                                        <div>${json.data[i].provider_name==null?common.ICONS['app_home']:json.data[i].provider_name}</div>
+                                        <div>${json.data[i].provider_name==null?common.ICONS.app_home:json.data[i].provider_name}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
                                         <div>${json.data[i].count_users}</div>
@@ -618,7 +618,7 @@ const count_users = async () => {
                                 <div></div>
                             </div>
                             <div class='list_user_stat_col'>
-                                <div>${common.ICONS['app_logoff']}</div>
+                                <div>${common.ICONS.app_logoff}</div>
                             </div>
                             <div class='list_user_stat_col'>
                                 <div></div>
@@ -631,10 +631,10 @@ const count_users = async () => {
                    `<div id='menu_2_content' class='main_content'>
                         <div id='menu_2_content_widget1' class='widget'>
                             <div id='list_user_stat_row_title' class='list_user_stat_row'>
-                                <div id='list_user_stat_col_title1' class='list_user_stat_col'>${common.ICONS['provider_id']}</div>
-                                <div id='list_user_stat_col_title2' class='list_user_stat_col'>${common.ICONS['provider']}</div>
-                                <div id='list_user_stat_col_title3' class='list_user_stat_col'>${common.ICONS['app_sum']}</div>
-                                <div id='list_user_stat_col_title4' class='list_user_stat_col'>${common.ICONS['app_user_connections']}</div>
+                                <div id='list_user_stat_col_title1' class='list_user_stat_col'>${common.ICONS.provider_id}</div>
+                                <div id='list_user_stat_col_title2' class='list_user_stat_col'>${common.ICONS.provider}</div>
+                                <div id='list_user_stat_col_title3' class='list_user_stat_col'>${common.ICONS.app_sum}</div>
+                                <div id='list_user_stat_col_title4' class='list_user_stat_col'>${common.ICONS.app_user_connections}</div>
                             </div>
                             <div id='list_user_stat'>${html}</div>
                         </div>
@@ -663,18 +663,18 @@ const show_users = () =>{
     document.querySelector('#menu_3_content').innerHTML = common.APP_SPINNER;
     document.querySelector('#menu_3_content').innerHTML = 
             `<div id='menu_3_content_widget1' class='widget'>
-                <div id='list_user_account_title'>${common.ICONS['app_users']}</div>
+                <div id='list_user_account_title'>${common.ICONS.app_users}</div>
                 <div class='list_search'>
                     <input class='list_search_input' id='list_user_account_search_input' type='text' />
-                    <div class='list_search_icon'>${common.ICONS['app_search']}</div>
+                    <div class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
             </div>
             <div id='menu_3_content_widget2' class='widget'>
-                <div id='list_user_account_logon_title'>${common.ICONS['app_login']}</div>
+                <div id='list_user_account_logon_title'>${common.ICONS.app_login}</div>
                 <div id='list_user_account_logon' class='common_list_scrollbar'></div>
                 <div id='users_buttons' class="save_buttons">
-                    <button id='users_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
+                    <button id='users_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</button>
                 </div>
             </div>`;
     document.querySelector('#list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
@@ -703,83 +703,83 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             const result_obj = JSON.parse(result);
             let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
                             <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
-                                <div>${common.ICONS['user_avatar']}</div>
+                                <div>${common.ICONS.user_avatar}</div>
                             </div>
                             <div id='list_user_account_col_title2' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']}</div>
+                                <div>${common.ICONS.provider_id}</div>
                             </div>
                             <div id='list_user_account_col_title3' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_role']}</div>
+                                <div>${common.ICONS.app_role}</div>
                             </div>
                             <div id='list_user_account_col_title4' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_role']} ${common.ICONS['misc_image']}</div>
+                                <div>${common.ICONS.app_role} ${common.ICONS.misc_image}</div>
                             </div>
                             <div id='list_user_account_col_title5' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_inactive']} ${common.ICONS['app_active']}</div>
+                                <div>${common.ICONS.app_inactive} ${common.ICONS.app_active}</div>
                             </div>
                             <div id='list_user_account_col_title6' class='list_user_account_col list_sort_click list_title'>
                                 <div>LEVEL</div>
                             </div>
                             <div id='list_user_account_col_title7' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_private']}</div>
+                                <div>${common.ICONS.app_private}</div>
                             </div>
                             <div id='list_user_account_col_title8' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['user']} ${common.ICONS['username']}</div>
+                                <div>${common.ICONS.user} ${common.ICONS.username}</div>
                             </div>
                             <div id='list_user_account_col_title9' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['user_bio']}</div>
+                                <div>${common.ICONS.user_bio}</div>
                             </div>
                             <div id='list_user_account_col_title10' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_email']}</div>
+                                <div>${common.ICONS.app_email}</div>
                             </div>
                             <div id='list_user_account_col_title11' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_email']} ${common.ICONS['app_forgot']}</div>
+                                <div>${common.ICONS.app_email} ${common.ICONS.app_forgot}</div>
                             </div>
                             <div id='list_user_account_col_title12' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['user_password']}</div>
+                                <div>${common.ICONS.user_password}</div>
                             </div>
                             <div id='list_user_account_col_title13' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['user_password']} ${common.ICONS['app_info']}</div>
+                                <div>${common.ICONS.user_password} ${common.ICONS.app_info}</div>
                             </div>
                             <div id='list_user_account_col_title14' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['app_verification_code']}</div>
+                                <div>${common.ICONS.app_verification_code}</div>
                             </div>
                             <div id='list_user_account_col_title15' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']}</div>
+                                <div>${common.ICONS.provider_id}</div>
                             </div>
                             <div id='list_user_account_col_title16' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider']}</div>
+                                <div>${common.ICONS.provider}</div>
                             </div>
                             <div id='list_user_account_col_title17' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ID</div>
+                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ID</div>
                             </div>
                             <div id='list_user_account_col_title18' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['username']} 1</div>
+                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 1</div>
                             </div>
                             <div id='list_user_account_col_title19' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['username']} 2</div>
+                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 2</div>
                             </div>
                             <div id='list_user_account_col_title20' class='list_user_account_col list_title'>
-                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['user_avatar']}</div>
+                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar}</div>
                             </div>
                             <div id='list_user_account_col_title21' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['user_avatar']} URL</div>
+                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar} URL</div>
                             </div>
                             <div id='list_user_account_col_title22' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['provider_id']} ${common.ICONS['user']} ${common.ICONS['app_email']}</div>
+                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.app_email}</div>
                             </div>
                             <div id='list_user_account_col_title23' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS['user_account_created']}</div>
+                                <div>${common.ICONS.user_account_created}</div>
                             </div>
                             <div id='list_user_account_col_title24' class='list_apps_col list_sort_click list_title'>
-                                <div>${common.ICONS['user_account_modified']}</div>
+                                <div>${common.ICONS.user_account_modified}</div>
                             </div>
                         </div>`;
             let input_readonly = '';
             let lov_div = '';
             let lov_class = '';
             //superadmin can edit
-            if (common.COMMON_GLOBAL['user_app_role_id']==0){
+            if (common.COMMON_GLOBAL.user_app_role_id==0){
                 lov_div = '<div class=\'common_lov_button common_list_lov_click\'></div>';
                 lov_class = 'common_input_lov';
             }
@@ -789,7 +789,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             for (const user of result_obj.data) {
                 i++;
                 let list_user_account_current_user_row='';
-                if (user.id==common.COMMON_GLOBAL['user_account_id'])
+                if (user.id==common.COMMON_GLOBAL.user_account_id)
                     list_user_account_current_user_row = 'list_current_user_row';
                 else
                     list_user_account_current_user_row ='';
@@ -877,9 +877,9 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             document.getElementById('list_user_account').innerHTML = html;
             document.getElementById('list_user_account_col_title' + sort).classList.add(order_by);
         
-            if (common.COMMON_GLOBAL['user_app_role_id']==0){
+            if (common.COMMON_GLOBAL.user_app_role_id==0){
                 //add lov icon for super admin
-                document.querySelectorAll('#list_user_account .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
+                document.querySelectorAll('#list_user_account .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
             }
             list_events('list_user_account', 'list_user_account_row', ' .list_edit');
             if (focus==true){
@@ -1039,19 +1039,19 @@ const show_apps = async () => {
             }
             document.querySelector('#menu_4_content').innerHTML = 
                    `<div id='menu_4_content_widget1' class='widget'>
-                        <div id='list_apps_title'>${common.ICONS['app_apps']}</div>
+                        <div id='list_apps_title'>${common.ICONS.app_apps}</div>
                         <div id='list_apps' class='common_list_scrollbar'>${html}</div>
                     </div>
                     <div id='menu_4_content_widget2' class='widget'>
-                        <div id='list_app_parameter_title'>${common.ICONS['app_apps'] + common.ICONS['app_settings']}</div>
+                        <div id='list_app_parameter_title'>${common.ICONS.app_apps + common.ICONS.app_settings}</div>
                         <div id='list_app_parameter' class='common_list_scrollbar'></div>
                         <div id='apps_buttons' class="save_buttons">
-                            <button id='apps_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
+                            <button id='apps_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</button>
                         </div>
                     </div>`;
             document.getElementById('apps_save').addEventListener('click', () => { button_save('apps_save');}, false); 
             //add lov icon
-            document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
+            document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
             list_events('list_apps', 'list_apps_row', ' .list_edit');
             //disable enabled checkbox for app 0 common
             document.getElementById('list_apps_row_0').children[4].children[0].disabled = true;
@@ -1115,7 +1115,7 @@ const show_app_parameter = (app_id) => {
             }
             document.getElementById('list_app_parameter').innerHTML = html;
             //add lov icon
-            document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = common.ICONS['app_lov']);
+            document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
             list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit');
         }
     });
@@ -1252,9 +1252,9 @@ const update_record = async (table,
                 break;
             }
             case 'app':{
-                if (parameters.id==common.COMMON_GLOBAL['common_app_id']){
+                if (parameters.id==common.COMMON_GLOBAL.common_app_id){
                     if (row_element.children[4].children[0].checked == false){
-                        //app common.COMMON_GLOBAL['common_app_id'] should always be enabled
+                        //app common.COMMON_GLOBAL.common_app_id should always be enabled
                         row_element.children[4].children[0].checked = true;
                         parameters.enabled=true;
                     }
@@ -1362,7 +1362,7 @@ const list_events = (list_item, item_row, item_edit) => {
     document.getElementById(list_item).addEventListener('keydown', (event) => {
         if (event.target.classList.contains('list_edit')){
             if (event.code=='ArrowUp') {
-                APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
+                APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
                 event.preventDefault();
                 const index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
                 //focus on first list_edit item in the row
@@ -1370,7 +1370,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
             }
             if (event.code=='ArrowDown') {
-                APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
+                APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
                 event.preventDefault();
                 const index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
                 //focus on first list_edit item in the row
@@ -1385,8 +1385,8 @@ const list_events = (list_item, item_row, item_edit) => {
         //event on master to automatically show detail records
         document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
             e.addEventListener('focus', (event) => {
-                if (APP_GLOBAL['previous_row'] != event.target.parentNode.parentNode){
-                    APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
+                if (APP_GLOBAL.previous_row != event.target.parentNode.parentNode){
+                    APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
                     show_app_parameter(e.parentNode.parentNode.children[0].children[0].innerHTML);
                 }
             }
@@ -1396,8 +1396,8 @@ const list_events = (list_item, item_row, item_edit) => {
         //event on master to automatically show detail records
         document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
             e.addEventListener('focus', (event) => {
-                if (APP_GLOBAL['previous_row'] != event.target.parentNode.parentNode){
-                    APP_GLOBAL['previous_row'] = event.target.parentNode.parentNode;
+                if (APP_GLOBAL.previous_row != event.target.parentNode.parentNode){
+                    APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
                     show_user_account_logon(e.parentNode.parentNode.children[1].children[0].innerHTML);
                 }
             }
@@ -1453,9 +1453,9 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#menu_5_content').innerHTML = 
         `<div id='menu_5_content_widget1' class='widget'>
             <ul id='list_monitor_nav' class='list_nav'>
-                <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS['app_user_connections'] + ' ' + common.ICONS['app_log']}</button></li>
-                <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS['app_apps'] + ' ' + common.ICONS['app_log']}</button></li>
-                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS['app_server'] + ' ' + common.ICONS['app_log']}</button></li>
+                <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS.app_user_connections + ' ' + common.ICONS.app_log}</button></li>
+                <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS.app_apps + ' ' + common.ICONS.app_log}</button></li>
+                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS.app_server + ' ' + common.ICONS.app_log}</button></li>
             </ul>
             <div id='list_connected_form'>
                 <div class='list_row_sample'>
@@ -1486,28 +1486,28 @@ const show_monitor = async (yearvalues) =>{
                     <select id='select_year_menu5'></select>
                     <select id='select_month_menu5'>${list_generate(12)}</select>
                     <select id='select_day_menu5'>${list_generate(31)}</select>
-                    <button id='filesearch_menu5' class='common_dialogue_button' >${common.ICONS['app_search']}</button>
+                    <button id='filesearch_menu5' class='common_dialogue_button' >${common.ICONS.app_search}</button>
                 </div>
                 <div id='menu5_row_parameters'>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col1'>${common.ICONS['app_server'] + ' REQUEST'}</div>
-                        <div id='menu5_row_parameters_col1_1'>${common.ICONS['app_checkbox_checked']}</div>
-                        <div id='menu5_row_parameters_col1_0'>${common.ICONS['app_checkbox_empty']}</div>
+                        <div id='menu5_row_parameters_col1'>${common.ICONS.app_server + ' REQUEST'}</div>
+                        <div id='menu5_row_parameters_col1_1'>${common.ICONS.app_checkbox_checked}</div>
+                        <div id='menu5_row_parameters_col1_0'>${common.ICONS.app_checkbox_empty}</div>
                     </div>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col2'>${common.ICONS['app_server'] + ' SERVICE'}</div>
-                        <div id='menu5_row_parameters_col2_1'>${common.ICONS['app_checkbox_checked']}</div>
-                        <div id='menu5_row_parameters_col2_0'>${common.ICONS['app_checkbox_empty']}</div>
+                        <div id='menu5_row_parameters_col2'>${common.ICONS.app_server + ' SERVICE'}</div>
+                        <div id='menu5_row_parameters_col2_1'>${common.ICONS.app_checkbox_checked}</div>
+                        <div id='menu5_row_parameters_col2_0'>${common.ICONS.app_checkbox_empty}</div>
                     </div>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col3'>${common.ICONS['app_database']}</div>
-                        <div id='menu5_row_parameters_col3_1'>${common.ICONS['app_checkbox_checked']}</div>
-                        <div id='menu5_row_parameters_col3_0'>${common.ICONS['app_checkbox_empty']}</div>
+                        <div id='menu5_row_parameters_col3'>${common.ICONS.app_database}</div>
+                        <div id='menu5_row_parameters_col3_1'>${common.ICONS.app_checkbox_checked}</div>
+                        <div id='menu5_row_parameters_col3_0'>${common.ICONS.app_checkbox_empty}</div>
                     </div>
                 </div>
                 <div class='list_search'>
                     <input class='list_search_input' id='list_server_log_search_input' type='text' />
-                    <div class='list_search_icon'>${common.ICONS['app_search']}</div>
+                    <div class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_server_log' class='common_list_scrollbar'></div>
             </div>
@@ -1516,7 +1516,7 @@ const show_monitor = async (yearvalues) =>{
             <div id='mapid'></div>
         </div>`;
     
-    if (common.COMMON_GLOBAL['system_admin']==1){
+    if (common.COMMON_GLOBAL.system_admin==1){
         //hide APP LOG in MONITOR
         document.getElementById('list_monitor_nav_2').style.display='none';
     }
@@ -1577,28 +1577,28 @@ const show_monitor = async (yearvalues) =>{
         let token_type = '';
         const show_map = () =>{
             //show map only for this condition
-            if (common.COMMON_GLOBAL['system_admin_only'] != 1)
+            if (common.COMMON_GLOBAL.system_admin_only != 1)
 
-                common.map_init(APP_GLOBAL['module_leaflet_map_container'],
-                                common.COMMON_GLOBAL['module_leaflet_style'],
-                                common.COMMON_GLOBAL['client_longitude'],
-                                common.COMMON_GLOBAL['client_latitude'],
+                common.map_init(APP_GLOBAL.module_leaflet_map_container,
+                                common.COMMON_GLOBAL.module_leaflet_style,
+                                common.COMMON_GLOBAL.client_longitude,
+                                common.COMMON_GLOBAL.client_latitude,
                                 true,
                                 true,
                                 null).then(() => {
-                    common.map_update(  common.COMMON_GLOBAL['client_longitude'],
-                                        common.COMMON_GLOBAL['client_latitude'],
-                                        common.COMMON_GLOBAL['module_leaflet_zoom'],
-                                        common.COMMON_GLOBAL['client_place'],
+                    common.map_update(  common.COMMON_GLOBAL.client_longitude,
+                                        common.COMMON_GLOBAL.client_latitude,
+                                        common.COMMON_GLOBAL.module_leaflet_zoom,
+                                        common.COMMON_GLOBAL.client_place,
                                         null,
-                                        common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                                        common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                        common.COMMON_GLOBAL.module_leaflet_jumpto);
                     common.map_resize();
                 });
 
         };
         
-        if (common.COMMON_GLOBAL['system_admin']==1){
+        if (common.COMMON_GLOBAL.system_admin==1){
             path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
             token_type = 2;
         }
@@ -1610,12 +1610,12 @@ const show_monitor = async (yearvalues) =>{
             if (err)
                 null;
             else{
-                APP_GLOBAL['limit'] = parseInt(JSON.parse(result_limit).data);
+                APP_GLOBAL.limit = parseInt(JSON.parse(result_limit).data);
                 //connected
                 document.getElementById('select_year_menu5_list_connected').innerHTML = yearvalues;
                 document.getElementById('select_year_menu5_list_connected').selectedIndex = 0;
                 document.getElementById('select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
-                if (common.COMMON_GLOBAL['system_admin']==1){
+                if (common.COMMON_GLOBAL.system_admin==1){
                     //server log
                     document.getElementById('select_year_menu5').innerHTML = yearvalues;
                     document.getElementById('select_year_menu5').selectedIndex = 0;
@@ -1627,7 +1627,7 @@ const show_monitor = async (yearvalues) =>{
                     });
                 }
                 else{
-                    APP_GLOBAL['page'] = 0;
+                    APP_GLOBAL.page = 0;
                     //log
                     document.getElementById('select_year_menu5_app_log').innerHTML = yearvalues;
                     document.getElementById('select_year_menu5_app_log').selectedIndex = 0;
@@ -1641,7 +1641,7 @@ const show_monitor = async (yearvalues) =>{
         });
     };
     //fetch geolocation once
-    if (common.COMMON_GLOBAL['client_longitude'] && common.COMMON_GLOBAL['client_latitude'])
+    if (common.COMMON_GLOBAL.client_longitude && common.COMMON_GLOBAL.client_latitude)
         init_monitor();
     else
         common.get_gps_from_ip().then(() =>{
@@ -1655,16 +1655,16 @@ const fix_pagination_buttons = () => {
         //fix rtl isse with images, items created after login
         if (document.getElementById('common_user_direction_select').value=='ltr'||
             document.getElementById('common_user_direction_select').value==''){
-            document.getElementById('list_app_log_first').innerHTML = common.ICONS['app_first'];
-            document.getElementById('list_app_log_previous').innerHTML = common.ICONS['app_previous'];
-            document.getElementById('list_app_log_next').innerHTML = common.ICONS['app_next'];
-            document.getElementById('list_app_log_last').innerHTML = common.ICONS['app_last'];
+            document.getElementById('list_app_log_first').innerHTML = common.ICONS.app_first;
+            document.getElementById('list_app_log_previous').innerHTML = common.ICONS.app_previous;
+            document.getElementById('list_app_log_next').innerHTML = common.ICONS.app_next;
+            document.getElementById('list_app_log_last').innerHTML = common.ICONS.app_last;
         }
         else{
-            document.getElementById('list_app_log_first').innerHTML = common.ICONS['app_last'];
-            document.getElementById('list_app_log_previous').innerHTML = common.ICONS['app_next'];
-            document.getElementById('list_app_log_next').innerHTML = common.ICONS['app_previous'];
-            document.getElementById('list_app_log_last').innerHTML = common.ICONS['app_first'];
+            document.getElementById('list_app_log_first').innerHTML = common.ICONS.app_last;
+            document.getElementById('list_app_log_previous').innerHTML = common.ICONS.app_next;
+            document.getElementById('list_app_log_next').innerHTML = common.ICONS.app_previous;
+            document.getElementById('list_app_log_last').innerHTML = common.ICONS.app_first;
         }
     }
 };
@@ -1699,7 +1699,7 @@ const nav_click = (item_id) => {
             document.getElementById('list_app_log_form').style.display='flex';
             document.getElementById('list_server_log_form').style.display='none';
             document.getElementById('list_monitor_nav_2').classList= 'list_nav_selected_tab';
-            APP_GLOBAL['page'] = 0;
+            APP_GLOBAL.page = 0;
             show_app_log();
             break;
         }
@@ -1755,7 +1755,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         //set spinner
         switch (list_div){
             case 'list_connected':{
-                if (common.COMMON_GLOBAL['system_admin']==1){
+                if (common.COMMON_GLOBAL.system_admin==1){
                     path = `/broadcast/connection/SystemAdmin?${url_parameters}`;
                     service = 'BROADCAST';
                     token_type = 2;
@@ -1835,7 +1835,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         break;
                     }
                     case 'list_app_log':{
-                        APP_GLOBAL['page_last'] = Math.floor(json.data[0].total_rows/APP_GLOBAL['limit']) * APP_GLOBAL['limit'];
+                        APP_GLOBAL.page_last = Math.floor(json.data[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
                                     <div id='list_app_log_col_title1' class='list_app_log_col list_sort_click list_title'>
                                         <div>ID</div>
@@ -2038,7 +2038,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
-                                if (log.id==common.COMMON_GLOBAL['service_broadcast_client_ID'])
+                                if (log.id==common.COMMON_GLOBAL.service_broadcast_client_ID)
                                     list_connected_current_user_row = 'list_current_user_row';
                                 else
                                     list_connected_current_user_row ='';
@@ -2046,7 +2046,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                 let app_role_icon = log.app_role_icon;
                                 if (log.system_admin==1){
                                     app_role_class = 'app_role_system_admin';
-                                    app_role_icon = common.ICONS['app_system_admin'];
+                                    app_role_icon = common.ICONS.app_system_admin;
                                 }
                                 else
                                     switch (log.app_role_id){
@@ -2094,7 +2094,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                                 <div>${common.get_null_or_value(show_user_agent(log.user_agent))}</div>
                                             </div>
                                             <div class='list_connected_col chat_click'>
-                                                <div>${common.ICONS['app_chat']}</div>
+                                                <div>${common.ICONS.app_chat}</div>
                                             </div>
                                         </div>`;
                                 break;
@@ -2334,12 +2334,12 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
     const month = document.getElementById('select_month_menu5_list_connected').value;
     show_list('list_connected', 
               'list_connected_col_title', 
-              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL['limit']}`, 
+              `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL.limit}`, 
               sort,
               order_by);
 };    
 
-const show_app_log = async (sort=1, order_by='desc', offset=0, limit=APP_GLOBAL['limit']) => {
+const show_app_log = async (sort=1, order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
     const app_id = document.getElementById('select_app_menu5_app_log').options[document.getElementById('select_app_menu5_app_log').selectedIndex].value;
     const year = document.getElementById('select_year_menu5_app_log').value;
     const month = document.getElementById('select_month_menu5_app_log').value;
@@ -2425,30 +2425,30 @@ const page_navigation = (item) => {
         sort = 8;
     switch (item.id==''?item.parentNode.id:item.id){
         case 'list_app_log_first':{
-            APP_GLOBAL['page'] = 0;
-            show_app_log(sort, order_by, 0,APP_GLOBAL['limit']);
+            APP_GLOBAL.page = 0;
+            show_app_log(sort, order_by, 0,APP_GLOBAL.limit);
             break;
         }
         case 'list_app_log_previous':{
-            APP_GLOBAL['page'] = APP_GLOBAL['page'] - APP_GLOBAL['limit'];
-            if (APP_GLOBAL['page'] - APP_GLOBAL['limit'] < 0)
-                APP_GLOBAL['page'] = 0;
+            APP_GLOBAL.page = APP_GLOBAL.page - APP_GLOBAL.limit;
+            if (APP_GLOBAL.page - APP_GLOBAL.limit < 0)
+                APP_GLOBAL.page = 0;
             else
-                APP_GLOBAL['page'] = APP_GLOBAL['page'] - APP_GLOBAL['limit'];
-            show_app_log(sort, order_by, APP_GLOBAL['page'], APP_GLOBAL['limit']);
+                APP_GLOBAL.page = APP_GLOBAL.page - APP_GLOBAL.limit;
+            show_app_log(sort, order_by, APP_GLOBAL.page, APP_GLOBAL.limit);
             break;
         }
         case 'list_app_log_next':{
-            if (APP_GLOBAL['page'] + APP_GLOBAL['limit'] > APP_GLOBAL['page_last'])
-                APP_GLOBAL['page'] = APP_GLOBAL['page_last'];
+            if (APP_GLOBAL.page + APP_GLOBAL.limit > APP_GLOBAL.page_last)
+                APP_GLOBAL.page = APP_GLOBAL.page_last;
             else
-                APP_GLOBAL['page'] = APP_GLOBAL['page'] + APP_GLOBAL['limit'];
-            show_app_log(sort, order_by, APP_GLOBAL['page'], APP_GLOBAL['limit']);
+                APP_GLOBAL.page = APP_GLOBAL.page + APP_GLOBAL.limit;
+            show_app_log(sort, order_by, APP_GLOBAL.page, APP_GLOBAL.limit);
             break;
         }
         case 'list_app_log_last':{
-            APP_GLOBAL['page'] = APP_GLOBAL['page_last'];
-            show_app_log(sort, order_by, APP_GLOBAL['page'], APP_GLOBAL['limit']);
+            APP_GLOBAL.page = APP_GLOBAL.page_last;
+            show_app_log(sort, order_by, APP_GLOBAL.page, APP_GLOBAL.limit);
             break;
         }
     }
@@ -2457,7 +2457,7 @@ const list_item_click = (item) => {
     let path;
     let tokentype;
     //check if gps_click and if not system admin only when map is not loaded
-    if (item.classList.contains('gps_click') & common.COMMON_GLOBAL['system_admin_only'] != 1){
+    if (item.classList.contains('gps_click') & common.COMMON_GLOBAL.system_admin_only != 1){
         if (item.parentNode.parentNode.id =='list_server_log'){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
@@ -2465,7 +2465,7 @@ const list_item_click = (item) => {
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `ip=${item.children[0].innerHTML}`;
             path = `/ip?${ip_filter}`;
-            if (common.COMMON_GLOBAL['system_admin']==1)
+            if (common.COMMON_GLOBAL.system_admin==1)
                 tokentype = 2;
             else
                 tokentype = 1;
@@ -2476,13 +2476,13 @@ const list_item_click = (item) => {
                     const json = JSON.parse(result);
                     common.map_update(  json.geoplugin_longitude,
                                         json.geoplugin_latitude,
-                                        common.COMMON_GLOBAL['module_leaflet_zoom'],
+                                        common.COMMON_GLOBAL.module_leaflet_zoom,
                                         json.geoplugin_city + ', ' +
                                         json.geoplugin_regionName + ', ' +
                                         json.geoplugin_countryName,
                                         null,
-                                        common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                                        common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                                        common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                        common.COMMON_GLOBAL.module_leaflet_jumpto);
                 }
             });
         }
@@ -2499,7 +2499,7 @@ const list_item_click = (item) => {
                 }       
             }
             path = `/place?latitude=${lat}&longitude=${long}`;
-            if (common.COMMON_GLOBAL['system_admin']==1)
+            if (common.COMMON_GLOBAL.system_admin==1)
                 tokentype = 2;
             else
                 tokentype = 1;
@@ -2510,13 +2510,13 @@ const list_item_click = (item) => {
                         const json = JSON.parse(result);
                         common.map_update(  long,
                                             lat,
-                                            common.COMMON_GLOBAL['module_leaflet_zoom'],
+                                            common.COMMON_GLOBAL.module_leaflet_zoom,
                                             json.geoplugin_place + ', ' + 
                                             json.geoplugin_region + ', ' + 
                                             json.geoplugin_countryCode,
                                             null,
-                                            common.COMMON_GLOBAL['module_leaflet_marker_div_gps'],
-                                            common.COMMON_GLOBAL['module_leaflet_jumpto']);
+                                            common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                            common.COMMON_GLOBAL.module_leaflet_jumpto);
                     }
             });
         }
@@ -2534,11 +2534,11 @@ const get_server_log_parameters = async () => {
             null;
         else{
             json = JSON.parse(result);
-            APP_GLOBAL['service_log_scope_request'] = json.data.SERVICE_LOG_SCOPE_REQUEST;
-            APP_GLOBAL['service_log_scope_server'] = json.data.SERVICE_LOG_SCOPE_SERVER;
-            APP_GLOBAL['service_log_scope_app'] = json.data.SERVICE_LOG_SCOPE_APP;
-            APP_GLOBAL['service_log_scope_service'] = json.data.SERVICE_LOG_SCOPE_SERVICE;
-            APP_GLOBAL['service_log_scope_db'] = json.data.SERVICE_LOG_SCOPE_DB;
+            APP_GLOBAL.service_log_scope_request = json.data.SERVICE_LOG_SCOPE_REQUEST;
+            APP_GLOBAL.service_log_scope_server = json.data.SERVICE_LOG_SCOPE_SERVER;
+            APP_GLOBAL.service_log_scope_app = json.data.SERVICE_LOG_SCOPE_APP;
+            APP_GLOBAL.service_log_scope_service = json.data.SERVICE_LOG_SCOPE_SERVICE;
+            APP_GLOBAL.service_log_scope_db = json.data.SERVICE_LOG_SCOPE_DB;
             
             document.getElementById('menu5_row_parameters_col1_1').style.display = 'none';
             document.getElementById('menu5_row_parameters_col1_0').style.display = 'none';
@@ -2561,29 +2561,29 @@ const get_server_log_parameters = async () => {
             else
                 document.getElementById('menu5_row_parameters_col3_0').style.display = 'inline-block';
 
-            APP_GLOBAL['service_log_level_verbose'] = json.data.SERVICE_LOG_LEVEL_VERBOSE;
-            APP_GLOBAL['service_log_level_error'] = json.data.SERVICE_LOG_LEVEL_ERROR;
-            APP_GLOBAL['service_log_level_info'] = json.data.SERVICE_LOG_LEVEL_INFO;
+            APP_GLOBAL.service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
+            APP_GLOBAL.service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
+            APP_GLOBAL.service_log_level_info = json.data.SERVICE_LOG_LEVEL_INFO;
 
-            APP_GLOBAL['service_log_file_interval'] = json.data.SERVICE_LOG_FILE_INTERVAL;
+            APP_GLOBAL.service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
 
             let html = '';
-            html +=`<option value=0 log_scope='${APP_GLOBAL['service_log_scope_request']}'  log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_request']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=1 log_scope='${APP_GLOBAL['service_log_scope_request']}'  log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_request']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
-            html +=`<option value=2 log_scope='${APP_GLOBAL['service_log_scope_request']}'  log_level='${APP_GLOBAL['service_log_level_verbose']}'>${APP_GLOBAL['service_log_scope_request']} - ${APP_GLOBAL['service_log_level_verbose']}</option>`;
-            html +=`<option value=3 log_scope='${APP_GLOBAL['service_log_scope_server']}'   log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=4 log_scope='${APP_GLOBAL['service_log_scope_server']}'   log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_server']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
-            html +=`<option value=5 log_scope='${APP_GLOBAL['service_log_scope_app']}'      log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_app']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=6 log_scope='${APP_GLOBAL['service_log_scope_app']}'      log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_app']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
-            html +=`<option value=7 log_scope='${APP_GLOBAL['service_log_scope_service']}'  log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=8 log_scope='${APP_GLOBAL['service_log_scope_service']}'  log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_service']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
-            html +=`<option value=9 log_scope='${APP_GLOBAL['service_log_scope_db']}'       log_level='${APP_GLOBAL['service_log_level_info']}'>${APP_GLOBAL['service_log_scope_db']} - ${APP_GLOBAL['service_log_level_info']}</option>`;
-            html +=`<option value=10 log_scope='${APP_GLOBAL['service_log_scope_db']}'      log_level='${APP_GLOBAL['service_log_level_error']}'>${APP_GLOBAL['service_log_scope_db']} - ${APP_GLOBAL['service_log_level_error']}</option>`;
+            html +=`<option value=0 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_info}</option>`;
+            html +=`<option value=1 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_error}</option>`;
+            html +=`<option value=2 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_verbose}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_verbose}</option>`;
+            html +=`<option value=3 log_scope='${APP_GLOBAL.service_log_scope_server}'   log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_server} - ${APP_GLOBAL.service_log_level_info}</option>`;
+            html +=`<option value=4 log_scope='${APP_GLOBAL.service_log_scope_server}'   log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_server} - ${APP_GLOBAL.service_log_level_error}</option>`;
+            html +=`<option value=5 log_scope='${APP_GLOBAL.service_log_scope_app}'      log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_app} - ${APP_GLOBAL.service_log_level_info}</option>`;
+            html +=`<option value=6 log_scope='${APP_GLOBAL.service_log_scope_app}'      log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_app} - ${APP_GLOBAL.service_log_level_error}</option>`;
+            html +=`<option value=7 log_scope='${APP_GLOBAL.service_log_scope_service}'  log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_service} - ${APP_GLOBAL.service_log_level_info}</option>`;
+            html +=`<option value=8 log_scope='${APP_GLOBAL.service_log_scope_service}'  log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_service} - ${APP_GLOBAL.service_log_level_error}</option>`;
+            html +=`<option value=9 log_scope='${APP_GLOBAL.service_log_scope_db}'       log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_db} - ${APP_GLOBAL.service_log_level_info}</option>`;
+            html +=`<option value=10 log_scope='${APP_GLOBAL.service_log_scope_db}'      log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_db} - ${APP_GLOBAL.service_log_level_error}</option>`;
 
             
             document.getElementById('select_logscope5').innerHTML = html;
 
-            if (APP_GLOBAL['service_log_file_interval']=='1M')
+            if (APP_GLOBAL.service_log_file_interval=='1M')
                 document.getElementById('select_day_menu5').style.display = 'none';
             else
                 document.getElementById('select_day_menu5').style.display = 'inline-block';
@@ -2613,7 +2613,7 @@ const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     }
     let url_parameters;
     search=encodeURI(search);
-    if (APP_GLOBAL['service_log_file_interval']=='1M')
+    if (APP_GLOBAL.service_log_file_interval=='1M')
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&search=${search}`;
     else
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}&search=${search}`;
@@ -2657,7 +2657,7 @@ const show_existing_logfiles = () => {
                                 //month
                                 document.getElementById('select_month_menu5').value = month;
                                 //day if applicable
-                                if (APP_GLOBAL['service_log_file_interval']=='1D')
+                                if (APP_GLOBAL.service_log_file_interval=='1D')
                                     document.getElementById('select_day_menu5').value = day;
 
                                 document.getElementById('select_logscope5').dispatchEvent(new Event('change'));
@@ -2673,16 +2673,16 @@ const show_server_config = () =>{
     document.querySelector('#menu_6_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
             <ul id='list_config_nav' class='list_nav'>
-                <li id='list_config_nav_1'><button id='list_config_server_title' class='list_button' >${common.ICONS['app_server']}</button></li>
-                <li id='list_config_nav_2'><button id='list_config_blockip_title' class='list_button' >${common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['regional_numbersystem']}</button></li>
-                <li id='list_config_nav_3'><button id='list_config_useragent_title' class='list_button' >${common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['app_browser']}</button></li>
-                <li id='list_config_nav_4'><button id='list_config_policy_title' class='list_button' >${common.ICONS['app_internet'] + common.ICONS['app_shield'] + common.ICONS['misc_book']}</button></li>
-                <li id='list_config_nav_0'><button id='list_config_info_title' class='list_button' >${common.ICONS['app_info']}</button></li>
+                <li id='list_config_nav_1'><button id='list_config_server_title' class='list_button' >${common.ICONS.app_server}</button></li>
+                <li id='list_config_nav_2'><button id='list_config_blockip_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.regional_numbersystem}</button></li>
+                <li id='list_config_nav_3'><button id='list_config_useragent_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.app_browser}</button></li>
+                <li id='list_config_nav_4'><button id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</button></li>
+                <li id='list_config_nav_0'><button id='list_config_info_title' class='list_button' >${common.ICONS.app_info}</button></li>
             </ul>
             <div id='list_config' class='common_list_scrollbar'></div>
             <pre id='list_config_edit'></pre>
             <div id='config_buttons' class="save_buttons">
-                <button id='config_save' class='common_dialogue_button button_save' >${common.ICONS['app_save']}</button>
+                <button id='config_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</button>
             </div>
         </div>`;
     document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save');}, false); 
@@ -2777,13 +2777,13 @@ const show_installation = () =>{
             document.querySelector('#menu_7_content').innerHTML =
                 `<div id='menu_7_content_widget1' class='widget'>
                     <div id='install_db'>
-                        <div id='install_db_icon'>${common.ICONS['app_database']}</div>
+                        <div id='install_db_icon'>${common.ICONS.app_database}</div>
                         <div id='install_db_button_row'>
-                            <div id='install_db_button_install' class='common_dialogue_button'>${common.ICONS['app_add']}</div>
-                            <div id='install_db_button_uninstall' class='common_dialogue_button'>${common.ICONS['app_delete']}</div>
+                            <div id='install_db_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
+                            <div id='install_db_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
                         </div>
                         <div id='install_db_input'>
-                            <div id="install_db_country_language_translations_icon" >${common.ICONS['gps_country'] + common.ICONS['regional_locale']}</div>
+                            <div id="install_db_country_language_translations_icon" >${common.ICONS.gps_country + common.ICONS.regional_locale}</div>
                             <input id='install_db_country_language_translations' type='checkbox' class='common_switch_input' />
                             <label for='install_db_country_language_translations' class='common_switch_label'></label>
                         </div>
@@ -2791,13 +2791,13 @@ const show_installation = () =>{
                 </div>
                 <div id='menu_7_content_widget2' class='widget'>
                     <div id='install_demo'>
-                        <div id='install_demo_demo_users_icon'>${common.ICONS['app_users']}</div>
+                        <div id='install_demo_demo_users_icon'>${common.ICONS.app_users}</div>
                         <div id='install_demo_button_row'>
-                            <div id='install_demo_button_install' class='common_dialogue_button'>${common.ICONS['app_add']}</div>
-                            <div id='install_demo_button_uninstall' class='common_dialogue_button'>${common.ICONS['app_delete']}</div>
+                            <div id='install_demo_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
+                            <div id='install_demo_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
                         </div>
                         <div id='install_demo_input'>
-                            <div id="install_demo_password_icon" >${common.ICONS['user_password']}</div>
+                            <div id="install_demo_password_icon" >${common.ICONS.user_password}</div>
                             <input id='install_demo_password' type='password' />
                         </div>
                     </div>
@@ -2813,7 +2813,7 @@ const show_installation = () =>{
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.add('installed');
                                 const result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
                     };
@@ -2826,17 +2826,17 @@ const show_installation = () =>{
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.remove('installed');
                                 const result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
                     };
                     switch(event.target.parentNode.id){
                         case 'install_db_button_install':{
-                            common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL['app_id']);  
+                            common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL.app_id);  
                             break;
                         }
                         case 'install_db_button_uninstall':{
-                            common.show_message('CONFIRM',null,uninstall_function, null, common.COMMON_GLOBAL['app_id']);  
+                            common.show_message('CONFIRM',null,uninstall_function, null, common.COMMON_GLOBAL.app_id);  
                             break;
                         }
                     }
@@ -2845,7 +2845,7 @@ const show_installation = () =>{
                 switch(event.target.parentNode.id){
                     case 'install_demo_button_install':{
                         if (document.getElementById('install_demo_password').value == '') {
-                            common.show_message('INFO', null, null, common.ICONS['user_password'] + ' ' + common.ICONS['message_text'], common.COMMON_GLOBAL['common_app_id']);
+                            common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
                         }
                         else{
                             const json_data = {demo_password: document.querySelector('#install_demo_password').value};
@@ -2855,7 +2855,7 @@ const show_installation = () =>{
                                 document.querySelector('#install_demo_button_install').innerHTML = old_html;
                                 if (err == null){
                                     const result_obj = JSON.parse(result);
-                                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                                 }
                             });
                         }
@@ -2868,7 +2868,7 @@ const show_installation = () =>{
                             document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
                             if (err == null){
                                 const result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL['common_app_id']);
+                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
                         break;
@@ -2898,18 +2898,18 @@ const show_db_info = async () => {
                 document.querySelector('#menu_8_content').innerHTML = 
                     `<div id='menu_8_content_widget1' class='widget'>
                         <div id='menu_8_db_info1'>
-                            <div id='menu_8_db_info_database_title'>${common.ICONS['app_database'] + common.ICONS['regional_numbersystem']}</div><div id='menu_8_db_info_database_data'>${json.data.database_use}</div>
-                            <div id='menu_8_db_info_name_title'>${common.ICONS['app_database']}</div><div id='menu_8_db_info_name_data'>${json.data.database_name}</div>
-                            <div id='menu_8_db_info_version_title'>${common.ICONS['app_database'] + common.ICONS['regional_numbersystem'] + common.ICONS['app_info']}</div><div id='menu_8_db_info_version_data'>${json.data.version}</div>
-                            <div id='menu_8_db_info_database_schema_title'>${common.ICONS['app_database'] + common.ICONS['app_database_schema']}</div><div id='menu_8_db_info_database_schema_data'>${json.data.database_schema}</div>
-                            <div id='menu_8_db_info_host_title'>${common.ICONS['app_server']}</div><div id='menu_8_db_info_host_data'>${json.data.hostname}</div>
-                            <div id='menu_8_db_info_connections_title'>${common.ICONS['app_user_connections']}</div><div id='menu_8_db_info_connections_data'>${json.data.connections}</div>
-                            <div id='menu_8_db_info_started_title'>${common.ICONS['app_database_started']}</div><div id='menu_8_db_info_started_data'>${json.data.started}</div>
+                            <div id='menu_8_db_info_database_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem}</div><div id='menu_8_db_info_database_data'>${json.data.database_use}</div>
+                            <div id='menu_8_db_info_name_title'>${common.ICONS.app_database}</div><div id='menu_8_db_info_name_data'>${json.data.database_name}</div>
+                            <div id='menu_8_db_info_version_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem + common.ICONS.app_info}</div><div id='menu_8_db_info_version_data'>${json.data.version}</div>
+                            <div id='menu_8_db_info_database_schema_title'>${common.ICONS.app_database + common.ICONS.app_database_schema}</div><div id='menu_8_db_info_database_schema_data'>${json.data.database_schema}</div>
+                            <div id='menu_8_db_info_host_title'>${common.ICONS.app_server}</div><div id='menu_8_db_info_host_data'>${json.data.hostname}</div>
+                            <div id='menu_8_db_info_connections_title'>${common.ICONS.app_user_connections}</div><div id='menu_8_db_info_connections_data'>${json.data.connections}</div>
+                            <div id='menu_8_db_info_started_title'>${common.ICONS.app_database_started}</div><div id='menu_8_db_info_started_data'>${json.data.started}</div>
                         </div>
                     </div>
                     <div id='menu_8_content_widget2' class='widget'>
                         <div>
-                            <div id='menu_8_db_info_space_title'>${common.ICONS['app_database'] + common.ICONS['app_database_calc']}</div>
+                            <div id='menu_8_db_info_space_title'>${common.ICONS.app_database + common.ICONS.app_database_calc}</div>
                         </div>
                         <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
@@ -2965,7 +2965,7 @@ const show_db_info = async () => {
                                     document.getElementById('menu_8_db_info_space_detail').innerHTML += 
                                         `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
                                             <div class='menu_8_db_info_space_detail_col'>
-                                                <div>${common.ICONS['app_sum']}</div>
+                                                <div>${common.ICONS.app_sum}</div>
                                             </div>
                                             <div class='menu_8_db_info_space_detail_col'>
                                                 <div>${roundOff(json.data.total_size)}</div>
@@ -3015,7 +3015,7 @@ const show_server_info = async () => {
                 json = JSON.parse(result);
                 document.querySelector('#menu_10_content').innerHTML = 
                     `<div id='menu_10_content_widget1' class='widget'>
-                        <div id='menu_10_os_title'>${common.ICONS['app_server']}</div>
+                        <div id='menu_10_os_title'>${common.ICONS.app_server}</div>
                         <div id='menu_10_os_info'>
                             <div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${json.os.hostname}</div>
                             <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${json.os.cpus.length}</div>
@@ -3029,12 +3029,12 @@ const show_server_info = async () => {
                             <div id='menu_10_os_info_uptime_title'>${'UPTIME'}</div><div id='menu_10_os_info_uptime_data'>${seconds_to_time(json.os.uptime)}</div>
                             <div id='menu_10_os_info_homedir_title'>${'HOMEDIR'}</div><div id='menu_10_os_info_homedir_data'>${json.os.homedir}</div>
                             <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${json.os.tmpdir}</div>
-                            <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${json.os.userinfo['username']}</div>
-                            <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${json.os.userinfo['homedir']}</div>
+                            <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${json.os.userinfo.username}</div>
+                            <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${json.os.userinfo.homedir}</div>
                         </div>
                     </div>
                     <div id='menu_10_content_widget2' class='widget'>
-                        <div id='menu_10_process_title'>${common.ICONS['app_server'] + ' ' + common.ICONS['app_apps']}</div>
+                        <div id='menu_10_process_title'>${common.ICONS.app_server + ' ' + common.ICONS.app_apps}</div>
                         <div id='menu_10_process_info'>
                             <div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${json.process.memoryusage_rss}</div>
                             <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${json.process.memoryusage_heaptotal}</div>
@@ -3056,7 +3056,7 @@ const show_server_info = async () => {
 /* INIT                   */
 /*----------------------- */
 const admin_token_has_value = () => {
-    if (common.COMMON_GLOBAL['rest_at']=='' && common.COMMON_GLOBAL['rest_admin_at'] =='')
+    if (common.COMMON_GLOBAL.rest_at=='' && common.COMMON_GLOBAL.rest_admin_at =='')
         return false;
     else
         return true;
@@ -3065,45 +3065,45 @@ const admin_token_has_value = () => {
 const init = () => {
 
     //SET GLOBALS
-    APP_GLOBAL['page'] = 0;
-    APP_GLOBAL['page_last'] =0;
-    APP_GLOBAL['previous_row']= '';
+    APP_GLOBAL.page = 0;
+    APP_GLOBAL.page_last =0;
+    APP_GLOBAL.previous_row= '';
 
-    APP_GLOBAL['module_leaflet_map_container']      ='mapid';
+    APP_GLOBAL.module_leaflet_map_container      ='mapid';
 
-    APP_GLOBAL['service_log_scope_request']= '';
-    APP_GLOBAL['service_log_scope_server']= '';
-    APP_GLOBAL['service_log_scope_app']= '';
-    APP_GLOBAL['service_log_scope_service']= '';
-    APP_GLOBAL['service_log_scope_db']= '';
-    APP_GLOBAL['service_log_level_verbose']= '';
-    APP_GLOBAL['service_log_level_error']= '';
-    APP_GLOBAL['service_log_level_info']= '';                
-    APP_GLOBAL['service_log_destination']= '';
-    APP_GLOBAL['service_log_url_destination']= '';
-    APP_GLOBAL['service_log_url_destination_username']= '';
-    APP_GLOBAL['service_log_url_destination_password']= '';
-    APP_GLOBAL['service_log_file_interval']= '';
-    APP_GLOBAL['service_log_file_path_server']= '';
-    APP_GLOBAL['service_log_date_format']= '';
+    APP_GLOBAL.service_log_scope_request= '';
+    APP_GLOBAL.service_log_scope_server= '';
+    APP_GLOBAL.service_log_scope_app= '';
+    APP_GLOBAL.service_log_scope_service= '';
+    APP_GLOBAL.service_log_scope_db= '';
+    APP_GLOBAL.service_log_level_verbose= '';
+    APP_GLOBAL.service_log_level_error= '';
+    APP_GLOBAL.service_log_level_info= '';                
+    APP_GLOBAL.service_log_destination= '';
+    APP_GLOBAL.service_log_url_destination= '';
+    APP_GLOBAL.service_log_url_destination_username= '';
+    APP_GLOBAL.service_log_url_destination_password= '';
+    APP_GLOBAL.service_log_file_interval= '';
+    APP_GLOBAL.service_log_file_path_server= '';
+    APP_GLOBAL.service_log_date_format= '';
 
-    if (common.COMMON_GLOBAL['system_admin']==1){
-        common.COMMON_GLOBAL['module_leaflet_style']			    ='OpenStreetMap_Mapnik';
-        common.COMMON_GLOBAL['module_leaflet_jumpto']		        ='0';
-        common.COMMON_GLOBAL['module_leaflet_popup_offset']		    ='-25';
-        document.getElementById('common_confirm_question').innerHTML = common.ICONS['app_question'];
+    if (common.COMMON_GLOBAL.system_admin==1){
+        common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
+        common.COMMON_GLOBAL.module_leaflet_jumpto		                ='0';
+        common.COMMON_GLOBAL.module_leaflet_popup_offset		        ='-25';
+        document.getElementById('common_confirm_question').innerHTML    = common.ICONS.app_question;
     }
 
     //hide all first (display none in css using eval not working)
     for (let i=1;i<=10;i++){
         document.getElementById(`menu_${i}`).style.display='none';
     }
-    if (common.COMMON_GLOBAL['system_admin']==1){
+    if (common.COMMON_GLOBAL.system_admin==1){
         //show DASHBOARD
         document.getElementById('menu_1').style.display='block';
         document.getElementById('select_broadcast_type').innerHTML = 
-            `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>
-                <option value='MAINTENANCE' selected='selected'>${common.ICONS['app_maintenance']}</option>`;                 
+            `<option value='INFO' selected='selected'>${common.ICONS.app_alert}</option>
+                <option value='MAINTENANCE' selected='selected'>${common.ICONS.app_maintenance}</option>`;                 
         
         //show MONITOR (only SERVER LOG)
         document.getElementById('menu_5').style.display='block';
@@ -3124,7 +3124,7 @@ const init = () => {
         //show DASHBOARD
         document.getElementById('menu_1').style.display='block';
         document.getElementById('select_broadcast_type').innerHTML = 
-            `<option value='INFO' selected='selected'>${common.ICONS['app_alert']}</option>`;
+            `<option value='INFO' selected='selected'>${common.ICONS.app_alert}</option>`;
         //show USER STAT
         document.getElementById('menu_2').style.display='block';
         //show USERS
@@ -3135,7 +3135,7 @@ const init = () => {
         document.getElementById('menu_5').style.display='block';
         //start with DASHBOARD
         show_menu(1);
-        common.common_translate_ui(common.COMMON_GLOBAL['user_locale'], 'APP', ()=>{});
+        common.common_translate_ui(common.COMMON_GLOBAL.user_locale, 'APP', ()=>{});
     }
 };
 export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, init};
