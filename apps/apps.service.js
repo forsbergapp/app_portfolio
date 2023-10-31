@@ -1038,7 +1038,7 @@ const providers_buttons = async (app_id) =>{
  * @param {string} headers_accept_language
  * @param {object} data
  * @param {Types.res|null} res
- * @returns {Promise<(*)>}
+ * @returns {Promise<(string)>}
  */
 const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, res=null) => {
     return new Promise((resolve, reject) => {
@@ -1046,8 +1046,8 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
             let path = '';
             const call_service = (/**@type{string}*/path, /**@type{string}*/service) => {
                 microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
-                .then((/**@type{*}*/result)=>resolve(result))
-                .catch((/**@type{*}*/error)=>reject(error));
+                .then((/**@type{string}*/result)=>resolve(result))
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             };
             switch (service){
                 case 'AUTH':{
