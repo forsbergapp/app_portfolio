@@ -2362,11 +2362,19 @@ const init_map = async () => {
                 update_ui(5); 
             }, false);
             document.getElementById('common_module_leaflet_select_city').addEventListener('change', () => { 
-                const option = document.getElementById('setting_select_user_setting').options[document.getElementById('setting_select_user_setting').selectedIndex];
-                option.setAttribute('gps_country_id', document.getElementById('common_module_leaflet_select_country')[document.getElementById('common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
-                option.setAttribute('gps_city_id', document.getElementById('common_module_leaflet_select_city')[document.getElementById('common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
+                const select_country = document.getElementById('common_module_leaflet_select_country');
+                const select_city = document.getElementById('common_module_leaflet_select_city');
+                const select_setting = document.getElementById('setting_select_user_setting');
+                const option = select_setting.options[select_setting.selectedIndex];
+                option.setAttribute('gps_country_id', select_country[select_country.selectedIndex].getAttribute('id'));
+                option.setAttribute('gps_city_id', select_city[select_city.selectedIndex].getAttribute('id'));
                 //popular place not on map is read when saving
                 update_ui(6);
+                import('regional').then(({getTimezone})=>{
+                    const timezone = getTimezone(   document.getElementById('setting_input_lat').value,
+                                                    document.getElementById('setting_input_long').value);
+                    app_common.APP_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                });
             }, false);
             document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { update_ui(4); }, false);
 
@@ -2387,6 +2395,7 @@ const init_map = async () => {
                         document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
                         //set qibbla
                         map_show_qibbla();
+                        app_common.APP_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
                     });
                 }
             }, false);
@@ -2396,6 +2405,10 @@ const init_map = async () => {
                     document.getElementById('setting_input_long').value = e.latlng.lng;
                     //Update GPS position
                     update_ui(9);
+                    import('regional').then(({getTimezone})=>{
+                        const timezone = getTimezone(   e.latlng.lat, e.latlng.lng);
+                        app_common.APP_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                    });
                 }   
             });
             resolve();
@@ -2445,8 +2458,9 @@ const map_show_search_on_map_app = async (city) =>{
     document.getElementById('setting_input_long').value = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
     document.getElementById('setting_input_lat').value = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
     const {getTimezone} = await import('regional');
-    document.querySelector('#setting_select_report_timezone').value = getTimezone(city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML, 
-                                                                                  city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML);
+    document.querySelector('#setting_select_report_timezone').value = getTimezone(  document.getElementById('setting_input_lat').value, 
+                                                                                    document.getElementById('setting_input_long').value);
+    app_common.APP_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
 };
 /*----------------------- */
 /* EXCEPTION              */
@@ -2462,7 +2476,11 @@ const init_app = () => {
         dialogue_loading(1);
         //set app globals
         //set current date for report month
-        app_common.APP_GLOBAL.session_currentDate = new Date();
+        //if client_timezone is set, set Date with client_timezone
+        if (common.COMMON_GLOBAL.client_timezone)
+            app_common.APP_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+        else
+            app_common.APP_GLOBAL.session_currentDate = new Date();
         app_common.APP_GLOBAL.session_CurrentHijriDate = new Array();
         //get Hijri date from initial Gregorian date
         app_common.APP_GLOBAL.session_CurrentHijriDate[0] = parseInt(new Date(app_common.APP_GLOBAL.session_currentDate.getFullYear(),
