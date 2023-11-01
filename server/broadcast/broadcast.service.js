@@ -13,7 +13,7 @@ let CONNECTED_CLIENTS = [];
  * Broadcast connect
  * Used by EventSource and leaves connection open
  * @param {number} app_id
- * @param {string} identity_provider_id
+ * @param {number} identity_provider_id
  * @param {number} user_account_logon_user_account_id
  * @param {number} system_admin
  * @param {string} latitude
@@ -303,7 +303,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
 };
 /**
  * Broadcast connected count
- * @param {string} identity_provider_id
+ * @param {number} identity_provider_id
  * @param {number} count_logged_in
  * @param {Types.callBack} callBack
  */
@@ -312,16 +312,16 @@ const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
     for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
         if ((count_logged_in==1 &&
                 CONNECTED_CLIENTS[i].identity_provider_id == identity_provider_id &&
-                identity_provider_id !='' &&
+                identity_provider_id !=null &&
                 CONNECTED_CLIENTS[i].user_account_id != null) ||
             (count_logged_in==1 &&
-                identity_provider_id =='' &&
-                CONNECTED_CLIENTS[i].identity_provider_id =='' &&
+                identity_provider_id ==null &&
+                CONNECTED_CLIENTS[i].identity_provider_id ==null &&
                 (CONNECTED_CLIENTS[i].user_account_id != null ||
                 CONNECTED_CLIENTS[i].system_admin == 1)) ||
             (count_logged_in==0 && 
-                identity_provider_id =='' &&
-                CONNECTED_CLIENTS[i].identity_provider_id =='' &&
+                identity_provider_id ==null &&
+                CONNECTED_CLIENTS[i].identity_provider_id ==null &&
                 CONNECTED_CLIENTS[i].user_account_id ==null &&
                 CONNECTED_CLIENTS[i].system_admin == 0))
             {
@@ -335,7 +335,7 @@ const ConnectedCount = (identity_provider_id, count_logged_in, callBack) => {
  * @param {number} client_id
  * @param {number} user_account_id
  * @param {number} system_admin
- * @param {string} identity_provider_id
+ * @param {number} identity_provider_id
  * @param {string} latitude
  * @param {string} longitude
  * @param {Types.callBack} callBack
