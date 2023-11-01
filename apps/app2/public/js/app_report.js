@@ -187,10 +187,9 @@ const getColumnTitles = (transliteration = 0, calendartype, locale, second_local
 	return coltitle;
 };
 const isToday = (checkdate) => {
-    const today = new Date();
-    return (checkdate.getMonth() == today.getMonth()) && 
-            (checkdate.getDate() == today.getDate()) && 
-            (checkdate.getFullYear() == today.getFullYear());
+    return (checkdate.getMonth() == app_common.APP_GLOBAL.session_currentDate.getMonth()) && 
+            (checkdate.getDate() == app_common.APP_GLOBAL.session_currentDate.getDate()) && 
+            (checkdate.getFullYear() == app_common.APP_GLOBAL.session_currentDate.getFullYear());
 };
 const set_prayer_method = async() => {
 	return new Promise( (resolve) => {
@@ -655,11 +654,11 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 		let options;
 		switch (settings.reporttype_year_month){
 			case 'MONTH':{
-				options = {month:'long', year: 'numeric'};
+				options = {timeZone: settings.timezone, month:'long', year: 'numeric'};
 				break;
 				}
 			case 'YEAR':{
-				options = {month:'long'};
+				options = {timeZone: settings.timezone, month:'long'};
 				break;
 				}
 		}
@@ -1056,18 +1055,24 @@ const displayYear = (prayTimes, settings, item_id) => {
 			}
 
 	//show year with selected locale and number system for both Hijri and Gregorian
-	const options_year = { timeZone: settings.timezone, 
-						year: 'numeric',
-						useGrouping:false};
-	let year_title4;
+	const options_year = { 	timeZone: settings.timezone, 
+							year: 'numeric',
+							useGrouping:false};
+	let timetable_title = '';
 	if (settings.calendartype=='GREGORIAN'){
-		year_title4 = app_common.APP_GLOBAL.session_currentDate.getFullYear();
-		year_title4 = year_title4.toLocaleString(settings.locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + settings.number_system, options_year);
+		timetable_title = app_common.APP_GLOBAL.session_currentDate.getFullYear().toLocaleString(settings.locale + 
+																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																							settings.number_system, 
+																							options_year);
 	}
 	else{
 		//HIJRI
-		year_title4 = app_common.APP_GLOBAL.session_CurrentHijriDate[1];
-		year_title4 = year_title4.toLocaleString(settings.locale + REPORT_GLOBAL.regional_def_locale_ext_prefix + REPORT_GLOBAL.regional_def_locale_ext_number_system + settings.number_system, options_year);
+		timetable_title = app_common.APP_GLOBAL.session_CurrentHijriDate[1].toLocaleString(settings.locale + 
+																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																							settings.number_system, 
+																							options_year);
 	}
 	const months = new Array(12);
 	app_common.APP_GLOBAL.session_currentDate.setMonth(startmonth);
@@ -1085,7 +1090,7 @@ const displayYear = (prayTimes, settings, item_id) => {
 						<div id='timetable_qr_code'></div>
 					</div>
 					<div id='timetable_year_timetables_header' class='display_font'>
-						<div>${year_title4}</div>
+						<div>${timetable_title}</div>
 						<div>${REPORT_GLOBAL.first_language.timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL.second_language.timetable_title:''}</div>
 					</div>
 					<div id='timetable_year_timetables' ${timetable_class}'>
