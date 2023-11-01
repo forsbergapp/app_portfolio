@@ -1339,15 +1339,15 @@ const user_settings_load = async () => {
         document.getElementById('setting_select_report_highlight_row'),1);
 
     document.getElementById('setting_checkbox_report_show_weekday').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_weekday_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_weekday_checked'));
     document.getElementById('setting_checkbox_report_show_calendartype').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_calendartype_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_calendartype_checked'));
     document.getElementById('setting_checkbox_report_show_notes').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_notes_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_notes_checked'));
     document.getElementById('setting_checkbox_report_show_gps').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_gps_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_gps_checked'));
     document.getElementById('setting_checkbox_report_show_timezone').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_timezone_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_timezone_checked'));
 
     //Image
     //dont set null value, it will corrupt IMG tag
@@ -1430,11 +1430,11 @@ const user_settings_load = async () => {
         document.getElementById('setting_select_report_iqamat_title_isha'),1);
 
     document.getElementById('setting_checkbox_report_show_imsak').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_imsak_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_imsak_checked'));
     document.getElementById('setting_checkbox_report_show_sunset').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_sunset_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_sunset_checked'));
     document.getElementById('setting_checkbox_report_show_midnight').checked =
-        common.number_to_boolean(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_midnight_checked'));
+        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_midnight_checked'));
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end'),
         document.getElementById('setting_select_report_show_fast_start_end'),1);
@@ -1457,7 +1457,6 @@ const user_settings_function = async (function_name, initial_user_setting, callB
         common.check_input(document.getElementById('setting_input_reportfooter3').value) == false ||
         common.check_input(document.getElementById('setting_input_long').value) == false)
         return;
-    //boolean use common.boolean_to_number()
     let country_id, city_id;
     if (document.getElementById('common_module_leaflet_select_country')){
         const select_setting_country = document.querySelector('#common_module_leaflet_select_country');
@@ -1503,11 +1502,11 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             design_theme_year_id: get_theme_id('year'),
             design_paper_size: document.getElementById('setting_select_report_papersize').value,
             design_row_highlight: document.getElementById('setting_select_report_highlight_row').value,
-            design_column_weekday_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked),
-            design_column_calendartype_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked),
-            design_column_notes_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked),
-            design_column_gps_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked),
-            design_column_timezone_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked),
+            design_column_weekday_checked: Number(document.getElementById('setting_checkbox_report_show_weekday').checked),
+            design_column_calendartype_checked: Number(document.getElementById('setting_checkbox_report_show_calendartype').checked),
+            design_column_notes_checked: Number(document.getElementById('setting_checkbox_report_show_notes').checked),
+            design_column_gps_checked: Number(document.getElementById('setting_checkbox_report_show_gps').checked),
+            design_column_timezone_checked: Number(document.getElementById('setting_checkbox_report_show_timezone').checked),
 
             image_header_image_img: document.getElementById('setting_reportheader_img').src,
             image_footer_image_img: document.getElementById('setting_reportfooter_img').src,
@@ -1531,9 +1530,9 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             prayer_asr_iqamat: document.getElementById('setting_select_report_iqamat_title_asr').value,
             prayer_maghrib_iqamat: document.getElementById('setting_select_report_iqamat_title_maghrib').value,
             prayer_isha_iqamat: document.getElementById('setting_select_report_iqamat_title_isha').value,
-            prayer_column_imsak_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked),
-            prayer_column_sunset_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked),
-            prayer_column_midnight_checked: common.boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked),
+            prayer_column_imsak_checked: Number(document.getElementById('setting_checkbox_report_show_imsak').checked),
+            prayer_column_sunset_checked: Number(document.getElementById('setting_checkbox_report_show_sunset').checked),
+            prayer_column_midnight_checked: Number(document.getElementById('setting_checkbox_report_show_midnight').checked),
             prayer_column_fast_start_end: document.getElementById('setting_select_report_show_fast_start_end').value
          };
     const json_data = { description:        description,
@@ -1791,11 +1790,11 @@ const set_settings_select = () => {
     option.setAttribute('design_theme_year_id', get_theme_id('year'));
     option.setAttribute('design_paper_size', document.getElementById('setting_select_report_papersize').value);
     option.setAttribute('design_row_highlight', document.getElementById('setting_select_report_highlight_row').value);
-    option.setAttribute('design_column_weekday_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_weekday').checked));
-    option.setAttribute('design_column_calendartype_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_calendartype').checked));
-    option.setAttribute('design_column_notes_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_notes').checked));
-    option.setAttribute('design_column_gps_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_gps').checked));
-    option.setAttribute('design_column_timezone_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_timezone').checked));
+    option.setAttribute('design_column_weekday_checked', Number(document.getElementById('setting_checkbox_report_show_weekday').checked));
+    option.setAttribute('design_column_calendartype_checked', Number(document.getElementById('setting_checkbox_report_show_calendartype').checked));
+    option.setAttribute('design_column_notes_checked', Number(document.getElementById('setting_checkbox_report_show_notes').checked));
+    option.setAttribute('design_column_gps_checked', Number(document.getElementById('setting_checkbox_report_show_gps').checked));
+    option.setAttribute('design_column_timezone_checked', Number(document.getElementById('setting_checkbox_report_show_timezone').checked));
 
     option.setAttribute('image_header_image_img', document.getElementById('setting_reportheader_img').src);
     option.setAttribute('image_footer_image_img', document.getElementById('setting_reportfooter_img').src);
@@ -1820,9 +1819,9 @@ const set_settings_select = () => {
     option.setAttribute('prayer_asr_iqamat', document.getElementById('setting_select_report_iqamat_title_asr').value);
     option.setAttribute('prayer_maghrib_iqamat', document.getElementById('setting_select_report_iqamat_title_maghrib').value);
     option.setAttribute('prayer_isha_iqamat', document.getElementById('setting_select_report_iqamat_title_isha').value);
-    option.setAttribute('prayer_column_imsak_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_imsak').checked));
-    option.setAttribute('prayer_column_sunset_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_sunset').checked));
-    option.setAttribute('prayer_column_midnight_checked', common.boolean_to_number(document.getElementById('setting_checkbox_report_show_midnight').checked));
+    option.setAttribute('prayer_column_imsak_checked', Number(document.getElementById('setting_checkbox_report_show_imsak').checked));
+    option.setAttribute('prayer_column_sunset_checked', Number(document.getElementById('setting_checkbox_report_show_sunset').checked));
+    option.setAttribute('prayer_column_midnight_checked', Number(document.getElementById('setting_checkbox_report_show_midnight').checked));
     option.setAttribute('prayer_column_fast_start_end', document.getElementById('setting_select_report_show_fast_start_end').value);
 };
 
