@@ -286,13 +286,13 @@ Object.seal(REPORT_GLOBAL);
  */
 const getTimezoneOffset = (local_timezone) =>{
     const utc = new Date(	Number(new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'})),
-							Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'})),
+							Number(new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'}))-1,
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', day:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', hour:'numeric', hour12:false})),
                             Number(new Date().toLocaleString('en', {timeZone: 'UTC', minute:'numeric'}))).valueOf();
 
     const local = new Date(	Number(new Date().toLocaleString('en', {timeZone: local_timezone, year:'numeric'})),
-							Number(new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'})),
+							Number(new Date().toLocaleString('en', {timeZone: local_timezone, month:'numeric'}))-1,
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, day:'numeric'})),
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, hour:'numeric', hour12:false})),
                             Number(new Date().toLocaleString('en', {timeZone: local_timezone, minute:'numeric'}))).valueOf();
@@ -434,10 +434,9 @@ const getColumnTitles = (transliteration = 0, calendartype, locale, second_local
  * @returns {boolean}
  */
 const isToday = checkdate => {
-    const today = new Date();
-    return (checkdate.getMonth() == today.getMonth()) && 
-            (checkdate.getDate() == today.getDate()) && 
-            (checkdate.getFullYear() == today.getFullYear());
+    return (checkdate.getMonth() == REPORT_GLOBAL.session_currentDate.getMonth()) && 
+            (checkdate.getDate() == REPORT_GLOBAL.session_currentDate.getDate()) && 
+            (checkdate.getFullYear() == REPORT_GLOBAL.session_currentDate.getFullYear());
 };
 /**
  * Sets prayer method
@@ -1297,34 +1296,31 @@ const create_header_row = (report_type, col_titles, settings) => {
  */
 const displayDay = (prayTimes, settings, user_settings) => {
 	let times; 
-	const options = { timeZone: settings.timezone, 
-					weekday: 'long', 
-					year: 'numeric', 
-					month: 'long', 
-					day: 'numeric'};
+	const options = { 	timeZone: settings.timezone, 
+						weekday: 'long', 
+						year: 'numeric', 
+						month: 'long', 
+						day: 'numeric'};
 	const options_hijri = { timeZone: settings.timezone, 
-					year: 'numeric', 
-					month: 'long', 
-					day: 'numeric'};
+							year: 'numeric', 
+							month: 'long', 
+							day: 'numeric'};
 					
-
+	/**@type{*}*/
 	const date_current = new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
 									REPORT_GLOBAL.session_currentDate.getMonth(),
 									REPORT_GLOBAL.session_currentDate.getDate());
 	const date_title4 = date_current.toLocaleDateString(settings.locale + 
-									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-									/**@ts-ignore */
-									settings.number_system, options).toLocaleUpperCase();
+														REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+														REPORT_GLOBAL.regional_def_locale_ext_number_system + 				
+														settings.number_system, options).toLocaleUpperCase();
 	date_current.setDate(date_current.getDate() + settings.hijri_adj);
 	const date_title5 = date_current.toLocaleDateString(settings.locale + 
-									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-									REPORT_GLOBAL.regional_def_locale_ext_calendar + 
-									settings.calendar_hijri_type + 
-									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-									/**@ts-ignore */
-									settings.number_system, options_hijri).toLocaleUpperCase();
-	
+														REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+														REPORT_GLOBAL.regional_def_locale_ext_calendar + 
+														settings.calendar_hijri_type + 
+														REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+														settings.number_system, options_hijri).toLocaleUpperCase();	
 	const timetable_data = () => {
 		/**
 		 * 
@@ -1475,11 +1471,11 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 		let options;
 		switch (settings.reporttype_year_month){
 			case 'MONTH':{
-				options = {month:'long', year: 'numeric'};
+				options = {timeZone: settings.timezone, month:'long', year: 'numeric'};
 				break;
 				}
 			case 'YEAR':{
-				options = {month:'long'};
+				options = {timeZone: settings.timezone, month:'long'};
 				break;
 				}
 		}
@@ -1491,7 +1487,7 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 					title:			new Date(year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
 										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-										settings.number_system, 
+										settings.number_system,
 										/**@ts-ignore */
 										options).toLocaleUpperCase(),
 					date:			new Date(year_greogrian, month_gregorian, 1),
@@ -1683,25 +1679,21 @@ const displayYear = (prayTimes, settings) => {
 	const options_year = { timeZone: settings.timezone, 
 						year: 'numeric',
 						useGrouping:false};
-	let year_title4 = '';
+	let timetable_title = '';
 	if (settings.calendartype=='GREGORIAN'){
-		year_title4 = REPORT_GLOBAL.session_currentDate.getFullYear().toString();
-		/**@ts-ignore */
-		year_title4 = year_title4.toLocaleString(	settings.locale + 
-													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-													settings.number_system, 
-													options_year);
+		timetable_title = REPORT_GLOBAL.session_currentDate.getFullYear().toLocaleString(	settings.locale + 
+																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																							settings.number_system, 
+																							options_year);
 	}
 	else{
 		//HIJRI
-		year_title4 = REPORT_GLOBAL.session_CurrentHijriDate[1].toString();
-		/**@ts-ignore */
-		year_title4 = year_title4.toLocaleString(	settings.locale + 
-													REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-													REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-													settings.number_system, 
-													options_year);
+		timetable_title = REPORT_GLOBAL.session_CurrentHijriDate[1].toLocaleString(	settings.locale + 
+																					REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																					REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																					settings.number_system, 
+																					options_year);
 	}
 	const months = new Array(12);
 	REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
@@ -1719,7 +1711,7 @@ const displayYear = (prayTimes, settings) => {
 						<div id='timetable_qr_code'><REPORT_QRCODE/></div>
 					</div>
 					<div id='timetable_year_timetables_header' class='display_font'>
-						<div>${year_title4}</div>
+						<div>${timetable_title}</div>
 						<div>${REPORT_GLOBAL.first_language.timetable_title} ${settings.second_locale!='0'?REPORT_GLOBAL.second_language.timetable_title:''}</div>
 					</div>
 					<div id='timetable_year_timetables' ${timetable_class}'>
