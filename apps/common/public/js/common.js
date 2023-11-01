@@ -26,62 +26,63 @@
 
 //CONTINUE
 const COMMON_GLOBAL = {
-    'common_app_id':'',
-    'app_id':null,
-    'app_url':'',
-    'app_logo':'',
-    'app_sound':'',
-    'ui':'',
-    'exception_app_function':'',
-    'user_app_role_id':'',
-    'system_admin':'',
-    'system_admin_only':'',
-    'user_identity_provider_id':'',
-    'user_account_id':'',
-    'client_latitude':'',
-    'client_longitude':'',
-    'client_place':'',
-    'rest_at':'',
-    'rest_dt':'',
-    'rest_admin_at':'',
-    'rest_resource_server':'',
-    'rest_resource_bff':'',
-    'image_file_allowed_type1':'',
-    'image_file_allowed_type2':'',
-    'image_file_allowed_type3':'',
-    'image_file_allowed_type4':'',
-    'image_file_allowed_type5':'',
-    'image_file_mime_type':'',
-    'image_file_max_size':'',
-    'image_avatar_width':'',
-    'image_avatar_height':'',
-    'user_locale':'',
-    'user_timezone':'',
-    'user_direction':'',
-    'user_arabic_script':'',
-    'user_preference_save':'',
-    'module_leaflet_library': '',
-    'module_leaflet_flyto':'',
-    'module_leaflet_jumpto':'',
-    'module_leaflet_popup_offset':'',
-    'module_leaflet_style':'',
-    'module_leaflet_session_map':'',
-    'module_leaflet_session_map_layer':'',
-    'module_leaflet_countries':'',
-    'module_leaflet_zoom':'', 
-    'module_leaflet_zoom_city':'',
-    'module_leaflet_zoom_pp':'',
-    'module_leaflet_marker_div_gps':'',
-    'module_leaflet_marker_div_city':'',
-    'module_leaflet_marker_div_pp':'',
-    'module_leaflet_map_styles':'',
+    common_app_id:'',
+    app_id:null,
+    app_url:'',
+    app_logo:'',
+    app_sound:'',
+    ui:'',
+    exception_app_function:'',
+    user_app_role_id:'',
+    system_admin:'',
+    system_admin_only:'',
+    user_identity_provider_id:'',
+    user_account_id:'',
+    client_latitude:'',
+    client_longitude:'',
+    client_place:'',
+    client_timezone:'',
+    rest_at:'',
+    rest_dt:'',
+    rest_admin_at:'',
+    rest_resource_server:'',
+    rest_resource_bff:'',
+    image_file_allowed_type1:'',
+    image_file_allowed_type2:'',
+    image_file_allowed_type3:'',
+    image_file_allowed_type4:'',
+    image_file_allowed_type5:'',
+    image_file_mime_type:'',
+    image_file_max_size:'',
+    image_avatar_width:'',
+    image_avatar_height:'',
+    user_locale:'',
+    user_timezone:'',
+    user_direction:'',
+    user_arabic_script:'',
+    user_preference_save:'',
+    module_leaflet_library: '',
+    module_leaflet_flyto:'',
+    module_leaflet_jumpto:'',
+    module_leaflet_popup_offset:'',
+    module_leaflet_style:'',
+    module_leaflet_session_map:'',
+    module_leaflet_session_map_layer:'',
+    module_leaflet_countries:'',
+    module_leaflet_zoom:'', 
+    module_leaflet_zoom_city:'',
+    module_leaflet_zoom_pp:'',
+    module_leaflet_marker_div_gps:'',
+    module_leaflet_marker_div_city:'',
+    module_leaflet_marker_div_pp:'',
+    module_leaflet_map_styles:'',
     'module_easy.qrcode_width':'',
     'module_easy.qrcode_height':'',
     'module_easy.qrcode_color_dark':'',
     'module_easy.qrcode_color_light':'',
     'module_easy.qrcode_background_color':'',
-    'service_broadcast_client_ID':'',
-    'service_broadcast_eventsource':''
+    service_broadcast_client_ID:'',
+    service_broadcast_eventsource:''
 };
 Object.seal(COMMON_GLOBAL);
 const icon_string = (hexvalue) => `<div class='common_icon'>${String.fromCharCode(parseInt(hexvalue, 16))}</div>`;
@@ -2491,7 +2492,7 @@ const user_preferences_set_default_globals = (preference) => {
             break;
         }
         case 'TIMEZONE':{
-            COMMON_GLOBAL.user_timezone       = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            COMMON_GLOBAL.user_timezone       = COMMON_GLOBAL.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
             break;
         }
         case 'DIRECTION':{
@@ -3463,6 +3464,7 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL.client_latitude  = parameters.client_latitude;
     COMMON_GLOBAL.client_longitude = parameters.client_longitude;
     COMMON_GLOBAL.client_place     = parameters.client_place;
+    COMMON_GLOBAL.client_timezone  = parameters.client_timezone==''?null:parameters.client_timezone;
     
     if (COMMON_GLOBAL.system_admin_only==0){
         user_preferences_set_default_globals('LOCALE');
@@ -3475,7 +3477,7 @@ const set_app_service_parameters = async (parameters) => {
         COMMON_GLOBAL.module_leaflet_countries   = parameters.countries;
         COMMON_GLOBAL.module_leaflet_map_styles  = parameters.map_styles;
         COMMON_GLOBAL.user_locale                = parameters.locale;
-        COMMON_GLOBAL.user_timezone              = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
         COMMON_GLOBAL.user_direction             = '';
         COMMON_GLOBAL.user_arabic_script         = '';
     }  

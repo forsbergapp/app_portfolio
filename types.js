@@ -291,6 +291,7 @@
  * @property {string} latitude              - geodata latitude
  * @property {string} longitude             - geodata longitude
  * @property {string} place                 - geodata place
+ * @property {string} timezone              - geodata timezone
  * @property {string} module                - HTML
  */
 /**
@@ -339,6 +340,7 @@
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
+ * @property {string|null}  client_timezone
  * @property {number|null}  app_sound
  * @property {number|null}  common_app_id
  * @property {string}       rest_resource_server
