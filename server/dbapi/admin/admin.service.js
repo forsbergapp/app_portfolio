@@ -386,8 +386,8 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
                               admin:                  1
 									};
 					create(app_id, data)
-               .then((/**@type{Types.db_result_insert}*/results_create)=> {
-                  demo_user.id = results_create.insertId;
+               .then((/**@type{Types.db_result_insert}*/result_create)=> {
+                  demo_user.id = result_create.insertId;
                   records_user_account++;
                   if (records_user_account == demo_users.length)
                      resolve(null);
@@ -555,9 +555,9 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
 			return new Promise((resolve, reject) => {
 				getUserSettingsByUserId(app_id, user1)
-            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings)=>{
-               const random_settings_index = Math.floor(1 + Math.random() * results_settings.length - 1 );
-               likeUserSetting(app_id, user2, results_settings[random_settings_index].id)
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
+               const random_settings_index = Math.floor(1 + Math.random() * result_settings.length - 1 );
+               likeUserSetting(app_id, user2, result_settings[random_settings_index].id)
                .then((/**@type{Types.db_result_user_account_app_setting_like_likeUserSetting}*/result) => {
                   if (result.affectedRows == 1)
                      records_user_account_setting_like++;
@@ -583,16 +583,16 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
 		const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
 			return new Promise((resolve, reject) => {
 				getUserSettingsByUserId(app_id, user1)
-            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/results_settings)=>{
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
                //choose random setting from user
-						const random_index = Math.floor(1 + Math.random() * results_settings.length -1);
+						const random_index = Math.floor(1 + Math.random() * result_settings.length -1);
 						let user_account_id;
 						if (social_type == 'SETTINGS_VIEW')
 							user_account_id = user2;
 						else
 							user_account_id = null;
 						insertUserSettingView(app_id, {  user_account_id: user_account_id,
-                                                   user_setting_id: results_settings[random_index].id,
+                                                   user_setting_id: result_settings[random_index].id,
                                                    client_ip: null,
                                                    client_user_agent: null,
                                                    client_longitude: null,
