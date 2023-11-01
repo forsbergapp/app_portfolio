@@ -422,6 +422,7 @@ const get_module_with_init = async (app_info, callBack) => {
             client_latitude: app_info.latitude,
             client_longitude: app_info.longitude,
             client_place: app_info.place,
+            client_timezone: app_info.timezone,
             app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
             common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
             rest_resource_server: ConfigGet('SERVER', 'REST_RESOURCE_SERVER'),
@@ -737,12 +738,14 @@ const getModule = async (app_id, module_config, callBack) =>{
         result_geodata.place =  JSON.parse(result_gps).geoplugin_city + ', ' +
                                 JSON.parse(result_gps).geoplugin_regionName + ', ' +
                                 JSON.parse(result_gps).geoplugin_countryName;
+        result_geodata.timezone = JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
         const result_city = await BFF(app_id, 'WORLDCITIES', '/city/random?', module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
         result_geodata.latitude = JSON.parse(result_city).lat;
         result_geodata.longitude = JSON.parse(result_city).lng;
         result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
+        result_geodata.timezone = null;
     }
     /** @type {number} */
     let system_admin_only;
@@ -824,11 +827,11 @@ const getModule = async (app_id, module_config, callBack) =>{
                         { app_id : app_id,
                             app_module : 'APPS',
                             app_module_type : app_module_type,
-                            app_module_request : null,
+                            app_module_request : module_config.url,
                             app_module_result : result_geodata.place,
                             app_user_id : null,
-                            user_language : null,
-                            user_timezone : null,
+                            user_language : client_locale(module_config.accept_language),
+                            user_timezone : result_geodata.timezone,
                             user_number_system : null,
                             user_platform : null,
                             server_remote_addr : module_config.ip,
@@ -855,6 +858,7 @@ const getModule = async (app_id, module_config, callBack) =>{
                                 latitude:           result_geodata.latitude,
                                 longitude:          result_geodata.longitude,
                                 place:              result_geodata.place,
+                                timezone:           result_geodata.timezone,
                                 module:             app.app}, (err, app_with_init) =>{
                                 log(app_with_init);
         });
