@@ -223,7 +223,7 @@ const userSignup = (req, res) => {
                 };
     service.create(getNumberValue(req.query.app_id), data)
     .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
-        if (req.body.provider_id == null ) {
+        if (data.provider_id == null ) {
             //send email for local users only
             getParameter(getNumberValue(req.query.app_id), getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
             .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
@@ -1096,7 +1096,7 @@ const userLogin = (req, res) => {
  * @param {Types.res} res 
  */
 const providerSignIn = (req, res) => {
-    service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id))
+    service.providerSignIn(getNumberValue(req.query.app_id), getNumberValue(req.body.identity_provider_id), getNumberValue(req.params.id))
     .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin)=>{
         /** @type{Types.db_parameter_user_account_create} */
         const data_user = { bio:                    null,
@@ -1111,7 +1111,7 @@ const providerSignIn = (req, res) => {
                             avatar:                 null,
                             verification_code:      null,
                             active:                 1,
-                            identity_provider_id:   req.body.identity_provider_id,
+                            identity_provider_id:   getNumberValue(req.body.identity_provider_id),
                             provider_id:            req.body.provider_id,
                             provider_first_name:    req.body.provider_first_name,
                             provider_last_name:     req.body.provider_last_name,
@@ -1168,7 +1168,7 @@ const providerSignIn = (req, res) => {
                 data_login.user_account_id = result_create.insertId;
                     createUserAccountApp(getNumberValue(req.query.app_id), result_create.insertId)
                     .then(()=>{
-                        service.providerSignIn(getNumberValue(req.query.app_id), req.body.identity_provider_id, getNumberValue(req.params.id))
+                        service.providerSignIn(getNumberValue(req.query.app_id), getNumberValue(req.body.identity_provider_id), getNumberValue(req.params.id))
                             .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
                                 data_login.access_token = accessToken(getNumberValue(req.query.app_id));
                                     insertUserAccountLogon(getNumberValue(req.query.app_id), data_login)

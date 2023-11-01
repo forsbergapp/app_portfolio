@@ -91,7 +91,7 @@ const ConnectedListSystemAdmin = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedCount = (req, res) => {
-    service.ConnectedCount(req.query.identity_provider_id, getNumberValue(req.query.count_logged_in), (/**@type{Types.error}*/err, count_connected) => {
+    service.ConnectedCount(getNumberValue(req.query.identity_provider_id), getNumberValue(req.query.count_logged_in), (/**@type{Types.error}*/err, count_connected) => {
         res.status(200).json({
             data: count_connected
         });
@@ -103,7 +103,7 @@ const ConnectedCount = (req, res) => {
  * @param {Types.res} res
  */
 const ConnectedUpdate = (req, res) => {
-    service.ConnectedUpdate(getNumberValue(req.query.client_id), getNumberValue(req.query.user_account_logon_user_account_id), getNumberValue(req.query.system_admin), req.query.identity_provider_id, 
+    service.ConnectedUpdate(getNumberValue(req.query.client_id), getNumberValue(req.query.user_account_logon_user_account_id), getNumberValue(req.query.system_admin), getNumberValue(req.query.identity_provider_id), 
                             req.query.latitude, req.query.longitude,
                             (/**@type{Types.error}*/err, result) =>{
         res.status(200).json(
