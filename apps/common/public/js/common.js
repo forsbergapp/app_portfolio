@@ -591,18 +591,6 @@ const set_avatar = (avatar, item) => {
     else
         item.src = image_format(avatar);
 };
-const boolean_to_number = (boolean_value) => {
-    if (boolean_value == true)
-        return 1;
-    else
-        return 0;
-};
-const number_to_boolean = (number_value) => {
-    if (number_value == 1)
-        return true;
-    else
-        return false;
-};
 /* check if run inside an iframe*/
 const inIframe = () => {
     try {
@@ -1954,7 +1942,7 @@ const user_edit = async () => {
                 document.getElementById('common_user_edit_provider').style.display = 'none';
                 document.getElementById('common_dialogue_user_edit').style.visibility = 'visible';
 
-                document.getElementById('common_user_edit_checkbox_profile_private').checked = number_to_boolean(json.private);
+                document.getElementById('common_user_edit_checkbox_profile_private').checked = Number(json.private);
                 document.getElementById('common_user_edit_input_username').value = json.username;
                 document.getElementById('common_user_edit_input_bio').value = get_null_or_value(json.bio);
 
@@ -2054,7 +2042,7 @@ const user_update = async () => {
         }
         json_data = {   username:           username,
                         bio:                bio,
-                        private:            boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked),
+                        private:            Number(document.getElementById('common_user_edit_checkbox_profile_private').checked),
                         password:           password,
                         password_new:       password_new,
                         password_reminder:  password_reminder,
@@ -2068,7 +2056,7 @@ const user_update = async () => {
         json_data = {   provider_id:    document.getElementById('common_user_edit_provider_id').innerHTML,
                         username:       username,
                         bio:            bio,
-                        private:        boolean_to_number(document.getElementById('common_user_edit_checkbox_profile_private').checked)
+                        private:        Number(document.getElementById('common_user_edit_checkbox_profile_private').checked)
                     };
         path = `/user_account/common/${COMMON_GLOBAL.user_account_id}?`;
     }
@@ -3834,7 +3822,7 @@ export{/* GLOBALS*/
        /* MISC */
        getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
-       list_image_format_src, recreate_img, set_avatar, boolean_to_number, number_to_boolean,
+       list_image_format_src, recreate_img, set_avatar,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
