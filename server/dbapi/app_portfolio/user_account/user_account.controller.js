@@ -619,8 +619,7 @@ const updateUserLocal = async (req, res) => {
         /**@type{Types.db_result_user_account_getUserByUserId[]}*/
         const result_user = await service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id));
         if (result_user[0]) {
-            /**@ts-ignore */
-            if (compareSync(req.body.password, result_user[0].password)){
+            if (compareSync(req.body.password, result_user[0].password ?? '')){
                 let send_email=false;
                 if (req.body.new_email && req.body.new_email!=''){
                     /**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/

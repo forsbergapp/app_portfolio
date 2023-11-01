@@ -173,8 +173,8 @@ const pool_start = async (dbparameters) =>{
                                  else
                                     db[2] = [{pool_id_app: dbparameters.pool_id?.toString()}];
                               });
-               /**@ts-ignore */
-               createpoolOracle(dbparameters.pool_id.toString());
+               if (dbparameters.pool_id)
+                  createpoolOracle(dbparameters.pool_id.toString());
             }
             break;
          }
@@ -422,7 +422,6 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         }
                         if (result.rowsAffected){
                            //add custom key using same name as other databases
-                           /**@ts-ignore */
                            result.affectedRows = result.rowsAffected;
                         }
                         if (result.rows)
