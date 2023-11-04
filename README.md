@@ -336,8 +336,3 @@
 	String.fromCharCode(0x5341).toLocaleString('en-u-nu-latin') 
 	UTF-16 code unit of Hanidec 十 (Shí),
 	should return 10 in latin number but returns 十.
-
-	Oracle issues:
-	oracle can not save long BASE64 strings to CLOB column
-	oracle ORA-0932 in admin dashboard, sql valid, oracledb module error
-	oracle ORA-0905 in admin users
