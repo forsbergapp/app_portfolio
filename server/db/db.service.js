@@ -173,7 +173,7 @@ const pool_start = async (dbparameters) =>{
                                  else
                                     db[2] = [{pool_id_app: dbparameters.pool_id?.toString()}];
                               });
-               if (dbparameters.pool_id)
+               if (dbparameters.pool_id!=null)
                   createpoolOracle(dbparameters.pool_id.toString());
             }
             break;
