@@ -10,10 +10,16 @@ import * as Types from './../types.js';
 let CONFIG_INIT;
 /**@type{Types.config} */
 let CONFIG;
-/**@type{Types.config_user} */
-let CONFIG_USER;
 /**@type{Types.config_apps[]} */
 let CONFIG_APPS;
+/**@type{Types.config_auth_blockip} */
+let CONFIG_AUTH_BLOCKIP;
+/**@type{Types.config_auth_policy} */
+let CONFIG_AUTH_POLICY;
+/**@type{Types.config_auth_user_agent} */
+let CONFIG_AUTH_USERAGENT;
+/**@type{Types.config_auth_user} */
+let CONFIG_AUTH_USER;
 /**@type{string} */
 let SLASH;
 if (process.platform == 'win32')
@@ -90,12 +96,11 @@ const config_files = () => {
     return [
             [0, SERVER_CONFIG_INIT_PATH],
             [1, CONFIG_INIT.FILE_CONFIG_SERVER],
-            [2, CONFIG_INIT.FILE_CONFIG_AUTH_BLOCKIP],
-            [3, CONFIG_INIT.FILE_CONFIG_AUTH_USERAGENT],
+            [2, CONFIG_INIT.FILE_CONFIG_APPS],
+            [3, CONFIG_INIT.FILE_CONFIG_AUTH_BLOCKIP],
             [4, CONFIG_INIT.FILE_CONFIG_AUTH_POLICY],
-            [5, CONFIG_INIT.PATH_LOG],
-            [6, CONFIG_INIT.FILE_CONFIG_AUTH_USER],
-            [7, CONFIG_INIT.FILE_CONFIG_APPS]
+            [5, CONFIG_INIT.FILE_CONFIG_AUTH_USERAGENT],
+            [6, CONFIG_INIT.FILE_CONFIG_AUTH_USER]
            ];
 };
 /**
@@ -112,7 +117,7 @@ const config_files = () => {
  * @returns {string}
  */
  const ConfigGetUser = (parameter) => {
-    return CONFIG_USER[parameter];
+    return CONFIG_AUTH_USER[parameter];
  };
 /**
  * Config get apps
@@ -247,12 +252,12 @@ const DefaultConfig = async () => {
     /**@type{Types.config_files[]} */
     const default_files = [
                             [1, 'default_config.json'],
-                            [2, 'default_auth_blockip.json'],
-                            [3, 'default_auth_useragent.json'],
+                            [2, 'default_apps.json'],
+                            [3, 'default_auth_blockip.json'],
                             [4, 'default_auth_policy.json'],
+                            [5, 'default_auth_useragent.json'],
                             [6, 'default_auth_user.json'],
-                            [7, 'default_apps.json'],
-                            [8, 'default_service_pdf_config.json']
+                            [7, 'default_service_pdf_config.json']
                         ]; 
     //ES2020 import() with ES6 promises
     const config_json = await Promise.all(default_files.map(file => {
@@ -285,15 +290,15 @@ const DefaultConfig = async () => {
                 row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
             }
     });
-    //set created for user
-    config_obj[4].created = new Date().toISOString();
     //generate hash for apps
-    config_obj[5].APPS.map(row=>{
+    config_obj[1].APPS.map(row=>{
         row.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
     });
+    //set created for user
+    config_obj[5].created = new Date().toISOString();
     //default server metadata
     const config_init = {
         'CONFIGURATION': app_portfolio_title,
@@ -301,12 +306,12 @@ const DefaultConfig = async () => {
         'MODIFIED': '',
         'MAINTENANCE': '0',
         'FILE_CONFIG_SERVER': `${SLASH}config${SLASH}config.json`,
+        'FILE_CONFIG_APPS':`${SLASH}config${SLASH}apps.json`,
         'FILE_CONFIG_AUTH_BLOCKIP':`${SLASH}config${SLASH}auth_blockip.json`,
-        'FILE_CONFIG_AUTH_USERAGENT':`${SLASH}config${SLASH}auth_useragent.json`,
         'FILE_CONFIG_AUTH_POLICY':`${SLASH}config${SLASH}auth_policy.json`,
-        'PATH_LOG':`${SLASH}logs${SLASH}`,
+        'FILE_CONFIG_AUTH_USERAGENT':`${SLASH}config${SLASH}auth_useragent.json`,
         'FILE_CONFIG_AUTH_USER':`${SLASH}config${SLASH}auth_user.json`,
-        'FILE_CONFIG_APPS':`${SLASH}config${SLASH}apps.json`
+        'PATH_LOG':`${SLASH}logs${SLASH}`
         };
     //save initial config files with metadata including path to config files
     await fs.promises.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, JSON.stringify(config_init, undefined, 2),  'utf8');
@@ -340,49 +345,44 @@ const DefaultConfig = async () => {
 const InitConfig = async () => {
     return await new Promise((resolve, reject) => {
         const setVariables = async () => {
-            return await new Promise((resolve, reject) => {
-                const files = config_files();
-                let i=0;                
-                for (const file of files){
-                    //skip log path
-                    if (file[0]!=5){
-                        import('node:fs').then((fs) => {
-                            fs.readFile(process.cwd() + file[1], 'utf8', (err, fileBuffer) => {
-                                if (err)
-                                    reject(err);
-                                else{
-                                    switch (file[0]){
-                                        case 0:{
-                                            CONFIG_INIT = JSON.parse(fileBuffer.toString());
-                                            break;
-                                        }
-                                        case 1:{
-                                            CONFIG = JSON.parse(fileBuffer.toString());
-                                            break;
-                                        }
-                                        case 6:{
-                                            CONFIG_USER = JSON.parse(fileBuffer.toString());
-                                            break;
-                                        }
-                                        case 7:{
-                                            CONFIG_APPS = JSON.parse(fileBuffer.toString());
-                                            break;
-                                        }
-                                        default:{
-                                            break;
-                                        }
-                                    }
-                                    //check if last, dont count skipped log path
-                                    if (i == files.length -2)
-                                        resolve(null);
-                                    else
-                                        i++;
-                                }
-                            });
-                        });
+            const fs = await import('node:fs');
+            const files = config_files();         
+            for (const file of files){
+                const fileBuffer = await fs.promises.readFile(process.cwd() + file[1], 'utf8');
+                switch (file[0]){
+                    case 0:{
+                        CONFIG_INIT = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    case 1:{
+                        CONFIG = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    case 2:{
+                        CONFIG_APPS = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    case 3:{
+                        CONFIG_AUTH_BLOCKIP = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    case 4:{
+                        CONFIG_AUTH_POLICY = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    case 5:{
+                        CONFIG_AUTH_USERAGENT = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    case 6:{
+                        CONFIG_AUTH_USER = JSON.parse(fileBuffer.toString());
+                        break;
+                    }
+                    default:{
+                        break;
                     }
                 }
-            });
+            }
         };
         ConfigExists().then((result) => {
             if (result==true)
@@ -463,12 +463,11 @@ const ConfigMaintenanceGet = (callBack) => {
  *   config_type_no
  *   0 = config_init     path + file
  *   1 = config          path + file
- *   2 = auth blockip    path + file
- *   3 = auth useragent  path + file
- *   4 = auth policy     path + file
- *   5 = log path        path
+ *   2 = apps            path + file
+ *   3 = auth blockip    path + file
+ *   4 = auth policy     path + file 
+ *   5 = auth useragent  path + file
  *   6 = auth user       path + file
- *   7 = apps            path + file
  * @async
  * @param {Types.config_type_no} config_type_no
  * @returns {Promise<Types.config>}
@@ -500,21 +499,33 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
                         reject(err);
                     else{
                         //update some frequent configurations in module variables for faster access
-                        //for security reason  blockip and useragent configuration are not saved in variables
                         //config init and policy configuration are only used by admin and at start
                         switch (config_no){
                             case 1:{
                                 CONFIG = JSON.parse(config_json);
                                 break;
                             }
-                            case 5:{
-                                CONFIG_USER = JSON.parse(config_json);
-                                break;
-                            }
-                            case 6:{
+                            case 2:{
                                 CONFIG_APPS = JSON.parse(config_json);
                                 break;
                             }
+                            case 3:{
+                                CONFIG_AUTH_BLOCKIP = JSON.parse(config_json);
+                                break;
+                            }
+                            case 4:{
+                                CONFIG_AUTH_POLICY = JSON.parse(config_json);
+                                break;
+                            }
+                            case 5:{
+                                CONFIG_AUTH_USERAGENT = JSON.parse(config_json);
+                                break;
+                            }
+                            case 6:{
+                                CONFIG_AUTH_USER = JSON.parse(config_json);
+                                break;
+                            }
+                            
                             default:{
                                 break;
                             }
@@ -573,7 +584,7 @@ const ConfigSave = async (config_no, config_json, first_time, callBack) => {
  * @returns {boolean}
  */
 const CheckFirstTime = () => {
-    if (CONFIG_USER.username=='')
+    if (CONFIG_AUTH_USER.username=='')
         return true;
     else
         return false;
@@ -587,11 +598,11 @@ const CheckFirstTime = () => {
  */
 const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
     const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
-    CONFIG_USER.username = admin_name;
-    CONFIG_USER.password = hashSync(admin_password, genSaltSync(10));
-    CONFIG_USER.modified = new Date().toISOString();
+    CONFIG_AUTH_USER.username = admin_name;
+    CONFIG_AUTH_USER.password = hashSync(admin_password, genSaltSync(10));
+    CONFIG_AUTH_USER.modified = new Date().toISOString();
     import('node:fs').then((fs) => {
-        fs.writeFile(process.cwd() + config_files()[6][1], JSON.stringify(CONFIG_USER, undefined, 2),  'utf8', (err) => {
+        fs.writeFile(process.cwd() + config_files()[6][1], JSON.stringify(CONFIG_AUTH_USER, undefined, 2),  'utf8', (err) => {
             if (err)
                 callBack(err, null);
             else

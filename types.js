@@ -126,7 +126,7 @@
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
  * @property {number} query.identity_provider_id
- * @property {0|1|2|3|4|5|6|7} query.config_type_no - Server parameter
+ * @property {0|1|2|3|4|5|6} query.config_type_no - Server parameter
  * @property {  'SERVER'|
  *              'SERVICE_AUTH'|
  *              'SERVICE_BROADCAST'|
@@ -583,16 +583,21 @@
  * @property {string} [DATA_EXPIRE]
  * @property {string} [ACCESS_SECRET]
  * @property {string} [ACCESS_EXPIRE]
- */
-/**
- * Server - Config user
+ *
+ * Server - Config auth blockip
+ * @typedef {[string,string][]} config_auth_blockip
+ * Server - Config auth policy
+ * @typedef {{'content-security-policy':string}} config_auth_policy
+ * Server - Config auth user agent
+ * @typedef {{ user_agent:[{Name:string, 
+ *                          user_agent:string}]}} config_auth_user_agent
+ * Server - Config auth user
  * @typedef {{  ['username']:string, 
  *              ['password']:string, 
  *              ['created']:string,
- *              ['modified']:string}} config_user
- */
-/**
- * Server - Config user parameter
+ *              ['modified']:string}} config_auth_user
+ *
+ *  Server - Config user parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter
  */
 
