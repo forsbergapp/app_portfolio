@@ -281,7 +281,7 @@ const serverExpress = async () => {
     const {default:compression} = await import('compression');
     const { check_request, access_control} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     const {LogRequestI} = await import(`file://${process.cwd()}/server/log/log.service.js`);    
-    const ContentSecurityPolicy = await ConfigGetSaved('4').then(/**@param{Types.config} parameter*/parameter=>parameter['content-security-policy']);
+    const ContentSecurityPolicy = ConfigGetSaved(4)['content-security-policy'];
     const {randomUUID, createHash} = await import('node:crypto');
     return new Promise((resolve) =>{
         /**@type{Types.express} */

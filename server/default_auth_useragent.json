@@ -1,5 +1,5 @@
 {
-    "user_agent": [
+    "user_agents": [
             {"Name": "Let's Encrypt validation", 
             "user_agent": "Mozilla/5.0 (compatible; Let's Encrypt validation server; +https://www.letsencrypt.org)"}
         ]

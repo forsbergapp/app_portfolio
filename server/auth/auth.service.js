@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
 
 /**
@@ -111,64 +111,38 @@ const access_control = (ip, host, user_agent, accept_language, callBack) => {
  */
 const block_ip_control = async (ip_v4, callBack) => {
     if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
-        let ranges;
-        import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + ConfigGetInit('FILE_CONFIG_AUTH_BLOCKIP'), 'utf8', (err, fileBuffer) => {
-                if (err)
-                    return callBack(err, null);
-                else{
-                    ranges = fileBuffer.toString();
-                    //check if IP is blocked
-                    if ((ip_v4.match(/\./g)||[]).length==3){
-                        for (const element of JSON.parse(ranges)) {
-                            if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
-                                IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
-                                    //403 Forbidden
-                                    return callBack(null,{statusCode: 403,
-                                                            statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`});
-                            }
-                        }
-                    }
+        const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/server.service.js`);
+        const ranges = ConfigGetSaved(3);
+        //check if IP is blocked
+        if ((ip_v4.match(/\./g)||[]).length==3){
+            for (const element of ranges) {
+                if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
+                    IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
+                        //403 Forbidden
+                        return callBack(null,{  statusCode: 403,
+                                                statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`});
                 }
-                return callBack(null, null);
-            });
-        });
+            }
+        }
+        return callBack(null, null);
     }
     else
         return callBack(null, null);
 };
 /**
  * Controls if user agent is safe
- * @param {string} user_agent
+ * @param {string} client_user_agent
  * @param {Types.callBack} callBack
  */
-const safe_user_agents = async (user_agent, callBack) => {
-    /*format file
-        {"user_agent": [
-                        {"Name": "ID", 
-                            "user_agent": "[user agent]"},
-                            {"Name": "OtherSafe", 
-                            "user_agent": "Some known user agent description with missing accept_language"}
-                        ]
-        }
-    */
+const safe_user_agents = async (client_user_agent, callBack) => {
     if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
-        let json;  
-        import('node:fs').then((fs) =>{
-            fs.readFile(process.cwd() + ConfigGetInit('FILE_CONFIG_AUTH_USERAGENT'), 'utf8', (err, fileBuffer) => {
-                if (err){
-                    return callBack(err, null);
-                }
-                else{
-                    json = JSON.parse(fileBuffer.toString());
-                    for (let i = 0; i < json.user_agent.length; i++){
-                        if (json.user_agent[i].user_agent == user_agent)
-                            return callBack(null, true);
-                    }
-                    return callBack(null, false);
-                }
-            });
-        });
+        const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/server.service.js`);
+        const {user_agents} = ConfigGetSaved(5);
+        for (const user_agent of user_agents){
+            if (user_agent.user_agent == client_user_agent)
+                return callBack(null, true);
+        }
+        return callBack(null, false);
     }
     else
         return callBack(null, false);
