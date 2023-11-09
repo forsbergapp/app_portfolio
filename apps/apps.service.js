@@ -757,6 +757,8 @@ const getModule = async (app_id, module_config, callBack) =>{
     /** @type {Types.map_styles} */
     let config_map_styles;
     let config_ui;
+    /**@type {[string, string][]} */
+    const render_variables = [];
 
     if (app_id == 0 && module_config.module_type=='APP'){
         //get app admin
@@ -772,6 +774,21 @@ const getModule = async (app_id, module_config, callBack) =>{
         config_map = app.map;
         config_map_styles = app.map_styles;
         config_ui = true;
+        const result_objects = [];
+        result_objects.push({object_item_name:'PASSWORD_NEW', text:'New password'});
+        result_objects.push({object_item_name:'PASSWORD_NEW_CONFIRM', text:'New password confirm'});
+        result_objects.push({object_item_name:'USERNAME', text:'Username'});
+        result_objects.push({object_item_name:'PASSWORD', text:'Password'});
+        result_objects.push({object_item_name:'EMAIL', text:'Email'});
+        result_objects.push({object_item_name:'NEW_EMAIL', text:'New email'});
+        result_objects.push({object_item_name:'PASSWORD_CONFIRM', text:'Password confirm'});
+        result_objects.push({object_item_name:'PASSWORD_REMINDER', text:'Password reminder'});
+        result_objects.push({object_item_name:'BIO', text:'Bio'});
+        result_objects.push({object_item_name:'CONFIRM_QUESTION', text:'Are you sure?'});
+        for (const row of result_objects){
+            render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
+        }
+        app.app = render_app_with_data(app.app, render_variables);
     }
     else{
         system_admin_only = 0;
@@ -787,10 +804,8 @@ const getModule = async (app_id, module_config, callBack) =>{
             //get translation data
             const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
             const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON');
-            /**@type {[string, string][]} */
-            const render_variables = [];
             for (const row of result_objects){
-                render_variables.push([`CommonTranslation${row.object_item_name.toUpperCase()}`, row.text]);
+                render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
             }
             app.app = render_app_with_data(app.app, render_variables);
         }
