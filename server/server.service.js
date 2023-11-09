@@ -470,15 +470,35 @@ const ConfigMaintenanceGet = (callBack) => {
  *   6 = auth user       path + file
  * @async
  * @param {Types.config_type_no} config_type_no
- * @returns {Promise<Types.config>}
+ * @returns {{}}
  */
-const ConfigGetSaved = async (config_type_no) => {
-    const config_file = config_files().filter((file) => {
-        return (file[0] == config_type_no);
-    })[0][1];
-    const fs = await import('node:fs');
-    const fileBuffer = await fs.promises.readFile(process.cwd() + config_file, 'utf8');
-    return JSON.parse(fileBuffer.toString());
+const ConfigGetSaved = (config_type_no) => {
+    switch (config_type_no){
+        case 0:{
+            return CONFIG_INIT;
+        }
+        case 1:{
+            return CONFIG;
+        }
+        case 2:{
+            return CONFIG_APPS;
+        }
+        case 3:{
+            return CONFIG_AUTH_BLOCKIP;
+        }
+        case 4:{
+            return CONFIG_AUTH_POLICY;
+        }
+        case 5:{
+            return CONFIG_AUTH_USERAGENT;
+        }
+        case 6:{
+            return CONFIG_AUTH_USER;
+        }
+        default:{
+            return {};
+        }
+    }
 };
 /**
  * Config save
