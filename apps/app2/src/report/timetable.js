@@ -667,7 +667,9 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
  * @returns 
  */
 const getstyle = (img_src, align) => {
-	return 	img_src==null?'':`background-image:url(${img_src});${align==null?'':'text-align:' + align}`;
+	const img_style = img_src==null?'':`background-image:url(${img_src});`;
+	const align_style = `${align==null?'':'text-align:' + align}`;
+	return img_style + align_style;
 };
 /**
  * Show column with correct class and correct format 
@@ -1100,17 +1102,17 @@ const timetable_user_setting_get = async (app_id, user_setting_id, callBack) => 
 									show_gps   	       		: getNumberValue(user_setting.design_column_gps_checked),
 									show_timezone       	: getNumberValue(user_setting.design_column_timezone_checked),
 												
-									header_img_src      	: (user_setting.image_header_image_img??null)==null?null:user_setting.image_header_image_img,
-									footer_img_src      	: (user_setting.image_footer_image_img??null)==null?null:user_setting.image_footer_image_img,
+									header_img_src      	: (user_setting.image_header_image_img == '' || user_setting.image_header_image_img == null)?null:user_setting.image_header_image_img,
+									footer_img_src      	: (user_setting.image_footer_image_img == '' || user_setting.image_footer_image_img == null)?null:user_setting.image_footer_image_img,
 
 									header_txt1         	: user_setting.text_header_1_text,
 									header_txt2         	: user_setting.text_header_2_text,
 									header_txt3         	: user_setting.text_header_3_text,
-									header_align      		: (user_setting.text_header_align??null)==null?null:user_setting.text_header_align,
+									header_align      		: (user_setting.text_header_align == '' || user_setting.text_header_align ==null)?null:user_setting.text_header_align,
 									footer_txt1         	: user_setting.text_footer_1_text,
 									footer_txt2         	: user_setting.text_footer_2_text,
 									footer_txt3    	   		: user_setting.text_footer_3_text,
-									footer_align			: (user_setting.text_footer_align??null)==null?null:user_setting.text_footer_align,
+									footer_align			: (user_setting.text_footer_align == '' || user_setting.text_footer_align ==null)?null:user_setting.text_footer_align,
 
 									method              	: user_setting.prayer_method,
 									asr                 	: user_setting.prayer_asr_method,

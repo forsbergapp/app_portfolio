@@ -272,7 +272,9 @@ const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_
 };
 //header and footer style
 const getstyle = (img_src, align) => {
-	return 	img_src==null?'':`background-image:url(${img_src});${align==null?'':'text-align:' + align}`;	
+	const img_style = img_src==null?'':`background-image:url(${img_src});`;
+	const align_style = `${align==null?'':'text-align:' + align}`;
+	return img_style + align_style;
 };
 //show column with correct class and correct format
 //for both day and month timetable
