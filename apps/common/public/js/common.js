@@ -3822,7 +3822,7 @@ export{/* GLOBALS*/
        /* MISC */
        getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
-       list_image_format_src, recreate_img, set_avatar,
+       list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
