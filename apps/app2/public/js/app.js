@@ -73,8 +73,8 @@ const getReportSettings = () => {
                 show_gps   	       		: Number(document.getElementById('setting_checkbox_report_show_gps').checked),
                 show_timezone       	: Number(document.getElementById('setting_checkbox_report_show_timezone').checked),
                 
-                header_img_src      	: (document.getElementById('setting_reportheader_img').src??null)==null?null:document.getElementById('setting_reportheader_img').src,
-				footer_img_src      	: (document.getElementById('setting_reportfooter_img').src??null)==null?null:document.getElementById('setting_reportfooter_img').src,
+                header_img_src      	: document.getElementById('setting_reportheader_img').src == ''?null:document.getElementById('setting_reportheader_img').src,
+				footer_img_src      	: document.getElementById('setting_reportfooter_img').src == ''?null:document.getElementById('setting_reportfooter_img').src,
 
                 header_txt1         	: document.getElementById('setting_input_reportheader1').value,
                 header_txt2         	: document.getElementById('setting_input_reportheader2').value,
@@ -400,7 +400,7 @@ const get_align = (al,ac,ar) => {
 		return 'center';
 	if (ar==true)
 		return 'right';
-	return '';
+	return null;
 };
 const showcurrenttime = () => {
     const options = {
