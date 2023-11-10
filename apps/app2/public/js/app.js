@@ -1707,13 +1707,17 @@ const set_default_settings = async () => {
     if (app_common.APP_GLOBAL.image_default_report_header_src == null || app_common.APP_GLOBAL.image_default_report_header_src == '')
         common.recreate_img(document.getElementById('setting_reportheader_img'));
     else {
-        document.getElementById('setting_reportheader_img').src = app_common.APP_GLOBAL.image_default_report_header_src;
+        document.getElementById('setting_reportheader_img').src = await common.convert_image(   app_common.APP_GLOBAL.image_default_report_header_src, 
+                                                                                                app_common.APP_GLOBAL.image_header_footer_width, 
+                                                                                                app_common.APP_GLOBAL.image_header_footer_height);
     }
     document.getElementById('setting_input_reportfooter_img').value = '';
     if (app_common.APP_GLOBAL.image_default_report_footer_src == null || app_common.APP_GLOBAL.image_default_report_footer_src == '')
         common.recreate_img(document.getElementById('setting_reportfooter_img'));
     else {
-        document.getElementById('setting_reportfooter_img').src = app_common.APP_GLOBAL.image_default_report_footer_src;
+        document.getElementById('setting_reportfooter_img').src = await common.convert_image(   app_common.APP_GLOBAL.image_default_report_footer_src, 
+                                                                                                app_common.APP_GLOBAL.image_header_footer_width, 
+                                                                                                app_common.APP_GLOBAL.image_header_footer_height);
     }
     //Text
     document.getElementById('setting_input_reportheader1').value = app_common.APP_GLOBAL.text_default_reporttitle1;
