@@ -277,16 +277,17 @@ const init_app = (system_admin_only) => {
 };
 const init = (parameters) => {
     //show admin login as default
-    admin_login_nav(document.getElementById('admin_login_title'));
+    document.querySelector('#admin_login_button').innerHTML = common.APP_SPINNER;
     common.COMMON_GLOBAL.exception_app_function = admin_exception;
+    
+
     common.init_common(parameters).then(()=>{
+        admin_login_nav(document.getElementById('admin_login_title'));
         document.getElementById('admin_login_title').innerHTML = common.ICONS.user;
         document.getElementById('system_admin_login_title').innerHTML = common.ICONS.app_system_admin;
         document.getElementById('system_admin_login_username_icon').innerHTML = common.ICONS.app_system_admin;
         document.getElementById('system_admin_login_password_icon').innerHTML = common.ICONS.user_password;
-
-        document.getElementById('admin_login_button').innerHTML = common.ICONS.app_login;
-
+        
         document.getElementById('common_message_close').innerHTML = common.ICONS.app_close;
         document.getElementById('admin_login_username_icon').innerHTML = common.ICONS.user;
         document.getElementById('admin_login_password_icon').innerHTML = common.ICONS.user_password;
@@ -317,6 +318,7 @@ const init = (parameters) => {
             }
         }
         init_app(parameters.app_service.system_admin_only);
+        document.getElementById('admin_login_button').innerHTML = common.ICONS.app_login;
     });
 };
 export { init };
