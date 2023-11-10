@@ -1,16 +1,3 @@
-/*  Functions and globals in this order:
-    GLOBALS APP & REPORT
-	COMMON REPORT
-	COMMON APP & REPORT
-	COMMON APP & REPORT TIMETABLE MONTH & YEAR (USES MODULE REGIONAL)
-	COMMON APP & REPORT TIMETABLE DAY (USES MODULE REGIONAL)
-	COMMON APP & REPORT TIMETABLE YEAR
-    EXCEPTION REPORT
-    INIT REPORT (USES MODULE PRAYTIMES)
-
-	APP    = USED IN APP
-	REPORT = USED IN REPORT
-*/
 const common = await import('common');
 const app_common = await import('app_common');
 /*----------------------- */
