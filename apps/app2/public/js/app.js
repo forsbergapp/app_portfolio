@@ -244,7 +244,7 @@ const set_theme_id = (type, theme_id) => {
             //remove active class from current theme
             document.querySelectorAll('.slider_active_' + type)[0].classList.remove('slider_active_' + type);
             //set active class on found theme
-            document.getElementById(slides.children[i].children[0].id).classList.add('slider_active_' + type);
+            document.querySelector('#' + slides.children[i].children[0].id).classList.add('slider_active_' + type);
             //update preview image to correct theme
             document.querySelector('#slides_' + type).style.left = (-96 * (i)).toString() + 'px';
             set_theme_title(type);
@@ -274,7 +274,7 @@ const load_themes = () => {
     return null;
 };
 const slide = (items, prev, next, type) => {
-    document.getElementById(items.children[0].children[0].id).classList.add(`slider_active_${type}`);
+    document.querySelector('#' + items.children[0].children[0].id).classList.add(`slider_active_${type}`);
     set_theme_title(type);
 
     // Click events
@@ -303,7 +303,7 @@ const slide = (items, prev, next, type) => {
         //remove old active theme class
         document.querySelectorAll(`.slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
         //add new active theme class
-        document.getElementById(items.children[theme_index].children[0].id).classList.add(`slider_active_${type}`);
+        document.querySelector('#' + items.children[theme_index].children[0].id).classList.add(`slider_active_${type}`);
         //set theme title
         set_theme_title(type);
 
@@ -613,8 +613,8 @@ const select_get_selectindex = (select, id) => {
     if (id == 0)
         return 0;
     else {
-        for (let i = 0; i < document.getElementById(select).options.length; i++) {
-            if (document.getElementById(select).options[i].getAttribute('id') == id)
+        for (let i = 0; i < document.querySelector('#' + select).options.length; i++) {
+            if (document.querySelector('#' + select).options[i].getAttribute('id') == id)
                 return i;
         }
     }
@@ -624,7 +624,7 @@ const select_get_id = (select, selectindex) => {
     if (selectindex == 0)
         return 'null';
     else {
-        return document.getElementById(select)[selectindex].getAttribute('id');
+        return document.querySelector('#' + select)[selectindex].getAttribute('id');
     }
 };
 const set_null_or_value = (value) => {
@@ -867,14 +867,14 @@ const update_ui = async (option, item_id=null) => {
         case 15:
             {
                 //check if clicking on button that is already active then deactivate so no alignment
-                if (document.getElementById(item_id).classList.contains(settings.button_active_class)){
-                    document.getElementById(item_id).classList.remove(settings.button_active_class);
+                if (document.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
+                    document.querySelector('#' + item_id).classList.remove(settings.button_active_class);
                 }
                 else{	
                     settings.reportheader_aleft.classList.remove(settings.button_active_class);
                     settings.reportheader_acenter.classList.remove(settings.button_active_class);
                     settings.reportheader_aright.classList.remove(settings.button_active_class);
-                    document.getElementById(item_id).classList.add(settings.button_active_class);
+                    document.querySelector('#' + item_id).classList.add(settings.button_active_class);
                 }
                 const header_align = get_align(document.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'),
                                              document.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'),
@@ -888,14 +888,14 @@ const update_ui = async (option, item_id=null) => {
         case 16:
             {
                 //check if clicking on button that is already active then deactivate so no alignment
-                if (document.getElementById(item_id).classList.contains(settings.button_active_class)){
-                    document.getElementById(item_id).classList.remove(settings.button_active_class);
+                if (document.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
+                    document.querySelector('#' + item_id).classList.remove(settings.button_active_class);
                 }
                 else{
                     settings.reportfooter_aleft.classList.remove(settings.button_active_class);
                     settings.reportfooter_acenter.classList.remove(settings.button_active_class);
                     settings.reportfooter_aright.classList.remove(settings.button_active_class);
-                    document.getElementById(item_id).classList.add(settings.button_active_class);
+                    document.querySelector('#' + item_id).classList.add(settings.button_active_class);
                 }
                 const footer_align = get_align(document.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
                                                  document.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
@@ -2148,7 +2148,7 @@ const setEvents = () => {
                     //'user_day_html', 'user_day_html_copy', 'user_day_pdf', 'user_day_pdf_copy'
                     //'user_month_html', 'user_month_html_copy', 'user_month_pdf', 'user_month_pdf_copy'
                     //'user_year_html', 'user_year_html_copy', 'user_year_pdf', 'user_year_pdf_copy'
-                    user_setting_link(document.getElementById(event_target_id));
+                    user_setting_link(document.querySelector('#' + event_target_id));
                     break;
                 }
             }
@@ -2382,7 +2382,7 @@ const init_map = async () => {
             document.querySelector('#common_module_leaflet_select_mapstyle').addEventListener('change', () => { update_ui(4); }, false);
 
             //add extra app events on map
-            document.getElementById(app_common.APP_GLOBAL.gps_module_leaflet_container).addEventListener('click', (event) => {
+            document.querySelector('#' + app_common.APP_GLOBAL.gps_module_leaflet_container).addEventListener('click', (event) => {
                 const event_target_id = event.target.id==''?event.target.parentNode.id:event.target.id;
                 if ( event_target_id == 'common_module_leaflet_control_my_location_id'){
                     document.querySelector('#setting_select_popular_place').selectedIndex = 0;
