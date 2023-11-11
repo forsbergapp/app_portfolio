@@ -1218,10 +1218,10 @@ const button_save = async (item) => {
                     else
                         json_data = {   config_no:   config_no,
                                         config_json: document.querySelector('#list_config_edit').innerHTML};
-                    const old_button = document.getElementById(item).innerHTML;
-                    document.getElementById(item).innerHTML = common.APP_SPINNER;
+                    const old_button = document.querySelector('#' + item).innerHTML;
+                    document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
                     common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 2, json_data, () => {
-                        document.getElementById(item).innerHTML = old_button;
+                        document.querySelector('#' + item).innerHTML = old_button;
                     });
                 }
             }    
@@ -1233,8 +1233,8 @@ const update_record = async (table,
     if (admin_token_has_value()){
         let path;
         let json_data;
-        const old_button = document.getElementById(button).innerHTML;
-        document.getElementById(button).innerHTML = common.APP_SPINNER;
+        const old_button = document.querySelector('#' + button).innerHTML;
+        document.querySelector('#' + button).innerHTML = common.APP_SPINNER;
         switch (table){
             case 'user_account':{
                 json_data = {   app_role_id:        parameters.app_role_id,
@@ -1279,7 +1279,7 @@ const update_record = async (table,
             }
         }
         await common.FFB ('DB_API', path, 'PUT', 1, json_data, (err) => {
-            document.getElementById(button).innerHTML = old_button;
+            document.querySelector('#' + button).innerHTML = old_button;
             if (err)
                 null;
             else{
@@ -1294,7 +1294,7 @@ const list_events = (list_item, item_row, item_edit) => {
     //mark record as changed if any editable field is changed
     
     //change event
-    document.getElementById(list_item).addEventListener('change', (event) => {
+    document.querySelector('#' + list_item).addEventListener('change', (event) => {
         if (event.target.classList.contains('list_edit')){
             event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
             const row_action = (err, result, item, event, nextindex) => {
@@ -1310,7 +1310,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     const json = JSON.parse(result);
                     if (json.data.length == 1){
                         //set new value from 3 column JSON result
-                        document.getElementById(event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
+                        document.querySelector('#' + event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
                     }
                     else{
                         event.stopPropagation();
@@ -1359,7 +1359,7 @@ const list_events = (list_item, item_row, item_edit) => {
         }
     });
     //keydown event
-    document.getElementById(list_item).addEventListener('keydown', (event) => {
+    document.querySelector('#' + list_item).addEventListener('keydown', (event) => {
         if (event.target.classList.contains('list_edit')){
             if (event.code=='ArrowUp') {
                 APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
@@ -1405,7 +1405,7 @@ const list_events = (list_item, item_row, item_edit) => {
     }
     //click event
     if (list_item == 'list_apps')
-        document.getElementById(list_item).addEventListener('click', (event) => {   
+        document.querySelector('#' + list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 const function_event = (event_lov) => {
                     //setting values from LOV
@@ -1419,7 +1419,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 
         });
     if (list_item == 'list_app_parameter')
-        document.getElementById(list_item).addEventListener('click', (event) => {   
+        document.querySelector('#' + list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 const function_event = (event_lov) => {
                     //setting values from LOV
@@ -1433,7 +1433,7 @@ const list_events = (list_item, item_row, item_edit) => {
         });
     
     if (list_item == 'list_user_account')
-        document.getElementById(list_item).addEventListener('click', (event) => {   
+        document.querySelector('#' + list_item).addEventListener('click', (event) => {   
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 const function_event = (event_lov) => {
                     //setting values from LOV
@@ -1765,14 +1765,14 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     service = 'BROADCAST';
                     token_type = 1;
                 }
-                document.getElementById(list_div).innerHTML = common.APP_SPINNER;
+                document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_app_log':{
                 path = `/app_log/admin?${url_parameters}`;
                 service = 'DB_API';
                 token_type = 1;
-                document.getElementById(list_div).innerHTML = common.APP_SPINNER;
+                document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_server_log':{
@@ -1780,13 +1780,13 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 path = `/log/logs?${url_parameters}`;
                 service = 'LOG';
                 token_type = 2;
-                document.getElementById(list_div).innerHTML = common.APP_SPINNER;
+                document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
         }
         common.FFB (service, path, 'GET', token_type, null, (err, result) => {
             if (err){
-                document.getElementById(list_div).innerHTML = '';
+                document.querySelector('#' + list_div).innerHTML = '';
             }
             else{
                 json = JSON.parse(result);
@@ -2308,18 +2308,18 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     }
                     switch (list_div){
                         case 'list_connected':{
-                            document.getElementById(list_div).innerHTML = html;
-                            document.getElementById(list_div_col_title + '_' + sort).classList.add(order_by);
+                            document.querySelector('#' + list_div).innerHTML = html;
+                            document.querySelector('#' + list_div_col_title + '_' + sort).classList.add(order_by);
                             break;
                         }
                         case 'list_app_log':{
-                            document.getElementById(list_div).innerHTML = html;
-                            document.getElementById(list_div_col_title + sort).classList.add(order_by);
+                            document.querySelector('#' + list_div).innerHTML = html;
+                            document.querySelector('#' + list_div_col_title + sort).classList.add(order_by);
                             break;
                         }
                         case 'list_server_log':{
-                            document.getElementById(list_div).innerHTML = html;
-                            document.getElementById(list_div_col_title + '_' + sort).classList.add(order_by);
+                            document.querySelector('#' + list_div).innerHTML = html;
+                            document.querySelector('#' + list_div_col_title + '_' + sort).classList.add(order_by);
                             break;
                         }
                     }
@@ -2389,9 +2389,9 @@ const get_sort = (order_by=0) => {
 };
 const get_order = (item) => {
     let order_by = '';
-    if (document.getElementById(item.id).classList.contains('asc'))
+    if (document.querySelector('#' + item.id).classList.contains('asc'))
         order_by = 'desc';
-    if (document.getElementById(item.id).classList.contains('desc'))
+    if (document.querySelector('#' + item.id).classList.contains('desc'))
         order_by = 'asc';
     if (order_by=='')
         order_by = 'desc';

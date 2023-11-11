@@ -441,13 +441,13 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                             }
                             case 'APP':{
                                 //translate items in current app
-                                if (document.getElementById(json.data[i].object_item_name.toLowerCase()))
-                                    document.getElementById(json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                if (document.querySelector('#' + json.data[i].object_item_name.toLowerCase()))
+                                    document.querySelector('#' + json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
                                 break;
                             }
                             case 'APP_LOV':{
                                 //translate items in select lists in current app
-                                const select_element = document.getElementById(json.data[i].object_item_name.toLowerCase());
+                                const select_element = document.querySelector('#' + json.data[i].object_item_name.toLowerCase());
                                 for (let option_element = 0; option_element < select_element.options.length; option_element++){
                                     if (select_element.options[option_element].id == json.data[i].id)
                                         select_element.options[option_element].text = json.data[i].text;
@@ -600,7 +600,7 @@ const inIframe = () => {
     }
 };
 const show_image = (item_img, item_input, image_width, image_height) => {
-    const file = document.getElementById(item_input).files[0];
+    const file = document.querySelector('#' + item_input).files[0];
     const reader = new FileReader();
 
     const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
@@ -749,10 +749,10 @@ const dialogue_close = async (dialogue) => {
             soundDuration = 0;
 
         setTimeout(()=>{
-            document.getElementById(dialogue).classList.add('common_dialogue_close');
+            document.querySelector('#' + dialogue).classList.add('common_dialogue_close');
             setTimeout(()=>{
-                document.getElementById(dialogue).style.visibility = 'hidden';
-                document.getElementById(dialogue).classList.remove('common_dialogue_close');
+                document.querySelector('#' + dialogue).style.visibility = 'hidden';
+                document.querySelector('#' + dialogue).classList.remove('common_dialogue_close');
                 resolve();
             }, animationDuration);
         }, soundDuration);
@@ -2144,7 +2144,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
     let json_data;
     const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
     //only accept 0-9
-    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
+    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.querySelector('#' + item.id).value) > -1)
         if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').value != '' &
                 document.querySelector('#common_user_verify_verification_char2').value != '' &
                 document.querySelector('#common_user_verify_verification_char3').value != '' &
@@ -2231,12 +2231,12 @@ const user_verify_check_input = async (item, nextField, callBack) => {
             });
         } else{
             //not last, next!
-            document.getElementById(nextField).focus();
+            document.querySelector('#' + nextField).focus();
             return callBack(null, null);
         }
     else{
         //remove anything else than 0-9
-        document.getElementById(item.id).value = '';
+        document.querySelector('#' + item.id).value = '';
         return callBack(null, null);
     }
 };
@@ -2569,7 +2569,7 @@ const ProviderSignIn = async (provider_button, callBack) => {
 /*----------------------- */
 const create_qr = (div, url) => {
     import('easy.qrcode').then(({QRCode})=>{
-        new QRCode(document.getElementById(div), {
+        new QRCode(document.querySelector('#' + div), {
             text: url,
             width: COMMON_GLOBAL['module_easy.qrcode_width'],
             height: COMMON_GLOBAL['module_easy.qrcode_height'],
@@ -2822,7 +2822,7 @@ const map_click_event = (event, containervalue) =>{
             if (document.fullscreenElement)
                 document.exitFullscreen();
             else
-                document.getElementById(containervalue).requestFullscreen();
+                document.querySelector('#' + containervalue).requestFullscreen();
             break;
         }
         case 'common_module_leaflet_control_my_location_id':{
@@ -3231,9 +3231,9 @@ const connectOnline = async () => {
 const checkOnline = (div_icon_online, user_account_id) => {
     FFB ('BROADCAST', `/broadcast/connection/check/${user_account_id}?`, 'GET', 0, null, (err, result) => {
         if (JSON.parse(result).online == 1)
-            document.getElementById(div_icon_online).className = 'online';
+            document.querySelector('#' + div_icon_online).className = 'online';
         else
-            document.getElementById(div_icon_online).className= 'offline';
+            document.querySelector('#' + div_icon_online).className= 'offline';
     });
 };
 /*-----------------------

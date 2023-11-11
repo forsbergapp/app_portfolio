@@ -149,7 +149,7 @@ const setEvents = () => {
                 event.preventDefault();
                 admin_login();
                 //unfocus
-                document.getElementById(event.target.id).blur();
+                document.querySelector('#' + event.target.id).blur();
             }
     });
     document.querySelector('#admin_login_button').addEventListener('click', () => { admin_login(); }, false);
