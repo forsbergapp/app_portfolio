@@ -196,7 +196,7 @@ const set_prayer_method = async() => {
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
 		//called from app where there is a DOM select
-		const methods = document.getElementById('setting_select_method');
+		const methods = document.querySelector('#setting_select_method');
 		for (let i=0;i <methods.options.length;i++){
 			const prayer_value = set_prayer_value(	methods[i].getAttribute('data2'),
 													methods[i].getAttribute('data3'),
