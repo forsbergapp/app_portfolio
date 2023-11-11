@@ -388,52 +388,52 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                                 //translate common items
                                 switch  (json.data[i].object_item_name){
                                     case 'USERNAME':{
-                                        document.getElementById('common_login_username').placeholder = json.data[i].text;
-                                        document.getElementById('common_signup_username').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_edit_input_username').placeholder = json.data[i].text;
+                                        document.querySelector('#common_login_username').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_username').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_username').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'EMAIL':{
-                                        document.getElementById('common_signup_email').placeholder = json.data[i].text;
-                                        document.getElementById('common_forgot_email').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_email').placeholder = json.data[i].text;
+                                        document.querySelector('#common_forgot_email').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'NEW_EMAIL':{
-                                        document.getElementById('common_user_edit_input_new_email').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_new_email').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'BIO':{
-                                        document.getElementById('common_user_edit_input_bio').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_bio').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'PASSWORD':{
-                                        document.getElementById('common_login_password').placeholder = json.data[i].text;
-                                        document.getElementById('common_signup_password').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_edit_input_password').placeholder = json.data[i].text;
+                                        document.querySelector('#common_login_password').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_password').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_password').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'PASSWORD_CONFIRM':{
-                                        document.getElementById('common_signup_password_confirm').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_edit_input_password_confirm').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_password_confirm').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_password_confirm').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'PASSWORD_REMINDER':{
-                                        document.getElementById('common_signup_password_reminder').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_edit_input_password_reminder').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_password_reminder').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_password_reminder').placeholder = json.data[i].text;
                                         break;
                                     }
                                     case 'NEW_PASSWORD_CONFIRM':{
-                                        document.getElementById('common_user_edit_input_password_new_confirm').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_password_new_confirm').placeholder = json.data[i].text;    
+                                        document.querySelector('#common_user_edit_input_password_new_confirm').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_password_new_confirm').placeholder = json.data[i].text;    
                                         break;
                                     }
                                     case 'NEW_PASSWORD':{
-                                        document.getElementById('common_user_edit_input_password_new').placeholder = json.data[i].text;
-                                        document.getElementById('common_user_password_new').placeholder = json.data[i].text;    
+                                        document.querySelector('#common_user_edit_input_password_new').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_password_new').placeholder = json.data[i].text;    
                                         break;
                                     }
                                     case 'CONFIRM_QUESTION':{
-                                        document.getElementById('common_confirm_question').innerHTML = json.data[i].text;
+                                        document.querySelector('#common_confirm_question').innerHTML = json.data[i].text;
                                         break;
                                     }
                                 } 
@@ -473,7 +473,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                 else{
                     json = JSON.parse(result);
                     let html='';
-                    const select_locale = document.getElementById('common_user_locale_select');
+                    const select_locale = document.querySelector('#common_user_locale_select');
                     for (let i = 0; i < json.locales.length; i++){
                         html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
                     }
@@ -764,15 +764,15 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
         case 'PROFILE':
             {    
                 dialogue_profile_clear();
-                document.getElementById('common_dialogue_profile').style.visibility = 'visible';
+                document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                 break;
             }
         case 'PASSWORD_NEW':
             {    
-                document.getElementById('common_user_password_new_auth').innerHTML=title;
-                document.getElementById('common_user_password_new').value='';
-                document.getElementById('common_user_password_new_confirm').value='';
-                document.getElementById('common_dialogue_user_password_new').style.visibility = 'visible';
+                document.querySelector('#common_user_password_new_auth').innerHTML=title;
+                document.querySelector('#common_user_password_new').value='';
+                document.querySelector('#common_user_password_new_confirm').value='';
+                document.querySelector('#common_dialogue_user_password_new').style.visibility = 'visible';
                 break;
             }
         case 'VERIFY':
@@ -780,55 +780,55 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
                 dialogue_verify_clear();
                 switch (user_verification_type){
                     case 'LOGIN':{
-                        document.getElementById('common_user_verification_type').innerHTML = 1;
+                        document.querySelector('#common_user_verification_type').innerHTML = 1;
                         break;
                     }
                     case 'SIGNUP':{
-                        document.getElementById('common_user_verification_type').innerHTML = 2;
+                        document.querySelector('#common_user_verification_type').innerHTML = 2;
                         break;
                     }
                     case 'FORGOT':{
-                        document.getElementById('common_user_verification_type').innerHTML = 3;
+                        document.querySelector('#common_user_verification_type').innerHTML = 3;
                         break;
                     }
                     case 'NEW_EMAIL':{
-                        document.getElementById('common_user_verification_type').innerHTML = 4;
+                        document.querySelector('#common_user_verification_type').innerHTML = 4;
                         break;
                     }
                 }
-                document.getElementById('common_user_verify_cancel').addEventListener('click', click_cancel_event);
+                document.querySelector('#common_user_verify_cancel').addEventListener('click', click_cancel_event);
 
-                document.getElementById('common_user_verify_email').innerHTML = title;
-                document.getElementById('common_user_verify_cancel').innerHTML = icon;
+                document.querySelector('#common_user_verify_email').innerHTML = title;
+                document.querySelector('#common_user_verify_cancel').innerHTML = icon;
                 
-                document.getElementById('common_dialogue_login').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_forgot').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_user_verify').style.visibility = 'visible';
+                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
         case 'LOGIN':
             {
-                document.getElementById('common_dialogue_login').style.visibility = 'visible';
-                document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_forgot').style.visibility = 'hidden';
-                document.getElementById('common_login_username').focus();
+                document.querySelector('#common_dialogue_login').style.visibility = 'visible';
+                document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
+                document.querySelector('#common_login_username').focus();
                 break;
             }
         case 'SIGNUP':
             {
-                document.getElementById('common_dialogue_login').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_signup').style.visibility = 'visible';
-                document.getElementById('common_dialogue_forgot').style.visibility = 'hidden';
-                document.getElementById('common_signup_username').focus();
+                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_signup').style.visibility = 'visible';
+                document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
+                document.querySelector('#common_signup_username').focus();
                 break;
             }
         case 'FORGOT':
             {
-                document.getElementById('common_dialogue_login').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
-                document.getElementById('common_dialogue_forgot').style.visibility = 'visible';
-                document.getElementById('common_forgot_email').focus();
+                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_forgot').style.visibility = 'visible';
+                document.querySelector('#common_forgot_email').focus();
                 break;
             }
     }
@@ -836,12 +836,12 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
 };
 
 const show_message = (message_type, code, function_event, message_text='', data_app_id=null) => {
-    const confirm_question = document.getElementById('common_confirm_question');
-    const message_title = document.getElementById('common_message_title');
-    const dialogue = document.getElementById('common_dialogue_message');
-    const old_close = document.getElementById('common_message_close');
-    const button_cancel = document.getElementById('common_message_cancel');
-    const function_close = () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden';};
+    const confirm_question = document.querySelector('#common_confirm_question');
+    const message_title = document.querySelector('#common_message_title');
+    const dialogue = document.querySelector('#common_dialogue_message');
+    const old_close = document.querySelector('#common_message_close');
+    const button_cancel = document.querySelector('#common_message_cancel');
+    const function_close = () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden';};
     const show = 'inline-block';
     const hide = 'none';
     //this removes old eventlistener
@@ -921,132 +921,132 @@ const show_message = (message_type, code, function_event, message_text='', data_
     }
 };
 const dialogue_verify_clear = () => {
-    document.getElementById('common_dialogue_user_verify').style.visibility = 'hidden';
+    document.querySelector('#common_dialogue_user_verify').style.visibility = 'hidden';
     //this removes old eventlistener
-    const old_cancel = document.getElementById('common_user_verify_cancel');
+    const old_cancel = document.querySelector('#common_user_verify_cancel');
     const button_cancel = old_cancel.cloneNode(true);
     old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
-    document.getElementById('common_user_verification_type').innerHTML='';
-    document.getElementById('common_user_verify_email').innerHTML='';
-    document.getElementById('common_user_verify_cancel').innerHTML='';
-    document.getElementById('common_user_verify_verification_char1').value = '';
-    document.getElementById('common_user_verify_verification_char2').value = '';
-    document.getElementById('common_user_verify_verification_char3').value = '';
-    document.getElementById('common_user_verify_verification_char4').value = '';
-    document.getElementById('common_user_verify_verification_char5').value = '';
-    document.getElementById('common_user_verify_verification_char6').value = '';
+    document.querySelector('#common_user_verification_type').innerHTML='';
+    document.querySelector('#common_user_verify_email').innerHTML='';
+    document.querySelector('#common_user_verify_cancel').innerHTML='';
+    document.querySelector('#common_user_verify_verification_char1').value = '';
+    document.querySelector('#common_user_verify_verification_char2').value = '';
+    document.querySelector('#common_user_verify_verification_char3').value = '';
+    document.querySelector('#common_user_verify_verification_char4').value = '';
+    document.querySelector('#common_user_verify_verification_char5').value = '';
+    document.querySelector('#common_user_verify_verification_char6').value = '';
 };
 const dialogue_password_new_clear = () => {
-    document.getElementById('common_dialogue_user_password_new').style.visibility = 'hidden';
-    document.getElementById('common_user_password_new_auth').innerHTML='';
-    document.getElementById('common_user_password_new').value='';
-    document.getElementById('common_user_password_new_confirm').value='';
+    document.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
+    document.querySelector('#common_user_password_new_auth').innerHTML='';
+    document.querySelector('#common_user_password_new').value='';
+    document.querySelector('#common_user_password_new_confirm').value='';
     COMMON_GLOBAL.user_account_id = '';
     COMMON_GLOBAL.rest_at = '';
 };
 const dialogue_user_edit_clear = () => {
-    document.getElementById('common_dialogue_user_edit').style.visibility = 'hidden';
-    document.getElementById('common_user_edit_avatar').style.display = 'none';
+    document.querySelector('#common_dialogue_user_edit').style.visibility = 'hidden';
+    document.querySelector('#common_user_edit_avatar').style.display = 'none';
                 
     //common
-    document.getElementById('common_user_edit_checkbox_profile_private').checked = false;
-    document.getElementById('common_user_edit_input_username').value = '';
-    document.getElementById('common_user_edit_input_bio').value = '';
+    document.querySelector('#common_user_edit_checkbox_profile_private').checked = false;
+    document.querySelector('#common_user_edit_input_username').value = '';
+    document.querySelector('#common_user_edit_input_bio').value = '';
     //local
-    document.getElementById('common_user_edit_input_email').innerHTML = '';
-    document.getElementById('common_user_edit_input_new_email').value = '';
-    document.getElementById('common_user_edit_input_password').value = '';
-    document.getElementById('common_user_edit_input_password_confirm').value = '';
-    document.getElementById('common_user_edit_input_password_new').value = '';
-    document.getElementById('common_user_edit_input_password_new_confirm').value = '';
-    document.getElementById('common_user_edit_input_password_reminder').value = '';
+    document.querySelector('#common_user_edit_input_email').innerHTML = '';
+    document.querySelector('#common_user_edit_input_new_email').value = '';
+    document.querySelector('#common_user_edit_input_password').value = '';
+    document.querySelector('#common_user_edit_input_password_confirm').value = '';
+    document.querySelector('#common_user_edit_input_password_new').value = '';
+    document.querySelector('#common_user_edit_input_password_new_confirm').value = '';
+    document.querySelector('#common_user_edit_input_password_reminder').value = '';
     //provider
-    document.getElementById('common_user_edit_provider_id').innerHTML = '';
-    document.getElementById('common_user_edit_label_provider_id_data').innerHTML = '';
-    document.getElementById('common_user_edit_label_provider_name_data').innerHTML = '';
-    document.getElementById('common_user_edit_label_provider_email_data').innerHTML = '';
-    document.getElementById('common_user_edit_label_provider_image_url_data').innerHTML = '';
+    document.querySelector('#common_user_edit_provider_id').innerHTML = '';
+    document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = '';
+    document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = '';
+    document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = '';
+    document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = '';
     //account info
-    document.getElementById('common_user_edit_label_data_last_logontime').innerHTML = '';
-    document.getElementById('common_user_edit_label_data_account_created').innerHTML = '';
-    document.getElementById('common_user_edit_label_data_account_modified').innerHTML = '';
+    document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = '';
+    document.querySelector('#common_user_edit_label_data_account_created').innerHTML = '';
+    document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = '';
 };
 const dialogue_login_clear = () => {
-    document.getElementById('common_dialogue_login').style.visibility = 'hidden';
-    document.getElementById('common_login_username').value = '';
-    document.getElementById('common_login_password').value = '';
+    document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+    document.querySelector('#common_login_username').value = '';
+    document.querySelector('#common_login_password').value = '';
 };
 const dialogue_signup_clear = () => {
-    document.getElementById('common_dialogue_signup').style.visibility = 'hidden';
-    document.getElementById('common_signup_username').value = '';
-    document.getElementById('common_signup_email').value = '';
-    document.getElementById('common_signup_password').value = '';
-    document.getElementById('common_signup_password_confirm').value = '';
-    document.getElementById('common_signup_password_reminder').value = '';
+    document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
+    document.querySelector('#common_signup_username').value = '';
+    document.querySelector('#common_signup_email').value = '';
+    document.querySelector('#common_signup_password').value = '';
+    document.querySelector('#common_signup_password_confirm').value = '';
+    document.querySelector('#common_signup_password_reminder').value = '';
 };
 const dialogue_forgot_clear = () => {
-    document.getElementById('common_forgot_email').value = '';
+    document.querySelector('#common_forgot_email').value = '';
 };
 const dialogue_profile_clear = () => {
-    document.getElementById('common_profile_info').style.display = 'none';
-    document.getElementById('common_profile_top').style.display = 'none';
-    document.getElementById('common_profile_detail').style.display = 'none';
+    document.querySelector('#common_profile_info').style.display = 'none';
+    document.querySelector('#common_profile_top').style.display = 'none';
+    document.querySelector('#common_profile_detail').style.display = 'none';
     
-    document.getElementById('common_profile_follow').children[0].style.display = 'block';
-    document.getElementById('common_profile_follow').children[1].style.display = 'none';
-    document.getElementById('common_profile_like').children[0].style.display = 'block';
-    document.getElementById('common_profile_like').children[1].style.display = 'none';
+    document.querySelector('#common_profile_follow').children[0].style.display = 'block';
+    document.querySelector('#common_profile_follow').children[1].style.display = 'none';
+    document.querySelector('#common_profile_like').children[0].style.display = 'block';
+    document.querySelector('#common_profile_like').children[1].style.display = 'none';
 
-    document.getElementById('common_profile_avatar').src = '';
-    document.getElementById('common_profile_username').innerHTML = '';
-    document.getElementById('common_profile_bio').innerHTML = '';
-    document.getElementById('common_profile_joined_date').innerHTML = '';
+    document.querySelector('#common_profile_avatar').src = '';
+    document.querySelector('#common_profile_username').innerHTML = '';
+    document.querySelector('#common_profile_bio').innerHTML = '';
+    document.querySelector('#common_profile_joined_date').innerHTML = '';
 
-    document.getElementById('common_profile_info_view_count').innerHTML = '';
-    document.getElementById('common_profile_info_following_count').innerHTML = '';
-    document.getElementById('common_profile_info_followers_count').innerHTML = '';
-    document.getElementById('common_profile_info_likes_count').innerHTML = '';
-    document.getElementById('common_profile_info_liked_count').innerHTML = '';
+    document.querySelector('#common_profile_info_view_count').innerHTML = '';
+    document.querySelector('#common_profile_info_following_count').innerHTML = '';
+    document.querySelector('#common_profile_info_followers_count').innerHTML = '';
+    document.querySelector('#common_profile_info_likes_count').innerHTML = '';
+    document.querySelector('#common_profile_info_liked_count').innerHTML = '';
     
-    document.getElementById('common_profile_qr').innerHTML = '';
-    document.getElementById('common_profile_detail_list').innerHTML = '';
-    document.getElementById('common_profile_top_list').innerHTML = '';
+    document.querySelector('#common_profile_qr').innerHTML = '';
+    document.querySelector('#common_profile_detail_list').innerHTML = '';
+    document.querySelector('#common_profile_top_list').innerHTML = '';
 };
 const dialogue_user_edit_remove_error = () => {
-    document.getElementById('common_user_edit_input_username').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_username').classList.remove('common_input_error');
 
-    document.getElementById('common_user_edit_input_bio').classList.remove('common_input_error');
-    document.getElementById('common_user_edit_input_new_email').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_bio').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_new_email').classList.remove('common_input_error');
 
-    document.getElementById('common_user_edit_input_password').classList.remove('common_input_error');
-    document.getElementById('common_user_edit_input_password_confirm').classList.remove('common_input_error');
-    document.getElementById('common_user_edit_input_password_new').classList.remove('common_input_error');
-    document.getElementById('common_user_edit_input_password_new_confirm').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_password').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_password_confirm').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_password_new').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_password_new_confirm').classList.remove('common_input_error');
 
-    document.getElementById('common_user_edit_input_password_reminder').classList.remove('common_input_error');
+    document.querySelector('#common_user_edit_input_password_reminder').classList.remove('common_input_error');
 };
 const lov_close = () => {
     //remove all event listeners
     document.querySelectorAll('.common_list_lov_row').forEach(e => 
         e.replaceWith(e.cloneNode(true))
     );
-    document.getElementById('common_dialogue_lov').style.visibility = 'hidden';
-    document.getElementById('common_lov_title').innerHTML='';
-    document.getElementById('common_lov_search_input').value='';
-    document.getElementById('common_lov_list').innerHTML='';
+    document.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
+    document.querySelector('#common_lov_title').innerHTML='';
+    document.querySelector('#common_lov_search_input').value='';
+    document.querySelector('#common_lov_list').innerHTML='';
     
 };
 const lov_show = (lov, function_event) => {
     
-    document.getElementById('common_dialogue_lov').style.visibility = 'visible';
-    document.getElementById('common_lov_list').innerHTML = APP_SPINNER;
+    document.querySelector('#common_dialogue_lov').style.visibility = 'visible';
+    document.querySelector('#common_lov_list').innerHTML = APP_SPINNER;
     let path = '';
     let token_type = '';
     let lov_column_value='';
     let service;
     switch (lov){
         case 'PARAMETER_TYPE':{
-            document.getElementById('common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_settings  + ' ' + ICONS.app_type;
+            document.querySelector('#common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_settings  + ' ' + ICONS.app_type;
             lov_column_value = 'parameter_type_text';            
             path = '/parameter_type/admin?';
             service = 'DB_API';
@@ -1054,7 +1054,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'SERVER_LOG_FILES':{
-            document.getElementById('common_lov_title').innerHTML = ICONS.app_server + ' ' + ICONS.app_file_path;
+            document.querySelector('#common_lov_title').innerHTML = ICONS.app_server + ' ' + ICONS.app_file_path;
             lov_column_value = 'filename';
             path = '/log/files?';
             service = 'LOG';
@@ -1062,7 +1062,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_CATEGORY':{
-            document.getElementById('common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_type;
+            document.querySelector('#common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_type;
             lov_column_value = 'app_category_text';
             path = '/app_category/admin?';
             service = 'DB_API';
@@ -1070,7 +1070,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_ROLE':{
-            document.getElementById('common_lov_title').innerHTML = ICONS.app_role;
+            document.querySelector('#common_lov_title').innerHTML = ICONS.app_role;
             lov_column_value = 'icon';
             path = '/app_role/admin?';
             service = 'DB_API';
@@ -1080,9 +1080,9 @@ const lov_show = (lov, function_event) => {
     }
     FFB (service, path, 'GET', token_type, null, (err, result) => {
         if (err)
-            document.getElementById('common_lov_list').innerHTML = '';
+            document.querySelector('#common_lov_list').innerHTML = '';
         else{
-            document.getElementById('common_lov_list').innerHTML = '';
+            document.querySelector('#common_lov_list').innerHTML = '';
             const json = JSON.parse(result);
             let html = '';
             for (let i = 0; i < json.data.length; i++) {
@@ -1096,8 +1096,8 @@ const lov_show = (lov, function_event) => {
                     </div>
                 </div>`;
             }
-            document.getElementById('common_lov_list').innerHTML = html;
-            document.getElementById('common_lov_search_input').focus();
+            document.querySelector('#common_lov_list').innerHTML = html;
+            document.querySelector('#common_lov_search_input').focus();
             document.querySelectorAll('.common_list_lov_row').forEach(e => e.addEventListener('click', function_event));
         }
     });
@@ -1164,8 +1164,8 @@ const lov_keys = (event) => {
         }
         default:{
             //if db call will be implemented, add delay
-            //typewatch(lov_filter, document.getElementById('common_lov_search_input').value); 
-            lov_filter(document.getElementById('common_lov_search_input').value); 
+            //typewatch(lov_filter, document.querySelector('#common_lov_search_input').value); 
+            lov_filter(document.querySelector('#common_lov_search_input').value); 
             break;
         }    
     }
@@ -1194,7 +1194,7 @@ const lov_filter = (text_filter) => {
 const zoom_info = (zoomvalue = '') => {
     let old;
     let old_scale;
-    const div = document.getElementById('common_window_info_info');
+    const div = document.querySelector('#common_window_info_info');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == '') {
@@ -1208,7 +1208,7 @@ const zoom_info = (zoomvalue = '') => {
 };
 const move_info = (move1, move2) => {
     let old;
-    const div = document.getElementById('common_window_info_info');
+    const div = document.querySelector('#common_window_info_info');
     if (move1==null && move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {
@@ -1286,11 +1286,11 @@ const show_window_info = (info, url, content_type, iframe_content) => {
     }
 };
 const show_hide_window_info_toolbar = () => {
-    if (document.getElementById('common_window_info_toolbar').style.display=='flex' ||
-        document.getElementById('common_window_info_toolbar').style.display=='')
-        document.getElementById('common_window_info_toolbar').style.display='none';
+    if (document.querySelector('#common_window_info_toolbar').style.display=='flex' ||
+        document.querySelector('#common_window_info_toolbar').style.display=='')
+        document.querySelector('#common_window_info_toolbar').style.display='none';
     else
-        document.getElementById('common_window_info_toolbar').style.display='flex';
+        document.querySelector('#common_window_info_toolbar').style.display='flex';
 };
 /*-----------------------
   PROFILE               
@@ -1320,9 +1320,9 @@ const show_profile_click_events = (item, click_function) => {
 };
 const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
     let path;
-    document.getElementById('common_dialogue_profile').style.visibility = 'visible';
-    document.getElementById('common_profile_info').style.display = 'none';
-    document.getElementById('common_profile_top').style.display = 'block';
+    document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+    document.querySelector('#common_profile_info').style.display = 'none';
+    document.querySelector('#common_profile_top').style.display = 'block';
                 
     if (statschoice ==1 || statschoice ==2 || statschoice ==3){
         /*statschoice 1,2,3: user_account*/
@@ -1338,7 +1338,7 @@ const profile_top = (statschoice, app_rest_url = null, click_function=null) => {
             null;
         else{
             const json = JSON.parse(result);
-            const profile_top_list = document.getElementById('common_profile_top_list');
+            const profile_top_list = document.querySelector('#common_profile_top_list');
             profile_top_list.innerHTML = '';
             let html ='';
             let image='';
@@ -1379,7 +1379,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
         /* detailchoice 5, apps, returns same columns*/
         path = `${rest_url_app}/`;
     }
-    path += `${document.getElementById('common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
+    path += `${document.querySelector('#common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
     if (parseInt(COMMON_GLOBAL.user_account_id) || 0 !== 0) {
@@ -1387,73 +1387,73 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
             case 0:
                 {
                     //show only other app specific hide common
-                    document.getElementById('common_profile_detail').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
+                    document.querySelector('#common_profile_detail').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_following').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_followed').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_like').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_liked').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 1:
                 {
                     //Following
-                    document.getElementById('common_profile_detail').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_following').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
+                    document.querySelector('#common_profile_detail').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_following').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_followed').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_like').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_liked').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 2:
                 {
                     //Followed
-                    document.getElementById('common_profile_detail').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_followed').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
+                    document.querySelector('#common_profile_detail').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_following').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_followed').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_like').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_liked').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 3:
                 {
                     //Like user
-                    document.getElementById('common_profile_detail').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_like').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
+                    document.querySelector('#common_profile_detail').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_following').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_followed').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_like').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_liked').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             case 4:
                 {
                     //Liked user
-                    document.getElementById('common_profile_detail').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_liked').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_app').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').innerHTML = '';
+                    document.querySelector('#common_profile_detail').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_following').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_followed').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_like').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_liked').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_app').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').innerHTML = '';
                     break;
                 }
             default:
                 {
                     //show app specific
-                    document.getElementById('common_profile_detail').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_following').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_followed').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_like').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_liked').style.display = 'none';
-                    document.getElementById('common_profile_detail_header_app').style.display = 'block';
-                    document.getElementById('common_profile_detail_header_app').innerHTML = header_app;
+                    document.querySelector('#common_profile_detail').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_following').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_followed').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_like').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_liked').style.display = 'none';
+                    document.querySelector('#common_profile_detail_header_app').style.display = 'block';
+                    document.querySelector('#common_profile_detail_header_app').innerHTML = header_app;
                     break;
                 }
         }
@@ -1463,7 +1463,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                     null;
                 else{
                     const json = JSON.parse(result);
-                    const profile_detail_list = document.getElementById('common_profile_detail_list');
+                    const profile_detail_list = document.querySelector('#common_profile_detail_list');
                     profile_detail_list.innerHTML = '';
 
                     let html = '';
@@ -1472,7 +1472,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                     for (let i = 0; i < json.count; i++) {
                         //id for username list, app_id for app list
                         if (detailchoice==5 && typeof json.items[i].id =='undefined'){
-                            if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
+                            if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
                                 delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS.app_delete}</div>`;
                                 
                             //App list in app 0
@@ -1525,15 +1525,15 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                             if (event.target.classList.contains('common_profile_detail_list_app_name'))
                                 window.open(event.target.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
                             else
-                                if (document.getElementById('common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id){
+                                if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id){
                                     if (event.target.parentNode.classList.contains('common_profile_detail_list_app_delete'))
                                         user_account_app_delete(null, 
-                                                                document.getElementById('common_profile_id').innerHTML,
+                                                                document.querySelector('#common_profile_id').innerHTML,
                                                                 event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
                                                                 () => { 
-                                                                    document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+                                                                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                                                                     user_account_app_delete(1, 
-                                                                                            document.getElementById('common_profile_id').innerHTML, 
+                                                                                            document.querySelector('#common_profile_id').innerHTML, 
                                                                                             event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML, 
                                                                                             null);
                                                                 });
@@ -1549,15 +1549,15 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
         show_common_dialogue('LOGIN');
 };
 const search_profile = (click_function) => {
-    document.getElementById('common_profile_search_input').classList.remove('common_input_error');
-    const profile_search_list = document.getElementById('common_profile_search_list');
+    document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
+    const profile_search_list = document.querySelector('#common_profile_search_list');
     profile_search_list.innerHTML = '';
-    document.getElementById('common_profile_search_list_wrap').style.display = 'none';
+    document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
     profile_search_list.style.display = 'none';
-    if (document.getElementById('common_profile_search_input').value=='')
-        document.getElementById('common_profile_search_input').classList.add('common_input_error');
+    if (document.querySelector('#common_profile_search_input').value=='')
+        document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     else{
-        const searched_username = document.getElementById('common_profile_search_input').value;
+        const searched_username = document.querySelector('#common_profile_search_input').value;
         let path;
         let token;
         let json_data;
@@ -1587,7 +1587,7 @@ const search_profile = (click_function) => {
                 const json = JSON.parse(result);
                 if (json.count > 0){
                     profile_search_list.style.display = 'inline-block';
-                    document.getElementById('common_profile_search_list_wrap').style.display = 'flex';
+                    document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
                 }
                 let html = '';
                 let image= '';
@@ -1653,50 +1653,50 @@ const profile_show = async (user_account_id_other = null, username = null, callB
                 return callBack(err,null);
             else{
                 json = JSON.parse(result);
-                document.getElementById('common_profile_info').style.display = 'block';
-                document.getElementById('common_profile_main').style.display = 'block';
-                document.getElementById('common_profile_id').innerHTML = json.id;
-                set_avatar(json.avatar ?? json.provider_image, document.getElementById('common_profile_avatar')); 
+                document.querySelector('#common_profile_info').style.display = 'block';
+                document.querySelector('#common_profile_main').style.display = 'block';
+                document.querySelector('#common_profile_id').innerHTML = json.id;
+                set_avatar(json.avatar ?? json.provider_image, document.querySelector('#common_profile_avatar')); 
                 //show local username
-                document.getElementById('common_profile_username').innerHTML = json.username;
+                document.querySelector('#common_profile_username').innerHTML = json.username;
 
-                document.getElementById('common_profile_bio').innerHTML = get_null_or_value(json.bio);
-                document.getElementById('common_profile_joined_date').innerHTML = format_json_date(json.date_created, true);
-                document.getElementById('common_profile_qr').innerHTML = '';
+                document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(json.bio);
+                document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(json.date_created, true);
+                document.querySelector('#common_profile_qr').innerHTML = '';
                 create_qr('common_profile_qr', getHostname() + '/' + json.username);
                 //User account followed and liked
                 if (json.followed == 1) {
                     //followed
-                    document.getElementById('common_profile_follow').children[0].style.display = 'none';
-                    document.getElementById('common_profile_follow').children[1].style.display = 'block';
+                    document.querySelector('#common_profile_follow').children[0].style.display = 'none';
+                    document.querySelector('#common_profile_follow').children[1].style.display = 'block';
                 } else {
                     //not followed
-                    document.getElementById('common_profile_follow').children[0].style.display = 'block';
-                    document.getElementById('common_profile_follow').children[1].style.display = 'none';
+                    document.querySelector('#common_profile_follow').children[0].style.display = 'block';
+                    document.querySelector('#common_profile_follow').children[1].style.display = 'none';
                 }
                 if (json.liked == 1) {
                     //liked
-                    document.getElementById('common_profile_like').children[0].style.display = 'none';
-                    document.getElementById('common_profile_like').children[1].style.display = 'block';
+                    document.querySelector('#common_profile_like').children[0].style.display = 'none';
+                    document.querySelector('#common_profile_like').children[1].style.display = 'block';
                 } else {
                     //not liked
-                    document.getElementById('common_profile_like').children[0].style.display = 'block';
-                    document.getElementById('common_profile_like').children[1].style.display = 'none';
+                    document.querySelector('#common_profile_like').children[0].style.display = 'block';
+                    document.querySelector('#common_profile_like').children[1].style.display = 'none';
                 } 
                 //if private then hide info, sql decides if private, no need to check here if same user
                 if (json.private==1) {
                     //private
-                    document.getElementById('common_profile_public').style.display = 'none';
-                    document.getElementById('common_profile_private').style.display = 'block';
+                    document.querySelector('#common_profile_public').style.display = 'none';
+                    document.querySelector('#common_profile_private').style.display = 'block';
                 } else {
                     //public
-                    document.getElementById('common_profile_public').style.display = 'block';
-                    document.getElementById('common_profile_private').style.display = 'none';
-                    document.getElementById('common_profile_info_view_count').innerHTML = json.count_views;
-                    document.getElementById('common_profile_info_following_count').innerHTML = json.count_following;
-                    document.getElementById('common_profile_info_followers_count').innerHTML = json.count_followed;
-                    document.getElementById('common_profile_info_likes_count').innerHTML = json.count_likes;
-                    document.getElementById('common_profile_info_liked_count').innerHTML = json.count_liked;
+                    document.querySelector('#common_profile_public').style.display = 'block';
+                    document.querySelector('#common_profile_private').style.display = 'none';
+                    document.querySelector('#common_profile_info_view_count').innerHTML = json.count_views;
+                    document.querySelector('#common_profile_info_following_count').innerHTML = json.count_following;
+                    document.querySelector('#common_profile_info_followers_count').innerHTML = json.count_followed;
+                    document.querySelector('#common_profile_info_likes_count').innerHTML = json.count_likes;
+                    document.querySelector('#common_profile_info_liked_count').innerHTML = json.count_liked;
                 }    
                 if (COMMON_GLOBAL.user_account_id =='')
                     setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
@@ -1709,11 +1709,11 @@ const profile_show = async (user_account_id_other = null, username = null, callB
     }
 };
 const profile_close = () => {
-    document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
+    document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
 };
 const profile_update_stat = async (callBack) => {
-    const profile_id = document.getElementById('common_profile_id');
+    const profile_id = document.querySelector('#common_profile_id');
     const json_data ={  
                         client_latitude:    COMMON_GLOBAL.client_latitude,
                         client_longitude:   COMMON_GLOBAL.client_longitude
@@ -1725,11 +1725,11 @@ const profile_update_stat = async (callBack) => {
             return callBack(err,null);
         else{
             const json = JSON.parse(result);
-            document.getElementById('common_profile_info_view_count').innerHTML = json.count_views;
-            document.getElementById('common_profile_info_following_count').innerHTML = json.count_following;
-            document.getElementById('common_profile_info_followers_count').innerHTML = json.count_followed;
-            document.getElementById('common_profile_info_likes_count').innerHTML = json.count_likes;
-            document.getElementById('common_profile_info_liked_count').innerHTML = json.count_liked;
+            document.querySelector('#common_profile_info_view_count').innerHTML = json.count_views;
+            document.querySelector('#common_profile_info_following_count').innerHTML = json.count_following;
+            document.querySelector('#common_profile_info_followers_count').innerHTML = json.count_followed;
+            document.querySelector('#common_profile_info_likes_count').innerHTML = json.count_likes;
+            document.querySelector('#common_profile_info_liked_count').innerHTML = json.count_liked;
             return callBack(null, {id : json.id});
         }
     });
@@ -1742,7 +1742,7 @@ const search_input = (event, module, event_function) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            if (document.getElementById(`common_${module}_search_list`).style.display=='inline-block'){
+            if (document.querySelector(`#common_${module}_search_list`).style.display=='inline-block'){
                 const x = document.querySelectorAll(`.common_${module}_search_list_row`);
                 const focus_item = (element) =>{
                     element.focus();
@@ -1795,7 +1795,7 @@ const search_input = (event, module, event_function) => {
         }
         case 'Enter':{
             //enter
-            if (document.getElementById(`common_${module}_search_list`).style.display=='inline-block'){
+            if (document.querySelector(`#common_${module}_search_list`).style.display=='inline-block'){
                 const x = document.querySelectorAll(`.common_${module}_search_list_row`);
                 for (let i = 0; i <= x.length -1; i++) {
                     if (x[i].classList.contains(`common_${module}_search_list_selected`)){
@@ -1904,24 +1904,24 @@ const user_logoff = async () => {
     COMMON_GLOBAL.rest_at ='';
     COMMON_GLOBAL.user_account_id = '';
     
-    set_avatar(null, document.getElementById('common_user_menu_avatar_img')); 
+    set_avatar(null, document.querySelector('#common_user_menu_avatar_img')); 
     //clear logged in info
-    document.getElementById('common_user_menu_username').innerHTML = '';
-    document.getElementById('common_user_menu_username').style.display = 'none';
-    document.getElementById('common_user_menu_logged_in').style.display = 'none';
-    document.getElementById('common_user_menu_logged_out').style.display = 'inline-block';
-    document.getElementById('common_user_menu_dropdown_logged_in').style.display = 'none';
-    document.getElementById('common_user_menu_dropdown_logged_out').style.display = 'inline-block';
+    document.querySelector('#common_user_menu_username').innerHTML = '';
+    document.querySelector('#common_user_menu_username').style.display = 'none';
+    document.querySelector('#common_user_menu_logged_in').style.display = 'none';
+    document.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
 
     updateOnlineStatus();
-    document.getElementById('common_profile_avatar_online_status').className='';
+    document.querySelector('#common_profile_avatar_online_status').className='';
     dialogue_user_edit_clear();
     dialogue_verify_clear();
     dialogue_password_new_clear();
     dialogue_login_clear();
     dialogue_signup_clear();
     dialogue_forgot_clear();
-    document.getElementById('common_dialogue_profile').style.visibility = 'hidden';
+    document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
     user_preferences_set_default_globals('LOCALE');
     user_preferences_set_default_globals('TIMEZONE');
@@ -1938,44 +1938,44 @@ const user_edit = async () => {
         else{
             json = JSON.parse(result);
             if (COMMON_GLOBAL.user_account_id == json.id) {
-                document.getElementById('common_user_edit_local').style.display = 'none';
-                document.getElementById('common_user_edit_provider').style.display = 'none';
-                document.getElementById('common_dialogue_user_edit').style.visibility = 'visible';
+                document.querySelector('#common_user_edit_local').style.display = 'none';
+                document.querySelector('#common_user_edit_provider').style.display = 'none';
+                document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
-                document.getElementById('common_user_edit_checkbox_profile_private').checked = Number(json.private);
-                document.getElementById('common_user_edit_input_username').value = json.username;
-                document.getElementById('common_user_edit_input_bio').value = get_null_or_value(json.bio);
+                document.querySelector('#common_user_edit_checkbox_profile_private').checked = Number(json.private);
+                document.querySelector('#common_user_edit_input_username').value = json.username;
+                document.querySelector('#common_user_edit_input_bio').value = get_null_or_value(json.bio);
 
                 if (json.provider_id == null) {
-                    document.getElementById('common_user_edit_local').style.display = 'block';
-                    document.getElementById('common_user_edit_provider').style.display = 'none';
+                    document.querySelector('#common_user_edit_local').style.display = 'block';
+                    document.querySelector('#common_user_edit_provider').style.display = 'none';
 
                     //display fetched avatar editable
-                    document.getElementById('common_user_edit_avatar').style.display = 'block';
-                    set_avatar(json.avatar, document.getElementById('common_user_edit_avatar_img')); 
-                    document.getElementById('common_user_edit_input_email').innerHTML = json.email;
-                    document.getElementById('common_user_edit_input_new_email').value = json.email_unverified;
-                    document.getElementById('common_user_edit_input_password').value = '',
-                        document.getElementById('common_user_edit_input_password_confirm').value = '',
-                        document.getElementById('common_user_edit_input_password_new').value = '';
-                    document.getElementById('common_user_edit_input_password_new_confirm').value = '';
+                    document.querySelector('#common_user_edit_avatar').style.display = 'block';
+                    set_avatar(json.avatar, document.querySelector('#common_user_edit_avatar_img')); 
+                    document.querySelector('#common_user_edit_input_email').innerHTML = json.email;
+                    document.querySelector('#common_user_edit_input_new_email').value = json.email_unverified;
+                    document.querySelector('#common_user_edit_input_password').value = '',
+                        document.querySelector('#common_user_edit_input_password_confirm').value = '',
+                        document.querySelector('#common_user_edit_input_password_new').value = '';
+                    document.querySelector('#common_user_edit_input_password_new_confirm').value = '';
 
-                    document.getElementById('common_user_edit_input_password_reminder').value = json.password_reminder;
+                    document.querySelector('#common_user_edit_input_password_reminder').value = json.password_reminder;
                 } else{
-                        document.getElementById('common_user_edit_local').style.display = 'none';
-                        document.getElementById('common_user_edit_provider').style.display = 'block';
-                        document.getElementById('common_user_edit_provider_id').innerHTML = json.identity_provider_id;
-                        document.getElementById('common_user_edit_label_provider_id_data').innerHTML = json.provider_id;
-                        document.getElementById('common_user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
-                        document.getElementById('common_user_edit_label_provider_email_data').innerHTML = json.provider_email;
-                        document.getElementById('common_user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
-                        document.getElementById('common_user_edit_avatar').style.display = 'none';
-                        set_avatar(json.provider_image, document.getElementById('common_user_edit_avatar_img')); 
+                        document.querySelector('#common_user_edit_local').style.display = 'none';
+                        document.querySelector('#common_user_edit_provider').style.display = 'block';
+                        document.querySelector('#common_user_edit_provider_id').innerHTML = json.identity_provider_id;
+                        document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = json.provider_id;
+                        document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
+                        document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = json.provider_email;
+                        document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
+                        document.querySelector('#common_user_edit_avatar').style.display = 'none';
+                        set_avatar(json.provider_image, document.querySelector('#common_user_edit_avatar_img')); 
                     } 
-                document.getElementById('common_user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null);
-                document.getElementById('common_user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null);
-                document.getElementById('common_user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null);
-                set_avatar(json.avatar ?? json.provider_image, document.getElementById('common_user_menu_avatar_img'));
+                document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null);
+                document.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null);
+                document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null);
+                set_avatar(json.avatar ?? json.provider_image, document.querySelector('#common_user_menu_avatar_img'));
             } else {
                 //User not found
                 show_message('ERROR', 20305, null, null, COMMON_GLOBAL.common_app_id);
@@ -1984,10 +1984,10 @@ const user_edit = async () => {
     });
 };
 const user_update = async () => {
-    const username = document.getElementById('common_user_edit_input_username').value;
-    const bio = document.getElementById('common_user_edit_input_bio').value;
-    const avatar = document.getElementById('common_user_edit_avatar_img').src;
-    const new_email = document.getElementById('common_user_edit_input_new_email').value;
+    const username = document.querySelector('#common_user_edit_input_username').value;
+    const bio = document.querySelector('#common_user_edit_input_bio').value;
+    const avatar = document.querySelector('#common_user_edit_avatar_img').src;
+    const new_email = document.querySelector('#common_user_edit_input_new_email').value;
 
     let path;
     let json_data;
@@ -1995,13 +1995,13 @@ const user_update = async () => {
     if (check_input(bio, 150) == false)
         return null;
         
-    if (document.getElementById('common_user_edit_local').style.display == 'block') {
-        const email = document.getElementById('common_user_edit_input_email').innerHTML;    
-        const password = document.getElementById('common_user_edit_input_password').value;
-        const password_confirm = document.getElementById('common_user_edit_input_password_confirm').value;
-        const password_new = document.getElementById('common_user_edit_input_password_new').value;
-        const password_new_confirm = document.getElementById('common_user_edit_input_password_new_confirm').value;
-        const password_reminder = document.getElementById('common_user_edit_input_password_reminder').value;
+    if (document.querySelector('#common_user_edit_local').style.display == 'block') {
+        const email = document.querySelector('#common_user_edit_input_email').innerHTML;    
+        const password = document.querySelector('#common_user_edit_input_password').value;
+        const password_confirm = document.querySelector('#common_user_edit_input_password_confirm').value;
+        const password_new = document.querySelector('#common_user_edit_input_password_new').value;
+        const password_new_confirm = document.querySelector('#common_user_edit_input_password_new_confirm').value;
+        const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').value;
         if (check_input(username) == false ||
             check_input(new_email) == false ||
             check_input(password) == false ||
@@ -2016,33 +2016,33 @@ const user_update = async () => {
         //validate input
         if (username == '') {
             //"Please enter username"
-            document.getElementById('common_user_edit_input_username').classList.add('common_input_error');
+            document.querySelector('#common_user_edit_input_username').classList.add('common_input_error');
             show_message('ERROR', 20303, null, null);
             return null;
         }
         if (password == '') {
             //"Please enter password"
-            document.getElementById('common_user_edit_input_password').classList.add('common_input_error');
+            document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
             show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
         if (password != password_confirm) {
             //Password not the same
-            document.getElementById('common_user_edit_input_password_confirm').classList.add('common_input_error');
+            document.querySelector('#common_user_edit_input_password_confirm').classList.add('common_input_error');
             show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
         //check new passwords
         if (password_new != password_new_confirm) {
             //New Password are entered but they are not the same
-            document.getElementById('common_user_edit_input_password_new').classList.add('common_input_error');
-            document.getElementById('common_user_edit_input_password_new_confirm').classList.add('common_input_error');
+            document.querySelector('#common_user_edit_input_password_new').classList.add('common_input_error');
+            document.querySelector('#common_user_edit_input_password_new_confirm').classList.add('common_input_error');
             show_message('ERROR', 20301, null, null);
             return null;
         }
         json_data = {   username:           username,
                         bio:                bio,
-                        private:            Number(document.getElementById('common_user_edit_checkbox_profile_private').checked),
+                        private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').checked),
                         password:           password,
                         password_new:       password_new,
                         password_reminder:  password_reminder,
@@ -2053,28 +2053,28 @@ const user_update = async () => {
                     };
         path = `/user_account/${COMMON_GLOBAL.user_account_id}?`;
     } else {
-        json_data = {   provider_id:    document.getElementById('common_user_edit_provider_id').innerHTML,
+        json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
                         username:       username,
                         bio:            bio,
-                        private:        Number(document.getElementById('common_user_edit_checkbox_profile_private').checked)
+                        private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').checked)
                     };
         path = `/user_account/common/${COMMON_GLOBAL.user_account_id}?`;
     }
-    const old_button = document.getElementById('common_user_edit_btn_user_update').innerHTML;
+    const old_button = document.querySelector('#common_user_edit_btn_user_update').innerHTML;
     let json;
-    document.getElementById('common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
+    document.querySelector('#common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
     //update user using REST API
     FFB ('DB_API', path, 'PUT', 1, json_data, (err, result) => {
-        document.getElementById('common_user_edit_btn_user_update').innerHTML = old_button;
+        document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
         if (err){    
             return null;
         }
         else{
             json = JSON.parse(result);
-            set_avatar(avatar, document.getElementById('common_user_menu_avatar_img'));
-            document.getElementById('common_user_menu_username').innerHTML = username;
+            set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
+            document.querySelector('#common_user_menu_username').innerHTML = username;
             if (json.sent_change_email == 1){
-                const function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
+                const function_cancel_event = () => { document.querySelector('#common_dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, function_cancel_event);
             }
             else
@@ -2084,11 +2084,11 @@ const user_update = async () => {
     });
 };
 const user_signup = () => {
-    const username = document.getElementById('common_signup_username').value;
-    const email = document.getElementById('common_signup_email').value;
-    const password = document.getElementById('common_signup_password').value;
-    const password_confirm = document.getElementById('common_signup_password_confirm').value;
-    const password_reminder = document.getElementById('common_signup_password_reminder').value;
+    const username = document.querySelector('#common_signup_username').value;
+    const email = document.querySelector('#common_signup_email').value;
+    const password = document.querySelector('#common_signup_password').value;
+    const password_confirm = document.querySelector('#common_signup_password_confirm').value;
+    const password_reminder = document.querySelector('#common_signup_password_reminder').value;
 
     if (check_input(username) == false || 
         check_input(email)== false ||
@@ -2120,10 +2120,10 @@ const user_signup = () => {
         return null;
     }
 
-    const old_button = document.getElementById('common_signup_button').innerHTML;
-    document.getElementById('common_signup_button').innerHTML = APP_SPINNER;
+    const old_button = document.querySelector('#common_signup_button').innerHTML;
+    document.querySelector('#common_signup_button').innerHTML = APP_SPINNER;
     FFB ('DB_API', '/user_account/signup?', 'POST', 0, json_data, (err, result) => {
-        document.getElementById('common_signup_button').innerHTML = old_button;
+        document.querySelector('#common_signup_button').innerHTML = old_button;
         if (err){    
             null;
         }
@@ -2142,30 +2142,30 @@ const user_verify_check_input = async (item, nextField, callBack) => {
 
     let json;
     let json_data;
-    const verification_type = parseInt(document.getElementById('common_user_verification_type').innerHTML);
+    const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
     //only accept 0-9
     if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.getElementById(item.id).value) > -1)
-        if (nextField == '' || (document.getElementById('common_user_verify_verification_char1').value != '' &
-                document.getElementById('common_user_verify_verification_char2').value != '' &
-                document.getElementById('common_user_verify_verification_char3').value != '' &
-                document.getElementById('common_user_verify_verification_char4').value != '' &
-                document.getElementById('common_user_verify_verification_char5').value != '' &
-                document.getElementById('common_user_verify_verification_char6').value != '')) {
+        if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').value != '' &
+                document.querySelector('#common_user_verify_verification_char2').value != '' &
+                document.querySelector('#common_user_verify_verification_char3').value != '' &
+                document.querySelector('#common_user_verify_verification_char4').value != '' &
+                document.querySelector('#common_user_verify_verification_char5').value != '' &
+                document.querySelector('#common_user_verify_verification_char6').value != '')) {
             //last field, validate entered code
-            const verification_code = parseInt(document.getElementById('common_user_verify_verification_char1').value +
-                document.getElementById('common_user_verify_verification_char2').value +
-                document.getElementById('common_user_verify_verification_char3').value +
-                document.getElementById('common_user_verify_verification_char4').value +
-                document.getElementById('common_user_verify_verification_char5').value +
-                document.getElementById('common_user_verify_verification_char6').value);
-            const old_button = document.getElementById('common_user_verify_email').innerHTML;
-            document.getElementById('common_user_verify_email').innerHTML = APP_SPINNER;
-            document.getElementById('common_user_verify_verification_char1').classList.remove('common_input_error');
-            document.getElementById('common_user_verify_verification_char2').classList.remove('common_input_error');
-            document.getElementById('common_user_verify_verification_char3').classList.remove('common_input_error');
-            document.getElementById('common_user_verify_verification_char4').classList.remove('common_input_error');
-            document.getElementById('common_user_verify_verification_char5').classList.remove('common_input_error');
-            document.getElementById('common_user_verify_verification_char6').classList.remove('common_input_error');
+            const verification_code = parseInt(document.querySelector('#common_user_verify_verification_char1').value +
+                document.querySelector('#common_user_verify_verification_char2').value +
+                document.querySelector('#common_user_verify_verification_char3').value +
+                document.querySelector('#common_user_verify_verification_char4').value +
+                document.querySelector('#common_user_verify_verification_char5').value +
+                document.querySelector('#common_user_verify_verification_char6').value);
+            const old_button = document.querySelector('#common_user_verify_email').innerHTML;
+            document.querySelector('#common_user_verify_email').innerHTML = APP_SPINNER;
+            document.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
+            document.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
+            document.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
+            document.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
+            document.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
+            document.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
 
             //activate user
             json_data = {   verification_code:  verification_code,
@@ -2173,7 +2173,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             ...get_uservariables()
                         };
             FFB ('DB_API', `/user_account/activate/${COMMON_GLOBAL.user_account_id}?`, 'PUT', 0, json_data, (err, result) => {
-                document.getElementById('common_user_verify_email').innerHTML = old_button;
+                document.querySelector('#common_user_verify_email').innerHTML = old_button;
                 if (err){    
                     return callBack(err, null);
                 }
@@ -2188,10 +2188,10 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             case 2:{
                                 //SIGNUP
                                 //login with username and password from signup fields
-                                document.getElementById('common_login_username').value =
-                                    document.getElementById('common_signup_username').value;
-                                document.getElementById('common_login_password').value =
-                                    document.getElementById('common_signup_password').value;
+                                document.querySelector('#common_login_username').value =
+                                    document.querySelector('#common_signup_username').value;
+                                document.querySelector('#common_login_password').value =
+                                    document.querySelector('#common_signup_password').value;
                                 break;
                             }
                             case 3:{
@@ -2207,7 +2207,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             }
                         }
                         
-                        document.getElementById('common_dialogue_login').style.visibility = 'hidden';
+                        document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
                         
                         dialogue_signup_clear();
                         dialogue_forgot_clear();
@@ -2217,12 +2217,12 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                                                 'verification_type' : verification_type});
 
                         } else {
-                            document.getElementById('common_user_verify_verification_char1').classList.add('common_input_error');
-                            document.getElementById('common_user_verify_verification_char2').classList.add('common_input_error');
-                            document.getElementById('common_user_verify_verification_char3').classList.add('common_input_error');
-                            document.getElementById('common_user_verify_verification_char4').classList.add('common_input_error');
-                            document.getElementById('common_user_verify_verification_char5').classList.add('common_input_error');
-                            document.getElementById('common_user_verify_verification_char6').classList.add('common_input_error');
+                            document.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
+                            document.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
+                            document.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
+                            document.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
+                            document.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
+                            document.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                             //code not valid
                             show_message('ERROR', 20306, null, null, COMMON_GLOBAL.common_app_id);
                             return callBack('ERROR', null);
@@ -2241,12 +2241,12 @@ const user_verify_check_input = async (item, nextField, callBack) => {
     }
 };
 const user_delete = async (choice=null, user_local, function_delete_event, callBack ) => {
-    const password = document.getElementById('common_user_edit_input_password').value;
+    const password = document.querySelector('#common_user_edit_input_password').value;
     switch (choice){
         case null:{
             if (user_local==true && password == '') {
                 //"Please enter password"
-                document.getElementById('common_user_edit_input_password').classList.add('common_input_error');
+                document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
                 show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
                 return null;
             }
@@ -2254,15 +2254,15 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             return callBack('CONFIRM',null);
         }
         case 1:{
-            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
             dialogue_user_edit_remove_error();
     
-            const old_button = document.getElementById('common_user_edit_btn_user_delete_account').innerHTML;
-            document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
+            const old_button = document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML;
+            document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             const json_data = { password: password};
 
             FFB ('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'DELETE', 1, json_data, (err) => {
-                document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = old_button;
+                document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = old_button;
                 if (err){
                     return callBack(err,null);
                 }
@@ -2277,7 +2277,7 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
     }
 };
 const user_function = (user_function, callBack) => {
-    const user_id_profile = document.getElementById('common_profile_id').innerHTML;
+    const user_id_profile = document.querySelector('#common_profile_id').innerHTML;
     let json_data;
     let method;
     let path;
@@ -2287,14 +2287,14 @@ const user_function = (user_function, callBack) => {
             {
                 path = '/user_account_follow';
                 json_data = { user_account_id: user_id_profile};
-                check_div = document.getElementById('common_profile_follow');
+                check_div = document.querySelector('#common_profile_follow');
                 break;
             }
         case 'LIKE':
             {
                 path = '/user_account_like';
                 json_data = { user_account_id: user_id_profile};
-                check_div = document.getElementById('common_profile_like');
+                check_div = document.querySelector('#common_profile_like');
                 break;
             }
     }
@@ -2314,29 +2314,29 @@ const user_function = (user_function, callBack) => {
                 switch (user_function) {
                     case 'FOLLOW':
                         {
-                            if (document.getElementById('common_profile_follow').children[0].style.display == 'block'){
+                            if (document.querySelector('#common_profile_follow').children[0].style.display == 'block'){
                                 //follow
-                                document.getElementById('common_profile_follow').children[0].style.display = 'none';
-                                document.getElementById('common_profile_follow').children[1].style.display = 'block';
+                                document.querySelector('#common_profile_follow').children[0].style.display = 'none';
+                                document.querySelector('#common_profile_follow').children[1].style.display = 'block';
                             }
                             else{
                                 //unfollow
-                                document.getElementById('common_profile_follow').children[0].style.display = 'block';
-                                document.getElementById('common_profile_follow').children[1].style.display = 'none';
+                                document.querySelector('#common_profile_follow').children[0].style.display = 'block';
+                                document.querySelector('#common_profile_follow').children[1].style.display = 'none';
                             }
                             break;
                         }
                     case 'LIKE':
                         {
-                            if (document.getElementById('common_profile_like').children[0].style.display == 'block'){
+                            if (document.querySelector('#common_profile_like').children[0].style.display == 'block'){
                                 //like
-                                document.getElementById('common_profile_like').children[0].style.display = 'none';
-                                document.getElementById('common_profile_like').children[1].style.display = 'block';
+                                document.querySelector('#common_profile_like').children[0].style.display = 'none';
+                                document.querySelector('#common_profile_like').children[1].style.display = 'block';
                             }
                             else{
                                 //unlike
-                                document.getElementById('common_profile_like').children[0].style.display = 'block';
-                                document.getElementById('common_profile_like').children[1].style.display = 'none';
+                                document.querySelector('#common_profile_like').children[0].style.display = 'block';
+                                document.querySelector('#common_profile_like').children[1].style.display = 'none';
                             }
                             break;
                         }
@@ -2353,13 +2353,13 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
             break;
         }
         case 1:{
-            document.getElementById('common_dialogue_message').style.visibility = 'hidden';
+            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
             FFB ('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 1, null, (err) => {
                 if (err)
                     null;
                 else{
                     //execute event and refresh app list
-                    document.getElementById('common_profile_main_btn_cloud').click();
+                    document.querySelector('#common_profile_main_btn_cloud').click();
                 }
             });
             break;
@@ -2369,24 +2369,24 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
     }
 };
 const user_forgot = async () => {
-    const email = document.getElementById('common_forgot_email').value;
+    const email = document.querySelector('#common_forgot_email').value;
     const json_data = { email: email,
                         ...get_uservariables()
                     };
     if (check_input(email) == false || email =='')
         return;
     else{
-        const old_button = document.getElementById('common_forgot_button').innerHTML;
-        document.getElementById('common_forgot_button').innerHTML = APP_SPINNER;
+        const old_button = document.querySelector('#common_forgot_button').innerHTML;
+        document.querySelector('#common_forgot_button').innerHTML = APP_SPINNER;
         FFB ('DB_API', '/user_account/forgot?', 'PUT', 0, json_data, (err, result) => {
-            document.getElementById('common_forgot_button').innerHTML = old_button;
+            document.querySelector('#common_forgot_button').innerHTML = old_button;
             if (err)
                 null;
             else{
                 const json = JSON.parse(result);
                 if (json.sent == 1){
                     COMMON_GLOBAL.user_account_id = json.id;
-                    const function_cancel_event = () => { document.getElementById('common_dialogue_user_verify').style.visibility='hidden';};
+                    const function_cancel_event = () => { document.querySelector('#common_dialogue_user_verify').style.visibility='hidden';};
                     show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, function_cancel_event);
                 }
             }
@@ -2394,9 +2394,9 @@ const user_forgot = async () => {
     }
 };
 const updatePassword = () => {
-    const password_new = document.getElementById('common_user_password_new').value;
-    const password_new_confirm = document.getElementById('common_user_password_new_confirm').value;
-    const user_password_new_auth = document.getElementById('common_user_password_new_auth').innerHTML;
+    const password_new = document.querySelector('#common_user_password_new').value;
+    const password_new_confirm = document.querySelector('#common_user_password_new_confirm').value;
+    const user_password_new_auth = document.querySelector('#common_user_password_new_auth').innerHTML;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
                         ...get_uservariables()
@@ -2407,7 +2407,7 @@ const updatePassword = () => {
     else{
         if (password_new == '') {
             //"Please enter password"
-            document.getElementById('common_user_password_new').classList.add('common_input_error');
+            document.querySelector('#common_user_password_new').classList.add('common_input_error');
             show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
@@ -2416,10 +2416,10 @@ const updatePassword = () => {
             show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
-        const old_button = document.getElementById('common_user_password_new_icon').innerHTML;
-        document.getElementById('common_user_password_new_icon').innerHTML = APP_SPINNER;
+        const old_button = document.querySelector('#common_user_password_new_icon').innerHTML;
+        document.querySelector('#common_user_password_new_icon').innerHTML = APP_SPINNER;
         FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id}?`, 'PUT', 1, json_data, (err) => {
-            document.getElementById('common_user_password_new_icon').innerHTML = old_button;
+            document.querySelector('#common_user_password_new_icon').innerHTML = old_button;
             if (err)
                 null;
             else{
@@ -2433,10 +2433,10 @@ const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != ''){
         const json_data =
             {  
-                preference_locale: document.getElementById('common_user_locale_select').value,
-                setting_preference_timezone_id: document.getElementById('common_user_timezone_select').options[document.getElementById('common_user_timezone_select').selectedIndex].id,
-                setting_preference_direction_id: document.getElementById('common_user_direction_select').options[document.getElementById('common_user_direction_select').selectedIndex].id,
-                setting_preference_arabic_script_id: document.getElementById('common_user_arabic_script_select').options[document.getElementById('common_user_arabic_script_select').selectedIndex].id
+                preference_locale: document.querySelector('#common_user_locale_select').value,
+                setting_preference_timezone_id: document.querySelector('#common_user_timezone_select').options[document.querySelector('#common_user_timezone_select').selectedIndex].id,
+                setting_preference_direction_id: document.querySelector('#common_user_direction_select').options[document.querySelector('#common_user_direction_select').selectedIndex].id,
+                setting_preference_arabic_script_id: document.querySelector('#common_user_arabic_script_select').options[document.querySelector('#common_user_arabic_script_select').selectedIndex].id
             };
         await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id}?`, 'PATCH', 1, json_data, (err) => {
             if (err)
@@ -2466,15 +2466,15 @@ const user_preference_get = async (callBack) => {
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.getElementById('common_user_timezone_select'), 0);
-                COMMON_GLOBAL.user_timezone = document.getElementById('common_user_timezone_select').value;
+                SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
+                COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
             }
             //direction
-            SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.getElementById('common_user_direction_select'), 0);
-            COMMON_GLOBAL.user_direction = document.getElementById('common_user_direction_select').value;
+            SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
+            COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
             //arabic script
-            SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.getElementById('common_user_arabic_script_select'), 0);
-            COMMON_GLOBAL.user_arabic_script = document.getElementById('common_user_arabic_script_select').value;
+            SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
+            COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
             user_preferences_update_select();
             return callBack(null, null);
         }
@@ -2505,10 +2505,10 @@ const user_preferences_update_select = () => {
     //don't save changes now, just execute other code
     //or it would save preferences 4 times
     COMMON_GLOBAL.user_preference_save = false;
-    document.getElementById('common_user_locale_select').dispatchEvent(new Event('change'));
-	document.getElementById('common_user_timezone_select').dispatchEvent(new Event('change'));
-	document.getElementById('common_user_direction_select').dispatchEvent(new Event('change'));
-	document.getElementById('common_user_arabic_script_select').dispatchEvent(new Event('change'));
+    document.querySelector('#common_user_locale_select').dispatchEvent(new Event('change'));
+	document.querySelector('#common_user_timezone_select').dispatchEvent(new Event('change'));
+	document.querySelector('#common_user_direction_select').dispatchEvent(new Event('change'));
+	document.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
     COMMON_GLOBAL.user_preference_save = true;
 };
 /*----------------------- */
@@ -2638,7 +2638,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                                         </select>
                                                     </div>
                                                 </div>`;
-                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.getElementById('common_module_leaflet_select_mapstyle'),1);
+                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.querySelector('#common_module_leaflet_select_mapstyle'),1);
 
                     //add event on map countries
                     const select_country = document.querySelector('#common_module_leaflet_select_country');
@@ -2666,12 +2666,12 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                         });
                     }, false);
                     //add event on map layer select
-                    document.getElementById('common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.getElementById('common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
+                    document.querySelector('#common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.querySelector('#common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
                     //add event on search
                     document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', (event) => { typewatch(search_input, event, 'module_leaflet', search_event_function); }, false);
-                    document.getElementById('common_module_leaflet_search_icon').addEventListener('click', () => { 
-                        document.getElementById('common_module_leaflet_search_input').focus();
-                        document.getElementById('common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    document.querySelector('#common_module_leaflet_search_icon').addEventListener('click', () => { 
+                        document.querySelector('#common_module_leaflet_search_input').focus();
+                        document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                     }, false);
                     
 
@@ -2739,10 +2739,10 @@ const map_country = (lang_code) =>{
                 }
                 COMMON_GLOBAL.module_leaflet_countries = html;
                 if (document.querySelector('#common_module_leaflet_select_country')){
-                    const select_country = document.getElementById('common_module_leaflet_select_country');
-                    const current_country = document.getElementById('common_module_leaflet_select_country')[document.getElementById('common_module_leaflet_select_country').selectedIndex].id;
+                    const select_country = document.querySelector('#common_module_leaflet_select_country');
+                    const current_country = document.querySelector('#common_module_leaflet_select_country')[document.querySelector('#common_module_leaflet_select_country').selectedIndex].id;
                     select_country.innerHTML = html;
-                    SearchAndSetSelectedIndex(current_country, document.getElementById('common_module_leaflet_select_country'),0);    
+                    SearchAndSetSelectedIndex(current_country, document.querySelector('#common_module_leaflet_select_country'),0);    
                 }
                 resolve();
             }
@@ -2925,7 +2925,7 @@ const map_setstyle = async (mapstyle) => {
     });
 };
 const map_update_popup = (title) => {
-    document.getElementById('common_module_leaflet_popup_title').innerHTML = title;
+    document.querySelector('#common_module_leaflet_popup_title').innerHTML = title;
 };
 const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
     const {getTimezone} = await import('regional');
@@ -3108,14 +3108,14 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
   ----------------------- */
 const broadcast_init = () => {
     //broadcast
-    document.getElementById('common_broadcast_close').innerHTML = ICONS.app_broadcast_close;
-    document.getElementById('common_broadcast_info_title').innerHTML = ICONS.app_alert;
+    document.querySelector('#common_broadcast_close').innerHTML = ICONS.app_broadcast_close;
+    document.querySelector('#common_broadcast_info_title').innerHTML = ICONS.app_alert;
     connectOnline();
 };
 const maintenance_countdown = (remaining) => {
     if(remaining <= 0)
         location.reload(true);
-    document.getElementById('common_maintenance_countdown').innerHTML = remaining;
+    document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
     setTimeout(()=>{ maintenance_countdown(remaining - 1); }, 1000);
 };
 const show_broadcast = (broadcast_message) => {
@@ -3126,7 +3126,7 @@ const show_broadcast = (broadcast_message) => {
         case 'MAINTENANCE':{
             if (COMMON_GLOBAL.user_account_id !='' && COMMON_GLOBAL.user_account_id !=null)
                 exception(COMMON_GLOBAL.exception_app_function, null);
-            document.getElementById('common_maintenance_message').innerHTML = ICONS.app_maintenance;
+            document.querySelector('#common_maintenance_message').innerHTML = ICONS.app_maintenance;
             show_maintenance(message);
             break;
         
@@ -3143,24 +3143,24 @@ const show_broadcast = (broadcast_message) => {
     }
 };
 const show_broadcast_info = (message) => {
-    const hide_function = () => { document.getElementById('common_broadcast_info').style.visibility='hidden';
-                                document.getElementById('common_broadcast_close').removeEventListener('click', hide_function);
-                                document.getElementById('common_broadcast_info_message_item').innerHTML='';
-                                document.getElementById('common_broadcast_info_message').style.animationName='unset';};
-    document.getElementById('common_broadcast_info_message').style.animationName='common_ticker';
-    document.getElementById('common_broadcast_close').addEventListener('click', hide_function);
-    document.getElementById('common_broadcast_info_message_item').innerHTML = message;
-    document.getElementById('common_broadcast_info').style.visibility='visible';
+    const hide_function = () => { document.querySelector('#common_broadcast_info').style.visibility='hidden';
+                                document.querySelector('#common_broadcast_close').removeEventListener('click', hide_function);
+                                document.querySelector('#common_broadcast_info_message_item').innerHTML='';
+                                document.querySelector('#common_broadcast_info_message').style.animationName='unset';};
+    document.querySelector('#common_broadcast_info_message').style.animationName='common_ticker';
+    document.querySelector('#common_broadcast_close').addEventListener('click', hide_function);
+    document.querySelector('#common_broadcast_info_message_item').innerHTML = message;
+    document.querySelector('#common_broadcast_info').style.visibility='visible';
 };
 const show_maintenance = (message, init) => {
     const countdown_timer = 60;
 
     if (init==1){
-        document.getElementById('common_dialogue_maintenance').style.visibility='visible';
+        document.querySelector('#common_dialogue_maintenance').style.visibility='visible';
         maintenance_countdown(countdown_timer);
     }
     else
-        if (document.getElementById('common_maintenance_countdown').innerHTML=='') {
+        if (document.querySelector('#common_maintenance_countdown').innerHTML=='') {
             //hide all divs except broadcast and maintenance
             const divs = document.body.getElementsByTagName('div');
             for (let i = 0; i < divs.length; i += 1) {
@@ -3169,17 +3169,17 @@ const show_maintenance = (message, init) => {
                     divs[i].id.indexOf('common_maintenance') !=0)
                     divs[i].style.visibility ='hidden';
             }
-            const maintenance_divs = document.getElementById('common_dialogue_maintenance').getElementsByTagName('div');
+            const maintenance_divs = document.querySelector('#common_dialogue_maintenance').getElementsByTagName('div');
             for (let i = 0; i < maintenance_divs.length; i += 1) {
                 maintenance_divs[i].style.visibility ='visible';
             }
-            document.getElementById('common_dialogue_maintenance').style.visibility='visible';
+            document.querySelector('#common_dialogue_maintenance').style.visibility='visible';
             maintenance_countdown(countdown_timer);
-            document.getElementById('common_maintenance_footer').innerHTML = message;
+            document.querySelector('#common_maintenance_footer').innerHTML = message;
         }
         else
             if (message!='')
-                document.getElementById('common_maintenance_footer').innerHTML = message;
+                document.querySelector('#common_maintenance_footer').innerHTML = message;
 };
 const reconnect = () => {
     setTimeout(()=>{
@@ -3479,114 +3479,114 @@ const set_app_service_parameters = async (parameters) => {
 };
 const assign_icons = () => {
     //dialogue user verify
-    document.getElementById('common_user_verify_email_icon').innerHTML = ICONS.app_email;
+    document.querySelector('#common_user_verify_email_icon').innerHTML = ICONS.app_email;
     //dialogue login
-    document.getElementById('common_login_tab1').innerHTML = ICONS.app_login;
-    document.getElementById('common_login_tab2').innerHTML = ICONS.app_signup;
-    document.getElementById('common_login_tab3').innerHTML = ICONS.app_forgot;
-    document.getElementById('common_login_button').innerHTML = ICONS.app_login;
-    document.getElementById('common_login_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_login_tab1').innerHTML = ICONS.app_login;
+    document.querySelector('#common_login_tab2').innerHTML = ICONS.app_signup;
+    document.querySelector('#common_login_tab3').innerHTML = ICONS.app_forgot;
+    document.querySelector('#common_login_button').innerHTML = ICONS.app_login;
+    document.querySelector('#common_login_close').innerHTML = ICONS.app_close;
     //dialogue signup
-    document.getElementById('common_signup_tab1').innerHTML = ICONS.app_login;
-    document.getElementById('common_signup_tab2').innerHTML = ICONS.app_signup;
-    document.getElementById('common_signup_tab3').innerHTML = ICONS.app_forgot;
-    document.getElementById('common_signup_button').innerHTML = ICONS.app_signup;
-    document.getElementById('common_signup_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_signup_tab1').innerHTML = ICONS.app_login;
+    document.querySelector('#common_signup_tab2').innerHTML = ICONS.app_signup;
+    document.querySelector('#common_signup_tab3').innerHTML = ICONS.app_forgot;
+    document.querySelector('#common_signup_button').innerHTML = ICONS.app_signup;
+    document.querySelector('#common_signup_close').innerHTML = ICONS.app_close;
     //dialogue forgot
-    document.getElementById('common_forgot_tab1').innerHTML = ICONS.app_login;
-    document.getElementById('common_forgot_tab2').innerHTML = ICONS.app_signup;
-    document.getElementById('common_forgot_tab3').innerHTML = ICONS.app_forgot;
-    document.getElementById('common_forgot_button').innerHTML = ICONS.app_sendmail;
-    document.getElementById('common_forgot_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_forgot_tab1').innerHTML = ICONS.app_login;
+    document.querySelector('#common_forgot_tab2').innerHTML = ICONS.app_signup;
+    document.querySelector('#common_forgot_tab3').innerHTML = ICONS.app_forgot;
+    document.querySelector('#common_forgot_button').innerHTML = ICONS.app_sendmail;
+    document.querySelector('#common_forgot_close').innerHTML = ICONS.app_close;
     //dialogue new password
-    document.getElementById('common_user_password_new_icon').innerHTML = ICONS.user_password;
-    document.getElementById('common_user_password_new_cancel').innerHTML = ICONS.app_cancel;
-    document.getElementById('common_user_password_new_ok').innerHTML = ICONS.app_close;
+    document.querySelector('#common_user_password_new_icon').innerHTML = ICONS.user_password;
+    document.querySelector('#common_user_password_new_cancel').innerHTML = ICONS.app_cancel;
+    document.querySelector('#common_user_password_new_ok').innerHTML = ICONS.app_close;
     //dialogue user edit
-    document.getElementById('common_user_edit_btn_avatar_img').innerHTML = ICONS.user_avatar_edit;
-    document.getElementById('common_user_edit_private').innerHTML = ICONS.app_private;
-    document.getElementById('common_user_edit_btn_user_update').innerHTML = ICONS.app_update;
-    document.getElementById('common_user_edit_btn_user_delete_account').innerHTML = ICONS.user_delete_account;
-    document.getElementById('common_user_edit_close').innerHTML = ICONS.app_close;
-    document.getElementById('common_user_edit_label_provider').innerHTML = ICONS.provider;
-    document.getElementById('common_user_edit_label_provider_id').innerHTML = ICONS.provider_id;
-    document.getElementById('common_user_edit_label_provider_email').innerHTML = ICONS.app_email;
-    document.getElementById('common_user_edit_input_username_icon').innerHTML = ICONS.user;
-    document.getElementById('common_user_edit_input_bio_icon').innerHTML = ICONS.user_profile;
-    document.getElementById('common_user_edit_input_email_icon').innerHTML = ICONS.app_email;
-    document.getElementById('common_user_edit_input_new_email_icon').innerHTML = ICONS.app_email;
-    document.getElementById('common_user_edit_input_password_icon').innerHTML = ICONS.user_password;
-    document.getElementById('common_user_edit_input_password_confirm_icon').innerHTML = ICONS.user_password;
-    document.getElementById('common_user_edit_input_password_new_icon').innerHTML = ICONS.user_password;
-    document.getElementById('common_user_edit_input_password_new_confirm_icon').innerHTML = ICONS.user_password;
-    document.getElementById('common_user_edit_input_password_reminder_icon').innerHTML = ICONS.user_account_reminder;
-    document.getElementById('common_user_edit_label_last_logontime').innerHTML = ICONS.user_last_logontime;
-    document.getElementById('common_user_edit_label_account_created').innerHTML = ICONS.user_account_created;
-    document.getElementById('common_user_edit_label_account_modified').innerHTML = ICONS.user_account_modified;
+    document.querySelector('#common_user_edit_btn_avatar_img').innerHTML = ICONS.user_avatar_edit;
+    document.querySelector('#common_user_edit_private').innerHTML = ICONS.app_private;
+    document.querySelector('#common_user_edit_btn_user_update').innerHTML = ICONS.app_update;
+    document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = ICONS.user_delete_account;
+    document.querySelector('#common_user_edit_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_user_edit_label_provider').innerHTML = ICONS.provider;
+    document.querySelector('#common_user_edit_label_provider_id').innerHTML = ICONS.provider_id;
+    document.querySelector('#common_user_edit_label_provider_email').innerHTML = ICONS.app_email;
+    document.querySelector('#common_user_edit_input_username_icon').innerHTML = ICONS.user;
+    document.querySelector('#common_user_edit_input_bio_icon').innerHTML = ICONS.user_profile;
+    document.querySelector('#common_user_edit_input_email_icon').innerHTML = ICONS.app_email;
+    document.querySelector('#common_user_edit_input_new_email_icon').innerHTML = ICONS.app_email;
+    document.querySelector('#common_user_edit_input_password_icon').innerHTML = ICONS.user_password;
+    document.querySelector('#common_user_edit_input_password_confirm_icon').innerHTML = ICONS.user_password;
+    document.querySelector('#common_user_edit_input_password_new_icon').innerHTML = ICONS.user_password;
+    document.querySelector('#common_user_edit_input_password_new_confirm_icon').innerHTML = ICONS.user_password;
+    document.querySelector('#common_user_edit_input_password_reminder_icon').innerHTML = ICONS.user_account_reminder;
+    document.querySelector('#common_user_edit_label_last_logontime').innerHTML = ICONS.user_last_logontime;
+    document.querySelector('#common_user_edit_label_account_created').innerHTML = ICONS.user_account_created;
+    document.querySelector('#common_user_edit_label_account_modified').innerHTML = ICONS.user_account_modified;
     //dialogue message
-    document.getElementById('common_message_cancel').innerHTML = ICONS.app_cancel;
-    document.getElementById('common_message_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_message_cancel').innerHTML = ICONS.app_cancel;
+    document.querySelector('#common_message_close').innerHTML = ICONS.app_close;
     //dialog lov
-    document.getElementById('common_lov_search_icon').innerHTML = ICONS.app_search;
+    document.querySelector('#common_lov_search_icon').innerHTML = ICONS.app_search;
     //profile detail
-    document.getElementById('common_profile_detail_header_following').innerHTML = ICONS.user_follows;
-    document.getElementById('common_profile_detail_header_followed').innerHTML = ICONS.user_followed;
-    document.getElementById('common_profile_detail_header_like').innerHTML = ICONS.user_like;
-    document.getElementById('common_profile_detail_header_liked_heart').innerHTML = ICONS.user_like;
-    document.getElementById('common_profile_detail_header_liked_users').innerHTML =  ICONS.user_followed;
+    document.querySelector('#common_profile_detail_header_following').innerHTML = ICONS.user_follows;
+    document.querySelector('#common_profile_detail_header_followed').innerHTML = ICONS.user_followed;
+    document.querySelector('#common_profile_detail_header_like').innerHTML = ICONS.user_like;
+    document.querySelector('#common_profile_detail_header_liked_heart').innerHTML = ICONS.user_like;
+    document.querySelector('#common_profile_detail_header_liked_users').innerHTML =  ICONS.user_followed;
     //profile info search
-    document.getElementById('common_profile_search_icon').innerHTML = ICONS.app_search;
+    document.querySelector('#common_profile_search_icon').innerHTML = ICONS.app_search;
     //profile info
-    document.getElementById('common_profile_joined_date_icon').innerHTML = ICONS.user_account_created;
-    document.getElementById('common_profile_follow_follow').innerHTML = ICONS.user_follow_user;
-    document.getElementById('common_profile_follow_followed').innerHTML = ICONS.user_followed_user;
-    document.getElementById('common_profile_like_like').innerHTML = ICONS.user_like;
-    document.getElementById('common_profile_like_unlike').innerHTML = ICONS.user_unlike;
-    document.getElementById('common_profile_info_view_count_icon').innerHTML = ICONS.user_views;
-    document.getElementById('common_profile_main_btn_following').innerHTML = ICONS.user_follows;
-    document.getElementById('common_profile_main_btn_followed').innerHTML = ICONS.user_followed;
-    document.getElementById('common_profile_main_btn_likes').innerHTML = ICONS.user_like;
-    document.getElementById('common_profile_main_btn_liked_heart').innerHTML = ICONS.user_like;
-    document.getElementById('common_profile_main_btn_liked_users').innerHTML = ICONS.user_followed;
+    document.querySelector('#common_profile_joined_date_icon').innerHTML = ICONS.user_account_created;
+    document.querySelector('#common_profile_follow_follow').innerHTML = ICONS.user_follow_user;
+    document.querySelector('#common_profile_follow_followed').innerHTML = ICONS.user_followed_user;
+    document.querySelector('#common_profile_like_like').innerHTML = ICONS.user_like;
+    document.querySelector('#common_profile_like_unlike').innerHTML = ICONS.user_unlike;
+    document.querySelector('#common_profile_info_view_count_icon').innerHTML = ICONS.user_views;
+    document.querySelector('#common_profile_main_btn_following').innerHTML = ICONS.user_follows;
+    document.querySelector('#common_profile_main_btn_followed').innerHTML = ICONS.user_followed;
+    document.querySelector('#common_profile_main_btn_likes').innerHTML = ICONS.user_like;
+    document.querySelector('#common_profile_main_btn_liked_heart').innerHTML = ICONS.user_like;
+    document.querySelector('#common_profile_main_btn_liked_users').innerHTML = ICONS.user_followed;
     
-    document.getElementById('common_profile_private_title').innerHTML = ICONS.app_private;
-    document.getElementById('common_profile_avatar_online_status').innerHTML = ICONS.app_online;
+    document.querySelector('#common_profile_private_title').innerHTML = ICONS.app_private;
+    document.querySelector('#common_profile_avatar_online_status').innerHTML = ICONS.app_online;
     //profile top
-    document.getElementById('common_profile_top_row1_1').innerHTML = ICONS.user_views;
-    document.getElementById('common_profile_top_row1_2').innerHTML = ICONS.user_follows;
-    document.getElementById('common_profile_top_row1_3').innerHTML = ICONS.user_like + ICONS.user_follows;
-    document.getElementById('common_profile_home').innerHTML = ICONS.user_profile_top;
-    document.getElementById('common_profile_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_profile_top_row1_1').innerHTML = ICONS.user_views;
+    document.querySelector('#common_profile_top_row1_2').innerHTML = ICONS.user_follows;
+    document.querySelector('#common_profile_top_row1_3').innerHTML = ICONS.user_like + ICONS.user_follows;
+    document.querySelector('#common_profile_home').innerHTML = ICONS.user_profile_top;
+    document.querySelector('#common_profile_close').innerHTML = ICONS.app_close;
 
     //profile button top
-    if (document.getElementById('common_profile_btn_top'))
-        document.getElementById('common_profile_btn_top').innerHTML = ICONS.user_profile_top;
+    if (document.querySelector('#common_profile_btn_top'))
+        document.querySelector('#common_profile_btn_top').innerHTML = ICONS.user_profile_top;
 
     //window info
-    document.getElementById('common_window_info_btn_close').innerHTML = ICONS.app_close;
-    document.getElementById('common_window_info_toolbar_btn_zoomout').innerHTML = ICONS.app_zoomout;
-    document.getElementById('common_window_info_toolbar_btn_zoomin').innerHTML = ICONS.app_zoomin;
-    document.getElementById('common_window_info_toolbar_btn_left').innerHTML =  ICONS.app_left;
-    document.getElementById('common_window_info_toolbar_btn_right').innerHTML = ICONS.app_right;
-    document.getElementById('common_window_info_toolbar_btn_up').innerHTML =  ICONS.app_up;
-    document.getElementById('common_window_info_toolbar_btn_down').innerHTML = ICONS.app_down;
-    document.getElementById('common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS.app_fullscreen;
+    document.querySelector('#common_window_info_btn_close').innerHTML = ICONS.app_close;
+    document.querySelector('#common_window_info_toolbar_btn_zoomout').innerHTML = ICONS.app_zoomout;
+    document.querySelector('#common_window_info_toolbar_btn_zoomin').innerHTML = ICONS.app_zoomin;
+    document.querySelector('#common_window_info_toolbar_btn_left').innerHTML =  ICONS.app_left;
+    document.querySelector('#common_window_info_toolbar_btn_right').innerHTML = ICONS.app_right;
+    document.querySelector('#common_window_info_toolbar_btn_up').innerHTML =  ICONS.app_up;
+    document.querySelector('#common_window_info_toolbar_btn_down').innerHTML = ICONS.app_down;
+    document.querySelector('#common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS.app_fullscreen;
     
     //user menu
-    //document.getElementById('common_user_menu_dropdown_profile').innerHTML = ICONS.button_default_icon_profile;
-    document.getElementById('common_user_menu_dropdown_edit').innerHTML = ICONS.app_edit;
-    document.getElementById('common_user_menu_dropdown_log_out').innerHTML = ICONS.app_logoff;
-    document.getElementById('common_user_menu_dropdown_signup').innerHTML = ICONS.app_signup;
-    document.getElementById('common_user_menu_dropdown_log_in').innerHTML = ICONS.app_login;
-    document.getElementById('common_user_menu_default_avatar').innerHTML = ICONS.user_avatar;
-    document.getElementById('common_user_preference_locale').innerHTML = ICONS.regional_locale;
-    document.getElementById('common_user_preference_timezone').innerHTML = ICONS.regional_timezone;
-    document.getElementById('common_user_preference_direction').innerHTML = ICONS.regional_direction;
-    document.getElementById('common_user_preference_arabic_script').innerHTML = ICONS.regional_script;
+    //document.querySelector('#common_user_menu_dropdown_profile').innerHTML = ICONS.button_default_icon_profile;
+    document.querySelector('#common_user_menu_dropdown_edit').innerHTML = ICONS.app_edit;
+    document.querySelector('#common_user_menu_dropdown_log_out').innerHTML = ICONS.app_logoff;
+    document.querySelector('#common_user_menu_dropdown_signup').innerHTML = ICONS.app_signup;
+    document.querySelector('#common_user_menu_dropdown_log_in').innerHTML = ICONS.app_login;
+    document.querySelector('#common_user_menu_default_avatar').innerHTML = ICONS.user_avatar;
+    document.querySelector('#common_user_preference_locale').innerHTML = ICONS.regional_locale;
+    document.querySelector('#common_user_preference_timezone').innerHTML = ICONS.regional_timezone;
+    document.querySelector('#common_user_preference_direction').innerHTML = ICONS.regional_direction;
+    document.querySelector('#common_user_preference_arabic_script').innerHTML = ICONS.regional_script;
 };
 const set_event_user_menu = () =>{
     //user menu also for system admin
-    document.getElementById('common_user_menu').addEventListener('click', () => { const menu = document.getElementById('common_user_menu_dropdown');
+    document.querySelector('#common_user_menu').addEventListener('click', () => { const menu = document.querySelector('#common_user_menu_dropdown');
     if (menu.style.visibility == 'visible') 
         menu.style.visibility = 'hidden'; 
     else 
@@ -3595,13 +3595,13 @@ const set_event_user_menu = () =>{
     if (event.key === 'Escape') {
         event.preventDefault();
         //hide use menu dropdown
-        if (document.getElementById('common_user_menu_dropdown').style.visibility=='visible')
-            document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';
+        if (document.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
+            document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
         //hide search
-        const x = document.getElementById('common_profile_input_row'); 
+        const x = document.querySelector('#common_profile_input_row'); 
         if (x.style.visibility == 'visible') {
             x.style.visibility = 'hidden';
-            document.getElementById('common_profile_search_list_wrap').style.visibility = 'hidden';
+            document.querySelector('#common_profile_search_list_wrap').style.visibility = 'hidden';
         } 
     }
     }, false);
@@ -3609,50 +3609,50 @@ const set_event_user_menu = () =>{
 
 const set_events = () => {
     //login/signup/forgot
-    document.getElementById('common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
-    document.getElementById('common_login_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
-    document.getElementById('common_login_close').addEventListener('click', () => { document.getElementById('common_dialogue_login').style.visibility = 'hidden'; }, false);
-    document.getElementById('common_signup_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN'); }, false);
-    document.getElementById('common_signup_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
-    document.getElementById('common_signup_close').addEventListener('click', () => { document.getElementById('common_dialogue_signup').style.visibility = 'hidden'; }, false);
-    document.getElementById('common_forgot_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN'); }, false);
-    document.getElementById('common_forgot_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
-    document.getElementById('common_forgot_email').addEventListener('keyup', (event) =>{
+    document.querySelector('#common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
+    document.querySelector('#common_login_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
+    document.querySelector('#common_login_close').addEventListener('click', () => { document.querySelector('#common_dialogue_login').style.visibility = 'hidden'; }, false);
+    document.querySelector('#common_signup_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN'); }, false);
+    document.querySelector('#common_signup_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
+    document.querySelector('#common_signup_close').addEventListener('click', () => { document.querySelector('#common_dialogue_signup').style.visibility = 'hidden'; }, false);
+    document.querySelector('#common_forgot_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN'); }, false);
+    document.querySelector('#common_forgot_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
+    document.querySelector('#common_forgot_email').addEventListener('keyup', (event) =>{
         if (event.code === 'Enter') {
             event.preventDefault();
             user_forgot().then(()=>{
                 //unfocus
-                document.getElementById('common_forgot_email').blur();
+                document.querySelector('#common_forgot_email').blur();
             });
         }
     });
-    document.getElementById('common_forgot_button').addEventListener('click', () => { user_forgot();}, false);
-    document.getElementById('common_forgot_close').addEventListener('click', () => { document.getElementById('common_dialogue_forgot').style.visibility = 'hidden'; }, false);
+    document.querySelector('#common_forgot_button').addEventListener('click', () => { user_forgot();}, false);
+    document.querySelector('#common_forgot_close').addEventListener('click', () => { document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden'; }, false);
 
     //dialogue message
-    document.getElementById('common_message_cancel').addEventListener('click', () => { document.getElementById('common_dialogue_message').style.visibility = 'hidden'; }, false);
+    document.querySelector('#common_message_cancel').addEventListener('click', () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden'; }, false);
     //dialogue new password
-    document.getElementById('common_user_password_new_cancel').addEventListener('click', () => { dialogue_password_new_clear(); }, false);
-    document.getElementById('common_user_password_new_ok').addEventListener('click', () => { updatePassword(); }, false);
+    document.querySelector('#common_user_password_new_cancel').addEventListener('click', () => { dialogue_password_new_clear(); }, false);
+    document.querySelector('#common_user_password_new_ok').addEventListener('click', () => { updatePassword(); }, false);
     //dialogue lov
-    document.getElementById('common_lov_search_input').addEventListener('keyup', (event) => {lov_keys(event);});
-    document.getElementById('common_lov_search_icon').addEventListener('click', () => {lov_filter(document.getElementById('common_lov_search_input').value);});
-    document.getElementById('common_lov_close').addEventListener('click', () => { lov_close();}, false); 
+    document.querySelector('#common_lov_search_input').addEventListener('keyup', (event) => {lov_keys(event);});
+    document.querySelector('#common_lov_search_icon').addEventListener('click', () => {lov_filter(document.querySelector('#common_lov_search_input').value);});
+    document.querySelector('#common_lov_close').addEventListener('click', () => { lov_close();}, false); 
     //profile search
-    if (document.getElementById('common_profile_input_row'))
-        document.getElementById('common_profile_search_icon').addEventListener('click', () => { 
-            document.getElementById('common_profile_search_input').focus();
-            document.getElementById('common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+    if (document.querySelector('#common_profile_input_row'))
+        document.querySelector('#common_profile_search_icon').addEventListener('click', () => { 
+            document.querySelector('#common_profile_search_input').focus();
+            document.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
         }, false);
     //window info
     document.querySelector('#common_window_info_btn_close').addEventListener('click', () =>{
-            document.getElementById('common_window_info').style.visibility = 'hidden'; 
-            document.getElementById('common_window_info_info').innerHTML='';
-            document.getElementById('common_window_info_content').src='';
-            document.getElementById('common_window_info_content').classList='';
-            document.getElementById('common_window_info_toolbar').classList='';
+            document.querySelector('#common_window_info').style.visibility = 'hidden'; 
+            document.querySelector('#common_window_info_info').innerHTML='';
+            document.querySelector('#common_window_info_content').src='';
+            document.querySelector('#common_window_info_content').classList='';
+            document.querySelector('#common_window_info_toolbar').classList='';
     });
-    document.getElementById('common_window_info_info').addEventListener('click', () => { show_hide_window_info_toolbar();  }, false);
+    document.querySelector('#common_window_info_info').addEventListener('click', () => { show_hide_window_info_toolbar();  }, false);
     document.querySelector('#common_window_info_toolbar').addEventListener('click', (event)=>{
         let event_target_id;
         if  (event.target.parentNode.id == 'common_window_info_toolbar'){
@@ -3705,36 +3705,36 @@ const set_events = () => {
     }, false);
     //usermenu
     set_event_user_menu();
-    document.getElementById('common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden';}, false);
-    document.getElementById('common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
-    document.getElementById('common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.getElementById('common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    document.querySelector('#common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';}, false);
+    document.querySelector('#common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+    document.querySelector('#common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
     //user preferences
     //define globals and save settings here, in apps define what should happen when changing
-    if (document.getElementById('common_user_locale_select'))
-        document.getElementById('common_user_locale_select').addEventListener('change', (event) => { 
+    if (document.querySelector('#common_user_locale_select'))
+        document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { 
                                                                                     COMMON_GLOBAL.user_locale = event.target.value;
                                                                                     //change navigator.language, however when logging out default navigator.language will be set
                                                                                     //commented at the moment
                                                                                     //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
                                                                                     user_preference_save();
                                                                                 }, false);
-    if (document.getElementById('common_user_timezone_select'))
-        document.getElementById('common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_timezone = event.target.value;
+    if (document.querySelector('#common_user_timezone_select'))
+        document.querySelector('#common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_timezone = event.target.value;
                                                                                                 user_preference_save().then(()=>{
-                                                                                                    if (document.getElementById('common_dialogue_user_edit').style.visibility == 'visible') {
+                                                                                                    if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
                                                                                                         dialogue_user_edit_clear();
                                                                                                         user_edit();
                                                                                                     }
                                                                                                 });
                                                                                                 }, false);
     //define also in app if needed to adjust ui
-    if (document.getElementById('common_user_direction_select'))
-        document.getElementById('common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
+    if (document.querySelector('#common_user_direction_select'))
+        document.querySelector('#common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
                                                                                                 COMMON_GLOBAL.user_direction = event.target.value;  
                                                                                                 user_preference_save();
                                                                                                 }, false);
-    if (document.getElementById('common_user_arabic_script_select'))
-        document.getElementById('common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_arabic_script = event.target.value;
+    if (document.querySelector('#common_user_arabic_script_select'))
+        document.querySelector('#common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_arabic_script = event.target.value;
                                                                                                     user_preference_save();
                                                                                                     }, false);
     
@@ -3742,16 +3742,16 @@ const set_events = () => {
     set_user_account_app_settings();
     
     //dialogue user edit
-    document.getElementById('common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
-    document.getElementById('common_user_edit_btn_avatar_img').addEventListener('click', () => { document.getElementById('common_user_edit_input_avatar_img').click(); }, false);
-    document.getElementById('common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.getElementById('common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height); }, false);
-    document.getElementById('common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
+    document.querySelector('#common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
+    document.querySelector('#common_user_edit_btn_avatar_img').addEventListener('click', () => { document.querySelector('#common_user_edit_input_avatar_img').click(); }, false);
+    document.querySelector('#common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height); }, false);
+    document.querySelector('#common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
 };
 const set_user_account_app_settings = () =>{
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.getElementById('common_user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.getElementById('common_user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.getElementById('common_user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.getElementById('common_user_arabic_script_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.querySelector('#common_user_locale_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.querySelector('#common_user_timezone_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.querySelector('#common_user_direction_select'), 1);
+    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.querySelector('#common_user_arabic_script_select'), 1);
 };
 const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
