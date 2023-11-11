@@ -94,23 +94,6 @@ const demo_delete = async (req, res)=> {
 	});
 };
 /**
- * DB demo get
- * @param {Types.req} req 
- * @param {Types.res} res 
- */
-const demo_get = async (req, res)=> {
-	service.demo_get(getNumberValue(req.query.app_id), (/**@type{Types.error}*/err, /**@type{Types.db_result_user_account_getDemousers}*/result) =>{
-		if (err) {
-			res.status(500).send({
-				data: err
-			});
-		}
-		res.status(200).json({
-			data: result
-		});
-	});
-};
-/**
  * DB install
  * @param {Types.req} req 
  * @param {Types.res} res 
@@ -158,6 +141,6 @@ const install_db_delete = (req, res) =>{
 
 export{
 	DBInfo, DBInfoSpace, DBInfoSpaceSum, 
-	demo_add, demo_delete, demo_get, 
+	demo_add, demo_delete, 
 	install_db, install_db_check, install_db_delete
 };
