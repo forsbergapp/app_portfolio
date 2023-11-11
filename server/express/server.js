@@ -80,7 +80,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     //log
     const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.controller.js`);    
     //server db api admin
-    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, demo_get, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
+    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
     //server db api app_portfolio app
     const { getApp, getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.controller.js`);
     //server db api app_portfolio app category
@@ -196,7 +196,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpace`).get(checkSystemAdmin, DBInfoSpace);
     app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpaceSum`).get(checkSystemAdmin, DBInfoSpaceSum);
     app.route(`${rest_resouce_server}/dbapi/admin/demo`).post(checkSystemAdmin, demo_add);
-    app.route(`${rest_resouce_server}/dbapi/admin/demo`).get(checkSystemAdmin, demo_get);
     app.route(`${rest_resouce_server}/dbapi/admin/demo`).delete(checkSystemAdmin, demo_delete);
     app.route(`${rest_resouce_server}/dbapi/admin/install`).post(checkSystemAdmin, install_db);
     app.route(`${rest_resouce_server}/dbapi/admin/install`).get(checkSystemAdmin, install_db_check);
