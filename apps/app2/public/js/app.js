@@ -290,14 +290,14 @@ const slide = (items, prev, next, type) => {
         });
         //set next index
         if (dir == 1)
-            if ((theme_index + 1) == items.getElementsByClassName(`slide_${type}`).length)
+            if ((theme_index + 1) == items.querySelectorAll(`.slide_${type}`).length)
                 theme_index = 0;
             else
                 theme_index++;
         else 
             if (dir == -1)
                 if (theme_index == 0)
-                    theme_index = items.getElementsByClassName(`slide_${type}`).length -1;
+                    theme_index = items.querySelectorAll(`.slide_${type}`).length -1;
                 else
                     theme_index--;
         //remove old active theme class
@@ -769,7 +769,7 @@ const update_ui = async (option, item_id=null) => {
                     //display empty country
                     common.SearchAndSetSelectedIndex('', settings.country,0);
                     //remove old city list:            
-                    const old_groups = settings.city.getElementsByTagName('optgroup');
+                    const old_groups = settings.city.querySelectorAll('optgroup');
                     for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
                         settings.city.removeChild(old_groups[old_index]);
                     //display first empty city

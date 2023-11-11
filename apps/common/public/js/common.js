@@ -2768,7 +2768,7 @@ const map_city = (country_code) =>{
 const map_city_empty = () =>{
     //remove old city list:      
     const select_city = document.querySelector('#common_module_leaflet_select_city');
-    const old_groups = select_city.getElementsByTagName('optgroup');
+    const old_groups = select_city.querySelectorAll('optgroup');
     for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
         select_city.removeChild(old_groups[old_index]);
     //display first empty city
@@ -3162,14 +3162,14 @@ const show_maintenance = (message, init) => {
     else
         if (document.querySelector('#common_maintenance_countdown').innerHTML=='') {
             //hide all divs except broadcast and maintenance
-            const divs = document.body.getElementsByTagName('div');
+            const divs = document.body.querySelectorAll('div');
             for (let i = 0; i < divs.length; i += 1) {
                 if (divs[i].id.indexOf('common_broadcast') !=0 &&
                     divs[i].id.indexOf('common_dialogue_maintenance') !=0 &&
                     divs[i].id.indexOf('common_maintenance') !=0)
                     divs[i].style.visibility ='hidden';
             }
-            const maintenance_divs = document.querySelector('#common_dialogue_maintenance').getElementsByTagName('div');
+            const maintenance_divs = document.querySelector('#common_dialogue_maintenance').querySelectorAll('div');
             for (let i = 0; i < maintenance_divs.length; i += 1) {
                 maintenance_divs[i].style.visibility ='visible';
             }
