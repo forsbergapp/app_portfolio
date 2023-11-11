@@ -205,30 +205,16 @@ const service_request = async (service, path, method, timeout, client_ip, author
         }
         const request = request_protocol.request(options, res =>{
             let responseBody = '';
-            //for REPORT statucode 301 is returned, resolve the redirected path
-            if (res.statusCode==301)
-                resolve(service_request(hostname, 
-                                        res.headers.location, 
-                                        method, 
-                                        timeout, 
-                                        client_ip, 
-                                        authorization, 
-                                        headers_user_agent, 
-                                        headers_accept_language, 
-                                        body));
-            else{
-                res.setEncoding('utf8');
-                res.on('data', (chunk) =>{
-                    responseBody += chunk;
-                });
-                res.on('end', ()=>{
-                    if (res.statusCode == 200)
-                        resolve (responseBody);
-                    else
-                        reject(responseBody);
-                });
-            }
-            
+            res.setEncoding('utf8');
+            res.on('data', (chunk) =>{
+                responseBody += chunk;
+            });
+            res.on('end', ()=>{
+                if (res.statusCode == 200)
+                    resolve (responseBody);
+                else
+                    reject(responseBody);
+            });
         });
         if (method !='GET')
             request.write(JSON.stringify(body));
