@@ -687,7 +687,9 @@ const serverStart = async () =>{
     const {serverExpress, serverExpressLogError} = await import(`file://${process.cwd()}/server/express/server.js`);
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
     const fs = await import('node:fs');
+    const http = await import('node:http');
     const https = await import('node:https');
+
     process.env.TZ = 'UTC';
     await InitConfig();
     await DBStart();
@@ -699,11 +701,13 @@ const serverStart = async () =>{
     serverExpressLogError(app);
     BroadcastCheckMaintenance();
     //START HTTP SERVER
-    app.listen(ConfigGet('SERVER', 'PORT'), () => {
+    /**@ts-ignore*/
+    http.createServer(app).listen(ConfigGet('SERVER', 'PORT'), () => {
         LogServerI('HTTP Server up and running on PORT: ' + ConfigGet('SERVER', 'PORT')).then(() => {
             null;
         });
     });
+    
     if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
         //START HTTPS SERVER
         //SSL files for HTTPS
