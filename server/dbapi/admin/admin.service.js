@@ -743,22 +743,6 @@ const demo_delete = async (app_id, callBack)=> {
 	});
 };
 /**
- * Demo get
- * @param {number} app_id 
- * @param {Types.callBack} callBack 
- */
-const demo_get = async (app_id, callBack)=> {
-	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers})=>{
-		getDemousers(app_id)
-      .then((/**@type{Types.db_result_user_account_getDemousers}*/result_demo_users) =>{
-         callBack(null, result_demo_users);
-      })
-      .catch((/**@type{Types.error}*/error)=>{
-         callBack(error, null);
-      });
-	});
-};
-/**
  * Install db execute statement
  * @param {number} app_id 
  * @param {string} sql 
@@ -1089,5 +1073,5 @@ const install_db_delete = async (app_id, callBack)=> {
 };
 export{DBStart, 
        DBInfo, DBInfoSpace, DBInfoSpaceSum,
-       demo_add, demo_get, demo_delete, 
+       demo_add, demo_delete, 
        install_db, install_db_check, install_db_delete};
