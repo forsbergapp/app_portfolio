@@ -691,43 +691,47 @@ const serverStart = async () =>{
     const https = await import('node:https');
 
     process.env.TZ = 'UTC';
-    await InitConfig();
-    await DBStart();
-    //Get express app with all configurations
-    /**@type{Types.express}*/
-    const app = await serverExpress();
-    const {serverExpressApps} = await import(`file://${process.cwd()}/server/express/apps.js`);
-    await serverExpressApps(app);
-    serverExpressLogError(app);
-    BroadcastCheckMaintenance();
-    //START HTTP SERVER
-    /**@ts-ignore*/
-    http.createServer(app).listen(ConfigGet('SERVER', 'PORT'), () => {
-        LogServerI('HTTP Server up and running on PORT: ' + ConfigGet('SERVER', 'PORT')).then(() => {
-            null;
-        });
+    process.on('uncaughtException', (err) =>{
+        console.log(err);
+        LogServerE('Process uncaughtException: ' + err.stack);
     });
-    
-    if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
-        //START HTTPS SERVER
-        //SSL files for HTTPS
-        const HTTPS_KEY = await fs.promises.readFile(process.cwd() + ConfigGet('SERVER', 'HTTPS_KEY'), 'utf8');
-        const HTTPS_CERT = await fs.promises.readFile(process.cwd() + ConfigGet('SERVER', 'HTTPS_CERT'), 'utf8');
-        const options = {
-            key: HTTPS_KEY.toString(),
-            cert: HTTPS_CERT.toString()
-        };
+    try {
+        await InitConfig();
+        await DBStart();
+        //Get express app with all configurations
+        /**@type{Types.express}*/
+        const app = await serverExpress();
+        const {serverExpressApps} = await import(`file://${process.cwd()}/server/express/apps.js`);
+        await serverExpressApps(app);
+        serverExpressLogError(app);
+        BroadcastCheckMaintenance();
+        //START HTTP SERVER
         /**@ts-ignore*/
-        https.createServer(options,  app).listen(ConfigGet('SERVER', 'HTTPS_PORT'), () => {
-            LogServerI('HTTPS Server up and running on PORT: ' + ConfigGet('SERVER', 'HTTPS_PORT')).then(() => {
+        http.createServer(app).listen(ConfigGet('SERVER', 'PORT'), () => {
+            LogServerI('HTTP Server up and running on PORT: ' + ConfigGet('SERVER', 'PORT')).then(() => {
                 null;
             });
         });
-        process.on('uncaughtException', (err) =>{
-            console.log(err);
-            LogServerE('Process uncaughtException: ' + err);
-        });
+        if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
+            //START HTTPS SERVER
+            //SSL files for HTTPS
+            const HTTPS_KEY = await fs.promises.readFile(process.cwd() + ConfigGet('SERVER', 'HTTPS_KEY'), 'utf8');
+            const HTTPS_CERT = await fs.promises.readFile(process.cwd() + ConfigGet('SERVER', 'HTTPS_CERT'), 'utf8');
+            const options = {
+                key: HTTPS_KEY.toString(),
+                cert: HTTPS_CERT.toString()
+            };
+            /**@ts-ignore*/
+            https.createServer(options,  app).listen(ConfigGet('SERVER', 'HTTPS_PORT'), () => {
+                LogServerI('HTTPS Server up and running on PORT: ' + ConfigGet('SERVER', 'HTTPS_PORT')).then(() => {
+                    null;
+                });
+            });
+        }
+    } catch (/**@type{Types.error}*/error) {
+        LogServerE('serverStart: ' + error.stack);
     }
+    
 };
 
 export {COMMON, getNumberValue, CreateRandomString,
