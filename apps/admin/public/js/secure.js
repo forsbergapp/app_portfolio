@@ -2769,39 +2769,27 @@ const show_config = async (config_nav=1) => {
 /* INSTALLATION           */
 /*----------------------- */
 const show_installation = () =>{
-    document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', '/admin/install?', 'GET', 2, null, (err, result) => {
-        if (err)
-            document.querySelector('#menu_7_content').innerHTML = '';
-        else{
-            document.querySelector('#menu_7_content').innerHTML =
-                `<div id='menu_7_content_widget1' class='widget'>
-                    <div id='install_db'>
-                        <div id='install_db_icon'>${common.ICONS.app_database}</div>
-                        <div id='install_db_button_row'>
-                            <div id='install_db_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
-                            <div id='install_db_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
+    document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;    
+    if (common.COMMON_GLOBAL.system_admin==1){
+        common.FFB ('DB_API', '/admin/install?', 'GET', 2, null, (err, result) => {
+            if (err)
+                document.querySelector('#menu_7_content').innerHTML = '';
+            else{
+                document.querySelector('#menu_7_content').innerHTML =
+                    `<div id='menu_7_content_widget1' class='widget'>
+                        <div id='install_db'>
+                            <div id='install_db_icon'>${common.ICONS.app_database}</div>
+                            <div id='install_db_button_row'>
+                                <div id='install_db_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
+                                <div id='install_db_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
+                            </div>
+                            <div id='install_db_input'>
+                                <div id="install_db_country_language_translations_icon" >${common.ICONS.gps_country + common.ICONS.regional_locale}</div>
+                                <input id='install_db_country_language_translations' type='checkbox' class='common_switch_input' />
+                                <label for='install_db_country_language_translations' class='common_switch_label'></label>
+                            </div>
                         </div>
-                        <div id='install_db_input'>
-                            <div id="install_db_country_language_translations_icon" >${common.ICONS.gps_country + common.ICONS.regional_locale}</div>
-                            <input id='install_db_country_language_translations' type='checkbox' class='common_switch_input' />
-                            <label for='install_db_country_language_translations' class='common_switch_label'></label>
-                        </div>
-                    </div>
-                </div>
-                <div id='menu_7_content_widget2' class='widget'>
-                    <div id='install_demo'>
-                        <div id='install_demo_demo_users_icon'>${common.ICONS.app_users}</div>
-                        <div id='install_demo_button_row'>
-                            <div id='install_demo_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
-                            <div id='install_demo_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
-                        </div>
-                        <div id='install_demo_input'>
-                            <div id="install_demo_password_icon" >${common.ICONS.user_password}</div>
-                            <input id='install_demo_password' type='password' />
-                        </div>
-                    </div>
-                </div>`;
+                    </div>`;
                 document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
                     const install_function = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
@@ -2841,45 +2829,62 @@ const show_installation = () =>{
                         }
                     }
                 }, false);
-            document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
-                switch(event.target.parentNode.id){
-                    case 'install_demo_button_install':{
-                        if (document.querySelector('#install_demo_password').value == '') {
-                            common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
-                        }
-                        else{
-                            const json_data = {demo_password: document.querySelector('#install_demo_password').value};
-                            const old_html = document.querySelector('#install_demo_button_install').innerHTML;
-                            document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-                            common.FFB ('DB_API', '/admin/demo?', 'POST', 2, json_data, (err, result) => {
-                                document.querySelector('#install_demo_button_install').innerHTML = old_html;
-                                if (err == null){
-                                    const result_obj = JSON.parse(result);
-                                    common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
-                                }
-                            });
-                        }
-                        break;
+                document.querySelector('#install_db_icon').classList.remove('installed');
+                if (JSON.parse(result).installed == 1)
+                    document.querySelector('#install_db_icon').classList.add('installed');
+            }
+        });
+    }
+    else{
+        document.querySelector('#menu_7_content').innerHTML =
+        `<div id='menu_7_content_widget2' class='widget'>
+            <div id='install_demo'>
+                <div id='install_demo_demo_users_icon'>${common.ICONS.app_users}</div>
+                <div id='install_demo_button_row'>
+                    <div id='install_demo_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
+                    <div id='install_demo_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
+                </div>
+                <div id='install_demo_input'>
+                    <div id="install_demo_password_icon" >${common.ICONS.user_password}</div>
+                    <input id='install_demo_password' type='password' />
+                </div>
+            </div>
+        </div>`;
+        document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
+            switch(event.target.parentNode.id){
+                case 'install_demo_button_install':{
+                    if (document.querySelector('#install_demo_password').value == '') {
+                        common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
                     }
-                    case 'install_demo_button_uninstall':{
-                        const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
-                        document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/admin/demo?', 'DELETE', 2, null, (err, result) => {
-                            document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
+                    else{
+                        const json_data = {demo_password: document.querySelector('#install_demo_password').value};
+                        const old_html = document.querySelector('#install_demo_button_install').innerHTML;
+                        document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
+                        common.FFB ('DB_API', '/admin/demo?', 'POST', 2, json_data, (err, result) => {
+                            document.querySelector('#install_demo_button_install').innerHTML = old_html;
                             if (err == null){
                                 const result_obj = JSON.parse(result);
                                 common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
-                        break;
                     }
+                    break;
                 }
-            }, false);
-            document.querySelector('#install_db_icon').classList.remove('installed');
-            if (JSON.parse(result).installed == 1)
-                document.querySelector('#install_db_icon').classList.add('installed');
-        }
-    });
+                case 'install_demo_button_uninstall':{
+                    const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
+                    document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
+                    common.FFB ('DB_API', '/admin/demo?', 'DELETE', 2, null, (err, result) => {
+                        document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
+                        if (err == null){
+                            const result_obj = JSON.parse(result);
+                            common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+                        }
+                    });
+                    break;
+                }
+            }
+        }, false);
+    }
 };
 /*----------------------- */
 /* DB INFO                */
@@ -2890,7 +2895,7 @@ const show_db_info = async () => {
         const size = '(Mb)';
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB_API', '/admin/DBInfo?', 'GET', 2, null, (err, result) => {
+        await common.FFB ('DB_API', '/systemadmin/DBInfo?', 'GET', 2, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_8_content').innerHTML = '';
             else{
@@ -2914,7 +2919,7 @@ const show_db_info = async () => {
                         <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
                     document.querySelector('#menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', '/admin/DBInfoSpace?', 'GET', 2, null, (err, result) => {
+                    common.FFB ('DB_API', '/systemadmin/DBInfoSpace?', 'GET', 2, null, (err, result) => {
                         if (err)
                             document.querySelector('#menu_8_db_info_space_detail').innerHTML = '';
                         else{
@@ -2957,7 +2962,7 @@ const show_db_info = async () => {
                                 </div>`;
                             }
                             document.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                            common.FFB ('DB_API', '/admin/DBInfoSpaceSum?', 'GET', 2, null, (err, result) => {
+                            common.FFB ('DB_API', '/systemadmin/DBInfoSpaceSum?', 'GET', 2, null, (err, result) => {
                                 if (err)
                                     null;
                                 else{
@@ -3133,6 +3138,8 @@ const init = () => {
         document.querySelector('#menu_4').style.display='block';
         //show MONITOR
         document.querySelector('#menu_5').style.display='block';
+        //show INSTALLATION
+        document.querySelector('#menu_7').style.display='block';
         //start with DASHBOARD
         show_menu(1);
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale, 'APP', ()=>{});

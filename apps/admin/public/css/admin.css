@@ -614,12 +614,12 @@ ul#admin_login_nav li{
 }
 /* MENU INSTALLATION*/
 #menu_7_content_widget1{
-	height: calc(50% - 10px);
+	height: calc(100%  + 10px);
 	display: flex;
 	flex-direction: column;
 }
 #menu_7_content_widget2{
-	height: calc(50% - 10px);
+	height: calc(100%  + 10px);
 	display: flex;
 	flex-direction: column;
 }
