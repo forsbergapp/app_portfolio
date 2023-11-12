@@ -8,13 +8,14 @@ const service = await import('./apps.service.js');
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
- * Backend for frontend (BFF)
+ * Backend for frontend (BFF) common
  * 
  * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
+ * @param {string} endpoint
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
-const BFF = (req, res) =>{
+const BFF = (endpoint, req, res) =>{
     //check inparameters
     if (!getNumberValue(req.query.app_id) &&
         !req.query.service &&
@@ -36,7 +37,7 @@ const BFF = (req, res) =>{
             parameters = decodedparameters + `&user_account_logon_user_account_id=${getNumberValue(req.query.user_account_logon_user_account_id)}`;
         else
             parameters = decodedparameters;
-        service.BFF(getNumberValue(req.query.app_id), service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
+        service.BFF(getNumberValue(req.query.app_id), endpoint, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
         .then(result_service => {
             import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
                 const log_text = message_queue==true?null:result_service;
@@ -66,6 +67,43 @@ const BFF = (req, res) =>{
     }
 };
 /**
+ * Backend for frontend (BFF) data
+ * 
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ */
+ const BFF_data = (req, res) =>{
+    BFF('DATA', req,res);
+};
+/**
+ * Backend for frontend (BFF) access
+ * 
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ */
+ const BFF_access = (req, res) =>{
+    BFF('ACCESS', req,res);
+};
+/**
+ * Backend for frontend (BFF) admin
+ * 
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ */
+ const BFF_admin = (req, res) =>{
+    BFF('ADMIN', req,res);
+};
+/**
+ * Backend for frontend (BFF) systemadmin
+ * 
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ */
+ const BFF_systemadmin = (req, res) =>{
+    BFF('SYSTEMADMIN', req,res);
+};
+
+/**
  * Backend for frontend (BFF) without authorization
  * 
  * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
@@ -76,7 +114,7 @@ const BFF_noauth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='BROADCAST' && 
         Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-            BFF(req,res);
+            BFF('NOAUTH', req,res);
         }
     else{
         //required parameters not provided
@@ -96,7 +134,7 @@ const BFF_noauth = (req, res) =>{
 const BFF_auth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='AUTH' && req.headers.authorization.toUpperCase().startsWith('BASIC'))
-        BFF(req,res);
+        BFF('AUTH', req,res);
     else{
         //required parameters not provided
         //use common app id to get message and use first lang_code form app or if missing use language in headers
@@ -105,4 +143,4 @@ const BFF_auth = (req, res) =>{
         });
     }
 };
-export{BFF, BFF_noauth, BFF_auth};
+export{BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_noauth, BFF_auth};

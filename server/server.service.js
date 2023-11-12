@@ -676,6 +676,178 @@ const Info = async (callBack) => {
                     process: process_json
                     });
 };
+/**
+ * server routes
+ * @param {number} app_id
+ * @param {string} service
+ * @param {string} endpoint
+ * @param {string} method
+ * @param {string} parameters
+ * @param {*} data
+ * @async
+ */
+ const serverRoutes = async (app_id, service, endpoint, method, parameters, data) =>{
+    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
+    /**@type{*} */
+    const query = new URLSearchParams(parameters);
+    /**
+     * throws not valid
+     */
+    const notvalid = () =>{
+        throw '⛔';
+    };
+    return new Promise((resolve, reject)=>{
+        try {
+            //check what BFF endpoint is used that has already used middleware if declared in routes
+            switch(endpoint){
+                case 'DATA':{
+                    break;
+                }
+                case 'ACCESS':{
+                    break;
+                }
+                case 'SYSTEMADMIN':{
+                    switch (service){
+                        case 'SERVER':{
+                            break;
+                        }
+                        case 'DB_API':{
+                            const routeFunction = parameters.substring('/systemadmin/'.length, parameters.indexOf('?')).toUpperCase();
+                            switch (routeFunction){
+                                case 'DBINFO':{
+                                    if (method=='GET')
+                                        DBInfo(app_id).then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
+                                            resolve({
+                                                data: result[0]
+                                            });
+                                        });
+                                    else
+                                        notvalid();
+                                    break;
+                                }
+                                case 'DBINFOSPACE':{
+                                    if (method=='GET')
+                                        DBInfoSpace(app_id).then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
+                                            resolve({
+                                                data: result
+                                            });
+                                        });
+                                    else
+                                        notvalid();
+                                    break;
+                                }
+                                case 'DBINFOSPACESUM':{
+                                    if (method=='GET')
+                                        DBInfoSpaceSum(app_id).then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
+                                            resolve({
+                                                data: result[0]
+                                            });
+                                        });
+                                    else
+                                        notvalid();
+                                    break;
+                                }
+                                case 'INSTALL':{
+                                    switch (method){
+                                        case 'POST':{
+                                            install_db(app_id,getNumberValue(query.get('optional')), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
+                                                if (err)
+                                                    reject(err);
+                                                else
+                                                    resolve(result);
+                                            });
+                                            break;
+                                        }
+                                        case 'GET':{
+                                            install_db_check(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
+                                                if (err)
+                                                    reject(err);
+                                                else
+                                                    resolve(result);
+                                            });
+                                            break;
+                                        }
+                                        case 'DELETE':{
+                                            install_db_delete(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
+                                                if (err)
+                                                    reject(err);
+                                                else
+                                                    resolve(result);
+                                            });
+                                            break;
+                                        }
+                                        default:{
+                                            notvalid();
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        }
+                        case 'LOG':{
+                            break;
+                        }
+                        default:{
+                            notvalid();
+                        }
+                    }
+                    break;
+                }
+                case 'ADMIN':{
+                    switch (service){
+                        case 'DB_API':{
+                            
+                            const routeFunction = parameters.substring('/admin/'.length, parameters.indexOf('?')).toUpperCase();
+                            switch (routeFunction){
+                                case 'DEMO':{
+                                    switch (method){
+                                        case 'POST':{
+                                            demo_add(app_id, data.demo_password, query.get('lang_code'), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
+                                                if (err) {
+                                                    reject(err);
+                                                }
+                                                else
+                                                    resolve(result);
+                                            });
+                                            break;
+                                        }
+                                        case 'DELETE':{
+                                            demo_delete(app_id, (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
+                                                if (err) {
+                                                    reject(err);
+                                                }
+                                                else
+                                                    resolve({
+                                                        count_deleted: result_demo_users_length
+                                                    });
+                                            });
+                                            break;
+                                        }
+                                        default:{
+                                            notvalid();
+                                            break;
+                                        }
+                                    }
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                    break;
+                }
+                case 'AUTH':{
+                    break;
+                }
+                case 'NOAUTH':{
+                    break;
+                }
+            }    
+        } catch (error) {
+            reject(error);
+        }
+    });
+ };
 
 /**
  * server start
@@ -737,4 +909,4 @@ const serverStart = async () =>{
 export {COMMON, getNumberValue, CreateRandomString,
         ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, ConfigInfo, Info, 
-        ConfigGet, ConfigGetInit, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig, serverStart };
+        ConfigGet, ConfigGetInit, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig, serverRoutes, serverStart };

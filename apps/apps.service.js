@@ -727,7 +727,7 @@ const getModule = async (app_id, module_config, callBack) =>{
     const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     const datatoken = CreateDataToken(app_id);
     //get GPS from IP
-    const result_gps = await BFF(app_id, 'GEOLOCATION', `/ip?ip=${module_config.ip}`, module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
+    const result_gps = await BFF(app_id, null, 'GEOLOCATION', `/ip?ip=${module_config.ip}`, module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
     .catch(error=>
         callBack(error, null)
     );
@@ -741,7 +741,7 @@ const getModule = async (app_id, module_config, callBack) =>{
         result_geodata.timezone = JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
-        const result_city = await BFF(app_id, 'WORLDCITIES', '/city/random?', module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
+        const result_city = await BFF(app_id, null, 'WORLDCITIES', '/city/random?', module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
         result_geodata.latitude = JSON.parse(result_city).lat;
         result_geodata.longitude = JSON.parse(result_city).lng;
         result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -1048,6 +1048,7 @@ const providers_buttons = async (app_id) =>{
  * Backend for frontend BFF
  * @async
  * @param {Types.req_id_number} app_id
+ * @param {string|null} endpoint
  * @param {string} service
  * @param {string} parameters
  * @param {string} ip
@@ -1059,7 +1060,8 @@ const providers_buttons = async (app_id) =>{
  * @param {Types.res|null} res
  * @returns {Promise<(string)>}
  */
-const BFF = async (app_id, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, res=null) => {
+const BFF = async (app_id, endpoint, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, res=null) => {
+    const {serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
     return new Promise((resolve, reject) => {
         try {
             let path = '';
@@ -1128,17 +1130,20 @@ const BFF = async (app_id, service, parameters, ip, method, authorization, heade
                         case 'PUT':
                         case 'PATCH':
                         case 'DELETE':{
-                            if (parameters.startsWith('/admin'))
-                                path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${parameters}&app_id=${app_id}`;
-                            else
+                            if ((endpoint=='ADMIN'  && parameters.substring('/admin/'.length, parameters.indexOf('?')).toUpperCase()=='DEMO')|| endpoint=='SYSTEMADMIN')
+                                serverRoutes(app_id, service, endpoint, method.toUpperCase(), parameters, data)
+                                .then((/**@type{string}*/result)=>resolve(result))
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
+                            else{
                                 path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${parameters}&app_id=${app_id}`;
+                                call_service(path, service);
+                            }
                             break;
                         }
                         default:{
                             return reject('service DB GET, POST, PUT, PATCH or DELETE only');
                         }
                     }
-                    call_service(path, service);
                     break;
                 }
                 case 'GEOLOCATION':{

@@ -2981,7 +2981,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
         case 0:{
             //data token authorization check
             authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
-            bff_path = COMMON_GLOBAL.rest_resource_bff;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/data`;
             break;
         }
         case 1:{
