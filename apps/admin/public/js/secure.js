@@ -2771,7 +2771,7 @@ const show_config = async (config_nav=1) => {
 const show_installation = () =>{
     document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;    
     if (common.COMMON_GLOBAL.system_admin==1){
-        common.FFB ('DB_API', '/admin/install?', 'GET', 2, null, (err, result) => {
+        common.FFB ('DB_API', '/systemadmin/install?', 'GET', 2, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_7_content').innerHTML = '';
             else{
@@ -2795,7 +2795,7 @@ const show_installation = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                         document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
-                        const path = `/admin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
+                        const path = `/systemadmin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
                         common.FFB ('DB_API', path, 'POST', 2, null, (err, result) => {
                             document.querySelector('#install_db_button_install').innerHTML = old_html;
                             if (err == null){
@@ -2809,7 +2809,7 @@ const show_installation = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
                         document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/admin/install?', 'DELETE', 2, null, (err, result) => {
+                        common.FFB ('DB_API', '/systemadmin/install?', 'DELETE', 2, null, (err, result) => {
                             document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.remove('installed');

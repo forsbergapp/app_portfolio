@@ -69,7 +69,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     //server (ConfigGet function from controller to mount on router)
     const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGetApps, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //apps
-    const { BFF, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
+    const { BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //auth
     const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,
             checkAccessTokenAdmin, checkAccessTokenSuperAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
@@ -78,9 +78,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     //broadcast
     const { BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //log
-    const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.controller.js`);    
-    //server db api admin
-    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.controller.js`);
+    const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.controller.js`);
     //server db api app_portfolio app
     const { getApp, getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.controller.js`);
     //server db api app_portfolio app category
@@ -148,26 +146,26 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
     const rest_resouce_server = ConfigGet('SERVER', 'REST_RESOURCE_SERVER');
     
-    app.route('/apps/bff').delete               (checkDataToken, BFF);
-    app.route('/apps/bff').get                  (checkDataToken, BFF);
-    app.route('/apps/bff').patch                (checkDataToken, BFF);
-    app.route('/apps/bff').post                 (checkDataToken, BFF);
-    app.route('/apps/bff').put                  (checkDataToken, BFF);
-    app.route('/apps/bff/access').delete        (checkAccessToken, BFF);
-    app.route('/apps/bff/access').get           (checkAccessToken, BFF);
-    app.route('/apps/bff/access').patch         (checkAccessToken, BFF);
-    app.route('/apps/bff/access').post          (checkAccessToken, BFF);
-    app.route('/apps/bff/access').put           (checkAccessToken, BFF);
-    app.route('/apps/bff/admin').delete         (checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').get            (checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').patch          (checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').post           (checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/admin').put            (checkAccessTokenAdmin, BFF);
-    app.route('/apps/bff/systemadmin').delete   (checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').get      (checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').patch    (checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').post     (checkSystemAdmin, BFF);
-    app.route('/apps/bff/systemadmin').put      (checkSystemAdmin, BFF);    
+    app.route('/apps/bff/data').delete          (checkDataToken, BFF_data);
+    app.route('/apps/bff/data').get             (checkDataToken, BFF_data);
+    app.route('/apps/bff/data').patch           (checkDataToken, BFF_data);
+    app.route('/apps/bff/data').post            (checkDataToken, BFF_data);
+    app.route('/apps/bff/data').put             (checkDataToken, BFF_data);
+    app.route('/apps/bff/access').delete        (checkAccessToken, BFF_access);
+    app.route('/apps/bff/access').get           (checkAccessToken, BFF_access);
+    app.route('/apps/bff/access').patch         (checkAccessToken, BFF_access);
+    app.route('/apps/bff/access').post          (checkAccessToken, BFF_access);
+    app.route('/apps/bff/access').put           (checkAccessToken, BFF_access);
+    app.route('/apps/bff/admin').delete         (checkAccessTokenAdmin, BFF_admin);
+    app.route('/apps/bff/admin').get            (checkAccessTokenAdmin, BFF_admin);
+    app.route('/apps/bff/admin').patch          (checkAccessTokenAdmin, BFF_admin);
+    app.route('/apps/bff/admin').post           (checkAccessTokenAdmin, BFF_admin);
+    app.route('/apps/bff/admin').put            (checkAccessTokenAdmin, BFF_admin);
+    app.route('/apps/bff/systemadmin').delete   (checkSystemAdmin, BFF_systemadmin);
+    app.route('/apps/bff/systemadmin').get      (checkSystemAdmin, BFF_systemadmin);
+    app.route('/apps/bff/systemadmin').patch    (checkSystemAdmin, BFF_systemadmin);
+    app.route('/apps/bff/systemadmin').post     (checkSystemAdmin, BFF_systemadmin);
+    app.route('/apps/bff/systemadmin').put      (checkSystemAdmin, BFF_systemadmin);    
     app.route('/apps/bff/noauth').get           (BFF_noauth);
     app.route('/apps/bff/auth').post            (BFF_auth);
 
@@ -192,36 +190,35 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route(`${rest_resouce_server}/broadcast/connection`).patch                       (checkDataToken, ConnectedUpdate);
     app.route(`${rest_resouce_server}/broadcast/connection/check/:user_account_id`).get  (checkDataToken, ConnectedCheck);
 
-    app.route(`${rest_resouce_server}/dbapi/admin/DBInfo`).get(checkSystemAdmin, DBInfo);
-    app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpace`).get(checkSystemAdmin, DBInfoSpace);
-    app.route(`${rest_resouce_server}/dbapi/admin/DBInfoSpaceSum`).get(checkSystemAdmin, DBInfoSpaceSum);
-    app.route(`${rest_resouce_server}/dbapi/admin/demo`).post(checkSystemAdmin, demo_add);
-    app.route(`${rest_resouce_server}/dbapi/admin/demo`).delete(checkSystemAdmin, demo_delete);
-    app.route(`${rest_resouce_server}/dbapi/admin/install`).post(checkSystemAdmin, install_db);
-    app.route(`${rest_resouce_server}/dbapi/admin/install`).get(checkSystemAdmin, install_db_check);
-    app.route(`${rest_resouce_server}/dbapi/admin/install`).delete(checkSystemAdmin, install_db_delete);
-
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps`).get(checkDataToken, getApp);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps/admin`).get(checkAccessTokenAdmin, getAppsAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps/admin/:id`).put(checkAccessTokenAdmin, updateAppAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_category/admin`).get(checkAccessTokenAdmin, getAppCategoryAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin`).get(checkAccessTokenAdmin, getLogsAdmin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin/stat/uniquevisitor`).get(checkAccessTokenAdmin, getStatUniqueVisitorAdmin);    
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_log/admin/stat/uniquevisitor`).get(checkAccessTokenAdmin, getStatUniqueVisitorAdmin);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_object/:lang_code`).get(checkDataToken, getObjects);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_object/admin/:lang_code`).get(checkDataToken, getObjects);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin/all/:app_id`).get(checkAccessTokenAdmin, getParametersAllAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_parameter/admin`).put(checkAccessTokenAdmin, setParameter_admin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/app_role/admin`).get(checkAccessTokenAdmin, getAppRoleAdmin);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/country/:lang_code`).get( checkDataToken, getCountries);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/:lang_code`).get( checkDataToken, getLocales);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/language/locale/admin/:lang_code`).get( checkDataToken, getLocales);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/message_translation/:code`).get( checkDataToken, getMessage);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/parameter_type/admin`).get(checkAccessTokenAdmin, getParameterTypeAdmin);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/settings`).get(checkDataToken, getSettings);
 
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/count`).get(checkAccessTokenAdmin, getStatCountAdmin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin`).get(checkAccessTokenAdmin, getUsersAdmin);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/admin/:id`).put(checkAccessTokenSuperAdmin, updateUserSuperAdmin);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/login`).put(checkDataTokenLogin, userLogin);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/signup`).post(checkDataTokenRegistration, userSignup);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/activate/:id`).put(checkDataToken, activateUser);
@@ -260,6 +257,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).delete(checkAccessToken, unfollowUser);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).post(checkAccessToken, likeUser);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).delete(checkAccessToken, unlikeUser);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_logon/admin/:user_account_id/:app_id`).get(checkAccessTokenAdmin, getUserAccountLogonAdmin);
 
     app.route(`${rest_resouce_server}/log/parameters`).get                               (checkSystemAdmin, getLogParameters);
