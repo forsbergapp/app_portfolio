@@ -2860,7 +2860,7 @@ const show_installation = () =>{
                         const json_data = {demo_password: document.querySelector('#install_demo_password').value};
                         const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                         document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/admin/demo?', 'POST', 2, json_data, (err, result) => {
+                        common.FFB ('DB_API', '/admin/demo?', 'POST', 1, json_data, (err, result) => {
                             document.querySelector('#install_demo_button_install').innerHTML = old_html;
                             if (err == null){
                                 const result_obj = JSON.parse(result);
@@ -2873,7 +2873,7 @@ const show_installation = () =>{
                 case 'install_demo_button_uninstall':{
                     const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
                     document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', '/admin/demo?', 'DELETE', 2, null, (err, result) => {
+                    common.FFB ('DB_API', '/admin/demo?', 'DELETE', 1, null, (err, result) => {
                         document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
                         if (err == null){
                             const result_obj = JSON.parse(result);
