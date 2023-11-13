@@ -687,15 +687,29 @@ const Info = async (callBack) => {
  * @async
  */
  const serverRoutes = async (app_id, service, endpoint, method, parameters, data) =>{
+    //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
+    //server db api app_portfolio app
+    const { getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    //server db api app_portfolio app category
+    const {getAppCategoryAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_category/app_category.service.js`);
+    //server db api app_portfolio app log
+    const { getLogsAdmin, getStatUniqueVisitorAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`);
+    //server db api app_portfolio app parameter
+    const { getParametersAllAdmin, setParameter_admin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+    //server db api app_portfolio app role
+    const { getAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_role/app_role.service.js`);
+    //server db api app_portfolio parameter type
+    const { getParameterTypeAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/parameter_type/parameter_type.service.js`);
+    const {getUserByUserId, getUsersAdmin, getStatCountAdmin, updateUserSuperAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
+    //server db api app_portfolio user account logon
+    const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`);
+    //server db api app_portfolio user account app
+    const { getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
+    const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
     /**@type{*} */
-    const query = new URLSearchParams(parameters);
-    /**
-     * throws not valid
-     */
-    const notvalid = () =>{
-        throw '⛔';
-    };
+    const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
+    const routeFunction = parameters.substring(0, parameters.indexOf('?')).toUpperCase();
     return new Promise((resolve, reject)=>{
         try {
             //check what BFF endpoint is used that has already used middleware if declared in routes
@@ -712,75 +726,57 @@ const Info = async (callBack) => {
                             break;
                         }
                         case 'DB_API':{
-                            const routeFunction = parameters.substring('/systemadmin/'.length, parameters.indexOf('?')).toUpperCase();
-                            switch (routeFunction){
-                                case 'DBINFO':{
-                                    if (method=='GET')
-                                        DBInfo(app_id).then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
-                                            resolve({
-                                                data: result[0]
-                                            });
+                            switch (routeFunction + '_' + method){
+                                case '/SYSTEMADMIN/DBINFO_GET':{
+                                    DBInfo(app_id).then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
+                                        resolve({
+                                            data: result[0]
                                         });
-                                    else
-                                        notvalid();
+                                    });
                                     break;
                                 }
-                                case 'DBINFOSPACE':{
-                                    if (method=='GET')
-                                        DBInfoSpace(app_id).then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
-                                            resolve({
-                                                data: result
-                                            });
+                                case '/SYSTEMADMIN/DBINFOSPACE_GET':{
+                                    DBInfoSpace(app_id).then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
+                                        resolve({
+                                            data: result
                                         });
-                                    else
-                                        notvalid();
+                                    });
                                     break;
                                 }
-                                case 'DBINFOSPACESUM':{
-                                    if (method=='GET')
-                                        DBInfoSpaceSum(app_id).then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
-                                            resolve({
-                                                data: result[0]
-                                            });
+                                case '/SYSTEMADMIN/DBINFOSPACESUM_GET':{
+                                    DBInfoSpaceSum(app_id).then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
+                                        resolve({
+                                            data: result[0]
                                         });
-                                    else
-                                        notvalid();
+                                    });                                    
                                     break;
                                 }
-                                case 'INSTALL':{
-                                    switch (method){
-                                        case 'POST':{
-                                            install_db(app_id,getNumberValue(query.get('optional')), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
-                                                if (err)
-                                                    reject(err);
-                                                else
-                                                    resolve(result);
-                                            });
-                                            break;
-                                        }
-                                        case 'GET':{
-                                            install_db_check(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
-                                                if (err)
-                                                    reject(err);
-                                                else
-                                                    resolve(result);
-                                            });
-                                            break;
-                                        }
-                                        case 'DELETE':{
-                                            install_db_delete(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
-                                                if (err)
-                                                    reject(err);
-                                                else
-                                                    resolve(result);
-                                            });
-                                            break;
-                                        }
-                                        default:{
-                                            notvalid();
-                                            break;
-                                        }
-                                    }
+                                case '/SYSTEMADMIN/INSTALL_POST':{
+                                    install_db(app_id,getNumberValue(query.get('optional')), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/SYSTEMADMIN/INSTALL_GET':{
+                                    install_db_check(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/SYSTEMADMIN/INSTALL_DELETE':{
+                                    install_db_delete(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
                                 }
                             }
                             break;
@@ -788,48 +784,227 @@ const Info = async (callBack) => {
                         case 'LOG':{
                             break;
                         }
-                        default:{
-                            notvalid();
-                        }
                     }
                     break;
                 }
                 case 'ADMIN':{
                     switch (service){
                         case 'DB_API':{
-                            
-                            const routeFunction = parameters.substring('/admin/'.length, parameters.indexOf('?')).toUpperCase();
-                            switch (routeFunction){
-                                case 'DEMO':{
-                                    switch (method){
-                                        case 'POST':{
-                                            demo_add(app_id, data.demo_password, query.get('lang_code'), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
-                                                if (err) {
-                                                    reject(err);
-                                                }
-                                                else
-                                                    resolve(result);
-                                            });
-                                            break;
+                            switch (routeFunction + '_' + method){
+                                case '/ADMIN/DEMO_POST':{
+                                    demo_add(app_id, data.demo_password, query.get('lang_code'), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
+                                        if (err) {
+                                            reject(err);
                                         }
-                                        case 'DELETE':{
-                                            demo_delete(app_id, (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
-                                                if (err) {
-                                                    reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/ADMIN/DEMO_DELETE':{
+                                    demo_delete(app_id, (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
+                                        if (err) {
+                                            reject(err);
+                                        }
+                                        else
+                                            resolve({
+                                                count_deleted: result_demo_users_length
+                                            });
+                                    });
+                                    break;
+                                }
+                                case '/APPS/ADMIN_GET':{
+                                    getAppsAdmin(app_id, query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_app_getAppAdmin[]}*/result) =>{
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/APPS/ADMIN_PUT':{
+                                    /**@type{Types.db_parameter_app_updateAppAdmin} */
+                                    const body = {	app_name:		data.app_name,
+                                                    url: 			data.url,
+                                                    logo: 			data.logo,
+                                                    enabled: 		getNumberValue(data.enabled),
+                                                    app_category_id:getNumberValue(data.app_category_id)};
+                                    updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+                                    .then((/**@type{Types.db_result_app_updateAppAdmin}*/result)=> {
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/APP_CATEGORY/ADMIN_GET':{
+                                    getAppCategoryAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_app_category_getAppCategoryAdmin[]}*/result) =>{
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/APP_LOG/ADMIN_GET':{
+                                    getLogsAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                                    .then((/**@type{Types.db_result_app_log_getLogsAdmin[]}*/result) =>{
+                                        if (result.length>0)
+                                            resolve({
+                                                data: result
+                                            });
+                                        else{
+                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                                reject(record_not_found_promise(app_id, query.get('lang_code')));
+                                            });
+                                        }
+                                    });
+                                    break;
+                                }
+                                case '/APP_LOG/ADMIN/STAT/UNIQUEVISITOR_GET':{
+                                    getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
+                                    .then((/**@type{Types.db_result_app_log_getStatUniqueVisitorAdmin[]}*/result) =>{
+                                        if (result.length>0)
+                                            resolve({
+                                                data: result
+                                            });
+                                        else{
+                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                                reject(record_not_found_promise(app_id, query.get('lang_code')));
+                                            });
+                                        }
+                                    });
+                                    break;
+                                }
+                                case '/APP_PARAMETER/ADMIN/ALL_GET':{
+                                    getParametersAllAdmin(app_id, getNumberValue(query.get('data_app_id')), query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_app_parameter_getParametersAllAdmin[]}*/result)=> {
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/APP_PARAMETER/ADMIN_PUT':{
+                                    /**@type{Types.db_parameter_app_parameter_setParameter_admin} */
+                                    const body = {	app_id: 			app_id,
+                                                    parameter_type_id: 	data.parameter_type_id,
+                                                    parameter_name: 	data.parameter_name,
+                                                    parameter_value: 	data.parameter_value, 
+                                                    parameter_comment: 	data.parameter_comment
+                                    };
+                                    setParameter_admin(app_id, body)
+                                    .then((/**@type{Types.db_result_app_parameter_setParameter_admin}*/result)=> {
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/APP_ROLE/ADMIN_GET':{
+                                    getAppRoleAdmin(app_id, getNumberValue(query.get('id')))
+                                    .then((/**@type{Types.db_result_app_role_getAppRoleAdmin[]}*/result)=> {
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/PARAMETER_TYPE/ADMIN_GET':{
+                                    getParameterTypeAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_parameter_type_getParameterTypeAdmin[]}*/result)=>{
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/USER_ACCOUNT/ADMIN_PUT':{
+                                    // get avatar and provider column used to validate
+                                    getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')))
+                                    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+                                        if (result_user[0]) {
+                                            /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
+                                            const body = {  app_role_id:        getNumberValue(data.app_role_id),
+                                                            active:             getNumberValue(data.active),
+                                                            user_level:         getNumberValue(data.user_level),
+                                                            private:            getNumberValue(data.private),
+                                                            username:           data.username,
+                                                            bio:                data.bio,
+                                                            email:              data.email,
+                                                            email_unverified:   data.email_unverified,
+                                                            password:           null,
+                                                            password_new:       data.password_new==''?null:data.password_new,
+                                                            password_reminder:  data.password_reminder,
+                                                            verification_code:  data.verification_code,
+                                                            provider_id:        result_user[0].provider_id,
+                                                            avatar:             result_user[0].avatar,
+                                                            admin:              1};
+                                            updateUserSuperAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+                                            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
+                                                if (data.app_role_id!=0 && data.app_role_id!=1){
+                                                    //delete admin app from user if user is not an admin anymore
+                                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                                                        deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
+                                                        .then(()=>{
+                                                            resolve({
+                                                                data: result_update
+                                                            });
+                                                        });
+                                                    });
                                                 }
                                                 else
                                                     resolve({
-                                                        count_deleted: result_demo_users_length
+                                                        data: result_update
                                                     });
+                                            })
+                                            .catch((/**@type{Types.error}*/error)=>{
+                                                reject(checked_error(app_id, query.get('lang_code'), error));
                                             });
-                                            break;
                                         }
-                                        default:{
-                                            notvalid();
-                                            break;
+                                        else{
+                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                                reject(record_not_found_promise(app_id, query.get('lang_code')));
+                                            });
                                         }
-                                    }
+                                    });
                                     break;
+                                }
+                                case '/USER_ACCOUNT/ADMIN/COUNT_GET':{
+                                    getStatCountAdmin(app_id)
+                                    .then((/**@type{Types.db_result_user_account_getStatCountAdmin[]}*/result)=>{
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                //  app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).get(checkAccessToken, getUserAccountApp);
+                                case '/USER_ACCOUNT_APP_GET':{
+                                    getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')))
+                                    .then((/**@type{Types.db_result_user_account_app_getUserAccountApp[]}*/result)=>{
+                                        resolve({
+                                            items: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/USER_ACCOUNT/ADMIN_GET':{
+                                    getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                                    .then((/**@type{Types.db_result_user_account_getUsersAdmin[]}*/result)=>{
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/USER_ACCOUNT_LOGON/ADMIN_GET':{
+                                    getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+                                    .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogonAdmin[]}*/result)=>{
+                                        resolve({
+                                            data: result
+                                        });
+                                    });
                                 }
                             }
                         }
@@ -842,7 +1017,7 @@ const Info = async (callBack) => {
                 case 'NOAUTH':{
                     break;
                 }
-            }    
+            }
         } catch (error) {
             reject(error);
         }
