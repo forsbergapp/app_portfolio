@@ -827,7 +827,7 @@ const Info = async (callBack) => {
                                     const body = {	app_name:		data.app_name,
                                                     url: 			data.url,
                                                     logo: 			data.logo,
-                                                    enabled: 		getNumberValue(data.enabled),
+                                                    enabled: 		getNumberValue(data.enabled) ?? 0,
                                                     app_category_id:getNumberValue(data.app_category_id)};
                                     updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
                                     .then((/**@type{Types.db_result_app_updateAppAdmin}*/result)=> {

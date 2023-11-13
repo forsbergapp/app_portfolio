@@ -947,9 +947,9 @@
  * APP
  * @typedef {{  app_name:string, 
  *              url:string, 
- *              logo:string, 
+ *              logo:string|null, 
  *              enabled:number, 
- *              app_category_id:number}} db_parameter_app_updateAppAdmin
+ *              app_category_id:number|null}} db_parameter_app_updateAppAdmin
  * @typedef {{  id:number, 
  *              app_name:string, 
  *              url:string, 
@@ -1124,10 +1124,10 @@
  * @typedef {{  identity_provider_id:number,
  *              provider_name:string,
  *              count_user:number}} db_result_user_account_getStatCountAdmin
- * @typedef {{  app_role_id:number,
- *              active:number,
- *              user_level:number,
- *              private:number,
+ * @typedef {{  app_role_id:number|null,
+ *              active:number|null,
+ *              user_level:number|null,
+ *              private:number|null,
  *              username:string,
  *              bio:string|null,
  *              email:string,
