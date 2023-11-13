@@ -1130,7 +1130,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                         case 'PUT':
                         case 'PATCH':
                         case 'DELETE':{
-                            if ((endpoint=='ADMIN'  && parameters.substring('/admin/'.length, parameters.indexOf('?')).toUpperCase()=='DEMO')|| endpoint=='SYSTEMADMIN')
+                            if (endpoint=='ADMIN' || endpoint=='SYSTEMADMIN')
                                 serverRoutes(app_id, service, endpoint, method.toUpperCase(), parameters, data)
                                 .then((/**@type{string}*/result)=>resolve(result))
                                 .catch((/**@type{Types.error}*/error)=>reject(error));

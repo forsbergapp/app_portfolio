@@ -2449,7 +2449,7 @@ const user_preference_save = async () => {
     
 };
 const user_preference_get = async (callBack) => {
-    await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id}?`, 'GET', 1, null, (err, result) => {
+    await FFB ('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 1, null, (err, result) => {
         if (err)
             null;
         else{

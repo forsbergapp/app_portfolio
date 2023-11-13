@@ -1210,6 +1210,6 @@ const providerSignIn = (req, res) => {
         );
     });
 };
-export{getUsersAdmin, getStatCountAdmin, checked_error, updateUserSuperAdmin, userSignup, activateUser, 
+export{getUsersAdmin, getStatCountAdmin, updateUserSuperAdmin, userSignup, activateUser, 
        passwordResetUser, getUserByUserId, getProfileUser, searchProfileUser, getProfileDetail,
        getProfileTop, updateUserLocal, updatePassword, updateUserCommon,deleteUser, userLogin, providerSignIn};
