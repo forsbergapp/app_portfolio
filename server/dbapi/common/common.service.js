@@ -10,6 +10,42 @@ const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js
 const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
 
 /**
+ * 
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ * @param {Types.error} err 
+ */
+ const checked_error = async (app_id, lang_code, err) =>{
+	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`);
+    return new Promise((resolve)=>{
+		const app_code = get_app_code(  err.errorNum, 
+										err.message, 
+										err.code, 
+										err.errno, 
+										err.sqlMessage);
+		if (app_code != null){
+			getMessage( app_id,
+						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+						app_code, 
+						lang_code)
+			.then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+				resolve(
+					result_message[0].text
+				);
+			})
+			.catch((/**@type{Types.error}*/error)=>{
+				resolve(
+					error
+				);
+			});
+		}
+		else
+			resolve(
+				err
+			);
+	});
+};
+/**
  * Get app code derived from database error
  * 
  *	if known SQL error, example:
@@ -63,6 +99,29 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 			return null;
 	}
 };
+/**
+ * Get message for record not found
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ */
+ const record_not_found_promise = (app_id, lang_code) => {
+	return new Promise((resolve)=>{
+		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`).then(({ getMessage }) => {
+				getMessage( app_id,
+							getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+							'20400',
+							lang_code)
+				.then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+					resolve(
+						result_message[0].text
+					);
+				});
+			});
+		});
+	});
+};
+
 /**
  * Get message for record not found
  * @param {Types.res} res 
@@ -212,6 +271,6 @@ const db_limit_rows = (sql, limit_type = null) => {
 };
 
 export{
-		get_app_code, record_not_found, get_locale,
+		checked_error, get_app_code, record_not_found_promise, record_not_found, get_locale,
 		db_schema,  db_limit_rows, db_execute
 };

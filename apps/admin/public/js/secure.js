@@ -906,7 +906,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
 const show_user_account_logon = async (user_account_id) => {
     let json;
     document.querySelector('#list_user_account_logon').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/user_account_logon/admin/${parseInt(user_account_id)}/''?`, 'GET', 1, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 1, null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account_logon').innerHTML = '';
         else{
@@ -1064,7 +1064,7 @@ const show_apps = async () => {
 const show_app_parameter = (app_id) => {
     let json;
     document.querySelector('#list_app_parameter').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/app_parameter/admin/all/${parseInt(app_id)}?`, 'GET', 1, null, (err, result) => {
+    common.FFB ('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 1, null, (err, result) => {
         if (err)
             document.querySelector('#list_app_parameter').innerHTML = '';
         else{
@@ -1248,7 +1248,7 @@ const update_record = async (table,
                                 password_new:       parameters.password,
                                 password_reminder:  parameters.password_reminder,
                                 verification_code:  parameters.verification_code};
-                path = `/user_account/admin/${parameters.id}?`;
+                path = `/user_account/admin?PUT_ID=${parameters.id}`;
                 break;
             }
             case 'app':{
@@ -1265,7 +1265,7 @@ const update_record = async (table,
                                 enabled:        parameters.enabled==true?1:0,
                                 app_category_id:parameters.app_category_id
                             };
-                path = `/apps/admin/${parameters.id}?`;
+                path = `/apps/admin?PUT_ID=${parameters.id}`;
                 break;
             }
             case 'app_parameter':{
