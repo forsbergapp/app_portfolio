@@ -90,108 +90,6 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
  * @param {Types.req} req 
  * @param {Types.res} res 
  */
-const getUsersAdmin = (req, res) => {
-    service.getUsersAdmin(getNumberValue(req.query.app_id), req.query.search, getNumberValue(req.query.sort), req.query.order_by, getNumberValue(req.query.offset), getNumberValue(req.query.limit))
-    .then((/**@type{Types.db_result_user_account_getUsersAdmin[]}*/result)=>{
-        res.status(200).json({
-            data: result
-        });
-    })
-    .catch((/**@type{Types.error}*/error)=>{
-        res.status(500).send(
-            error
-        );
-    });
-};
-/**
- * 
- * @param {Types.req} req 
- * @param {Types.res} res 
- */
-const getStatCountAdmin = (req, res) => {
-    service.getStatCountAdmin(getNumberValue(req.query.app_id))
-    .then((/**@type{Types.db_result_user_account_getStatCountAdmin[]}*/result)=>{
-        res.status(200).json({
-            data: result
-        });
-    })
-    .catch((/**@type{Types.error}*/error)=>{
-        res.status(500).send(
-            error
-        );
-    });
-};
-
-/**
- * 
- * @param {Types.req} req 
- * @param {Types.res} res 
- */
-const updateUserSuperAdmin = (req, res) => {
-    // get avatar and provider column used to validate
-    service.getUserByUserId(getNumberValue(req.query.app_id), getNumberValue(req.params.id))
-    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
-        if (result_user[0]) {
-            /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
-            const data = {  app_role_id:        getNumberValue(req.body.app_role_id),
-                            active:             getNumberValue(req.body.active),
-                            user_level:         getNumberValue(req.body.user_level),
-                            private:            getNumberValue(req.body.private),
-                            username:           req.body.username,
-                            bio:                req.body.bio,
-                            email:              req.body.email,
-                            email_unverified:   req.body.email_unverified,
-                            password:           null,
-                            password_new:       req.body.password_new==''?null:req.body.password_new,
-                            password_reminder:  req.body.password_reminder,
-                            verification_code:  req.body.verification_code,
-                            provider_id:        result_user[0].provider_id,
-                            avatar:             result_user[0].avatar,
-                            admin:              1};
-            service.updateUserSuperAdmin(getNumberValue(req.query.app_id), getNumberValue(req.params.id), data)
-            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
-                if (req.body.app_role_id!=0 && req.body.app_role_id!=1){
-                    //delete admin app from user if user is not an admin anymore
-                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-                        deleteUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.app_id))
-                        .then(()=>{
-                            res.status(200).json({
-                                data: result_update
-                            });
-                        })
-                        .catch((/**@type{Types.error}*/error)=>{
-                            res.status(500).send(
-                                error
-                            );
-                        }); 
-                    });
-                }
-                else
-                    res.status(200).json({
-                        data: result_update
-                    });
-            })
-            .catch((/**@type{Types.error}*/error)=>{
-                checked_error(getNumberValue(req.query.app_id), req.query.lang_code, error, res);
-            });
-        }
-        else
-            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
-            });
-    })
-    .catch((/**@type{Types.error}*/error)=>{
-        res.status(500).send(
-            error
-        );
-    });
-    
-};
-/**
- * 
- * @param {Types.req} req 
- * @param {Types.res} res 
- */
 const userSignup = (req, res) => {
     /**@type{string|null} */
     let verification_code = null;
@@ -1210,6 +1108,6 @@ const providerSignIn = (req, res) => {
         );
     });
 };
-export{getUsersAdmin, getStatCountAdmin, updateUserSuperAdmin, userSignup, activateUser, 
+export{userSignup, activateUser, 
        passwordResetUser, getUserByUserId, getProfileUser, searchProfileUser, getProfileDetail,
        getProfileTop, updateUserLocal, updatePassword, updateUserCommon,deleteUser, userLogin, providerSignIn};
