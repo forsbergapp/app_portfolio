@@ -4,7 +4,7 @@
 import * as Types from './../../types.js';
 
 const {ConfigGet, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
-const {apps_start_ok, getInfo, getApp, getReport, getMaintenance} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const {app_start, getInfo, getApp, getReport, getMaintenance} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const fs = await import('node:fs');
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
@@ -74,39 +74,41 @@ const req_report_param = req =>{return{ reportid:               req.query.report
                           
     app.get('/info/:info',(/**@type {Types.req} */req, /**@type {Types.res} */ res, /**@type {function} */ next) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        if (apps_start_ok()==true)
-            if (ConfigGetApp(app_id, 'SHOWINFO')==1)
-                switch (req.params.info){
-                    case 'about':
-                    case 'disclaimer':
-                    case 'privacy_policy':
-                    case 'terms':{
-                        if (typeof req.query.lang_code !='undefined'){
-                            req.query.lang_code = 'en';
-                        }
-                        getInfo(app_id, req.params.info, req.query.lang_code, (/**@type{Types.error}*/err, /**@type{Types.info_page_data}}*/info_result)=>{
-                            //show empty if any error
-                            if (err){
-                                res.statusCode = 500;
-                                res.statusMessage = err;
-                                next();
+        app_start(app_id).then((/**@type{boolean}*/result)=>{
+            if (result ==true)
+                if (ConfigGetApp(app_id, 'SHOWINFO')==1)
+                    switch (req.params.info){
+                        case 'about':
+                        case 'disclaimer':
+                        case 'privacy_policy':
+                        case 'terms':{
+                            if (typeof req.query.lang_code !='undefined'){
+                                req.query.lang_code = 'en';
                             }
-                            else
-                                res.send(info_result);
-                        });
-                        break;
+                            getInfo(app_id, req.params.info, req.query.lang_code, (/**@type{Types.error}*/err, /**@type{Types.info_page_data}}*/info_result)=>{
+                                //show empty if any error
+                                if (err){
+                                    res.statusCode = 500;
+                                    res.statusMessage = err;
+                                    next();
+                                }
+                                else
+                                    res.send(info_result);
+                            });
+                            break;
+                        }
+                        default:{
+                            res.send(null);
+                            break;
+                        }
                     }
-                    default:{
-                        res.send(null);
-                        break;
-                    }
-                }
+                else
+                    next();
             else
-                next();
-        else
-            getMaintenance(app_id)
-            .then((/**@type{string}*/app_result) => {
-                res.send(app_result);
+                getMaintenance(app_id)
+                .then((/**@type{string}*/app_result) => {
+                    res.send(app_result);
+                });    
             });
     });
     app.get('/reports',(/** @type{Types.req}*/req, /**@type {Types.res} */ res) => {

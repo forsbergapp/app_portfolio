@@ -199,8 +199,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
  */
 const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by, sort, dba, callBack) => {
     limit = Number(limit ?? 0);
-    const { apps_start_ok } = await import(`file://${process.cwd()}/apps/apps.service.js`);
-    const db_ok = ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true;
+    const { app_start } = await import(`file://${process.cwd()}/apps/apps.service.js`);
     //filter    
     /**@type{Types.broadcast_connect_list_no_res[]} */
     let connected_clients_no_res =[];
@@ -264,39 +263,28 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
         });
     };
     if (connected_clients_no_res.length>0){
-        if (db_ok){
-            //update with user role
-            const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
-            let i=0;
-            connected_clients_no_res.map(client=>{
-                if (client.system_admin==0)
-                    getUserRoleAdmin(app_id, client.user_account_id, dba)
+        //update with user role
+        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
+        for (const client of connected_clients_no_res){
+            if (client.system_admin==0)
+                if (await app_start()==true){    
+                    await getUserRoleAdmin(app_id, client.user_account_id, dba)
                     .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result_app_role)=>{
                         if (result_app_role[0]){
                             client.app_role_id = result_app_role[0].app_role_id;
                             client.app_role_icon = result_app_role[0].icon;
                         }
-                        if (i== connected_clients_no_res.length - 1) 
-                            callBack(null, sort_and_return(sort));
-                        else
-                            i++;
                     })
                     .catch((/**@type{Types.error}*/error)=>{
-                        callBack(error, null);
+                        return callBack(error, null);
                     });
-                else{
-                    client.app_role_id = '';
-                    client.app_role_icon = '';
-                    if (i== connected_clients_no_res.length - 1) 
-                        callBack(null, sort_and_return(sort));
-                    else
-                        i++;
                 }
-                    
-            });
+            else{
+                client.app_role_id = '';
+                client.app_role_icon = '';
+            } 
         }
-        else
-            callBack(null, sort_and_return(sort));
+        callBack(null, sort_and_return(sort));
     }
     else
         callBack(null, null);

@@ -35,14 +35,31 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 };
 /**
  * Checks if ok to start app
- * @returns {boolean}   - Returns true if MAINTENANCE=0 and START=1 and APP_START=1 and DB[DBUSE]_APP_ADMIN_USER is defined else false
+ * @param {number|null} app_id
+ * @param {string|null} lang_code
+ * @returns {Promise.<boolean>}
  */
- const apps_start_ok = ()=>{
-    if (ConfigGetInit('MAINTENANCE')=='0' && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
-        ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
-        return true;
-    else
-        return false;
+ const app_start = async (app_id=null, lang_code=null)=>{
+    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    return new Promise((resolve)=>{
+        if (ConfigGetInit('MAINTENANCE')=='0' && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
+            ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+            if (app_id == null)
+                resolve(true);
+            else{
+                //check also current app_id if enabled
+                getApp(app_id, app_id, lang_code)
+                .then((/** @type{Types.db_result_app_getApp[]}*/result_app)=> {
+                    //function already has condition enabled=1
+                    if (result_app.length==1)
+                        resolve(true);
+                    else
+                        resolve(false);
+                });
+            }
+        else
+            resolve(false);
+    });
 };
 /**
  * Get client locale from accept language from request
@@ -764,7 +781,7 @@ const getModule = async (app_id, module_config, callBack) =>{
         //get app admin
         const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
         app = await createAdmin(app_id, client_locale(module_config.accept_language));
-        if (ConfigGet('SERVICE_DB', 'START')=='1' && apps_start_ok()==true){
+        if (await app_start()==true){
             system_admin_only = 0;
         }
         else{
@@ -889,8 +906,8 @@ const getModule = async (app_id, module_config, callBack) =>{
  * @param {string|null} params              - parameter in url
  * @param {Types.callBack} callBack         - CallBack with error and success info
  */
-const getApp = (req, app_id, params, callBack) => {
-    if (apps_start_ok() ==true || app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))){  
+const getApp = async (req, app_id, params, callBack) => {
+    if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || await app_start(app_id) ==true){  
         getModule(app_id, {	module_type:'APP', 
                             params:params,
                             reportid:null,
@@ -926,7 +943,7 @@ const getApp = (req, app_id, params, callBack) => {
  * @param {Types.callBack} callBack         - CallBack with error and success info
  */
 const getReport = async (req, app_id, callBack) => {
-    if (apps_start_ok() ==true){
+    if (await app_start(app_id) ==true){
         const decodedparameters = Buffer.from(req.reportid, 'base64').toString('utf-8');
         //example string:
         //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
@@ -1207,7 +1224,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
     });
 };
 export {/*APP functions */
-        apps_start_ok, render_app_html,render_report_html ,render_app_with_data,
+        app_start, render_app_html,render_report_html ,render_app_with_data,
         /*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */
