@@ -48,9 +48,7 @@ const ConnectedList = (req, res) => {
         }
         else{
             if (result && result.length>0)
-                res.status(200).json({
-                    data: result
-                });
+                res.status(200).json(result);
             else{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);
@@ -74,9 +72,7 @@ const ConnectedListSystemAdmin = (req, res) => {
         }
         else{
             if (result && result.length>0)
-                res.status(200).json({
-                    data: result
-                });
+                res.status(200).json(result);
             else{
                 res.status(404).send(
                     'Record not found'

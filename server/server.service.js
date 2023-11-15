@@ -709,6 +709,10 @@ const Info = async (callBack) => {
     const { getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
 
     const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
+
+    //server log
+    const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
     const routeFunction = parameters.substring(0, parameters.indexOf('?')).toUpperCase();
@@ -784,6 +788,85 @@ const Info = async (callBack) => {
                             break;
                         }
                         case 'LOG':{
+                            switch (routeFunction + '_' + method){
+                                case '/LOG/PARAMETERS_GET':{
+                                    getLogParameters(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_parameters}*/result) =>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/LOG/LOGS_GET':{
+                                    /**@type{Types.admin_log_data_parameters} */
+                                    const data = {	app_id:			app_id,
+                                                    select_app_id:	getNumberValue(query.get('select_app_id')),
+                                                    logscope:		query.get('logscope'),
+                                                    loglevel:		query.get('loglevel'),
+                                                    search:			query.get('search'),
+                                                    sort:			query.get('sort'),
+                                                    order_by:		query.get('order_by'),
+                                                    year: 			query.get('year').toString(),
+                                                    month:			query.get('month').toString(),
+                                                    day:			query.get('day'),
+                                                    };
+                                    getLogs(app_id, data, (/**@type{Types.error}*/err, /**@type{*}*/result) =>{
+                                        if (err)
+                                            reject(err);
+                                        else{
+                                            if (result.length>0)
+                                                resolve(result);
+                                            else{
+                                                reject('Record not found');
+                                            }
+                                        }
+                                    });
+                                    break;
+                                }
+                                case '/LOG/STATUSCODE_GET':{
+                                    getStatusCodes().then((/**@type{object}*/status_codes)=>{
+                                        resolve({
+                                            status_codes: status_codes
+                                        });
+                                    });
+                                    break;
+                                }
+                                case '/LOG/LOGS_STAT_GET':{
+                                    /**@type{Types.log_parameter_getLogStats} */
+                                    const data = {	app_id:			getNumberValue(query.get('select_app_id')),
+                                                    code:			getNumberValue(query.get('code')),
+                                                    year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
+                                                    month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
+                                                    };
+                                    getLogsStats(app_id, data, (/**@type{Types.error}*/err, /**@type{Types.log_parameter_getLogStats[]}*/result) =>{
+                                    if (err)
+                                        reject(err);
+                                    else{
+                                        if (result.length>0)
+                                            resolve(result);
+                                        else{
+                                            reject('Record not found');
+                                        }
+                                    }
+                                    });
+                                    break;
+                                }
+                                case '/LOG/FILES_GET':{
+                                    getFiles(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_files[]}*/result) =>{
+                                        if (err)
+                                            reject(err);
+                                        else{
+                                            if (result.length>0)
+                                                resolve(result);
+                                            else{
+                                                reject('Record not found');
+                                            }
+                                        }
+                                    });
+                                    break;
+                                }
+                            }
                             break;
                         }
                     }
@@ -852,9 +935,7 @@ const Info = async (callBack) => {
                                     getLogsAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
                                     .then((/**@type{Types.db_result_app_log_getLogsAdmin[]}*/result) =>{
                                         if (result.length>0)
-                                            resolve({
-                                                data: result
-                                            });
+                                            resolve(result);
                                         else{
                                             import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
                                                 reject(record_not_found_promise(app_id, query.get('lang_code')));
@@ -867,9 +948,7 @@ const Info = async (callBack) => {
                                     getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
                                     .then((/**@type{Types.db_result_app_log_getStatUniqueVisitorAdmin[]}*/result) =>{
                                         if (result.length>0)
-                                            resolve({
-                                                data: result
-                                            });
+                                            resolve(result);
                                         else{
                                             import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
                                                 reject(record_not_found_promise(app_id, query.get('lang_code')));

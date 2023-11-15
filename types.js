@@ -863,7 +863,7 @@
  * Server - Log data parameter 
  * @typedef{object}         admin_log_data_parameters
  * @property {number}       app_id
- * @property {number}       select_app_id
+ * @property {number|null}  select_app_id
  * @property {string}       logscope
  * @property {string}       loglevel
  * @property {string}       search
@@ -876,8 +876,8 @@
 /**
  * Server - log parameters get log stats
  * @typedef {object} log_parameter_getLogStats
- * @property {number} app_id
- * @property {number} code
+ * @property {number|null} app_id
+ * @property {number|null} code
  * @property {number} year
  * @property {number} month
  */
@@ -891,7 +891,10 @@
  * @property {number|null}  day
  * @property {number|null}  amount
  */
-
+/**
+ * Server - Log files
+ * @typedef {{id:number, filename:string}} admin_log_files
+ */
 /**
  * Server - DATABASE
  * DB query result
