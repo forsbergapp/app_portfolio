@@ -1089,15 +1089,12 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
             };
             switch (service){
                 case 'AUTH':{
-                    // parameters ex:
-                    // /auth /auth/admin
-                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
-                    call_service(path, service);
+                    serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, parameters, data)
+                    .then((/**@type{string}*/result)=>resolve(result))
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
                     break;
                 }
                 case 'BROADCAST':{
-                    // parameters ex:
-                    // /broadcast...
                     if (parameters.startsWith('/broadcast/connection/connect')){
                         //this endpoint does not exists
                         //this is used for EventSource that needs to leave connection open
@@ -1123,10 +1120,8 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     break;
                 }
                 case 'LOG':{
-                    // parameters ex:
-                    // /log...
                     if (endpoint=='SYSTEMADMIN')
-                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), parameters, data)
+                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, parameters, data)
                         .then((/**@type{string}*/result)=>resolve(result))
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     else
@@ -1134,8 +1129,6 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     break;
                 }
                 case 'SERVER':{
-                    // parameters ex:
-                    // /config...  /info
                     path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
                     call_service(path, service);
                     break;
@@ -1143,16 +1136,13 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                 case 'DB_API':{
                     const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
                     switch (method){
-                        // parameters ex:
-                        // /user_account/profile/id/[:param]?id=&app_id=[id]&lang_code=en'
-                        // /db/admin and /db/common have no db schema
                         case 'GET':
                         case 'POST':
                         case 'PUT':
                         case 'PATCH':
                         case 'DELETE':{
                             if (endpoint=='ADMIN' || endpoint=='SYSTEMADMIN')
-                                serverRoutes(app_id, service, endpoint, method.toUpperCase(), parameters, data)
+                                serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, parameters, data)
                                 .then((/**@type{string}*/result)=>resolve(result))
                                 .catch((/**@type{Types.error}*/error)=>reject(error));
                             else{
