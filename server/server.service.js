@@ -682,11 +682,12 @@ const Info = async (callBack) => {
  * @param {string} service
  * @param {string} endpoint
  * @param {string} method
+ * @param {string} authorization
  * @param {string} parameters
  * @param {*} data
  * @async
  */
- const serverRoutes = async (app_id, service, endpoint, method, parameters, data) =>{
+ const serverRoutes = async (app_id, service, endpoint, method, authorization, parameters, data) =>{
     //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     //server db api app_portfolio app
@@ -712,6 +713,9 @@ const Info = async (callBack) => {
 
     //server log
     const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+    
+    const {default:{sign}} = await import('jsonwebtoken');
+    const {CheckFirstTime, ConfigGet, ConfigGetUser, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
 
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
@@ -1093,6 +1097,39 @@ const Info = async (callBack) => {
                     break;
                 }
                 case 'AUTH':{
+                    switch (routeFunction + '_' + method){
+                        case '/AUTH/ADMIN_POST':{
+                            const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
+                                const { default: {compareSync} } = await import('bcryptjs');
+                                const config_username = ConfigGetUser('username');
+                                const config_password = ConfigGetUser('password');
+                                if (username == config_username && compareSync(password, config_password)) {
+                                    const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
+                                                        expiresIn: ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
+                                                        });
+                                    resolve({ 
+                                        token_at: jsontoken_at
+                                    });
+                                }
+                                else{
+                                    reject('⛔');
+                                }            
+                            };
+                            if(authorization){       
+                                const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+                                const username = userpass.split(':')[0];
+                                const password = userpass.split(':')[1];
+                                if (CheckFirstTime())
+                                    CreateSystemAdmin(username, password, () =>{
+                                        check_user(username, password);
+                                    });
+                                else
+                                    check_user(username, password);
+                            }
+                            else
+                                reject('⛔');
+                        }
+                    }
                     break;
                 }
                 case 'NOAUTH':{

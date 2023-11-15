@@ -73,7 +73,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     //auth
     const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,checkAccessTokenAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
-    const { authSystemAdmin, checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
+    const { checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
     //broadcast
     const { BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //server db api app_portfolio app
@@ -150,8 +150,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/apps/bff/systemadmin').put      (checkSystemAdmin, BFF_systemadmin);    
     app.route('/apps/bff/noauth').get           (BFF_noauth);
     app.route('/apps/bff/auth').post            (BFF_auth);
-
-    app.route(`${rest_resouce_server}/auth/admin`).post                                  (authSystemAdmin);
 
     app.route(`${rest_resouce_server}/config/systemadmin`).put                           (checkSystemAdmin, ConfigSave);
     app.route(`${rest_resouce_server}/config/systemadmin`).get                           (checkSystemAdmin, ConfigGetController);
