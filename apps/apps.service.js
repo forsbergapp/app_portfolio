@@ -1125,8 +1125,12 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                 case 'LOG':{
                     // parameters ex:
                     // /log...
-                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${parameters}&app_id=${app_id}`;
-                    call_service(path, service);
+                    if (endpoint=='SYSTEMADMIN')
+                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), parameters, data)
+                        .then((/**@type{string}*/result)=>resolve(result))
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                    else
+                        return reject ('⛔');
                     break;
                 }
                 case 'SERVER':{
@@ -1158,7 +1162,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                             break;
                         }
                         default:{
-                            return reject('service DB GET, POST, PUT, PATCH or DELETE only');
+                            return reject ('⛔');
                         }
                     }
                     break;
@@ -1190,7 +1194,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                             call_service(path, service);
                         }
                         else
-                            return reject('service GEOLOCATION GET only');
+                            return reject ('⛔');
                     }
                     else
                         return resolve('');
@@ -1211,11 +1215,11 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     }
                         
                     else
-                        return reject('service WORLDCITIES GET only');
+                        return reject ('⛔');
                     break;
                 }
                 default:{
-                    return reject(`service ${service} does not exist`);
+                    return reject ('⛔');
                 }
             }
         } catch (error) {

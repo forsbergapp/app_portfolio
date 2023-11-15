@@ -643,7 +643,7 @@ const getLogsStats = async (app_id, data, callBack) => {
  * @param {Types.callBack} callBack 
  */
 const getFiles = (app_id, callBack) => {
-    /**@type{[{id:number, filename:string}]|[]} */
+    /**@type{[Types.admin_log_files]|[]} */
     const logfiles =[];
     import('node:fs').then((fs) =>{
         fs.readdir(process.cwd() + ConfigGetInit('PATH_LOG'), (err, files) => {

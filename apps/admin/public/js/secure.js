@@ -208,7 +208,7 @@ const show_start = async (yearvalues) =>{
                         return null;
                     };
                     let sum_amount =0;
-                    const chart_1 = result_obj.data.filter((row)=> row.chart==1);
+                    const chart_1 = result_obj.filter((row)=> row.chart==1);
                     for (const stat of chart_1) {
                         sum_amount += +stat.amount;
                     }
@@ -246,7 +246,7 @@ const show_start = async (yearvalues) =>{
                     //CHART 2
                     html = '';
                     let max_amount =0;
-                    const chart_2 = result_obj.data.filter((row)=> row.chart==2);
+                    const chart_2 = result_obj.filter((row)=> row.chart==2);
                     for (const stat of chart_2) {
                         if (+stat.amount>max_amount)
                             max_amount = +stat.amount;
@@ -300,7 +300,7 @@ const show_start = async (yearvalues) =>{
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
     const get_status_codes = async () =>{
         return new Promise((resolve)=>{
-            common.FFB ('SERVER', '/log/statuscode?', 'GET', 2, null, (err, result) => {
+            common.FFB ('LOG', '/log/statuscode?', 'GET', 2, null, (err, result) => {
                 if (err)
                     resolve();
                 else{
@@ -1748,7 +1748,7 @@ const nav_click = (item_id) => {
 const show_list = async (list_div, list_div_col_title, url_parameters, sort, order_by) => {
     if (admin_token_has_value()){
         let logscope;
-        let json;
+        let logs;
         let token_type;
         let path;
         let service;
@@ -1789,7 +1789,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 document.querySelector('#' + list_div).innerHTML = '';
             }
             else{
-                json = JSON.parse(result);
+                logs = JSON.parse(result);
                 let html = '';
                 switch (list_div){
                     /*
@@ -1835,7 +1835,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         break;
                     }
                     case 'list_app_log':{
-                        APP_GLOBAL.page_last = Math.floor(json.data[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
+                        APP_GLOBAL.page_last = Math.floor(logs[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
                                     <div id='list_app_log_col_title1' class='list_app_log_col list_sort_click list_title'>
                                         <div>ID</div>
@@ -2033,8 +2033,8 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         break;
                     }
                 }
-                if (json.data.length >0){
-                    for (const log of json.data) {
+                if (logs.length >0){
+                    for (const log of logs) {
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
@@ -2528,17 +2528,17 @@ const list_item_click = (item) => {
     
 };
 const get_server_log_parameters = async () => {
-    let json;
+    let log_parameter;
     await common.FFB ('LOG', '/log/parameters?', 'GET', 2, null, (err, result) => {
         if (err)
             null;
         else{
-            json = JSON.parse(result);
-            APP_GLOBAL.service_log_scope_request = json.data.SERVICE_LOG_SCOPE_REQUEST;
-            APP_GLOBAL.service_log_scope_server = json.data.SERVICE_LOG_SCOPE_SERVER;
-            APP_GLOBAL.service_log_scope_app = json.data.SERVICE_LOG_SCOPE_APP;
-            APP_GLOBAL.service_log_scope_service = json.data.SERVICE_LOG_SCOPE_SERVICE;
-            APP_GLOBAL.service_log_scope_db = json.data.SERVICE_LOG_SCOPE_DB;
+            log_parameter = JSON.parse(result);
+            APP_GLOBAL.service_log_scope_request = log_parameter.SERVICE_LOG_SCOPE_REQUEST;
+            APP_GLOBAL.service_log_scope_server = log_parameter.SERVICE_LOG_SCOPE_SERVER;
+            APP_GLOBAL.service_log_scope_app = log_parameter.SERVICE_LOG_SCOPE_APP;
+            APP_GLOBAL.service_log_scope_service = log_parameter.SERVICE_LOG_SCOPE_SERVICE;
+            APP_GLOBAL.service_log_scope_db = log_parameter.SERVICE_LOG_SCOPE_DB;
             
             document.querySelector('#menu5_row_parameters_col1_1').style.display = 'none';
             document.querySelector('#menu5_row_parameters_col1_0').style.display = 'none';
@@ -2548,24 +2548,24 @@ const get_server_log_parameters = async () => {
             document.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
 
 
-            if (json.data.SERVICE_LOG_REQUEST_LEVEL==1 ||json.data.SERVICE_LOG_REQUEST_LEVEL==2)
+            if (log_parameter.SERVICE_LOG_REQUEST_LEVEL==1 ||log_parameter.SERVICE_LOG_REQUEST_LEVEL==2)
                 document.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
             else
                 document.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_SERVICE_LEVEL==1 || json.data.SERVICE_LOG_SERVICE_LEVEL==2)
+            if (log_parameter.SERVICE_LOG_SERVICE_LEVEL==1 || log_parameter.SERVICE_LOG_SERVICE_LEVEL==2)
                 document.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
             else
                 document.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
-            if (json.data.SERVICE_LOG_DB_LEVEL==1 || json.data.SERVICE_LOG_DB_LEVEL==2)
+            if (log_parameter.SERVICE_LOG_DB_LEVEL==1 || log_parameter.SERVICE_LOG_DB_LEVEL==2)
                 document.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
             else
                 document.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
 
-            APP_GLOBAL.service_log_level_verbose = json.data.SERVICE_LOG_LEVEL_VERBOSE;
-            APP_GLOBAL.service_log_level_error = json.data.SERVICE_LOG_LEVEL_ERROR;
-            APP_GLOBAL.service_log_level_info = json.data.SERVICE_LOG_LEVEL_INFO;
+            APP_GLOBAL.service_log_level_verbose = log_parameter.SERVICE_LOG_LEVEL_VERBOSE;
+            APP_GLOBAL.service_log_level_error = log_parameter.SERVICE_LOG_LEVEL_ERROR;
+            APP_GLOBAL.service_log_level_info = log_parameter.SERVICE_LOG_LEVEL_INFO;
 
-            APP_GLOBAL.service_log_file_interval = json.data.SERVICE_LOG_FILE_INTERVAL;
+            APP_GLOBAL.service_log_file_interval = log_parameter.SERVICE_LOG_FILE_INTERVAL;
 
             let html = '';
             html +=`<option value=0 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_info}</option>`;
