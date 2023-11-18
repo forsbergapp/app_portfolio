@@ -31,7 +31,7 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
         import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
             const log_result = service_called.toUpperCase()=='MAIL'?'✅':result_service;
             LogServiceI(app_id, service_called, parameters, log_result).then(()=>{
-                if (endpoint=='NOAUTH'){
+                if (endpoint=='SOCKET'){
                     //This endpoint only allowed for EventSource so no more update of response
                     null;
                 }
@@ -94,11 +94,11 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
-const BFF_noauth = (req, res) =>{
+const BFF_socket = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='BROADCAST' && 
         Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-            BFF(getNumberValue(req.query.app_id), 'NOAUTH', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+            BFF(getNumberValue(req.query.app_id), 'SOCKET', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
         }
     else{
         //required parameters not provided
@@ -127,4 +127,4 @@ const BFF_auth = (req, res) =>{
         });
     }
 };
-export{BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_noauth, BFF_auth};
+export{BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_socket, BFF_auth};

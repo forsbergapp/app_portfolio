@@ -465,7 +465,7 @@ const sendBroadcast = () => {
         if (err)
             null;
         else{
-            if (Number(result) == 1)
+            if (Number(JSON.parse(result).sent) == 1)
                 common.show_message('INFO', null, null, `${common.ICONS.message_success}`, common.COMMON_GLOBAL.app_id);
             else
                 common.show_message('INFO', null, null, `${common.ICONS.message_fail}`, common.COMMON_GLOBAL.app_id);

@@ -5,34 +5,9 @@ import * as Types from './../types.js';
 const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
 const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
-const {BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-/**
- * Get value from path with query string
- * @param {string} parameters
- * @param {string} param
- * @param {1|null} type     - 1 = number
- * @returns {string|number|null}
- */
- const get_query_value = (parameters, param, type=null) => {
-    const query_parameters = parameters.split('?')[1].split('&');
-    const value_row = query_parameters.filter(query=>query.toLowerCase().startsWith(param));
-    if (value_row.length == 0)
-        return null;
-    else{
-        if (type==1){
-            //Number
-            if (value_row[0].split('=')[1]=='')
-                return null;
-            else
-                return Number(value_row[0].split('=')[1]);
-        }
-        else
-            return value_row[0].split('=')[1];
-    }    
-};
 /**
  * Checks if ok to start app
  * @param {number|null} app_id
@@ -1102,40 +1077,16 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 };
                 switch (service){
-                    case 'AUTH':{
-                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, decodedparameters, data)
+                    case 'AUTH':
+                    case 'BROADCAST':{
+                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data, res)
                         .then((/**@type{string}*/result)=>resolve(result))
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                         break;
                     }
-                    case 'BROADCAST':{
-                        if (decodedparameters.startsWith('/broadcast/connection/connect')){
-                            //this endpoint does not exists
-                            //this is used for EventSource that needs to leave connection open
-                            // ex path and query parameters: 
-                            ///broadcast/connection/connect?identity_provider_id=&system_admin=null&&latitude=[...]&longitude=[...]&lang_code=en
-                            BroadcastConnect(   app_id, 
-                                                get_query_value(decodedparameters, 'identity_provider_id',1),
-                                                get_query_value(decodedparameters, 'user_account_logon_user_account_id',1),
-                                                get_query_value(decodedparameters, 'system_admin',1),
-                                                get_query_value(decodedparameters, 'latitude'),
-                                                get_query_value(decodedparameters, 'longitude'),
-                                                get_query_value(decodedparameters, 'authorization'),
-                                                headers_user_agent,
-                                                ip,
-                                                res).then(()=> {
-                                return resolve('');
-                            });
-                        }
-                        else{
-                            path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}${decodedparameters}&app_id=${app_id}`;
-                            call_service(path, service);
-                        }
-                        break;
-                    }
                     case 'LOG':{
                         if (endpoint=='SYSTEMADMIN')
-                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, decodedparameters, data)
+                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data)
                             .then((/**@type{string}*/result)=>resolve(result))
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         else
@@ -1144,7 +1095,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     }
                     case 'SERVER':{
                         if (endpoint=='ADMIN' || endpoint=='SYSTEMADMIN')
-                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, decodedparameters, data)
+                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data)
                             .then((/**@type{string}*/result)=>resolve(result))
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         else
@@ -1160,7 +1111,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                             case 'PATCH':
                             case 'DELETE':{
                                 if (endpoint=='ADMIN' || endpoint=='SYSTEMADMIN')
-                                    serverRoutes(app_id, service, endpoint, method.toUpperCase(), authorization, decodedparameters, data)
+                                    serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data)
                                     .then((/**@type{string}*/result)=>resolve(result))
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
                                 else{
