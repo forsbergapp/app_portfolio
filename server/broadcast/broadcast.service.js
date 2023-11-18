@@ -135,7 +135,7 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
                 else
                     if (client.app_id == app_id || app_id == null){
                         ClientSend(client.response, broadcast_message, broadcast_type);
-                        return callBack(null,1);
+                        return callBack(null,{sent:1});
                     }
         });
     }
@@ -145,11 +145,11 @@ const BroadcastSendSystemAdmin = (app_id, client_id, client_id_current, broadcas
             CONNECTED_CLIENTS.forEach(client=>{
                 if (client.id == client_id){
                     ClientSend(client.response, broadcast_message, broadcast_type);
-                    return callBack(null,1);
+                    return callBack(null,{sent:1});
                 }
             });
         }
-    callBack(null, 0);
+    callBack(null, {sent:0});
 };
 /**
  * Broadcast client send as admin
@@ -168,7 +168,7 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
                 if (client.id != client_id_current)
                     if (client.app_id == app_id || app_id == null){
                         ClientSend(client.response, broadcast_message, broadcast_type);
-                        return callBack(null,1);
+                        return callBack(null,{sent:1});
                     }
             });
         }
@@ -177,13 +177,13 @@ const BroadcastSendAdmin = (app_id, client_id, client_id_current, broadcast_type
             CONNECTED_CLIENTS.forEach(client=>{
                 if (client.id == client_id){
                     ClientSend(client.response, broadcast_message, broadcast_type);
-                    return callBack(null,1);
+                    return callBack(null,{sent:1});
                 }
             });
         }
     }
     
-    callBack(null, 0);
+    callBack(null, {sent:0});
 };
 /**
  * Broadcast connected list

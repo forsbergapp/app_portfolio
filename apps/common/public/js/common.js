@@ -3012,7 +3012,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             //use query to send authorization since EventSource does not support headers
             path += `&authorization=${authorization}`;
             json_data = null;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/noauth`;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/socket`;
             break;
         }
     }
@@ -3229,7 +3229,7 @@ const connectOnline = async () => {
     });
 };
 const checkOnline = (div_icon_online, user_account_id) => {
-    FFB ('BROADCAST', `/broadcast/connection/check/${user_account_id}?`, 'GET', 0, null, (err, result) => {
+    FFB ('BROADCAST', `/broadcast/connection/check?user_account_id=${user_account_id}`, 'GET', 0, null, (err, result) => {
         if (JSON.parse(result).online == 1)
             document.querySelector('#' + div_icon_online).className = 'online';
         else

@@ -67,13 +67,11 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
  const serverExpressRoutes = async (app) => {
     //apps
-    const { BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
+    const { BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_socket, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //auth
     const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,checkAccessTokenAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
     const { checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
-    //broadcast
-    const { BroadcastSendSystemAdmin, BroadcastSendAdmin, ConnectedList, ConnectedListSystemAdmin, ConnectedCount, ConnectedUpdate, ConnectedCheck} = await import(`file://${process.cwd()}/server/broadcast/broadcast.controller.js`);
     //server db api app_portfolio app
     const { getApp } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.controller.js`);
     //server db api app_portfolio app object
@@ -146,17 +144,8 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/apps/bff/systemadmin').patch    (checkSystemAdmin, BFF_systemadmin);
     app.route('/apps/bff/systemadmin').post     (checkSystemAdmin, BFF_systemadmin);
     app.route('/apps/bff/systemadmin').put      (checkSystemAdmin, BFF_systemadmin);    
-    app.route('/apps/bff/noauth').get           (BFF_noauth);
+    app.route('/apps/bff/socket').get           (BFF_socket);
     app.route('/apps/bff/auth').post            (BFF_auth);
-
-    app.route(`${rest_resouce_server}/broadcast/message/SystemAdmin`).post               (checkSystemAdmin, BroadcastSendSystemAdmin);
-    app.route(`${rest_resouce_server}/broadcast/message/Admin`).post                     (checkAccessTokenAdmin, BroadcastSendAdmin);
-    app.route(`${rest_resouce_server}/broadcast/connection/SystemAdmin`).get             (checkSystemAdmin, ConnectedListSystemAdmin);
-    app.route(`${rest_resouce_server}/broadcast/connection/SystemAdmin`).patch           (checkSystemAdmin, ConnectedUpdate);
-    app.route(`${rest_resouce_server}/broadcast/connection/Admin`).get                   (checkAccessTokenAdmin, ConnectedList);
-    app.route(`${rest_resouce_server}/broadcast/connection/Admin/count`).get             (checkAccessTokenAdmin, ConnectedCount);
-    app.route(`${rest_resouce_server}/broadcast/connection`).patch                       (checkDataToken, ConnectedUpdate);
-    app.route(`${rest_resouce_server}/broadcast/connection/check/:user_account_id`).get  (checkDataToken, ConnectedCheck);
 
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/apps`).get(checkDataToken, getApp);
 

@@ -668,17 +668,46 @@ const Info = async (callBack) => {
                     });
 };
 /**
+ * Get value from path with query string
+ * @param {string} parameters
+ * @param {string} param
+ * @param {1|null} type     - 1 = number
+ * @returns {string|number|null}
+ */
+ const get_query_value = (parameters, param, type=null) => {
+    const query_parameters = parameters.split('?')[1].split('&');
+    const value_row = query_parameters.filter(query=>query.toLowerCase().startsWith(param));
+    if (value_row.length == 0)
+        return null;
+    else{
+        if (type==1){
+            //Number
+            if (value_row[0].split('=')[1]=='')
+                return null;
+            else
+                return Number(value_row[0].split('=')[1]);
+        }
+        else
+            return value_row[0].split('=')[1];
+    }    
+};
+/**
  * server routes
  * @param {number} app_id
  * @param {string} service
  * @param {string} endpoint
  * @param {string} method
+ * @param {string} ip
+ * @param {string} user_agent
  * @param {string} authorization
  * @param {string} parameters
  * @param {*} data
+ * @param {Types.res|null} res
  * @async
  */
- const serverRoutes = async (app_id, service, endpoint, method, authorization, parameters, data) =>{
+ const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, authorization, parameters, data, res=null) =>{
+    //broadcast
+    const {BroadcastSendAdmin, ConnectedCount, ConnectedCheck, BroadcastSendSystemAdmin, ConnectedList, ConnectedUpdate, BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
     //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     //server db api app_portfolio app
@@ -716,6 +745,26 @@ const Info = async (callBack) => {
             //check what BFF endpoint is used that has already used middleware if declared in routes
             switch(endpoint){
                 case 'DATA':{
+                    switch (service){
+                        case 'BROADCAST':{
+                            switch (routeFunction + '_' + method){
+                                case '/BROADCAST/CONNECTION_PATCH':{
+                                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), getNumberValue(query.get('system_admin')), getNumberValue(query.get('identity_provider_id')), 
+                                                    query.get('latitude'), query.get('longitude'),
+                                                            (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
+                                        resolve(err ?? result);
+                                    });
+                                    break;
+                                }
+                                case '/BROADCAST/CONNECTION/CHECK_GET':{
+                                    ConnectedCheck(getNumberValue(query.get('user_account_id')), (/**@type{Types.error}*/err, /**@type{boolean}*/result_connected)=>{
+                                        resolve({online: result_connected});
+                                    });
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     break;
                 }
                 case 'ACCESS':{
@@ -723,6 +772,40 @@ const Info = async (callBack) => {
                 }
                 case 'SYSTEMADMIN':{
                     switch (service){
+                        case 'BROADCAST':{
+                            switch (routeFunction + '_' + method){
+                                case '/BROADCAST/MESSAGE/SYSTEMADMIN_POST':{
+                                    BroadcastSendSystemAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
+                                        data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
+                                        resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/BROADCAST/CONNECTION/SYSTEMADMIN_GET':{
+                                    ConnectedList(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
+                                        query.get('order_by'), query.get('sort'),  1, (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
+                                        if (err)
+                                            reject({data: err});
+                                        else{
+                                            if (result && result.length>0)
+                                                resolve(result);
+                                            else
+                                                reject('Record not found');
+                                        }
+                                    });
+                                    break;
+                                }
+                                case '/BROADCAST/CONNECTION/SYSTEMADMIN_PATCH':{
+                                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), getNumberValue(query.get('system_admin')), getNumberValue(query.get('identity_provider_id')), 
+                                                            query.get('latitude'), query.get('longitude'),
+                                                            (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
+                                        resolve(err ?? result);
+                                    });
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                         case 'SERVER':{
                             switch (routeFunction + '_' + method){
                                 case '/CONFIG/SYSTEMADMIN_PUT':{
@@ -928,6 +1011,42 @@ const Info = async (callBack) => {
                 }
                 case 'ADMIN':{
                     switch (service){
+                        case 'BROADCAST':{
+                            switch (routeFunction + '_' + method){
+                                case '/BROADCAST/MESSAGE/ADMIN_POST':{
+                                    BroadcastSendAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
+                                                                data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
+                                        resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/BROADCAST/CONNECTION/ADMIN_GET':{
+                                    ConnectedList(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
+                                                    query.get('order_by'), query.get('sort'), 0, (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
+                                        if (err) {
+                                            reject({data: err});
+                                        }
+                                        else{
+                                            if (result && result.length>0)
+                                                resolve(result);
+                                            else{
+                                                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                                    reject(record_not_found_promise(app_id, query.get('lang_code')));
+                                                });
+                                            }
+                                        }
+                                    });
+                                    break;
+                                }
+                                case '/BROADCAST/CONNECTION/ADMIN/COUNT_GET':{
+                                    ConnectedCount(getNumberValue(query.get('identity_provider_id')), getNumberValue(query.get('count_logged_in')), (/**@type{Types.error}*/err, /**@type{number}*/count_connected) => {
+                                        resolve({data: count_connected});
+                                    });
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                         case 'SERVER':{
                             switch (routeFunction + '_' + method){
                                 case '/CONFIG/ADMIN_GET':{
@@ -1191,7 +1310,20 @@ const Info = async (callBack) => {
                     }
                     break;
                 }
-                case 'NOAUTH':{
+                case 'SOCKET':{
+                    //this is used for EventSource that needs to leave connection open
+                    BroadcastConnect(   app_id, 
+                                        get_query_value(parameters, 'identity_provider_id',1),
+                                        get_query_value(parameters, 'user_account_logon_user_account_id',1),
+                                        get_query_value(parameters, 'system_admin',1),
+                                        get_query_value(parameters, 'latitude'),
+                                        get_query_value(parameters, 'longitude'),
+                                        get_query_value(parameters, 'authorization'),
+                                        user_agent,
+                                        ip,
+                                        res).then(()=> {
+                        return resolve('');
+                    });
                     break;
                 }
             }
