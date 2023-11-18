@@ -202,7 +202,8 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 				   OR ua.email_unverified LIKE :search
 				   OR ua.provider_first_name LIKE :search
 				   OR ua.provider_last_name LIKE :search
-				   OR ua.provider_email LIKE :search)
+				   OR ua.provider_email LIKE :search
+				   OR ua.id LIKE :search)
 				   OR :search = '*'
 				ORDER BY ${sort} ${order_by}`;
 		sql = db_limit_rows(sql, null);
