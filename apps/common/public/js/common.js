@@ -369,10 +369,10 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
     else
         object_parameter = `object=${object}`;
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-        path = `/app_object/admin/${lang_code}?${object_parameter}`;
+        path = `/app_object/admin?data_lang_code=${lang_code}&${object_parameter}`;
     }
     else{
-        path = `/app_object/${lang_code}?${object_parameter}`;
+        path = `/app_object?data_lang_code=${lang_code}&${object_parameter}`;
     }
     //translate objects
     await FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
@@ -462,10 +462,10 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
             //translate locales
             json = '';
             if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-                path = `/language/locale/admin/${lang_code}?`;
+                path = `/language/locale/admin?lang_code=${lang_code}`;
             }
             else{
-                path = `/language/locale/${lang_code}?`;
+                path = `/language/locale?lang_code=${lang_code}`;
             }
             FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
                 if (err)
@@ -850,7 +850,7 @@ const show_message = (message_type, code, function_event, message_text='', data_
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            FFB ('DB_API', `/message_translation/${code}?data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
+            FFB ('DB_API', `/message_translation?code=${code}&data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
