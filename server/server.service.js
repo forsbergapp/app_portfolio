@@ -729,6 +729,19 @@ const Info = async (callBack) => {
     //server db api app_portfolio user account app
     const { getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
 
+    //server db api app_portfolio app
+    const { getApp } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    //server db api app_portfolio app object
+    const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
+    //server db api app_portfolio country
+    const { getCountries } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`);
+    //server db api app_portfolio locale
+    const { getLocales } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
+    //server db api app_portfolio message translation
+    const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`);
+    //server db api app_portfolio setting
+    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
+
     const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
     //server log
@@ -763,6 +776,68 @@ const Info = async (callBack) => {
                                     break;
                                 }
                             }
+                            break;
+                        }
+                        case 'DB_API':{
+                            switch (routeFunction + '_' + method){
+                                case '/APPS_GET':{
+                                    getApp(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_app_getApp[]}*/result)=> {
+                                        resolve({data: result});
+                                    });
+                                    break;
+                                }
+                                case '/APP_OBJECT_GET':{
+                                    getObjects(app_id, query.get('data_lang_code'), query.get('object') ?? null, query.get('object_name') ?? null)
+                                    .then((/**@type{Types.db_result_app_object_getObjects[]}*/result)=> {
+                                        resolve({data: result});
+                                    });
+                                    break;
+                                }
+                                case '/APP_OBJECT/ADMIN_GET':{
+                                    getObjects(app_id, query.get('data_lang_code'), query.get('object') ?? null, query.get('object_name') ?? null)
+                                    .then((/**@type{Types.db_result_app_object_getObjects[]}*/result)=> {
+                                        resolve({data: result});
+                                    });
+                                    break;
+                                }
+                                case '/COUNTRY_GET':{
+                                    getCountries(app_id, query.get('lang_code') ?? 'en')
+                                    .then((/**@type{Types.db_result_country_getCountries[]}*/result)=> {
+                                        resolve({countries: result});
+                                    });
+                                    break;
+                                }
+                                case '/LANGUAGE/LOCALE_GET':{
+                                    getLocales(app_id, query.get('lang_code') ?? 'en')
+                                    .then((/**@type{Types.db_result_locale_getLocales[]}*/result)=> {
+                                        resolve({locales: result});
+                                    });
+                                    break;
+                                }
+                                case '/LANGUAGE/LOCALE/ADMIN_GET':{
+                                    getLocales(app_id, query.get('lang_code') ?? 'en')
+                                    .then((/**@type{Types.db_result_locale_getLocales[]}*/result)=> {
+                                        resolve({locales: result});
+                                    });
+                                    break;
+                                }
+                                case '/MESSAGE_TRANSLATION_GET':{
+                                    getMessage(app_id, getNumberValue(query.get('data_app_id')), query.get('code'), query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result)=>{
+                                        resolve(result[0]);
+                                    });
+                                    break;
+                                }
+                                case '/SETTINGS_GET':{
+                                    getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? query.get('setting_type')==''?null:query.get('setting_type'))
+                                    .then((/**@type{Types.db_result_setting_getSettings[]}*/result)=>{
+                                        resolve({settings: result});
+                                    });
+                                    break;
+                                }
+                            }
+                            break;
                         }
                     }
                     break;

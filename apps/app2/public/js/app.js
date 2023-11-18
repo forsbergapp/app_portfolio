@@ -352,7 +352,7 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.FFB ('DB_API', `/app_object/${locale}?object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
+        await common.FFB ('DB_API', `/app_object?data_lang_code=${locale}&object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 0, null, (err, result) => {
             if (err)
                 null;
             else{
