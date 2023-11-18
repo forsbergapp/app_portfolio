@@ -455,7 +455,7 @@
 
 /**
  * Server - Config type no
- * @typedef {0|1|2|3|4|5|6|7} config_type_no
+ * @typedef {number|null} config_type_no
  */
 /**
  * Server - Config group

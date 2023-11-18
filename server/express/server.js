@@ -66,8 +66,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  * @param {Types.express} app
  */
  const serverExpressRoutes = async (app) => {
-    //server (ConfigGet function from controller to mount on router)
-    const { ConfigMaintenanceGet, ConfigMaintenanceSet, ConfigGetApps, ConfigGet:ConfigGetController, ConfigGetSaved, ConfigSave, ConfigInfo, Info} = await import(`file://${process.cwd()}/server/server.controller.js`);
     //apps
     const { BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_noauth, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //auth
@@ -150,16 +148,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/apps/bff/systemadmin').put      (checkSystemAdmin, BFF_systemadmin);    
     app.route('/apps/bff/noauth').get           (BFF_noauth);
     app.route('/apps/bff/auth').post            (BFF_auth);
-
-    app.route(`${rest_resouce_server}/config/systemadmin`).put                           (checkSystemAdmin, ConfigSave);
-    app.route(`${rest_resouce_server}/config/systemadmin`).get                           (checkSystemAdmin, ConfigGetController);
-    app.route(`${rest_resouce_server}/config/systemadmin/apps`).get                      (checkSystemAdmin, ConfigGetApps);
-    app.route(`${rest_resouce_server}/config/systemadmin/saved`).get                     (checkSystemAdmin, ConfigGetSaved);
-    app.route(`${rest_resouce_server}/config/systemadmin/maintenance`).get               (checkSystemAdmin, ConfigMaintenanceGet);
-    app.route(`${rest_resouce_server}/config/systemadmin/maintenance`).patch             (checkSystemAdmin, ConfigMaintenanceSet);
-    app.route(`${rest_resouce_server}/config/info`).get                                  (checkSystemAdmin, ConfigInfo);
-    app.route(`${rest_resouce_server}/info`).get                                         (checkSystemAdmin, Info);
-    app.route(`${rest_resouce_server}/config/admin`).get                                 (checkAccessTokenAdmin, ConfigGetController);
 
     app.route(`${rest_resouce_server}/broadcast/message/SystemAdmin`).post               (checkSystemAdmin, BroadcastSendSystemAdmin);
     app.route(`${rest_resouce_server}/broadcast/message/Admin`).post                     (checkAccessTokenAdmin, BroadcastSendAdmin);
