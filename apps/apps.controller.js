@@ -11,60 +11,44 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * Backend for frontend (BFF) common
  * 
  * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
- * @param {string} endpoint
- * @param {Types.req} req - Request
+ * @param {Types.req_id_number} app_id
+ * @param {string|null} endpoint
+ * @param {string} service_called
+ * @param {string} parameters
+ * @param {string} ip
+ * @param {string} method
+ * @param {string} authorization
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {object} body
+ * @param {number|null} user_account_logon_user_account_id
  * @param {Types.res} res
  */
-const BFF = (endpoint, req, res) =>{
-    //check inparameters
-    if (!getNumberValue(req.query.app_id) &&
-        !req.query.service &&
-        !req.query.parameters)
-        //required parameters not provided
-        //use common app id to get message and use first lang_code form app or if missing use language in headers
-        res.status(401).send({
-            message: '⛔'
-        });
-    else{
-        const decodedparameters = Buffer.from(req.query.parameters, 'base64').toString('utf-8');
-        let message_queue=false;
-        const service_called = req.query.service.toUpperCase();
-        if (service_called=='MAIL')
-            message_queue=true;
-        /** @type {string} */
-        let parameters;
-        if (getNumberValue(req.query.user_account_logon_user_account_id))
-            parameters = decodedparameters + `&user_account_logon_user_account_id=${getNumberValue(req.query.user_account_logon_user_account_id)}`;
-        else
-            parameters = decodedparameters;
-        service.BFF(getNumberValue(req.query.app_id), endpoint, service_called, parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, res)
-        .then(result_service => {
-            import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
-                const log_text = message_queue==true?null:result_service;
-                LogServiceI(getNumberValue(req.query.app_id), service_called, parameters, log_text).then(()=>{
-                    //message queue saves result there
-                    if (parameters.startsWith('/broadcast/connection/connect')){
-                        //EventSource requested so no more update of response
-                        null;
-                    }
-                    else
-                        if (message_queue)
-                            res.status(200).send('✅');
-                        else
-                            res.status(200).send(result_service);
-                });
-            });
-        })
-        .catch(error => {
-            import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
-                //log ERROR to module log and to files
-                LogServiceE(getNumberValue(req.query.app_id), service_called, parameters, error).then(() => {
-                    //return service unavailable and error message
-                    res.status(503).send(error);
-                });
+const BFF = (app_id, endpoint, service_called, parameters, ip, method, authorization, user_agent, accept_language, body, user_account_logon_user_account_id, res) =>{
+
+    service.BFF(app_id, endpoint, service_called, parameters, ip, method, authorization, user_agent, accept_language, body, user_account_logon_user_account_id, res)
+    .then((/**@type{*}*/result_service) => {
+        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
+            const log_result = service_called.toUpperCase()=='MAIL'?'✅':result_service;
+            LogServiceI(app_id, service_called, parameters, log_result).then(()=>{
+                if (endpoint=='NOAUTH'){
+                    //This endpoint only allowed for EventSource so no more update of response
+                    null;
+                }
+                else
+                    res.status(200).send(log_result);
             });
         });
-    }
+    })
+    .catch((/**@type{Types.error}*/error) => {
+        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
+            //log ERROR to module log and to files
+            LogServiceE(app_id ?? null, service_called ?? null, parameters ?? null, error).then(() => {
+                //return service unavailable and error message
+                res.status(503).send(error);
+            });
+        });
+    });
 };
 /**
  * Backend for frontend (BFF) data
@@ -73,7 +57,7 @@ const BFF = (endpoint, req, res) =>{
  * @param {Types.res} res
  */
  const BFF_data = (req, res) =>{
-    BFF('DATA', req,res);
+    BFF(getNumberValue(req.query.app_id), 'DATA', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 /**
  * Backend for frontend (BFF) access
@@ -82,7 +66,7 @@ const BFF = (endpoint, req, res) =>{
  * @param {Types.res} res
  */
  const BFF_access = (req, res) =>{
-    BFF('ACCESS', req,res);
+    BFF(getNumberValue(req.query.app_id), 'ACCESS', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 /**
  * Backend for frontend (BFF) admin
@@ -91,7 +75,7 @@ const BFF = (endpoint, req, res) =>{
  * @param {Types.res} res
  */
  const BFF_admin = (req, res) =>{
-    BFF('ADMIN', req,res);
+    BFF(getNumberValue(req.query.app_id), 'ADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 /**
  * Backend for frontend (BFF) systemadmin
@@ -100,7 +84,7 @@ const BFF = (endpoint, req, res) =>{
  * @param {Types.res} res
  */
  const BFF_systemadmin = (req, res) =>{
-    BFF('SYSTEMADMIN', req,res);
+    BFF(getNumberValue(req.query.app_id), 'SYSTEMADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 
 /**
@@ -114,7 +98,7 @@ const BFF_noauth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='BROADCAST' && 
         Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
-            BFF('NOAUTH', req,res);
+            BFF(getNumberValue(req.query.app_id), 'NOAUTH', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
         }
     else{
         //required parameters not provided
@@ -134,7 +118,7 @@ const BFF_noauth = (req, res) =>{
 const BFF_auth = (req, res) =>{
     //check inparameters
     if (req.query.service.toUpperCase()=='AUTH' && req.headers.authorization.toUpperCase().startsWith('BASIC'))
-        BFF('AUTH', req,res);
+        BFF(getNumberValue(req.query.app_id), 'AUTH', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
     else{
         //required parameters not provided
         //use common app id to get message and use first lang_code form app or if missing use language in headers

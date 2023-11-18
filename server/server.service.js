@@ -407,15 +407,6 @@ const InitConfig = async () => {
 };
 
 /**
- * Config callBack
- * @param {Types.config_group} config_group
- * @param {string} parameter
- * @param {Types.callBack} callBack
- */
-const ConfigGetCallBack = (config_group, parameter, callBack) => {
-        callBack(null, ConfigGet(config_group, parameter));
-    };
-/**
  * Config maintenance set
  * @param {string} value
  * @param {Types.callBack} callBack
@@ -469,7 +460,7 @@ const ConfigMaintenanceGet = (callBack) => {
  *   5 = auth useragent  path + file
  *   6 = auth user       path + file
  * @async
- * @param {Types.config_type_no} config_type_no
+ * @param {Types.config_type_no|null} config_type_no
  * @returns {{}}
  */
 const ConfigGetSaved = (config_type_no) => {
@@ -503,7 +494,7 @@ const ConfigGetSaved = (config_type_no) => {
 /**
  * Config save
  * @async
- * @param {number} config_no
+ * @param {number|null} config_no
  * @param {Types.config} config_json
  * @param {boolean} first_time
  * @param {Types.callBack} callBack
@@ -733,6 +724,65 @@ const Info = async (callBack) => {
                 case 'SYSTEMADMIN':{
                     switch (service){
                         case 'SERVER':{
+                            switch (routeFunction + '_' + method){
+                                case '/CONFIG/SYSTEMADMIN_PUT':{
+                                    ConfigSave(getNumberValue(data.config_no), data.config_json, false, (err, result)=>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/CONFIG/SYSTEMADMIN_GET':{
+                                    resolve({data:getNumberValue(ConfigGet(query.get('config_group'), query.get('parameter')))});
+                                    break;
+                                }
+                                case '/CONFIG/SYSTEMADMIN/APPS_GET':{
+                                    resolve({ data: ConfigGetApps()});
+                                    break;
+                                }
+                                case '/CONFIG/SYSTEMADMIN/SAVED_GET':{
+                                    resolve({data: ConfigGetSaved(getNumberValue(query.get('config_type_no')))});
+                                    break;
+                                }
+                                case '/CONFIG/SYSTEMADMIN/MAINTENANCE_GET':{
+                                    ConfigMaintenanceGet((err, result)=>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve({value: result});
+                                    });
+                                    break;
+                                }
+                                case '/CONFIG/SYSTEMADMIN/MAINTENANCE_PATCH':{
+                                    ConfigMaintenanceSet(data.value, (err, result)=>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                                case '/CONFIG/INFO_GET':{
+                                    ConfigInfo((err, result)=>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve({data: result.info});
+                                    });
+                                    break;
+                                }
+                                case '/INFO_GET':{
+                                    Info((err, result)=>{
+                                        if (err)
+                                            reject(err);
+                                        else
+                                            resolve(result);
+                                    });
+                                    break;
+                                }
+                            }
                             break;
                         }
                         case 'DB_API':{
@@ -878,6 +928,15 @@ const Info = async (callBack) => {
                 }
                 case 'ADMIN':{
                     switch (service){
+                        case 'SERVER':{
+                            switch (routeFunction + '_' + method){
+                                case '/CONFIG/ADMIN_GET':{
+                                    resolve({data:getNumberValue(ConfigGet(query.get('config_group'), query.get('parameter')))});
+                                    break;
+                                }
+                            }
+                            break;
+                        }
                         case 'DB_API':{
                             switch (routeFunction + '_' + method){
                                 case '/ADMIN/DEMO_POST':{
@@ -1200,6 +1259,6 @@ const serverStart = async () =>{
 };
 
 export {COMMON, getNumberValue, CreateRandomString,
-        ConfigGetCallBack, ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
+        ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, ConfigInfo, Info, 
         ConfigGet, ConfigGetInit, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig, serverRoutes, serverStart };
