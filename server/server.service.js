@@ -692,41 +692,6 @@ const Info = async (callBack) => {
     }    
 };
 /**
- * 
- * @param {number} app_id 
- * @param {string} emailtype 
- * @param {string} host 
- * @param {number} userid 
- * @param {string|null} verification_code 
- * @param {string} email 
- * @param {Types.callBack} callBack 
- */
- const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, callBack) => {
-    const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
-    const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
-    
-    createMail(app_id, 
-        {
-            'emailtype':        emailtype,
-            'host':             host,
-            'app_user_id':      userid,
-            'verificationCode': verification_code,
-            'to':               email,
-        }).then((/**@type{Types.email_return_data}*/email)=>{
-            MessageQueue('MAIL', 'PUBLISH', email, null)
-            .then(()=>{
-                callBack(null, null);
-            })
-            .catch((/**@type{Types.error}*/error)=>{
-                callBack(error, null);
-            });
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            callBack(error, null);
-        });
-};
-
-/**
  * server routes
  * @param {number} app_id
  * @param {string} service
@@ -745,6 +710,11 @@ const Info = async (callBack) => {
  const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, accept_language, authorization, host, parameters, data, res) =>{
     //broadcast
     const {BroadcastSendAdmin, ConnectedCount, ConnectedCheck, BroadcastSendSystemAdmin, ConnectedList, ConnectedUpdate, BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
+    //server db api component user account
+    const user_account = await import(`file://${process.cwd()}/server/dbapi/component/user_account.js`);
+    //server db api component user account app
+    const user_account_app = await import(`file://${process.cwd()}/server/dbapi/component/user_account_app.js`);
+
     //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     //server db api app_portfolio app
@@ -776,21 +746,8 @@ const Info = async (callBack) => {
     //server db api app_portfolio setting
     const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting.service.js`);
 
-    //server db api app_portfolio user account data token
-    const {
-        verification_code,
-        updateUserVerificationCode,
-        updateSigninProvider,
-        create,
-        userLogin,
-        activateUser,
-        getEmailUser,
-        providerSignIn,
-        getProfileTop,
-        getProfileUser,
-        searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
     //server db api app_portfolio user account app
-    const { createUserAccountApp, getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
+    const { getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
     //server db api app_portfolio user account app setting
     const { getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileTopSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
 
@@ -800,13 +757,8 @@ const Info = async (callBack) => {
     const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.service.js`);
     
     const {default:{sign}} = await import('jsonwebtoken');
-    const { default: {compareSync} } = await import('bcryptjs');
     const {CheckFirstTime, ConfigGet, ConfigGetUser, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
-    const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     
-    const { insertUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
-    const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-    const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
     const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
 
     /**@type{*} */
@@ -814,1183 +766,687 @@ const Info = async (callBack) => {
     const routeFunction = parameters.substring(0, parameters.indexOf('?')).toUpperCase();
     return new Promise((resolve, reject)=>{
         try {
-            //check what BFF endpoint is used that has already used middleware if declared in routes
-            switch(endpoint){
-                case 'DATA_LOGIN':{
-                    switch (service){
-                        case 'DB_API':{
-                            switch (routeFunction + '_' + method){
-                                case '/USER_ACCOUNT/LOGIN_PUT':{
-                                    /**@type{Types.db_parameter_user_account_userLogin} */
-                                    const data_login =    {   username: data.username};
-                                    userLogin(app_id, data_login)
-                                    .then((/**@type{Types.db_result_user_account_userLogin[]}*/result_login)=>{
-                                        if (result_login[0]) {
-                                            const data_body = { user_account_id:    getNumberValue(result_login[0].id),
-                                                                app_id:             getNumberValue(data.app_id),
-                                                                result:             Number(compareSync(data.password, result_login[0].password)),
-                                                                client_ip:          ip,
-                                                                client_user_agent:  user_agent,
-                                                                client_longitude:   data.client_longitude ?? null,
-                                                                client_latitude:    data.client_latitude ?? null,
-                                                                access_token:       null};
-                                            if (compareSync(data.password, result_login[0].password)) {
-                                                if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
-                                                        app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                                                    createUserAccountApp(app_id, result_login[0].id)
-                                                    .then(()=>{
-                                                        //if user not activated then send email with new verification code
-                                                        const new_code = verification_code();
-                                                        if (result_login[0].active == 0){
-                                                            updateUserVerificationCode(app_id, result_login[0].id, new_code)
-                                                            .then(()=>{
-                                                                getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
-                                                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                                                        //send email UNVERIFIED
-                                                                        sendUserEmail(  app_id, 
-                                                                                        parameter[0].parameter_value, 
-                                                                                        host, 
-                                                                                        result_login[0].id, 
-                                                                                        new_code, 
-                                                                                        result_login[0].email, 
-                                                                                        (/**@type{Types.error}*/err)=>{
-                                                                            if (err)
-                                                                                reject(err);
-                                                                            else{
-                                                                                data_body.access_token = accessToken(app_id);
-                                                                                insertUserAccountLogon(app_id, data_body)
-                                                                                .then(()=>{
-                                                                                    resolve({
-                                                                                        accessToken: data_body.access_token,
-                                                                                        items: Array(result_login[0])
-                                                                                    });
-                                                                                });
-                                                                            }
-                                                                        });
-                                                                    });
-                                                            });
-                                                        }
-                                                        else{
-                                                            data_body.access_token = accessToken(app_id);
-                                                            insertUserAccountLogon(app_id, data_body)
-                                                            .then(()=>{
-                                                                resolve({
-                                                                    accessToken: data_body.access_token,
-                                                                    items: Array(result_login[0])
-                                                                });
-                                                            });
-                                                        }
-                                                    });
-                                                }
-                                                else{
-                                                    res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
-                                                    res.statusCode = 401;
-                                                    //unauthorized, only admin allowed to log in to admin
-                                                    reject('⛔');
-                                                }
-                                                
-                                            } else {
-                                                insertUserAccountLogon(app_id, data_body)
-                                                .then(()=>{
-                                                    res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
-                                                    res.statusCode = 400;
-                                                    //Username or password not found
-                                                    getMessage( app_id,
-                                                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                                '20300',
-                                                                query.get('lang_code'))
-                                                    .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
-                                                        reject(result_message[0].text);
-                                                    });
-                                                });
-                                            }
-                                        } else{
-                                            if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-                                                res.statusMessage = 'admin user not found:' + data_login.username;
-                                            else
-                                                res.statusMessage = 'user not found:' + data_login.username;
-                                            res.statusCode = 404;
-                                            //User not found
-                                            getMessage( app_id,
-                                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                                        '20305',
-                                                        query.get('lang_code'))
-                                            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
-                                                reject(result_message[0].text);
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/PROVIDER_PUT':{
-                                    providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
-                                    .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin)=>{
-                                        /** @type{Types.db_parameter_user_account_create} */
-                                        const data_user = { bio:                    null,
-                                                            private:                null,
-                                                            user_level:             null,
-                                                            username:               null,
-                                                            password:               null,
-                                                            password_new:           null,
-                                                            password_reminder:      null,
-                                                            email_unverified:       null,
-                                                            email:                  null,
-                                                            avatar:                 null,
-                                                            verification_code:      null,
-                                                            active:                 1,
-                                                            identity_provider_id:   getNumberValue(data.identity_provider_id),
-                                                            provider_id:            data.provider_id,
-                                                            provider_first_name:    data.provider_first_name,
-                                                            provider_last_name:     data.provider_last_name,
-                                                            provider_image:         data.provider_image,
-                                                            provider_image_url:     data.provider_image_url,
-                                                            provider_email:         data.provider_email,
-                                                            admin:                  0};
-                                        const data_login = {user_account_id:        data.user_account_id,
-                                                            app_id:                 data.app_id,
-                                                            result:                 1,
-                                                            client_ip:              ip,
-                                                            client_user_agent:      user_agent,
-                                                            client_longitude:       data.client_longitude,
-                                                            client_latitude:        data.client_latitude,
-                                                            access_token:           null};
-                                        if (result_signin.length > 0) {
-                                            updateSigninProvider(app_id, result_signin[0].id, data_user)
-                                            .then(()=>{
-                                                data_login.user_account_id = result_signin[0].id;
-                                                createUserAccountApp(app_id, result_signin[0].id)
-                                                .then(()=>{
-                                                    data_login.access_token = accessToken(app_id);
-                                                    insertUserAccountLogon(app_id, data_login)
-                                                    .then(()=>{
-                                                        resolve({
-                                                            count: result_signin.length,
-                                                            accessToken: data_login.access_token,
-                                                            items: result_signin,
-                                                            userCreated: 0
-                                                        });
-                                                    });
-                                                });
-                                            })
-                                            .catch((/**@type{Types.error}*/error)=>{
-                                                checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
-                                            });            
-                                        } else {
-                                            //if provider user not found then create user and one user setting
-                                            //avatar not used by providers, set default null
-                                            data_user.avatar = data.avatar ?? null;
-                                            data_user.provider_image = data.provider_image ?? null;
-                                            create(app_id, data_user)
-                                            .then((/**@type{Types.db_result_user_account_create} */result_create)=>{
-                                                data_login.user_account_id = result_create.insertId;
-                                                    createUserAccountApp(app_id, result_create.insertId)
-                                                    .then(()=>{
-                                                        providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
-                                                        .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                                            data_login.access_token = accessToken(app_id);
-                                                            insertUserAccountLogon(app_id, data_login)
-                                                            .then(()=>{
-                                                                resolve({
-                                                                    count: result_signin2.length,
-                                                                    accessToken: data_login.access_token,
-                                                                    items: result_signin2,
-                                                                    userCreated: 1
-                                                                });
-                                                            });
-                                                        });
-                                                    });
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
+            switch (endpoint + '_' + service + '_' + routeFunction + '_' + method){
+                case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/LOGIN_PUT':{
+                    user_account.login(app_id, ip, user_agent, host, query, data, res)
+                    .then((/**@type{*}*/result)=>resolve(result));
                     break;
                 }
-                case 'DATA_SIGNUP':{
-                    switch (service){
-                        case 'DB_API':{
-                            switch (routeFunction + '_' + method){
-                                case '/USER_ACCOUNT/SIGNUP_POST':{
-                                    /**@type{Types.db_parameter_user_account_create} */
-                                    const data_body = { bio:                    data.bio,
-                                                        private:                data.private,
-                                                        user_level:             data.user_level,
-                                                        username:               data.username,
-                                                        password:               null,
-                                                        password_new:           data.password,
-                                                        password_reminder:      data.password_reminder,
-                                                        email:                  data.email,
-                                                        email_unverified:       null,
-                                                        avatar:                 data.avatar,
-                                                        verification_code:      data.provider_id?null:verification_code(),
-                                                        active:                 getNumberValue(data.active) ?? 0,
-                                                        identity_provider_id:   getNumberValue(data.identity_provider_id),
-                                                        provider_id:            data.provider_id ?? null,
-                                                        provider_first_name:    data.provider_first_name,
-                                                        provider_last_name:     data.provider_last_name,
-                                                        provider_image:         data.provider_image,
-                                                        provider_image_url:     data.provider_image_url,
-                                                        provider_email:         data.provider_email,
-                                                        admin:                  0
-                                                    };
-                                    create(app_id, data_body)
-                                    .then((/**@type{Types.db_result_user_account_create}*/result_create)=>{
-                                        if (data.provider_id == null ) {
-                                            //send email for local users only
-                                            getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_SIGNUP')
-                                            .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                                //send email SIGNUP
-                                                sendUserEmail(  app_id, 
-                                                                parameter[0].parameter_value, 
-                                                                host, 
-                                                                result_create.insertId, 
-                                                                data_body.verification_code, 
-                                                                data_body.email ?? '', 
-                                                                (/**@type{Types.error}*/err)=>{
-                                                    if (err)
-                                                        reject(err);
-                                                    else
-                                                        resolve({
-                                                            accessToken: accessToken(app_id),
-                                                            id: result_create.insertId,
-                                                            data: result_create
-                                                        });
-                                                });  
-                                            });
-                                        }
-                                        else
-                                            resolve({
-                                                accessToken: accessToken(app_id),
-                                                id: result_create.insertId,
-                                                data: result_create
-                                            });
-                                    })
-                                    .catch((/**@type{Types.error}*/error)=>{
-                                        checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
+                case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/PROVIDER_PUT':{
+                    user_account.login_provider(app_id, ip, user_agent, host, query, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
                     break;
                 }
-                case 'DATA':{
-                    switch (service){
-                        case 'BROADCAST':{
-                            switch (routeFunction + '_' + method){
-                                case '/BROADCAST/CONNECTION_PATCH':{
-                                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), 
-                                                    getNumberValue(query.get('system_admin')), getNumberValue(query.get('identity_provider_id')), query.get('latitude'), query.get('longitude'),
-                                                            (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
-                                        resolve(err ?? result);
-                                    });
-                                    break;
-                                }
-                                case '/BROADCAST/CONNECTION/CHECK_GET':{
-                                    ConnectedCheck(getNumberValue(query.get('user_account_id')), (/**@type{Types.error}*/err, /**@type{boolean}*/result_connected)=>{
-                                        resolve({online: result_connected});
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        case 'DB_API':{
-                            switch (routeFunction + '_' + method){
-                                case '/APPS_GET':{
-                                    getApp(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_app_getApp[]}*/result)=> {
-                                        resolve({data: result});
-                                    });
-                                    break;
-                                }
-                                case '/APP_OBJECT_GET':
-                                case '/APP_OBJECT/ADMIN_GET':{
-                                    getObjects(app_id, query.get('data_lang_code'), query.get('object') ?? null, query.get('object_name') ?? null)
-                                    .then((/**@type{Types.db_result_app_object_getObjects[]}*/result)=> {
-                                        resolve({data: result});
-                                    });
-                                    break;
-                                }
-                                case '/COUNTRY_GET':{
-                                    getCountries(app_id, query.get('lang_code') ?? 'en')
-                                    .then((/**@type{Types.db_result_country_getCountries[]}*/result)=> {
-                                        resolve({countries: result});
-                                    });
-                                    break;
-                                }
-                                case '/LANGUAGE/LOCALE_GET':
-                                case '/LANGUAGE/LOCALE/ADMIN_GET':{
-                                    getLocales(app_id, query.get('lang_code') ?? 'en')
-                                    .then((/**@type{Types.db_result_locale_getLocales[]}*/result)=> {
-                                        resolve({locales: result});
-                                    });
-                                    break;
-                                }
-                                case '/MESSAGE_TRANSLATION_GET':{
-                                    getMessage(app_id, getNumberValue(query.get('data_app_id')), query.get('code'), query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result)=>{
-                                        resolve(result[0]);
-                                    });
-                                    break;
-                                }
-                                case '/SETTINGS_GET':{
-                                    getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? query.get('setting_type')==''?null:query.get('setting_type'))
-                                    .then((/**@type{Types.db_result_setting_getSettings[]}*/result)=>{
-                                        resolve({settings: result});
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/ACTIVATE_PUT':{
-                                    /**@type{string|null} */
-                                    let auth_password_new = null;
-                                    if (getNumberValue(data.verification_type) == 3){
-                                        //reset password
-                                        auth_password_new = verification_code();
-                                    }
-                                    activateUser(app_id, getNumberValue(query.get('PUT_ID')), getNumberValue(data.verification_type), data.verification_code, auth_password_new)
-                                    .then((/**@type{Types.db_result_user_account_activateUser}*/result_activate)=>{
-                                        if (auth_password_new == null){
-                                            if (result_activate.affectedRows==1 && getNumberValue(data.verification_type)==4){
-                                                //new email verified
-                                                /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
-                                                const eventData = {
-                                                    user_account_id: getNumberValue(query.get('PUT_ID')) ?? 0,
-                                                    event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                                                    event_status: 'SUCCESSFUL',
-                                                    user_language: data.user_language,
-                                                    user_timezone: data.user_timezone,
-                                                    user_number_system: data.user_number_system,
-                                                    user_platform: data.user_platform,
-                                                    server_remote_addr : ip,
-                                                    server_user_agent : user_agent,
-                                                    server_http_host : host,
-                                                    server_http_accept_language : accept_language,
-                                                    client_latitude : data.client_latitude,
-                                                    client_longitude : data.client_longitude
-                                                };
-                                                insertUserEvent(app_id, eventData)
-                                                .then((/**@type{Types.db_result_user_account_event_insertUserEvent}*/result_insert)=>{
-                                                    resolve({
-                                                        count: result_insert.affectedRows,
-                                                        items: Array(result_insert)
-                                                    });
-                                                });
-                                            }
-                                            else
-                                                resolve({
-                                                    count: result_activate.affectedRows,
-                                                    items: Array(result_activate)
-                                                });
-                                        }
-                                        else{
-                                            //return accessToken since PASSWORD_RESET is in progress
-                                            //email was verified and activated with data token, but now the password will be updated
-                                            //using accessToken and authentication code
-                                            resolve({
-                                                count: result_activate.affectedRows,
-                                                auth: auth_password_new,
-                                                accessToken: accessToken(app_id),
-                                                items: Array(result_activate)
-                                            });
-                                        }
-                                    })
-                                    .catch((/**@type{Types.error}*/error)=>{
-                                        checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
-                                    });    
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/FORGOT_PUT':{
-                                    const email = data.email ?? '';
-                                    if (email !='')
-                                        getEmailUser(app_id, email)
-                                        .then((/**@type{Types.db_result_user_account_getEmailUser[]}*/result_emailuser)=>{
-                                            if (result_emailuser[0]){
-                                                getLastUserEvent(app_id, getNumberValue(result_emailuser[0].id), 'PASSWORD_RESET')
-                                                .then((/**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/result_user_event)=>{
-                                                    if (result_user_event[0] &&
-                                                        result_user_event[0].status_name == 'INPROGRESS' &&
-                                                        (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) < 1)
-                                                        resolve({sent: 0});
-                                                    else{
-                                                        /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
-                                                        const eventData = {
-                                                                            user_account_id: result_emailuser[0].id,
-                                                                            event: 'PASSWORD_RESET',
-                                                                            event_status: 'INPROGRESS',
-                                                                            user_language: data.user_language,
-                                                                            user_timezone: data.user_timezone,
-                                                                            user_number_system: data.user_number_system,
-                                                                            user_platform: data.user_platform,
-                                                                            server_remote_addr : ip,
-                                                                            server_user_agent : user_agent,
-                                                                            server_http_host : host,
-                                                                            server_http_accept_language : accept_language,
-                                                                            client_latitude : data.client_latitude,
-                                                                            client_longitude : data.client_longitude
-                                                                        };
-                                                        insertUserEvent(app_id, eventData)
-                                                        .then(()=>{
-                                                            const new_code = verification_code();
-                                                            updateUserVerificationCode(app_id, result_emailuser[0].id, new_code)
-                                                            .then(()=>{
-                                                                getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_PASSWORD_RESET')
-                                                                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                                                    //send email PASSWORD_RESET
-                                                                    sendUserEmail(  app_id, 
-                                                                                    parameter[0].parameter_value, 
-                                                                                    host, 
-                                                                                    result_emailuser[0].id, 
-                                                                                    new_code, 
-                                                                                    email, 
-                                                                                    (/**@type{Types.error}*/err)=>{
-                                                                        if (err)
-                                                                            reject(err);
-                                                                        else
-                                                                            resolve({
-                                                                                sent: 1,
-                                                                                id: result_emailuser[0].id
-                                                                            });  
-                                                                    });
-                                                                });
-                                                            });
-                                                        })
-                                                        .catch(()=> {
-                                                            resolve({sent: 0});
-                                                        });
-                                                    }
-                                                });            
-                                            }
-                                            else
-                                                resolve({sent: 0});
-                                        });
-                                    else
-                                        resolve({sent: 0});
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/PROFILE/TOP_GET':{
-                                    getProfileTop(app_id, getNumberValue(query.get('statchoice')))
-                                    .then((/**@type{Types.db_result_user_account_getProfileTop[]}*/result)=>{
-                                        if (result)
-                                            resolve({
-                                                count: result.length,
-                                                items: result
-                                            });
-                                        else {
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/PROFILE/ID_POST':
-                                case '/USER_ACCOUNT/PROFILE/USERNAME_POST':{
-                                    getProfileUser(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(query.get('POST_ID'))==null?query.get('search'):null, getNumberValue(query.get('id')))
-                                    .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
-                                        if (result_getProfileUser[0]){
-                                            if (result_getProfileUser[0].id == getNumberValue(query.get('id'))) {
-                                                //send without {} so the variablename is not sent
-                                                resolve(result_getProfileUser[0]);
-                                            }
-                                            else{
-                                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
-                                                    const data_body = { user_account_id:        getNumberValue(query.get('POST_ID')),
-                                                                                                //set user id when username is searched
-                                                                        user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id,
-                                                                        client_ip:              ip,
-                                                                        client_user_agent:      user_agent,
-                                                                        client_longitude:       data.client_longitude,
-                                                                        client_latitude:        data.client_latitude};
-                                                    insertUserAccountView(app_id, data_body)
-                                                    .then(()=>{
-                                                        //send without {} so the variablename is not sent
-                                                        resolve(result_getProfileUser[0]);
-                                                    });
-                                                });
-                                            }
-                                        }
-                                        else{
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/PROFILE/USERNAME/SEARCHD_POST':{
-                                    searchProfileUser(app_id, query.get('search'))
-                                    .then((/**@type{Types.db_result_user_account_searchProfileUser[]}*/result_search)=>{
-                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`).then(({ insertProfileSearch }) => {
-                                            /**@type{Types.db_parameter_profile_search_insertProfileSearch} */
-                                            const data_insert = {   user_account_id:    data.user_account_id,
-                                                                    search:             query.get('search'),
-                                                                    client_ip:          ip,
-                                                                    client_user_agent:  user_agent,
-                                                                    client_longitude:   data.client_longitude,
-                                                                    client_latitude:    data.client_latitude};
-                                            insertProfileSearch(app_id, data_insert)
-                                            .then(()=>{
-                                                if (result_search.length>0)
-                                                    resolve({
-                                                        count: result_search.length,
-                                                        items: result_search
-                                                    });
-                                                else {
-                                                    //return silent message if not found, no popup message
-                                                    resolve({
-                                                        count: 0,
-                                                        items: null
-                                                    });
-                                                }
-                                            });
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_APP_SETTING_GET':{
-                                    //not used anymore, timetable.js calls directly
-                                    ///user_account_app_setting/:id`).get(checkDataToken, getUserSetting);
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_APP_SETTING/ALL_GET':{
-                                    getUserSettingsByUserId(app_id, getNumberValue(query.get('user_account_id')))
-                                    .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result)=>{
-                                        if (result)
-                                            resolve({
-                                                count: result.length,
-                                                items: result
-                                            });
-                                        else
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_APP_SETTING/PROFILE_GET':{
-                                    getProfileUserSetting(app_id, getNumberValue(query.get('id')))
-                                    .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSetting[]}*/result)=>{
-                                        if (result[0])
-                                            resolve({items: result[0]});
-                                        else
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_APP_SETTING/PROFILE/ALL_GET':{
-                                    getProfileUserSettings(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
-                                    .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettings[]}*/result)=>{
-                                        if (result)
-                                            resolve({
-                                                count: result.length,
-                                                items: result
-                                            });
-                                        else
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_APP_SETTING/PROFILE/TOP_GET':{
-                                    getProfileTopSetting(app_id, getNumberValue(query.get('statchoice')))
-                                    .then((/**@type{Types.db_result_user_account_app_setting_getProfileTopSetting[]}*/result)=>{
-                                        if (result)
-                                            resolve({
-                                                count: result.length,
-                                                items: result
-                                            }); 
-                                        else
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_APP_SETTING_VIEW_POST':{
-                                    /**@type{Types.db_parameter_user_account_app_setting_view_insertUserSettingView} */
-                                    const data_insert = {   client_ip:          ip,
-                                                            client_user_agent:  user_agent,
-                                                            client_longitude:   data.client_longitude,
-                                                            client_latitude:    data.client_latitude,
-                                                            user_account_id:    getNumberValue(data.user_account_id),
-                                                            user_setting_id:    getNumberValue(data.user_setting_id) ?? 0};
-                                    insertUserSettingView(app_id, data_insert)
-                                    .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
-                                        resolve({
-                                            count: result.affectedRows,
-                                            items: Array(result)
-                                        });
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
+                case 'DATA_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
+                    user_account.signup(app_id, host, query, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
                     break;
                 }
-                case 'ACCESS':{
+                case 'DATA_BROADCAST_/BROADCAST/CONNECTION_PATCH':{
+                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), 
+                                    getNumberValue(query.get('system_admin')), getNumberValue(query.get('identity_provider_id')), query.get('latitude'), query.get('longitude'),
+                                            (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
+                        resolve(err ?? result);
+                    });
                     break;
                 }
-                case 'SYSTEMADMIN':{
-                    switch (service){
-                        case 'BROADCAST':{
-                            switch (routeFunction + '_' + method){
-                                case '/BROADCAST/MESSAGE/SYSTEMADMIN_POST':{
-                                    BroadcastSendSystemAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
-                                        data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
-                                        resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/BROADCAST/CONNECTION/SYSTEMADMIN_GET':{
-                                    ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), 
-                                                    getNumberValue(query.get('month')), query.get('order_by'), query.get('sort'),  1, 
-                                                    (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
-                                        if (err)
-                                            reject({data: err});
-                                        else{
-                                            if (result && result.length>0)
-                                                resolve(result);
-                                            else
-                                                reject('Record not found');
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/BROADCAST/CONNECTION/SYSTEMADMIN_PATCH':{
-                                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), getNumberValue(query.get('system_admin')), 
-                                                    getNumberValue(query.get('identity_provider_id')), query.get('latitude'), query.get('longitude'),
-                                                    (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
-                                        resolve(err ?? result);
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        case 'SERVER':{
-                            switch (routeFunction + '_' + method){
-                                case '/CONFIG/SYSTEMADMIN_PUT':{
-                                    ConfigSave(getNumberValue(data.config_no), data.config_json, false, (err, result)=>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/CONFIG/SYSTEMADMIN_GET':{
-                                    resolve({data:getNumberValue(ConfigGet(query.get('config_group'), query.get('parameter')))});
-                                    break;
-                                }
-                                case '/CONFIG/SYSTEMADMIN/APPS_GET':{
-                                    resolve({ data: ConfigGetApps()});
-                                    break;
-                                }
-                                case '/CONFIG/SYSTEMADMIN/SAVED_GET':{
-                                    resolve({data: ConfigGetSaved(getNumberValue(query.get('config_type_no')))});
-                                    break;
-                                }
-                                case '/CONFIG/SYSTEMADMIN/MAINTENANCE_GET':{
-                                    ConfigMaintenanceGet((err, result)=>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve({value: result});
-                                    });
-                                    break;
-                                }
-                                case '/CONFIG/SYSTEMADMIN/MAINTENANCE_PATCH':{
-                                    ConfigMaintenanceSet(data.value, (err, result)=>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/CONFIG/INFO_GET':{
-                                    ConfigInfo((err, result)=>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve({data: result.info});
-                                    });
-                                    break;
-                                }
-                                case '/INFO_GET':{
-                                    Info((err, result)=>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        case 'DB_API':{
-                            switch (routeFunction + '_' + method){
-                                case '/SYSTEMADMIN/DBINFO_GET':{
-                                    DBInfo(app_id).then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
-                                        resolve({
-                                            data: result[0]
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/SYSTEMADMIN/DBINFOSPACE_GET':{
-                                    DBInfoSpace(app_id).then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/SYSTEMADMIN/DBINFOSPACESUM_GET':{
-                                    DBInfoSpaceSum(app_id).then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
-                                        resolve({
-                                            data: result[0]
-                                        });
-                                    });                                    
-                                    break;
-                                }
-                                case '/SYSTEMADMIN/INSTALL_POST':{
-                                    install_db(app_id,getNumberValue(query.get('optional')), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/SYSTEMADMIN/INSTALL_GET':{
-                                    install_db_check(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/SYSTEMADMIN/INSTALL_DELETE':{
-                                    install_db_delete(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        case 'LOG':{
-                            switch (routeFunction + '_' + method){
-                                case '/LOG/PARAMETERS_GET':{
-                                    getLogParameters(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_parameters}*/result) =>{
-                                        if (err)
-                                            reject(err);
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/LOG/LOGS_GET':{
-                                    /**@type{Types.admin_log_data_parameters} */
-                                    const data = {	app_id:			app_id,
-                                                    select_app_id:	getNumberValue(query.get('select_app_id')),
-                                                    logscope:		query.get('logscope'),
-                                                    loglevel:		query.get('loglevel'),
-                                                    search:			query.get('search'),
-                                                    sort:			query.get('sort'),
-                                                    order_by:		query.get('order_by'),
-                                                    year: 			query.get('year').toString(),
-                                                    month:			query.get('month').toString(),
-                                                    day:			query.get('day'),
-                                                    };
-                                    getLogs(app_id, data, (/**@type{Types.error}*/err, /**@type{*}*/result) =>{
-                                        if (err)
-                                            reject(err);
-                                        else{
-                                            if (result.length>0)
-                                                resolve(result);
-                                            else{
-                                                reject('Record not found');
-                                            }
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/LOG/STATUSCODE_GET':{
-                                    getStatusCodes().then((/**@type{object}*/status_codes)=>{
-                                        resolve({
-                                            status_codes: status_codes
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/LOG/LOGS_STAT_GET':{
-                                    /**@type{Types.log_parameter_getLogStats} */
-                                    const data = {	app_id:			getNumberValue(query.get('select_app_id')),
-                                                    code:			getNumberValue(query.get('code')),
-                                                    year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
-                                                    month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
-                                                    };
-                                    getLogsStats(app_id, data, (/**@type{Types.error}*/err, /**@type{Types.log_parameter_getLogStats[]}*/result) =>{
-                                    if (err)
-                                        reject(err);
-                                    else{
-                                        if (result.length>0)
-                                            resolve(result);
-                                        else{
-                                            reject('Record not found');
-                                        }
-                                    }
-                                    });
-                                    break;
-                                }
-                                case '/LOG/FILES_GET':{
-                                    getFiles(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_files[]}*/result) =>{
-                                        if (err)
-                                            reject(err);
-                                        else{
-                                            if (result.length>0)
-                                                resolve(result);
-                                            else{
-                                                reject('Record not found');
-                                            }
-                                        }
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                    }
+                case 'DATA_BROADCAST_/BROADCAST/CONNECTION/CHECK_GET':{
+                    ConnectedCheck(getNumberValue(query.get('user_account_id')), (/**@type{Types.error}*/err, /**@type{boolean}*/result_connected)=>{
+                        resolve({online: result_connected});
+                    });
                     break;
                 }
-                case 'ADMIN':{
-                    switch (service){
-                        case 'BROADCAST':{
-                            switch (routeFunction + '_' + method){
-                                case '/BROADCAST/MESSAGE/ADMIN_POST':{
-                                    BroadcastSendAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
-                                                                data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
-                                        resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/BROADCAST/CONNECTION/ADMIN_GET':{
-                                    ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), 
-                                                    getNumberValue(query.get('month')), query.get('order_by'), query.get('sort'), 0, 
-                                                    (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
-                                        if (err) {
-                                            reject({data: err});
-                                        }
-                                        else{
-                                            if (result && result.length>0)
-                                                resolve(result);
-                                            else{
-                                                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                                });
-                                            }
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/BROADCAST/CONNECTION/ADMIN/COUNT_GET':{
-                                    ConnectedCount( getNumberValue(query.get('identity_provider_id')), getNumberValue(query.get('count_logged_in')), 
-                                                    (/**@type{Types.error}*/err, /**@type{number}*/count_connected) => {
-                                        resolve({data: count_connected});
-                                    });
-                                    break;
-                                }
-                            }
-                            break;
+                case 'DATA_DB_API_/APPS_GET':{
+                    getApp(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                    .then((/**@type{Types.db_result_app_getApp[]}*/result)=> {
+                        resolve({data: result});
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/APP_OBJECT_GET':
+                case 'DATA_DB_API_/APP_OBJECT/ADMIN_GET':{
+                    getObjects(app_id, query.get('data_lang_code'), query.get('object') ?? null, query.get('object_name') ?? null)
+                    .then((/**@type{Types.db_result_app_object_getObjects[]}*/result)=> {
+                        resolve({data: result});
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/COUNTRY_GET':{
+                    getCountries(app_id, query.get('lang_code') ?? 'en')
+                    .then((/**@type{Types.db_result_country_getCountries[]}*/result)=> {
+                        resolve({countries: result});
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/LANGUAGE/LOCALE_GET':
+                case 'DATA_DB_API_/LANGUAGE/LOCALE/ADMIN_GET':{
+                    getLocales(app_id, query.get('lang_code') ?? 'en')
+                    .then((/**@type{Types.db_result_locale_getLocales[]}*/result)=> {
+                        resolve({locales: result});
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/MESSAGE_TRANSLATION_GET':{
+                    getMessage(app_id, getNumberValue(query.get('data_app_id')), query.get('code'), query.get('lang_code'))
+                    .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result)=>{
+                        resolve(result[0]);
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/SETTINGS_GET':{
+                    getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? query.get('setting_type')==''?null:query.get('setting_type'))
+                    .then((/**@type{Types.db_result_setting_getSettings[]}*/result)=>{
+                        resolve({settings: result});
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{
+                    user_account.activate(app_id, ip, user_agent, accept_language, host, query, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT/FORGOT_PUT':{
+                    user_account.forgot(app_id, ip, user_agent, accept_language, host, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/TOP_GET':{
+                    user_account.getProfileTop(app_id, query)
+                    .then((/**@type{*}*/result)=>resolve(result));
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/ID_POST':
+                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME_POST':{
+                    user_account.getProfile(app_id, ip, user_agent, query, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHD_POST':{
+                    user_account.searchProfile(app_id, ip, user_agent, query, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/ALL_GET':{
+                    getUserSettingsByUserId(app_id, getNumberValue(query.get('user_account_id')))
+                    .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result)=>{
+                        if (result)
+                            resolve({
+                                count: result.length,
+                                items: result
+                            });
+                        else
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE_GET':{
+                    getProfileUserSetting(app_id, getNumberValue(query.get('id')))
+                    .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSetting[]}*/result)=>{
+                        if (result[0])
+                            resolve({items: result[0]});
+                        else
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/ALL_GET':{
+                    getProfileUserSettings(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
+                    .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettings[]}*/result)=>{
+                        if (result)
+                            resolve({
+                                count: result.length,
+                                items: result
+                            });
+                        else
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/TOP_GET':{
+                    getProfileTopSetting(app_id, getNumberValue(query.get('statchoice')))
+                    .then((/**@type{Types.db_result_user_account_app_setting_getProfileTopSetting[]}*/result)=>{
+                        if (result)
+                            resolve({
+                                count: result.length,
+                                items: result
+                            }); 
+                        else
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                    });
+                    break;
+                }
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING_VIEW_POST':{
+                    /**@type{Types.db_parameter_user_account_app_setting_view_insertUserSettingView} */
+                    const data_insert = {   client_ip:          ip,
+                                            client_user_agent:  user_agent,
+                                            client_longitude:   data.client_longitude,
+                                            client_latitude:    data.client_latitude,
+                                            user_account_id:    getNumberValue(data.user_account_id),
+                                            user_setting_id:    getNumberValue(data.user_setting_id) ?? 0};
+                    insertUserSettingView(app_id, data_insert)
+                    .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
+                        resolve({
+                            count: result.affectedRows,
+                            items: Array(result)
+                        });
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_BROADCAST_/BROADCAST/MESSAGE/SYSTEMADMIN_POST':{
+                    BroadcastSendSystemAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
+                        data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
+                        resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_BROADCAST_/BROADCAST/CONNECTION/SYSTEMADMIN_GET':{
+                    ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), 
+                                    getNumberValue(query.get('month')), query.get('order_by'), query.get('sort'),  1, 
+                                    (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
+                        if (err)
+                            reject({data: err});
+                        else{
+                            if (result && result.length>0)
+                                resolve(result);
+                            else
+                                reject('Record not found');
                         }
-                        case 'SERVER':{
-                            switch (routeFunction + '_' + method){
-                                case '/CONFIG/ADMIN_GET':{
-                                    resolve({data:getNumberValue(ConfigGet(query.get('config_group'), query.get('parameter')))});
-                                    break;
-                                }
-                            }
-                            break;
-                        }
-                        case 'DB_API':{
-                            switch (routeFunction + '_' + method){
-                                case '/ADMIN/DEMO_POST':{
-                                    demo_add(app_id, data.demo_password, query.get('lang_code'), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
-                                        if (err) {
-                                            reject(err);
-                                        }
-                                        else
-                                            resolve(result);
-                                    });
-                                    break;
-                                }
-                                case '/ADMIN/DEMO_DELETE':{
-                                    demo_delete(app_id, (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
-                                        if (err) {
-                                            reject(err);
-                                        }
-                                        else
-                                            resolve({
-                                                count_deleted: result_demo_users_length
-                                            });
-                                    });
-                                    break;
-                                }
-                                case '/APPS/ADMIN_GET':{
-                                    getAppsAdmin(app_id, query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_app_getAppAdmin[]}*/result) =>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/APPS/ADMIN_PUT':{
-                                    /**@type{Types.db_parameter_app_updateAppAdmin} */
-                                    const body = {	app_name:		data.app_name,
-                                                    url: 			data.url,
-                                                    logo: 			data.logo,
-                                                    enabled: 		getNumberValue(data.enabled) ?? 0,
-                                                    app_category_id:getNumberValue(data.app_category_id)};
-                                    updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
-                                    .then((/**@type{Types.db_result_app_updateAppAdmin}*/result)=> {
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/APP_CATEGORY/ADMIN_GET':{
-                                    getAppCategoryAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_app_category_getAppCategoryAdmin[]}*/result) =>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/APP_LOG/ADMIN_GET':{
-                                    getLogsAdmin(   app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
-                                                    getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
-                                    .then((/**@type{Types.db_result_app_log_getLogsAdmin[]}*/result) =>{
-                                        if (result.length>0)
-                                            resolve(result);
-                                        else{
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/APP_LOG/ADMIN/STAT/UNIQUEVISITOR_GET':{
-                                    getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
-                                    .then((/**@type{Types.db_result_app_log_getStatUniqueVisitorAdmin[]}*/result) =>{
-                                        if (result.length>0)
-                                            resolve(result);
-                                        else{
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/APP_PARAMETER/ADMIN/ALL_GET':{
-                                    getParametersAllAdmin(app_id, getNumberValue(query.get('data_app_id')), query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_app_parameter_getParametersAllAdmin[]}*/result)=> {
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/APP_PARAMETER/ADMIN_PUT':{
-                                    /**@type{Types.db_parameter_app_parameter_setParameter_admin} */
-                                    const body = {	app_id: 			app_id,
-                                                    parameter_type_id: 	data.parameter_type_id,
-                                                    parameter_name: 	data.parameter_name,
-                                                    parameter_value: 	data.parameter_value, 
-                                                    parameter_comment: 	data.parameter_comment
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_BROADCAST_/BROADCAST/CONNECTION/SYSTEMADMIN_PATCH':{
+                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), getNumberValue(query.get('system_admin')), 
+                                    getNumberValue(query.get('identity_provider_id')), query.get('latitude'), query.get('longitude'),
+                                    (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
+                        resolve(err ?? result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_PUT':{
+                    ConfigSave(getNumberValue(data.config_no), data.config_json, false, (err, result)=>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_GET':{
+                    resolve({data:getNumberValue(ConfigGet(query.get('config_group'), query.get('parameter')))});
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/APPS_GET':{
+                    resolve({ data: ConfigGetApps()});
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/SAVED_GET':{
+                    resolve({data: ConfigGetSaved(getNumberValue(query.get('config_type_no')))});
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/MAINTENANCE_GET':{
+                    ConfigMaintenanceGet((err, result)=>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve({value: result});
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/MAINTENANCE_PATCH':{
+                    ConfigMaintenanceSet(data.value, (err, result)=>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/CONFIG/INFO_GET':{
+                    ConfigInfo((err, result)=>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve({data: result.info});
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_SERVER_/INFO_GET':{
+                    Info((err, result)=>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFO_GET':{
+                    DBInfo(app_id).then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
+                        resolve({
+                            data: result[0]
+                        });
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACE_GET':{
+                    DBInfoSpace(app_id).then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACESUM_GET':{
+                    DBInfoSpaceSum(app_id).then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
+                        resolve({
+                            data: result[0]
+                        });
+                    });                                    
+                    break;
+                }
+                case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_POST':{
+                    install_db(app_id,getNumberValue(query.get('optional')), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_GET':{
+                    install_db_check(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_DELETE':{
+                    install_db_delete(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_LOG_/LOG/PARAMETERS_GET':{
+                    getLogParameters(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_parameters}*/result) =>{
+                        if (err)
+                            reject(err);
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_LOG_/LOG/LOGS_GET':{
+                    /**@type{Types.admin_log_data_parameters} */
+                    const data = {	app_id:			app_id,
+                                    select_app_id:	getNumberValue(query.get('select_app_id')),
+                                    logscope:		query.get('logscope'),
+                                    loglevel:		query.get('loglevel'),
+                                    search:			query.get('search'),
+                                    sort:			query.get('sort'),
+                                    order_by:		query.get('order_by'),
+                                    year: 			query.get('year').toString(),
+                                    month:			query.get('month').toString(),
+                                    day:			query.get('day'),
                                     };
-                                    setParameter_admin(app_id, body)
-                                    .then((/**@type{Types.db_result_app_parameter_setParameter_admin}*/result)=> {
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/APP_ROLE/ADMIN_GET':{
-                                    getAppRoleAdmin(app_id, getNumberValue(query.get('id')))
-                                    .then((/**@type{Types.db_result_app_role_getAppRoleAdmin[]}*/result)=> {
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/PARAMETER_TYPE/ADMIN_GET':{
-                                    getParameterTypeAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
-                                    .then((/**@type{Types.db_result_parameter_type_getParameterTypeAdmin[]}*/result)=>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/ADMIN_PUT':{
-                                    // get avatar and provider column used to validate
-                                    getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')))
-                                    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
-                                        if (result_user[0]) {
-                                            /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
-                                            const body = {  app_role_id:        getNumberValue(data.app_role_id),
-                                                            active:             getNumberValue(data.active),
-                                                            user_level:         getNumberValue(data.user_level),
-                                                            private:            getNumberValue(data.private),
-                                                            username:           data.username,
-                                                            bio:                data.bio,
-                                                            email:              data.email,
-                                                            email_unverified:   data.email_unverified,
-                                                            password:           null,
-                                                            password_new:       data.password_new==''?null:data.password_new,
-                                                            password_reminder:  data.password_reminder,
-                                                            verification_code:  data.verification_code,
-                                                            provider_id:        result_user[0].provider_id,
-                                                            avatar:             result_user[0].avatar,
-                                                            admin:              1};
-                                            updateUserSuperAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
-                                            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
-                                                if (data.app_role_id!=0 && data.app_role_id!=1){
-                                                    //delete admin app from user if user is not an admin anymore
-                                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
-                                                        deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
-                                                        .then(()=>{
-                                                            resolve({
-                                                                data: result_update
-                                                            });
-                                                        });
-                                                    });
-                                                }
-                                                else
-                                                    resolve({
-                                                        data: result_update
-                                                    });
-                                            })
-                                            .catch((/**@type{Types.error}*/error)=>{
-                                                checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                        else{
-                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                            });
-                                        }
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/ADMIN/COUNT_GET':{
-                                    getStatCountAdmin(app_id)
-                                    .then((/**@type{Types.db_result_user_account_getStatCountAdmin[]}*/result)=>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                //  app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).get(checkAccessToken, getUserAccountApp);
-                                case '/USER_ACCOUNT_APP_GET':{
-                                    getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')))
-                                    .then((/**@type{Types.db_result_user_account_app_getUserAccountApp[]}*/result)=>{
-                                        resolve({
-                                            items: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT/ADMIN_GET':{
-                                    getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
-                                    .then((/**@type{Types.db_result_user_account_getUsersAdmin[]}*/result)=>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                    break;
-                                }
-                                case '/USER_ACCOUNT_LOGON/ADMIN_GET':{
-                                    getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
-                                    .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogonAdmin[]}*/result)=>{
-                                        resolve({
-                                            data: result
-                                        });
-                                    });
-                                }
-                            }
-                        }
-                    }
-                    break;
-                }
-                case 'AUTH':{
-                    switch (routeFunction + '_' + method){
-                        case '/AUTH/ADMIN_POST':{
-                            const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
-                                const { default: {compareSync} } = await import('bcryptjs');
-                                const config_username = ConfigGetUser('username');
-                                const config_password = ConfigGetUser('password');
-                                if (username == config_username && compareSync(password, config_password)) {
-                                    const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
-                                                        expiresIn: ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
-                                                        });
-                                    resolve({ 
-                                        token_at: jsontoken_at
-                                    });
-                                }
-                                else{
-                                    res.statusMessage = 'unauthorized system admin login attempt for username:' + username;
-                                    res.statusCode =401;
-                                    reject('⛔');
-                                }            
-                            };
-                            if(authorization){       
-                                const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-                                const username = userpass.split(':')[0];
-                                const password = userpass.split(':')[1];
-                                if (CheckFirstTime())
-                                    CreateSystemAdmin(username, password, () =>{
-                                        check_user(username, password);
-                                    });
-                                else
-                                    check_user(username, password);
-                            }
+                    getLogs(app_id, data, (/**@type{Types.error}*/err, /**@type{*}*/result) =>{
+                        if (err)
+                            reject(err);
+                        else{
+                            if (result.length>0)
+                                resolve(result);
                             else{
-                                res.statusCode =401;
-                                reject('⛔');
+                                reject('Record not found');
                             }
                         }
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_LOG_/LOG/STATUSCODE_GET':{
+                    getStatusCodes().then((/**@type{object}*/status_codes)=>{
+                        resolve({
+                            status_codes: status_codes
+                        });
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_LOG_/LOG/LOGS_STAT_GET':{
+                    /**@type{Types.log_parameter_getLogStats} */
+                    const data = {	app_id:			getNumberValue(query.get('select_app_id')),
+                                    code:			getNumberValue(query.get('code')),
+                                    year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
+                                    month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
+                                    };
+                    getLogsStats(app_id, data, (/**@type{Types.error}*/err, /**@type{Types.log_parameter_getLogStats[]}*/result) =>{
+                    if (err)
+                        reject(err);
+                    else{
+                        if (result.length>0)
+                            resolve(result);
+                        else{
+                            reject('Record not found');
+                        }
+                    }
+                    });
+                    break;
+                }
+                case 'SYSTEMADMIN_LOG_/LOG/FILES_GET':{
+                    getFiles(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_files[]}*/result) =>{
+                        if (err)
+                            reject(err);
+                        else{
+                            if (result.length>0)
+                                resolve(result);
+                            else{
+                                reject('Record not found');
+                            }
+                        }
+                    });
+                    break;
+                }
+                case 'ADMIN_BROADCAST_/BROADCAST/MESSAGE/ADMIN_POST':{
+                    BroadcastSendAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
+                                                data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
+                        resolve(result);
+                    });
+                    break;
+                }
+                case 'ADMIN_BROADCAST_/BROADCAST/CONNECTION/ADMIN_GET':{
+                    ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), 
+                                    getNumberValue(query.get('month')), query.get('order_by'), query.get('sort'), 0, 
+                                    (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
+                        if (err) {
+                            reject({data: err});
+                        }
+                        else{
+                            if (result && result.length>0)
+                                resolve(result);
+                            else{
+                                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                                });
+                            }
+                        }
+                    });
+                    break;
+                }
+                case 'ADMIN_BROADCAST_/BROADCAST/CONNECTION/ADMIN/COUNT_GET':{
+                    ConnectedCount( getNumberValue(query.get('identity_provider_id')), getNumberValue(query.get('count_logged_in')), 
+                                    (/**@type{Types.error}*/err, /**@type{number}*/count_connected) => {
+                        resolve({data: count_connected});
+                    });
+                    break;
+                }
+                case 'ADMIN_SERVER_/CONFIG/ADMIN_GET':{
+                    resolve({data:getNumberValue(ConfigGet(query.get('config_group'), query.get('parameter')))});
+                    break;
+                }
+                case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
+                    demo_add(app_id, data.demo_password, query.get('lang_code'), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
+                        if (err) {
+                            reject(err);
+                        }
+                        else
+                            resolve(result);
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/ADMIN/DEMO_DELETE':{
+                    demo_delete(app_id, (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
+                        if (err) {
+                            reject(err);
+                        }
+                        else
+                            resolve({
+                                count_deleted: result_demo_users_length
+                            });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APPS/ADMIN_GET':{
+                    getAppsAdmin(app_id, query.get('lang_code'))
+                    .then((/**@type{Types.db_result_app_getAppAdmin[]}*/result) =>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APPS/ADMIN_PUT':{
+                    /**@type{Types.db_parameter_app_updateAppAdmin} */
+                    const body = {	app_name:		data.app_name,
+                                    url: 			data.url,
+                                    logo: 			data.logo,
+                                    enabled: 		getNumberValue(data.enabled) ?? 0,
+                                    app_category_id:getNumberValue(data.app_category_id)};
+                    updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+                    .then((/**@type{Types.db_result_app_updateAppAdmin}*/result)=> {
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_CATEGORY/ADMIN_GET':{
+                    getAppCategoryAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                    .then((/**@type{Types.db_result_app_category_getAppCategoryAdmin[]}*/result) =>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_LOG/ADMIN_GET':{
+                    getLogsAdmin(   app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
+                                    getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                    .then((/**@type{Types.db_result_app_log_getLogsAdmin[]}*/result) =>{
+                        if (result.length>0)
+                            resolve(result);
+                        else{
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_LOG/ADMIN/STAT/UNIQUEVISITOR_GET':{
+                    getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
+                    .then((/**@type{Types.db_result_app_log_getStatUniqueVisitorAdmin[]}*/result) =>{
+                        if (result.length>0)
+                            resolve(result);
+                        else{
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN/ALL_GET':{
+                    getParametersAllAdmin(app_id, getNumberValue(query.get('data_app_id')), query.get('lang_code'))
+                    .then((/**@type{Types.db_result_app_parameter_getParametersAllAdmin[]}*/result)=> {
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN_PUT':{
+                    /**@type{Types.db_parameter_app_parameter_setParameter_admin} */
+                    const body = {	app_id: 			app_id,
+                                    parameter_type_id: 	data.parameter_type_id,
+                                    parameter_name: 	data.parameter_name,
+                                    parameter_value: 	data.parameter_value, 
+                                    parameter_comment: 	data.parameter_comment
+                    };
+                    setParameter_admin(app_id, body)
+                    .then((/**@type{Types.db_result_app_parameter_setParameter_admin}*/result)=> {
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_ROLE/ADMIN_GET':{
+                    getAppRoleAdmin(app_id, getNumberValue(query.get('id')))
+                    .then((/**@type{Types.db_result_app_role_getAppRoleAdmin[]}*/result)=> {
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/PARAMETER_TYPE/ADMIN_GET':{
+                    getParameterTypeAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                    .then((/**@type{Types.db_result_parameter_type_getParameterTypeAdmin[]}*/result)=>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
+                    // get avatar and provider column used to validate
+                    getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')))
+                    .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+                        if (result_user[0]) {
+                            /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
+                            const body = {  app_role_id:        getNumberValue(data.app_role_id),
+                                            active:             getNumberValue(data.active),
+                                            user_level:         getNumberValue(data.user_level),
+                                            private:            getNumberValue(data.private),
+                                            username:           data.username,
+                                            bio:                data.bio,
+                                            email:              data.email,
+                                            email_unverified:   data.email_unverified,
+                                            password:           null,
+                                            password_new:       data.password_new==''?null:data.password_new,
+                                            password_reminder:  data.password_reminder,
+                                            verification_code:  data.verification_code,
+                                            provider_id:        result_user[0].provider_id,
+                                            avatar:             result_user[0].avatar,
+                                            admin:              1};
+                            updateUserSuperAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+                            .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
+                                if (data.app_role_id!=0 && data.app_role_id!=1){
+                                    //delete admin app from user if user is not an admin anymore
+                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                                        deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
+                                        .then(()=>{
+                                            resolve({
+                                                data: result_update
+                                            });
+                                        });
+                                    });
+                                }
+                                else
+                                    resolve({
+                                        data: result_update
+                                    });
+                            })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                        else{
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                                record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN/COUNT_GET':{
+                    getStatCountAdmin(app_id)
+                    .then((/**@type{Types.db_result_user_account_getStatCountAdmin[]}*/result)=>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_GET':{
+                    getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')))
+                    .then((/**@type{Types.db_result_user_account_app_getUserAccountApp[]}*/result)=>{
+                        resolve({
+                            items: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_PATCH':{
+                    user_account_app.update(app_id, ip, user_agent, accept_language, host, query, data)
+                    .then((/**@type{*}*/result)=>resolve(result));
+                    
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_GET':{
+                    getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                    .then((/**@type{Types.db_result_user_account_getUsersAdmin[]}*/result)=>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_LOGON/ADMIN_GET':{
+                    getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+                    .then((/**@type{Types.db_result_user_account_logon_getUserAccountLogonAdmin[]}*/result)=>{
+                        resolve({
+                            data: result
+                        });
+                    });
+                    break;
+                }
+                case 'AUTH_AUTH_/AUTH/ADMIN_POST':{
+                    const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
+                        const { default: {compareSync} } = await import('bcryptjs');
+                        const config_username = ConfigGetUser('username');
+                        const config_password = ConfigGetUser('password');
+                        if (username == config_username && compareSync(password, config_password)) {
+                            const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
+                                                expiresIn: ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
+                                                });
+                            resolve({ 
+                                token_at: jsontoken_at
+                            });
+                        }
+                        else{
+                            res.statusMessage = 'unauthorized system admin login attempt for username:' + username;
+                            res.statusCode =401;
+                            reject('⛔');
+                        }            
+                    };
+                    if(authorization){       
+                        const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+                        const username = userpass.split(':')[0];
+                        const password = userpass.split(':')[1];
+                        if (CheckFirstTime())
+                            CreateSystemAdmin(username, password, () =>{
+                                check_user(username, password);
+                            });
+                        else
+                            check_user(username, password);
+                    }
+                    else{
+                        res.statusCode =401;
+                        reject('⛔');
                     }
                     break;
                 }
-                case 'SOCKET':{
+                case 'SOCKET_BROADCAST_/BROADCAST/CONNECTION/CONNECT_GET':{
                     //this is used for EventSource that needs to leave connection open
                     BroadcastConnect(   app_id, 
                                         get_query_value(parameters, 'identity_provider_id',1),
@@ -2004,6 +1460,12 @@ const Info = async (callBack) => {
                                         res).then(()=> {
                         return resolve('');
                     });
+                    break;
+                }
+                default:{
+                    res.statusMessage = 'invalid route :' + endpoint + '_' + service + '_' + routeFunction + '_' + method;
+                    res.statusCode =400;
+                    reject('⛔');
                     break;
                 }
             }
