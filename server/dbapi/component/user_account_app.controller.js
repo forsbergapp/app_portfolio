@@ -75,7 +75,7 @@ const updateUserAccountApp = (req, res) => {
 					setting_preference_timezone_id: 	getNumberValue(req.body.setting_preference_timezone_id),
 					preference_locale:					req.body.preference_locale
 				};
-	service.updateUserAccountApp(getNumberValue(req.query.app_id), getNumberValue(req.params.user_account_id), data)
+	service.updateUserAccountApp(getNumberValue(req.query.app_id), getNumberValue(req.query.PATCH_ID), data)
 	.then((/**@type{Types.db_result_user_account_app_updateUserAccountApp}*/result)=>{
 		res.status(200).json({
 			items: result

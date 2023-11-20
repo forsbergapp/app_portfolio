@@ -117,6 +117,7 @@
  * @property {number|null} query.uid_view                           - Report parameter
  * @property {string|*} query.service
  * @property {string|*} query.parameters
+ * @property {number} query.PATCH_ID                                - app portfolio parameter
  * @property {number} query.data_app_id                             - app portfolio parameter
  * @property {string} query.object                                  - app portfolio parameter
  * @property {string} query.object_name                             - app portfolio parameter
