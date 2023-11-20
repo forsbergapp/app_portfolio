@@ -1189,7 +1189,7 @@
  *              provider_email:string|null,
  *              date_created:string,
  *              date_modified:string}} db_result_user_account_getUserByUserId
- * @typedef {{  id:string,
+ * @typedef {{  id:number,
  *              bio:string|null,
  *              private:number|null,
  *              user_level:string,
@@ -1368,7 +1368,7 @@
  *              client_user_agent:string,
  *              client_longitude:string,
  *              client_latitude:string,
- *              user_account_id:number,
+ *              user_account_id:number|null,
  *              user_setting_id:number}} db_parameter_user_account_app_setting_view_insertUserSettingView
  * @typedef {   db_result_insert} db_result_user_account_app_setting_view_insertUserSettingView
  * USER ACCOUNT EVENT

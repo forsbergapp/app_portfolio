@@ -104,7 +104,7 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
  * @param {number} app_id 
  * @param {string} lang_code 
  */
- const record_not_found_promise = (app_id, lang_code) => {
+ const record_not_found_promise = async (app_id, lang_code) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
 			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`).then(({ getMessage }) => {
