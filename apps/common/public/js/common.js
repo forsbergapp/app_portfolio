@@ -1720,7 +1720,7 @@ const profile_update_stat = async (callBack) => {
                     };
     //get updated stat for given user
     //to avoid update in stat set searched by same user
-    FFB ('DB_API', `/user_account/profile/id/${profile_id.innerHTML}?id=${profile_id.innerHTML}`, 'POST', 0, json_data, (err, result) => {
+    FFB ('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 0, json_data, (err, result) => {
         if (err)
             return callBack(err,null);
         else{
@@ -2438,7 +2438,7 @@ const user_preference_save = async () => {
                 setting_preference_direction_id: document.querySelector('#common_user_direction_select').options[document.querySelector('#common_user_direction_select').selectedIndex].id,
                 setting_preference_arabic_script_id: document.querySelector('#common_user_arabic_script_select').options[document.querySelector('#common_user_arabic_script_select').selectedIndex].id
             };
-        await FFB ('DB_API', `/user_account_app/${COMMON_GLOBAL.user_account_id}?`, 'PATCH', 3, json_data, (err) => {
+        await FFB ('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 3, json_data, (err) => {
             if (err)
                 null;
             else{
