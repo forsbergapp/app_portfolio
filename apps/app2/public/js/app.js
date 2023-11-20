@@ -1158,7 +1158,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 const user_settings_get = async () => {
     const select = document.querySelector('#setting_select_user_setting');
     let result_obj;
-    await common.FFB ('DB_API', `/user_account_app_setting/user_account_id/${common.COMMON_GLOBAL.user_account_id}?`, 'GET', 0, null, (err, result) => {
+    await common.FFB ('DB_API', `/user_account_app_setting/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1570,7 +1570,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             break;
         }
     }
-    await common.FFB ('DB_API', path, method, 1, json_data, (err, result) => {
+    await common.FFB ('DB_API', path, method, 3, json_data, (err, result) => {
         if (err){
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
@@ -1620,7 +1620,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 const old_button = document.querySelector('#setting_btn_user_delete').innerHTML;
                 document.querySelector('#setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 1, null, (err) => {
+                common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 3, null, (err) => {
                     if (err){
                         document.querySelector('#setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -1831,7 +1831,7 @@ const set_settings_select = () => {
 
 const profile_user_setting_stat = (id) => {
     let json;
-    common.FFB ('DB_API', `/user_account_app_setting/profile/${id}?`, 'GET', 0, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_app_setting/profile?id=${id}`, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1880,8 +1880,8 @@ const profile_show_user_setting = () => {
     let json;
     document.querySelector('#profile_user_settings_row').style.display = 'block';
 
-    common.FFB ('DB_API', `/user_account_app_setting/profile/all/${document.querySelector('#common_profile_id').innerHTML}` + 
-                      '?id=' + common.COMMON_GLOBAL.user_account_id, 'GET', 0, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_app_setting/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
+                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1911,8 +1911,8 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     const profile_id = document.querySelector('#common_profile_id').innerHTML;
     let json;
-    common.FFB ('DB_API', `/user_account_app_setting/profile/all/${profile_id}` +
-                      '?id=' + common.COMMON_GLOBAL.user_account_id, 'GET', 0, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_app_setting/profile/all?id=${profile_id}` +
+                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 0, null, (err, result) => {
         if (err)
             null;
         else{
@@ -1948,7 +1948,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.FFB ('DB_API', `/user_account_app_setting_like/${common.COMMON_GLOBAL.user_account_id}?`, method, 1, json_data, (err) => {
+        common.FFB ('DB_API', `/user_account_app_setting_like/${common.COMMON_GLOBAL.user_account_id}?`, method, 3, json_data, (err) => {
             if (err)
                 null;
             else{

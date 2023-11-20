@@ -67,42 +67,29 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
  const serverExpressRoutes = async (app) => {
     //apps
-    const { BFF_data, BFF_access, BFF_admin, BFF_systemadmin, BFF_socket, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
+    const { BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_systemadmin, BFF_socket, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
     //auth
-    const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin,checkAccessTokenAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
+    const { checkAccessToken, checkDataToken, checkDataTokenRegistration, checkDataTokenLogin, checkAccessTokenAdmin} = await import(`file://${process.cwd()}/server/auth/auth.controller.js`);
     //auth admin
     const { checkSystemAdmin} = await import(`file://${process.cwd()}/server/auth/admin/admin.controller.js`);
 
     //server db api app_portfolio user account
     const {
-        userLogin,
-        userSignup,
-        activateUser,
-        passwordResetUser,
         updatePassword,
         updateUserLocal,
-        providerSignIn,
         getUserByUserId,
         updateUserCommon,
         deleteUser,
         getProfileDetail,
-        getProfileTop,
-        getProfileUser,
         searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.controller.js`);
     //server db api app_portfolio user account app
     const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.controller.js`);
 
     const { createUserSetting, 
-            getUserSettingsByUserId, 
-            getProfileUserSetting,
-            getProfileUserSettings,
             getProfileUserSettingDetail,
-            getProfileTopSetting,
-            getUserSetting,
             updateUserSetting, 
             deleteUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.controller.js`);
     const { likeUserSetting, unlikeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like/user_account_app_setting_like.controller.js`);
-    const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.controller.js`);
 
     //server db api db app_portfolio user account follow
     const { followUser, unfollowUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow/user_account_follow.controller.js`);
@@ -118,6 +105,8 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/apps/bff/data').patch           (checkDataToken, BFF_data);
     app.route('/apps/bff/data').post            (checkDataToken, BFF_data);
     app.route('/apps/bff/data').put             (checkDataToken, BFF_data);
+    app.route('/apps/bff/data_login').put       (checkDataTokenLogin, BFF_data_login);
+    app.route('/apps/bff/data_signup').post     (checkDataTokenRegistration, BFF_data_signup);
     app.route('/apps/bff/access').delete        (checkAccessToken, BFF_access);
     app.route('/apps/bff/access').get           (checkAccessToken, BFF_access);
     app.route('/apps/bff/access').patch         (checkAccessToken, BFF_access);
@@ -136,21 +125,12 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/apps/bff/socket').get           (BFF_socket);
     app.route('/apps/bff/auth').post            (BFF_auth);
 
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/login`).put(checkDataTokenLogin, userLogin);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/signup`).post(checkDataTokenRegistration, userSignup);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/activate/:id`).put(checkDataToken, activateUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/forgot`).put(checkDataToken, passwordResetUser);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/password/:id`).put(checkAccessToken, updatePassword);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).put(checkAccessToken, updateUserLocal);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/provider/:id`).put(checkDataTokenLogin, providerSignIn);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).get(checkAccessToken, getUserByUserId);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/common/:id`).put(checkAccessToken, updateUserCommon);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).delete(checkAccessToken, deleteUser);    
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail/:id`).get(checkAccessToken, getProfileDetail);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/top/:statchoice`).get(checkDataToken, getProfileTop);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/id/:id`).post(checkDataToken, getProfileUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username`).post(checkDataToken, getProfileUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchD`).post(checkDataToken, searchProfileUser);
+    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail/:id`).get(checkAccessToken, getProfileDetail);    
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchA`).post(checkAccessToken, searchProfileUser);
 
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/`).post(checkAccessToken, createUserAccountApp);
@@ -158,20 +138,17 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/apps/:user_account_id`).get(checkAccessToken, getUserAccountApps);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id`).patch(checkAccessToken, updateUserAccountApp);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id/:app_id`).delete(checkAccessToken, deleteUserAccountApps);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).get(checkDataToken, getUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/user_account_id/:id`).get(checkDataToken, getUserSettingsByUserId);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/:id`).get(checkDataToken, getProfileUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/all/:id`).get(checkDataToken, getProfileUserSettings);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/detail/:id`).get(checkAccessToken, getProfileUserSettingDetail);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/top/:statchoice`).get(checkDataToken, getProfileTopSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting`).post(checkAccessToken, createUserSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).put(checkAccessToken, updateUserSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).delete(checkAccessToken, deleteUserSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).post(checkAccessToken, likeUserSetting);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).delete(checkAccessToken, unlikeUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_view`).post(checkDataToken, insertUserSettingView);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).post(checkAccessToken, followUser);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).delete(checkAccessToken, unfollowUser);
+
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).post(checkAccessToken, likeUser);
     app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).delete(checkAccessToken, unlikeUser);    
 };
@@ -258,7 +235,6 @@ const serverExpress = async () => {
                             check_request(req.path, (/**@type{string}*/err) =>{
                                 if (err){
                                     res.statusCode = 400;
-                                    res.statusMessage = 'check_request ⛔';
                                     res.send('⛔');
                                     res.end();
                                 }

@@ -720,7 +720,7 @@ const getModule = async (app_id, module_config, callBack) =>{
     const datatoken = CreateDataToken(app_id);
     //get GPS from IP
     
-    const result_gps = await BFF(app_id, null, 'GEOLOCATION', new Buffer(`/ip?ip=${module_config.ip}`).toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body)
+    const result_gps = await BFF(app_id, null, 'GEOLOCATION', new Buffer(`/ip?ip=${module_config.ip}`).toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.host, module_config.user_agent, module_config.accept_language, module_config.body)
     .catch(error=>
         callBack(error, null)
     );
@@ -735,7 +735,7 @@ const getModule = async (app_id, module_config, callBack) =>{
     }
     else{
         
-        const result_city = await BFF(app_id, null, 'WORLDCITIES', new Buffer('/city/random?').toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.user_agent, module_config.accept_language, module_config.body);
+        const result_city = await BFF(app_id, null, 'WORLDCITIES', new Buffer('/city/random?').toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.host, module_config.user_agent, module_config.accept_language, module_config.body);
         result_geodata.latitude = JSON.parse(result_city).lat;
         result_geodata.longitude = JSON.parse(result_city).lng;
         result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
@@ -1048,6 +1048,7 @@ const providers_buttons = async (app_id) =>{
  * @param {string} ip
  * @param {string} method
  * @param {string} authorization
+ * @param {string} host
  * @param {string} headers_user_agent
  * @param {string} headers_accept_language
  * @param {object} data
@@ -1055,7 +1056,7 @@ const providers_buttons = async (app_id) =>{
  * @param {Types.res|null} res
  * @returns {Promise<(string)>}
  */
-const BFF = async (app_id, endpoint, service, parameters, ip, method, authorization, headers_user_agent, headers_accept_language, data, user_account_logon_user_account_id=null, res=null) => {
+const BFF = async (app_id, endpoint, service, parameters, ip, method, authorization, host, headers_user_agent, headers_accept_language, data, user_account_logon_user_account_id=null, res=null) => {
     const {serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
     return new Promise((resolve, reject) => {
         if (!app_id && !service && !parameters){
@@ -1079,14 +1080,14 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                 switch (service){
                     case 'AUTH':
                     case 'BROADCAST':{
-                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data, res)
+                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
                         .then((/**@type{string}*/result)=>resolve(result))
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                         break;
                     }
                     case 'LOG':{
                         if (endpoint=='SYSTEMADMIN')
-                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data)
+                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
                             .then((/**@type{string}*/result)=>resolve(result))
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         else
@@ -1095,7 +1096,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     }
                     case 'SERVER':{
                         if (endpoint=='ADMIN' || endpoint=='SYSTEMADMIN')
-                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data)
+                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
                             .then((/**@type{string}*/result)=>resolve(result))
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         else
@@ -1104,25 +1105,13 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                     }
                     case 'DB_API':{
                         const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-                        switch (method){
-                            case 'GET':
-                            case 'POST':
-                            case 'PUT':
-                            case 'PATCH':
-                            case 'DELETE':{
-                                if (!decodedparameters.toUpperCase().startsWith('/USER_ACCOUNT') ||endpoint == 'ADMIN')
-                                    serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, authorization, decodedparameters, data)
-                                    .then((/**@type{string}*/result)=>resolve(result))
-                                    .catch((/**@type{Types.error}*/error)=>reject(error));
-                                else{
-                                    path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${decodedparameters}&app_id=${app_id}`;
-                                    call_service(path, service);
-                                }
-                                break;
-                            }
-                            default:{
-                                return reject ('⛔');
-                            }
+                        if (endpoint == 'ADMIN' || endpoint == 'SYSTEMADMIN' ||endpoint=='DATA' || endpoint=='DATA_LOGIN' || endpoint=='DATA_SIGNUP')
+                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
+                            .then((/**@type{string}*/result)=>resolve(result))
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
+                        else{
+                            path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${decodedparameters}&app_id=${app_id}`;
+                            call_service(path, service);
                         }
                         break;
                     }
