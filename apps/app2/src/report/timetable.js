@@ -5,7 +5,7 @@ import * as Types from './../../../../types.js';
 
 const {render_app_with_data} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.service.js`);
+const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
 
 /**
  * App types
@@ -445,7 +445,7 @@ const isToday = checkdate => {
  * @returns {Promise.<null>}
  */
 const set_prayer_method = async(app_id, locale) => {
-    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
+    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting.service.js`);
 	return new Promise( (resolve, reject) => {
 		/* see more in PrayTimes module
 		original
@@ -1066,7 +1066,7 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
  * @param {Types.callBack} callBack 
  */
 const timetable_user_setting_get = async (app_id, user_setting_id, callBack) => {
-    const { getUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.service.js`);
+    const { getUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
 	getUserSetting(app_id, user_setting_id)
 	.then((/**@type{Types.db_result_user_account_app_setting_getUserSetting[]}*/result_user_setting)=>{
 		const user_setting = JSON.parse(result_user_setting[0].settings_json);
@@ -1147,7 +1147,7 @@ const timetable_user_setting_get = async (app_id, user_setting_id, callBack) => 
  * @param {string} locale_second 
  */
 const timetable_translate_settings = async (app_id, locale, locale_second) => {
-    const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
+    const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
 	/**
 	 * 
 	 * @param {string} locale 
@@ -1202,7 +1202,7 @@ const timetable_day_user_settings_get = async (app_id, user_account_id, callBack
 	/**@type{type_day_user_settings[]} */
 	const user_settings = [];
 
-    const { getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.service.js`);
+    const { getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
     getUserSettingsByUserId(app_id, user_account_id)
 	.then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_user_settings)=>{
 		for (const user_setting of result_user_settings) {
@@ -1806,7 +1806,7 @@ const timetable = async (timetable_parameters) => {
 	const user_account_id = Number(urlParams.get('id'));
 	const user_setting_id = Number(urlParams.get('sid'));
 	const reporttype = Number(urlParams.get('type'));
-    const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+    const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
 	return await new Promise((resolve) => {
 		getAppStartParameters(timetable_parameters.app_id)
 		.then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/result_parameters)=> {

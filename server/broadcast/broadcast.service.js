@@ -264,7 +264,7 @@ const ConnectedList = async (app_id, app_id_select, limit, year, month, order_by
     };
     if (connected_clients_no_res.length>0){
         //update with user role
-        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
+        const { getUserRoleAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
         for (const client of connected_clients_no_res){
             if (client.system_admin==0)
                 if (await app_start()==true){    

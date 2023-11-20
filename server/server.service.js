@@ -748,33 +748,33 @@ const Info = async (callBack) => {
     //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     //server db api app_portfolio app
-    const { getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    const { getAppsAdmin, updateAppAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     //server db api app_portfolio app category
-    const {getAppCategoryAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_category/app_category.service.js`);
+    const {getAppCategoryAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_category.service.js`);
     //server db api app_portfolio app log
-    const { getLogsAdmin, getStatUniqueVisitorAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`);
+    const { getLogsAdmin, getStatUniqueVisitorAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
     //server db api app_portfolio app parameter
-    const { getParametersAllAdmin, setParameter_admin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+    const { getParametersAllAdmin, setParameter_admin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     //server db api app_portfolio app role
-    const { getAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_role/app_role.service.js`);
+    const { getAppRoleAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_role.service.js`);
     //server db api app_portfolio parameter type
-    const { getParameterTypeAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/parameter_type/parameter_type.service.js`);
-    const {getUserByUserId, getUsersAdmin, getStatCountAdmin, updateUserSuperAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
+    const { getParameterTypeAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/parameter_type.service.js`);
+    const {getUserByUserId, getUsersAdmin, getStatCountAdmin, updateUserSuperAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
     //server db api app_portfolio user account logon
-    const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`);
+    const { getUserAccountLogonAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
     
     //server db api app_portfolio app
-    const { getApp } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    const { getApp } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     //server db api app_portfolio app object
-    const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
+    const { getObjects } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
     //server db api app_portfolio country
-    const { getCountries } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`);
+    const { getCountries } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/country.service.js`);
     //server db api app_portfolio locale
-    const { getLocales } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);
+    const { getLocales } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/locale.service.js`);
     //server db api app_portfolio message translation
-    const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation/message_translation.service.js`);
+    const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation.service.js`);
     //server db api app_portfolio setting
-    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
+    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting.service.js`);
 
     //server db api app_portfolio user account data token
     const {
@@ -788,11 +788,11 @@ const Info = async (callBack) => {
         providerSignIn,
         getProfileTop,
         getProfileUser,
-        searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
+        searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
     //server db api app_portfolio user account app
-    const { createUserAccountApp, getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
+    const { createUserAccountApp, getUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
     //server db api app_portfolio user account app setting
-    const { getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileTopSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.service.js`);
+    const { getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileTopSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
 
     const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
@@ -804,10 +804,10 @@ const Info = async (callBack) => {
     const {CheckFirstTime, ConfigGet, ConfigGetUser, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
     const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
     
-    const { insertUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon/user_account_logon.service.js`);
-    const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
-    const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event/user_account_event.service.js`);
-    const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.service.js`);
+    const { insertUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
+    const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
+    const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
+    const { insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
 
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
@@ -1300,7 +1300,7 @@ const Info = async (callBack) => {
                                                 resolve(result_getProfileUser[0]);
                                             }
                                             else{
-                                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view/user_account_view.service.js`).then(({ insertUserAccountView }) => {
+                                                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`).then(({ insertUserAccountView }) => {
                                                     const data_body = { user_account_id:        getNumberValue(query.get('POST_ID')),
                                                                                                 //set user id when username is searched
                                                                         user_account_id_view:   getNumberValue(query.get('POST_ID')) ?? result_getProfileUser[0].id,
@@ -1327,7 +1327,7 @@ const Info = async (callBack) => {
                                 case '/USER_ACCOUNT/PROFILE/USERNAME/SEARCHD_POST':{
                                     searchProfileUser(app_id, query.get('search'))
                                     .then((/**@type{Types.db_result_user_account_searchProfileUser[]}*/result_search)=>{
-                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search/profile_search.service.js`).then(({ insertProfileSearch }) => {
+                                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`).then(({ insertProfileSearch }) => {
                                             /**@type{Types.db_parameter_profile_search_insertProfileSearch} */
                                             const data_insert = {   user_account_id:    data.user_account_id,
                                                                     search:             query.get('search'),
@@ -1883,7 +1883,7 @@ const Info = async (callBack) => {
                                             .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
                                                 if (data.app_role_id!=0 && data.app_role_id!=1){
                                                     //delete admin app from user if user is not an admin anymore
-                                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                                                    import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
                                                         deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
                                                         .then(()=>{
                                                             resolve({

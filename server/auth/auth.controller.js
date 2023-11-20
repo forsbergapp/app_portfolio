@@ -32,7 +32,7 @@ const checkAccessTokenCommon = (req, res, next) => {
  */
 const checkAccessTokenSuperAdmin = (req, res, next) => {
     if (req.query.app_id==0)
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getUserAppRoleAdmin}) => {
             getUserAppRoleAdmin(getNumberValue(req.query.app_id), getNumberValue(req.query.user_account_logon_user_account_id))
             .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){

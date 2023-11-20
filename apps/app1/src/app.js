@@ -56,7 +56,7 @@ const createApp = (app_id, username, locale) => {
             });
         };
         if (username!=null){
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getProfileUser}) => {
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {
                 getProfileUser(app_id, null, username, null)
                 .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result)=>{
                     if (result[0])

@@ -76,7 +76,7 @@ const DBStart = async () => {
          password = `${ConfigGet('SERVICE_DB', `DB${db_use}_APP_ADMIN_PASS`)}`;
          dba = 0;
          await pool_db(db_use, dba, user, password, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
-         const { getAppDBParametersAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+         const { getAppDBParametersAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
          //app_id inparameter for log, all apps will be returned
          /**@type{Types.db_result_app_parameter_getAppDBParametersAdmin[]} */
          const result_apps = await getAppDBParametersAdmin(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')));
@@ -322,15 +322,15 @@ const DBInfoSpaceSum = async (app_id) => {
  * @param {Types.callBack} callBack
  */
 const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
-	const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
-	const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`);
-	const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app/user_account_app.service.js`);
-	const {createUserSetting, getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting/user_account_app_setting.service.js`);
-	const {likeUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like/user_account_like.service.js`);
-	const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view/user_account_view.service.js`);
-	const {followUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow/user_account_follow.service.js`);
-	const {likeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like/user_account_app_setting_like.service.js`);
-	const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view/user_account_app_setting_view.service.js`);
+	const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+	const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+	const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
+	const {createUserSetting, getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
+	const {likeUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
+	const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`);
+	const {followUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
+	const {likeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
+	const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
 	const fs = await import('node:fs');
    const install_result = [];
    install_result.push({'start': new Date().toISOString()});
@@ -708,7 +708,7 @@ const demo_add = async (app_id, demo_password, lang_code, callBack)=> {
  * @param {Types.callBack} callBack 
  */
 const demo_delete = async (app_id, callBack)=> {
-	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account/user_account.service.js`).then(({getDemousers, deleteUser})=>{
+	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getDemousers, deleteUser})=>{
 		getDemousers(app_id)
       .then((/**@type{Types.db_result_user_account_getDemousers[]}*/result_demo_users) =>{
          let deleted_user = 0;
