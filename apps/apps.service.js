@@ -15,7 +15,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @returns {Promise.<boolean>}
  */
  const app_start = async (app_id=null, lang_code=null)=>{
-    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
+    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     return new Promise((resolve)=>{
         if (ConfigGetInit('MAINTENANCE')=='0' && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
             ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
@@ -206,7 +206,7 @@ const render_common_html = async (app_id, module, app_config) =>{
     /** @type {[string, string][]} */
     const render_variables = [];
     if (app_config.render_locales){
-        const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/language/locale/locale.service.js`);            
+        const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/locale.service.js`);            
         await getLocales(app_id, app_config.locale)
         .then((/**@type{Types.db_result_locale_getLocales[]} */result_user_locales)=> {
             result_user_locales.forEach((locale, i) => {
@@ -218,7 +218,7 @@ const render_common_html = async (app_id, module, app_config) =>{
         });
     }
     if (app_config.render_settings){
-        const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting/setting.service.js`);
+        const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting.service.js`);
         /** @type {Types.db_result_setting_getSettings[]}*/
         const settings_db = await getSettings(app_id, app_config.locale, null);
         let option;
@@ -344,7 +344,7 @@ const render_common_html = async (app_id, module, app_config) =>{
  */
 const countries = (app_id, locale) => {
     return new Promise((resolve, reject) => {
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/country/country.service.js`).then(({getCountries})=>{
+        import(`file://${process.cwd()}/server/dbapi/app_portfolio/country.service.js`).then(({getCountries})=>{
             getCountries(app_id, locale)
             .then((/** @type {Types.db_result_country_getCountries[]}*/ result)=>{
                 /** @type {string}*/
@@ -433,8 +433,8 @@ const get_module_with_init = async (app_info, callBack) => {
         callBack(null, return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0));
     }
     else{
-        const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
-        const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+        const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+        const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
         getAppName(app_info.app_id)
         .then((/** @type{Types.db_result_app_getAppName[]}*/result_app_name) =>{
             //fetch parameters for common_app_id and current app_id
@@ -469,7 +469,7 @@ const get_module_with_init = async (app_info, callBack) => {
  * @returns {Promise<Types.email_return_data>}  - Email return data
  */
 const createMail = async (app_id, data) =>{
-    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
         /** @type {[string, string][]} */
         let files= [];
@@ -587,8 +587,8 @@ const createMail = async (app_id, data) =>{
  * @param {Types.callBack} callBack   - CallBack with error and success info or null in both info parameter is unknown
  */
 const getInfo = async (app_id, info, lang_code, callBack) => {
-    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app/app.service.js`);
-    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter/app_parameter.service.js`);
+    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     /** @type {Types.callBack} callBack */
     const get_parameters = (app_id, callBack) => {
         getApp(app_id, app_id, lang_code)
@@ -796,7 +796,7 @@ const getModule = async (app_id, module_config, callBack) =>{
             config_map_styles = app.map_styles;
             config_ui = true;
             //get translation data
-            const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object/app_object.service.js`);
+            const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
             const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'COMMON');
             for (const row of result_objects){
                 render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
@@ -831,7 +831,7 @@ const getModule = async (app_id, module_config, callBack) =>{
     const log = module => {
         //if app admin then log, system does not log in database
         if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log/app_log.service.js`).then(({createLog}) => {
+            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`).then(({createLog}) => {
                 createLog(app_id,
                         { app_id : app_id,
                             app_module : 'APPS',
@@ -1017,7 +1017,7 @@ const getMaintenance = (app_id) => {
  * @returns {Promise<string>}
  */
 const providers_buttons = async (app_id) =>{
-    const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider/identity_provider.service.js`);
+    const { getIdentityProviders } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/identity_provider.service.js`);
     return new Promise((resolve, reject)=>{
         getIdentityProviders(app_id)
         .then((/**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
