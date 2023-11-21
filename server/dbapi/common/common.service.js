@@ -16,7 +16,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.se
  * @param {Types.error} err 
  */
  const checked_error = async (app_id, lang_code, err) =>{
-	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation.service.js`);
+	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
     return new Promise((resolve)=>{
 		const app_code = get_app_code(  err.errorNum, 
 										err.message, 
@@ -28,7 +28,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.se
 						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
 						app_code, 
 						lang_code)
-			.then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+			.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
 				resolve(
 					result_message[0].text
 				);
@@ -107,12 +107,12 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
  const record_not_found_promise = async (app_id, lang_code) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation.service.js`).then(({ getMessage }) => {
+			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
 				getMessage( app_id,
 							getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
 							'20400',
 							lang_code)
-				.then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+				.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
 					resolve(
 						result_message[0].text
 					);
@@ -130,12 +130,12 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
  */
 const record_not_found = (res, app_id, lang_code) => {
 	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
-		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation.service.js`).then(({ getMessage }) => {
+		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
 			getMessage( app_id,
 						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
 						'20400',
 						lang_code)
-			.then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+			.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
 				res.status(404).send(
 					result_message[0].text
 				);

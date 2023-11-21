@@ -1,4 +1,4 @@
-/** @module server/dbapi/app_portfolio/user_account_app */
+/** @module server/dbapi/component/user_account_app */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
@@ -27,4 +27,12 @@ const update = (app_id, query, data) => {
         });
     });
 };
-export {update};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @returns 
+ */
+const getUserAccountApp = (app_id, query) => service.getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')));
+
+export {update, getUserAccountApp};
