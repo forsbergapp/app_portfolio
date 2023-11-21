@@ -155,29 +155,28 @@ const app_theme_switch = () => {
 };
 
 const get_apps = () => {
-    let json;
     const old_button = document.querySelector('#apps').innerHTML;
     common.FFB ('DB_API', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 0, null, (err, result) => {
         if (err)
             document.querySelector('#apps').innerHTML = old_button;
         else{
-            json = JSON.parse(result);
+            const apps = JSON.parse(result);
             let html ='';
-            for (let i = 0; i < json.data.length; i++) {
+            for (const app of apps) {
                 html +=`<div class='app_link_row'>
                             <div class='app_link_col'>
-                                <div class='app_id'>${json.data[i].id}</div>
+                                <div class='app_id'>${app.id}</div>
                             </div>
                             <div class='app_link_col'>
-                                <div class='app_url'>${json.data[i].url}</div>
+                                <div class='app_url'>${app.url}</div>
                             </div>
                             <div class='app_link_col'>
-                                <img class='app_logo' src='${json.data[i].logo}' />
+                                <img class='app_logo' src='${app.logo}' />
                             </div>
                             <div class='app_link_col'>
-                                <div class='app_name'>${json.data[i].app_name}</div>
-                                <div class='app_category'>${json.data[i].app_category==null?'':json.data[i].app_category}</div>
-                                <div class='app_description'>${json.data[i].app_description==null?'':json.data[i].app_description}</div>
+                                <div class='app_name'>${app.app_name}</div>
+                                <div class='app_category'>${app.app_category==null?'':app.app_category}</div>
+                                <div class='app_description'>${app.app_description==null?'':app.app_description}</div>
                             </div>
                         </div>`;
             }

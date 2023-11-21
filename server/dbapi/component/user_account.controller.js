@@ -7,7 +7,7 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
 
 const { default: {compareSync} } = await import('bcryptjs');
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
-const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation.service.js`);
+const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -65,7 +65,7 @@ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code,
                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         app_code, 
                         lang_code)
-            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                 res.status(400).send(
                     result_message[0].text
                 );
@@ -279,7 +279,7 @@ const updateUserLocal = async (req, res) => {
                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                             '20401',
                             req.query.lang_code)
-                .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                     res.status(400).send(
                         result_message[0].text
                     );
@@ -292,7 +292,7 @@ const updateUserLocal = async (req, res) => {
                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         '20305',
                         req.query.lang_code)
-            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                 res.status(404).send(
                     result_message[0].text
                 );
@@ -443,7 +443,7 @@ const deleteUser = (req, res) => {
                                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                                         '20401',
                                         req.query.lang_code)
-                            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                                 res.status(400).send(
                                     result_message[0].text
                                 );
@@ -461,7 +461,7 @@ const deleteUser = (req, res) => {
                                     getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                                     '20305',
                                     req.query.lang_code)
-                        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                        .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                             res.status(404).send(
                                 result_message[0].text
                             );
@@ -486,7 +486,7 @@ const deleteUser = (req, res) => {
                         getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                         '20305',
                         req.query.lang_code)
-            .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                 res.status(404).send(
                     result_message[0].text
                 );
