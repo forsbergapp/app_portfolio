@@ -1,4 +1,4 @@
-/** @module server/dbapi/app_portfolio/user_account */
+/** @module server/dbapi/component/user_account */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
@@ -12,9 +12,10 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
 
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message_translation.service.js`);
+const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
-const { insertUserAccountLogon } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
+
+const { insertUserAccountLogon, getUserAccountLogonAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
 
 const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
@@ -144,7 +145,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                     getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                                     '20300',
                                     query.get('lang_code'))
-                        .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                        .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                             reject(result_message[0].text);
                         });
                     });
@@ -160,7 +161,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                             getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
                             '20305',
                             query.get('lang_code'))
-                .then((/**@type{Types.db_result_message_translation_getMessage[]}*/result_message)=>{
+                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                     reject(result_message[0].text);
                 });
             }
@@ -584,4 +585,85 @@ const searchProfile = (app_id, ip, user_agent, query, data) =>{
         });
     });
 };
-export {login, login_provider, signup, activate, forgot, getProfile, getProfileTop, searchProfile};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {*} data 
+ * @returns 
+ */
+const updateAdmin =(app_id, query, data) =>{
+    return new Promise((resolve, reject)=>{
+        // get avatar and provider column used to validate
+        service.getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')))
+        .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+            if (result_user[0]) {
+                /**@type{Types.db_parameter_user_account_updateUserSuperAdmin} */
+                const body = {  app_role_id:        getNumberValue(data.app_role_id),
+                                active:             getNumberValue(data.active),
+                                user_level:         getNumberValue(data.user_level),
+                                private:            getNumberValue(data.private),
+                                username:           data.username,
+                                bio:                data.bio,
+                                email:              data.email,
+                                email_unverified:   data.email_unverified,
+                                password:           null,
+                                password_new:       data.password_new==''?null:data.password_new,
+                                password_reminder:  data.password_reminder,
+                                verification_code:  data.verification_code,
+                                provider_id:        result_user[0].provider_id,
+                                avatar:             result_user[0].avatar,
+                                admin:              1};
+                service.updateUserSuperAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+                .then((/**@type{Types.db_result_user_account_updateUserSuperAdmin}*/result_update)=>{
+                    if (data.app_role_id!=0 && data.app_role_id!=1){
+                        //delete admin app from user if user is not an admin anymore
+                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
+                            deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
+                            .then(()=>{
+                                resolve({
+                                    data: result_update
+                                });
+                            });
+                        });
+                    }
+                    else
+                        resolve({
+                            data: result_update
+                        });
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+            else{
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
+                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ */
+const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')));
+
+/**
+ * 
+ * @param {number} app_id 
+ * @returns 
+ */
+const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id);
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ */
+const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')));
+    
+export {login, login_provider, signup, activate, forgot, getProfile, getProfileTop, searchProfile, updateAdmin, getUsersAdmin, getStatCountAdmin,
+        getLogonAdmin};

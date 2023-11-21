@@ -387,7 +387,6 @@ const show_user_agent = (user_agent) => {
 };
 const get_apps = async () => {
     return new Promise((resolve)=>{
-        let json;
         let html = `<option value="">${common.ICONS.infinite}</option>`;
         let url;
         let authorization_type;
@@ -406,13 +405,13 @@ const get_apps = async () => {
             if (err)
                 resolve();
             else{
-                json = JSON.parse(result);
+                const apps = JSON.parse(result);
                 if (common.COMMON_GLOBAL.system_admin==1)
-                    for (const app of json.data) {
+                    for (const app of apps) {
                         html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
                     }
                 else
-                    for (const app of json.data) {
+                    for (const app of apps) {
                         html += `<option value='${app.id}'>${app.id} - ${app.app_name}</option>`;
                     }
                 resolve(html);
@@ -588,29 +587,30 @@ const count_users = async () => {
         }
     };    
     if (admin_token_has_value()){
-        let json;
         document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
         await common.FFB ('DB_API', '/user_account/admin/count?', 'GET', 3, null, (err, result) => {
             if (err)
                 document.querySelector('#menu_2_content').innerHTML = '';
             else{
-                json = JSON.parse(result);
+                const users = JSON.parse(result);
                 let html='';
-                for (let i=0;i<=json.data.length-1;i++){
+                let i=0;
+                for (const user of users){
                     html +=  `<div id='list_user_stat_row_${i}' class='list_user_stat_row'>
                                     <div class='list_user_stat_col'>
-                                        <div>${common.get_null_or_value(json.data[i].identity_provider_id)}</div>
+                                        <div>${common.get_null_or_value(user.identity_provider_id)}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
-                                        <div>${json.data[i].provider_name==null?common.ICONS.app_home:json.data[i].provider_name}</div>
+                                        <div>${user.provider_name==null?common.ICONS.app_home:user.provider_name}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
-                                        <div>${json.data[i].count_users}</div>
+                                        <div>${user.count_users}</div>
                                     </div>
                                     <div class='list_user_stat_col'>
                                         <div></div>
                                     </div>
                               </div>`;
+                    i++;
                 }
                 //count not logged in
                 html += `<div id='list_user_stat_row_not_connected' class='list_user_stat_row'>
@@ -644,11 +644,11 @@ const count_users = async () => {
                     if (e.id !='list_user_stat_row_title'){
                         if (e.id=='list_user_stat_row_not_connected')
                             count_connected(e.children[0].children[0].innerHTML,0, (err, result)=>{
-                                e.children[3].children[0].innerHTML = JSON.parse(result).data;
+                                e.children[3].children[0].innerHTML = JSON.parse(result).count_connected;
                             });
                         else
                             count_connected(e.children[0].children[0].innerHTML,1, (err, result)=>{
-                                    e.children[3].children[0].innerHTML = JSON.parse(result).data;
+                                    e.children[3].children[0].innerHTML = JSON.parse(result).count_connected;
                             });
                     }
                 });
@@ -700,7 +700,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
         if (err)
             document.querySelector('#list_user_account').innerHTML = '';
         else{
-            const result_obj = JSON.parse(result);
+            const users = JSON.parse(result);
             let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
                             <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
                                 <div>${common.ICONS.user_avatar}</div>
@@ -786,7 +786,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             else
                 input_readonly = 'readonly=\'true\'';
             let i = 0;
-            for (const user of result_obj.data) {
+            for (const user of users) {
                 i++;
                 let list_user_account_current_user_row='';
                 if (user.id==common.COMMON_GLOBAL.user_account_id)
@@ -904,13 +904,12 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
     });
 };
 const show_user_account_logon = async (user_account_id) => {
-    let json;
     document.querySelector('#list_user_account_logon').innerHTML = common.APP_SPINNER;
     common.FFB ('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 3, null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account_logon').innerHTML = '';
         else{
-            json = JSON.parse(result);
+            const user_account_logons = JSON.parse(result);
             let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
                             <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
                                 <div>USER ACCOUNT ID</div>
@@ -940,37 +939,39 @@ const show_user_account_logon = async (user_account_id) => {
                                 <div>ACCESS TOKEN</div>
                             </div>
                         </div>`;
-            for (let i = 0; i < json.data.length; i++) {
+            let i=0;
+            for (const user_account_logon of user_account_logons) {
                 html += 
                 `<div id='list_user_account_logon_row_${i}' data-changed-record='0' class='list_user_account_logon_row'>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${json.data[i].user_account_id}</div>
+                        <div class='list_readonly'>${user_account_logon.user_account_id}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].date_created)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user_account_logon.date_created)}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${json.data[i].app_id}</div>
+                        <div class='list_readonly'>${user_account_logon.app_id}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${json.data[i].result}</div>
+                        <div class='list_readonly'>${user_account_logon.result}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${json.data[i].client_ip}</div>
+                        <div class='list_readonly'>${user_account_logon.client_ip}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].client_longitude)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user_account_logon.client_longitude)}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].client_latitude)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user_account_logon.client_latitude)}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${json.data[i].client_user_agent}</div>
+                        <div class='list_readonly'>${user_account_logon.client_user_agent}</div>
                     </div>
                     <div class='list_user_account_logon_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].access_token)}</div>
+                        <div class='list_readonly'>${common.get_null_or_value(user_account_logon.access_token)}</div>
                     </div>
                 </div>`;
+                i++;
             }
             document.querySelector('#list_user_account_logon').innerHTML = html;
         }
@@ -980,13 +981,12 @@ const show_user_account_logon = async (user_account_id) => {
 /* APP ADMIN              */
 /*----------------------- */
 const show_apps = async () => {
-    let json;
     document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
     await common.FFB ('DB_API', '/apps/admin?', 'GET', 3, null, (err, result) => {
         if (err)
             document.querySelector('#menu_4_content').innerHTML = '';
         else{
-            json = JSON.parse(result);
+            const apps = JSON.parse(result);
             let html = `<div id='list_apps_row_title' class='list_apps_row'>
                             <div id='list_apps_col_title1' class='list_apps_col list_title'>
                                 <div>ID</div>
@@ -1010,32 +1010,34 @@ const show_apps = async () => {
                                 <div>CATEGORY NAME</div>
                             </div>
                         </div>`;
-            for (let i = 0; i < json.data.length; i++) {
+            let i=0;
+            for (const app of apps) {
                 html += 
                 `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
                     <div class='list_apps_col'>
-                        <div class='list_readonly'>${json.data[i].id}</div>
+                        <div class='list_readonly'>${app.id}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${json.data[i].app_name}'/>
+                        <input type=text class='list_edit' value='${app.app_name}'/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${json.data[i].url}'/>
+                        <input type=text class='list_edit' value='${app.url}'/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${json.data[i].logo}'/>
+                        <input type=text class='list_edit' value='${app.logo}'/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type='checkbox' class='list_edit' ${json.data[i].enabled==1?'checked':''} />
+                        <input type='checkbox' class='list_edit' ${app.enabled==1?'checked':''} />
                     </div>
                     <div class='list_apps_col'>
-                        <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(json.data[i].app_category_id)}' />
+                        <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(app.app_category_id)}' />
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(json.data[i].app_category_text)} </div>
+                        <div class='list_readonly'>${common.get_null_or_value(app.app_category_text)} </div>
                     </div>
                 </div>`;
+                i++;
             }
             document.querySelector('#menu_4_content').innerHTML = 
                    `<div id='menu_4_content_widget1' class='widget'>
@@ -1062,13 +1064,12 @@ const show_apps = async () => {
     });
 };
 const show_app_parameter = (app_id) => {
-    let json;
     document.querySelector('#list_app_parameter').innerHTML = common.APP_SPINNER;
     common.FFB ('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 3, null, (err, result) => {
         if (err)
             document.querySelector('#list_app_parameter').innerHTML = '';
         else{
-            json = JSON.parse(result);
+            const app_parameters = JSON.parse(result);
             let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
                             <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>
                                 <div>APP ID</div>
@@ -1089,29 +1090,31 @@ const show_app_parameter = (app_id) => {
                                 <div>COMMENT</div>
                             </div>
                         </div>`;
-            for (let i = 0; i < json.data.length; i++) {
+            let i=0;
+            for (const app_parameter of app_parameters) {
                 html += 
                 `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly'>${json.data[i].app_id}</div>
+                        <div class='list_readonly'>${app_parameter.app_id}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit common_input_lov' value='${json.data[i].parameter_type_id}'/>
+                        <input type=text class='list_edit common_input_lov' value='${app_parameter.parameter_type_id}'/>
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly'>${json.data[i].parameter_type_text}</div>
+                        <div class='list_readonly'>${app_parameter.parameter_type_text}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly'>${json.data[i].parameter_name}</div>
+                        <div class='list_readonly'>${app_parameter.parameter_name}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${common.get_null_or_value(json.data[i].parameter_value)}'/>
+                        <input type=text class='list_edit' value='${common.get_null_or_value(app_parameter.parameter_value)}'/>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${common.get_null_or_value(json.data[i].parameter_comment)}'/>
+                        <input type=text class='list_edit' value='${common.get_null_or_value(app_parameter.parameter_comment)}'/>
                     </div>
                 </div>`;
+                i++;
             }
             document.querySelector('#list_app_parameter').innerHTML = html;
             //add lov icon
@@ -1307,10 +1310,10 @@ const list_events = (list_item, item_row, item_edit) => {
                     item.nextElementSibling.dispatchEvent(new Event('click'));
                 }
                 else{
-                    const json = JSON.parse(result);
-                    if (json.data.length == 1){
+                    const list_result = JSON.parse(result);
+                    if (list_result.length == 1){
                         //set new value from 3 column JSON result
-                        document.querySelector('#' + event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(json.data[0])[2];
+                        document.querySelector('#' + event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(list_result[0])[2];
                     }
                     else{
                         event.stopPropagation();

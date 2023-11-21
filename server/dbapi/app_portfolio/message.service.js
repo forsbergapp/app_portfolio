@@ -11,7 +11,7 @@ const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()
  * @param {number} data_app_id 
  * @param {string} code 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_message_translation_getMessage[]>}
+ * @returns {Promise.<Types.db_result_message_getMessage[]>}
  */
 const getMessage = async (app_id, data_app_id, code, lang_code) => {
 		const sql = `SELECT m.code "code",

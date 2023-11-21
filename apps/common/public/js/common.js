@@ -361,7 +361,6 @@ const fromBase64 = (str) => {
     return decodeURIComponent(escape(window.atob(str)));
 };
 const common_translate_ui = async (lang_code, object = null, callBack) => {
-    let json;
     let object_parameter;
     let path='';
     if  (object==null)
@@ -379,61 +378,61 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
         if (err)
             null;
         else{
-            json = JSON.parse(result);
-            for (let i = 0; i < json.data.length; i++){
-                switch (json.data[i].object){
+            const app_objects = JSON.parse(result);
+            for (const app_object of app_objects){
+                switch (app_object.object){
                     case 'APP_OBJECT_ITEM':{
-                        switch(json.data[i].object_name){
+                        switch(app_object.object_name){
                             case 'COMMON':{
                                 //translate common items
-                                switch  (json.data[i].object_item_name){
+                                switch  (app_object.object_item_name){
                                     case 'USERNAME':{
-                                        document.querySelector('#common_login_username').placeholder = json.data[i].text;
-                                        document.querySelector('#common_signup_username').placeholder = json.data[i].text;
-                                        document.querySelector('#common_user_edit_input_username').placeholder = json.data[i].text;
+                                        document.querySelector('#common_login_username').placeholder = app_object.text;
+                                        document.querySelector('#common_signup_username').placeholder = app_object.text;
+                                        document.querySelector('#common_user_edit_input_username').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'EMAIL':{
-                                        document.querySelector('#common_signup_email').placeholder = json.data[i].text;
-                                        document.querySelector('#common_forgot_email').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_email').placeholder = app_object.text;
+                                        document.querySelector('#common_forgot_email').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'NEW_EMAIL':{
-                                        document.querySelector('#common_user_edit_input_new_email').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_new_email').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'BIO':{
-                                        document.querySelector('#common_user_edit_input_bio').placeholder = json.data[i].text;
+                                        document.querySelector('#common_user_edit_input_bio').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'PASSWORD':{
-                                        document.querySelector('#common_login_password').placeholder = json.data[i].text;
-                                        document.querySelector('#common_signup_password').placeholder = json.data[i].text;
-                                        document.querySelector('#common_user_edit_input_password').placeholder = json.data[i].text;
+                                        document.querySelector('#common_login_password').placeholder = app_object.text;
+                                        document.querySelector('#common_signup_password').placeholder = app_object.text;
+                                        document.querySelector('#common_user_edit_input_password').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'PASSWORD_CONFIRM':{
-                                        document.querySelector('#common_signup_password_confirm').placeholder = json.data[i].text;
-                                        document.querySelector('#common_user_edit_input_password_confirm').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_password_confirm').placeholder = app_object.text;
+                                        document.querySelector('#common_user_edit_input_password_confirm').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'PASSWORD_REMINDER':{
-                                        document.querySelector('#common_signup_password_reminder').placeholder = json.data[i].text;
-                                        document.querySelector('#common_user_edit_input_password_reminder').placeholder = json.data[i].text;
+                                        document.querySelector('#common_signup_password_reminder').placeholder = app_object.text;
+                                        document.querySelector('#common_user_edit_input_password_reminder').placeholder = app_object.text;
                                         break;
                                     }
                                     case 'NEW_PASSWORD_CONFIRM':{
-                                        document.querySelector('#common_user_edit_input_password_new_confirm').placeholder = json.data[i].text;
-                                        document.querySelector('#common_user_password_new_confirm').placeholder = json.data[i].text;    
+                                        document.querySelector('#common_user_edit_input_password_new_confirm').placeholder = app_object.text;
+                                        document.querySelector('#common_user_password_new_confirm').placeholder = app_object.text;    
                                         break;
                                     }
                                     case 'NEW_PASSWORD':{
-                                        document.querySelector('#common_user_edit_input_password_new').placeholder = json.data[i].text;
-                                        document.querySelector('#common_user_password_new').placeholder = json.data[i].text;    
+                                        document.querySelector('#common_user_edit_input_password_new').placeholder = app_object.text;
+                                        document.querySelector('#common_user_password_new').placeholder = app_object.text;    
                                         break;
                                     }
                                     case 'CONFIRM_QUESTION':{
-                                        document.querySelector('#common_confirm_question').innerHTML = json.data[i].text;
+                                        document.querySelector('#common_confirm_question').innerHTML = app_object.text;
                                         break;
                                     }
                                 } 
@@ -441,16 +440,16 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                             }
                             case 'APP':{
                                 //translate items in current app
-                                if (document.querySelector('#' + json.data[i].object_item_name.toLowerCase()))
-                                    document.querySelector('#' + json.data[i].object_item_name.toLowerCase()).innerHTML = json.data[i].text;
+                                if (document.querySelector('#' + app_object.object_item_name.toLowerCase()))
+                                    document.querySelector('#' + app_object.object_item_name.toLowerCase()).innerHTML = app_object.text;
                                 break;
                             }
                             case 'APP_LOV':{
                                 //translate items in select lists in current app
-                                const select_element = document.querySelector('#' + json.data[i].object_item_name.toLowerCase());
+                                const select_element = document.querySelector('#' + app_object.object_item_name.toLowerCase());
                                 for (let option_element = 0; option_element < select_element.options.length; option_element++){
-                                    if (select_element.options[option_element].id == json.data[i].id)
-                                        select_element.options[option_element].text = json.data[i].text;
+                                    if (select_element.options[option_element].id == app_object.id)
+                                        select_element.options[option_element].text = app_object.text;
                                 }
                                 break;
                             }
@@ -460,22 +459,23 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                 }
             }
             //translate locales
-            json = '';
             if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-                path = `/language/locale/admin?lang_code=${lang_code}`;
+                path = `/locale/admin?lang_code=${lang_code}`;
             }
             else{
-                path = `/language/locale?lang_code=${lang_code}`;
+                path = `/locale?lang_code=${lang_code}`;
             }
             FFB ('DB_API', path, 'GET', 0, null, (err, result) => {
                 if (err)
                     null;
                 else{
-                    json = JSON.parse(result);
+                    const locales = JSON.parse(result);
                     let html='';
                     const select_locale = document.querySelector('#common_user_locale_select');
-                    for (let i = 0; i < json.locales.length; i++){
-                        html += `<option id="${i}" value="${json.locales[i].locale}">${json.locales[i].text}</option>`;
+                    let i=0;
+                    for (const locale of locales){
+                        html += `<option id="${i}" value="${locale.locale}">${locale.text}</option>`;
+                        i++;
                     }
                     select_locale.innerHTML = html;
                     select_locale.value = lang_code;
@@ -850,14 +850,14 @@ const show_message = (message_type, code, function_event, message_text='', data_
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
-            FFB ('DB_API', `/message_translation?code=${code}&data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
+            FFB ('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 0, null, (err, result) => {
                 confirm_question.style.display = hide;
                 button_cancel.style.display = hide;
                 message_title.style.display = show;
                 if(err)
                     message_title.innerHTML = err;
                 else
-                    message_title.innerHTML = JSON.parse(result).text;
+                    message_title.innerHTML = JSON.parse(result)[0].text;
                 button_close.addEventListener('click', function_close, false);
                 dialogue.style.visibility = 'visible';
                 button_close.focus();
@@ -1083,18 +1083,20 @@ const lov_show = (lov, function_event) => {
             document.querySelector('#common_lov_list').innerHTML = '';
         else{
             document.querySelector('#common_lov_list').innerHTML = '';
-            const json = JSON.parse(result);
+            const list_result = JSON.parse(result);
             let html = '';
-            for (let i = 0; i < json.data.length; i++) {
+            let i=0;
+            for (const list_row of list_result) {
                 html += 
                 `<div id='common_list_lov_row_${i}' class='common_list_lov_row'>
                     <div class='common_list_lov_col'>
-                        <div>${json.data[i].id}</div>
+                        <div>${list_row.id}</div>
                     </div>
                     <div class='common_list_lov_col'>
-                        <div>${json.data[i][lov_column_value]}</div>
+                        <div>${list_row[lov_column_value]}</div>
                     </div>
                 </div>`;
+                i++;
             }
             document.querySelector('#common_lov_list').innerHTML = html;
             document.querySelector('#common_lov_search_input').focus();
@@ -2446,34 +2448,34 @@ const user_preference_save = async () => {
             }
         });
     }
-    
+        
 };
 const user_preference_get = async (callBack) => {
     await FFB ('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 3, null, (err, result) => {
         if (err)
             null;
         else{
-            const json = JSON.parse(result);
+            const user_account_app = JSON.parse(result)[0];
             //locale
-            if (json.items[0].preference_locale==null){
+            if (user_account_app.preference_locale==null){
                 user_preferences_set_default_globals('LOCALE');
             }
             else{
-                COMMON_GLOBAL.user_locale = json.items[0].preference_locale;
+                COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
             }
             //timezone
-            if (json.items[0].setting_preference_timezone_id==null){
+            if (user_account_app.setting_preference_timezone_id==null){
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(json.items[0].setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
+                SearchAndSetSelectedIndex(user_account_app.setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
                 COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
             }
             //direction
-            SearchAndSetSelectedIndex(json.items[0].setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
+            SearchAndSetSelectedIndex(user_account_app.setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
             COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
             //arabic script
-            SearchAndSetSelectedIndex(json.items[0].setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
+            SearchAndSetSelectedIndex(user_account_app.setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
             COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
             user_preferences_update_select();
             return callBack(null, null);
@@ -2715,27 +2717,29 @@ const map_country = (lang_code) =>{
             if (err)
                 reject(err,null);
             else{
-                const json = JSON.parse(result);
+                const countries = JSON.parse(result);
                 let html='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
                 let current_group_name;
-                for (let i = 0; i < json.countries.length; i++){
+                let i=0;
+                for (const country of countries){
                     if (i === 0){
-                        html += `<optgroup label=${json.countries[i].group_name} />`;
-                        current_group_name = json.countries[i].group_name;
+                        html += `<optgroup label=${country.group_name} />`;
+                        current_group_name = country.group_name;
                     }
                     else{
-                        if (json.countries[i].group_name !== current_group_name){
-                            html += `<optgroup label=${json.countries[i].group_name} />`;
-                            current_group_name = json.countries[i].group_name;
+                        if (country.group_name !== current_group_name){
+                            html += `<optgroup label=${country.group_name} />`;
+                            current_group_name = country.group_name;
                         }
                         html +=
                         `<option value=${i}
-                                id=${json.countries[i].id} 
-                                country_code=${json.countries[i].country_code} 
-                                flag_emoji=${json.countries[i].flag_emoji} 
-                                group_name=${json.countries[i].group_name}>${json.countries[i].flag_emoji} ${json.countries[i].text}
+                                id=${country.id} 
+                                country_code=${country.country_code} 
+                                flag_emoji=${country.flag_emoji} 
+                                group_name=${country.group_name}>${country.flag_emoji} ${country.text}
                         </option>`;
                     }
+                    i++;
                 }
                 COMMON_GLOBAL.module_leaflet_countries = html;
                 if (document.querySelector('#common_module_leaflet_select_country')){

@@ -1076,7 +1076,7 @@
  *              language_id:number, 
  *              lang_code:string, 
  *              text:string, 
- *              app_id:number}} db_result_message_translation_getMessage
+ *              app_id:number}} db_result_message_getMessage
  * PARAMETER TYPE
  * @typedef {{  id:number,
  *              parameter_type_name:string,
