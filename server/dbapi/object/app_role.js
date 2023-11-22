@@ -1,4 +1,4 @@
-/** @module server/dbapi/component/app_role */
+/** @module server/dbapi/object/app_role */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
