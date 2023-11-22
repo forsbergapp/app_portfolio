@@ -1,4 +1,4 @@
-/** @module server/dbapi/component/app_category */
+/** @module server/dbapi/object/app_category */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
