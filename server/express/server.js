@@ -81,20 +81,20 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
         updateUserCommon,
         deleteUser,
         getProfileDetail,
-        searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/component/user_account.controller.js`);
+        searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/object/user_account.controller.js`);
     //server db api app_portfolio user account app
-    const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import(`file://${process.cwd()}/server/dbapi/component/user_account_app.controller.js`);
+    const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.controller.js`);
 
     const { createUserSetting, 
             getProfileUserSettingDetail,
             updateUserSetting, 
-            deleteUserSetting} = await import(`file://${process.cwd()}/server/dbapi/component/user_account_app_setting.controller.js`);
-    const { likeUserSetting, unlikeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/component/user_account_app_setting_like.controller.js`);
+            deleteUserSetting} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.controller.js`);
+    const { likeUserSetting, unlikeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting_like.controller.js`);
 
     //server db api db app_portfolio user account follow
-    const { followUser, unfollowUser} = await import(`file://${process.cwd()}/server/dbapi/component/user_account_follow.controller.js`);
+    const { followUser, unfollowUser} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_follow.controller.js`);
     //server db api app_portfolio user account like
-    const { likeUser, unlikeUser} = await import(`file://${process.cwd()}/server/dbapi/component/user_account_like.controller.js`);
+    const { likeUser, unlikeUser} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_like.controller.js`);
     
     //ConfigGet function in service.js used to get parameter values
     const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');

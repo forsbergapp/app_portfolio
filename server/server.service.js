@@ -711,32 +711,32 @@ const Info = async (callBack) => {
     //broadcast
     const {BroadcastSendAdmin, ConnectedCount, ConnectedCheck, BroadcastSendSystemAdmin, ConnectedList, ConnectedUpdate, BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
 
-    //server db api component app
-    const app = await import(`file://${process.cwd()}/server/dbapi/component/app.js`);
-    //server db api component app_category
-    const app_category = await import(`file://${process.cwd()}/server/dbapi/component/app_category.js`);
-    //server db api component app_log
-    const app_log = await import(`file://${process.cwd()}/server/dbapi/component/app_log.js`);
-    //server db api component app_object
-    const app_object = await import(`file://${process.cwd()}/server/dbapi/component/app_object.js`);
-    //server db api component app_parameter
-    const app_parameter = await import(`file://${process.cwd()}/server/dbapi/component/app_parameter.js`);
-    //server db api component app_role
-    const app_role = await import(`file://${process.cwd()}/server/dbapi/component/app_role.js`);
-    //server db api component country
-    const country = await import(`file://${process.cwd()}/server/dbapi/component/country.js`);
-    //server db api component locale
-    const locale = await import(`file://${process.cwd()}/server/dbapi/component/locale.js`);
-    //server db api component message
-    const message = await import(`file://${process.cwd()}/server/dbapi/component/message.js`);
-    //server db api component parameter_type
-    const parameter_type = await import(`file://${process.cwd()}/server/dbapi/component/parameter_type.js`);
-    //server db api component user account
-    const user_account = await import(`file://${process.cwd()}/server/dbapi/component/user_account.js`);
-    //server db api component user account app
-    const user_account_app = await import(`file://${process.cwd()}/server/dbapi/component/user_account_app.js`);
-    //server db api component user account app setting
-    const user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/component/user_account_app_setting.js`);
+    //server db api object app
+    const app = await import(`file://${process.cwd()}/server/dbapi/object/app.js`);
+    //server db api object app_category
+    const app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
+    //server db api  object app_log
+    const app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
+    //server db api object app_object
+    const app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
+    //server db api object app_parameter
+    const app_parameter = await import(`file://${process.cwd()}/server/dbapi/object/app_parameter.js`);
+    //server db api object app_role
+    const app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
+    //server db api object country
+    const country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
+    //server db api object locale
+    const locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
+    //server db api object message
+    const message = await import(`file://${process.cwd()}/server/dbapi/object/message.js`);
+    //server db api object parameter_type
+    const parameter_type = await import(`file://${process.cwd()}/server/dbapi/object/parameter_type.js`);
+    //server db api object user account
+    const user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
+    //server db api object user account app
+    const user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
+    //server db api object user account app setting
+    const user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.js`);
 
     //server db api admin
     const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
