@@ -99,6 +99,16 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
     BFF(getNumberValue(req.query.app_id), 'ADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 /**
+ * Backend for frontend (BFF) superadmin
+ * 
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ */
+ const BFF_superadmin = (req, res) =>{
+    BFF(getNumberValue(req.query.app_id), 'SUPERADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+};
+
+/**
  * Backend for frontend (BFF) systemadmin
  * 
  * @param {Types.req} req - Request
@@ -148,4 +158,4 @@ const BFF_auth = (req, res) =>{
         });
     }
 };
-export{BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_systemadmin, BFF_socket, BFF_auth};
+export{BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_auth};

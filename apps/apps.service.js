@@ -716,7 +716,7 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
  */
 const getModule = async (app_id, module_config, callBack) =>{
     //Data token
-    const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+    const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
     const datatoken = CreateDataToken(app_id);
     //get GPS from IP
     

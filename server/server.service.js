@@ -710,6 +710,10 @@ const Info = async (callBack) => {
  const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, accept_language, authorization, host, parameters, data, res) =>{
     //broadcast
     const {BroadcastSendAdmin, ConnectedCount, ConnectedCheck, BroadcastSendSystemAdmin, ConnectedList, ConnectedUpdate, BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
+
+    //server auth object
+    const auth = await import(`file://${process.cwd()}/server/auth.js`);
+
     //server db api object database
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     //server db api object app
@@ -742,8 +746,7 @@ const Info = async (callBack) => {
     //server log
     const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.service.js`);
     
-    const {default:{sign}} = await import('jsonwebtoken');
-    const {CheckFirstTime, ConfigGet, ConfigGetUser, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
     
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
@@ -1109,7 +1112,7 @@ const Info = async (callBack) => {
                     resolve(parameter_type.getParameterTypeAdmin(app_id, query));
                     break;
                 }
-                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
+                case 'SUPERADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
                     resolve(user_account.updateAdmin(app_id, query));
                     break;
                 }
@@ -1133,40 +1136,8 @@ const Info = async (callBack) => {
                     resolve(user_account.getLogonAdmin(app_id, query));
                     break;
                 }
-                case 'AUTH_AUTH_/AUTH/ADMIN_POST':{
-                    const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
-                        const { default: {compareSync} } = await import('bcryptjs');
-                        const config_username = ConfigGetUser('username');
-                        const config_password = ConfigGetUser('password');
-                        if (username == config_username && compareSync(password, config_password)) {
-                            const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
-                                                expiresIn: ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
-                                                });
-                            resolve({ 
-                                token_at: jsontoken_at
-                            });
-                        }
-                        else{
-                            res.statusMessage = 'unauthorized system admin login attempt for username:' + username;
-                            res.statusCode =401;
-                            reject('⛔');
-                        }            
-                    };
-                    if(authorization){       
-                        const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-                        const username = userpass.split(':')[0];
-                        const password = userpass.split(':')[1];
-                        if (CheckFirstTime())
-                            CreateSystemAdmin(username, password, () =>{
-                                check_user(username, password);
-                            });
-                        else
-                            check_user(username, password);
-                    }
-                    else{
-                        res.statusCode =401;
-                        reject('⛔');
-                    }
+                case 'AUTH_AUTH_/AUTH/SYSTEMADMIN_POST':{
+                    resolve(auth.login_systemadmin(authorization, res));
                     break;
                 }
                 case 'SOCKET_BROADCAST_/BROADCAST/CONNECTION/CONNECT_GET':{
