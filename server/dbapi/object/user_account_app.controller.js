@@ -32,12 +32,9 @@ const createUserAccountApp = (req, res) => {
  * @param {Types.res} res 
  */
 const getUserAccountApps = (req, res) => {
-	service.getUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.params.user_account_id))
+	service.getUserAccountApps(getNumberValue(req.query.app_id), getNumberValue(req.query.user_account_id))
 	.then((/**@type{Types.db_result_user_account_app_getUserAccountApps[]}*/result)=>{
-		res.status(200).json({
-			count: result.length,
-			items: result
-		});
+		res.status(200).send(result);
 	})
 	.catch((/**@type{Types.error}*/error)=>{
 		res.status(500).send(
@@ -53,9 +50,7 @@ const getUserAccountApps = (req, res) => {
 const getUserAccountApp = (req, res) => {
 	service.getUserAccountApp(getNumberValue(req.query.app_id), getNumberValue(req.query.user_account_id))
 	.then((/**@type{Types.db_result_user_account_app_getUserAccountApp[]}*/result)=>{
-		res.status(200).json({
-			items: result
-		});
+		res.status(200).send(result);
 	})
 	.catch((/**@type{Types.error}*/error)=>{
 		res.status(500).send(

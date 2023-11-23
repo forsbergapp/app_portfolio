@@ -110,6 +110,24 @@ const setParameter_admin = async (app_id, data) => {
 	};
 /**
  * 
+ * @param {number} app_id
+ * @param {Types.db_parameter_app_parameter_setParameterValue_admin} data 
+ * @param {number} dba
+ * @returns {Promise.<Types.db_result_app_parameter_setParameterValue_admin[]>}
+ */
+ const setParameterValue_admin = async (app_id, data, dba) => {
+	const sql = `UPDATE ${db_schema()}.app_parameter
+					SET parameter_value = :parameter_value
+				  WHERE app_id = :app_id
+					AND parameter_name = :parameter_name`;
+	const parameters = {parameter_value: data.parameter_value, 
+						app_id: data.app_id,
+						parameter_name: data.parameter_name};
+	return await db_execute(app_id, sql, parameters, dba);
+};
+
+/**
+ * 
  * @param {number} app_id 
  * @returns {Promise.<Types.db_result_app_parameter_getAppDBParametersAdmin[]>}
  */
@@ -157,5 +175,5 @@ const getAppStartParameters = async app_id => {
 		return await db_execute(app_id, sql, parameters, null);
 	};
 export{
-		getParameters_server, getParametersAllAdmin, getParameter, setParameter_admin, 
+		getParameters_server, getParametersAllAdmin, getParameter, setParameter_admin, setParameterValue_admin, 
 		getAppDBParametersAdmin, getAppStartParameters};

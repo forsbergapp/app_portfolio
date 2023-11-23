@@ -1045,6 +1045,10 @@
  *              parameter_value:string, 
  *              parameter_comment:string}} db_parameter_app_parameter_setParameter_admin
  * @typedef {   db_result_update} db_result_app_parameter_setParameter_admin
+ * @typedef {{  app_id: number, 
+ *              parameter_name:string, 
+ *              parameter_value:string}} db_parameter_app_parameter_setParameterValue_admin
+ * @typedef {   db_result_update} db_result_app_parameter_setParameterValue_admin
  * @typedef {{  id: number, 
  *              db_user:string, 
  *              db_password:string}} db_result_app_parameter_getAppDBParametersAdmin

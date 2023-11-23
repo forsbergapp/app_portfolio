@@ -710,7 +710,8 @@ const Info = async (callBack) => {
  const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, accept_language, authorization, host, parameters, data, res) =>{
     //broadcast
     const {BroadcastSendAdmin, ConnectedCount, ConnectedCheck, BroadcastSendSystemAdmin, ConnectedList, ConnectedUpdate, BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
-
+    //server db api object database
+    const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     //server db api object app
     const app = await import(`file://${process.cwd()}/server/dbapi/object/app.js`);
     //server db api object app_category
@@ -737,9 +738,6 @@ const Info = async (callBack) => {
     const user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
     //server db api object user account app setting
     const user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.js`);
-
-    //server db api admin
-    const { DBInfo, DBInfoSpace, DBInfoSpaceSum, demo_add, demo_delete, install_db, install_db_check, install_db_delete } = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
     
     //server log
     const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.service.js`);
@@ -930,54 +928,27 @@ const Info = async (callBack) => {
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFO_GET':{
-                    DBInfo(app_id).then((/**@type{Types.db_result_admin_DBInfo[]}*/result) =>{
-                        resolve({
-                            data: result[0]
-                        });
-                    });
+                    resolve(database.Info(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACE_GET':{
-                    DBInfoSpace(app_id).then((/**@type{Types.db_result_admin_DBInfoSpace[]}*/result) =>{
-                        resolve({
-                            data: result
-                        });
-                    });
+                    resolve(database.InfoSpace(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACESUM_GET':{
-                    DBInfoSpaceSum(app_id).then((/**@type{Types.db_result_admin_DBInfoSpaceSum[]}*/result) =>{
-                        resolve({
-                            data: result[0]
-                        });
-                    });                                    
+                    resolve(database.InfoSpaceSum(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_POST':{
-                    install_db(app_id,getNumberValue(query.get('optional')), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
-                        if (err)
-                            reject(err);
-                        else
-                            resolve(result);
-                    });
+                    resolve(database.Install(app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_GET':{
-                    install_db_check(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_db_check}*/result) =>{
-                        if (err)
-                            reject(err);
-                        else
-                            resolve(result);
-                    });
+                    resolve(database.InstalledCheck(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_DELETE':{
-                    install_db_delete(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_delete_result}*/result) =>{
-                        if (err)
-                            reject(err);
-                        else
-                            resolve(result);
-                    });
+                    resolve(database.Uninstall(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/PARAMETERS_GET':{
@@ -1095,25 +1066,11 @@ const Info = async (callBack) => {
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
-                    demo_add(app_id, data.demo_password, query.get('lang_code'), (/**@type{Types.error}*/err, /**@type{Types.admin_db_install_result}*/result) =>{
-                        if (err) {
-                            reject(err);
-                        }
-                        else
-                            resolve(result);
-                    });
+                    resolve(database.DemoInstall(app_id, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_DELETE':{
-                    demo_delete(app_id, (/**@type{Types.error}*/err, /**@type{number}*/result_demo_users_length) =>{
-                        if (err) {
-                            reject(err);
-                        }
-                        else
-                            resolve({
-                                count_deleted: result_demo_users_length
-                            });
-                    });
+                    resolve(database.DemoUninstall(app_id));
                     break;
                 }
                 case 'ADMIN_DB_API_/APPS/ADMIN_GET':{
@@ -1246,7 +1203,7 @@ const Info = async (callBack) => {
  * @async
  */
 const serverStart = async () =>{
-    const {DBStart} = await import(`file://${process.cwd()}/server/dbapi/admin/admin.service.js`);
+    const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
     const {serverExpress, serverExpressLogError} = await import(`file://${process.cwd()}/server/express/server.js`);
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
@@ -1261,7 +1218,7 @@ const serverStart = async () =>{
     });
     try {
         await InitConfig();
-        await DBStart();
+        await database.Start();
         //Get express app with all configurations
         /**@type{Types.express}*/
         const app = await serverExpress();
