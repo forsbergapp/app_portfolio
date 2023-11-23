@@ -2796,7 +2796,7 @@ const show_installation = () =>{
                 document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
                     const install_function = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                        const old_html = document.querySelector('#install_demo_button_install').innerHTML;
+                        const old_html = document.querySelector('#install_db_button_install').innerHTML;
                         document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
                         const path = `/systemadmin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
                         common.FFB ('DB_API', path, 'POST', 4, null, (err, result) => {
@@ -2810,7 +2810,7 @@ const show_installation = () =>{
                     };
                     const uninstall_function = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                        const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
+                        const old_html = document.querySelector('#install_db_button_uninstall').innerHTML;
                         document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
                         common.FFB ('DB_API', '/systemadmin/install?', 'DELETE', 4, null, (err, result) => {
                             document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
@@ -2833,7 +2833,7 @@ const show_installation = () =>{
                     }
                 }, false);
                 document.querySelector('#install_db_icon').classList.remove('installed');
-                if (JSON.parse(result).installed == 1)
+                if (JSON.parse(result)[0].installed == 1)
                     document.querySelector('#install_db_icon').classList.add('installed');
             }
         });
@@ -2894,7 +2894,6 @@ const show_installation = () =>{
 /*----------------------- */
 const show_db_info = async () => {
     if (admin_token_has_value()){
-        let json;
         const size = '(Mb)';
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
@@ -2902,17 +2901,17 @@ const show_db_info = async () => {
             if (err)
                 document.querySelector('#menu_8_content').innerHTML = '';
             else{
-                json = JSON.parse(result);
+                const database = JSON.parse(result)[0];
                 document.querySelector('#menu_8_content').innerHTML = 
                     `<div id='menu_8_content_widget1' class='widget'>
                         <div id='menu_8_db_info1'>
-                            <div id='menu_8_db_info_database_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem}</div><div id='menu_8_db_info_database_data'>${json.data.database_use}</div>
-                            <div id='menu_8_db_info_name_title'>${common.ICONS.app_database}</div><div id='menu_8_db_info_name_data'>${json.data.database_name}</div>
-                            <div id='menu_8_db_info_version_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem + common.ICONS.app_info}</div><div id='menu_8_db_info_version_data'>${json.data.version}</div>
-                            <div id='menu_8_db_info_database_schema_title'>${common.ICONS.app_database + common.ICONS.app_database_schema}</div><div id='menu_8_db_info_database_schema_data'>${json.data.database_schema}</div>
-                            <div id='menu_8_db_info_host_title'>${common.ICONS.app_server}</div><div id='menu_8_db_info_host_data'>${json.data.hostname}</div>
-                            <div id='menu_8_db_info_connections_title'>${common.ICONS.app_user_connections}</div><div id='menu_8_db_info_connections_data'>${json.data.connections}</div>
-                            <div id='menu_8_db_info_started_title'>${common.ICONS.app_database_started}</div><div id='menu_8_db_info_started_data'>${json.data.started}</div>
+                            <div id='menu_8_db_info_database_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem}</div><div id='menu_8_db_info_database_data'>${database.database_use}</div>
+                            <div id='menu_8_db_info_name_title'>${common.ICONS.app_database}</div><div id='menu_8_db_info_name_data'>${database.database_name}</div>
+                            <div id='menu_8_db_info_version_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem + common.ICONS.app_info}</div><div id='menu_8_db_info_version_data'>${database.version}</div>
+                            <div id='menu_8_db_info_database_schema_title'>${common.ICONS.app_database + common.ICONS.app_database_schema}</div><div id='menu_8_db_info_database_schema_data'>${database.database_schema}</div>
+                            <div id='menu_8_db_info_host_title'>${common.ICONS.app_server}</div><div id='menu_8_db_info_host_data'>${database.hostname}</div>
+                            <div id='menu_8_db_info_connections_title'>${common.ICONS.app_user_connections}</div><div id='menu_8_db_info_connections_data'>${database.connections}</div>
+                            <div id='menu_8_db_info_started_title'>${common.ICONS.app_database_started}</div><div id='menu_8_db_info_started_data'>${database.started}</div>
                         </div>
                     </div>
                     <div id='menu_8_content_widget2' class='widget'>
@@ -2926,7 +2925,7 @@ const show_db_info = async () => {
                         if (err)
                             document.querySelector('#menu_8_db_info_space_detail').innerHTML = '';
                         else{
-                            json = JSON.parse(result);
+                            const databaseInfoSpace = JSON.parse(result);
                             let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
                                             <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
                                                 <div>TABLE NAME</div>
@@ -2944,48 +2943,50 @@ const show_db_info = async () => {
                                                 <div>% USED</div>
                                             </div>
                                         </div>`;
-                            for (let i = 0; i < json.data.length; i++) {
+                            let i=0;
+                            for (const databaseInfoSpaceTable of databaseInfoSpace) {
                                 html += 
                                 `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
                                     <div class='menu_8_db_info_space_detail_col'>
-                                        <div>${json.data[i].table_name}</div>
+                                        <div>${databaseInfoSpaceTable.table_name}</div>
                                     </div>
                                     <div class='menu_8_db_info_space_detail_col'>
-                                        <div>${roundOff(json.data[i].total_size)}</div>
+                                        <div>${roundOff(databaseInfoSpaceTable.total_size)}</div>
                                     </div>
                                     <div class='menu_8_db_info_space_detail_col'>
-                                        <div>${roundOff(json.data[i].data_used)}</div>
+                                        <div>${roundOff(databaseInfoSpaceTable.data_used)}</div>
                                     </div>
                                     <div class='menu_8_db_info_space_detail_col'>
-                                        <div>${roundOff(json.data[i].data_free)}</div>
+                                        <div>${roundOff(databaseInfoSpaceTable.data_free)}</div>
                                     </div>
                                     <div class='menu_8_db_info_space_detail_col'>
-                                        <div>${roundOff(json.data[i].pct_used)}</div>
+                                        <div>${roundOff(databaseInfoSpaceTable.pct_used)}</div>
                                     </div>
                                 </div>`;
+                                i=0;
                             }
                             document.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
                             common.FFB ('DB_API', '/systemadmin/DBInfoSpaceSum?', 'GET', 4, null, (err, result) => {
                                 if (err)
                                     null;
                                 else{
-                                    json = JSON.parse(result);
+                                    const databaseInfoSpaceSum = JSON.parse(result);
                                     document.querySelector('#menu_8_db_info_space_detail').innerHTML += 
                                         `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
                                             <div class='menu_8_db_info_space_detail_col'>
                                                 <div>${common.ICONS.app_sum}</div>
                                             </div>
                                             <div class='menu_8_db_info_space_detail_col'>
-                                                <div>${roundOff(json.data.total_size)}</div>
+                                                <div>${roundOff(databaseInfoSpaceSum.total_size)}</div>
                                             </div>
                                             <div class='menu_8_db_info_space_detail_col'>
-                                                <div>${roundOff(json.data.data_used)}</div>
+                                                <div>${roundOff(databaseInfoSpaceSum.data_used)}</div>
                                             </div>
                                             <div class='menu_8_db_info_space_detail_col'>
-                                                <div>${roundOff(json.data.data_free)}</div>
+                                                <div>${roundOff(databaseInfoSpaceSum.data_free)}</div>
                                             </div>
                                             <div class='menu_8_db_info_space_detail_col'>
-                                                <div>${roundOff(json.data.pct_used)}</div>
+                                                <div>${roundOff(databaseInfoSpaceSum.pct_used)}</div>
                                             </div>
                                         </div>`;
                                 }
