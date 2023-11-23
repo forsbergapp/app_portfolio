@@ -9,7 +9,7 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
 const { default: {compareSync} } = await import('bcryptjs');
 const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
-const { accessToken } = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
+const { createAccessToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
 
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
 const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
@@ -103,7 +103,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                                 if (err)
                                                     reject(err);
                                                 else{
-                                                    data_body.access_token = accessToken(app_id);
+                                                    data_body.access_token = createAccessToken(app_id);
                                                     insertUserAccountLogon(app_id, data_body)
                                                     .then(()=>{
                                                         resolve({
@@ -117,7 +117,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                 });
                             }
                             else{
-                                data_body.access_token = accessToken(app_id);
+                                data_body.access_token = createAccessToken(app_id);
                                 insertUserAccountLogon(app_id, data_body)
                                 .then(()=>{
                                     resolve({
@@ -216,7 +216,7 @@ const login_provider = (app_id, ip, user_agent, query, data) =>{
                     data_login.user_account_id = result_signin[0].id;
                     createUserAccountApp(app_id, result_signin[0].id)
                     .then(()=>{
-                        data_login.access_token = accessToken(app_id);
+                        data_login.access_token = createAccessToken(app_id);
                         insertUserAccountLogon(app_id, data_login)
                         .then(()=>{
                             resolve({
@@ -243,7 +243,7 @@ const login_provider = (app_id, ip, user_agent, query, data) =>{
                         .then(()=>{
                             service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
                             .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                data_login.access_token = accessToken(app_id);
+                                data_login.access_token = createAccessToken(app_id);
                                 insertUserAccountLogon(app_id, data_login)
                                 .then(()=>{
                                     resolve({
@@ -310,7 +310,7 @@ const signup = (app_id, host, query, data) =>{
                             reject(err);
                         else
                             resolve({
-                                accessToken: accessToken(app_id),
+                                accessToken: createAccessToken(app_id),
                                 id: result_create.insertId,
                                 data: result_create
                             });
@@ -319,7 +319,7 @@ const signup = (app_id, host, query, data) =>{
             }
             else
                 resolve({
-                    accessToken: accessToken(app_id),
+                    accessToken: createAccessToken(app_id),
                     id: result_create.insertId,
                     data: result_create
                 });
@@ -390,7 +390,7 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data) =>
                 resolve({
                     count: result_activate.affectedRows,
                     auth: auth_password_new,
-                    accessToken: accessToken(app_id),
+                    accessToken: createAccessToken(app_id),
                     items: Array(result_activate)
                 });
             }

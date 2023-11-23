@@ -33,8 +33,8 @@ const BroadcastConnect = async (app_id,
                                 headers_user_agent, 
                                 ip, 
                                 response) =>{
-    const {checkDataToken} = await import(`file://${process.cwd()}/server/auth/auth.service.js`);
-    if (checkDataToken(authorization)){
+    const {checkDataTokenSocket} = await import(`file://${process.cwd()}/server/auth.service.js`);
+    if (checkDataTokenSocket(app_id, authorization)){
         const client_id = Date.now();
         ClientConnect(response);
         ClientOnClose(response, client_id);
