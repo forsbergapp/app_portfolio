@@ -180,12 +180,12 @@ const show_start = async (yearvalues) =>{
             if (common.COMMON_GLOBAL.system_admin==1){
                 service = 'LOG';
                 url = `/log/logs_stat?select_app_id=${app_id}&code=${status_code}&year=${year}&month=${month}`;
-                authorization_type = 4;
+                authorization_type = 'SYSTEMADMIN';
             }
             else{
                 service = 'DB_API';
                 url = `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`;
-                authorization_type = 3;
+                authorization_type = 'ACCESS';
             }
             //return result for both charts
             common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
@@ -300,7 +300,7 @@ const show_start = async (yearvalues) =>{
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
     const get_status_codes = async () =>{
         return new Promise((resolve)=>{
-            common.FFB ('LOG', '/log/statuscode?', 'GET', 4, null, (err, result) => {
+            common.FFB ('LOG', '/log/statuscode?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
                 if (err)
                     resolve();
                 else{
@@ -394,12 +394,12 @@ const get_apps = async () => {
         if (common.COMMON_GLOBAL.system_admin==1){
             service = 'SERVER';
             url = '/config/systemadmin/apps?';
-            authorization_type = 4;
+            authorization_type = 'SYSTEMADMIN';
         }
         else{
             service = 'DB_API';
             url = '/apps/admin?';
-            authorization_type = 3;
+            authorization_type = 'ACCESS';
         }
         common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
             if (err)
@@ -454,11 +454,11 @@ const sendBroadcast = () => {
     let token_type;
     if (common.COMMON_GLOBAL.system_admin==1){
         path = '/broadcast/message/SystemAdmin?';
-        token_type = 4;
+        token_type = 'SYSTEMADMIN';
     }
     else{
         path = '/broadcast/message/Admin?';
-        token_type = 3;
+        token_type = 'ACCESS';
     }
     common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err, result) => {
         if (err)
@@ -546,7 +546,7 @@ const set_broadcast_type = () => {
 const check_maintenance = async () => {
     if (admin_token_has_value()){
         let json;
-        await common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'GET', 4, null, (err, result) => {
+        await common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
             if (err)
                 null;
             else{
@@ -567,7 +567,7 @@ const set_maintenance = () => {
         else
             check_value = 0;
         const json_data = {value: check_value};
-        common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 4, json_data, () => {});
+        common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 'SYSTEMADMIN', json_data, () => {});
     }
 };
 /*----------------------- */
@@ -577,7 +577,7 @@ const set_maintenance = () => {
 const count_users = async () => {
     const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
         if (admin_token_has_value()){
-            await common.FFB ('BROADCAST', `/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 3, null, (err, result) => {
+            await common.FFB ('BROADCAST', `/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'ACCESS', null, (err, result) => {
                 if (err)
                     callBack(result, null);
                 else{
@@ -588,7 +588,7 @@ const count_users = async () => {
     };    
     if (admin_token_has_value()){
         document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB_API', '/user_account/admin/count?', 'GET', 3, null, (err, result) => {
+        await common.FFB ('DB_API', '/user_account/admin/count?', 'GET', 'ACCESS', null, (err, result) => {
             if (err)
                 document.querySelector('#menu_2_content').innerHTML = '';
             else{
@@ -696,7 +696,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
     //show all records if no search criteria
     if (document.querySelector('#list_user_account_search_input').value!='')
         search_user = encodeURI(document.querySelector('#list_user_account_search_input').value);
-    common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 3, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account').innerHTML = '';
         else{
@@ -905,7 +905,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
 };
 const show_user_account_logon = async (user_account_id) => {
     document.querySelector('#list_user_account_logon').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 3, null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account_logon').innerHTML = '';
         else{
@@ -982,7 +982,7 @@ const show_user_account_logon = async (user_account_id) => {
 /*----------------------- */
 const show_apps = async () => {
     document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
-    await common.FFB ('DB_API', '/apps/admin?', 'GET', 3, null, (err, result) => {
+    await common.FFB ('DB_API', '/apps/admin?', 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#menu_4_content').innerHTML = '';
         else{
@@ -1065,7 +1065,7 @@ const show_apps = async () => {
 };
 const show_app_parameter = (app_id) => {
     document.querySelector('#list_app_parameter').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 3, null, (err, result) => {
+    common.FFB ('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_app_parameter').innerHTML = '';
         else{
@@ -1223,7 +1223,7 @@ const button_save = async (item) => {
                                         config_json: document.querySelector('#list_config_edit').innerHTML};
                     const old_button = document.querySelector('#' + item).innerHTML;
                     document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
-                    common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 4, json_data, () => {
+                    common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data, () => {
                         document.querySelector('#' + item).innerHTML = old_button;
                     });
                 }
@@ -1236,6 +1236,7 @@ const update_record = async (table,
     if (admin_token_has_value()){
         let path;
         let json_data;
+        let token_type;
         const old_button = document.querySelector('#' + button).innerHTML;
         document.querySelector('#' + button).innerHTML = common.APP_SPINNER;
         switch (table){
@@ -1252,6 +1253,7 @@ const update_record = async (table,
                                 password_reminder:  parameters.password_reminder,
                                 verification_code:  parameters.verification_code};
                 path = `/user_account/admin?PUT_ID=${parameters.id}`;
+                token_type = 'SUPERADMIN';
                 break;
             }
             case 'app':{
@@ -1269,6 +1271,7 @@ const update_record = async (table,
                                 app_category_id:parameters.app_category_id
                             };
                 path = `/apps/admin?PUT_ID=${parameters.id}`;
+                token_type = 'ACCESS';
                 break;
             }
             case 'app_parameter':{
@@ -1278,10 +1281,11 @@ const update_record = async (table,
                                 parameter_value:    parameters.parameter_value,
                                 parameter_comment:  parameters.parameter_comment};
                 path = '/app_parameter/admin?';
+                token_type = 'ACCESS';
                 break;
             }
         }
-        await common.FFB ('DB_API', path, 'PUT', 3, json_data, (err) => {
+        await common.FFB ('DB_API', path, 'PUT', token_type, json_data, (err) => {
             document.querySelector('#' + button).innerHTML = old_button;
             if (err)
                 null;
@@ -1330,7 +1334,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.value}`, 'GET', 3, null, (err, result) => {
+                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.value}`, 'GET', 'ACCESS', null, (err, result) => {
                         row_action(err, result, event.target, event, 6, '');
                     });
                 }
@@ -1339,7 +1343,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.value = event.target.defaultValue;
                 else{
-                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.value}`, 'GET', 3, null, (err, result) => {
+                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.value}`, 'GET', 'ACCESS', null, (err, result) => {
                         row_action(err, result, event.target, event, 2);
                     });
                 }
@@ -1352,7 +1356,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     app_role_id_lookup=2;
                 else
                     app_role_id_lookup=event.target.value;
-                common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 3, null, (err, result) => {
+                common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 'ACCESS', null, (err, result) => {
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
                     if (old_value!='' && event.target.value=='')
@@ -1603,11 +1607,11 @@ const show_monitor = async (yearvalues) =>{
         
         if (common.COMMON_GLOBAL.system_admin==1){
             path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-            token_type = 4;
+            token_type = 'SYSTEMADMIN';
         }
         else{
             path  = '/config/admin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-            token_type = 3;
+            token_type = 'ACCESS';
         }      
         common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {
             if (err)
@@ -1761,12 +1765,12 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 if (common.COMMON_GLOBAL.system_admin==1){
                     path = `/broadcast/connection/SystemAdmin?${url_parameters}`;
                     service = 'BROADCAST';
-                    token_type = 4;
+                    token_type = 'SYSTEMADMIN';
                 }
                 else{
                     path = `/broadcast/connection/Admin?${url_parameters}`;
                     service = 'BROADCAST';
-                    token_type = 3;
+                    token_type = 'ACCESS';
                 }
                 document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
@@ -1774,7 +1778,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
             case 'list_app_log':{
                 path = `/app_log/admin?${url_parameters}`;
                 service = 'DB_API';
-                token_type = 3;
+                token_type = 'ACCESS';
                 document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
@@ -1782,7 +1786,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 logscope = document.querySelector('#select_logscope5')[document.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
                 path = `/log/logs?${url_parameters}`;
                 service = 'LOG';
-                token_type = 4;
+                token_type = 'SYSTEMADMIN';
                 document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
@@ -2469,9 +2473,9 @@ const list_item_click = (item) => {
                 ip_filter = `ip=${item.children[0].innerHTML}`;
             path = `/ip?${ip_filter}`;
             if (common.COMMON_GLOBAL.system_admin==1)
-                tokentype = 4;
+                tokentype = 'SYSTEMADMIN';
             else
-                tokentype = 3;
+                tokentype = 'ACCESS';
             common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                 if (err)
                     null;
@@ -2503,9 +2507,9 @@ const list_item_click = (item) => {
             }
             path = `/place?latitude=${lat}&longitude=${long}`;
             if (common.COMMON_GLOBAL.system_admin==1)
-                tokentype = 4;
+                tokentype = 'SYSTEMADMIN';
             else
-                tokentype = 3;
+                tokentype = 'ACCESS';
             common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                     if (err)
                         null;
@@ -2532,7 +2536,7 @@ const list_item_click = (item) => {
 };
 const get_server_log_parameters = async () => {
     let log_parameter;
-    await common.FFB ('LOG', '/log/parameters?', 'GET', 4, null, (err, result) => {
+    await common.FFB ('LOG', '/log/parameters?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
         if (err)
             null;
         else{
@@ -2697,7 +2701,7 @@ const show_server_config = () =>{
 };
 const show_config = async (config_nav=1) => {
     document.querySelector('#list_config').innerHTML = common.APP_SPINNER;
-    await common.FFB ('SERVER', `/config/systemadmin/saved?config_type_no=${config_nav}`, 'GET', 4, null, (err, result) => {
+    await common.FFB ('SERVER', `/config/systemadmin/saved?config_type_no=${config_nav}`, 'GET', 'SYSTEMADMIN', null, (err, result) => {
         if (err)
             document.querySelector('#list_config').innerHTML = '';
         else{
@@ -2774,7 +2778,7 @@ const show_config = async (config_nav=1) => {
 const show_installation = () =>{
     document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;    
     if (common.COMMON_GLOBAL.system_admin==1){
-        common.FFB ('DB_API', '/systemadmin/install?', 'GET', 4, null, (err, result) => {
+        common.FFB ('DB_API', '/systemadmin/install?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
             if (err)
                 document.querySelector('#menu_7_content').innerHTML = '';
             else{
@@ -2799,7 +2803,7 @@ const show_installation = () =>{
                         const old_html = document.querySelector('#install_db_button_install').innerHTML;
                         document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
                         const path = `/systemadmin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
-                        common.FFB ('DB_API', path, 'POST', 4, null, (err, result) => {
+                        common.FFB ('DB_API', path, 'POST', 'SYSTEMADMIN', null, (err, result) => {
                             document.querySelector('#install_db_button_install').innerHTML = old_html;
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.add('installed');
@@ -2812,7 +2816,7 @@ const show_installation = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         const old_html = document.querySelector('#install_db_button_uninstall').innerHTML;
                         document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/systemadmin/install?', 'DELETE', 4, null, (err, result) => {
+                        common.FFB ('DB_API', '/systemadmin/install?', 'DELETE', 'SYSTEMADMIN', null, (err, result) => {
                             document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.remove('installed');
@@ -2863,7 +2867,7 @@ const show_installation = () =>{
                         const json_data = {demo_password: document.querySelector('#install_demo_password').value};
                         const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                         document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/admin/demo?', 'POST', 3, json_data, (err, result) => {
+                        common.FFB ('DB_API', '/admin/demo?', 'POST', 'ACCESS', json_data, (err, result) => {
                             document.querySelector('#install_demo_button_install').innerHTML = old_html;
                             if (err == null){
                                 const result_obj = JSON.parse(result);
@@ -2876,7 +2880,7 @@ const show_installation = () =>{
                 case 'install_demo_button_uninstall':{
                     const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
                     document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', '/admin/demo?', 'DELETE', 3, null, (err, result) => {
+                    common.FFB ('DB_API', '/admin/demo?', 'DELETE', 'ACCESS', null, (err, result) => {
                         document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
                         if (err == null){
                             const result_obj = JSON.parse(result);
@@ -2897,7 +2901,7 @@ const show_db_info = async () => {
         const size = '(Mb)';
 
         document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB_API', '/systemadmin/DBInfo?', 'GET', 4, null, (err, result) => {
+        await common.FFB ('DB_API', '/systemadmin/DBInfo?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
             if (err)
                 document.querySelector('#menu_8_content').innerHTML = '';
             else{
@@ -2921,7 +2925,7 @@ const show_db_info = async () => {
                         <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                     </div>`;
                     document.querySelector('#menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', '/systemadmin/DBInfoSpace?', 'GET', 4, null, (err, result) => {
+                    common.FFB ('DB_API', '/systemadmin/DBInfoSpace?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
                         if (err)
                             document.querySelector('#menu_8_db_info_space_detail').innerHTML = '';
                         else{
@@ -2966,7 +2970,7 @@ const show_db_info = async () => {
                                 i=0;
                             }
                             document.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                            common.FFB ('DB_API', '/systemadmin/DBInfoSpaceSum?', 'GET', 4, null, (err, result) => {
+                            common.FFB ('DB_API', '/systemadmin/DBInfoSpaceSum?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
                                 if (err)
                                     null;
                                 else{
@@ -3003,7 +3007,7 @@ const show_db_info = async () => {
 const show_server_info = async () => {
     if (admin_token_has_value()){
         let json;
-        await common.FFB ('SERVER', '/info?', 'GET', 4, null, (err, result) => {
+        await common.FFB ('SERVER', '/info?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
             if (err)
                 null;
             else{         
