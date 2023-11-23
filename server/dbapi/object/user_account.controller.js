@@ -158,13 +158,10 @@ const searchProfileUser = (req, res) => {
  * @param {Types.res} res 
  */
 const getProfileDetail = (req, res) => {
-    service.getProfileDetail(getNumberValue(req.query.app_id), getNumberValue(req.params.id), getNumberValue(req.query.detailchoice))
+    service.getProfileDetail(getNumberValue(req.query.app_id), getNumberValue(req.query.user_account_id), getNumberValue(req.query.detailchoice))
     .then((/**@type{Types.db_result_user_account_getProfileDetail[]}*/result)=>{
         if (result)
-            res.status(200).json({
-                count: result.length,
-                items: result
-            });
+            res.status(200).send(result);
         else {
             import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                 record_not_found(res, getNumberValue(req.query.app_id), req.query.lang_code);

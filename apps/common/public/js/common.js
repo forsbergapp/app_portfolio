@@ -1375,13 +1375,13 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
     let path;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
-        path = '/user_account/profile/detail/';
+        path = '/user_account/profile/detail';
     }
     else{
         /* detailchoice 5, apps, returns same columns*/
-        path = `${rest_url_app}/`;
+        path = `${rest_url_app}`;
     }
-    path += `${document.querySelector('#common_profile_id').innerHTML}?detailchoice=${detailchoice}`;
+    path += `?user_account_id=${document.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
     if (parseInt(COMMON_GLOBAL.user_account_id) || 0 !== 0) {
@@ -1464,16 +1464,16 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                 if (err)
                     null;
                 else{
-                    const json = JSON.parse(result);
+                    const list_items = JSON.parse(result);
                     const profile_detail_list = document.querySelector('#common_profile_detail_list');
                     profile_detail_list.innerHTML = '';
 
                     let html = '';
                     let image = '';
                     let delete_div ='';
-                    for (let i = 0; i < json.count; i++) {
+                    for (const list_item of list_items) {
                         //id for username list, app_id for app list
-                        if (detailchoice==5 && typeof json.items[i].id =='undefined'){
+                        if (detailchoice==5 && typeof list_item.id =='undefined'){
                             if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
                                 delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS.app_delete}</div>`;
                                 
@@ -1481,41 +1481,41 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                             html += 
                             `<div class='common_profile_detail_list_row'>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_id'>${json.items[i].app_id}</div>
+                                    <div class='common_profile_detail_list_app_id'>${list_item.app_id}</div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <img class='common_profile_detail_list_app_logo' src='${json.items[i].logo}'>
+                                    <img class='common_profile_detail_list_app_logo' src='${list_item.logo}'>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                        ${json.items[i].app_name}
+                                        ${list_item.app_name}
                                     </div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     ${delete_div}
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_url'>${json.items[i].url}</div>
+                                    <div class='common_profile_detail_list_app_url'>${list_item.url}</div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_date_created'>${json.items[i].date_created}</div>
+                                    <div class='common_profile_detail_list_date_created'>${list_item.date_created}</div>
                                 </div>
                             </div>`;
                         }
                         else{
                             //Username list
-                            image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image);
+                            image = list_image_format_src(list_item.avatar ?? list_item.provider_image);
                             html += 
                             `<div class='common_profile_detail_list_row'>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_user_account_id'>${json.items[i].id}</div>
+                                    <div class='common_profile_detail_list_user_account_id'>${list_item.id}</div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     <img class='common_profile_detail_list_avatar' ${image}>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_username common_wide_list_column'>
-                                        <a href='#'>${json.items[i].username}</a>
+                                        <a href='#'>${list_item.username}</a>
                                     </div>
                                 </div>
                             </div>`;
