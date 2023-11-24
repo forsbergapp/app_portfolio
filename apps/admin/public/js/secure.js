@@ -1545,7 +1545,7 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
         const n = id => id==''?null:id;
         nav_click(n(event.target.id)?? n(event.target.parentNode.id) ?? n(event.target.parentNode.parentNode.id) ?? event.target.parentNode.parentNode.parentNode.id);    
-      }, true);
+      }, false);
 
     //add sort events on title
     set_list_eventlisteners('connected', 'sort');

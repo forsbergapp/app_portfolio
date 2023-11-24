@@ -132,6 +132,9 @@ const Info = async () => {
     //server config object
     const config = await import(`file://${process.cwd()}/server/config.js`);
 
+    //server log object
+    const log = await import(`file://${process.cwd()}/server/log.js`);
+
     //server db api object database
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     //server db api object app
@@ -160,10 +163,7 @@ const Info = async () => {
     const user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
     //server db api object user account app setting
     const user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.js`);
-    
-    //server log
-    const {getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles} = await import(`file://${process.cwd()}/server/log/log.service.js`);
-    
+        
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
     const routeFunction = parameters.substring(0, parameters.indexOf('?')).toUpperCase();
@@ -342,80 +342,23 @@ const Info = async () => {
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/PARAMETERS_GET':{
-                    getLogParameters(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_parameters}*/result) =>{
-                        if (err)
-                            reject(err);
-                        else
-                            resolve(result);
-                    });
+                    resolve(log.getLogParameters());
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/LOGS_GET':{
-                    /**@type{Types.admin_log_data_parameters} */
-                    const data = {	app_id:			app_id,
-                                    select_app_id:	getNumberValue(query.get('select_app_id')),
-                                    logscope:		query.get('logscope'),
-                                    loglevel:		query.get('loglevel'),
-                                    search:			query.get('search'),
-                                    sort:			query.get('sort'),
-                                    order_by:		query.get('order_by'),
-                                    year: 			query.get('year').toString(),
-                                    month:			query.get('month').toString(),
-                                    day:			query.get('day'),
-                                    };
-                    getLogs(app_id, data, (/**@type{Types.error}*/err, /**@type{*}*/result) =>{
-                        if (err)
-                            reject(err);
-                        else{
-                            if (result.length>0)
-                                resolve(result);
-                            else{
-                                reject('Record not found');
-                            }
-                        }
-                    });
+                    resolve(log.getLogs(app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/STATUSCODE_GET':{
-                    getStatusCodes().then((/**@type{object}*/status_codes)=>{
-                        resolve({
-                            status_codes: status_codes
-                        });
-                    });
+                    resolve(log.getStatusCodes());
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/LOGS_STAT_GET':{
-                    /**@type{Types.log_parameter_getLogStats} */
-                    const data = {	app_id:			getNumberValue(query.get('select_app_id')),
-                                    code:			getNumberValue(query.get('code')),
-                                    year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
-                                    month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1
-                                    };
-                    getLogsStats(app_id, data, (/**@type{Types.error}*/err, /**@type{Types.log_parameter_getLogStats[]}*/result) =>{
-                    if (err)
-                        reject(err);
-                    else{
-                        if (result.length>0)
-                            resolve(result);
-                        else{
-                            reject('Record not found');
-                        }
-                    }
-                    });
+                    resolve(log.getLogStats(query));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/FILES_GET':{
-                    getFiles(app_id, (/**@type{Types.error}*/err, /**@type{Types.admin_log_files[]}*/result) =>{
-                        if (err)
-                            reject(err);
-                        else{
-                            if (result.length>0)
-                                resolve(result);
-                            else{
-                                reject('Record not found');
-                            }
-                        }
-                    });
+                    resolve(log.getFiles());
                     break;
                 }
                 case 'ADMIN_BROADCAST_/BROADCAST/MESSAGE/ADMIN_POST':{
@@ -565,7 +508,7 @@ const serverStart = async () =>{
     const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
     const {serverExpress, serverExpressLogError} = await import(`file://${process.cwd()}/server/express/server.js`);
-    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
     const fs = await import('node:fs');
     const http = await import('node:http');
     const https = await import('node:https');

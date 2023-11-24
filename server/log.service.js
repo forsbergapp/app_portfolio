@@ -1,10 +1,30 @@
 /** @module server/log */
 
 // eslint-disable-next-line no-unused-vars
-import * as Types from './../../types.js';
+import * as Types from './../types.js';
 
 const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
+/**
+ * Get log parameters
+ */
+ const getLogParameters = () => {
+    /**@type{Types.admin_log_parameters} */
+    const result = {};
+    result.SERVICE_LOG_SCOPE_REQUEST = ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST');
+    result.SERVICE_LOG_SCOPE_SERVER = ConfigGet('SERVICE_LOG', 'SCOPE_SERVER');
+    result.SERVICE_LOG_SCOPE_SERVICE = ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE');
+    result.SERVICE_LOG_SCOPE_APP = ConfigGet('SERVICE_LOG', 'SCOPE_APP');
+    result.SERVICE_LOG_SCOPE_DB = ConfigGet('SERVICE_LOG', 'SCOPE_DB');
+    result.SERVICE_LOG_REQUEST_LEVEL = ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL');
+    result.SERVICE_LOG_SERVICE_LEVEL = ConfigGet('SERVICE_LOG', 'SERVICE_LEVEL');
+    result.SERVICE_LOG_DB_LEVEL = ConfigGet('SERVICE_LOG', 'DB_LEVEL');
+    result.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
+    result.SERVICE_LOG_LEVEL_ERROR = ConfigGet('SERVICE_LOG', 'LEVEL_ERROR');
+    result.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');  
+    result.SERVICE_LOG_FILE_INTERVAL = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
+    return result;
+};
 /**
  * Send log
  * @param {string} logscope 
@@ -12,7 +32,7 @@ const fs = await import('node:fs');
  * @param {object} log 
  * @returns {Promise.<null>}
  */
-const sendLog = async (logscope, loglevel, log) => {
+ const sendLog = async (logscope, loglevel, log) => {
     return await new Promise((resolve) => {
         try{        
             let filename = '';
@@ -394,142 +414,121 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
         resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_ERROR'), app_filename, app_function_name, app_line, logtext));
     });
 };
-/**
- * Get log parameters
- * @param {number} app_id 
- * @param {Types.callBack} callBack 
- * @returns 
- */
-const getLogParameters = (app_id, callBack) => {
-    /**@type{Types.admin_log_parameters} */
-    const result = {};
-    result.SERVICE_LOG_SCOPE_REQUEST = ConfigGet('SERVICE_LOG', 'SCOPE_REQUEST');
-    result.SERVICE_LOG_SCOPE_SERVER = ConfigGet('SERVICE_LOG', 'SCOPE_SERVER');
-    result.SERVICE_LOG_SCOPE_SERVICE = ConfigGet('SERVICE_LOG', 'SCOPE_SERVICE');
-    result.SERVICE_LOG_SCOPE_APP = ConfigGet('SERVICE_LOG', 'SCOPE_APP');
-    result.SERVICE_LOG_SCOPE_DB = ConfigGet('SERVICE_LOG', 'SCOPE_DB');
-    result.SERVICE_LOG_REQUEST_LEVEL = ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL');
-    result.SERVICE_LOG_SERVICE_LEVEL = ConfigGet('SERVICE_LOG', 'SERVICE_LEVEL');
-    result.SERVICE_LOG_DB_LEVEL = ConfigGet('SERVICE_LOG', 'DB_LEVEL');
-    result.SERVICE_LOG_LEVEL_VERBOSE = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-    result.SERVICE_LOG_LEVEL_ERROR = ConfigGet('SERVICE_LOG', 'LEVEL_ERROR');
-    result.SERVICE_LOG_LEVEL_INFO = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');  
-    result.SERVICE_LOG_FILE_INTERVAL = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-    return callBack(null, result);
-};
+
 /**
  * Get logs
- * @param {number} app_id 
- * @param {Types.admin_log_data_parameters} data 
- * @param {Types.callBack} callBack 
+ * @param {Types.admin_log_data_parameters} data
  */
-const getLogs = async (app_id, data, callBack) => {
+const getLogs = async (data) => {
     const fs = await import('node:fs');
-    let filename;
-    if (Number(data.month) <10)
-        data.month = '0' + data.month;
-    if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
-        if (Number(data.day) <10)
-            data.day = '0' + data.day;
-        filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
-    }
-    else
-        if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1M')
-            filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
-        else
-            filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
-    /**
-     * 
-     * @param {object} record 
-     * @param {string} search 
-     * @returns 
-     */
-    const match = (record, search) =>{
-        for (const value of Object.values(record)){
-            if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
-                !value.toString().toLowerCase().startsWith('/log/logs')){
-                    const col_check = value.toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-                    const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
-                    if (col_check.search(search_check)>-1)
-                        return true;
-                }
+    return new Promise ((resolve, reject)=>{
+        let filename;
+        if (Number(data.month) <10)
+            data.month = '0' + data.month;
+        if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
+            if (Number(data.day) <10)
+                data.day = '0' + data.day;
+            filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
         }
-        return false;
-    };
-    //read log file
-    await fs.promises.readFile(`${process.cwd()}${ConfigGetInit('PATH_LOG')}${filename}`, 'utf8')
-    .then(fileBuffer=>{
-        //read log records in the file
-        /**@type{string[]} */
-        const log_rows_array = fileBuffer.toString().split('\r\n');
-        //remove empty row and parse records to object
-        /**@type{object[]} */
-        let log_rows_array_obj = log_rows_array.filter(record=>record.length>0).map(record=>{if (record.length>0)
-                                            return JSON.parse(record);
-                                          });
-        //filter records
-        log_rows_array_obj = log_rows_array_obj.filter(record => {
-                return (
-                        (
+        else
+            if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1M')
+                filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+            else
+                filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+        /**
+         * 
+         * @param {object} record 
+         * @param {string} search 
+         * @returns 
+         */
+        const match = (record, search) =>{
+            for (const value of Object.values(record)){
+                if (!value.toString().toLowerCase().startsWith('/server/log/logs') && 
+                    !value.toString().toLowerCase().startsWith('/log/logs')){
+                        const col_check = value.toString().normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+                        const search_check = search.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase();
+                        if (col_check.search(search_check)>-1)
+                            return true;
+                    }
+            }
+            return false;
+        };
+        //read log file
+        fs.promises.readFile(`${process.cwd()}${ConfigGetInit('PATH_LOG')}${filename}`, 'utf8')
+        .then(fileBuffer=>{
+            //read log records in the file
+            /**@type{string[]} */
+            const log_rows_array = fileBuffer.toString().split('\r\n');
+            //remove empty row and parse records to object
+            /**@type{object[]} */
+            let log_rows_array_obj = log_rows_array.filter(record=>record.length>0).map(record=>{if (record.length>0)
+                                                return JSON.parse(record);
+                                              });
+            //filter records
+            log_rows_array_obj = log_rows_array_obj.filter(record => {
+                    return (
                             (
-                             (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == data.select_app_id ||data.select_app_id ==null))||
-                             (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
-                            ) &&
-                         ((data.search==null || data.search=='null' || data.search=='')|| 
-                          ((data.search!=null || data.search!='null' || data.search!='') && match(record, data.search)))
-                    );
-        });
-        //sort 
-        /**@type{number} */
-        let order_by_num;
-        if (data.order_by =='asc')
-            order_by_num = 1;
-        else   
-            order_by_num = -1;
-        log_rows_array_obj = log_rows_array_obj.sort((first, second)=>{
-            let first_sort, second_sort;
-            //sort default is connection_date if sort missing as argument
-            /**@ts-ignore */
-            if (typeof first[data.sort==null?'logdate':data.sort] == 'number'){
-                //number sort
+                                (
+                                 (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == data.select_app_id ||data.select_app_id ==null))||
+                                 (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
+                                ) &&
+                             ((data.search==null || data.search=='null' || data.search=='')|| 
+                              ((data.search!=null || data.search!='null' || data.search!='') && match(record, data.search)))
+                        );
+            });
+            //sort 
+            /**@type{number} */
+            let order_by_num;
+            if (data.order_by =='asc')
+                order_by_num = 1;
+            else   
+                order_by_num = -1;
+            log_rows_array_obj = log_rows_array_obj.sort((first, second)=>{
+                let first_sort, second_sort;
+                //sort default is connection_date if sort missing as argument
                 /**@ts-ignore */
-                first_sort = first[data.sort==null?'logdate':data.sort];
-                /**@ts-ignore */
-                second_sort = second[data.sort==null?'logdate':data.sort];
-                if (first_sort< second_sort )
-                    return -1 * order_by_num;
-                else if (first_sort> second_sort)
-                    return 1 * order_by_num;
-                else
-                    return 0;
-            }
-            else{
-                //string sort with lowercase and localcompare
-                /**@ts-ignore */
-                first_sort = first[data.sort==null?'logdate':data.sort];
-                if (first_sort == undefined)
-                    first_sort = 'undefined';
-                else
-                    first_sort = first_sort.toLowerCase();
-                if (second_sort == undefined)
-                    second_sort = 'undefined';
-                else{
+                if (typeof first[data.sort==null?'logdate':data.sort] == 'number'){
+                    //number sort
                     /**@ts-ignore */
-                    second_sort = second_sort.toLowerCase();
+                    first_sort = first[data.sort==null?'logdate':data.sort];
+                    /**@ts-ignore */
+                    second_sort = second[data.sort==null?'logdate':data.sort];
+                    if (first_sort< second_sort )
+                        return -1 * order_by_num;
+                    else if (first_sort> second_sort)
+                        return 1 * order_by_num;
+                    else
+                        return 0;
                 }
-                //using localeCompare as collation method
-                if (first_sort.localeCompare(second_sort)<0 )
-                    return -1 * order_by_num;
-                else if (first_sort.localeCompare(second_sort)>0 )
-                    return 1 * order_by_num;
-                else
-                    return 0;
-            }
-        });
-        callBack(null, log_rows_array_obj);
-    })
-    //return empty and not error
-    .catch(()=>callBack(null, []));
+                else{
+                    //string sort with lowercase and localcompare
+                    /**@ts-ignore */
+                    first_sort = first[data.sort==null?'logdate':data.sort];
+                    if (first_sort == undefined)
+                        first_sort = 'undefined';
+                    else
+                        first_sort = first_sort.toLowerCase();
+                    if (second_sort == undefined)
+                        second_sort = 'undefined';
+                    else{
+                        /**@ts-ignore */
+                        second_sort = second_sort.toLowerCase();
+                    }
+                    //using localeCompare as collation method
+                    if (first_sort.localeCompare(second_sort)<0 )
+                        return -1 * order_by_num;
+                    else if (first_sort.localeCompare(second_sort)>0 )
+                        return 1 * order_by_num;
+                    else
+                        return 0;
+                }
+            });
+            resolve(log_rows_array_obj);
+        })
+        //return empty and not error
+        .catch(()=> reject([]));
+    });
+    
 };
 /**
  * Get status codes
@@ -548,15 +547,16 @@ const getLogs = async (app_id, data, callBack) => {
  */
 const getStatusCodes = async () =>{
     const {STATUS_CODES} = await import('node:http');
-    return STATUS_CODES;
+    return {
+        status_codes: STATUS_CODES
+    };
+    
 };
 /**
  * Get log stat
- * @param {number} app_id 
  * @param {Types.log_parameter_getLogStats} data 
- * @param {Types.callBack} callBack 
  */
-const getLogsStats = async (app_id, data, callBack) => {
+const getLogsStats = async (data) => {
     /**@type{[Types.admin_log_stats_data]|[]} */
     const logfiles = [];
     /**@type{[Types.admin_log_stats_data]|[]} */
@@ -635,39 +635,33 @@ const getLogsStats = async (app_id, data, callBack) => {
             amount: logfiles.filter(log=>log.day == day).length
         });
     });
-    return callBack(null, logstat);
+    return logstat;
 };
 /**
  * Get log files
- * @param {number} app_id 
- * @param {Types.callBack} callBack 
  */
-const getFiles = (app_id, callBack) => {
+const getFiles = async () => {
     /**@type{[Types.admin_log_files]|[]} */
     const logfiles =[];
-    import('node:fs').then((fs) =>{
-        fs.readdir(process.cwd() + ConfigGetInit('PATH_LOG'), (err, files) => {
-            if (err) {
-                return callBack(err, null);
-            }
-            let i =1;
-            files.forEach(file => {
-                if (file.indexOf('REQUEST_INFO_')==0||
-                    file.indexOf('REQUEST_ERROR_')==0||
-                    file.indexOf('REQUEST_VERBOSE_')==0||
-                    file.indexOf('SERVER_INFO_')==0||
-                    file.indexOf('SERVER_ERROR_')==0||
-                    file.indexOf('APP_INFO_')==0||
-                    file.indexOf('APP_ERROR_')==0||
-                    file.indexOf('DB_INFO_')==0||
-                    file.indexOf('DB_ERROR_')==0||
-                    file.indexOf('SERVICE_ERROR_')==0||
-                    file.indexOf('SERVICE_INFO_')==0)
-                /**@ts-ignore */
-                logfiles.push({id: i++, filename:file});
-            });
-            return callBack(null, logfiles);
-        });
+    const fs = await import('node:fs');
+    const files = await fs.promises.readdir(process.cwd() + ConfigGetInit('PATH_LOG'));
+    let i =1;
+    files.forEach(file => {
+        if (file.indexOf('REQUEST_INFO_')==0||
+            file.indexOf('REQUEST_ERROR_')==0||
+            file.indexOf('REQUEST_VERBOSE_')==0||
+            file.indexOf('SERVER_INFO_')==0||
+            file.indexOf('SERVER_ERROR_')==0||
+            file.indexOf('APP_INFO_')==0||
+            file.indexOf('APP_ERROR_')==0||
+            file.indexOf('DB_INFO_')==0||
+            file.indexOf('DB_ERROR_')==0||
+            file.indexOf('SERVICE_ERROR_')==0||
+            file.indexOf('SERVICE_INFO_')==0)
+        /**@ts-ignore */
+        logfiles.push({id: i++, filename:file});
     });
+    return logfiles;
 };
-export {LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogParameters, getLogs, getStatusCodes, getLogsStats, getFiles};
+
+export {getLogParameters, LogRequestE, LogRequestI, LogServerI, LogServerE, LogDBI, LogDBE, LogServiceI, LogServiceE, LogAppI, LogAppE, getLogs, getStatusCodes, getLogsStats, getFiles};
