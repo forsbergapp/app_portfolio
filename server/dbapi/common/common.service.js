@@ -7,7 +7,7 @@ const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.service.js`);
 
 /**
  * 
