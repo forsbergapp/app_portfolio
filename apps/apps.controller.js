@@ -127,8 +127,8 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
  */
 const BFF_socket = (req, res) =>{
     //check inparameters
-    if (req.query.service.toUpperCase()=='BROADCAST' && 
-        Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/broadcast/connection/connect')){
+    if (req.query.service.toUpperCase()=='SOCKET' && 
+        Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/socket/connection/connect')){
             BFF(getNumberValue(req.query.app_id), 'SOCKET', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
         }
     else{
