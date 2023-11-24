@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {ConfigGet, ConfigGetSaved} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**
  * Calculate responsetime
  * @param {Types.res} res
@@ -159,7 +159,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
 const serverExpress = async () => {
     const {default:express} = await import('express');
-    const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {default:compression} = await import('compression');
     const {RequestControl} = await import(`file://${process.cwd()}/server/auth.service.js`);
     const {LogRequestI} = await import(`file://${process.cwd()}/server/log/log.service.js`);    

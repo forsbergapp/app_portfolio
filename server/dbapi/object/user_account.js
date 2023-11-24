@@ -7,7 +7,7 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
 
 
 const { default: {compareSync} } = await import('bcryptjs');
-const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const { ConfigGet } = await import(`file://${process.cwd()}/server/config.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { createAccessToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
 

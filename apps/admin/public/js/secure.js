@@ -2705,7 +2705,7 @@ const show_config = async (config_nav=1) => {
         if (err)
             document.querySelector('#list_config').innerHTML = '';
         else{
-            const json = JSON.parse(result);
+            const config = JSON.parse(result);
             let i = 0;
             if (config_nav==0)
                 document.querySelector('#list_config_edit').contentEditable = false;
@@ -2731,20 +2731,20 @@ const show_config = async (config_nav=1) => {
                         html += 
                         `<div id='list_config_row_${i_group}' class='list_config_row list_config_group' >
                             <div class='list_config_col list_config_group_title'>
-                                <div class='list_readonly'>${Object.keys(json.data)[i_group]}</div>
+                                <div class='list_readonly'>${Object.keys(config)[i_group]}</div>
                             </div>`;
-                            for (let j = 0; j < json.data[Object.keys(json.data)[i_group]].length; j++) {
+                            for (let j = 0; j < config[Object.keys(config)[i_group]].length; j++) {
                                 i++;
                                 html += 
                                 `<div id='list_config_row_${i}' class='list_config_row' >
                                     <div class='list_config_col'>
-                                        <div class='list_readonly'>${Object.keys(json.data[Object.keys(json.data)[i_group]][j])[0]}</div>
+                                        <div class='list_readonly'>${Object.keys(config[Object.keys(config)[i_group]][j])[0]}</div>
                                     </div>
                                     <div class='list_config_col'>
-                                        <input type=text class='list_edit' value='${Object.values(json.data[Object.keys(json.data)[i_group]][j])[0]}'/>
+                                        <input type=text class='list_edit' value='${Object.values(config[Object.keys(config)[i_group]][j])[0]}'/>
                                     </div>
                                     <div class='list_config_col'>
-                                        <div class='list_readonly'>${Object.values(json.data[Object.keys(json.data)[i_group]][j])[1]}</div>
+                                        <div class='list_readonly'>${Object.values(config[Object.keys(config)[i_group]][j])[1]}</div>
                                     </div>
                                 </div>`;
                             }    
@@ -2765,7 +2765,7 @@ const show_config = async (config_nav=1) => {
                     document.querySelector('#list_config').innerHTML = '';
                     document.querySelector('#list_config').style.display = 'none';
                     document.querySelector('#list_config_edit').style.display = 'flex';
-                    document.querySelector('#list_config_edit').innerHTML = JSON.stringify(json.data, undefined, 2);
+                    document.querySelector('#list_config_edit').innerHTML = JSON.stringify(config, undefined, 2);
                     break;
                 }
             }

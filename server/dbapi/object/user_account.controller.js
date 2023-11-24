@@ -6,7 +6,7 @@ import * as Types from './../../../types.js';
 const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
 
 const { default: {compareSync} } = await import('bcryptjs');
-const { ConfigGet } = await import(`file://${process.cwd()}/server/server.service.js`);
+const { ConfigGet } = await import(`file://${process.cwd()}/server/config.service.js`);
 const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);

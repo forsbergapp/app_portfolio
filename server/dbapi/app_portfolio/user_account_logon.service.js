@@ -56,7 +56,7 @@ const checkLogin = async (app_id, user_account_id, access_token, client_ip) => {
 							ua.app_role_id IN (:super_admin_app_role_id,:admin_app_role_id))
 						OR
 						ual.app_id <> :admin_app_id)`;
-	const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+	const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 	const parameters = {
 		user_account_id: user_account_id,
 		app_id: app_id,

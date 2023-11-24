@@ -3,7 +3,7 @@
 import * as Types from './../types.js';
 
 const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
-const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);

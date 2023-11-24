@@ -11,7 +11,7 @@ import * as Types from './../../../types.js';
  */
  const Info = async (app_id, DBA) => {
     const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     let sql;
     const db_use = ConfigGet('SERVICE_DB', 'USE');
     switch (db_use){
@@ -130,7 +130,7 @@ import * as Types from './../../../types.js';
  */
 const InfoSpace = async (app_id, DBA) => {
     const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     let sql;
     switch (ConfigGet('SERVICE_DB', 'USE')){
        case '1':
@@ -190,7 +190,7 @@ const InfoSpace = async (app_id, DBA) => {
  */
 const InfoSpaceSum = async (app_id, DBA) => {
     const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     let sql;
     switch (ConfigGet('SERVICE_DB', 'USE')){
        case '1':

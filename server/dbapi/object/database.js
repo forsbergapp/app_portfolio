@@ -6,7 +6,7 @@ import * as Types from './../../../types.js';
 const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/database.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const DBA=1;
 /**
  * 
@@ -59,7 +59,7 @@ const install_db_get_files = async (json_type) =>{
  */
  const Install = async (app_id, query)=> {
     const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-    const {CreateRandomString} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {CreateRandomString} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {setParameterValue_admin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     const {createHash} = await import('node:crypto');

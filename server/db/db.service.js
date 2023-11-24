@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 //mysql module used for both MariaDB and MySQL
 const MYSQL               = await import('mysql');
 const {default: PG}       = await import('pg');

@@ -5,7 +5,7 @@ import * as Types from './../types.js';
 
 const http = await import('node:http');
 const https = await import('node:https');
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
 
 
