@@ -32,10 +32,10 @@
  * @property {string} body.config_no                                - Server parameter
  * @property {config} body.config_json                              - Server parameter
  * @property {number} body.app_id
- * @property {number} body.client_id                                - Broadcast parameter
- * @property {number} body.client_id_current                        - Broadcast parameter
- * @property {string} body.broadcast_type                           - Broadcast parameter
- * @property {string} body.broadcast_message                        - Broadcast parameter
+ * @property {number} body.client_id                                - Socket parameter
+ * @property {number} body.client_id_current                        - Socket parameter
+ * @property {string} body.broadcast_type                           - Socket parameter
+ * @property {string} body.broadcast_message                        - Socket parameter
  * @property {string} body.demo_password                            - Admin parameter
  * @property {string} body.app_name                                 - app portfolio parameter
  * @property {string} body.url                                      - app portfolio parameter
@@ -93,7 +93,7 @@
  * @property {string} query.day                                     - Admin parameter
  * @property {number} query.limit                                   - Admin parameter
  * @property {string} query.order_by                                - Admin parameter
- * @property {sort_broadcast} query.sort                            - Admin parameter
+ * @property {sort_socket} query.sort                               - Admin parameter
  * @property {string} query.count_logged_in                         - Admin parameter
  * @property {number} query.optional                                - Admin parameter
  * @property {string} query.logscope                                - Admin log parameter
@@ -107,8 +107,8 @@
  * @property {(string|number|*)} query.user_account_logon_user_account_id
  * @property {string} query.lang_code
  * @property {string} query.authorization                           - EventSource parameter
- * @property {string} query.latitude                                - Broadcast and geolocation parameter
- * @property {string} query.longitude                               - Broadcast and geolocation parameter
+ * @property {string} query.latitude                                - Socket and geolocation parameter
+ * @property {string} query.longitude                               - Socket and geolocation parameter
  * @property {string} query.reportid                                - Report parameter
  * @property {string} query.service                                 - Report parameter
  * @property {string} query.messagequeue                            - Report parameter
@@ -130,7 +130,7 @@
  * @property {0|1|2|3|4|5|6} query.config_type_no - Server parameter
  * @property {  'SERVER'|
  *              'SERVICE_AUTH'|
- *              'SERVICE_BROADCAST'|
+ *              'SERVICE_SOCKET'|
  *              'SERVICE_DB'|
  *              'SERVICE_LOG'} query.config_group                   - Server parameter
  * 
@@ -460,7 +460,7 @@
  */
 /**
  * Server - Config group
- * @typedef {'SERVER'|'SERVICE_AUTH'|'SERVICE_BROADCAST'|'SERVICE_DB'|'SERVICE_LOG'} config_group
+ * @typedef {'SERVER'|'SERVICE_AUTH'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'} config_group
  */
 
 /**
@@ -498,7 +498,7 @@
  *                                  ENABLE_USER_REGISTRATION:string,
  *                                  ENABLE_USER_LOGIN:string,
  *                                  ENABLE_DBLOG:string}],
- *              ['SERVICE_BROADCAST']:[{CHECK_INTERVAL:string}],
+ *              ['SERVICE_SOCKET']:[{CHECK_INTERVAL:string}],
  *              ['SERVICE_DB']:[{   START:string,
  *                                  REST_RESOURCE_SCHEMA:string,
  *                                  USE:string,
@@ -603,8 +603,8 @@
  */
 
 /**
- * Server - Broadcast client
- * @typedef {object} broadcast_connect_list
+ * Server - Socket client
+ * @typedef {object} socket_connect_list
  * @property {number} id
  * @property {number} app_id
  * @property {number} user_account_id
@@ -618,7 +618,7 @@
  * @property {res}    response
  */
 /**
- * Server - Broadcast client
+ * Server - Socket client
  * @typedef {{  'id':number,
  *              'app_id':number,
  *              'app_role_icon':number|string,
@@ -630,11 +630,11 @@
  *              'gps_latitude':string,
  *              'gps_longitude':string,
  *              'ip':string,
- *              'user_agent':string}} broadcast_connect_list_no_res
+ *              'user_agent':string}} socket_connect_list_no_res
  */
 
 /**
- * Server Broadcast sort
+ * Server Socket sort
  * @typedef {   'id'|
  *              'app_id'|
  *              'app_role_icon'|
@@ -647,7 +647,7 @@
  *              'gps_longitude'|
  *              'ip'|
  *              'user_agent'|
- *              null} sort_broadcast
+ *              null} sort_socket
  */
 
 /**

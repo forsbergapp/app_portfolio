@@ -175,7 +175,7 @@ const serverExpress = async () => {
         const shouldCompress = (/**@type{Types.req}*/req) => {
             //exclude broadcast messages
             //check endpoint for broadcast
-            if (req.baseUrl == `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/broadcast`)
+            if (req.baseUrl == `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/socket`)
                 return false;
             else
                 return true;

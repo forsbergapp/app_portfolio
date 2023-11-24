@@ -123,9 +123,7 @@ const Info = async () => {
  * @async
  */
  const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, accept_language, authorization, host, parameters, data, res) =>{
-    //broadcast
-    const {BroadcastSendAdmin, ConnectedCount, ConnectedCheck, BroadcastSendSystemAdmin, ConnectedList, ConnectedUpdate, BroadcastConnect} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
-
+    
     //server auth object
     const auth = await import(`file://${process.cwd()}/server/auth.js`);
 
@@ -134,6 +132,9 @@ const Info = async () => {
 
     //server log object
     const log = await import(`file://${process.cwd()}/server/log.js`);
+
+    //server socket object
+    const socket = await import(`file://${process.cwd()}/server/socket.js`);
 
     //server db api object database
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
@@ -182,18 +183,12 @@ const Info = async () => {
                     resolve(user_account.signup(app_id, host, query, data));
                     break;
                 }
-                case 'DATA_BROADCAST_/BROADCAST/CONNECTION_PATCH':{
-                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), 
-                                    getNumberValue(query.get('system_admin')), getNumberValue(query.get('identity_provider_id')), query.get('latitude'), query.get('longitude'),
-                                            (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
-                        resolve(err ?? result);
-                    });
+                case 'DATA_SOCKET_/SOCKET/CONNECTION_PATCH':{
+                    resolve(socket.ConnectedUpdate(query));
                     break;
                 }
-                case 'DATA_BROADCAST_/BROADCAST/CONNECTION/CHECK_GET':{
-                    ConnectedCheck(getNumberValue(query.get('user_account_id')), (/**@type{Types.error}*/err, /**@type{boolean}*/result_connected)=>{
-                        resolve({online: result_connected});
-                    });
+                case 'DATA_SOCKET_/SOCKET/CONNECTION/CHECK_GET':{
+                    resolve(socket.ConnectedCheck(query));
                     break;
                 }
                 case 'DATA_DB_API_/APPS_GET':{
@@ -259,34 +254,16 @@ const Info = async () => {
                     resolve(user_account_app_setting.insertUserSettingView(app_id, ip, user_agent, data));
                     break;
                 }
-                case 'SYSTEMADMIN_BROADCAST_/BROADCAST/MESSAGE/SYSTEMADMIN_POST':{
-                    BroadcastSendSystemAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
-                        data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
-                        resolve(result);
-                    });
+                case 'SYSTEMADMIN_SOCKET_/SOCKET/MESSAGE/SYSTEMADMIN_POST':{
+                    resolve(socket.SocketSendSystemAdmin(data));
                     break;
                 }
-                case 'SYSTEMADMIN_BROADCAST_/BROADCAST/CONNECTION/SYSTEMADMIN_GET':{
-                    ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), 
-                                    getNumberValue(query.get('month')), query.get('order_by'), query.get('sort'),  1, 
-                                    (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
-                        if (err)
-                            reject({data: err});
-                        else{
-                            if (result && result.length>0)
-                                resolve(result);
-                            else
-                                reject('Record not found');
-                        }
-                    });
+                case 'SYSTEMADMIN_SOCKET_/SOCKET/CONNECTION/SYSTEMADMIN_GET':{
+                    resolve(socket.ConnectedListSystemadmin(app_id, query));
                     break;
                 }
-                case 'SYSTEMADMIN_BROADCAST_/BROADCAST/CONNECTION/SYSTEMADMIN_PATCH':{
-                    ConnectedUpdate(getNumberValue(query.get('client_id')), getNumberValue(query.get('user_account_logon_user_account_id')), getNumberValue(query.get('system_admin')), 
-                                    getNumberValue(query.get('identity_provider_id')), query.get('latitude'), query.get('longitude'),
-                                    (/**@type{Types.error}*/err, /**@type{void}*/result) =>{
-                        resolve(err ?? result);
-                    });
+                case 'SYSTEMADMIN_SOCKET_/SOCKET/CONNECTION/SYSTEMADMIN_PATCH':{
+                    resolve(socket.ConnectedUpdate(query));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_PUT':{
@@ -361,37 +338,16 @@ const Info = async () => {
                     resolve(log.getFiles());
                     break;
                 }
-                case 'ADMIN_BROADCAST_/BROADCAST/MESSAGE/ADMIN_POST':{
-                    BroadcastSendAdmin(getNumberValue(data.app_id), getNumberValue(data.client_id), getNumberValue(data.client_id_current),
-                                                data.broadcast_type, data.broadcast_message, (/**@type{Types.error}*/err, /**@type{object}*/result) =>{
-                        resolve(result);
-                    });
+                case 'ADMIN_SOCKET_/SOCKET/MESSAGE/ADMIN_POST':{
+                    resolve(socket.SocketSendAdmin(data));
                     break;
                 }
-                case 'ADMIN_BROADCAST_/BROADCAST/CONNECTION/ADMIN_GET':{
-                    ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('limit')), getNumberValue(query.get('year')), 
-                                    getNumberValue(query.get('month')), query.get('order_by'), query.get('sort'), 0, 
-                                    (/**@type{Types.error}*/err, /**@type{Types.broadcast_connect_list_no_res[]} */result) => {
-                        if (err) {
-                            reject({data: err});
-                        }
-                        else{
-                            if (result && result.length>0)
-                                resolve(result);
-                            else{
-                                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
-                                });
-                            }
-                        }
-                    });
+                case 'ADMIN_SOCKET_/SOCKET/CONNECTION/ADMIN_GET':{
+                    resolve(socket.ConnectedListAdmin(app_id, query));
                     break;
                 }
-                case 'ADMIN_BROADCAST_/BROADCAST/CONNECTION/ADMIN/COUNT_GET':{
-                    ConnectedCount( getNumberValue(query.get('identity_provider_id')), getNumberValue(query.get('count_logged_in')), 
-                                    (/**@type{Types.error}*/err, /**@type{number}*/count_connected) => {
-                        resolve({count_connected});
-                    });
+                case 'ADMIN_SOCKET_/SOCKET/CONNECTION/ADMIN/COUNT_GET':{
+                    resolve(socket.ConnectedCount(query));
                     break;
                 }
                 case 'ADMIN_SERVER_/CONFIG/ADMIN_GET':{
@@ -470,20 +426,8 @@ const Info = async () => {
                     resolve(auth.login_systemadmin(authorization, res));
                     break;
                 }
-                case 'SOCKET_BROADCAST_/BROADCAST/CONNECTION/CONNECT_GET':{
-                    //this is used for EventSource that needs to leave connection open
-                    BroadcastConnect(   app_id, 
-                                        get_query_value(parameters, 'identity_provider_id',1),
-                                        get_query_value(parameters, 'user_account_logon_user_account_id',1),
-                                        get_query_value(parameters, 'system_admin',1),
-                                        get_query_value(parameters, 'latitude'),
-                                        get_query_value(parameters, 'longitude'),
-                                        get_query_value(parameters, 'authorization'),
-                                        user_agent,
-                                        ip,
-                                        res).then(()=> {
-                        return resolve('');
-                    });
+                case 'SOCKET_SOCKET_/SOCKET/CONNECTION/CONNECT_GET':{
+                    resolve(socket.SocketConnect(app_id, parameters, user_agent, ip, res));
                     break;
                 }
                 default:{
@@ -506,7 +450,7 @@ const Info = async () => {
 const serverStart = async () =>{
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-    const {BroadcastCheckMaintenance} = await import(`file://${process.cwd()}/server/broadcast/broadcast.service.js`);
+    const {SocketCheckMaintenance} = await import(`file://${process.cwd()}/server/socket.service.js`);
     const {serverExpress, serverExpressLogError} = await import(`file://${process.cwd()}/server/express/server.js`);
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
     const fs = await import('node:fs');
@@ -527,7 +471,7 @@ const serverStart = async () =>{
         const {serverExpressApps} = await import(`file://${process.cwd()}/server/express/apps.js`);
         await serverExpressApps(app);
         serverExpressLogError(app);
-        BroadcastCheckMaintenance();
+        SocketCheckMaintenance();
         //START HTTP SERVER
         /**@ts-ignore*/
         http.createServer(app).listen(ConfigGet('SERVER', 'PORT'), () => {
@@ -557,4 +501,4 @@ const serverStart = async () =>{
     
 };
 
-export {COMMON, getNumberValue, Info, serverRoutes, serverStart };
+export {COMMON, getNumberValue, get_query_value, Info, serverRoutes, serverStart };

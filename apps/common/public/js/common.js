@@ -81,8 +81,8 @@ const COMMON_GLOBAL = {
     'module_easy.qrcode_color_dark':'',
     'module_easy.qrcode_color_light':'',
     'module_easy.qrcode_background_color':'',
-    service_broadcast_client_ID:'',
-    service_broadcast_eventsource:''
+    service_socket_client_ID:'',
+    service_socket_eventsource:''
 };
 Object.seal(COMMON_GLOBAL);
 const icon_string = (hexvalue) => `<div class='common_icon'>${String.fromCharCode(parseInt(hexvalue, 16))}</div>`;
@@ -3061,7 +3061,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     const encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id}&parameters=${encodedparameters}`;
     url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id}`;
-    if (service=='BROADCAST' && authorization_type=='SOCKET'){
+    if (service=='SOCKET' && authorization_type=='SOCKET'){
         callBack(null, new EventSource(url));
     }
     else
@@ -3120,7 +3120,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
         });
 };
 /*----------------------- 
-  SERVICE BROADCAST      
+  SERVICE SOCKET      
 
   local objects:
   broadcast_init
@@ -3155,7 +3155,7 @@ const show_broadcast = (broadcast_message) => {
         
         }
         case 'CONNECTINFO':{
-            COMMON_GLOBAL.service_broadcast_client_ID = JSON.parse(message).client_id;
+            COMMON_GLOBAL.service_socket_client_ID = JSON.parse(message).client_id;
             break;
         }
         case 'CHAT':
@@ -3217,42 +3217,42 @@ const updateOnlineStatus = () => {
     let token_type='';
     let path='';
     if (COMMON_GLOBAL.system_admin==1){
-        path =   '/broadcast/connection/SystemAdmin'+ 
-                `?client_id=${COMMON_GLOBAL.service_broadcast_client_ID}`+
+        path =   '/socket/connection/SystemAdmin'+ 
+                `?client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                 `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
                 `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type='SYSTEMADMIN';
     }
     else{
-        path =   '/broadcast/connection'+ 
-                `?client_id=${COMMON_GLOBAL.service_broadcast_client_ID}`+
+        path =   '/socket/connection'+ 
+                `?client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                 `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
                 `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type='DATA';
     }
-    FFB ('BROADCAST', path, 'PATCH', token_type, null, () => {});
+    FFB ('SOCKET', path, 'PATCH', token_type, null, () => {});
 };
 const connectOnline = async () => {
-    FFB ('BROADCAST', '/broadcast/connection/connect' +
+    FFB ('SOCKET', '/socket/connection/connect' +
                       `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
                       `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
          'GET', 'SOCKET', null, (err, result_eventsource) => {
         if (err)
             reconnect();
         else{
-            COMMON_GLOBAL.service_broadcast_eventsource = result_eventsource;
-            COMMON_GLOBAL.service_broadcast_eventsource.onmessage = (event) => {
+            COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
+            COMMON_GLOBAL.service_socket_eventsource.onmessage = (event) => {
                 show_broadcast(event.data);
             };
-            COMMON_GLOBAL.service_broadcast_eventsource.onerror = () => {
-                COMMON_GLOBAL.service_broadcast_eventsource.close();
+            COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
+                COMMON_GLOBAL.service_socket_eventsource.close();
                 reconnect();
             };
         }
     });
 };
 const checkOnline = (div_icon_online, user_account_id) => {
-    FFB ('BROADCAST', `/broadcast/connection/check?user_account_id=${user_account_id}`, 'GET', 'DATA', null, (err, result) => {
+    FFB ('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'DATA', null, (err, result) => {
         if (JSON.parse(result).online == 1)
             document.querySelector('#' + div_icon_online).className = 'online';
         else

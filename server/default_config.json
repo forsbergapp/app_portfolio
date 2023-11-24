@@ -35,7 +35,7 @@
     {"ENABLE_USER_LOGIN": "1", "COMMENT": "0=NO, 1=YES"},
     {"ENABLE_DBLOG": "0", "COMMENT": "0=NO, 1=YES, if services should be enabled to log all activity in app_log table in database"}
 ],
-"SERVICE_BROADCAST":[
+"SERVICE_SOCKET":[
     {"CHECK_INTERVAL": "5000", "COMMENT": "maintenance check interval in milliseconds"}
 ],
 "SERVICE_DB":[

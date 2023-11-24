@@ -1079,7 +1079,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                 };
                 switch (service){
                     case 'AUTH':
-                    case 'BROADCAST':{
+                    case 'SOCKET':{
                         serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
                         .then((/**@type{string}*/result)=>resolve(result))
                         .catch((/**@type{Types.error}*/error)=>reject(error));
