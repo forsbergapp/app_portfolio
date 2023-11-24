@@ -752,7 +752,7 @@ const DemoUninstall = async (app_id)=> {
  */
  const pool_db = async (db_use, dba, user, password, pool_id) =>{
     const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log/log.service.js`);
+    const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
     return new Promise ((resolve, reject)=>{
        /**@type{Types.pool_parameters} */
        const dbparameters = {

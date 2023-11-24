@@ -52,7 +52,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  * @param {Types.express} app
  */
  const serverExpressLogError = (app) =>{
-    import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogRequestE}) => {
+    import(`file://${process.cwd()}/server/log.service.js`).then(({LogRequestE}) => {
         //ERROR LOGGING
         app.use((/**@type{Types.error}*/err,/**@type{Types.req}*/req,/**@type{Types.res}*/res, /**@type{function}*/next) => {
             LogRequestE(req_log(req), res.statusCode, res.statusMessage, responsetime(res), err).then(() => {
@@ -162,7 +162,7 @@ const serverExpress = async () => {
     const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {default:compression} = await import('compression');
     const {RequestControl} = await import(`file://${process.cwd()}/server/auth.service.js`);
-    const {LogRequestI} = await import(`file://${process.cwd()}/server/log/log.service.js`);    
+    const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);    
     const ContentSecurityPolicy = ConfigGetSaved(4)['content-security-policy'];
     const {randomUUID, createHash} = await import('node:crypto');
     return new Promise((resolve) =>{

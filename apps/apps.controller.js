@@ -29,7 +29,7 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
 
     service.BFF(app_id, endpoint, service_called, parameters, ip, method, authorization, host, user_agent, accept_language, body, user_account_logon_user_account_id, res)
     .then((/**@type{*}*/result_service) => {
-        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceI})=>{
+        import(`file://${process.cwd()}/server/log.service.js`).then(({LogServiceI})=>{
             const log_result = service_called.toUpperCase()=='MAIL'?'✅':result_service;
             LogServiceI(app_id, service_called, parameters, log_result).then(()=>{
                 if (endpoint=='SOCKET'){
@@ -42,7 +42,7 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
         });
     })
     .catch((/**@type{Types.error}*/error) => {
-        import(`file://${process.cwd()}/server/log/log.service.js`).then(({LogServiceE})=>{
+        import(`file://${process.cwd()}/server/log.service.js`).then(({LogServiceE})=>{
             //log ERROR to module log and to files
             LogServiceE(app_id ?? null, service_called ?? null, parameters ?? null, error).then(() => {
                 //return service unavailable and error message
