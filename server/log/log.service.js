@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
 /**
  * Send log
@@ -580,7 +580,7 @@ const getLogsStats = async (app_id, data, callBack) => {
             }
             else
                 sample = `${data.year}${data.month}`;
-            const {ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
+            const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
             const fileBuffer = await fs.promises.readFile(`${process.cwd() + ConfigGetInit('PATH_LOG') + `REQUEST_INFO_${sample}.log`}`, 'utf8');
             fileBuffer.toString().split('\r\n').forEach((record) => {
                 if (record != ''){

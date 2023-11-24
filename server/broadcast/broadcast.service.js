@@ -5,7 +5,7 @@ import * as Types from './../../types.js';
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
-const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
 /**@type{Types.broadcast_connect_list[]} */
 let CONNECTED_CLIENTS = [];
 

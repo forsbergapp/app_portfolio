@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
 /**
  * 
@@ -314,7 +314,7 @@ const checkAccessToken = (app_id, authorization, ip, user_account_logon_user_acc
      */
     const block_ip_control = async (ip_v4, callBack) => {
         if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
-            const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/server.service.js`);
+            const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
             const ranges = ConfigGetSaved(3);
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
@@ -339,7 +339,7 @@ const checkAccessToken = (app_id, authorization, ip, user_account_logon_user_acc
      */
     const safe_user_agents = async (client_user_agent, callBack) => {
         if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
-            const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/server.service.js`);
+            const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
             const {user_agents} = ConfigGetSaved(5);
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)

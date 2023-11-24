@@ -48,7 +48,7 @@ const getSettings = async (app_id, lang_code, setting_type_name) => {
                    OR
                    st.app_id = :common_app_id)
           ORDER BY 1, 2, 3`;
-	const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+	const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
      const parameters = {
                          lang_code1: get_locale(lang_code, 1),
                          lang_code2: get_locale(lang_code, 2),
