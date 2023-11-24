@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {ConfigGet, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {app_start, getInfo, getApp, getReport, getMaintenance} = await import(`file://${process.cwd()}/apps/apps.service.js`);
 const fs = await import('node:fs');
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);

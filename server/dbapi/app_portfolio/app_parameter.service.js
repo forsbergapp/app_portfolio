@@ -27,7 +27,7 @@ const getParameters_server = async (app_id, data_app_id) => {
 						app_id = :common_app_id)
 					AND parameter_type_id IN ('0','1','2')
 				ORDER BY 1, 3`;
-		const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+		const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 		const parameters = {app_id: data_app_id,
 							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))};
 		return await db_execute(app_id, sql, parameters, null);
@@ -169,7 +169,7 @@ const getAppStartParameters = async app_id => {
 						app_id = :common_app_id)
 					AND parameter_type_id IN ('0','1')
 					ORDER BY 1`;
-		const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+		const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 		const parameters = {app_id: app_id,
 							common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID'))};
 		return await db_execute(app_id, sql, parameters, null);

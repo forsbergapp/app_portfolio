@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
 
-const {ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {db_query} = await import(`file://${process.cwd()}/server/db/db.service.js`);
@@ -106,7 +106,7 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
  */
  const record_not_found_promise = async (app_id, lang_code) => {
 	return new Promise((resolve)=>{
-		import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+		import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
 			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
 				getMessage( app_id,
 							getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
@@ -129,7 +129,7 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
  * @param {string} lang_code 
  */
 const record_not_found = (res, app_id, lang_code) => {
-	import(`file://${process.cwd()}/server/server.service.js`).then(({ConfigGet}) => {
+	import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
 		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
 			getMessage( app_id,
 						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 

@@ -4,7 +4,8 @@
 import * as Types from './../../../types.js';
 
 const {db_execute, db_schema, get_locale} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
-const {getNumberValue, ConfigGet} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * 
