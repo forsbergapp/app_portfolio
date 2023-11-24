@@ -447,20 +447,20 @@ const sendBroadcast = () => {
         
     const json_data ={  app_id:             app_id==''?null:app_id,
                         client_id:          client_id==''?null:client_id,
-                        client_id_current:  common.COMMON_GLOBAL.service_broadcast_client_ID,
+                        client_id_current:  common.COMMON_GLOBAL.service_socket_client_ID,
                         broadcast_type:     broadcast_type, 
                         broadcast_message:  broadcast_message};
     let path='';
     let token_type;
     if (common.COMMON_GLOBAL.system_admin==1){
-        path = '/broadcast/message/SystemAdmin?';
+        path = '/socket/message/SystemAdmin?';
         token_type = 'SYSTEMADMIN';
     }
     else{
-        path = '/broadcast/message/Admin?';
+        path = '/socket/message/Admin?';
         token_type = 'ACCESS';
     }
-    common.FFB ('BROADCAST', path, 'POST', token_type, json_data, (err, result) => {
+    common.FFB ('SOCKET', path, 'POST', token_type, json_data, (err, result) => {
         if (err)
             null;
         else{
@@ -577,7 +577,7 @@ const set_maintenance = () => {
 const count_users = async () => {
     const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
         if (admin_token_has_value()){
-            await common.FFB ('BROADCAST', `/broadcast/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'ACCESS', null, (err, result) => {
+            await common.FFB ('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'ACCESS', null, (err, result) => {
                 if (err)
                     callBack(result, null);
                 else{
@@ -1203,7 +1203,7 @@ const button_save = async (item) => {
                     return {   
                                 SERVER:             config_json[0],
                                 SERVICE_AUTH:       config_json[1],
-                                SERVICE_BROADCAST:  config_json[2],
+                                SERVICE_SOCKET:  config_json[2],
                                 SERVICE_DB:         config_json[3],
                                 SERVICE_LOG:        config_json[4]
                             };
@@ -1763,13 +1763,13 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin==1){
-                    path = `/broadcast/connection/SystemAdmin?${url_parameters}`;
-                    service = 'BROADCAST';
+                    path = `/socket/connection/SystemAdmin?${url_parameters}`;
+                    service = 'SOCKET';
                     token_type = 'SYSTEMADMIN';
                 }
                 else{
-                    path = `/broadcast/connection/Admin?${url_parameters}`;
-                    service = 'BROADCAST';
+                    path = `/socket/connection/Admin?${url_parameters}`;
+                    service = 'SOCKET';
                     token_type = 'ACCESS';
                 }
                 document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
@@ -2045,7 +2045,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         switch (list_div){
                             case 'list_connected':{    
                                 let list_connected_current_user_row='';
-                                if (log.id==common.COMMON_GLOBAL.service_broadcast_client_ID)
+                                if (log.id==common.COMMON_GLOBAL.service_socket_client_ID)
                                     list_connected_current_user_row = 'list_current_user_row';
                                 else
                                     list_connected_current_user_row ='';
