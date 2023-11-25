@@ -173,9 +173,8 @@ const serverExpress = async () => {
         //
         //use compression for better performance
         const shouldCompress = (/**@type{Types.req}*/req) => {
-            //exclude broadcast messages
-            //check endpoint for broadcast
-            if (req.baseUrl == `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/socket`)
+            //exclude broadcast messages using socket
+            if (req.originalUrl.toUpperCase().startsWith('/APPS/BFF/SOCKET'))
                 return false;
             else
                 return true;
