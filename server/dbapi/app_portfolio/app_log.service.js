@@ -186,7 +186,7 @@ const getStatUniqueVisitorAdmin = async (app_id, data_app_id, year, month) => {
 						 3,
 						 4,
 						 t.day_log
-				ORDER BY 1, 5`;
+				ORDER BY 1, 2, 5`;
 		const parameters = {app_id_log: data_app_id,
 							year_log: year,
 							month_log: month};
