@@ -415,10 +415,9 @@
  * @property {string} info_link_about_url
  */
 /**
- * Server - Access control
- * @typedef {object} access_control
- * @property {number} statusCode
- * @property {string} statusMessage
+ * Server - Request control
+ * @typedef {{statusCode:number,
+ *            statusMessage:string}|null} request_control
  */
 /**
  * Server - Config init
@@ -481,13 +480,13 @@
  *                              SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD:string,
  *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT:string,
  *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN:string}], 
- *              ['SERVICE_AUTH']:[{ ACCESS_CONTROL_ENABLE:string,
- *                                  ACCESS_CONTROL_IP:string,
- *                                  ACCESS_CONTROL_HOST_EXIST:string,
- *                                  ACCESS_CONTROL_ACCESS_FROM:string,
- *                                  ACCESS_CONTROL_USER_AGENT:string,
- *                                  ACCESS_CONTROL_USER_AGENT_EXIST:string,
- *                                  ACCESS_CONTROL_ACCEPT_LANGUAGE:string,
+ *              ['SERVICE_AUTH']:[{ REQUEST_CONTROL_ENABLE:string,
+ *                                  REQUEST_CONTROL_IP:string,
+ *                                  REQUEST_CONTROL_HOST_EXIST:string,
+ *                                  REQUEST_CONTROL_ACCESS_FROM:string,
+ *                                  REQUEST_CONTROL_USER_AGENT:string,
+ *                                  REQUEST_CONTROL_USER_AGENT_EXIST:string,
+ *                                  REQUEST_CONTROL_ACCEPT_LANGUAGE:string,
  *                                  ADMIN_TOKEN_EXPIRE_ACCESS:string,
  *                                  ADMIN_TOKEN_SECRET:string,
  *                                  ENABLE_CONTENT_SECURITY_POLICY:string,
