@@ -497,7 +497,6 @@
  *                                  ENABLE_DBLOG:string}],
  *              ['SERVICE_SOCKET']:[{CHECK_INTERVAL:string}],
  *              ['SERVICE_DB']:[{   START:string,
- *                                  REST_RESOURCE_SCHEMA:string,
  *                                  USE:string,
  *                                  LIMIT_LIST_SEARCH:string,
  *                                  LIMIT_PROFILE_TOP:string,
