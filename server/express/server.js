@@ -166,25 +166,25 @@ const serverExpress = async () => {
         
         app.use((/**@type{Types.req}*/req, /**@type{Types.res}*/ res, /**@type{function}*/ next) => {
             //access control that stops request if not passing controls
-            if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
-                RequestControl(req.ip, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.path, (/**@type{string}*/err, /**@type{Types.access_control}*/result)=>{
-                    if (err){
-                        //access control caused unknown error continue, will be logged when response closed
-                        res.statusCode = 500;
-                        res.statusMessage = err;
+            if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_ENABLE')=='1'){
+                RequestControl(req.ip, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.path)
+                .then((/**@type{Types.request_control}*/result)=>{
+                    if (result == null){                            
                         next();
                     }
-                    else
-                        if (result == null){                            
-                            next();
-                        }
-                        else{
-                            //update response, will be logged in request log
-                            res.statusCode = result.statusCode;
-                            res.statusMessage = 'access control: ' + result.statusMessage;
-                            res.send('⛔');
-                            res.end();
-                        }
+                    else{
+                        //update response, will be logged in request log
+                        res.statusCode = result.statusCode;
+                        res.statusMessage = 'access control: ' + result.statusMessage;
+                        res.send('⛔');
+                        res.end();
+                    }
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    //access control caused unknown error, continue, will be logged when response closed
+                    res.statusCode = 500;
+                    res.statusMessage = error;
+                    next();
                 });
             }
             else
