@@ -45,7 +45,6 @@ const COMMON_GLOBAL = {
     rest_at:'',
     rest_dt:'',
     rest_admin_at:'',
-    rest_resource_server:'',
     rest_resource_bff:'',
     image_file_allowed_type1:'',
     image_file_allowed_type2:'',
@@ -1934,7 +1933,7 @@ const user_logoff = async () => {
 const user_edit = async () => {
     let json;
     //get user from REST API
-    FFB ('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'GET', 'ACCESS', null, (err, result) => {
+    FFB ('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             null;
         else{
@@ -2053,14 +2052,14 @@ const user_update = async () => {
                         avatar:             avatar,
                         ...get_uservariables()
                     };
-        path = `/user_account/${COMMON_GLOBAL.user_account_id}?`;
+        path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
     } else {
         json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
                         username:       username,
                         bio:            bio,
                         private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').checked)
                     };
-        path = `/user_account/common/${COMMON_GLOBAL.user_account_id}?`;
+        path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
     }
     const old_button = document.querySelector('#common_user_edit_btn_user_update').innerHTML;
     let json;
@@ -2280,68 +2279,33 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
 };
 const user_function = (user_function, callBack) => {
     const user_id_profile = document.querySelector('#common_profile_id').innerHTML;
-    let json_data;
     let method;
     let path;
-    let check_div;
-    switch (user_function) {
-        case 'FOLLOW':
-            {
-                path = '/user_account_follow';
-                json_data = { user_account_id: user_id_profile};
-                check_div = document.querySelector('#common_profile_follow');
-                break;
-            }
-        case 'LIKE':
-            {
-                path = '/user_account_like';
-                json_data = { user_account_id: user_id_profile};
-                check_div = document.querySelector('#common_profile_like');
-                break;
-            }
+    const json_data = { user_account_id: user_id_profile};
+    const check_div = document.querySelector(`#common_profile_${user_function.toLowerCase()}`);
+    if (check_div.children[0].style.display == 'block') {
+        path = `/user_account_${user_function.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id}`;
+        method = 'POST';
+    } else {
+        path = `/user_account_${user_function.toLowerCase()}?DELETE_ID=${COMMON_GLOBAL.user_account_id}`;
+        method = 'DELETE';
     }
-
     if (COMMON_GLOBAL.user_account_id == '')
         show_common_dialogue('LOGIN');
     else {
-        if (check_div.children[0].style.display == 'block') {
-            method = 'POST';
-        } else {
-            method = 'DELETE';
-        }
-        FFB ('DB_API', `${path}/${COMMON_GLOBAL.user_account_id}?`, method, 'ACCESS', json_data, (err) => {
+        FFB ('DB_API', path, method, 'ACCESS', json_data, (err) => {
             if (err)
                 return callBack(err, null);
             else{
-                switch (user_function) {
-                    case 'FOLLOW':
-                        {
-                            if (document.querySelector('#common_profile_follow').children[0].style.display == 'block'){
-                                //follow
-                                document.querySelector('#common_profile_follow').children[0].style.display = 'none';
-                                document.querySelector('#common_profile_follow').children[1].style.display = 'block';
-                            }
-                            else{
-                                //unfollow
-                                document.querySelector('#common_profile_follow').children[0].style.display = 'block';
-                                document.querySelector('#common_profile_follow').children[1].style.display = 'none';
-                            }
-                            break;
-                        }
-                    case 'LIKE':
-                        {
-                            if (document.querySelector('#common_profile_like').children[0].style.display == 'block'){
-                                //like
-                                document.querySelector('#common_profile_like').children[0].style.display = 'none';
-                                document.querySelector('#common_profile_like').children[1].style.display = 'block';
-                            }
-                            else{
-                                //unlike
-                                document.querySelector('#common_profile_like').children[0].style.display = 'block';
-                                document.querySelector('#common_profile_like').children[1].style.display = 'none';
-                            }
-                            break;
-                        }
+                if (document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display == 'block'){
+                    //follow/like
+                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'none';
+                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'block';
+                }
+                else{
+                    //unfollow/unlike
+                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'block';
+                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'none';
                 }
                 return callBack(null, {});
             }
@@ -2420,7 +2384,7 @@ const updatePassword = () => {
         }
         const old_button = document.querySelector('#common_user_password_new_icon').innerHTML;
         document.querySelector('#common_user_password_new_icon').innerHTML = APP_SPINNER;
-        FFB ('DB_API', `/user_account/password/${COMMON_GLOBAL.user_account_id}?`, 'PUT', 'ACCESS', json_data, (err) => {
+        FFB ('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'ACCESS', json_data, (err) => {
             document.querySelector('#common_user_password_new_icon').innerHTML = old_button;
             if (err)
                 null;
@@ -3460,7 +3424,6 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL.app_sound= parseInt(parameters.app_sound);
 
     //rest 
-    COMMON_GLOBAL.rest_resource_server = parameters.rest_resource_server;
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
     //client credentials

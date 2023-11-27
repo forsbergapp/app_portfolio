@@ -4,26 +4,25 @@
 import * as Types from './../../../types.js';
 
 const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
+const user_account_app_setting_like_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
+
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * 
  * @param {number} app_id 
  * @param {*} query 
- * @returns 
+ * @param {Types.error} res
  */
-const getUserSettingsByUserId = (app_id, query) =>{
+const getUserSettingsByUserId = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getUserSettingsByUserId(app_id, getNumberValue(query.get('user_account_id')))
         .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result)=>{
             if (result)
-                resolve({
-                    count: result.length,
-                    items: result
-                });
+                resolve(result);
             else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -31,18 +30,18 @@ const getUserSettingsByUserId = (app_id, query) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
- * @returns 
+ * @param {*} query
+ * @param {Types.res} res
  */
-const getProfileUserSetting = (app_id, query) =>{
+const getProfileUserSetting = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getProfileUserSetting(app_id, getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSetting[]}*/result)=>{
             if (result[0])
                 resolve({items: result[0]});
             else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -50,9 +49,10 @@ const getProfileUserSetting = (app_id, query) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {*} query
+ * @param {Types.res} res
  */
-const getProfileUserSettings =(app_id, query) =>{
+const getProfileUserSettings =(app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getProfileUserSettings(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
         .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettings[]}*/result)=>{
@@ -62,8 +62,8 @@ const getProfileUserSettings =(app_id, query) =>{
                     items: result
                 });
             else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -72,10 +72,10 @@ const getProfileUserSettings =(app_id, query) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
- * @returns 
+ * @param {*} query
+ * @param {Types.res} res
  */
-const getProfileTopSetting = (app_id, query) =>{
+const getProfileTopSetting = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getProfileTopSetting(app_id, getNumberValue(query.get('statchoice')))
         .then((/**@type{Types.db_result_user_account_app_setting_getProfileTopSetting[]}*/result)=>{
@@ -85,8 +85,8 @@ const getProfileTopSetting = (app_id, query) =>{
                     items: result
                 }); 
             else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });
@@ -94,32 +94,123 @@ const getProfileTopSetting = (app_id, query) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {string} ip 
- * @param {string} user_agent
- * @param {*} data 
- * @returns 
+ * @param {*} query 
+ * @param {*} res
  */
-const insertUserSettingView =(app_id, ip, user_agent, data) =>{
-    return new Promise((resolve)=>{
-        /**@type{Types.db_parameter_user_account_app_setting_view_insertUserSettingView} */
-        const data_insert = {   client_ip:          ip,
-                                client_user_agent:  user_agent,
-                                client_longitude:   data.client_longitude,
-                                client_latitude:    data.client_latitude,
-                                user_account_id:    getNumberValue(data.user_account_id),
-                                user_setting_id:    getNumberValue(data.user_setting_id) ?? 0};
-        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`).then(({ insertUserSettingView})=>{
-            insertUserSettingView(app_id, data_insert)
-            .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
-                resolve({
-                    count: result.affectedRows,
-                    items: Array(result)
+const getProfileUserSettingDetail = (app_id, query, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getProfileUserSettingDetail(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(query.get('detailchoice')))
+        .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettingDetail[]}*/result)=>{
+            if (result)
+                resolve(result);
+            else
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-            });
         });
     });
 };
-                    
+/**
+ * 
+ * @param {number} app_id
+ * @param {*} query
+ * @param {*} data
+ */
+const createUserSetting = (app_id, query, data) => {
+    return new Promise((resolve)=>{
+        /**@type{Types.db_parameter_user_account_app_setting_createUserSetting} */
+        const data_create = {	description:		data.description,
+                                settings_json: 		data.settings_json,
+                                user_account_id:	getNumberValue(data.user_account_id)
+                            };
+        const call_service = ()=> {
+            service.createUserSetting(app_id, data_create)
+            .then((/**@type{Types.db_result_user_account_app_setting_createUserSetting}*/result)=>{
+                resolve({
+                    id: result.insertId,
+                    data: result
+                });
+            });
+        };
+        //Check if first time
+        if (getNumberValue(query.get('initial'))==1){
+            service.getUserSettingsByUserId(app_id, getNumberValue(data.user_account_id))
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result)=>{
+                if (result.length==0){
+                    //no user settings found, ok to create initial user setting
+                    call_service();
+                }
+                else
+                    resolve({
+                        id: null,
+                        data: null
+                    });
+            });
+        }
+        else
+            call_service();
+    });
+	
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {*} data 
+ * @param {Types.res} res
+ */
+const updateUserSetting = (app_id, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        /**@type{Types.db_parameter_user_account_app_setting_updateUserSetting} */
+        const data_update = {	description:		data.description,
+                                settings_json: 		data.settings_json,
+                                user_account_id:	getNumberValue(data.user_account_id)};
+        service.updateUserSetting(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+        .then((/**@type{Types.db_result_user_account_app_setting_updateUserSetting}*/result)=>{
+            if (result)
+                resolve(result);
+            else
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {Types.res} res
+ */
+const deleteUserSetting = (app_id, query, res) => {
+    return new Promise((resolve, reject)=>{
+        service.deleteUserSetting(app_id, getNumberValue(query.get('DELETE_ID')))
+        .then((/**@type{Types.db_result_user_account_app_setting_deleteUserSetting}*/result)=>{
+            if (result)
+                resolve(result);
+            else
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {*} data
+ */
+const like = (app_id, query, data) => user_account_app_setting_like_service.like(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id));
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {*} data
+ */
+const unlike = (app_id, query, data) => user_account_app_setting_like_service.unlike(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id));
 
 export{ getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileTopSetting,
-        insertUserSettingView};
+        /*ACCESS */
+        getProfileUserSettingDetail, createUserSetting, updateUserSetting, deleteUserSetting, like, unlike};

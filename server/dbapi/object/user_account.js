@@ -18,6 +18,8 @@ const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dba
 const { insertUserAccountLogon, getUserAccountLogonAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);
 const { getLastUserEvent, insertUserEvent } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_event.service.js`);
 
+const user_account_follow_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
+const user_account_like_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
 const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
 
 /**
@@ -28,9 +30,8 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
  * @param {number} userid 
  * @param {string|null} verification_code 
  * @param {string} email 
- * @param {Types.callBack} callBack 
  */
- const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email, callBack) => {
+ const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email) => {
     const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
     const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
     
@@ -44,14 +45,8 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
         }).then((/**@type{Types.email_return_data}*/email)=>{
             MessageQueue('MAIL', 'PUBLISH', email, null)
             .then(()=>{
-                callBack(null, null);
-            })
-            .catch((/**@type{Types.error}*/error)=>{
-                callBack(error, null);
+                return null;
             });
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            callBack(error, null);
         });
 };
 
@@ -98,20 +93,15 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                                             host, 
                                                             result_login[0].id, 
                                                             new_code, 
-                                                            result_login[0].email, 
-                                                            (/**@type{Types.error}*/err)=>{
-                                                if (err)
-                                                    reject(err);
-                                                else{
-                                                    data_body.access_token = createAccessToken(app_id);
-                                                    insertUserAccountLogon(app_id, data_body)
-                                                    .then(()=>{
-                                                        resolve({
-                                                            accessToken: data_body.access_token,
-                                                            items: Array(result_login[0])
-                                                        });
+                                                            result_login[0].email).then(()=>{
+                                                data_body.access_token = createAccessToken(app_id);
+                                                insertUserAccountLogon(app_id, data_body)
+                                                .then(()=>{
+                                                    resolve({
+                                                        accessToken: data_body.access_token,
+                                                        items: Array(result_login[0])
                                                     });
-                                                }
+                                                });
                                             });
                                         });
                                 });
@@ -304,16 +294,12 @@ const signup = (app_id, host, query, data) =>{
                                     host, 
                                     result_create.insertId, 
                                     data_body.verification_code, 
-                                    data_body.email ?? '', 
-                                    (/**@type{Types.error}*/err)=>{
-                        if (err)
-                            reject(err);
-                        else
-                            resolve({
-                                accessToken: createAccessToken(app_id),
-                                id: result_create.insertId,
-                                data: result_create
-                            });
+                                    data_body.email ?? '').then(()=>{
+                        resolve({
+                            accessToken: createAccessToken(app_id),
+                            id: result_create.insertId,
+                            data: result_create
+                        });
                     });  
                 });
             }
@@ -411,7 +397,7 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data) =>
  * @returns 
  */
 const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
-    return new Promise((resolve, reject)=>{
+    return new Promise((resolve)=>{
         const email = data.email ?? '';
         if (email !='')
             service.getEmailUser(app_id, email)
@@ -453,15 +439,11 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                                         host, 
                                                         result_emailuser[0].id, 
                                                         new_code, 
-                                                        email, 
-                                                        (/**@type{Types.error}*/err)=>{
-                                            if (err)
-                                                reject(err);
-                                            else
-                                                resolve({
-                                                    sent: 1,
-                                                    id: result_emailuser[0].id
-                                                });  
+                                                        email).then(()=>{
+                                            resolve({
+                                                sent: 1,
+                                                id: result_emailuser[0].id
+                                            });  
                                         });
                                     });
                                 });
@@ -485,10 +467,11 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
  * @param {string} ip 
  * @param {string} user_agent 
  * @param {*} query 
- * @param {*} data 
+ * @param {*} data
+ * @param {Types.res} res
  * @returns 
  */
-const getProfile = (app_id, ip, user_agent, query, data) =>{
+const getProfile = (app_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         service.getProfileUser(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(query.get('POST_ID'))==null?query.get('search'):null, getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_getProfileUser[]}*/result_getProfileUser)=>{
@@ -515,8 +498,8 @@ const getProfile = (app_id, ip, user_agent, query, data) =>{
                 }
             }
             else{
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         });
@@ -526,9 +509,9 @@ const getProfile = (app_id, ip, user_agent, query, data) =>{
  * 
  * @param {number} app_id 
  * @param {*} query 
- * @returns 
+ * @param {Types.res} res
  */
-const getProfileTop = (app_id, query) =>{
+const getProfileTop = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getProfileTop(app_id, getNumberValue(query.get('statchoice')))
         .then((/**@type{Types.db_result_user_account_getProfileTop[]}*/result)=>{
@@ -538,8 +521,8 @@ const getProfileTop = (app_id, query) =>{
                     items: result
                 });
             else {
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         });
@@ -589,10 +572,10 @@ const searchProfile = (app_id, ip, user_agent, query, data) =>{
  * 
  * @param {number} app_id 
  * @param {*} query 
- * @param {*} data 
- * @returns 
+ * @param {*} data
+ * @param {Types.res} res
  */
-const updateAdmin =(app_id, query, data) =>{
+const updateAdmin =(app_id, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         // get avatar and provider column used to validate
         service.getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')))
@@ -621,24 +604,20 @@ const updateAdmin =(app_id, query, data) =>{
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
                             deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
                             .then(()=>{
-                                resolve({
-                                    data: result_update
-                                });
+                                resolve({data: result_update});
                             });
                         });
                     }
                     else
-                        resolve({
-                            data: result_update
-                        });
+                        resolve({data: result_update});
                 })
                 .catch((/**@type{Types.error}*/error)=>{
                     checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
                 });
             }
             else{
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         });
@@ -665,5 +644,366 @@ const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id);
  */
 const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')));
     
-export {login, login_provider, signup, activate, forgot, getProfile, getProfileTop, searchProfile, updateAdmin, getUsersAdmin, getStatCountAdmin,
-        getLogonAdmin};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {string} host 
+ * @param {string} accept_language 
+ * @param {*} query 
+ * @param {*} data 
+ * @param {Types.res} res
+ */
+ const updatePassword = (app_id, ip, user_agent, host, accept_language, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        /**@type{Types.db_parameter_user_account_updatePassword} */
+        const data_update = {   password_new:   data.password_new,
+                                auth:           data.auth};
+        service.updatePassword(app_id, getNumberValue(query.get('PUT_ID')), data_update)
+        .then((/**@type{Types.db_result_user_account_updatePassword}*/result_update)=>{
+            if (result_update) {
+                /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
+                const eventData = {
+                    user_account_id: getNumberValue(query.get('PUT_ID')),
+                    event: 'PASSWORD_RESET',
+                    event_status: 'SUCCESSFUL',
+                    user_language: data.user_language,
+                    user_timezone: data.user_timezone,
+                    user_number_system: data.user_number_system,
+                    user_platform: data.user_platform,
+                    server_remote_addr : ip,
+                    server_user_agent : user_agent,
+                    server_http_host : host,
+                    server_http_accept_language : accept_language,
+                    client_latitude : data.client_latitude,
+                    client_longitude : data.client_longitude
+                };
+                insertUserEvent(app_id, eventData)
+                .then(()=>{
+                    resolve(result_update);
+                })
+                .catch(()=> {
+                    resolve({sent: 0});
+                });
+            }
+            else{
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{Types.error}*/error)=>{
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} host
+ * @param {string} accept_language
+ * @param {*} query 
+ * @param {*} data 
+ * @param {Types.res} res 
+ */
+ const updateUserLocal = async (app_id, ip, user_agent, host, accept_language, query, data, res) => {
+    /**@type{Types.db_result_user_account_getUserByUserId[]}*/
+    const result_user = await service.getUserByUserId(app_id, getNumberValue(query.get('PUT_ID')));
+    /**@type{Types.db_result_user_account_event_getLastUserEvent[]}*/
+    const result_user_event = await getLastUserEvent(app_id, getNumberValue(query.get('PUT_ID')), 'EMAIL_VERIFIED_CHANGE_EMAIL');
+    return new Promise((resolve, reject)=>{
+        if (result_user[0]) {
+            if (compareSync(data.password, result_user[0].password ?? '')){
+                let send_email=false;
+                if (data.new_email && data.new_email!=''){
+                    if ((result_user_event[0] && 
+                        (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
+                            result_user_event.length == 0)
+                        send_email=true;
+                }
+                /**@type{Types.db_parameter_user_account_updateUserLocal} */
+                const data_update = {   bio:                data.bio,
+                                        private:            data.private,
+                                        username:           data.username,
+                                        password:           data.password,
+                                        password_new:       (data.password_new && data.password_new!='')==true?data.password_new:null,
+                                        password_reminder:  (data.password_reminder && data.password_reminder!='')==true?data.password_reminder:null,
+                                        email:              data.email,
+                                        email_unverified:   (data.new_email && data.new_email!='')==true?data.new_email:null,
+                                        avatar:             data.avatar,
+                                        verification_code:  send_email==true?service.verification_code():null,
+                                        provider_id:        result_user[0].provider_id,
+                                        admin:              0
+                                    };
+                service.updateUserLocal(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+                .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
+                    if (result_update){
+                        if (send_email){
+                            //no change email in progress or older than at least 1 day
+                            /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
+                            const eventData = {
+                                user_account_id: getNumberValue(query.get('PUT_ID')),
+                                event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                                event_status: 'INPROGRESS',
+                                user_language: data.user_language,
+                                user_timezone: data.user_timezone,
+                                user_number_system: data.user_number_system,
+                                user_platform: data.user_platform,
+                                server_remote_addr : ip,
+                                server_user_agent : user_agent,
+                                server_http_host : host,
+                                server_http_accept_language : accept_language,
+                                client_latitude : data.client_latitude,
+                                client_longitude : data.client_longitude
+                            };
+                            insertUserEvent(app_id, eventData)
+                            .then(()=>{
+                                getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
+                                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
+                                    sendUserEmail(  app_id, 
+                                                    parameter[0].parameter_value, 
+                                                    host, 
+                                                    getNumberValue(query.get('PUT_ID')),
+                                                    data.verification_code, 
+                                                    data.new_email).then(()=>{
+                                        resolve({sent_change_email: 1});
+                                    });
+                                });
+                            });
+                        }
+                        else
+                            resolve({sent_change_email: 0});
+                    }
+                    else{
+                        import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                            record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                        });
+                    }
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                });
+            } 
+            else {
+                res.statusCode=400;
+                res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('PUT_ID'));
+                //invalid password
+                getMessage( app_id,
+                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                            '20401',
+                            query.get('lang_code'))
+                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                    reject(result_message[0].text);
+                });
+            }
+        } 
+        else {
+            //user not found
+            res.statusCode=404;
+            getMessage( app_id,
+                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                        '20305',
+                        query.get('lang_code'))
+            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                reject(result_message[0].text);
+            });
+        }
+    });
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {*} query
+ * @param {*} data
+ * @param {Types.res} res
+ */
+ const updateUserCommon = (app_id, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        /**@type{Types.db_parameter_user_account_updateUserCommon} */
+        const data_update = {   username:   data.username,
+                                bio:        data.bio,
+                                private:    data.private};
+        service.updateUserCommon(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+        .then((/**@type{Types.db_result_user_account_updateUserCommon}*/result_update)=>{
+            if (result_update)
+                resolve(result_update);
+            else{
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        })
+        .catch((/**@type{Types.error}*/error)=>{
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {Types.res} res 
+ */
+const getUserByUserId = (app_id, query, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getUserByUserId(app_id, getNumberValue(query.get('user_account_id')))
+        .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result)=>{
+            if (result[0])
+                resolve(result[0]);
+            else{
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {*} query
+ * @param {*} data
+ * @param {Types.res} res 
+ */
+ const deleteUser = (app_id, query, data, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getUserByUserId(app_id, getNumberValue(query.get('DELETE_ID')))
+        .then((/**@type{Types.db_result_user_account_getUserByUserId[]}*/result_user)=>{
+            if (result_user[0]) {
+                if (result_user[0].provider_id !=null){
+                    service.deleteUser(app_id, getNumberValue(query.get('DELETE_ID')))
+                    .then((/**@type{Types.db_result_user_account_deleteUser}*/result_delete)=>{
+                        if (result_delete)
+                            resolve(result_delete);
+                        else{
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    });
+                }
+                else{
+                    service.checkPassword(app_id, getNumberValue(query.get('DELETE_ID')))
+                    .then((/**@type{Types.db_result_user_account_checkPassword[]}*/result_password)=>{
+                        if (result_password[0]) {
+                            if (compareSync(data.password, result_password[0].password)){
+                                service.deleteUser(app_id, getNumberValue(query.get('DELETE_ID')))
+                                .then((/**@type{Types.db_result_user_account_deleteUser}*/result_delete)=>{
+                                    if (result_delete)
+                                        resolve(result_delete);
+                                    else{
+                                        import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                                            record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                                        });
+                                    }
+                                });
+                            }
+                            else{
+                                res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('DELETE_ID'));
+                                res.statusCode = 400;
+                                //invalid password
+                                getMessage( app_id,
+                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                            '20401',
+                                            query.get('lang_code'))
+                                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                                    reject(result_message[0].text);
+                                });
+                            } 
+                        }
+                        else{
+                            //user not found
+                            res.statusCode = 404;
+                            getMessage( app_id,
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        '20305',
+                                        query.get('lang_code'))
+                            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                                reject(result_message[0].text);
+                            });
+                        }
+                    });
+                }
+            }
+            else{
+                //user not found
+                res.statusCode = 404;
+                getMessage( app_id,
+                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                            '20305',
+                            query.get('lang_code'))
+                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                    reject(result_message[0].text);
+                });
+            }
+        });
+    });
+};
+/**
+ * 
+ * @param {number} app_id
+ * @param {*} query
+ * @param {Types.res} res 
+ */
+ const getProfileDetail = (app_id, query, res) => {
+    return new Promise((resolve, reject)=>{
+        service.getProfileDetail(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(query.get('detailchoice')))
+        .then((/**@type{Types.db_result_user_account_getProfileDetail[]}*/result)=>{
+            if (result)
+                resolve(result);
+            else {
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                });
+            }
+        });
+    });
+    
+};
+/**
+ * @param {number} app_id
+ * @param {*} query 
+ * @param {*} data
+ */
+const follow = (app_id, query, data) => user_account_follow_service.follow(app_id, getNumberValue(query.get('POST_ID')),getNumberValue(data.user_account_id));
+/**
+ * @param {number} app_id
+ * @param {*} query 
+ * @param {*} data
+ */
+const unfollow = (app_id, query, data) => user_account_follow_service.unfollow(app_id, getNumberValue(query.get('DELETE_ID')),getNumberValue(data.user_account_id));
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {*} data
+ */
+const like = (app_id, query, data) => user_account_like_service.like(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(data.user_account_id));
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ * @param {*} data
+ */
+const unlike = (app_id, query, data) => user_account_like_service.unlike(app_id, getNumberValue(query.get('DELETE_ID')), getNumberValue(data.user_account_id));
+
+export {/*DATA_LOGIN*/
+        login, login_provider, 
+        /*DATA_SIGNUP*/
+        signup, 
+        /*DATA*/
+        activate, forgot, getProfile, getProfileTop, 
+        /*DATA + ACCESS*/
+        searchProfile, 
+        /*ADMIN*/
+        updateAdmin, getUsersAdmin, getStatCountAdmin, getLogonAdmin,
+        /*ACCESS*/
+        updatePassword, updateUserLocal, updateUserCommon, getUserByUserId, deleteUser, getProfileDetail,
+        follow, unfollow,
+        like, unlike};

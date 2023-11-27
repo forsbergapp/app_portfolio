@@ -1157,19 +1157,17 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 /*----------------------- */
 const user_settings_get = async () => {
     const select = document.querySelector('#setting_select_user_setting');
-    let result_obj;
-    await common.FFB ('DB_API', `/user_account_app_setting/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'DAAT', null, (err, result) => {
+    await common.FFB ('DB_API', `/user_account_app_setting/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
         else{
-            result_obj = JSON.parse(result);
             select.innerHTML = '';
             //fill select
             let option_html = '';
-            for (let i = 0; i < result_obj.count; i++) {
-                const settings = JSON.parse(result_obj.items[i].settings_json);
-                
-                option_html += `<option value=${i} id=${result_obj.items[i].id} description='${settings.description}'
+            let i=0;
+            for (const user_account_app_setting of JSON.parse(result)) {
+                const settings = JSON.parse(user_account_app_setting.settings_json);
+                option_html += `<option value=${i} id=${user_account_app_setting.id} description='${settings.description}'
                                     regional_language_locale=${settings.regional_language_locale}
                                     regional_timezone=${settings.regional_timezone}
                                     regional_number_system=${settings.regional_number_system}
@@ -1218,9 +1216,10 @@ const user_settings_get = async () => {
                                     prayer_column_sunset_checked=${settings.prayer_column_sunset_checked}
                                     prayer_column_midnight_checked=${settings.prayer_column_midnight_checked}
                                     prayer_column_fast_start_end=${settings.prayer_column_fast_start_end}
-                                    user_account_id=${result_obj.items[i].user_account_app_user_account_id}
+                                    user_account_id=${user_account_app_setting.user_account_app_user_account_id}
                                     >${settings.description}
                                 </option>`;
+                i++;
             }
             select.innerHTML += option_html;
             //show user setting select
@@ -1563,7 +1562,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             method = 'PUT';
             const select_user_setting = document.querySelector('#setting_select_user_setting');
             const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            path = `/user_account_app_setting/${user_setting_id}?`;
+            path = `/user_account_app_setting?PUT_ID=${user_setting_id}`;
             break;
         }
         default:{
@@ -1620,7 +1619,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 const old_button = document.querySelector('#setting_btn_user_delete').innerHTML;
                 document.querySelector('#setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB_API', `/user_account_app_setting/${user_setting_id}?`, 'DELETE', 'ACCESS', null, (err) => {
+                common.FFB ('DB_API', `/user_account_app_setting?DELETE_ID=${user_setting_id}`, 'DELETE', 'ACCESS', null, (err) => {
                     if (err){
                         document.querySelector('#setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -1948,7 +1947,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.FFB ('DB_API', `/user_account_app_setting_like/${common.COMMON_GLOBAL.user_account_id}?`, method, 'ACCESS', json_data, (err) => {
+        common.FFB ('DB_API', `/user_account_app_setting_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'ACCESS', json_data, (err) => {
             if (err)
                 null;
             else{
