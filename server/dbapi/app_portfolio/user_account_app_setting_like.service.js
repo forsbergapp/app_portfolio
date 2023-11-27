@@ -10,9 +10,9 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @param {number} app_id
  * @param {number} id
  * @param {number} id_like
- * @returns {Promise.<Types.db_result_user_account_app_setting_like_likeUserSetting>}
+ * @returns {Promise.<Types.db_result_user_account_app_setting_like_like>}
  */
-const likeUserSetting = async (app_id, id, id_like) => {
+const like = async (app_id, id, id_like) => {
 	const sql = `INSERT INTO ${db_schema()}.user_account_app_setting_like(
 					user_account_app_user_account_id, user_account_app_setting_id, user_account_app_app_id, date_created)
 				VALUES(:user_account_id,:user_setting_id, :app_id, CURRENT_TIMESTAMP) `;
@@ -28,9 +28,9 @@ const likeUserSetting = async (app_id, id, id_like) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} id_unlike 
- * @returns {Promise.<Types.db_result_user_account_app_setting_like_unlikeUserSetting>}
+ * @returns {Promise.<Types.db_result_user_account_app_setting_like_unlike>}
  */
-const unlikeUserSetting = async (app_id, id, id_unlike) => {
+const unlike = async (app_id, id, id_unlike) => {
 	const sql = `DELETE FROM ${db_schema()}.user_account_app_setting_like
 					WHERE user_account_app_user_account_id = :user_account_id
 						AND user_account_app_setting_id = :user_setting_id 
@@ -42,4 +42,4 @@ const unlikeUserSetting = async (app_id, id, id_unlike) => {
 					};
 	return await db_execute(app_id, sql, parameters, null);
 };
-export{likeUserSetting, unlikeUserSetting};
+export{like, unlike};

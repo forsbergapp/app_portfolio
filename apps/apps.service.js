@@ -417,7 +417,6 @@ const get_module_with_init = async (app_info, callBack) => {
             client_timezone: app_info.timezone,
             app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
             common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
-            rest_resource_server: ConfigGet('SERVER', 'REST_RESOURCE_SERVER'),
             rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
             first_time: first_time
         };
@@ -1001,7 +1000,6 @@ const getMaintenance = (app_id) => {
                 //maintenance can be used from all app_id
                 const parameters = {   
                     app_id: app_id,
-                    rest_resource_server: ConfigGet('SERVER', 'REST_RESOURCE_SERVER'),
                     rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
                 };
                 render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
@@ -1103,16 +1101,10 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                             return reject ('⛔');
                         break;
                     }
-                    case 'DB_API':{
-                        const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-                        if (endpoint == 'ADMIN' || endpoint == 'SYSTEMADMIN' ||endpoint=='DATA' || endpoint=='DATA_LOGIN' || endpoint=='DATA_SIGNUP')
-                            serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
-                            .then((/**@type{string}*/result)=>resolve(result))
-                            .catch((/**@type{Types.error}*/error)=>reject(error));
-                        else{
-                            path = `${ConfigGet('SERVER', 'REST_RESOURCE_SERVER')}/dbapi${rest_resource_service_db_schema}${decodedparameters}&app_id=${app_id}`;
-                            call_service(path, service);
-                        }
+                    case 'DB_API':{                        
+                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
+                        .then((/**@type{string}*/result)=>resolve(result))
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
                         break;
                     }
                     case 'GEOLOCATION':{

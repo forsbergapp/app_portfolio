@@ -14,8 +14,9 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
  * @param {number} app_id 
  * @param {string} lang_code 
  * @param {Types.error} err 
+ * @param {Types.res} res
  */
- const checked_error = async (app_id, lang_code, err) =>{
+ const checked_error = async (app_id, lang_code, err, res) =>{
 	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
     return new Promise((resolve)=>{
 		const app_code = get_app_code(  err.errorNum, 
@@ -25,24 +26,19 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
 										err.sqlMessage);
 		if (app_code != null){
 			getMessage( app_id,
-						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
 						app_code, 
 						lang_code)
 			.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-				resolve(
-					result_message[0].text
-				);
-			})
-			.catch((/**@type{Types.error}*/error)=>{
-				resolve(
-					error
-				);
+				res.statusCode = 400;
+				res.statusMessage = result_message[0].text;
+				resolve(result_message[0].text);
 			});
 		}
 		else
-			resolve(
-				err
-			);
+			res.statusCode = 500;
+			res.statusMessage = err;
+			resolve(err);
 	});
 };
 /**
@@ -102,9 +98,10 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 /**
  * Get message for record not found
  * @param {number} app_id 
- * @param {string} lang_code 
+ * @param {string} lang_code
+ * @param {Types.res} res
  */
- const record_not_found_promise = async (app_id, lang_code) => {
+const record_not_found = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
 			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
@@ -113,40 +110,14 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 							'20400',
 							lang_code)
 				.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-					resolve(
-						result_message[0].text
-					);
+					res.statusCode = 404;
+					res.statusMessage = result_message[0].text;
+					resolve(result_message[0].text);
 				});
 			});
-		});
+		});	
 	});
-};
-
-/**
- * Get message for record not found
- * @param {Types.res} res 
- * @param {number} app_id 
- * @param {string} lang_code 
- */
-const record_not_found = (res, app_id, lang_code) => {
-	import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
-		import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
-			getMessage( app_id,
-						getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-						'20400',
-						lang_code)
-			.then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-				res.status(404).send(
-					result_message[0].text
-				);
-			})
-			.catch((/**@type{Types.error}*/error)=>{
-				res.status(500).send(
-					error
-				);
-			});
-		});
-	});
+	
 };
 /**
  * Get locale part
@@ -271,6 +242,6 @@ const db_limit_rows = (sql, limit_type = null) => {
 };
 
 export{
-		checked_error, get_app_code, record_not_found_promise, record_not_found, get_locale,
+		checked_error, get_app_code, record_not_found, get_locale,
 		db_schema,  db_limit_rows, db_execute
 };

@@ -10,9 +10,9 @@ const {db_execute, db_schema} = await import(`file://${process.cwd()}/server/dba
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} id_follow 
- * @returns {Promise.<Types.db_result_user_account_follow_followUser>}
+ * @returns {Promise.<Types.db_result_user_account_follow_follow>}
  */
-const followUser = async (app_id, id, id_follow) => {
+const follow = async (app_id, id, id_follow) => {
 		const sql = `INSERT INTO ${db_schema()}.user_account_follow(
 							user_account_id, user_account_id_follow, date_created)
 					VALUES(:user_account_id,:user_account_id_follow, CURRENT_TIMESTAMP)`;
@@ -27,9 +27,9 @@ const followUser = async (app_id, id, id_follow) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} id_unfollow 
- * @returns {Promise.<Types.db_result_user_account_follow_unfollowUser>}
+ * @returns {Promise.<Types.db_result_user_account_follow_unfollow>}
  */
-const unfollowUser = async (app_id, id, id_unfollow) => {
+const unfollow = async (app_id, id, id_unfollow) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_follow
 						WHERE user_account_id = :user_account_id
 						  AND user_account_id_follow = :user_account_id_follow`;
@@ -39,4 +39,4 @@ const unfollowUser = async (app_id, id, id_unfollow) => {
 						};
 		return await db_execute(app_id, sql, parameters, null);
 	};
-export{followUser, unfollowUser};
+export{follow, unfollow};

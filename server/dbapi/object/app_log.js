@@ -9,10 +9,11 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
+ * @param {*} query
+ * @param {Types.res} res
  * @returns Promise.<{Types.db_result_app_log_getLogsAdmin[]}>
  */
-const getLogsAdmin = (app_id, query) =>{
+const getLogsAdmin = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getLogsAdmin(   app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
                                 getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
@@ -20,8 +21,8 @@ const getLogsAdmin = (app_id, query) =>{
             if (result.length>0)
                 resolve(result);
             else{
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         });
@@ -31,17 +32,18 @@ const getLogsAdmin = (app_id, query) =>{
  * 
  * @param {number} app_id 
  * @param {*} query 
+ * @param {Types.res} res
  * @returns Promise.<{Types.db_result_app_log_getStatUniqueVisitorAdmin[]}>
  */
-const getStatUniqueVisitorAdmin = (app_id, query) =>{
+const getStatUniqueVisitorAdmin = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getStatUniqueVisitorAdmin(app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')))
         .then((/**@type{Types.db_result_app_log_getStatUniqueVisitorAdmin[]}*/result) =>{
             if (result.length>0)
                 resolve(result);
             else{
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
         });

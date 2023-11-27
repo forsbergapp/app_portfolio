@@ -72,9 +72,10 @@ const SocketSendAdmin = (data) => service.SocketSendAdmin(  getNumberValue(data.
  * 
  * @param {number} app_id 
  * @param {*} query 
+ * @param {Types.res} res
  * @returns 
  */
-const ConnectedListAdmin = (app_id, query) =>{
+const ConnectedListAdmin = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.ConnectedList(  app_id, getNumberValue(query.get('select_app_id')), 
                                         getNumberValue(query.get('limit')), 
@@ -86,8 +87,8 @@ const ConnectedListAdmin = (app_id, query) =>{
             if (result && result.length>0)
                 resolve(result);
             else
-                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found_promise}) => {
-                    record_not_found_promise(app_id, query.get('lang_code')).then((/**@type{string}*/message)=>reject(message));
+                import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                    record_not_found( app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
         });
     });

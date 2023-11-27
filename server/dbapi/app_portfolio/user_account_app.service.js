@@ -101,9 +101,9 @@ const updateUserAccountApp = async (app_id, user_account_id, data) => {
  * @param {number} app_id 
  * @param {number} user_account_id 
  * @param {number} data_app_id 
- * @returns {Promise.<Types.db_result_user_account_app_deleteUserAccountApps>}
+ * @returns {Promise.<Types.db_result_user_account_app_deleteUserAccountApp>}
  */
-const deleteUserAccountApps = async (app_id, user_account_id, data_app_id) => {
+const deleteUserAccountApp = async (app_id, user_account_id, data_app_id) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_app
 					WHERE user_account_id = :user_account_id
 					AND app_id = :app_id`;
@@ -113,4 +113,4 @@ const deleteUserAccountApps = async (app_id, user_account_id, data_app_id) => {
 						};
 		return await db_execute(app_id, sql, parameters, null);
 	};
-export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps};
+export{createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApp};
