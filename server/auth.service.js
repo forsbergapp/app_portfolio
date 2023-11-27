@@ -278,22 +278,21 @@ const checkAccessToken = (app_id, authorization, ip, user_account_logon_user_acc
 };
 /**
  * Request control
- * Controls if ACCESS_CONTROL_ENABLE=1 else skips all checks
+ * Controls if REQUEST_CONTROL_ENABLE=1 else skips all checks
  *  if ip is blocked return 403
- *  if ACCESS_CONTROL_HOST_EXIST=1 then check if host exists else return 406
- *  if ACCESS_CONTROL_ACCESS_FROM=1 then check if request accessed from domain and not from os hostname else return 406
+ *  if REQUEST_CONTROL_HOST_EXIST=1 then check if host exists else return 406
+ *  if REQUEST_CONTROL_ACCESS_FROM=1 then check if request accessed from domain and not from os hostname else return 406
  *  if user agent is in safe list then return ok else continue checks:
- *  if ACCESS_CONTROL_USER_AGENT_EXIST=1 then check if user agent exists else return 406
- *  if ACCESS_CONTROL_ACCEPT_LANGUAGE=1 then check if accept language exists else return 406
+ *  if REQUEST_CONTROL_USER_AGENT_EXIST=1 then check if user agent exists else return 406
+ *  if REQUEST_CONTROL_ACCEPT_LANGUAGE=1 then check if accept language exists else return 406
  *  if decodeURIComponent() no error then return null else return 400
  * @param {string} ip
  * @param {string} host
  * @param {string} user_agent
  * @param {string} accept_language
  * @param {string} path
- * @param {Types.callBack} callBack
  */
- const RequestControl = (ip, host, user_agent, accept_language, path, callBack) => {
+ const RequestControl = (ip, host, user_agent, accept_language, path) => {
     /**
      * IP to number
      * @param {string} ip
@@ -310,10 +309,10 @@ const checkAccessToken = (app_id, authorization, ip, user_account_logon_user_acc
      * Controls if ip is blocked
      *  if ip is blocked return 403
      * @param {string} ip_v4
-     * @param {Types.callBack} callBack
+     * @returns {Promise.<Types.request_control|null>}
      */
-    const block_ip_control = async (ip_v4, callBack) => {
-        if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_IP') == '1'){
+    const block_ip_control = async (ip_v4) => {
+        if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_IP') == '1'){
             const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
             const ranges = ConfigGetSaved(3);
             //check if IP is blocked
@@ -322,104 +321,95 @@ const checkAccessToken = (app_id, authorization, ip, user_account_logon_user_acc
                     if (IPtoNum(element[0]) <= IPtoNum(ip_v4) &&
                         IPtoNum(element[1]) >= IPtoNum(ip_v4)) {
                             //403 Forbidden
-                            return callBack(null,{  statusCode: 403,
-                                                    statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`});
+                            return {    statusCode: 403,
+                                        statusMessage: `${IPtoNum(element[0])}-${IPtoNum(element[1])}`};
                     }
                 }
             }
-            return callBack(null, null);
+            return null;
         }
         else
-            return callBack(null, null);
+            return null;
     };
     /**
      * Controls if user agent is safe
      * @param {string} client_user_agent
-     * @param {Types.callBack} callBack
+     * @returns {Promise.<boolean>}
      */
-    const safe_user_agents = async (client_user_agent, callBack) => {
-        if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT') == '1'){
+    const safe_user_agents = async (client_user_agent) => {
+        if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_USER_AGENT') == '1'){
             const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
             const {user_agents} = ConfigGetSaved(5);
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
-                    return callBack(null, true);
+                    return true;
             }
-            return callBack(null, false);
+            return false;
         }
         else
-            return callBack(null, false);
+            return false;
     };
-
-    if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ENABLE')=='1'){
-        const ip_v4 = ip.replace('::ffff:','');
-        block_ip_control(ip_v4, (/**@type{Types.error}*/err, /**@type{Types.access_control}*/result_range)=>{
-            if (err){
-                callBack(err, null);
-            }
-            else{
+    return new Promise((resolve)=>{
+        if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_ENABLE')=='1'){
+            const ip_v4 = ip.replace('::ffff:','');
+            block_ip_control(ip_v4).then((/**@type{Types.request_control}*/result_range)=>{
                 if (result_range){
-                    return callBack(null,{statusCode:result_range.statusCode,
-                                          statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
+                    resolve({   statusCode:result_range.statusCode,
+                                statusMessage: `ip ${ip_v4} blocked, range: ${result_range.statusMessage}`});
                 }
                 else{
                     //check if host exists
-                    if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_HOST_EXIST')=='1' &&
+                    if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_HOST_EXIST')=='1' &&
                         typeof host=='undefined'){
                         //406 Not Acceptable
-                        return callBack(null, {statusCode: 406, 
-                                               statusMessage: `ip ${ip_v4} blocked, no host`});
+                        resolve({   statusCode: 406, 
+                                    statusMessage: `ip ${ip_v4} blocked, no host`});
                     }
                     else{
                         //check if accessed from domain and not os hostname
                         import('node:os').then(({hostname}) =>{
-                            if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ACCESS_FROM')=='1' &&
+                            if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_ACCESS_FROM')=='1' &&
                                 host==hostname()){
                                 //406 Not Acceptable
-                                return callBack(null, {statusCode: 406, 
-                                                       statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
+                                resolve({   statusCode: 406, 
+                                            statusMessage: `ip ${ip_v4} blocked, accessed from hostname ${host} not domain`});
                             }
                             else{
-                                safe_user_agents(user_agent, (/**@type{Types.error}*/err, /**@type{boolean}*/safe)=>{
-                                    if (err){
-                                        return callBack(err, null);
-                                    }
+                                safe_user_agents(user_agent).then((/**@type{boolean}*/safe)=>{
+                                    if (safe==true)
+                                        resolve(null);
                                     else{
-                                        if (safe==true)
-                                            return callBack(null,null);
+                                        //check if user-agent exists
+                                        if(ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_USER_AGENT_EXIST')==1 &&
+                                            typeof user_agent=='undefined'){
+                                            //406 Not Acceptable
+                                            resolve({   statusCode: 406, 
+                                                        statusMessage: `ip ${ip_v4} blocked, no user-agent`});
+                                        }
                                         else{
-                                            //check if user-agent exists
-                                            if(ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_USER_AGENT_EXIST')==1 &&
-                                                typeof user_agent=='undefined'){
+                                            //check if accept-language exists
+                                            if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_ACCEPT_LANGUAGE')=='1' &&
+                                                typeof accept_language=='undefined'){
                                                 //406 Not Acceptable
-                                                return callBack(null, {statusCode: 406, 
-                                                                       statusMessage: `ip ${ip_v4} blocked, no user-agent`});
+                                                resolve({   statusCode: 406, 
+                                                            statusMessage: `ip ${ip_v4} blocked, no accept-language`});
                                             }
                                             else{
-                                                //check if accept-language exists
-                                                if (ConfigGet('SERVICE_AUTH', 'ACCESS_CONTROL_ACCEPT_LANGUAGE')=='1' &&
-                                                    typeof accept_language=='undefined'){
-                                                    //406 Not Acceptable
-                                                    return callBack(null, {statusCode: 406, 
-                                                                           statusMessage: `ip ${ip_v4} blocked, no accept-language`});
+                                                //check request
+                                                let err = null;
+                                                try {
+                                                    decodeURIComponent(path);
                                                 }
-                                                else{
-                                                    //check request
-                                                    let err = null;
-                                                    try {
-                                                        decodeURIComponent(path);
-                                                    }
-                                                    catch(e) {
-                                                        err = e;
-                                                    }
-                                                    if (err){
-                                                        return callBack(null, { statusCode: 400, 
-                                                                                statusMessage: 'decodeURIComponent error'});
-                                                    }
-                                                    else
-                                                        return callBack(null, null);
-                                                    
+                                                catch(e) {
+                                                    err = e;
                                                 }
+                                                if (err){
+                                                    resolve({   statusCode: 400, 
+                                                                statusMessage: 'decodeURIComponent error'});
+                                                }
+                                                else
+                                                    resolve(null);
+                                                
                                             }
                                         }
                                     }
@@ -428,11 +418,12 @@ const checkAccessToken = (app_id, authorization, ip, user_account_logon_user_acc
                         });
                     }
                 }
-            }
-        });
-    }
-    else
-        return callBack(null,null);
+            });
+        }
+        else
+            resolve(null);
+    });
+    
 };
 
 export{ login_systemadmin, checkSystemAdmin, 
