@@ -71,33 +71,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     
     //auth
     const auth = await import(`file://${process.cwd()}/server/auth.js`);
-
-    //server db api app_portfolio user account
-    const {
-        updatePassword,
-        updateUserLocal,
-        getUserByUserId,
-        updateUserCommon,
-        deleteUser,
-        getProfileDetail,
-        searchProfileUser} = await import(`file://${process.cwd()}/server/dbapi/object/user_account.controller.js`);
-    //server db api app_portfolio user account app
-    const { createUserAccountApp, getUserAccountApps, getUserAccountApp, updateUserAccountApp, deleteUserAccountApps} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.controller.js`);
-
-    const { createUserSetting, 
-            getProfileUserSettingDetail,
-            updateUserSetting, 
-            deleteUserSetting} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.controller.js`);
-    const { likeUserSetting, unlikeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting_like.controller.js`);
-
-    //server db api db app_portfolio user account follow
-    const { followUser, unfollowUser} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_follow.controller.js`);
-    //server db api app_portfolio user account like
-    const { likeUser, unlikeUser} = await import(`file://${process.cwd()}/server/dbapi/object/user_account_like.controller.js`);
-    
-    //ConfigGet function in service.js used to get parameter values
-    const rest_resource_service_db_schema = ConfigGet('SERVICE_DB', 'REST_RESOURCE_SCHEMA');
-    const rest_resouce_server = ConfigGet('SERVER', 'REST_RESOURCE_SERVER');
     
     app.route('/apps/bff/data').delete          (auth.checkDataToken, BFF_data);
     app.route('/apps/bff/data').get             (auth.checkDataToken, BFF_data);
@@ -123,34 +96,8 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/apps/bff/systemadmin').post     (auth.checkSystemAdmin, BFF_systemadmin);
     app.route('/apps/bff/systemadmin').put      (auth.checkSystemAdmin, BFF_systemadmin);    
     app.route('/apps/bff/socket').get           (BFF_socket);
-    app.route('/apps/bff/auth').post            (BFF_auth);
+    app.route('/apps/bff/auth').post            (BFF_auth);    
 
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/password/:id`).put(auth.checkAccessToken, updatePassword);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).put(auth.checkAccessToken, updateUserLocal);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).get(auth.checkAccessToken, getUserByUserId);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/common/:id`).put(auth.checkAccessToken, updateUserCommon);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/:id`).delete(auth.checkAccessToken, deleteUser);    
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/detail`).get(auth.checkAccessToken, getProfileDetail);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account/profile/username/searchA`).post(auth.checkAccessToken, searchProfileUser);
-
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/`).post(auth.checkAccessToken, createUserAccountApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app`).get(auth.checkAccessToken, getUserAccountApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/apps`).get(auth.checkAccessToken, getUserAccountApps);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app`).patch(auth.checkAccessToken, updateUserAccountApp);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app/:user_account_id/:app_id`).delete(auth.checkAccessToken, deleteUserAccountApps);
-
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/profile/detail/:id`).get(auth.checkAccessToken, getProfileUserSettingDetail);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting`).post(auth.checkAccessToken, createUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).put(auth.checkAccessToken, updateUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting/:id`).delete(auth.checkAccessToken, deleteUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).post(auth.checkAccessToken, likeUserSetting);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_app_setting_like/:id`).delete(auth.checkAccessToken, unlikeUserSetting);
-
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).post(auth.checkAccessToken, followUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_follow/:id`).delete(auth.checkAccessToken, unfollowUser);
-
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).post(auth.checkAccessToken, likeUser);
-    app.route(`${rest_resouce_server}/dbapi${rest_resource_service_db_schema}/user_account_like/:id`).delete(auth.checkAccessToken, unlikeUser);    
 };
 /**
  * server Express

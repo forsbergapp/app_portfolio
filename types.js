@@ -344,7 +344,6 @@
  * @property {string|null}  client_timezone
  * @property {number|null}  app_sound
  * @property {number|null}  common_app_id
- * @property {string}       rest_resource_server
  * @property {string}       rest_resource_bff
  * @property {number}       first_time
  */
@@ -477,9 +476,7 @@
  *                              APP_START:string,
  *                              APP_SOUND:string,
  *                              APP_COMMON_APP_ID:string,
- *                              REST_RESOURCE_SERVER:string,
  *                              REST_RESOURCE_BFF:string,
- *                              REST_RESOURCE_SERVICE:string,
  *                              SERVICE_CIRCUITBREAKER_FAILURETHRESHOLD:string,
  *                              SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD:string,
  *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT:string,
@@ -1312,7 +1309,7 @@
  *              setting_preference_direction_id:number,
  *              setting_preference_arabic_script_id:number}} db_parameter_user_account_app_updateUserAccountApp
  * @typedef {   db_result_update} db_result_user_account_app_updateUserAccountApp
- * @typedef {   db_result_delete} db_result_user_account_app_deleteUserAccountApps
+ * @typedef {   db_result_delete} db_result_user_account_app_deleteUserAccountApp
  * USER ACCOUNT APP SETTING
  * @typedef {{  description:string,
  *              settings_json:object,
@@ -1366,8 +1363,8 @@
  * @typedef {   db_result_update} db_result_user_account_app_setting_updateUserSetting
  * @typedef {   db_result_delete} db_result_user_account_app_setting_deleteUserSetting
  * USER ACCOUNT APP SETTING LIKE
- * @typedef {   db_result_insert} db_result_user_account_app_setting_like_likeUserSetting
- * @typedef {   db_result_delete} db_result_user_account_app_setting_like_unlikeUserSetting
+ * @typedef {   db_result_insert} db_result_user_account_app_setting_like_like
+ * @typedef {   db_result_delete} db_result_user_account_app_setting_like_unlike
  * USER ACCOUNT APP SETTING VIEW
  * @typedef {{  client_ip:string,
  *              client_user_agent:string,
@@ -1400,11 +1397,11 @@
  *              date_modified:string,
  *              current_timestamp:string}} db_result_user_account_event_getLastUserEvent
  * USER ACCOUNT FOLLOW
- * @typedef {   db_result_insert} db_result_user_account_follow_followUser
- * @typedef {   db_result_delete} db_result_user_account_follow_unfollowUser
+ * @typedef {   db_result_insert} db_result_user_account_follow_follow
+ * @typedef {   db_result_delete} db_result_user_account_follow_unfollow
  * USER ACCOUNT LIKE
- * @typedef {   db_result_insert} db_result_user_account_like_likeUser
- * @typedef {   db_result_delete} db_result_user_account_like_unlikeUser
+ * @typedef {   db_result_insert} db_result_user_account_like_like
+ * @typedef {   db_result_delete} db_result_user_account_like_unlike
  * USER ACCOUNT LOGON
  * @typedef {{  user_account_id:number,
  *              app_id:number,

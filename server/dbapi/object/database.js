@@ -329,10 +329,10 @@ const install_db_get_files = async (json_type) =>{
     const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
     const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
     const {createUserSetting, getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
-    const {likeUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
+    const user_account_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
     const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`);
     const {followUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
-    const {likeUserSetting} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
+    const user_account_app_setting_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
     const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
     const fs = await import('node:fs');
     const install_result = [];
@@ -497,8 +497,8 @@ const install_db_get_files = async (json_type) =>{
      */
     const create_likeuser = async (app_id, id, id_like ) =>{
         return new Promise((resolve, reject) => {
-            likeUser(app_id, id, id_like)
-        .then((/**@type{Types.db_result_user_account_like_likeUser}*/result) => {
+            user_account_like.like(app_id, id, id_like)
+        .then((/**@type{Types.db_result_user_account_like_like}*/result) => {
             if (result.affectedRows == 1)
                 records_user_account_like++;
             resolve(null);
@@ -537,7 +537,7 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_follow = async (app_id, id, id_follow ) =>{
         return new Promise((resolve, reject) => {
             followUser(app_id, id, id_follow)
-        .then((/**@type{Types.db_result_user_account_follow_followUser}*/result)=>{
+        .then((/**@type{Types.db_result_user_account_follow_follow}*/result)=>{
             if (result.affectedRows == 1)
                 records_user_account_follow++;
             resolve(null);
@@ -559,8 +559,8 @@ const install_db_get_files = async (json_type) =>{
             getUserSettingsByUserId(app_id, user1)
         .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
             const random_settings_index = Math.floor(1 + Math.random() * result_settings.length - 1 );
-            likeUserSetting(app_id, user2, result_settings[random_settings_index].id)
-            .then((/**@type{Types.db_result_user_account_app_setting_like_likeUserSetting}*/result) => {
+            user_account_app_setting_like.like(app_id, user2, result_settings[random_settings_index].id)
+            .then((/**@type{Types.db_result_user_account_app_setting_like_like}*/result) => {
                 if (result.affectedRows == 1)
                     records_user_account_setting_like++;
                 resolve(null);
