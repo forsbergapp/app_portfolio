@@ -38,7 +38,6 @@
 ],
 "SERVICE_DB":[
     {"START": "0", "COMMENT": "0=NO, 1=YES, when 0 then only system admin can login in admin"},
-    {"REST_RESOURCE_SCHEMA": "/app_portfolio", "COMMENT": "rest resource database schema path"},
     {"USE": "1", "COMMENT": "1=MariaDB(mysql module), 2=MySQL(mysql module), 3=PostgreSQL(pg module), 4=Oracle(oracledb module)"},
     {"LIMIT_LIST_SEARCH": "100", "COMMENT": ""},
     {"LIMIT_LIST_PROFILE_TOP": "100", "COMMENT": ""},
