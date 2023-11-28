@@ -11,6 +11,7 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
  * @param {*} query 
  * @returns 
  */
-const getCountries = (app_id, query) => service.getCountries(app_id, query.get('lang_code') ?? 'en');
+const getCountries = (app_id, query) => service.getCountries(app_id, query.get('lang_code') ?? 'en')
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
     
 export{getCountries};

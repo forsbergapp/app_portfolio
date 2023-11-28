@@ -13,7 +13,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} data
  */
 const update = (app_id, query, data) => {
-    return new Promise((resolve)=> {
+    return new Promise((resolve, reject)=> {
         /**@type{Types.db_parameter_user_account_app_updateUserAccountApp} */
         const data_update = {	setting_preference_direction_id: 	getNumberValue(data.setting_preference_direction_id),
                                 setting_preference_arabic_script_id:getNumberValue(data.setting_preference_arabic_script_id),
@@ -23,7 +23,8 @@ const update = (app_id, query, data) => {
         service.updateUserAccountApp(app_id, getNumberValue(query.get('PATCH_ID')), data_update)
         .then((/**@type{Types.db_result_user_account_app_updateUserAccountApp}*/result)=>{
             resolve({items: result});
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -31,13 +32,15 @@ const update = (app_id, query, data) => {
  * @param {number} app_id 
  * @param {*} query 
  */
-const getUserAccountApp = (app_id, query) => service.getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')));
+const getUserAccountApp = (app_id, query) => service.getUserAccountApp(app_id, getNumberValue(query.get('user_account_id')))
+                                                .catch((/**@type{Types.error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
  * @param {*} query 
  */
-const getUserAccountApps = (app_id, query) => service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')));
+const getUserAccountApps = (app_id, query) => service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')))
+                                                .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
@@ -46,7 +49,7 @@ const getUserAccountApps = (app_id, query) => service.getUserAccountApps(app_id,
  * @param {*} data
  */
 const updateUserAccountApp = (app_id, query, data) => {
-    return new Promise((resolve)=>{
+    return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_app_updateUserAccountApp} */
         const data_update = {	setting_preference_direction_id: 	getNumberValue(data.setting_preference_direction_id),
                                 setting_preference_arabic_script_id:getNumberValue(data.setting_preference_arabic_script_id),
@@ -56,7 +59,8 @@ const updateUserAccountApp = (app_id, query, data) => {
         service.updateUserAccountApp(app_id, getNumberValue(query.get('PATCH_ID')), data_update)
         .then((/**@type{Types.db_result_user_account_app_updateUserAccountApp}*/result)=>{
             resolve(result);
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -64,7 +68,8 @@ const updateUserAccountApp = (app_id, query, data) => {
  * @param {number} app_id
  * @param {*} query
  */
-const deleteUserAccountApp = (app_id, query) => service.deleteUserAccountApp(app_id, getNumberValue(query.get('DELETE_USER_ACCOUNT_ID')), getNumberValue(query.get('DELETE_APP_ID')));
+const deleteUserAccountApp = (app_id, query) => service.deleteUserAccountApp(app_id, getNumberValue(query.get('DELETE_USER_ACCOUNT_ID')), getNumberValue(query.get('DELETE_APP_ID')))
+                                                    .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export {/*ADMIN + ACCESS*/
         update, getUserAccountApp,

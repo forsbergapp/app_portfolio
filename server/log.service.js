@@ -421,7 +421,7 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
  */
 const getLogs = async (data) => {
     const fs = await import('node:fs');
-    return new Promise ((resolve, reject)=>{
+    return new Promise ((resolve)=>{
         let filename;
         if (Number(data.month) <10)
             data.month = '0' + data.month;
@@ -526,7 +526,7 @@ const getLogs = async (data) => {
             resolve(log_rows_array_obj);
         })
         //return empty and not error
-        .catch(()=> reject([]));
+        .catch(()=> resolve([]));
     });
     
 };

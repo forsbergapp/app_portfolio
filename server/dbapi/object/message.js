@@ -11,6 +11,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {*} query 
  */
-const getMessage = (app_id, query) => service.getMessage(app_id, getNumberValue(query.get('data_app_id')), query.get('code'), query.get('lang_code'));
+const getMessage = (app_id, query) => service.getMessage(app_id, getNumberValue(query.get('data_app_id')), query.get('code'), query.get('lang_code'))
+                                        .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export{getMessage};

@@ -47,7 +47,8 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
             .then(()=>{
                 return null;
             });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>{throw error;});
 };
 
 /**
@@ -86,24 +87,28 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                 service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
                                 .then(()=>{
                                     getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
-                                        .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                            //send email UNVERIFIED
-                                            sendUserEmail(  app_id, 
-                                                            parameter[0].parameter_value, 
-                                                            host, 
-                                                            result_login[0].id, 
-                                                            new_code, 
-                                                            result_login[0].email).then(()=>{
-                                                data_body.access_token = createAccessToken(app_id);
-                                                insertUserAccountLogon(app_id, data_body)
-                                                .then(()=>{
-                                                    resolve({
-                                                        accessToken: data_body.access_token,
-                                                        items: Array(result_login[0])
-                                                    });
+                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                        //send email UNVERIFIED
+                                        sendUserEmail(  app_id, 
+                                                        parameter[0].parameter_value, 
+                                                        host, 
+                                                        result_login[0].id, 
+                                                        new_code, 
+                                                        result_login[0].email)
+                                        .then(()=>{
+                                            data_body.access_token = createAccessToken(app_id);
+                                            insertUserAccountLogon(app_id, data_body)
+                                            .then(()=>{
+                                                resolve({
+                                                    accessToken: data_body.access_token,
+                                                    items: Array(result_login[0])
                                                 });
-                                            });
-                                        });
+                                            })
+                                            .catch((/**@type{Types.error}*/error)=>reject(error));
+                                        })
+                                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>reject(error));
                                 });
                             }
                             else{
@@ -114,9 +119,11 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                         accessToken: data_body.access_token,
                                         items: Array(result_login[0])
                                     });
-                                });
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
                             }
-                        });
+                        })
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
                     }
                     else{
                         res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
@@ -137,8 +144,10 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                     query.get('lang_code'))
                         .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                             reject(result_message[0].text);
-                        });
-                    });
+                        })
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
                 }
             } else{
                 if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
@@ -153,9 +162,11 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                             query.get('lang_code'))
                 .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                     reject(result_message[0].text);
-                });
+                })
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -215,8 +226,10 @@ const login_provider = (app_id, ip, user_agent, query, data) =>{
                                 items: result_signin,
                                 userCreated: 0
                             });
-                        });
-                    });
+                        })
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
                 })
                 .catch((/**@type{Types.error}*/error)=>{
                     checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
@@ -242,12 +255,17 @@ const login_provider = (app_id, ip, user_agent, query, data) =>{
                                         items: result_signin2,
                                         userCreated: 1
                                     });
-                                });
-                            });
-                        });
-                });
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
+                            })
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
+                        })
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                })
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -294,14 +312,17 @@ const signup = (app_id, host, query, data) =>{
                                     host, 
                                     result_create.insertId, 
                                     data_body.verification_code, 
-                                    data_body.email ?? '').then(()=>{
+                                    data_body.email ?? '')
+                    .then(()=>{
                         resolve({
                             accessToken: createAccessToken(app_id),
                             id: result_create.insertId,
                             data: result_create
                         });
-                    });  
-                });
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                })
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             }
             else
                 resolve({
@@ -361,7 +382,8 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data) =>
                             count: result_insert.affectedRows,
                             items: Array(result_insert)
                         });
-                    });
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
                 }
                 else
                     resolve({
@@ -397,7 +419,7 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data) =>
  * @returns 
  */
 const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
-    return new Promise((resolve)=>{
+    return new Promise((resolve, reject)=>{
         const email = data.email ?? '';
         if (email !='')
             service.getEmailUser(app_id, email)
@@ -439,24 +461,30 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                                         host, 
                                                         result_emailuser[0].id, 
                                                         new_code, 
-                                                        email).then(()=>{
+                                                        email)
+                                        .then(()=>{
                                             resolve({
                                                 sent: 1,
                                                 id: result_emailuser[0].id
                                             });  
-                                        });
-                                    });
-                                });
+                                        })
+                                        .catch((/**@type{Types.error}*/error)=>reject(error));
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
                             })
                             .catch(()=> {
                                 resolve({sent: 0});
                             });
                         }
-                    });            
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));         
                 }
                 else
                     resolve({sent: 0});
-            });
+            })
+            .catch((/**@type{Types.error}*/error)=>reject(error));
         else
             resolve({sent: 0});
     });
@@ -493,7 +521,8 @@ const getProfile = (app_id, ip, user_agent, query, data, res) =>{
                         .then(()=>{
                             //send without {} so the variablename is not sent
                             resolve(result_getProfileUser[0]);
-                        });
+                        })
+                        .catch((/**@type{Types.error}*/error)=>reject(error));
                     });
                 }
             }
@@ -502,7 +531,8 @@ const getProfile = (app_id, ip, user_agent, query, data, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -525,7 +555,8 @@ const getProfileTop = (app_id, query, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -538,7 +569,7 @@ const getProfileTop = (app_id, query, res) =>{
  * @returns 
  */
 const searchProfile = (app_id, ip, user_agent, query, data) =>{
-    return new Promise((resolve)=>{
+    return new Promise((resolve, reject)=>{
         service.searchProfileUser(app_id, query.get('search'))
         .then((/**@type{Types.db_result_user_account_searchProfileUser[]}*/result_search)=>{
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/profile_search.service.js`).then(({ insertProfileSearch }) => {
@@ -563,9 +594,11 @@ const searchProfile = (app_id, ip, user_agent, query, data) =>{
                             items: null
                         });
                     }
-                });
+                })
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -620,7 +653,8 @@ const updateAdmin =(app_id, query, data, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -628,21 +662,23 @@ const updateAdmin =(app_id, query, data, res) =>{
  * @param {number} app_id 
  * @param {*} query 
  */
-const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')));
+const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
  * @returns 
  */
-const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id);
+const getStatCountAdmin = (app_id) => service.getStatCountAdmin(app_id).catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
  * @param {number} app_id 
  * @param {*} query 
  */
-const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')));
+const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumberValue(query.get('data_user_account_id')), getNumberValue(query.get('data_app_id')=='\'\''?'':query.get('data_app_id')))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
     
 /**
  * 
@@ -769,11 +805,15 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                                                     host, 
                                                     getNumberValue(query.get('PUT_ID')),
                                                     data.verification_code, 
-                                                    data.new_email).then(()=>{
+                                                    data.new_email)
+                                    .then(()=>{
                                         resolve({sent_change_email: 1});
-                                    });
-                                });
-                            });
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
+                            })
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
                         }
                         else
                             resolve({sent_change_email: 0});
@@ -798,7 +838,8 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                             query.get('lang_code'))
                 .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                     reject(result_message[0].text);
-                });
+                })
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             }
         } 
         else {
@@ -810,7 +851,8 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                         query.get('lang_code'))
             .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                 reject(result_message[0].text);
-            });
+            })
+            .catch((/**@type{Types.error}*/error)=>reject(error));
         }
     });
 };
@@ -859,7 +901,8 @@ const getUserByUserId = (app_id, query, res) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -884,7 +927,8 @@ const getUserByUserId = (app_id, query, res) => {
                                 record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                             });
                         }
-                    });
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
                 }
                 else{
                     service.checkPassword(app_id, getNumberValue(query.get('DELETE_ID')))
@@ -900,7 +944,8 @@ const getUserByUserId = (app_id, query, res) => {
                                             record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                                         });
                                     }
-                                });
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
                             }
                             else{
                                 res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('DELETE_ID'));
@@ -912,7 +957,8 @@ const getUserByUserId = (app_id, query, res) => {
                                             query.get('lang_code'))
                                 .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                                     reject(result_message[0].text);
-                                });
+                                })
+                                .catch((/**@type{Types.error}*/error)=>reject(error));
                             } 
                         }
                         else{
@@ -924,9 +970,11 @@ const getUserByUserId = (app_id, query, res) => {
                                         query.get('lang_code'))
                             .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
                                 reject(result_message[0].text);
-                            });
+                            })
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
                         }
-                    });
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
                 }
             }
             else{
@@ -940,7 +988,8 @@ const getUserByUserId = (app_id, query, res) => {
                     reject(result_message[0].text);
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -960,7 +1009,8 @@ const getUserByUserId = (app_id, query, res) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
     
 };
@@ -969,13 +1019,15 @@ const getUserByUserId = (app_id, query, res) => {
  * @param {*} query 
  * @param {*} data
  */
-const follow = (app_id, query, data) => user_account_follow_service.follow(app_id, getNumberValue(query.get('POST_ID')),getNumberValue(data.user_account_id));
+const follow = (app_id, query, data) => user_account_follow_service.follow(app_id, getNumberValue(query.get('POST_ID')),getNumberValue(data.user_account_id))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 /**
  * @param {number} app_id
  * @param {*} query 
  * @param {*} data
  */
-const unfollow = (app_id, query, data) => user_account_follow_service.unfollow(app_id, getNumberValue(query.get('DELETE_ID')),getNumberValue(data.user_account_id));
+const unfollow = (app_id, query, data) => user_account_follow_service.unfollow(app_id, getNumberValue(query.get('DELETE_ID')),getNumberValue(data.user_account_id))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
@@ -983,7 +1035,8 @@ const unfollow = (app_id, query, data) => user_account_follow_service.unfollow(a
  * @param {*} query 
  * @param {*} data
  */
-const like = (app_id, query, data) => user_account_like_service.like(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(data.user_account_id));
+const like = (app_id, query, data) => user_account_like_service.like(app_id, getNumberValue(query.get('POST_ID')), getNumberValue(data.user_account_id))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
@@ -991,7 +1044,8 @@ const like = (app_id, query, data) => user_account_like_service.like(app_id, get
  * @param {*} query 
  * @param {*} data
  */
-const unlike = (app_id, query, data) => user_account_like_service.unlike(app_id, getNumberValue(query.get('DELETE_ID')), getNumberValue(data.user_account_id));
+const unlike = (app_id, query, data) => user_account_like_service.unlike(app_id, getNumberValue(query.get('DELETE_ID')), getNumberValue(data.user_account_id))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export {/*DATA_LOGIN*/
         login, login_provider, 

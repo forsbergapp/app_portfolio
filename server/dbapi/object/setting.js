@@ -11,6 +11,7 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
  * @param {*} query 
  * @returns 
  */
-const getSettings = (app_id, query) => service.getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? query.get('setting_type')==''?null:query.get('setting_type'));
+const getSettings = (app_id, query) => service.getSettings(app_id, query.get('lang_code'), query.get('setting_type') ?? query.get('setting_type')==''?null:query.get('setting_type'))
+                                        .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export{getSettings};

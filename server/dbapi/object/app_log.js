@@ -25,7 +25,8 @@ const getLogsAdmin = (app_id, query, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -46,7 +47,8 @@ const getStatUniqueVisitorAdmin = (app_id, query, res) =>{
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };             
 export{getLogsAdmin, getStatUniqueVisitorAdmin};

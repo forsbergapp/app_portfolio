@@ -11,14 +11,16 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query 
  * @returns {Types.db_result_app_getApp[]}
  */
-const getApp = (app_id, query) => service.getApp(app_id, getNumberValue(query.get('id')), query.get('lang_code'));
+const getApp = (app_id, query) => service.getApp(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                                    .catch((/**@type{Types.error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
  * @param {*} query 
  * @returns {Types.db_result_app_getAppAdmin[]}
  */
-const getAppsAdmin = (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'));
+const getAppsAdmin = (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 /**
  * 
  * @param {number} app_id 
@@ -33,6 +35,7 @@ const updateAdmin = (app_id, query, data) =>{
                     logo: 			data.logo,
                     enabled: 		getNumberValue(data.enabled) ?? 0,
                     app_category_id:getNumberValue(data.app_category_id)};
-    return service.updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body);
+    return service.updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
+            .catch((/**@type{Types.error}*/error)=>{throw error;});
 };
 export {getApp, getAppsAdmin, updateAdmin};

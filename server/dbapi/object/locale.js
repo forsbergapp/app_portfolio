@@ -11,6 +11,7 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
  * @param {*} query 
  * @returns 
  */
-const getLocales = (app_id, query) =>service.getLocales(app_id, query.get('lang_code') ?? 'en');
+const getLocales = (app_id, query) =>service.getLocales(app_id, query.get('lang_code') ?? 'en')
+                                        .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export{getLocales};

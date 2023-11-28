@@ -222,20 +222,11 @@ const db_limit_rows = (sql, limit_type = null) => {
 			const database_error = 'DATABASE ERROR';
 			LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
-				const app_code = get_app_code(error.errorNum, 
-					error.message, 
-					error.code, 
-					error.errno, 
-					error.sqlMessage);
-				if (app_code != null)
+				//return full error to admin
+				if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
 					reject(error);
-				else{
-					//return full error to admin
-					if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-						reject(error);
-					else
-						reject(database_error);
-				}
+				else
+					reject(database_error);
 			});
 		});
 	});
