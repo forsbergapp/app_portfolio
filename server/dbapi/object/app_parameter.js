@@ -12,7 +12,8 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query 
  * @returns 
  */
-const getParametersAllAdmin = (app_id, query) =>service.getParametersAllAdmin(app_id, getNumberValue(query.get('data_app_id')), query.get('lang_code'));
+const getParametersAllAdmin = (app_id, query) =>service.getParametersAllAdmin(app_id, getNumberValue(query.get('data_app_id')), query.get('lang_code'))
+                                                    .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
@@ -28,7 +29,8 @@ const setParameter_admin = (app_id, data) =>{
                     parameter_value: 	data.parameter_value, 
                     parameter_comment: 	data.parameter_comment
                 };
-    return service.setParameter_admin(app_id, body);
+    return service.setParameter_admin(app_id, body)
+            .catch((/**@type{Types.error}*/error)=>{throw error;});
 };
 
 export {getParametersAllAdmin, setParameter_admin};

@@ -12,5 +12,6 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query
  * @returns {Types.db_result_app_category_getAppCategoryAdmin[]}
  */
-const getAppCategoryAdmin = (app_id, query) => service.getAppCategoryAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'));
+const getAppCategoryAdmin = (app_id, query) => service.getAppCategoryAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                                                .catch((/**@type{Types.error}*/error)=>{throw error;});
 export{getAppCategoryAdmin};

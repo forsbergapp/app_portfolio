@@ -12,6 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query 
  * @returns 
  */
-const getParameterTypeAdmin = (app_id, query) => service.getParameterTypeAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'));
+const getParameterTypeAdmin = (app_id, query) => service.getParameterTypeAdmin(app_id, getNumberValue(query.get('id')), query.get('lang_code'))
+                                                    .catch((/**@type{Types.error}*/error)=>{throw error;});
     
 export{getParameterTypeAdmin};
