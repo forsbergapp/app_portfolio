@@ -30,7 +30,8 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
                         resolve(true);
                     else
                         resolve(false);
-                });
+                })
+                .catch(()=>resolve(false));
             }
         else
             resolve(false);

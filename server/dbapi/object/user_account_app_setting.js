@@ -65,7 +65,8 @@ const getProfileUserSettings =(app_id, query, res) =>{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 
@@ -88,7 +89,8 @@ const getProfileTopSetting = (app_id, query, res) =>{
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -107,7 +109,8 @@ const getProfileUserSettingDetail = (app_id, query, res) => {
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -117,7 +120,7 @@ const getProfileUserSettingDetail = (app_id, query, res) => {
  * @param {*} data
  */
 const createUserSetting = (app_id, query, data) => {
-    return new Promise((resolve)=>{
+    return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_app_setting_createUserSetting} */
         const data_create = {	description:		data.description,
                                 settings_json: 		data.settings_json,
@@ -130,7 +133,8 @@ const createUserSetting = (app_id, query, data) => {
                     id: result.insertId,
                     data: result
                 });
-            });
+            })
+            .catch((/**@type{Types.error}*/error)=>reject(error));
         };
         //Check if first time
         if (getNumberValue(query.get('initial'))==1){
@@ -145,7 +149,8 @@ const createUserSetting = (app_id, query, data) => {
                         id: null,
                         data: null
                     });
-            });
+            })
+            .catch((/**@type{Types.error}*/error)=>reject(error));
         }
         else
             call_service();
@@ -173,7 +178,8 @@ const updateUserSetting = (app_id, query, data, res) => {
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -192,7 +198,8 @@ const deleteUserSetting = (app_id, query, res) => {
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
                 });
-        });
+        })
+        .catch((/**@type{Types.error}*/error)=>reject(error));
     });
 };
 /**
@@ -201,7 +208,8 @@ const deleteUserSetting = (app_id, query, res) => {
  * @param {*} query 
  * @param {*} data
  */
-const like = (app_id, query, data) => user_account_app_setting_like_service.like(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id));
+const like = (app_id, query, data) => user_account_app_setting_like_service.like(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id))
+                                        .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
  * 
@@ -209,7 +217,8 @@ const like = (app_id, query, data) => user_account_app_setting_like_service.like
  * @param {*} query 
  * @param {*} data
  */
-const unlike = (app_id, query, data) => user_account_app_setting_like_service.unlike(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id));
+const unlike = (app_id, query, data) => user_account_app_setting_like_service.unlike(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id))
+                                            .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export{ getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileTopSetting,
         /*ACCESS */

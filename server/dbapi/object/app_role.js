@@ -11,6 +11,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {number} app_id 
  * @param {*} query 
  */
-const getAppRoleAdmin = (app_id, query) => service.getAppRoleAdmin(app_id, getNumberValue(query.get('id')));
+const getAppRoleAdmin = (app_id, query) => service.getAppRoleAdmin(app_id, getNumberValue(query.get('id')))
+                                                .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 export{getAppRoleAdmin};

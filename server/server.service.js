@@ -542,6 +542,10 @@ const serverStart = async () =>{
         console.log(err);
         LogServerE('Process uncaughtException: ' + err.stack);
     });
+    process.on('unhandledRejection', (reason) =>{
+        console.log(reason);
+        LogServerE('Process unhandledRejection: ' + reason);
+    });
     try {
         await InitConfig();
         await database.Start();
