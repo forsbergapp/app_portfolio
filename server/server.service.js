@@ -49,64 +49,6 @@ const COMMON = {
 };
 
 /**
- * Info
- */
-const Info = async () => {
-    const os = await import('node:os');
-    const os_json = {
-                    hostname: os.hostname(),
-                    platform: os.platform(),
-                    type: os.type(),
-                    release: os.release(),
-                    cpus: os.cpus(),
-                    arch: os.arch(),
-                    freemem: os.freemem(),
-                    totalmem: os.totalmem(),
-                    homedir: os.homedir(),
-                    tmpdir: os.tmpdir(),
-                    uptime: os.uptime(),
-                    userinfo: os.userInfo(),
-                    version: os.version()
-                    };
-    const process_json = { 
-                            memoryusage_rss : process.memoryUsage().rss,
-                            memoryusage_heaptotal : process.memoryUsage().heapTotal,
-                            memoryusage_heapused : process.memoryUsage().heapUsed,
-                            memoryusage_external : process.memoryUsage().external,
-                            memoryusage_arraybuffers : process.memoryUsage().arrayBuffers,
-                            uptime : process.uptime(),
-                            version : process.version,
-                            path : process.cwd(),
-                            start_arg_0 : process.argv[0],
-                            start_arg_1 : process.argv[1]
-                        };
-    return {os: os_json,process: process_json};
-};
-/**
- * Get value from path with query string
- * @param {string} parameters
- * @param {string} param
- * @param {1|null} type     - 1 = number
- * @returns {string|number|null}
- */
- const get_query_value = (parameters, param, type=null) => {
-    const query_parameters = parameters.split('?')[1].split('&');
-    const value_row = query_parameters.filter(query=>query.toLowerCase().startsWith(param));
-    if (value_row.length == 0)
-        return null;
-    else{
-        if (type==1){
-            //Number
-            if (value_row[0].split('=')[1]=='')
-                return null;
-            else
-                return Number(value_row[0].split('=')[1]);
-        }
-        else
-            return value_row[0].split('=')[1];
-    }    
-};
-/**
  * server routes
  * @param {number} app_id
  * @param {string} service
@@ -129,6 +71,9 @@ const Info = async () => {
 
     //server config object
     const config = await import(`file://${process.cwd()}/server/config.js`);
+
+    //server info object
+    const info = await import(`file://${process.cwd()}/server/info.js`);
 
     //server log object
     const log = await import(`file://${process.cwd()}/server/log.js`);
@@ -375,7 +320,7 @@ const Info = async () => {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/INFO_GET':{
-                    resolve(Info());
+                    resolve(info.Info());
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFO_GET':{
@@ -507,7 +452,7 @@ const Info = async () => {
                     break;
                 }
                 case 'SOCKET_SOCKET_/SOCKET/CONNECTION/CONNECT_GET':{
-                    resolve(socket.SocketConnect(app_id, parameters, user_agent, ip, res));
+                    resolve(socket.SocketConnect(app_id, ip, user_agent, query, res));
                     break;
                 }
                 default:{
@@ -585,4 +530,4 @@ const serverStart = async () =>{
     
 };
 
-export {COMMON, getNumberValue, get_query_value, Info, serverRoutes, serverStart };
+export {COMMON, getNumberValue, serverRoutes, serverStart };
