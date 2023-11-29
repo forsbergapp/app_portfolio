@@ -33,7 +33,7 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
  */
  const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email) => {
     const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
-    const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
+    const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
     
     createMail(app_id, 
         {

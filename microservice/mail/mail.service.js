@@ -1,4 +1,4 @@
-/** @module server/express/service/mail */
+/** @module microservice/mail */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
