@@ -413,13 +413,50 @@
  * @property {string} info_link_disclaimer_url
  * @property {string} info_link_terms_url
  * @property {string} info_link_about_url
- */
+ */ 
 /**
  * Server - Request control
  * @typedef {{statusCode:number,
  *            statusMessage:string}|null} request_control
- */
-/**
+ * Server - Info
+ * @typedef {{  os:{        hostname:string,
+ *                          platform:NodeJS.Platform,
+ *                          type:string,
+ *                          release:string,
+ *                          cpus:{
+ *                                  model: string,
+ *                                  speed: number,
+ *                                  times: {
+ *                                          user: number,
+ *                                          nice: number,
+ *                                          sys: number,
+ *                                          idle: number,
+ *                                          irq: number
+ *                                          }
+ *                               }[],
+ *                          arch:string,
+ *                          freemem:number,
+ *                          totalmem:number,
+ *                          homedir:string,
+ *                          tmpdir:string,
+ *                          uptime:number,
+ *                          userinfo:{  username: *,
+ *                                      uid: number,
+ *                                      gid: number,
+ *                                      shell: *,
+ *                                      homedir: *},
+ *                          version:string},
+ *              process:{   memoryusage_rss : number,
+ *                          memoryusage_heaptotal : number,
+ *                          memoryusage_heapused : number,
+ *                          memoryusage_external : number,
+ *                          memoryusage_arraybuffers : number,
+ *                          uptime : number,
+ *                          version : string,
+ *                          path : string,
+ *                          start_arg_0 : string,
+ *                          start_arg_1 : string
+ *                  }}} server_info
  * Server - Config init
  * @typedef {{  ['CONFIGURATION']:string, 
  *              ['CREATED']:string, 

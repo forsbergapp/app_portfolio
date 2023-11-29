@@ -5,7 +5,7 @@ import * as Types from './../types.js';
 
 const service = await import(`file://${process.cwd()}/server/socket.service.js`);
 
-const {getNumberValue, get_query_value} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * 
@@ -104,20 +104,21 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
 /**
  * 
  * @param {number} app_id 
- * @param {string} parameters 
+ * @param {string} ip  
  * @param {string} user_agent 
- * @param {string} ip 
+ * @param {*} query
  * @param {Types.res} res
  */
-const SocketConnect = (app_id, parameters, user_agent, ip, res) => service.SocketConnect(app_id, 
-                                                                                            get_query_value(parameters, 'identity_provider_id',1),
-                                                                                            get_query_value(parameters, 'user_account_logon_user_account_id',1),
-                                                                                            get_query_value(parameters, 'system_admin',1),
-                                                                                            get_query_value(parameters, 'latitude'),
-                                                                                            get_query_value(parameters, 'longitude'),
-                                                                                            get_query_value(parameters, 'authorization'),
-                                                                                            user_agent,
-                                                                                            ip,
-                                                                                            res); 
+
+const SocketConnect = (app_id, ip, user_agent, query, res) => service.SocketConnect(app_id, 
+                                                                                    getNumberValue(query.get('identity_provider_id')),
+                                                                                    getNumberValue(query.get('user_account_logon_user_account_id')),
+                                                                                    getNumberValue(query.get('system_admin')),
+                                                                                    query.get('latitude'),
+                                                                                    query.get('longitude'),
+                                                                                    query.get('authorization'),
+                                                                                    user_agent,
+                                                                                    ip,
+                                                                                    res); 
 
 export{ConnectedUpdate, ConnectedCheck, SocketSendSystemAdmin, ConnectedListSystemadmin, SocketSendAdmin, ConnectedListAdmin, ConnectedCount, SocketConnect};
