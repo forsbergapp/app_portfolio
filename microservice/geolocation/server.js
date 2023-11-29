@@ -1,17 +1,17 @@
-/** @module server/express/service/geolocation */
+/** @module microservice/geolocation */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
 const service = await import('./service.js');
-const { getNumberValue, MicroserviceServer, IAM } = await import(`file://${process.cwd()}/service/service.service.js`);
+const { getNumberValue, MicroServiceServer, IAM } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**
  * Starts the server
  */
 const startserver = async () =>{
-	const request = await MicroserviceServer('GEOLOCATION');
-	request.server.createServer(request.options, (/**@type{Types.req_service}*/req, /**@type{Types.res_service}*/res) => {
+	const request = await MicroServiceServer('GEOLOCATION');
+	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
 		res.setHeader('Access-Control-Allow-Methods', 'GET');
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Content-Type',  'application/json; charset=utf-8');
@@ -74,8 +74,8 @@ const startserver = async () =>{
 };
 /**
  * 
- * @param {Types.req_service} req 
- * @param {Types.res_service} res 
+ * @param {Types.req_microservice} req 
+ * @param {Types.res_microservice} res 
  */
 const getPlace = async (req, res) => {
 	let geodata;
@@ -97,8 +97,8 @@ const getPlace = async (req, res) => {
 };
 /**
  * 
- * @param {Types.req_service} req 
- * @param {Types.res_service} res 
+ * @param {Types.req_microservice} req 
+ * @param {Types.res_microservice} res 
  */
 const getIp = async (req, res) => {
 	let geodata;

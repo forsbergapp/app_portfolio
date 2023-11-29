@@ -167,7 +167,7 @@
  */
 
 /**
- * Server/Service/apps - Request id
+ * Server/MicroService/apps - Request id
  * @typedef {string|number|null|undefined} req_id_number
  */
 /**
@@ -463,12 +463,15 @@
  *              ['MODIFIED']:string,
  *              ['MAINTENANCE']:string,
  *              ['FILE_CONFIG_SERVER']:string,
+ *              ['FILE_CONFIG_APPS']:string,
  *              ['FILE_CONFIG_AUTH_BLOCKIP']:string,
- *              ['FILE_CONFIG_AUTH_USERAGENT']:string,
  *              ['FILE_CONFIG_AUTH_POLICY']:string,
- *              ['PATH_LOG']:string,
+ *              ['FILE_CONFIG_AUTH_USERAGENT']:string,
  *              ['FILE_CONFIG_AUTH_USER']:string,
- *              ['FILE_CONFIG_APPS']:string}} config_init
+ *              ['FILE_CONFIG_MICROSERVICE']:string,
+ *              ['FILE_CONFIG_MICROSERVICE_BATCH']:string,
+ *              ['FILE_CONFIG_MICROSERVICE_PDF']:string,
+ *              ['PATH_LOG']:string}} config_init
 */
 /**
  * Server - Config files
@@ -484,9 +487,9 @@
  *              'FILE_CONFIG_AUTH_BLOCKIP'|
  *              'FILE_CONFIG_AUTH_USERAGENT'|
  *              'FILE_CONFIG_AUTH_POLICY'|
- *              'PATH_LOG'|
  *              'FILE_CONFIG_AUTH_USER'|
- *              'FILE_CONFIG_APPS'} config_init_parameter
+ *              'FILE_CONFIG_APPS'|
+ *              'PATH_LOG'} config_init_parameter
  */
 
 /**
@@ -599,7 +602,7 @@
  *              ['content-security-policy']:string}} config
  */
 /**
- * Server/Service - Config apps
+ * Server/MicroService - Config apps
  * @typedef  {object} config_apps
  * @property {function} filter
  * @property {function} reduce
@@ -1468,8 +1471,8 @@
  */
 
 /**
- * Service - Request
- * @typedef {object}        req_service
+ * MicroService - Request
+ * @typedef {object}        req_microservice
  * @property {string}       url
  * 
  * @property {{ authorization:string,
@@ -1486,8 +1489,43 @@
  *              country:string}} params
  */
 /**
- * Service - Response
- * @typedef {object}    res_service
+ * MicroService Config service
+ * @typedef {{SERVICE:string, PORT:number, HTTPS_PORT:number}} microservice_config_service
+ * 
+ * @typedef {   'SERVER_CONFIG'|
+ *              'APPS_CONFIG'|
+ *              'MICROSERVICE_CONFIG'|
+ *              'MICROSERVICE_CONFIG_BATCH'|
+ *              'MICROSERVICE_CONFIG_PDF'|
+ *              'MICROSERVICE_MESSAGE_QUEUE_ERROR'|
+ *              'MICROSERVICE_MESSAGE_QUEUE_PUBLISH'|
+ *              'MICROSERVICE_MESSAGE_QUEUE_CONSUME'|
+ *              'MICROSERVICE_PATH_BATCH'|
+ *              'MICROSERVICE_PATH_GEOLOCATION'|
+ *              'MICROSERVICE_PATH_MAIL'|
+ *              'MICROSERVICE_PATH_PDF'|
+ *              'MICROSERVICE_PATH_WORLDCITIES'|
+ *              'MICROSERVICE_PATH_LOGS'|
+ *              'MICROSERVICE_PATH_TEMP'} microservice_config_keys
+ * MicroService config
+ * @typedef {{  SERVER_CONFIG                       : string,
+ *              APPS_CONFIG                         : string,
+ *              MICROSERVICE_CONFIG                 : string,
+ *              MICROSERVICE_CONFIG_BATCH           : string,
+ *              MICROSERVICE_CONFIG_PDF             : string,
+ *              MICROSERVICE_MESSAGE_QUEUE_ERROR    : string,
+ *              MICROSERVICE_MESSAGE_QUEUE_PUBLISH  : string,
+ *              MICROSERVICE_MESSAGE_QUEUE_CONSUME  : string,
+ *              MICROSERVICE_PATH_BATCH             : string
+ *              MICROSERVICE_PATH_GEOLOCATION       : string
+ *              MICROSERVICE_PATH_MAIL              : string
+ *              MICROSERVICE_PATH_PDF               : string
+ *              MICROSERVICE_PATH_WORLDCITIES       : string
+ *              MICROSERVICE_PATH_LOGS              : string,
+ *              MICROSERVICE_PATH_TEMP              : string}} microservice_config
+ * 
+ * MicroService - Response
+ * @typedef {object}    res_microservice
  * @property {function} setHeader
  * @property {function} setEncoding
  * @property {number}   statusCode
@@ -1496,23 +1534,21 @@
  * 
  * @property {object}   headers
  * @property {string}   headers.location
- */
-
-/**
- * Service - message queue
+ * 
+ * MicroService - message queue
  * @typedef {{  message_id:string,
  *              service:string,
- *              message:object|null}}  service_message_queue_publish
+ *              message:object|null}}  microservice_message_queue_publish
  * @typedef {{  message_id:string|null,
  *              service:string|null,
  *              message:object|null,
  *              start:string|null,
  *              finished:string|null,
- *              result:*}}  service_message_queue_consume
+ *              result:*}}  microservice_message_queue_consume
  * @typedef {{  message_id:string,
  *              service:string,
  *              message:object,
  *              start:string,
- *              result:*}}  service_message_queue_error
+ *              result:*}}  microservice_message_queue_error
  */
 export {};

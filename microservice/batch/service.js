@@ -1,8 +1,9 @@
-/** @module server/express/service/batch */
+/** @module microservice/batch */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
+const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 
@@ -12,8 +13,7 @@ import * as Types from './../../types.js';
             milliseconds: number,
             scheduled_start: Date}[]} */
 const JOBS = [];
-const file_batch        = 'batch.json';
-const log_path          = '/service/logs/';
+
 const file_batchlog     = 'batch_log.json';
 /**
  * 
@@ -86,7 +86,7 @@ const get_batchlog_filename = () => {
     const logdate = new Date();
     const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
     const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${log_path}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
+    return `${MicroServiceConfigGet('MICROSERVICE_PATH_LOGS')}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
 };
 /**
  * 
@@ -320,7 +320,7 @@ const start_jobs = async () =>{
     const fs = await import('node:fs');
     const os = await import('node:os');
     /**@type{string} */
-    const jobs_string = await fs.promises.readFile(`${process.cwd()}${log_path}${file_batch}`, 'utf8');
+    const jobs_string = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_CONFIG_BATCH')}`, 'utf8');
     /**@type{{  jobid:number,
      *          name:string,
      *          command_type:'OS',

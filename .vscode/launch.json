@@ -15,7 +15,7 @@
         },
         {
             "name": "Microservice Batch",
-            "program": "${workspaceFolder}/service/batch/server.js",
+            "program": "${workspaceFolder}/microservice/batch/server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
@@ -24,7 +24,7 @@
         },
         {
             "name": "Microservice Geolocation",
-            "program": "${workspaceFolder}/service/geolocation/server.js",
+            "program": "${workspaceFolder}/microservice/geolocation/server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
@@ -33,7 +33,7 @@
         },    
         {
             "name": "Microservice Worldcities",
-            "program": "${workspaceFolder}/service/worldcities/server.js",
+            "program": "${workspaceFolder}/microservice/worldcities/server.js",
             "request": "launch",
             "skipFiles": [
                 "<node_internals>/**"
