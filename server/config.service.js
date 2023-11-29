@@ -57,7 +57,10 @@ const app_portfolio_title = 'App Portfolio';
             [3, CONFIG_INIT.FILE_CONFIG_AUTH_BLOCKIP],
             [4, CONFIG_INIT.FILE_CONFIG_AUTH_POLICY],
             [5, CONFIG_INIT.FILE_CONFIG_AUTH_USERAGENT],
-            [6, CONFIG_INIT.FILE_CONFIG_AUTH_USER]
+            [6, CONFIG_INIT.FILE_CONFIG_AUTH_USER],
+            [7, CONFIG_INIT.FILE_CONFIG_MICROSERVICE],
+            [8, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_BATCH],
+            [9, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_PDF]
            ];
 };
 /**
@@ -193,7 +196,11 @@ const DefaultConfig = async () => {
                 throw error;
             });
         };
-        for (const dir of ['/config', '/service/logs','/logs', '/service/pdf/config']){
+        for (const dir of [ `${SLASH}config`, 
+                            `${SLASH}logs`, 
+                            `${SLASH}microservice${SLASH}config`, 
+                            `${SLASH}microservice${SLASH}logs`, 
+                            `${SLASH}microservice${SLASH}temp`]){
             await fs.promises.access(process.cwd() + dir)
             .catch(()=>{
                 mkdir(dir);  
@@ -208,17 +215,19 @@ const DefaultConfig = async () => {
     //read all default files
     /**@type{Types.config_files[]} */
     const default_files = [
-                            [1, 'default_config.json'],
-                            [2, 'default_apps.json'],
-                            [3, 'default_auth_blockip.json'],
-                            [4, 'default_auth_policy.json'],
-                            [5, 'default_auth_useragent.json'],
-                            [6, 'default_auth_user.json'],
-                            [7, 'default_service_pdf_config.json']
+                            [1, `${SLASH}server${SLASH}default_config.json`],
+                            [2, `${SLASH}server${SLASH}default_apps.json`],
+                            [3, `${SLASH}server${SLASH}default_auth_blockip.json`],
+                            [4, `${SLASH}server${SLASH}default_auth_policy.json`],
+                            [5, `${SLASH}server${SLASH}default_auth_useragent.json`],
+                            [6, `${SLASH}server${SLASH}default_auth_user.json`],
+                            [7, `${SLASH}microservice${SLASH}default_microservice_config.json`],
+                            [8, `${SLASH}microservice${SLASH}default_microservice_config_batch.json`],
+                            [9, `${SLASH}microservice${SLASH}default_microservice_config_pdf.json`]
                         ]; 
     //ES2020 import() with ES6 promises
     const config_json = await Promise.all(default_files.map(file => {
-        return fs.promises.readFile(process.cwd() + '/server/' + file[1], 'utf8');
+        return fs.promises.readFile(process.cwd() + file[1], 'utf8');
     }));
     /**@type{Types.config[]} */
     const config_obj = [JSON.parse(config_json[0]),
@@ -227,7 +236,9 @@ const DefaultConfig = async () => {
                         JSON.parse(config_json[3]),
                         JSON.parse(config_json[4]),
                         JSON.parse(config_json[5]),
-                        JSON.parse(config_json[6])];
+                        JSON.parse(config_json[6]),
+                        JSON.parse(config_json[7]),
+                        JSON.parse(config_json[8])];
     //set server parameters
     //update path
     config_obj[0].SERVER.map(row=>{
@@ -256,19 +267,22 @@ const DefaultConfig = async () => {
     });
     //set created for user
     config_obj[5].created = new Date().toISOString();
-    //default server metadata
+    //server metadata
     const config_init = {
-        'CONFIGURATION': app_portfolio_title,
-        'CREATED': `${new Date().toISOString()}`,
-        'MODIFIED': '',
-        'MAINTENANCE': '0',
-        'FILE_CONFIG_SERVER': `${SLASH}config${SLASH}config.json`,
-        'FILE_CONFIG_APPS':`${SLASH}config${SLASH}apps.json`,
-        'FILE_CONFIG_AUTH_BLOCKIP':`${SLASH}config${SLASH}auth_blockip.json`,
-        'FILE_CONFIG_AUTH_POLICY':`${SLASH}config${SLASH}auth_policy.json`,
-        'FILE_CONFIG_AUTH_USERAGENT':`${SLASH}config${SLASH}auth_useragent.json`,
-        'FILE_CONFIG_AUTH_USER':`${SLASH}config${SLASH}auth_user.json`,
-        'PATH_LOG':`${SLASH}logs${SLASH}`
+        'CONFIGURATION':                    app_portfolio_title,
+        'CREATED':                          `${new Date().toISOString()}`,
+        'MODIFIED':                         '',
+        'MAINTENANCE':                      '0',
+        'FILE_CONFIG_SERVER':               `${SLASH}config${SLASH}config.json`,
+        'FILE_CONFIG_APPS':                 `${SLASH}config${SLASH}apps.json`,
+        'FILE_CONFIG_AUTH_BLOCKIP':         `${SLASH}config${SLASH}auth_blockip.json`,
+        'FILE_CONFIG_AUTH_POLICY':          `${SLASH}config${SLASH}auth_policy.json`,
+        'FILE_CONFIG_AUTH_USERAGENT':       `${SLASH}config${SLASH}auth_useragent.json`,
+        'FILE_CONFIG_AUTH_USER':            `${SLASH}config${SLASH}auth_user.json`,
+        'FILE_CONFIG_MICROSERVICE':         `${SLASH}microservice${SLASH}config${SLASH}config.json`,
+        'FILE_CONFIG_MICROSERVICE_BATCH':   `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
+        'FILE_CONFIG_MICROSERVICE_PDF':     `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
+        'PATH_LOG':                         `${SLASH}logs${SLASH}`
         };
     //save initial config files with metadata including path to config files
     await fs.promises.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, JSON.stringify(config_init, undefined, 2),  'utf8');
@@ -277,15 +291,9 @@ const DefaultConfig = async () => {
     CONFIG_INIT = config_init;
     let config_created=0;
     for (const config_row of config_obj){
-        if (config_created == 6){
-            //create default service pdf config not part of server parameter management
-            await fs.promises.writeFile(process.cwd() + `${SLASH}service${SLASH}pdf${SLASH}config${SLASH}config.json`, JSON.stringify(config_row, undefined,2),  'utf8');
-        }
-        else{
-            //send fileno in file array
-            await ConfigSave( default_files[config_created][0], config_row, true);
-            config_created++;
-        }
+        //send fileno in file array
+        await ConfigSave( default_files[config_created][0], config_row, true);
+        config_created++;
     }
     return null;
 };
@@ -299,6 +307,7 @@ const InitConfig = async () => {
     return await new Promise((resolve, reject) => {
         const setVariables = async () => {
             const fs = await import('node:fs');
+            const {MicroServiceConfig} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
             const files = config_files();         
             for (const file of files){
                 const fileBuffer = await fs.promises.readFile(process.cwd() + file[1], 'utf8');
@@ -336,6 +345,8 @@ const InitConfig = async () => {
                     }
                 }
             }
+            //sets MICROSERVICE module variable so main server can read configuration with better performance
+            await MicroServiceConfig();
         };
         ConfigExists().then((result) => {
             if (result==true)
@@ -387,13 +398,16 @@ const ConfigMaintenanceGet = async () => {
  * Config get saved
  * 
  *   config_type_no
- *   0 = config_init     path + file
- *   1 = config          path + file
- *   2 = apps            path + file
- *   3 = auth blockip    path + file
- *   4 = auth policy     path + file 
- *   5 = auth useragent  path + file
- *   6 = auth user       path + file
+ *   0 = config_init                path + file
+ *   1 = config                     path + file
+ *   2 = apps                       path + file
+ *   3 = auth blockip               path + file
+ *   4 = auth policy                path + file 
+ *   5 = auth useragent             path + file
+ *   6 = auth user                  path + file
+ *   7 = microservice config        path + file
+ *   8 = microservice config batch  path + file
+ *   9 = microservice config pdf    path + file
  * @async
  * @param {Types.config_type_no|null} config_type_no
  * @returns {{}}

@@ -1,7 +1,9 @@
-/** @module server/express/service/geolocation */
+/** @module microservice/geolocation */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
+
+const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**
  * 
@@ -72,7 +74,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
     try {
         switch (cachetype){
             case 'IP':{
-                geodata_cache = await fs.promises.readFile(`${process.cwd()}/service/geolocation/geodata_cache_ip.json`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_PATH_GEOLOCATION')}geodata_cache_ip.json`, 'utf8');
                 geodata_cache = geodata_cache.split('\r\n');
                 for (const row of geodata_cache){
                     const row_obj = JSON.parse(row);
@@ -84,7 +86,7 @@ const getCacheGeodata = async (cachetype, ip, latitude, longitude) =>{
                 return null;
             }
             case 'PLACE':{
-                geodata_cache = await fs.promises.readFile(`${process.cwd()}/service/geolocation/geodata_cache_place.json`, 'utf8');
+                geodata_cache = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_PATH_GEOLOCATION')}geodata_cache_place.json`, 'utf8');
                 geodata_cache =  geodata_cache.split('\r\n');
                 /**
                  * 
@@ -139,12 +141,12 @@ const writeCacheGeodata = async (cachetype, geodata) =>{
     const fs = await import('node:fs');
     switch (cachetype){
         case 'IP':{
-            await fs.promises.appendFile(`${process.cwd()}/service/geolocation/geodata_cache_ip.json`, 
+            await fs.promises.appendFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_PATH_GEOLOCATION')}geodata_cache_ip.json`, 
                                                           JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }
         case 'PLACE':{
-            await fs.promises.appendFile(`${process.cwd()}/service/geolocation/geodata_cache_place.json`, 
+            await fs.promises.appendFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_PATH_GEOLOCATION')}geodata_cache_place.json`, 
                                                              JSON.stringify(JSON.parse(geodata)) +'\r\n', 'utf8');
             break;
         }

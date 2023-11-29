@@ -1,19 +1,19 @@
-/** @module server/express/service/batch */
+/** @module microservice/batch */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
 const service = await import('./service.js');
-const { MicroserviceServer } = await import(`file://${process.cwd()}/service/service.service.js`);
+const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**
  * Starts the server
  */
 const startserver = async () =>{
 	
-	const request = await MicroserviceServer('BATCH');
+	const request = await MicroServiceServer('BATCH');
 		
-	request.server.createServer(request.options, (/**@type{Types.req_service}*/req, /**@type{Types.res_service}*/res) => {
+	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
 		res.statusCode = 401;
 		res.write('⛔', 'utf-8');
 		res.end();

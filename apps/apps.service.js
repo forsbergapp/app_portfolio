@@ -2,7 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const microservice = await import(`file://${process.cwd()}/service/service.service.js`);
+const microservice = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 const {CheckFirstTime, ConfigGet, ConfigGetInit, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const microservice_circuitbreak = new microservice.CircuitBreaker();
 
@@ -942,7 +942,7 @@ const getReport = async (req, app_id, callBack) => {
             //PDF
             const url = `${req.protocol}://${req.headers_host}/reports?ps=${req.ps}&hf=${req.hf}&reportid=${req.reportid}&messagequeue=1`;
             //call message queue
-            const { MessageQueue } = await import(`file://${process.cwd()}/service/service.service.js`);
+            const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
             MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
                 .then((/**@type{string}*/pdf)=>{
                     callBack(null, pdf);
@@ -1072,7 +1072,7 @@ const BFF = async (app_id, endpoint, service, parameters, ip, method, authorizat
                 decodedparameters += (user_account_logon_user_account_id)?`&user_account_logon_user_account_id=${user_account_logon_user_account_id}`:'';
                 let path = '';
                 const call_service = (/**@type{string}*/path, /**@type{string}*/service) => {
-                    microservice_circuitbreak.callService(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
+                    microservice_circuitbreak.MicroServiceCall(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
                     .then((/**@type{string}*/result)=>resolve(result))
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 };

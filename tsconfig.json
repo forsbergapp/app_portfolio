@@ -9,6 +9,6 @@
                         "lib": ["es2022", "DOM"],
                         "module":"es2022",
                         "target":"es2022"},
-    "include": ["server", "apps", "service", "test"],
+    "include": ["server", "apps", "microservice", "test"],
     "exclude":["apps/admin/public", "apps/app*/public", "apps/common/public"]
 }

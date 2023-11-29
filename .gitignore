@@ -2,8 +2,8 @@
 config/
 logs/
 node_modules/
-service/geolocation/geodata_cache_ip.json
-service/geolocation/geodata_cache_place.json
-service/logs/
-service/pdf/tmp/
-service/pdf/config/
+microservice/geolocation/geodata_cache_ip.json
+microservice/geolocation/geodata_cache_place.json
+microservice/logs/
+microservice/temp/
+microservice/config/

@@ -1,9 +1,10 @@
-/** @module server/express/service/pdf */
+/** @module microservice/pdf */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
 const puppeteer = await import('puppeteer');
+const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**@type{*} */
 let BROWSER;
@@ -13,8 +14,8 @@ let BROWSER;
  * @returns {Promise.<string|null>}
  */
 const ConfigGet = async (parameter)=>{
-    const fs = await import('node:fs');
-    const config_json = await fs.promises.readFile(`${process.cwd()}/service/pdf/config/config.json`, 'utf8');
+    const fs = await import('node:fs');    
+    const config_json = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_CONFIG_PDF')}`, 'utf8');
     const CONFIG = JSON.parse(config_json)['PDF'];
     for (const row of CONFIG){
         for (const key in row)
@@ -27,7 +28,7 @@ const ConfigGet = async (parameter)=>{
  * Init PDF service
  */
 const initPDFService = async () => {
-    if (!BROWSER)
+    if (!BROWSER){
         BROWSER = await puppeteer.launch({  pipe:true,
                                             headless: 'new',
                                             executablePath: await ConfigGet('EXECUTABLE_PATH') ?? '',
@@ -73,11 +74,12 @@ const initPDFService = async () => {
                                                     '--no-experiments',
                                                     '--no-default-browser-check',
                                                     '--no-pings',
-                                                    '--user-data-dir=' + process.cwd() + await ConfigGet('TMP_DIR')]
+                                                    '--user-data-dir=' + process.cwd() + MicroServiceConfigGet('MICROSERVICE_PATH_TEMP')]
         }).catch(error=>{
             console.log(error);
             throw error;
         });
+    }
 };
 /**
  * 

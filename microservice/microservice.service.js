@@ -1,4 +1,4 @@
-/** @module server/express/service */
+/** @module microservice */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
@@ -8,6 +8,33 @@ const https = await import('node:https');
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
 
+/**@type {Types.microservice_config_service[]|[]}*/
+let MICROSERVICE = [];
+
+let SLASH;
+if (process.platform == 'win32')
+    SLASH = '\\';
+else
+    SLASH = '/';
+
+/**@type{Types.microservice_config} */
+const CONFIG = {
+    SERVER_CONFIG                       : `${SLASH}config${SLASH}config.json`,
+    APPS_CONFIG                         : `${SLASH}config${SLASH}apps.json`,
+    MICROSERVICE_CONFIG                 : `${SLASH}microservice${SLASH}config${SLASH}config.json`,
+    MICROSERVICE_CONFIG_BATCH           : `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
+    MICROSERVICE_CONFIG_PDF             : `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
+    MICROSERVICE_MESSAGE_QUEUE_ERROR    : `${SLASH}microservice${SLASH}logs${SLASH}message_queue_error.json`,
+    MICROSERVICE_MESSAGE_QUEUE_PUBLISH  : `${SLASH}microservice${SLASH}logs${SLASH}message_queue_publish.json`,
+    MICROSERVICE_MESSAGE_QUEUE_CONSUME  : `${SLASH}microservice${SLASH}logs${SLASH}message_queue_consume.json`,
+    MICROSERVICE_PATH_BATCH             : `${SLASH}microservice${SLASH}batch${SLASH}`,
+    MICROSERVICE_PATH_GEOLOCATION       : `${SLASH}microservice${SLASH}geolocation${SLASH}`,
+    MICROSERVICE_PATH_MAIL              : `${SLASH}microservice${SLASH}mail${SLASH}`,
+    MICROSERVICE_PATH_PDF               : `${SLASH}microservice${SLASH}pdf${SLASH}`,
+    MICROSERVICE_PATH_WORLDCITIES       : `${SLASH}microservice${SLASH}worldcities${SLASH}`,
+    MICROSERVICE_PATH_LOGS              : `${SLASH}microservice${SLASH}logs${SLASH}`,
+    MICROSERVICE_PATH_TEMP              : `${SLASH}microservice${SLASH}temp${SLASH}`
+};
 
 const timeout_message = '🗺⛔?';
 
@@ -24,11 +51,16 @@ const timeout_message = '🗺⛔?';
  * @param {string} parameter 
  * @returns {Promise.<string|null>}
  */
-const ServiceConfig = async (parameter) =>{
+/**
+ * 
+ * @param {*} parameter 
+ * @returns 
+ */
+const ServerConfig = async (parameter) =>{
     let value=null;
     try {
         //fetch config parameters if config file exists
-        const config = await fs.promises.readFile(`${process.cwd()}/config/config.json`, 'utf8');
+        const config = await fs.promises.readFile(`${process.cwd()}${CONFIG.SERVER_CONFIG}`, 'utf8');
         /**@type{[]} */
         const rows =  JSON.parse(config).SERVER;
         value = rows.filter(row=>Object.prototype.hasOwnProperty.call(row, parameter))[0][parameter];    
@@ -38,49 +70,51 @@ const ServiceConfig = async (parameter) =>{
     }
     return value;
 };
+
+/**
+ * Reads config file and saves in MICROSERVICE module variable for better performance
+ * @returns {Promise.<void>}
+ */
+const MicroServiceConfig = async () => {
+    const MICROSERVICE_JSON = await fs.promises.readFile(`${process.cwd()}${CONFIG.MICROSERVICE_CONFIG}`, 'utf8');
+    MICROSERVICE =  JSON.parse(MICROSERVICE_JSON);
+};
+/**
+ * Returns value for given parameter in CONFIG module variable
+ * @param {Types.microservice_config_keys} config 
+ * @returns {string}
+ */
+const MicroServiceConfigGet = config => CONFIG[config];
 /**
  * 
  * @param {string} service 
  * @returns {Promise.<{ server:object,
  *                      port:number,
- *                      options:object}>}
+ *                      options?:object}>}
  */
-const MicroserviceServer = async (service) =>{
-    const env_https_enabled = await ServiceConfig('HTTPS_ENABLE');
-    const env_key_path = await ServiceConfig('HTTPS_KEY');
-    const env_cert_path = await ServiceConfig('HTTPS_CERT');
-    let env_key = null;
-    let env_cert = null;
-    if (env_key_path){
-        env_key = await fs.promises.readFile(process.cwd() + env_key_path, 'utf8');
-        env_cert = await fs.promises.readFile(process.cwd() + env_cert_path, 'utf8');
-    }
-    const env_http_port = MICROSERVICE.filter(row=>row.SERVICE==service)[0].PORT;
-    const env_https_port = MICROSERVICE.filter(row=>row.SERVICE==service)[0].HTTPS_PORT;
+const MicroServiceServer = async (service) =>{
+    await MicroServiceConfig();
+    const env_https_enabled = await ServerConfig('HTTPS_ENABLE');
+    const env_key_path = await ServerConfig('HTTPS_KEY');
+    const env_cert_path = await ServerConfig('HTTPS_CERT');
     
-    const options = {
-        key: env_key,
-        cert: env_cert
-    };
     if (env_https_enabled=='1')
         return {
             server  : https,
-            port	: env_https_port,
-            options : options
+            port	: MICROSERVICE.filter(row=>row.SERVICE==service)[0].HTTPS_PORT,
+            options : {
+                key: env_key_path?await fs.promises.readFile(process.cwd() + env_key_path, 'utf8'):null,
+                cert: env_key_path?await fs.promises.readFile(process.cwd() + env_cert_path, 'utf8'):null
+            }
         };
     else
         return {
             server  : http,
-            port 	: env_http_port,
-            options : options
+            port 	: MICROSERVICE.filter(row=>row.SERVICE==service)[0].PORT
         };
 };
 
-const MICROSERVICE = [
-                        {'SERVICE':'GEOLOCATION', 'PORT':3001, 'HTTPS_PORT': 4001 },
-                        {'SERVICE':'WORLDCITIES', 'PORT':3002, 'HTTPS_PORT': 4002 },
-                        {'SERVICE':'BATCH',       'PORT':3003, 'HTTPS_PORT': 4003 }
-                     ];
+
 /**
  * 
  * @param {number} app_id 
@@ -88,7 +122,7 @@ const MICROSERVICE = [
  * @returns {Promise.<boolean>}
  */
 const IAM = async (app_id, authorization) =>{
-    const apps = await fs.promises.readFile(`${process.cwd()}/config/apps.json`, 'utf8');
+    const apps = await fs.promises.readFile(`${process.cwd()}${CONFIG.APPS_CONFIG}`, 'utf8');
     /**@type{Types.config_apps[]} */
     const rows =  await  JSON.parse(apps).APPS;
     const CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
@@ -100,6 +134,7 @@ const IAM = async (app_id, authorization) =>{
     else
         return false;
 };
+
 /**
  * 
  * @param {string} service 
@@ -113,35 +148,25 @@ const IAM = async (app_id, authorization) =>{
  * @param {object} body 
  * @returns {Promise.<string>}
  */                    
-const service_request = async (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
+const MicroServiceRequest = async (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body) =>{
     return new Promise ((resolve, reject)=>{
         let headers;
         let options;
         let request_protocol;
         const hostname = 'localhost';
         let port;
-        switch (service){
+        switch (service.toUpperCase()){
             //mail and pdf microservice use message queue and have no servers
             //batch microservice is not callable, only used to run batch jobs
-            case 'GEOLOCATION':{
-                if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
-                    request_protocol = https;
-                    port = MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].HTTPS_PORT;
-                }
-                else{
-                    request_protocol = http;
-                    port = MICROSERVICE.filter(row=>row.SERVICE=='GEOLOCATION')[0].PORT;
-                }
-                break;
-            }
+            case 'GEOLOCATION':
             case 'WORLDCITIES':{
                 if (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'){
                     request_protocol = https;
-                    port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].HTTPS_PORT;
+                    port = MICROSERVICE.filter(row=>row.SERVICE==service.toUpperCase())[0].HTTPS_PORT;
                 }
                 else{
                     request_protocol = http;
-                    port = MICROSERVICE.filter(row=>row.SERVICE=='WORLDCITIES')[0].PORT;
+                    port = MICROSERVICE.filter(row=>row.SERVICE==service.toUpperCase())[0].PORT;
                 }
                 break;
             }
@@ -245,7 +270,7 @@ class CircuitBreaker {
      * @param {object} body 
      * @returns {Promise.<string>}
      */
-    async callService(app_id, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
+    async MicroServiceCall(app_id, path, service, method, client_ip, authorization, headers_user_agent, headers_accept_language, body){
         if (!this.canRequest(service))
             return '';
         try {
@@ -254,7 +279,7 @@ class CircuitBreaker {
                 timeout = 60 * 1000 * ConfigGet('SERVER', 'SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN');
             else
                 timeout = this.requestTimetout * 1000;
-            const response = await service_request (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
+            const response = await MicroServiceRequest (service, path, method, timeout, client_ip, authorization, headers_user_agent, headers_accept_language, body);
             this.onSuccess(service);
             return response;    
         } catch (error) {
@@ -334,17 +359,17 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 let filename;
                 switch (file){
                     case 0:{
-                        filename = '/service/logs/message_queue_error.json';
+                        filename = CONFIG.MICROSERVICE_MESSAGE_QUEUE_ERROR;
                         json_message = JSON.stringify({'message_id': new Date().toISOString(), 'message':   message, 'result':result});
                         break;
                     }
                     case 1:{
-                        filename = '/service/logs/message_queue_publish.json';
+                        filename = CONFIG.MICROSERVICE_MESSAGE_QUEUE_PUBLISH;
                         json_message = JSON.stringify(message);
                         break;
                     }
                     case 2:{
-                        filename = '/service/logs/message_queue_consume.json';
+                        filename = CONFIG.MICROSERVICE_MESSAGE_QUEUE_CONSUME;
                         json_message = JSON.stringify(message);
                         break;
                     }
@@ -363,7 +388,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 case 'PUBLISH': {
                     //message PUBLISH message in message_queue_publish.json
                     const new_message_id = new Date().toISOString();
-                    /**@type{Types.service_message_queue_publish} */
+                    /**@type{Types.microservice_message_queue_publish} */
                     const message_queue = {message_id: new_message_id, service: service, message:   message};
                     write_file(1, message_queue, null)
                     .then(()=>{
@@ -377,9 +402,9 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    fs.promises.readFile(`${process.cwd()}/service/logs/message_queue_publish.json`, 'utf8')
+                    fs.promises.readFile(`${process.cwd()}${CONFIG.MICROSERVICE_MESSAGE_QUEUE_PUBLISH}`, 'utf8')
                     .then((/**@type{string}*/message_queue)=>{
-                        /**@type{Types.service_message_queue_consume} */
+                        /**@type{Types.microservice_message_queue_consume} */
                         let message_consume = { message_id: null,
                                                 service:    null,
                                                 message:    null,
@@ -387,7 +412,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                                 finished:   null,
                                                 result:     null};
                         for (const row of message_queue.split('\r\n')){
-                            /**@type{Types.service_message_queue_publish} */
+                            /**@type{Types.microservice_message_queue_publish} */
                             const row_obj = JSON.parse(row);
                             if (row_obj.message_id == message_id){
                                 message_consume = { message_id: row_obj.message_id,
@@ -402,7 +427,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                         switch (service){
                             case 'MAIL':{
                                 message_consume.start = new Date().toISOString();
-                                import(`file://${process.cwd()}/service/mail/mail.service.js`).then(({sendEmail})=>{
+                                import(`file://${process.cwd()}/microservice/mail/mail.service.js`).then(({sendEmail})=>{
                                     sendEmail(message_consume.message)
                                     .then((/**@type{object}*/result_sendEmail)=>{
                                         message_consume.finished = new Date().toISOString();
@@ -436,7 +461,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                             }
                             case 'PDF':{
                                 message_consume.start = new Date().toISOString();
-                                import(`file://${process.cwd()}/service/pdf/pdf.service.js`).then(({getPDF})=>{
+                                import(`file://${process.cwd()}/microservice/pdf/service.js`).then(({getPDF})=>{
                                     getPDF(message_consume.message).then((/**@type{string}*/pdf)=>{
                                         message_consume.finished = new Date().toISOString();
                                         message_consume.result = 'PDF';
@@ -491,4 +516,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {getNumberValue, IAM, MicroserviceServer, MICROSERVICE, CircuitBreaker, MessageQueue};
+export {getNumberValue, IAM, MicroServiceConfig, MicroServiceConfigGet, MicroServiceServer, MICROSERVICE, CircuitBreaker, MessageQueue};
