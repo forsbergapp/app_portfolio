@@ -450,35 +450,33 @@ const install_db_get_files = async (json_type) =>{
         for (const app of apps){
             await create_user_account_app(app.id, demo_user.id);
         }
-        for (let i = 0; i < demo_user.settings.length; i++){
-            const user_setting_app_id = demo_user.settings[i].app_id;
+        for (const demo_user_setting of demo_user.settings){
             let settings_header_image;
             //use file in settings or if missing then use filename same as demo username
-            if (demo_user.settings[i].image_header_image_img)
-                settings_header_image = `${demo_user.settings[i].image_header_image_img}.webp`;
+            if (demo_user_setting.image_header_image_img)
+                settings_header_image = `${demo_user_setting.image_header_image_img}.webp`;
             else
                 settings_header_image = `${demo_user.username}.webp`;
-        /**@type{Buffer} */
+            /**@type{Buffer} */
             const image = await fs.promises.readFile(`${process.cwd()}/scripts/demo/${settings_header_image}`);
-        /**@ts-ignore */
+            /**@ts-ignore */
             const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
-
             //update settings with loaded image into BASE64 format
-            demo_user.settings[i].image_header_image_img = image_string;
+            demo_user_setting.image_header_image_img = image_string;
             //use random day and month themes
             //day 10001-10010
-            demo_user.settings[i].design_theme_day_id = Math.floor(10001 + Math.random() * 10);
+            demo_user_setting.design_theme_day_id = Math.floor(10001 + Math.random() * 10);
             //month 20001-20022
-            demo_user.settings[i].design_theme_month_id = Math.floor(20001 + Math.random() * 22);
-            demo_user.settings[i].design_theme_year_id = 30001;
-            const settings_no_app_id = JSON.parse(JSON.stringify(demo_user.settings[i]));
+            demo_user_setting.design_theme_month_id = Math.floor(20001 + Math.random() * 22);
+            demo_user_setting.design_theme_year_id = 30001;
+            const settings_no_app_id = JSON.parse(JSON.stringify(demo_user_setting));
             delete settings_no_app_id.app_id;
             const json_data_user_setting = {
-                                            description: demo_user.settings[i].description,
+                                            description: demo_user_setting.description,
                                             settings_json: settings_no_app_id,
                                             user_account_id: demo_user.id
                                         };	
-            await create_setting(user_setting_app_id, json_data_user_setting);
+            await create_setting(demo_user_setting.app_id, json_data_user_setting);
         }
     }
     let records_user_account_like = 0;

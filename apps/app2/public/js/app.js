@@ -127,21 +127,21 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                     set_settings_select();
                     const select_user_settings = document.querySelector('#setting_select_user_setting');
                     const current_user_settings =[];
-                    for (let i=0;i<=select_user_settings.options.length-1;i++){
+                    for (const setting of select_user_settings.options){
                         current_user_settings.push(
                         {
-                        'description' : select_user_settings[i].getAttribute('description'),
-                        'regional_language_locale' : select_user_settings[i].getAttribute('regional_language_locale'),
-                        'regional_timezone' : select_user_settings[i].getAttribute('regional_timezone'),
-                        'regional_number_system' : select_user_settings[i].getAttribute('regional_number_system'),
-                        'regional_calendar_hijri_type' : select_user_settings[i].getAttribute('regional_calendar_hijri_type'),
-                        'gps_lat_text' : parseFloat(select_user_settings[i].getAttribute('gps_lat_text')),
-                        'gps_long_text' : parseFloat(select_user_settings[i].getAttribute('gps_long_text')),
-                        'prayer_method' : select_user_settings[i].getAttribute('prayer_method'),
-                        'prayer_asr_method' : select_user_settings[i].getAttribute('prayer_asr_method'),
-                        'prayer_high_latitude_adjustment' : select_user_settings[i].getAttribute('prayer_high_latitude_adjustment'),
-                        'prayer_time_format' : select_user_settings[i].getAttribute('prayer_time_format'),
-                        'prayer_hijri_date_adjustment' : select_user_settings[i].getAttribute('prayer_hijri_date_adjustment')
+                        'description' : setting.getAttribute('description'),
+                        'regional_language_locale' : setting.getAttribute('regional_language_locale'),
+                        'regional_timezone' : setting.getAttribute('regional_timezone'),
+                        'regional_number_system' : setting.getAttribute('regional_number_system'),
+                        'regional_calendar_hijri_type' : setting.getAttribute('regional_calendar_hijri_type'),
+                        'gps_lat_text' : parseFloat(setting.getAttribute('gps_lat_text')),
+                        'gps_long_text' : parseFloat(setting.getAttribute('gps_long_text')),
+                        'prayer_method' : setting.getAttribute('prayer_method'),
+                        'prayer_asr_method' : setting.getAttribute('prayer_asr_method'),
+                        'prayer_high_latitude_adjustment' : setting.getAttribute('prayer_high_latitude_adjustment'),
+                        'prayer_time_format' : setting.getAttribute('prayer_time_format'),
+                        'prayer_hijri_date_adjustment' : setting.getAttribute('prayer_hijri_date_adjustment')
                         });
                     }
                     document.querySelector('#paper').innerHTML = common.APP_SPINNER;
@@ -239,17 +239,19 @@ const get_theme_id = (type) => {
 };
 const set_theme_id = (type, theme_id) => {
     const slides = document.querySelector('#setting_themes_' + type + '_slider').children[0].children[0];
-    for (let i = 0; i < slides.childElementCount; i++) {
-        if (slides.children[i].children[0].getAttribute('data-theme_id') == theme_id) {
+    let i=0;
+    for (const slide of slides.children) {
+        if (slide.children[0].getAttribute('data-theme_id') == theme_id) {
             //remove active class from current theme
             document.querySelectorAll('.slider_active_' + type)[0].classList.remove('slider_active_' + type);
             //set active class on found theme
-            document.querySelector('#' + slides.children[i].children[0].id).classList.add('slider_active_' + type);
+            document.querySelector('#' + slide.children[0].id).classList.add('slider_active_' + type);
             //update preview image to correct theme
             document.querySelector('#slides_' + type).style.left = (-96 * (i)).toString() + 'px';
             set_theme_title(type);
             return null;
         }
+        i++;
     }
     return null;
 };
@@ -341,7 +343,6 @@ const common_translate_ui_app = async (lang_code, callBack) => {
     });
 };
 const settings_translate = async (first=true) => {
-	let json;
     let locale;
     if (first ==true){
         locale = document.querySelector('#setting_select_locale').value;
@@ -356,12 +357,11 @@ const settings_translate = async (first=true) => {
             if (err)
                 null;
             else{
-                json = JSON.parse(result);
-                for (let i = 0; i < json.data.length; i++){
+                for (const app_object_item of JSON.parse(result).data){
                     if (first==true)
-                        app_report.REPORT_GLOBAL.first_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+                        app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
                     else
-                        app_report.REPORT_GLOBAL.second_language[json.data[i].object_item_name.toLowerCase()] = json.data[i].text;
+                        app_report.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
                 }
                 //if translating first language and second language is not used
                 if (first == true &&
@@ -442,9 +442,9 @@ const showreporttime = () => {
         let user_locale;
         let user_options;
         //loop user settings
-        for (let i = 0; i <= select_user_settings.options.length - 1; i++) {
+        for (const setting of select_user_settings.options) {
             user_options = {
-                timeZone: select_user_settings[i].getAttribute('regional_timezone'),
+                timeZone: setting.getAttribute('regional_timezone'),
                 weekday: 'long',
                 year: 'numeric',
                 month: 'long',
@@ -455,9 +455,9 @@ const showreporttime = () => {
                 timeZoneName: 'long'
             };
 
-            user_locale = select_user_settings[i].getAttribute('regional_language_locale');
+            user_locale = setting.getAttribute('regional_language_locale');
             //set user setting time, select index and order should be the same as div timetable_day_current_time indexes
-            user_current_time[i].innerHTML = new Date().toLocaleTimeString(user_locale, user_options);
+            user_current_time[setting.index].innerHTML = new Date().toLocaleTimeString(user_locale, user_options);
         }
     }
     return null;
@@ -613,9 +613,10 @@ const select_get_selectindex = (select, id) => {
     if (id == 0)
         return 0;
     else {
-        for (let i = 0; i < document.querySelector('#' + select).options.length; i++) {
-            if (document.querySelector('#' + select).options[i].getAttribute('id') == id)
-                return i;
+        const select_options = document.querySelector('#' + select).options;
+        for (const select of select_options) {
+            if (select.getAttribute('id') == id)
+                return select.index;
         }
     }
     return null;
@@ -1578,14 +1579,13 @@ const user_settings_function = async (function_name, initial_user_setting, callB
         else{
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
-            const json = JSON.parse(result);
             switch (function_name){
                 case 'ADD':{
                     //update user settings select with saved data
                     //save current settings to new option with 
                     //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
                     const select = document.querySelector('#setting_select_user_setting');
-                    select.innerHTML += `<option id=${json.id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
+                    select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
                     select.selectedIndex = select.options[select.options.length - 1].index;
                     select.options[select.options.length - 1].value = select.selectedIndex;
                     set_settings_select();
@@ -1829,14 +1829,12 @@ const set_settings_select = () => {
 };
 
 const profile_user_setting_stat = (id) => {
-    let json;
     common.FFB ('DB_API', `/user_account_app_setting/profile?id=${id}`, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
         else{
-            json = JSON.parse(result);
-            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = json.items.count_user_setting_likes;
-            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = json.items.count_user_setting_liked;
+            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result).items.count_user_setting_likes;
+            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result).items.count_user_setting_liked;
         }
     });
 };
@@ -1876,7 +1874,6 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
     document.querySelector('#profile_user_settings_info_view_count').innerHTML = count_views;
 };
 const profile_show_user_setting = () => {
-    let json;
     document.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB ('DB_API', `/user_account_app_setting/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
@@ -1884,21 +1881,22 @@ const profile_show_user_setting = () => {
         if (err)
             null;
         else{
-            json = JSON.parse(result);
             const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
             profile_select_user_settings.innerHTML='';
             let html = '';
-            for (let i = 0; i < json.count; i++) {
+            let i = 0;
+            for (const profile_setting of JSON.parse(result).items) {
                 html += `<option id="${i}" 
                         value=""
-                        sid=${json.items[i].id} 
-                        user_account_id=${json.items[i].user_account_app_user_account_id}
-                        liked=${json.items[i].liked}
-                        count_likes=${json.items[i].count_likes}
-                        count_views=${json.items[i].count_views}
-                        paper_size=${JSON.parse(json.items[i].settings_json).design_paper_size}
-                        >${json.items[i].description}
+                        sid=${profile_setting.id} 
+                        user_account_id=${profile_setting.user_account_app_user_account_id}
+                        liked=${profile_setting.liked}
+                        count_likes=${profile_setting.count_likes}
+                        count_views=${profile_setting.count_views}
+                        paper_size=${JSON.parse(profile_setting.settings_json).design_paper_size}
+                        >${profile_setting.description}
                         </option>`;
+                i++;
             }
             profile_select_user_settings.innerHTML = html;
             profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
@@ -1909,24 +1907,22 @@ const profile_show_user_setting = () => {
 };
 const profile_user_setting_update_stat = () => {
     const profile_id = document.querySelector('#common_profile_id').innerHTML;
-    let json;
     common.FFB ('DB_API', `/user_account_app_setting/profile/all?id=${profile_id}` +
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
         else{
-            json = JSON.parse(result);
             const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
-            for (let i = 0; i < json.count; i++) {
-                if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==json.items[i].id){
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', json.items[i].user_account_id);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', json.items[i].liked);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', json.items[i].count_likes);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', json.items[i].count_views);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = json.items[i].description;
-                    profile_show_user_setting_detail(json.items[i].liked, 
-                                                     json.items[i].count_likes, 
-                                                     json.items[i].count_views);
+            for (const profile_setting of JSON.parse(result).items) {
+                if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', profile_setting.user_account_id);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', profile_setting.liked);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', profile_setting.count_likes);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', profile_setting.count_views);
+                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = profile_setting.description;
+                    profile_show_user_setting_detail(profile_setting.liked, 
+                                                     profile_setting.count_likes, 
+                                                     profile_setting.count_views);
                 }
             }
             profile_user_setting_stat(profile_id);
@@ -2731,189 +2727,189 @@ const init_app = () => {
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
-        for (let i = 0; i < parameters.app.length; i++) {
-            if (parameters.app[i].parameter_name=='APP_COPYRIGHT')
-                app_common.APP_GLOBAL.app_copyright = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='APP_DEFAULT_STARTUP_PAGE')
-                app_common.APP_GLOBAL.app_default_startup_page = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='APP_REPORT_TIMETABLE')
-                app_common.APP_GLOBAL.app_report_timetable = parameters.app[i].parameter_value; 
-            if (parameters.app[i].parameter_name=='INFO_EMAIL_POLICY')
-                app_common.APP_GLOBAL.info_email_policy = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_EMAIL_DISCLAIMER')
-                app_common.APP_GLOBAL.info_email_disclaimer = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_EMAIL_TERMS')
-                app_common.APP_GLOBAL.info_email_terms = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK1_URL')
-                app_common.APP_GLOBAL.info_social_link1_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK2_URL')
-                app_common.APP_GLOBAL.info_social_link2_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK3_URL')
-                app_common.APP_GLOBAL.info_social_link3_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK4_URL')
-                app_common.APP_GLOBAL.info_social_link4_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                app_common.APP_GLOBAL.info_social_link1_icon = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                app_common.APP_GLOBAL.info_social_link2_icon = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                app_common.APP_GLOBAL.info_social_link3_icon = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                app_common.APP_GLOBAL.info_social_link4_icon = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_POLICY_URL')
-                app_common.APP_GLOBAL.info_link_policy_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                app_common.APP_GLOBAL.info_link_disclaimer_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_TERMS_URL')
-                app_common.APP_GLOBAL.info_link_terms_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_URL')
-                app_common.APP_GLOBAL.info_link_about_url = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_POLICY_NAME')
-                app_common.APP_GLOBAL.info_link_policy_name = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                app_common.APP_GLOBAL.info_link_disclaimer_name = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_TERMS_NAME')
-                app_common.APP_GLOBAL.info_link_terms_name = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='INFO_LINK_ABOUT_NAME')
-                app_common.APP_GLOBAL.info_link_about_name = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-                app_report.REPORT_GLOBAL.regional_def_calendar_lang = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-                app_report.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-                app_report.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-                app_report.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-                app_report.REPORT_GLOBAL.regional_def_calendar_type_greg = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-                app_report.REPORT_GLOBAL.regional_def_calendar_number_system = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_DIRECTION')
-                app_common.APP_GLOBAL.regional_default_direction = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
-                app_common.APP_GLOBAL.regional_default_locale_second = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_COLTITLE')
-                app_common.APP_GLOBAL.regional_default_coltitle = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
-                app_common.APP_GLOBAL.regional_default_arabic_script = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
-                app_common.APP_GLOBAL.regional_default_calendartype = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
-                app_common.APP_GLOBAL.regional_default_calendar_hijri_type = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_DEFAULT_PLACE_ID')
-                app_common.APP_GLOBAL.gps_default_place_id = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
-                app_common.APP_GLOBAL.gps_module_leaflet_container = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_title = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TEXT_SIZE')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LAT')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LONG')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_COLOR')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_color = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_WIDTH')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OPACITY')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TITLE')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TEXT_SIZE')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LAT')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LONG')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_COLOR')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_WIDTH')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_OPACITY')
-                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_THEME_DAY')
-                app_common.APP_GLOBAL.design_default_theme_day = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
-                app_common.APP_GLOBAL.design_default_theme_month = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
-                app_common.APP_GLOBAL.design_default_theme_year = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
-                app_common.APP_GLOBAL.design_default_papersize = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
-                app_common.APP_GLOBAL.design_default_highlight_row = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
-                app_common.APP_GLOBAL.design_default_show_weekday = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
-                app_common.APP_GLOBAL.design_default_show_calendartype = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
-                app_common.APP_GLOBAL.design_default_show_notes = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
-                app_common.APP_GLOBAL.design_default_show_gps = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
-                app_common.APP_GLOBAL.design_default_show_timezone = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE1')
-                app_common.APP_GLOBAL.text_default_reporttitle1 = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE2')
-                app_common.APP_GLOBAL.text_default_reporttitle2 = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='TEXT_DEFAULT_REPORTTITLE3')
-                app_common.APP_GLOBAL.text_default_reporttitle3 = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER1')
-                app_common.APP_GLOBAL.text_default_reportfooter1 = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER2')
-                app_common.APP_GLOBAL.text_default_reportfooter2 = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='TEXT_DEFAULT_REPORTFOOTER3')
-                app_common.APP_GLOBAL.text_default_reportfooter3 = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='IMAGE_HEADER_FOOTER_WIDTH')
-                app_common.APP_GLOBAL.image_header_footer_width = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
-                app_common.APP_GLOBAL.image_header_footer_height = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
-                if (parameters.app[i].parameter_value!='')
-                    app_common.APP_GLOBAL.image_default_report_header_src = parameters.app[i].parameter_value;
+        for (const parameter of parameters.app) {
+            if (parameter.parameter_name=='APP_COPYRIGHT')
+                app_common.APP_GLOBAL.app_copyright = parameter.parameter_value;
+            if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
+                app_common.APP_GLOBAL.app_default_startup_page = parseInt(parameter.parameter_value);
+            if (parameter.parameter_name=='APP_REPORT_TIMETABLE')
+                app_common.APP_GLOBAL.app_report_timetable = parameter.parameter_value; 
+            if (parameter.parameter_name=='INFO_EMAIL_POLICY')
+                app_common.APP_GLOBAL.info_email_policy = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
+                app_common.APP_GLOBAL.info_email_disclaimer = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_EMAIL_TERMS')
+                app_common.APP_GLOBAL.info_email_terms = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK1_URL')
+                app_common.APP_GLOBAL.info_social_link1_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK2_URL')
+                app_common.APP_GLOBAL.info_social_link2_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK3_URL')
+                app_common.APP_GLOBAL.info_social_link3_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK4_URL')
+                app_common.APP_GLOBAL.info_social_link4_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK1_ICON')
+                app_common.APP_GLOBAL.info_social_link1_icon = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK2_ICON')
+                app_common.APP_GLOBAL.info_social_link2_icon = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK3_ICON')
+                app_common.APP_GLOBAL.info_social_link3_icon = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_SOCIAL_LINK4_ICON')
+                app_common.APP_GLOBAL.info_social_link4_icon = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
+                app_common.APP_GLOBAL.info_link_policy_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
+                app_common.APP_GLOBAL.info_link_disclaimer_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
+                app_common.APP_GLOBAL.info_link_terms_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
+                app_common.APP_GLOBAL.info_link_about_url = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_POLICY_NAME')
+                app_common.APP_GLOBAL.info_link_policy_name = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_NAME')
+                app_common.APP_GLOBAL.info_link_disclaimer_name = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_TERMS_NAME')
+                app_common.APP_GLOBAL.info_link_terms_name = parameter.parameter_value;
+            if (parameter.parameter_name=='INFO_LINK_ABOUT_NAME')
+                app_common.APP_GLOBAL.info_link_about_name = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
+                app_report.REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
+                app_report.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
+                app_report.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
+                app_report.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
+                app_report.REPORT_GLOBAL.regional_def_calendar_type_greg = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
+                app_report.REPORT_GLOBAL.regional_def_calendar_number_system = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_DIRECTION')
+                app_common.APP_GLOBAL.regional_default_direction = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
+                app_common.APP_GLOBAL.regional_default_locale_second = parseInt(parameter.parameter_value);
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_COLTITLE')
+                app_common.APP_GLOBAL.regional_default_coltitle = parseInt(parameter.parameter_value);
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
+                app_common.APP_GLOBAL.regional_default_arabic_script = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
+                app_common.APP_GLOBAL.regional_default_calendartype = parameter.parameter_value;
+            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
+                app_common.APP_GLOBAL.regional_default_calendar_hijri_type = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_DEFAULT_PLACE_ID')
+                app_common.APP_GLOBAL.gps_default_place_id = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
+                app_common.APP_GLOBAL.gps_module_leaflet_container = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_title = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TEXT_SIZE')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LAT')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LONG')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_COLOR')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_color = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_WIDTH')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OPACITY')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TITLE')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TEXT_SIZE')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LAT')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LONG')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_COLOR')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameter.parameter_value;
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_WIDTH')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_OPACITY')
+                app_common.APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameter.parameter_value);
+            if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_DAY')
+                app_common.APP_GLOBAL.design_default_theme_day = parameter.parameter_value;
+            if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
+                app_common.APP_GLOBAL.design_default_theme_month = parameter.parameter_value;
+            if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
+                app_common.APP_GLOBAL.design_default_theme_year = parameter.parameter_value;
+            if (parameter.parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
+                app_common.APP_GLOBAL.design_default_papersize = parameter.parameter_value;
+            if (parameter.parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
+                app_common.APP_GLOBAL.design_default_highlight_row = parseInt(parameter.parameter_value);
+            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
+                app_common.APP_GLOBAL.design_default_show_weekday = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
+                app_common.APP_GLOBAL.design_default_show_calendartype = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
+                app_common.APP_GLOBAL.design_default_show_notes = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
+                app_common.APP_GLOBAL.design_default_show_gps = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
+                app_common.APP_GLOBAL.design_default_show_timezone = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE1')
+                app_common.APP_GLOBAL.text_default_reporttitle1 = parameter.parameter_value;
+            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE2')
+                app_common.APP_GLOBAL.text_default_reporttitle2 = parameter.parameter_value;
+            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE3')
+                app_common.APP_GLOBAL.text_default_reporttitle3 = parameter.parameter_value;
+            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER1')
+                app_common.APP_GLOBAL.text_default_reportfooter1 = parameter.parameter_value;
+            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER2')
+                app_common.APP_GLOBAL.text_default_reportfooter2 = parameter.parameter_value;
+            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER3')
+                app_common.APP_GLOBAL.text_default_reportfooter3 = parameter.parameter_value;
+            if (parameter.parameter_name=='IMAGE_HEADER_FOOTER_WIDTH')
+                app_common.APP_GLOBAL.image_header_footer_width = parameter.parameter_value;
+            if (parameter.parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
+                app_common.APP_GLOBAL.image_header_footer_height = parameter.parameter_value;
+            if (parameter.parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
+                if (parameter.parameter_value!='')
+                    app_common.APP_GLOBAL.image_default_report_header_src = parameter.parameter_value;
             }                    
-            if (parameters.app[i].parameter_name=='IMAGE_DEFAULT_REPORT_FOOTER_SRC'){
-                if (parameters.app[i].parameter_value!='')
-                    app_common.APP_GLOBAL.image_default_report_footer_src = parameters.app[i].parameter_value;
+            if (parameter.parameter_name=='IMAGE_DEFAULT_REPORT_FOOTER_SRC'){
+                if (parameter.parameter_value!='')
+                    app_common.APP_GLOBAL.image_default_report_footer_src = parameter.parameter_value;
             }                             
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_METHOD')
-                app_common.APP_GLOBAL.prayer_default_method = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_ASR')
-                app_common.APP_GLOBAL.prayer_default_asr = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
-                app_common.APP_GLOBAL.prayer_default_highlatitude = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
-                app_common.APP_GLOBAL.prayer_default_timeformat = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
-                app_common.APP_GLOBAL.prayer_default_hijri_adjustment = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
-                app_common.APP_GLOBAL.prayer_default_iqamat_title_fajr = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
-                app_common.APP_GLOBAL.prayer_default_iqamat_title_dhuhr = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
-                app_common.APP_GLOBAL.prayer_default_iqamat_title_asr = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
-                app_common.APP_GLOBAL.prayer_default_iqamat_title_maghrib = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
-                app_common.APP_GLOBAL.prayer_default_iqamat_title_isha = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
-                app_common.APP_GLOBAL.prayer_default_show_imsak = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
-                app_common.APP_GLOBAL.prayer_default_show_sunset = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
-                app_common.APP_GLOBAL.prayer_default_show_midnight = (parameters.app[i].parameter_value=== 'true');
-            if (parameters.app[i].parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
-                app_common.APP_GLOBAL.prayer_default_show_fast_start_end = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_WIDTH')
-                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameters.app[i].parameter_value);
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
-                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
-            if (parameters.app[i].parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-                common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_METHOD')
+                app_common.APP_GLOBAL.prayer_default_method = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_ASR')
+                app_common.APP_GLOBAL.prayer_default_asr = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
+                app_common.APP_GLOBAL.prayer_default_highlatitude = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
+                app_common.APP_GLOBAL.prayer_default_timeformat = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
+                app_common.APP_GLOBAL.prayer_default_hijri_adjustment = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
+                app_common.APP_GLOBAL.prayer_default_iqamat_title_fajr = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
+                app_common.APP_GLOBAL.prayer_default_iqamat_title_dhuhr = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
+                app_common.APP_GLOBAL.prayer_default_iqamat_title_asr = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
+                app_common.APP_GLOBAL.prayer_default_iqamat_title_maghrib = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
+                app_common.APP_GLOBAL.prayer_default_iqamat_title_isha = parameter.parameter_value;
+            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
+                app_common.APP_GLOBAL.prayer_default_show_imsak = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
+                app_common.APP_GLOBAL.prayer_default_show_sunset = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
+                app_common.APP_GLOBAL.prayer_default_show_midnight = (parameter.parameter_value=== 'true');
+            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
+                app_common.APP_GLOBAL.prayer_default_show_fast_start_end = parameter.parameter_value;
+            if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
+            if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
+            if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
+            if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
+            if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
         }
         init_app();   
     });
