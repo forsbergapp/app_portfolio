@@ -603,14 +603,44 @@
  */
 /**
  * Server/MicroService - Config apps
+ * @typedef  {  'APP_ID'|
+ *              'NAME'|
+ *              'SUBDOMAIN'|
+ *              'PATH'|
+ *              'ENDPOINT'|
+ *              'LOGO'|
+ *              'MANIFEST'|
+ *              'JS'|
+ *              'JS_REPORT'|
+ *              'CSS'|
+ *              'CSS_REPORT'|
+ *              'FAVICON_32x32'|
+ *              'FAVICON_192x192'|
+ *              'SHOWINFO'|
+ *              'SHOWPARAM'|
+ *              'CLIENT_ID'|
+ *              'CLIENT_SECRET'|
+ *              'DATA_SECRET'|
+ *              'DATA_EXPIRE'|
+ *              'ACCESS_SECRET'|
+ *              'ACCESS_EXPIRE'} config_apps_keys
  * @typedef  {object} config_apps
  * @property {function} filter
  * @property {function} reduce
  * @property {function} concat
  * @property {number} APP_ID
+ * @property {string} NAME
  * @property {string} SUBDOMAIN
  * @property {string} PATH
  * @property {string} ENDPOINT
+ * @property {string} LOGO
+ * @property {string} MANIFEST
+ * @property {string} JS
+ * @property {string} JS_REPORT
+ * @property {string} CSS
+ * @property {string} CSS_REPORT 
+ * @property {string} FAVICON_32x32
+ * @property {string} FAVICON_192x192
  * @property {string} SHOWINFO
  * @property {string} SHOWPARAM
  * @property {string} [CLIENT_ID]
