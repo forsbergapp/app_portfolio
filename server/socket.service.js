@@ -61,14 +61,14 @@ const ClientAdd = (newClient) => {
  * @param {string} longitude
  */
  const ConnectedUpdate = (client_id, user_account_id, system_admin, identity_provider_id, latitude, longitude) => {
-    for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
-        if (CONNECTED_CLIENTS[i].id==client_id){
-            CONNECTED_CLIENTS[i].user_account_id = user_account_id;
-            CONNECTED_CLIENTS[i].system_admin = system_admin;
-            CONNECTED_CLIENTS[i].connection_date = new Date().toISOString();
-            CONNECTED_CLIENTS[i].identity_provider_id = identity_provider_id;
-            CONNECTED_CLIENTS[i].gps_latitude = latitude;
-            CONNECTED_CLIENTS[i].gps_longitude = longitude;
+    for (const connected of CONNECTED_CLIENTS){
+        if (connected.id==client_id){
+            connected.user_account_id = user_account_id;
+            connected.system_admin = system_admin;
+            connected.connection_date = new Date().toISOString();
+            connected.identity_provider_id = identity_provider_id;
+            connected.gps_latitude = latitude;
+            connected.gps_longitude = longitude;
             return null;
         }
     }
@@ -79,8 +79,8 @@ const ClientAdd = (newClient) => {
  * @param {number} user_account_id
  */
  const ConnectedCheck = (user_account_id) => {
-    for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
-        if (CONNECTED_CLIENTS[i].user_account_id == user_account_id){
+    for (const connected of CONNECTED_CLIENTS){
+        if (connected.user_account_id == user_account_id){
             return {online: 1};
         }
     }
@@ -261,21 +261,21 @@ const ClientAdd = (newClient) => {
  */
  const ConnectedCount = (identity_provider_id, count_logged_in) => {
     let count_connected=0;
-    for (let i = 0; i < CONNECTED_CLIENTS.length; i++){
+    for (const connected of CONNECTED_CLIENTS){
         if ((count_logged_in==1 &&
-                CONNECTED_CLIENTS[i].identity_provider_id == identity_provider_id &&
+                connected.identity_provider_id == identity_provider_id &&
                 identity_provider_id !=null &&
-                CONNECTED_CLIENTS[i].user_account_id != null) ||
+                connected.user_account_id != null) ||
             (count_logged_in==1 &&
                 identity_provider_id ==null &&
-                CONNECTED_CLIENTS[i].identity_provider_id ==null &&
-                (CONNECTED_CLIENTS[i].user_account_id != null ||
-                CONNECTED_CLIENTS[i].system_admin == 1)) ||
+                connected.identity_provider_id ==null &&
+                (connected.user_account_id != null ||
+                connected.system_admin == 1)) ||
             (count_logged_in==0 && 
                 identity_provider_id ==null &&
-                CONNECTED_CLIENTS[i].identity_provider_id ==null &&
-                CONNECTED_CLIENTS[i].user_account_id ==null &&
-                CONNECTED_CLIENTS[i].system_admin == 0))
+                connected.identity_provider_id ==null &&
+                connected.user_account_id ==null &&
+                connected.system_admin == 0))
             {
             count_connected = count_connected + 1;
         }

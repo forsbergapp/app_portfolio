@@ -151,9 +151,10 @@ const app_portfolio_title = 'App Portfolio';
  */
 const ConfigGet = (config_group, parameter) => {
     for (const config_parameter_row of CONFIG[config_group]){
-        for (let i=0; i < Object.keys(config_parameter_row).length;i++){
-            if (Object.keys(config_parameter_row)[i]==parameter){
-                return Object.values(config_parameter_row)[i];
+        for (const key of Object.keys(config_parameter_row)){
+            if (key==parameter){
+                /**@ts-ignore */
+                return config_parameter_row[key];
             }
         }
     }                

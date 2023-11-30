@@ -1087,7 +1087,7 @@ const lov_show = (lov, function_event) => {
             let i=0;
             for (const list_row of list_result) {
                 html += 
-                `<div id='common_list_lov_row_${i}' class='common_list_lov_row'>
+                `<div id='common_list_lov_row_${i}' tabindex=-1 class='common_list_lov_row'>
                     <div class='common_list_lov_col'>
                         <div>${list_row.id}</div>
                     </div>
@@ -1112,53 +1112,64 @@ const lov_keys = (event) => {
         case 'ArrowUp':
         case 'ArrowDown':{
             //loop rows not hidden
-            const x = document.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
-            for (let i = 0; i <= x.length -1; i++) {
-                if (x[i].classList.contains('common_list_lov_row_selected')){
+            const rows = document.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
+            const focus_item = (element) =>{
+                element.focus();
+                document.querySelector('#common_lov_search_input').focus();
+            };
+            let i = 0;
+            for (const row of rows) {
+                if (row.classList.contains('common_list_lov_row_selected')){
                     //if up and first or
                     //if down and last
                     if ((event.code=='ArrowUp' && i == 0)||
-                        (event.code=='ArrowDown' && i == x.length -1)){
+                        (event.code=='ArrowDown' && i == rows.length -1)){
                         if(event.code=='ArrowUp'){
                             //if the first, set the last
-                            x[i].classList.remove ('common_list_lov_row_selected');
-                            x[x.length -1].classList.add ('common_list_lov_row_selected');
+                            row.classList.remove ('common_list_lov_row_selected');
+                            rows[rows.length -1].classList.add ('common_list_lov_row_selected');
+                            focus_item(rows[rows.length -1]);
                         }
                         else{
                             //if the last, set the first
-                            x[i].classList.remove ('common_list_lov_row_selected');
-                            x[0].classList.add ('common_list_lov_row_selected');
+                            row.classList.remove ('common_list_lov_row_selected');
+                            rows[0].classList.add ('common_list_lov_row_selected');
+                            focus_item(rows[0]);
                         }
                         return;
                     }
                     else{
                         if(event.code=='ArrowUp'){
                             //remove highlight, highlight previous
-                            x[i].classList.remove ('common_list_lov_row_selected');
-                            x[i-1].classList.add ('common_list_lov_row_selected');
+                            row.classList.remove ('common_list_lov_row_selected');
+                            rows[i-1].classList.add ('common_list_lov_row_selected');
+                            focus_item(rows[i-1]);
                         }
                         else{
                             //down
                             //remove highlight, highlight next
-                            x[i].classList.remove ('common_list_lov_row_selected');
-                            x[i+1].classList.add ('common_list_lov_row_selected');
+                            row.classList.remove ('common_list_lov_row_selected');
+                            rows[i+1].classList.add ('common_list_lov_row_selected');
+                            focus_item(rows[i+1]);
                         }
                         return;
                     }
                 }
+                i++;
             }
             //no highlight found, highlight first
-            x[0].classList.add ('common_list_lov_row_selected');
+            rows[0].classList.add ('common_list_lov_row_selected');
+            focus_item(rows[0]);
             break;
         }
         case 'Enter':{
             //enter
-            const x = document.querySelectorAll('.common_list_lov_row');
-            for (let i = 0; i <= x.length -1; i++) {
-                if (x[i].classList.contains('common_list_lov_row_selected')){
+            const rows = document.querySelectorAll('.common_list_lov_row');
+            for (const row of rows) {
+                if (row.classList.contains('common_list_lov_row_selected')){
                     //event on row is set in app when calling lov, dispatch it!
-                    x[i].dispatchEvent(new Event('click'));
-                    x[i].classList.remove ('common_list_lov_row_selected');
+                    row.dispatchEvent(new Event('click'));
+                    row.classList.remove ('common_list_lov_row_selected');
                 }
             }
             break;
@@ -1172,19 +1183,19 @@ const lov_keys = (event) => {
     }
 };
 const lov_filter = (text_filter) => {
-    const x = document.querySelectorAll('.common_list_lov_row');
-    for (let i = 0; i <= x.length -1; i++) {
-        x[i].classList.remove ('common_list_lov_row_hide');
-        x[i].classList.remove ('common_list_lov_row_selected');
+    const rows = document.querySelectorAll('.common_list_lov_row');
+    for (const row of rows) {
+        row.classList.remove ('common_list_lov_row_hide');
+        row.classList.remove ('common_list_lov_row_selected');
     }
-    for (let i = 0; i <= x.length -1; i++) {
-        if (x[i].children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
-            x[i].children[1].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
-                x[i].classList.remove ('common_list_lov_row_hide');
+    for (const row of rows) {
+        if (row.children[0].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1 ||
+            row.children[1].children[0].innerHTML.toUpperCase().indexOf(text_filter.toUpperCase()) > -1){
+                row.classList.remove ('common_list_lov_row_hide');
             }
         else{
-            x[i].classList.remove ('common_list_lov_row_hide');
-            x[i].classList.add ('common_list_lov_row_hide');
+            row.classList.remove ('common_list_lov_row_hide');
+            row.classList.add ('common_list_lov_row_hide');
         }
     }
 };
@@ -1338,30 +1349,27 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
         if (err)
             null;
         else{
-            const json = JSON.parse(result);
             const profile_top_list = document.querySelector('#common_profile_top_list');
             profile_top_list.innerHTML = '';
             let html ='';
             let image='';
-            let name='';
-            for (let i = 0; i < json.count; i++) {
-                image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image);
-                name = json.items[i].username;
+            for (const profile_top of JSON.parse(result).items) {
+                image = list_image_format_src(profile_top.avatar ?? profile_top.provider_image);
                 html +=
                 `<div class='common_profile_top_list_row'>
                     <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_user_account_id'>${json.items[i].id}</div>
+                        <div class='common_profile_top_list_user_account_id'>${profile_top.id}</div>
                     </div>
                     <div class='common_profile_top_list_col'>
                         <img class='common_profile_top_list_avatar' ${image}>
                     </div>
                     <div class='common_profile_top_list_col'>
                         <div class='common_profile_top_list_username common_wide_list_column'>
-                            <a href='#'>${name}</a>
+                            <a href='#'>${profile_top.username}</a>
                         </div>
                     </div>
                     <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_count'>${json.items[i].count}</div>
+                        <div class='common_profile_top_list_count'>${profile_top.count}</div>
                     </div>
                 </div>`;
             }
@@ -1585,28 +1593,25 @@ const search_profile = (click_function) => {
             if (err)
                 null;
             else{
-                const json = JSON.parse(result);
-                if (json.count > 0){
+                if (JSON.parse(result).count > 0){
                     profile_search_list.style.display = 'inline-block';
                     document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
                 }
                 let html = '';
                 let image= '';
-                let name = '';
-                for (let i = 0; i < json.count; i++) {
-                    image = list_image_format_src(json.items[i].avatar ?? json.items[i].provider_image);
-                    name = json.items[i].username;
+                for (const search_profile of JSON.parse(result).items) {
+                    image = list_image_format_src(search_profile.avatar ?? search_profile.provider_image);
                     html +=
                     `<div class='common_profile_search_list_row' tabindex=-1>
                         <div class='common_profile_search_list_col'>
-                            <div class='common_profile_search_list_user_account_id'>${json.items[i].id}</div>
+                            <div class='common_profile_search_list_user_account_id'>${search_profile.id}</div>
                         </div>
                         <div class='common_profile_search_list_col'>
                             <img class='common_profile_search_list_avatar' ${image}>
                         </div>
                         <div class='common_profile_search_list_col'>
                             <div class='common_profile_search_list_username common_wide_list_column'>
-                                <a href='#'>${name}</a>
+                                <a href='#'>${search_profile.username}</a>
                             </div>
                         </div>
                     </div>`;
@@ -1625,7 +1630,6 @@ profile_show(userid, null) 	 from choosing profile in search_profile
 profile_show(null, username) from init startup when user enters url
 */
 const profile_show = async (user_account_id_other = null, username = null, callBack) => {
-    let json;
     let user_account_id_search;
     let path;
 
@@ -1653,20 +1657,20 @@ const profile_show = async (user_account_id_other = null, username = null, callB
             if (err)
                 return callBack(err,null);
             else{
-                json = JSON.parse(result);
+                const profile = JSON.parse(result);
                 document.querySelector('#common_profile_info').style.display = 'block';
                 document.querySelector('#common_profile_main').style.display = 'block';
-                document.querySelector('#common_profile_id').innerHTML = json.id;
-                set_avatar(json.avatar ?? json.provider_image, document.querySelector('#common_profile_avatar')); 
+                document.querySelector('#common_profile_id').innerHTML = profile.id;
+                set_avatar(profile.avatar ?? profile.provider_image, document.querySelector('#common_profile_avatar')); 
                 //show local username
-                document.querySelector('#common_profile_username').innerHTML = json.username;
+                document.querySelector('#common_profile_username').innerHTML = profile.username;
 
-                document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(json.bio);
-                document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(json.date_created, true);
+                document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
+                document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
                 document.querySelector('#common_profile_qr').innerHTML = '';
-                create_qr('common_profile_qr', getHostname() + '/' + json.username);
+                create_qr('common_profile_qr', getHostname() + '/' + profile.username);
                 //User account followed and liked
-                if (json.followed == 1) {
+                if (profile.followed == 1) {
                     //followed
                     document.querySelector('#common_profile_follow').children[0].style.display = 'none';
                     document.querySelector('#common_profile_follow').children[1].style.display = 'block';
@@ -1675,7 +1679,7 @@ const profile_show = async (user_account_id_other = null, username = null, callB
                     document.querySelector('#common_profile_follow').children[0].style.display = 'block';
                     document.querySelector('#common_profile_follow').children[1].style.display = 'none';
                 }
-                if (json.liked == 1) {
+                if (profile.liked == 1) {
                     //liked
                     document.querySelector('#common_profile_like').children[0].style.display = 'none';
                     document.querySelector('#common_profile_like').children[1].style.display = 'block';
@@ -1685,7 +1689,7 @@ const profile_show = async (user_account_id_other = null, username = null, callB
                     document.querySelector('#common_profile_like').children[1].style.display = 'none';
                 } 
                 //if private then hide info, sql decides if private, no need to check here if same user
-                if (json.private==1) {
+                if (profile.private==1) {
                     //private
                     document.querySelector('#common_profile_public').style.display = 'none';
                     document.querySelector('#common_profile_private').style.display = 'block';
@@ -1693,18 +1697,18 @@ const profile_show = async (user_account_id_other = null, username = null, callB
                     //public
                     document.querySelector('#common_profile_public').style.display = 'block';
                     document.querySelector('#common_profile_private').style.display = 'none';
-                    document.querySelector('#common_profile_info_view_count').innerHTML = json.count_views;
-                    document.querySelector('#common_profile_info_following_count').innerHTML = json.count_following;
-                    document.querySelector('#common_profile_info_followers_count').innerHTML = json.count_followed;
-                    document.querySelector('#common_profile_info_likes_count').innerHTML = json.count_likes;
-                    document.querySelector('#common_profile_info_liked_count').innerHTML = json.count_liked;
+                    document.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
+                    document.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
+                    document.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
+                    document.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
+                    document.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
                 }    
                 if (COMMON_GLOBAL.user_account_id =='')
                     setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
                 else
-                    checkOnline('common_profile_avatar_online_status', json.id);
-                return callBack(null,{profile_id: json.id,
-                                      private: json.private});   
+                    checkOnline('common_profile_avatar_online_status', profile.id);
+                return callBack(null,{profile_id: profile.id,
+                                      private: profile.private});   
             }
         });
     }
@@ -1744,52 +1748,54 @@ const search_input = (event, module, event_function) => {
         case 'ArrowUp':
         case 'ArrowDown':{
             if (document.querySelector(`#common_${module}_search_list`).style.display=='inline-block'){
-                const x = document.querySelectorAll(`.common_${module}_search_list_row`);
+                const rows = document.querySelectorAll(`.common_${module}_search_list_row`);
                 const focus_item = (element) =>{
                     element.focus();
                     document.querySelector(`#common_${module}_search_input`).focus();
                 };
-                for (let i = 0; i <= x.length -1; i++) {
-                    if (x[i].classList.contains(`common_${module}_search_list_selected`))
+                let i=0;
+                for (const row of rows) {
+                    if (row.classList.contains(`common_${module}_search_list_selected`))
                         //if up and first or
                         //if down and last
                         if ((event.code=='ArrowUp' && i == 0)||
-                            (event.code=='ArrowDown' && i == x.length -1)){
+                            (event.code=='ArrowDown' && i == rows.length -1)){
                             if(event.code=='ArrowUp'){
                                 //if the first, set the last
-                                x[i].classList.remove (`common_${module}_search_list_selected`);
-                                x[x.length -1].classList.add (`common_${module}_search_list_selected`);
-                                focus_item(x[x.length -1]);
+                                row.classList.remove (`common_${module}_search_list_selected`);
+                                rows[rows.length -1].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(rows[rows.length -1]);
                             }
                             else{
                                 //down
                                 //if the last, set the first
-                                x[i].classList.remove (`common_${module}_search_list_selected`);
-                                x[0].classList.add (`common_${module}_search_list_selected`);
-                                focus_item(x[0]);
+                                row.classList.remove (`common_${module}_search_list_selected`);
+                                rows[0].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(rows[0]);
                             }
                             return;
                         }
                         else{
                             if(event.code=='ArrowUp'){
                                 //remove highlight, highlight previous
-                                x[i].classList.remove (`common_${module}_search_list_selected`);
-                                x[i-1].classList.add (`common_${module}_search_list_selected`);
-                                focus_item(x[i-1]);
+                                row.classList.remove (`common_${module}_search_list_selected`);
+                                rows[i-1].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(rows[i-1]);
                             }
                             else{
                                 //down
                                 //remove highlight, highlight next
-                                x[i].classList.remove (`common_${module}_search_list_selected`);
-                                x[i+1].classList.add (`common_${module}_search_list_selected`);
-                                focus_item(x[i+1]);
+                                row.classList.remove (`common_${module}_search_list_selected`);
+                                rows[i+1].classList.add (`common_${module}_search_list_selected`);
+                                focus_item(rows[i+1]);
                             }
                             return;
                         }
+                    i++;
                 }
                 //no highlight found, highlight first
-                x[0].classList.add (`common_${module}_search_list_selected`);
-                focus_item(x[0]);
+                rows[0].classList.add (`common_${module}_search_list_selected`);
+                focus_item(rows[0]);
                 return;
             }
             break;
@@ -1845,9 +1851,6 @@ const search_input = (event, module, event_function) => {
 
   ----------------------- */
 const user_login = async (username, password, callBack) => {
-    
-    let json;
-
     if (check_input(username) == false || check_input(password)== false)
         return callBack('ERROR', null);
 
@@ -1873,28 +1876,28 @@ const user_login = async (username, password, callBack) => {
             return callBack(err, null);
         else{
             profile_close();
-            json = JSON.parse(result);
-            COMMON_GLOBAL.user_account_id = json.items[0].id;
+            const user = JSON.parse(result).items[0];
+            COMMON_GLOBAL.user_account_id = user.id;
             COMMON_GLOBAL.user_identity_provider_id = '';
-            COMMON_GLOBAL.user_app_role_id = json.items[0].app_role_id;
-            COMMON_GLOBAL.rest_at	= json.accessToken;
+            COMMON_GLOBAL.user_app_role_id = user.app_role_id;
+            COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
             updateOnlineStatus();
             user_preference_get(() =>{
-                if (json.items[0].active==0){
+                if (user.active==0){
                     const function_cancel_event = () => { dialogue_verify_clear();
                                                           exception(COMMON_GLOBAL.exception_app_function, null);
                                                         };
-                    show_common_dialogue('VERIFY', 'LOGIN', json.items[0].email, ICONS.app_logoff, function_cancel_event);
+                    show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, function_cancel_event);
                     return callBack('ERROR', null);
                 }
                 else{
                     dialogue_login_clear();
                     dialogue_signup_clear();
-                    return callBack(null, {user_id: json.items[0].id,
-                        username: json.items[0].username,
-                        bio: json.items[0].bio,
-                        avatar: json.items[0].avatar,
-                        app: json.app});
+                    return callBack(null, { user_id: user.id,
+                                            username: user.username,
+                                            bio: user.bio,
+                                            avatar: user.avatar,
+                                            app: JSON.parse(result).app});
                 }
             });
         }
@@ -1931,52 +1934,51 @@ const user_logoff = async () => {
     user_preferences_update_select();
 };
 const user_edit = async () => {
-    let json;
     //get user from REST API
     FFB ('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             null;
         else{
-            json = JSON.parse(result);
-            if (COMMON_GLOBAL.user_account_id == json.id) {
+            const user = JSON.parse(result);
+            if (COMMON_GLOBAL.user_account_id == user.id) {
                 document.querySelector('#common_user_edit_local').style.display = 'none';
                 document.querySelector('#common_user_edit_provider').style.display = 'none';
                 document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
-                document.querySelector('#common_user_edit_checkbox_profile_private').checked = Number(json.private);
-                document.querySelector('#common_user_edit_input_username').value = json.username;
-                document.querySelector('#common_user_edit_input_bio').value = get_null_or_value(json.bio);
+                document.querySelector('#common_user_edit_checkbox_profile_private').checked = Number(user.private);
+                document.querySelector('#common_user_edit_input_username').value = user.username;
+                document.querySelector('#common_user_edit_input_bio').value = get_null_or_value(user.bio);
 
-                if (json.provider_id == null) {
+                if (user.provider_id == null) {
                     document.querySelector('#common_user_edit_local').style.display = 'block';
                     document.querySelector('#common_user_edit_provider').style.display = 'none';
 
                     //display fetched avatar editable
                     document.querySelector('#common_user_edit_avatar').style.display = 'block';
-                    set_avatar(json.avatar, document.querySelector('#common_user_edit_avatar_img')); 
-                    document.querySelector('#common_user_edit_input_email').innerHTML = json.email;
-                    document.querySelector('#common_user_edit_input_new_email').value = json.email_unverified;
+                    set_avatar(user.avatar, document.querySelector('#common_user_edit_avatar_img')); 
+                    document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
+                    document.querySelector('#common_user_edit_input_new_email').value = user.email_unverified;
                     document.querySelector('#common_user_edit_input_password').value = '',
                         document.querySelector('#common_user_edit_input_password_confirm').value = '',
                         document.querySelector('#common_user_edit_input_password_new').value = '';
                     document.querySelector('#common_user_edit_input_password_new_confirm').value = '';
 
-                    document.querySelector('#common_user_edit_input_password_reminder').value = json.password_reminder;
+                    document.querySelector('#common_user_edit_input_password_reminder').value = user.password_reminder;
                 } else{
                         document.querySelector('#common_user_edit_local').style.display = 'none';
                         document.querySelector('#common_user_edit_provider').style.display = 'block';
-                        document.querySelector('#common_user_edit_provider_id').innerHTML = json.identity_provider_id;
-                        document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = json.provider_id;
-                        document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = json.provider_first_name + ' ' + json.provider_last_name;
-                        document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = json.provider_email;
-                        document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = json.provider_image_url;
+                        document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
+                        document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
+                        document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
+                        document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
+                        document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
                         document.querySelector('#common_user_edit_avatar').style.display = 'none';
-                        set_avatar(json.provider_image, document.querySelector('#common_user_edit_avatar_img')); 
+                        set_avatar(user.provider_image, document.querySelector('#common_user_edit_avatar_img')); 
                     } 
-                document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(json.last_logontime, null);
-                document.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(json.date_created, null);
-                document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(json.date_modified, null);
-                set_avatar(json.avatar ?? json.provider_image, document.querySelector('#common_user_menu_avatar_img'));
+                document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(user.last_logontime, null);
+                document.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(user.date_created, null);
+                document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(user.date_modified, null);
+                set_avatar(user.avatar ?? user.provider_image, document.querySelector('#common_user_menu_avatar_img'));
             } else {
                 //User not found
                 show_message('ERROR', 20305, null, null, COMMON_GLOBAL.common_app_id);
@@ -2062,7 +2064,6 @@ const user_update = async () => {
         path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
     }
     const old_button = document.querySelector('#common_user_edit_btn_user_update').innerHTML;
-    let json;
     document.querySelector('#common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
     //update user using REST API
     FFB ('DB_API', path, 'PUT', 'ACCESS', json_data, (err, result) => {
@@ -2071,10 +2072,10 @@ const user_update = async () => {
             return null;
         }
         else{
-            json = JSON.parse(result);
+            const user_update = JSON.parse(result);
             set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
             document.querySelector('#common_user_menu_username').innerHTML = username;
-            if (json.sent_change_email == 1){
+            if (user_update.sent_change_email == 1){
                 const function_cancel_event = () => { document.querySelector('#common_dialogue_user_verify').style.visibility='hidden';};
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, function_cancel_event);
             }
@@ -2141,7 +2142,6 @@ const user_signup = () => {
 };
 const user_verify_check_input = async (item, nextField, callBack) => {
 
-    let json;
     let json_data;
     const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
     //only accept 0-9
@@ -2179,8 +2179,8 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                     return callBack(err, null);
                 }
                 else{
-                    json = JSON.parse(result);
-                    if (json.items[0].affectedRows == 1) {
+                    const user_activate = JSON.parse(result).items[0];
+                    if (user_activate.affectedRows == 1) {
                         switch (verification_type){
                             case 1:{
                                 //LOGIN
@@ -2197,9 +2197,9 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             }
                             case 3:{
                                 //FORGOT
-                                COMMON_GLOBAL.rest_at	= json.accessToken;
+                                COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
                                 //show dialogue new password
-                                show_common_dialogue('PASSWORD_NEW', null, json.auth);
+                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
                                 break;
                             }
                             case 4:{
@@ -2484,7 +2484,6 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
     convert_image(profile_image_url, 
                   COMMON_GLOBAL.image_avatar_width,
                   COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
-        let json;
         const json_data ={  app_id:                 COMMON_GLOBAL.app_id,
                             active:                 1,
                             identity_provider_id:   identity_provider_id,
@@ -2500,21 +2499,21 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
             if (err)
                 return callBack(err, null);
             else{
-                json = JSON.parse(result);
-                COMMON_GLOBAL.rest_at = json.accessToken;
-                COMMON_GLOBAL.user_account_id = json.items[0].id;
-                COMMON_GLOBAL.user_identity_provider_id = json.items[0].identity_provider_id;
+                const user_login = JSON.parse(result).items[0];
+                COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
+                COMMON_GLOBAL.user_account_id = user_update.id;
+                COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
                 updateOnlineStatus();
                 user_preference_get(() =>{
                     dialogue_login_clear();
                     dialogue_signup_clear();
-                    return callBack(null, {user_account_id: json.items[0].id,
-                                            username: json.items[0].username,
-                                            bio: json.items[0].bio,
+                    return callBack(null, {user_account_id: user_login.id,
+                                            username: user_login.username,
+                                            bio: user_login.bio,
                                             avatar: profile_image,
                                             first_name: profile_first_name,
                                             last_name: profile_last_name,
-                                            userCreated: json.userCreated});
+                                            userCreated: JSON.parse(result).userCreated});
                 });
             }
         });
@@ -3301,8 +3300,8 @@ const get_cities = async (countrycode, callBack) => {
         if (err)
             callBack(err, null);
         else{
-            const json = JSON.parse(result);
-            json.sort((a, b) => {
+            const cities = JSON.parse(result);
+            cities.sort((a, b) => {
                 const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
                 const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
                 if (x < y) {
@@ -3316,31 +3315,33 @@ const get_cities = async (countrycode, callBack) => {
 
             let current_admin_name;
             //fill list with cities
-            let cities='';
-            for (let i = 0; i < json.length; i++) {
+            let cities_options='';
+            let i =0;
+            for (const city of cities) {
                 if (i == 0) {
-                    cities += `<option value='' id='' label='…' selected='selected'>…</option>
-                                <optgroup label='${json[i].admin_name}'>`;
-                    current_admin_name = json[i].admin_name;
+                    cities_options += `<option value='' id='' label='…' selected='selected'>…</option>
+                                <optgroup label='${city.admin_name}'>`;
+                    current_admin_name = city.admin_name;
                 } else
-                if (json[i].admin_name != current_admin_name) {
-                    cities += `</optgroup>
-                                <optgroup label='${json[i].admin_name}'>`;
-                    current_admin_name = json[i].admin_name;
+                if (city.admin_name != current_admin_name) {
+                    cities_options += `</optgroup>
+                                <optgroup label='${city.admin_name}'>`;
+                    current_admin_name = city.admin_name;
                 }
-                cities +=
+                cities_options +=
                 `<option 
-                    id=${json[i].id} 
+                    id=${city.id} 
                     value=${i + 1}
-                    countrycode=${json[i].iso2}
-                    country='${json[i].country}'
-                    admin_name='${json[i].admin_name}'
-                    latitude=${json[i].lat}
-                    longitude=${json[i].lng}  
-                    >${json[i].city}
+                    countrycode=${city.iso2}
+                    country='${city.country}'
+                    admin_name='${city.admin_name}'
+                    latitude=${city.lat}
+                    longitude=${city.lng}  
+                    >${city.city}
                 </option>`;
+                i++;
             }
-            callBack(null, `${cities} </optgroup>`);
+            callBack(null, `${cities_options} </optgroup>`);
         }
     });
 };
