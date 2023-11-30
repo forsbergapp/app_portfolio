@@ -503,8 +503,8 @@ const serverStart = async () =>{
         SocketCheckMaintenance();
         //START HTTP SERVER
         /**@ts-ignore*/
-        http.createServer(app).listen(ConfigGet('SERVER', 'PORT'), () => {
-            LogServerI('HTTP Server up and running on PORT: ' + ConfigGet('SERVER', 'PORT')).then(() => {
+        http.createServer(app).listen(ConfigGet('SERVER', 'HTTP_PORT'), () => {
+            LogServerI('HTTP Server up and running on PORT: ' + ConfigGet('SERVER', 'HTTP_PORT')).then(() => {
                 null;
             });
         });
