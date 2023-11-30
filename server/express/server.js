@@ -67,36 +67,36 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
  const serverExpressRoutes = async (app) => {
     //apps
-    const { BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_auth} = await import(`file://${process.cwd()}/apps/apps.controller.js`);
+    const { BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_auth} = await import(`file://${process.cwd()}/server/bff.js`);
     
     //auth
     const auth = await import(`file://${process.cwd()}/server/auth.js`);
     
-    app.route('/apps/bff/data').delete          (auth.checkDataToken, BFF_data);
-    app.route('/apps/bff/data').get             (auth.checkDataToken, BFF_data);
-    app.route('/apps/bff/data').patch           (auth.checkDataToken, BFF_data);
-    app.route('/apps/bff/data').post            (auth.checkDataToken, BFF_data);
-    app.route('/apps/bff/data').put             (auth.checkDataToken, BFF_data);
-    app.route('/apps/bff/data_login').put       (auth.checkDataTokenLogin, BFF_data_login);
-    app.route('/apps/bff/data_signup').post     (auth.checkDataTokenRegistration, BFF_data_signup);
-    app.route('/apps/bff/access').delete        (auth.checkAccessToken, BFF_access);
-    app.route('/apps/bff/access').get           (auth.checkAccessToken, BFF_access);
-    app.route('/apps/bff/access').patch         (auth.checkAccessToken, BFF_access);
-    app.route('/apps/bff/access').post          (auth.checkAccessToken, BFF_access);
-    app.route('/apps/bff/access').put           (auth.checkAccessToken, BFF_access);
-    app.route('/apps/bff/admin').delete         (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/apps/bff/admin').get            (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/apps/bff/admin').patch          (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/apps/bff/admin').post           (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/apps/bff/admin').put            (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/apps/bff/superadmin').put       (auth.checkAccessTokenSuperAdmin, BFF_superadmin);
-    app.route('/apps/bff/systemadmin').delete   (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/apps/bff/systemadmin').get      (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/apps/bff/systemadmin').patch    (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/apps/bff/systemadmin').post     (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/apps/bff/systemadmin').put      (auth.checkSystemAdmin, BFF_systemadmin);    
-    app.route('/apps/bff/socket').get           (BFF_socket);
-    app.route('/apps/bff/auth').post            (BFF_auth);    
+    app.route('/server/bff/data').delete          (auth.checkDataToken, BFF_data);
+    app.route('/server/bff/data').get             (auth.checkDataToken, BFF_data);
+    app.route('/server/bff/data').patch           (auth.checkDataToken, BFF_data);
+    app.route('/server/bff/data').post            (auth.checkDataToken, BFF_data);
+    app.route('/server/bff/data').put             (auth.checkDataToken, BFF_data);
+    app.route('/server/bff/data_login').put       (auth.checkDataTokenLogin, BFF_data_login);
+    app.route('/server/bff/data_signup').post     (auth.checkDataTokenRegistration, BFF_data_signup);
+    app.route('/server/bff/access').delete        (auth.checkAccessToken, BFF_access);
+    app.route('/server/bff/access').get           (auth.checkAccessToken, BFF_access);
+    app.route('/server/bff/access').patch         (auth.checkAccessToken, BFF_access);
+    app.route('/server/bff/access').post          (auth.checkAccessToken, BFF_access);
+    app.route('/server/bff/access').put           (auth.checkAccessToken, BFF_access);
+    app.route('/server/bff/admin').delete         (auth.checkAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').get            (auth.checkAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').patch          (auth.checkAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').post           (auth.checkAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').put            (auth.checkAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/superadmin').put       (auth.checkAccessTokenSuperAdmin, BFF_superadmin);
+    app.route('/server/bff/systemadmin').delete   (auth.checkSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').get      (auth.checkSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').patch    (auth.checkSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').post     (auth.checkSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').put      (auth.checkSystemAdmin, BFF_systemadmin);    
+    app.route('/server/bff/socket').get           (BFF_socket);
+    app.route('/server/bff/auth').post            (BFF_auth);    
 
 };
 /**
@@ -121,7 +121,7 @@ const serverExpress = async () => {
         //use compression for better performance
         const shouldCompress = (/**@type{Types.req}*/req) => {
             //exclude broadcast messages using socket
-            if (req.originalUrl.toUpperCase().startsWith('/APPS/BFF/SOCKET'))
+            if (req.originalUrl.toUpperCase().startsWith('/SERVER/BFF/SOCKET'))
                 return false;
             else
                 return true;
