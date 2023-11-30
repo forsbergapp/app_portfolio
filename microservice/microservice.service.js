@@ -177,7 +177,7 @@ const MicroServiceRequest = async (service, path, method, timeout, client_ip, au
                 }
                 else{
                     request_protocol = http;
-                    port = ConfigGet('SERVER', 'PORT');
+                    port = ConfigGet('SERVER', 'HTTP_PORT');
                 }   
                 break;
             }
