@@ -99,7 +99,7 @@ const app_portfolio_title = 'App Portfolio';
 /**
  * Config get app
  * @param {string|number} config_group
- * @param {string} parameter
+ * @param {Types.config_apps_keys} parameter
  * @returns {object|null}
  */
  const ConfigGetApp = (config_group, parameter) => {
@@ -125,10 +125,18 @@ const app_portfolio_title = 'App Portfolio';
             }
         }
         //config_group = app id, return parameter value for given app id
+        case 'PATH':
+        case 'ENDPOINT':
+        case 'LOGO':
+        case 'MANIFEST':
+        case 'JS':
+        case 'JS_REPORT':
+        case 'CSS':
+        case 'CSS_REPORT':
+        case 'FAVICON_32x32':
+        case 'FAVICON_192x192':
         case 'SHOWINFO':
         case 'SHOWPARAM':
-        case 'ENDPOINT':
-        case 'PATH':
         case 'CLIENT_ID':
         case 'CLIENT_SECRET':
         case 'DATA_SECRET':
