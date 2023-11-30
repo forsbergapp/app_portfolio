@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const service = await import('./apps.service.js');
+const service = await import('./bff.service.js');
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
