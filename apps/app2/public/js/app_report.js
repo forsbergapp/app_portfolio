@@ -197,16 +197,16 @@ const set_prayer_method = async() => {
 		};
 		//called from app where there is a DOM select
 		const methods = document.querySelector('#setting_select_method');
-		for (let i=0;i <methods.options.length;i++){
-			const prayer_value = set_prayer_value(	methods[i].getAttribute('data2'),
-													methods[i].getAttribute('data3'),
-													methods[i].getAttribute('data4'),
-													methods[i].getAttribute('data5'));
+		for (const method of methods.options){
+			const prayer_value = set_prayer_value(	method.getAttribute('data2'),
+													method.getAttribute('data3'),
+													method.getAttribute('data4'),
+													method.getAttribute('data5'));
 			
 			//ES6 object spread 
 			Object.assign(app_common.APP_GLOBAL.module_praytimes_methods, 
-				{[methods[i].value.toUpperCase()]:{
-					name:  methods[i].text,
+				{[method.value.toUpperCase()]:{
+					name:  method.text,
 					params: { 	...prayer_value.fajr,
 								...prayer_value.isha,
 								...prayer_value.maghrib,

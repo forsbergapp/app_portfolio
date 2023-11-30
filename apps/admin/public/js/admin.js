@@ -83,15 +83,13 @@ const admin_login = async () => {
                 return;
             }
         }
-        let json;
         common.FFB ('AUTH', '/auth/systemadmin?', 'POST', 'SYSTEMADMIN', {username: encodeURI(document.querySelector('#system_admin_login_username_input').value),
                                                         password: encodeURI(document.querySelector('#system_admin_login_password_input').value)}, (err, result_login) => {
             document.querySelector('#admin_login_button').innerHTML = old_button;
             if (err)
                 null;
             else{
-                json = JSON.parse(result_login);
-                common.COMMON_GLOBAL.rest_admin_at = json.token_at;
+                common.COMMON_GLOBAL.rest_admin_at = JSON.parse(result_login).token_at;
                 common.COMMON_GLOBAL.system_admin = 1;
                 common.updateOnlineStatus();
                 common.dialogue_close('dialogue_admin_login').then(() => {
