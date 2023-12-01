@@ -649,6 +649,29 @@
  * @property {string} [DATA_EXPIRE]
  * @property {string} [ACCESS_SECRET]
  * @property {string} [ACCESS_EXPIRE]
+ * 
+ * @typedef  {object} config_apps_with_db_columns
+ * @property {number} APP_ID
+ * @property {string} NAME
+ * @property {string} SUBDOMAIN
+ * @property {string} PATH
+ * @property {string} ENDPOINT
+ * @property {string} LOGO
+ * @property {string} MANIFEST
+ * @property {string} JS
+ * @property {string} JS_REPORT
+ * @property {string} CSS
+ * @property {string} CSS_REPORT 
+ * @property {string} FAVICON_32x32
+ * @property {string} FAVICON_192x192
+ * @property {string} SHOWINFO
+ * @property {string} SHOWPARAM
+ * @property {string} CLIENT_ID
+ * @property {string} APP_DESCRIPTION
+ * @property {string} APP_CATEGORY
+ * @property {string} PROTOCOL
+ * @property {string} HOST
+ * @property {number} PORT
  *
  * Server - Config auth blockip
  * @typedef {[string,string][]} config_auth_blockip
