@@ -332,6 +332,7 @@
  * Apps - App common parameters
  * @typedef {object}        app_service_parameters
  * @property {number}       app_id
+ * @property {string}       app_logo
  * @property {string}       app_datatoken
  * @property {string|null}  countries
  * @property {map_styles}   map_styles

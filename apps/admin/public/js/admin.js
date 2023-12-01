@@ -192,6 +192,8 @@ const admin_exception = (error) => {
 };
 const init_app = (system_admin_only) => {
     //SET ICONS
+    document.querySelector('#admin_login_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
+
     document.querySelector('#common_message_close').innerHTML = common.ICONS.app_close;
     document.querySelector('#common_message_cancel').innerHTML = common.ICONS.app_cancel;
 

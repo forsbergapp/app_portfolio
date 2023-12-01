@@ -406,6 +406,7 @@ const get_module_with_init = async (app_info, callBack) => {
         /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
             app_id: app_info.app_id,
+            app_logo:ConfigGetApp(app_info.app_id, 'LOGO'),
             app_datatoken: app_info.datatoken,
             countries:countries,
             map_styles: app_info.map_styles,
