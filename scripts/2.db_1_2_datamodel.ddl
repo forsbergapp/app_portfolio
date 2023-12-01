@@ -10,9 +10,6 @@ GRANT ALL PRIVILEGES ON app_portfolio.* TO role_app_dba;
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
-    app_name  VARCHAR(100) NOT NULL,
-    url       VARCHAR(100),
-    logo      VARCHAR(100),
     enabled   INTEGER NOT NULL,
     app_category_id INTEGER,
 	CONSTRAINT app_pk PRIMARY KEY ( id )

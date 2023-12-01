@@ -2,7 +2,7 @@
 --
 -- app
 --
-INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (1,'App Portfolio', 'https://localhost','/app1/images/logo.png',1, 1);
+INSERT INTO app_portfolio.app (id, enabled, app_category_id) VALUES (1, 1, 1);
 --
 -- setting_type
 --

@@ -1,7 +1,7 @@
 --
 -- app
 --
-INSERT INTO app_portfolio.app (id, app_name, url, logo, enabled, app_category_id) VALUES (2,'Timetables','https://app2.localhost','/app2/images/logo.png',1, 6);
+INSERT INTO app_portfolio.app (id, enabled, app_category_id) VALUES (2, 1, 6);
 --
 -- setting_type
 --

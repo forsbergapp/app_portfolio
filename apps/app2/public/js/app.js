@@ -2491,6 +2491,7 @@ const init_app = () => {
     
         //set initial default language from clients settings
         common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.querySelector('#setting_select_locale'),1);
+        document.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
         //dialogues
         document.querySelector('#info_close').innerHTML = common.ICONS.app_close;
         document.querySelector('#scan_open_mobile_close').innerHTML = common.ICONS.app_close;
