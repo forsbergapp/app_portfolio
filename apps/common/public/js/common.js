@@ -1488,21 +1488,21 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                             html += 
                             `<div class='common_profile_detail_list_row'>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_id'>${list_item.app_id}</div>
+                                    <div class='common_profile_detail_list_app_id'>${list_item.APP_ID}</div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <img class='common_profile_detail_list_app_logo' src='${list_item.logo}'>
+                                    <img class='common_profile_detail_list_app_logo' src='${list_item.LOGO}'>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                        ${list_item.app_name}
+                                        ${list_item.NAME}
                                     </div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     ${delete_div}
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_url'>${list_item.url}</div>
+                                    <div class='common_profile_detail_list_app_url'>${list_item.PROTOCOL}${list_item.SUBDOMAIN}.${list_item.HOST}:${list_item.PORT}</div>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_date_created'>${list_item.date_created}</div>

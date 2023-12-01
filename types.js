@@ -1400,10 +1400,15 @@
  * USER ACCOUNT APP
  * @typedef {   db_result_insert} db_result_user_account_app_createUserAccountApp
  * @typedef {{  app_id:number,
- *              app_name:string,
- *              url_:string,
- *              logo:string,
  *              date_created:string}} db_result_user_account_app_getUserAccountApps
+ * @typedef {{  app_id:number,
+ *              NAME:string,
+ *              PROTOCOL:string,
+ *              SUBDOMAIN:string,
+ *              HOST:string,
+ *              PORT:string,
+ *              LOGO:string,
+ *              date_created:string}} db_result_user_account_app_getUserAccountApps_with_app_registry
  * @typedef {{  preference_locale:string,
  *              setting_preference_timezone_id:number,
  *              setting_preference_direction_id:number,

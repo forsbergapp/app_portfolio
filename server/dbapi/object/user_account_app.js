@@ -39,8 +39,34 @@ const getUserAccountApp = (app_id, query) => service.getUserAccountApp(app_id, g
  * @param {number} app_id 
  * @param {*} query 
  */
-const getUserAccountApps = (app_id, query) => service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')))
-                                                .catch((/**@type{Types.error}*/error)=>{throw error;});
+const getUserAccountApps = async (app_id, query) => {
+    const {ConfigGet, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+    return new Promise((resolve, reject)=>{
+        service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')))
+        .then((/**@type{Types.db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/apps_db)=>{
+            const apps_registry = ConfigGetApps();
+            /**@type{Types.config_apps_with_db_columns[]}*/
+            const apps = apps_registry.reduce(( /**@type{Types.config_apps} */app, /**@type {Types.config_apps}*/current)=> 
+                                                app.concat({APP_ID:current.APP_ID,
+                                                            NAME:current.NAME,
+                                                            LOGO:current.LOGO,
+                                                            SUBDOMAIN:current.SUBDOMAIN
+                                                            }) , []);    
+            
+            apps_db.map(app=>{
+                app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].NAME;
+                app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
+                app.SUBDOMAIN = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].SUBDOMAIN;
+                app.HOST = ConfigGet('SERVER', 'HOST');
+                app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
+                app.LOGO = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].LOGO;
+            });
+            resolve(apps_db);
+        })
+        .catch((/**@type{Types.error}*/error)=>{reject(error);});
+    });
+    
+};
 
 /**
  * 

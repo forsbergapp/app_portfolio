@@ -35,9 +35,6 @@ const createUserAccountApp = async (app_id, user_account_id) => {
  */
 const getUserAccountApps = async (app_id, user_account_id) => {
 		const sql = `SELECT uap.app_id "app_id",
-							a.app_name "app_name",
-							a.url "url",
-							a.logo "logo",
 							uap.date_created "date_created"
 					   FROM ${db_schema()}.user_account_app uap,
 							${db_schema()}.app a
