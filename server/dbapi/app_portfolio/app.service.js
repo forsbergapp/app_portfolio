@@ -16,9 +16,6 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const getApp = async (app_id, id,lang_code) => {
 		const sql = `SELECT	id "id",
-						app_name "app_name",
-						url "url",
-						logo "logo",
 						aot.text "app_description",
 						act.text "app_category"
 				FROM ${db_schema()}.app a
@@ -64,13 +61,10 @@ const getApp = async (app_id, id,lang_code) => {
  * 
  * @param {number} app_id 
  * @param {string} lang_code 
- * @returns {Promise.<Types.db_result_app_getAppAdmin[]>}
+ * @returns {Promise.<Types.db_result_app_getAppsAdmin[]>}
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
-						a.app_name "app_name",
-						a.url "url",
-						a.logo "logo",
 						a.enabled "enabled",
 						a.app_category_id "app_category_id",
 						act.text "app_category_text"
@@ -97,7 +91,7 @@ const getAppsAdmin = async (app_id, lang_code) => {
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<Types.db_result_app_getAppAdmin[]>}
+ * @returns {Promise.<Types.db_result_app_getAppsAdminId[]>}
  */
 const getAppsAdminId = async (app_id) => {
 	const sql = `SELECT a.id "id"
@@ -109,36 +103,18 @@ const getAppsAdminId = async (app_id) => {
 /**
  * 
  * @param {number} app_id 
- * @returns {Promise.<Types.db_result_app_getAppName[]>}
- */
-const getAppName = async (app_id) => {
-	const sql = `SELECT a.app_name "app_name"
-				   FROM ${db_schema()}.app a
-				  WHERE a.id = :app_id`;
-	const parameters = { app_id: app_id};
-	return await db_execute(app_id, sql, parameters, null);
-};
-/**
- * 
- * @param {number} app_id 
  * @param {number} id 
  * @param {Types.db_parameter_app_updateAppAdmin} data
  * @returns {Promise.<Types.db_result_app_updateAppAdmin[]>}
  */
 const updateAppAdmin = async (app_id, id, data) => {
 		const sql = `UPDATE ${db_schema()}.app
-						SET app_name = :app_name,
-							url = :url,
-							logo = :logo,
-							enabled = :enabled,
+						SET enabled = :enabled,
 							app_category_id = :app_category_id
 					WHERE id = :id`;
-		const parameters = {app_name: data.app_name,
-							url: data.url,
-							logo: data.logo,
-							enabled: data.enabled,
+		const parameters = {enabled: data.enabled,
 							app_category_id: data.app_category_id,
 							id: id};
 		return await db_execute(app_id, sql, parameters, null);
 	};
-export{getApp, getAppsAdmin, getAppsAdminId, getAppName, updateAppAdmin};
+export{getApp, getAppsAdmin, getAppsAdminId, updateAppAdmin};

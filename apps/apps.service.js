@@ -3,7 +3,7 @@
 import * as Types from './../types.js';
 
 
-const {CheckFirstTime, ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetApp, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
 
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -433,30 +433,24 @@ const get_module_with_init = async (app_info, callBack) => {
         callBack(null, return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0));
     }
     else{
-        const { getAppName } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-        getAppName(app_info.app_id)
-        .then((/** @type{Types.db_result_app_getAppName[]}*/result_app_name) =>{
-            //fetch parameters for common_app_id and current app_id
-            getAppStartParameters(app_info.app_id)
-            .then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/app_parameters)=>{
-                render_variables.push(['APP_NAME',result_app_name[0].app_name]);
-                if (app_info.map == true)
-                    //fetch countries and return map styles
-                    countries(app_info.app_id, app_info.locale).then((countries)=>{
-                        callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
-                    });
-                else{
-                    //no countries or map styles
-                    callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
-                }
-            })
-            .catch((/**@type{Types.error}*/error)=>{
-                callBack(error, null);
-            });
+        
+        //fetch parameters for common_app_id and current app_id
+        getAppStartParameters(app_info.app_id)
+        .then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/app_parameters)=>{
+            render_variables.push(['APP_NAME',ConfigGetApp(app_info.app_id, 'NAME')]);
+            if (app_info.map == true)
+                //fetch countries and return map styles
+                countries(app_info.app_id, app_info.locale).then((countries)=>{
+                    callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
+                });
+            else{
+                //no countries or map styles
+                callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
+            }
         })
-        .catch((/**@type{Types.error}*/err)=>{
-            callBack(err, null);
+        .catch((/**@type{Types.error}*/error)=>{
+            callBack(error, null);
         });
     }        
 };
@@ -587,12 +581,14 @@ const createMail = async (app_id, data) =>{
  * @param {Types.callBack} callBack   - CallBack with error and success info or null in both info parameter is unknown
  */
 const getInfo = async (app_id, info, lang_code, callBack) => {
-    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-    /** @type {Types.callBack} callBack */
+    /**
+     * @param {number} app_id
+     * @param {Types.callBack} callBack
+     */
     const get_parameters = (app_id, callBack) => {
-        getApp(app_id, app_id, lang_code)
-        .then((/** @type{Types.db_result_app_getApp[]}*/result_app)=> {
+        getApps(app_id, app_id, lang_code)
+        .then((/** @type{Types.config_apps_with_db_columns[]}*/result_app)=> {
             getParameters_server(app_id, app_id)
             .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
                 //app_parameter table
@@ -619,8 +615,9 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
                     if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
                         db_info_link_about_url = parameter.parameter_value;
                 }
-                callBack(null, {app_name: result_app[0].app_name,
-                                app_url: result_app[0].url,
+                callBack(null, {app_name: result_app[0].NAME,
+                                app_url:    result_app[0].PROTOCOL +
+                                            result_app[0].SUBDOMAIN + '.' + result_app[0].HOST + ':' + result_app[0].PORT,
                                 info_email_policy: db_info_email_policy,
                                 info_email_disclaimer: db_info_email_disclaimer,
                                 info_email_terms: db_info_email_terms,
@@ -652,7 +649,7 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
     const render_variables = [];
     const fs = await import('node:fs');
     if (info=='privacy_policy'||info=='disclaimer'||info=='terms'||info=='about' )
-        get_parameters(app_id, (/** @type {string}*/ err, /** @type{Types.info_page_data}*/ result)=>{
+        get_parameters(app_id, (/** @type {Types.error}*/ err, /** @type{Types.info_page_data}*/ result)=>{
             switch (info){
                 case 'privacy_policy':{
                     fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_policy_url}.html`, 'utf8', ( error, fileBuffer) => {
@@ -1066,7 +1063,39 @@ const getApps = async (app_id, id, lang_code) =>{
         app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
         app.APP_DESCRIPTION = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_description;
     });
-    //return apps with APP_ID, NAME, LOGO, SUBDOMAIN, HOST, PORT, APP_CATEGORY and APP_DESCRIPTION only
+    //return apps with APP_ID, NAME, LOGO, SUBDOMAIN, PROTOCOL, HOST, PORT, APP_CATEGORY and APP_DESCRIPTION only
+	return apps;
+};
+
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} lang_code 
+ */
+ const getAppsAdmin = async (app_id, lang_code) =>{
+    const {getAppsAdmin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+
+    /**@type{Types.db_result_app_getAppsAdmin[]}*/
+    const apps_db =  await getAppsAdmin(app_id, lang_code);
+    const apps_registry = ConfigGetApps();
+    /**@type{Types.config_apps_admin_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{Types.config_apps} */app, /**@type {Types.config_apps}*/current)=> 
+                                        app.concat({ID:current.APP_ID,
+                                                    NAME:current.NAME,
+                                                    LOGO:current.LOGO,
+                                                    SUBDOMAIN:current.SUBDOMAIN
+                                                    }) , []);    
+    
+    apps.map(app=>{
+        app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
+        app.HOST = ConfigGet('SERVER', 'HOST');
+        app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
+        app.ENABLED = apps_db.filter(app_db=>app_db.id==app.ID)[0].enabled;
+        app.APP_CATEGORY_ID = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_id;
+        app.APP_CATEGORY_TEXT = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_text;
+    });
+    //return apps with ID, NAME, LOGO, SUBDOMAIN, PROTOCOL, HOST, PORT, ENABLED, APP_CATEGORY_ID and APP_CATEGORY_TEXT only
 	return apps;
 };
 
@@ -1076,4 +1105,4 @@ export {/*APP functions */
         createMail,
         /*APP ROUTER functiontions */
         getApp, getReport, getInfo,getMaintenance,
-        getApps};
+        getApps, getAppsAdmin};

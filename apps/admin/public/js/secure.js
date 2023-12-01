@@ -397,7 +397,7 @@ const get_apps = async () => {
             authorization_type = 'SYSTEMADMIN';
         }
         else{
-            service = 'DB_API';
+            service = 'APP';
             url = '/apps/admin?';
             authorization_type = 'ACCESS';
         }
@@ -412,7 +412,7 @@ const get_apps = async () => {
                     }
                 else
                     for (const app of apps) {
-                        html += `<option value='${app.id}'>${app.id} - ${app.app_name}</option>`;
+                        html += `<option value='${app.ID}'>${app.ID} - ${app.NAME}</option>`;
                     }
                 resolve(html);
             }
@@ -980,7 +980,7 @@ const show_user_account_logon = async (user_account_id) => {
 /*----------------------- */
 const show_apps = async () => {
     document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
-    await common.FFB ('DB_API', '/apps/admin?', 'GET', 'ACCESS', null, (err, result) => {
+    await common.FFB ('APP', '/apps/admin?', 'GET', 'ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#menu_4_content').innerHTML = '';
         else{
@@ -1013,26 +1013,26 @@ const show_apps = async () => {
                 html += 
                 `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
                     <div class='list_apps_col'>
-                        <div class='list_readonly'>${app.id}</div>
+                        <div class='list_readonly'>${app.ID}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${app.app_name}'/>
+                        <input type=text class='list_edit' value='${app.NAME}' readonly/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${app.url}'/>
+                        <input type=text class='list_edit' value='${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}' readonly/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${app.logo}'/>
+                        <input type=text class='list_edit' value='${app.LOGO}' readonly/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type='checkbox' class='list_edit' ${app.enabled==1?'checked':''} />
+                        <input type='checkbox' class='list_edit' ${app.ENABLED==1?'checked':''} />
                     </div>
                     <div class='list_apps_col'>
-                        <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(app.app_category_id)}' />
+                        <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(app.APP_CATEGORY_ID)}' />
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(app.app_category_text)} </div>
+                        <div class='list_readonly'>${common.get_null_or_value(app.APP_CATEGORY_TEXT)} </div>
                     </div>
                 </div>`;
                 i++;
@@ -1131,9 +1131,6 @@ const button_save = async (item) => {
                                     record,
                                     item,
                                     {id: record.children[0].children[0].innerHTML,
-                                     app_name: record.children[1].children[0].value,
-                                     url: record.children[2].children[0].value,
-                                     logo: record.children[3].children[0].value,
                                      enabled: record.children[4].children[0].checked,
                                      app_category_id: record.children[5].children[0].value});
             }
@@ -1262,9 +1259,7 @@ const update_record = async (table,
                         parameters.enabled=true;
                     }
                 }
-                json_data = {   app_name:       parameters.app_name,
-                                url:            parameters.url,
-                                logo:           parameters.logo,
+                json_data = {   
                                 enabled:        parameters.enabled==true?1:0,
                                 app_category_id:parameters.app_category_id
                             };

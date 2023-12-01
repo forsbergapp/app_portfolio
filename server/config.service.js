@@ -134,6 +134,7 @@ const app_portfolio_title = 'App Portfolio';
             }
         }
         //config_group = app id, return parameter value for given app id
+        case 'NAME':
         case 'PATH':
         case 'ENDPOINT':
         case 'LOGO':

@@ -672,6 +672,30 @@
  * @property {string} PROTOCOL
  * @property {string} HOST
  * @property {number} PORT
+ * 
+ * @typedef  {object} config_apps_admin_with_db_columns
+ * @property {number} ID
+ * @property {string} NAME
+ * @property {string} SUBDOMAIN
+ * @property {string} PATH
+ * @property {string} ENDPOINT
+ * @property {string} LOGO
+ * @property {string} MANIFEST
+ * @property {string} JS
+ * @property {string} JS_REPORT
+ * @property {string} CSS
+ * @property {string} CSS_REPORT 
+ * @property {string} FAVICON_32x32
+ * @property {string} FAVICON_192x192
+ * @property {string} SHOWINFO
+ * @property {string} SHOWPARAM
+ * @property {string} CLIENT_ID
+ * @property {number} ENABLED
+ * @property {number} APP_CATEGORY_ID
+ * @property {string} APP_CATEGORY_TEXT
+ * @property {string} PROTOCOL
+ * @property {string} HOST
+ * @property {number} PORT
  *
  * Server - Config auth blockip
  * @typedef {[string,string][]} config_auth_blockip
@@ -1037,26 +1061,16 @@
  * result:
  *  db_result_[TABLE]_[function name]
  * APP
- * @typedef {{  app_name:string, 
- *              url:string, 
- *              logo:string|null, 
- *              enabled:number, 
+ * @typedef {{  enabled:number, 
  *              app_category_id:number|null}} db_parameter_app_updateAppAdmin
  * @typedef {{  id:number, 
- *              app_name:string, 
- *              url:string, 
- *              logo:string, 
  *              app_description:string, 
  *              app_category:string}} db_result_app_getApp
  * @typedef {{  id:number, 
- *              app_name:string, 
- *              url:string, 
- *              logo:string, 
  *              enabled:number, 
  *              app_category_id:number, 
- *              app_category_text:string}} db_result_app_getAppAdmin
+ *              app_category_text:string}} db_result_app_getAppsAdmin
  * @typedef {{  id:number}} db_result_app_getAppsAdminId
- * @typedef {{  app_name:string}} db_result_app_getAppName
  * @typedef {   db_result_update} db_result_app_updateAppAdmin
  * APP CATEGORY
  * @typedef {{id:number, category_name:string, app_category_text:string}} db_result_app_category_getAppCategoryAdmin
