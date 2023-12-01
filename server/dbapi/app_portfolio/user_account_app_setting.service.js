@@ -113,15 +113,15 @@ const getProfileUserSettings = async (app_id, id, id_current_user) => {
 					  		us.description "description",
 					  		us.user_account_app_user_account_id "user_account_app_user_account_id",
 							us.settings_json "settings_json",
-					  (SELECT COUNT(u_like.id)
+					  (SELECT COUNT(0)
 						 FROM ${db_schema()}.user_account_app_setting_like u_like
 						WHERE u_like.user_account_app_setting_id = us.id
 						 AND  u_like.user_account_app_app_id = us.user_account_app_app_id)					"count_likes",
-					  (SELECT COUNT(u_view.user_account_app_setting_id)
+					  (SELECT COUNT(0)
 						 FROM ${db_schema()}.user_account_app_setting_view u_view
 						WHERE u_view.user_account_app_setting_id = us.id
 						 AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
-					  (SELECT COUNT(u_liked_current_user.id)
+					  (SELECT COUNT(0)
 						 FROM ${db_schema()}.user_account_app_setting_like u_liked_current_user
 						WHERE u_liked_current_user.user_account_app_user_account_id = :Xuser_Xaccount_id_current
 						  AND u_liked_current_user.user_account_app_setting_id = us.id
