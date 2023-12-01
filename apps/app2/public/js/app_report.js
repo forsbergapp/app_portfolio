@@ -1,9 +1,12 @@
 const common = await import('common');
-const app_common = await import('app_common');
 /*----------------------- */
 /* GLOBALS APP & REPORT   */
 /*----------------------- */
 const REPORT_GLOBAL = {
+	app_copyright:'',
+	session_currentDate:new Date(),
+	session_currentHijriDate:[0,0,0],
+	module_praytimes_methods:{},
 	regional_def_calendar_lang:'',
 	regional_def_locale_ext_prefix:'',
 	regional_def_locale_ext_number_system:'',
@@ -174,9 +177,9 @@ const getColumnTitles = (transliteration = 0, calendartype, locale, second_local
 	return coltitle;
 };
 const isToday = (checkdate) => {
-    return (checkdate.getMonth() == app_common.APP_GLOBAL.session_currentDate.getMonth()) && 
-            (checkdate.getDate() == app_common.APP_GLOBAL.session_currentDate.getDate()) && 
-            (checkdate.getFullYear() == app_common.APP_GLOBAL.session_currentDate.getFullYear());
+    return (checkdate.getMonth() == REPORT_GLOBAL.session_currentDate.getMonth()) && 
+            (checkdate.getDate() == REPORT_GLOBAL.session_currentDate.getDate()) && 
+            (checkdate.getFullYear() == REPORT_GLOBAL.session_currentDate.getFullYear());
 };
 const set_prayer_method = async() => {
 	return new Promise( (resolve) => {
@@ -204,7 +207,7 @@ const set_prayer_method = async() => {
 													method.getAttribute('data5'));
 			
 			//ES6 object spread 
-			Object.assign(app_common.APP_GLOBAL.module_praytimes_methods, 
+			Object.assign(REPORT_GLOBAL.module_praytimes_methods, 
 				{[method.value.toUpperCase()]:{
 					name:  method.text,
 					params: { 	...prayer_value.fajr,
@@ -242,33 +245,33 @@ const is_ramadan_day = (year, month, day, timezone, calendartype, calendar_hijri
 const setMethod_praytimes = (prayTimes, settings_method, settings_asr, settings_highlat) => {
 	prayTimes.setMethod(settings_method);
 	//use methods without modifying original code
-	if (app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.maghrib && 
-		app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
+	if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib && 
+		REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
 		prayTimes.adjust( { asr:      settings_asr,
 							highLats: settings_highlat,
-							fajr:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-							isha:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.isha,
-							maghrib:  app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.maghrib,
-							midnight: app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
+							fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+							isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
+							maghrib:  REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib,
+							midnight: REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
 	else
-		if (app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.maghrib)
+		if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib)
 			prayTimes.adjust( { asr:      settings_asr,
 								highLats: settings_highlat,
-								fajr:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-								isha:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.isha,
-								maghrib:  app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.maghrib} );
+								fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+								isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
+								maghrib:  REPORT_GLOBAL.module_praytimes_methods[settings_method].params.maghrib} );
 		else
-			if (app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
+			if (REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight)
 				prayTimes.adjust( { asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-									isha:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.isha,
-									midnight: app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
+									fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+									isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha,
+									midnight: REPORT_GLOBAL.module_praytimes_methods[settings_method].params.midnight} );
 			else
 				prayTimes.adjust( { asr:      settings_asr,
 									highLats: settings_highlat,
-									fajr:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
-									isha:     app_common.APP_GLOBAL.module_praytimes_methods[settings_method].params.isha} );
+									fajr:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.fajr,
+									isha:     REPORT_GLOBAL.module_praytimes_methods[settings_method].params.isha} );
 };
 //header and footer style
 const getstyle = (img_src, align) => {
@@ -608,29 +611,29 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 	if (settings.calendartype=='GREGORIAN'){
 		//get previous or next Gregorian month using current Gregorian month
 		if (item_id == settings.ui_navigation_left)
-			app_common.APP_GLOBAL.session_currentDate.setMonth(app_common.APP_GLOBAL.session_currentDate.getMonth() -1);
+			REPORT_GLOBAL.session_currentDate.setMonth(REPORT_GLOBAL.session_currentDate.getMonth() -1);
 		else 
 			if (item_id == settings.ui_navigation_right)
-				app_common.APP_GLOBAL.session_currentDate.setMonth(app_common.APP_GLOBAL.session_currentDate.getMonth() +1);
+				REPORT_GLOBAL.session_currentDate.setMonth(REPORT_GLOBAL.session_currentDate.getMonth() +1);
 	}
 	else{
 		//get previous or next Hijri month using current Hijri month  
 		if (item_id == settings.ui_navigation_left){
-			if (app_common.APP_GLOBAL.session_CurrentHijriDate[0] ==1){
-				app_common.APP_GLOBAL.session_CurrentHijriDate[0] = 12;
-				app_common.APP_GLOBAL.session_CurrentHijriDate[1] = app_common.APP_GLOBAL.session_CurrentHijriDate[1] - 1;
+			if (REPORT_GLOBAL.session_currentHijriDate[0] ==1){
+				REPORT_GLOBAL.session_currentHijriDate[0] = 12;
+				REPORT_GLOBAL.session_currentHijriDate[1] = REPORT_GLOBAL.session_currentHijriDate[1] - 1;
 			}
 			else
-				app_common.APP_GLOBAL.session_CurrentHijriDate[0] = app_common.APP_GLOBAL.session_CurrentHijriDate[0] - 1;
+				REPORT_GLOBAL.session_currentHijriDate[0] = REPORT_GLOBAL.session_currentHijriDate[0] - 1;
 		}
 		else 
 			if (item_id == settings.ui_navigation_right){
-				if (app_common.APP_GLOBAL.session_CurrentHijriDate[0] ==12){
-					app_common.APP_GLOBAL.session_CurrentHijriDate[0] = 1;
-					app_common.APP_GLOBAL.session_CurrentHijriDate[1] = app_common.APP_GLOBAL.session_CurrentHijriDate[1] + 1;
+				if (REPORT_GLOBAL.session_currentHijriDate[0] ==12){
+					REPORT_GLOBAL.session_currentHijriDate[0] = 1;
+					REPORT_GLOBAL.session_currentHijriDate[1] = REPORT_GLOBAL.session_currentHijriDate[1] + 1;
 				}
 				else
-					app_common.APP_GLOBAL.session_CurrentHijriDate[0] = app_common.APP_GLOBAL.session_CurrentHijriDate[0] + 1;
+					REPORT_GLOBAL.session_currentHijriDate[0] = REPORT_GLOBAL.session_currentHijriDate[0] + 1;
 			}
 	}
 	const items = getColumnTitles(0, settings.calendartype, settings.locale, settings.second_locale, settings.locale);
@@ -652,8 +655,8 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 				}
 		}
 		if (settings.calendartype=='GREGORIAN'){
-			const month_gregorian = app_common.APP_GLOBAL.session_currentDate.getMonth();
-			const year_greogrian = app_common.APP_GLOBAL.session_currentDate.getFullYear();
+			const month_gregorian = REPORT_GLOBAL.session_currentDate.getMonth();
+			const year_greogrian = REPORT_GLOBAL.session_currentDate.getFullYear();
 			return {month:			month_gregorian,
 					year:			year_greogrian,
 					title:			new Date(year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
@@ -667,8 +670,8 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 					endDate_hijri: 	[0,0,0]};
 		}	
 		else{
-			const month_hijri = app_common.APP_GLOBAL.session_CurrentHijriDate[0];
-			const year_hijri = app_common.APP_GLOBAL.session_CurrentHijriDate[1];
+			const month_hijri = REPORT_GLOBAL.session_currentHijriDate[0];
+			const year_hijri = REPORT_GLOBAL.session_currentHijriDate[1];
 			const date_hijri 	= [year_hijri,month_hijri,1];
 			const endDate_hijri = month_hijri == 12?[(year_hijri + 1), 1,1]:[year_hijri,(month_hijri + 1),1];
 			const dateGregorian = common.getGregorian(date_hijri, settings.hijri_adj);
@@ -795,7 +798,7 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 								`<div >${REPORT_GLOBAL.first_language.timezone_text}</div>
 								<div >${settings.timezone}</div>`
 								:''}
-							<div class='copyright'>${app_common.APP_GLOBAL.app_copyright}</div>
+							<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
 						</div>
 					</div>
 				</div>
@@ -868,16 +871,16 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 					day: 'numeric'};
 					
 	if (item_id == settings.ui_navigation_left){
-		app_common.APP_GLOBAL.session_currentDate.setDate(app_common.APP_GLOBAL.session_currentDate.getDate() -1);
+		REPORT_GLOBAL.session_currentDate.setDate(REPORT_GLOBAL.session_currentDate.getDate() -1);
 	}
 	else 
 		if (item_id == settings.ui_navigation_right){
-			app_common.APP_GLOBAL.session_currentDate.setDate(app_common.APP_GLOBAL.session_currentDate.getDate() +1);
+			REPORT_GLOBAL.session_currentDate.setDate(REPORT_GLOBAL.session_currentDate.getDate() +1);
 			}
 
-	const date_current = new Date(	app_common.APP_GLOBAL.session_currentDate.getFullYear(),
-									app_common.APP_GLOBAL.session_currentDate.getMonth(),
-									app_common.APP_GLOBAL.session_currentDate.getDate());
+	const date_current = new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+									REPORT_GLOBAL.session_currentDate.getMonth(),
+									REPORT_GLOBAL.session_currentDate.getDate());
 	const date_title4 = date_current.toLocaleDateString(settings.locale + 
 									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
@@ -895,11 +898,11 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 										user_gps_latitude, user_gps_longitude, user_format, user_hijri_adjustment, user_place) =>{
 			let day_html = '';
 			const timezone_offset = common.getTimezoneOffset(user_timezone);
-			times = prayTimes.getTimes(app_common.APP_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, 'Float');
+			times = prayTimes.getTimes(REPORT_GLOBAL.session_currentDate, [user_gps_latitude, user_gps_longitude], parseInt(timezone_offset), 0, 'Float');
 
-			const show_col_data = {	year: 					app_common.APP_GLOBAL.session_currentDate.getFullYear(),
-									month: 					app_common.APP_GLOBAL.session_currentDate.getMonth(),
-									day:					app_common.APP_GLOBAL.session_currentDate.getDate(),
+			const show_col_data = {	year: 					REPORT_GLOBAL.session_currentDate.getFullYear(),
+									month: 					REPORT_GLOBAL.session_currentDate.getMonth(),
+									day:					REPORT_GLOBAL.session_currentDate.getDate(),
 									calendartype:			'GREGORIAN',
 									show_fast_start_end:	settings.show_fast_start_end, 
 									timezone:				user_timezone, 
@@ -985,7 +988,7 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 					${timetable_headers(0, null, settings)}
 					${timetable_data()}
 				</div>
-				<div class='copyright'>${app_common.APP_GLOBAL.app_copyright}</div>
+				<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
 				<div id='timetable_footer' class='display_font' style='${getstyle(settings.footer_img_src, settings.footer_align)}'>
 					<div>${settings.footer_txt1}</div>
 					<div>${settings.footer_txt2}</div>
@@ -1000,8 +1003,8 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 /* TIMETABLE YEAR         */
 /*----------------------- */
 const displayYear = (prayTimes, settings, item_id) => {
-	const startmonth            = app_common.APP_GLOBAL.session_currentDate.getMonth();
-	const starthijrimonth       = app_common.APP_GLOBAL.session_CurrentHijriDate[0];
+	const startmonth            = REPORT_GLOBAL.session_currentDate.getMonth();
+	const starthijrimonth       = REPORT_GLOBAL.session_currentHijriDate[0];
 	
 	settings.reporttype_year_month        = 'YEAR';
 	
@@ -1031,16 +1034,16 @@ const displayYear = (prayTimes, settings, item_id) => {
 	//if item_id is set then navigate previous/next month/year
 	if (item_id == settings.ui_navigation_left){
 		if (settings.calendartype=='GREGORIAN')
-			app_common.APP_GLOBAL.session_currentDate.setYear(app_common.APP_GLOBAL.session_currentDate.getFullYear() - 1);
+			REPORT_GLOBAL.session_currentDate.setYear(REPORT_GLOBAL.session_currentDate.getFullYear() - 1);
 		else
-			app_common.APP_GLOBAL.session_CurrentHijriDate[1] = app_common.APP_GLOBAL.session_CurrentHijriDate[1] - 1;
+			REPORT_GLOBAL.session_currentHijriDate[1] = REPORT_GLOBAL.session_currentHijriDate[1] - 1;
 	}
 	else 
 		if (item_id == settings.ui_navigation_right){
 			if (settings.calendartype=='GREGORIAN')
-				app_common.APP_GLOBAL.session_currentDate.setYear(app_common.APP_GLOBAL.session_currentDate.getFullYear() + 1);
+				REPORT_GLOBAL.session_currentDate.setYear(REPORT_GLOBAL.session_currentDate.getFullYear() + 1);
 			else
-				app_common.APP_GLOBAL.session_CurrentHijriDate[1] = app_common.APP_GLOBAL.session_CurrentHijriDate[1] + 1;
+				REPORT_GLOBAL.session_currentHijriDate[1] = REPORT_GLOBAL.session_currentHijriDate[1] + 1;
 			}
 
 	//show year with selected locale and number system for both Hijri and Gregorian
@@ -1049,7 +1052,7 @@ const displayYear = (prayTimes, settings, item_id) => {
 							useGrouping:false};
 	let timetable_title = '';
 	if (settings.calendartype=='GREGORIAN'){
-		timetable_title = app_common.APP_GLOBAL.session_currentDate.getFullYear().toLocaleString(settings.locale + 
+		timetable_title = REPORT_GLOBAL.session_currentDate.getFullYear().toLocaleString(settings.locale + 
 																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																							settings.number_system, 
@@ -1057,15 +1060,15 @@ const displayYear = (prayTimes, settings, item_id) => {
 	}
 	else{
 		//HIJRI
-		timetable_title = app_common.APP_GLOBAL.session_CurrentHijriDate[1].toLocaleString(settings.locale + 
+		timetable_title = REPORT_GLOBAL.session_currentHijriDate[1].toLocaleString(settings.locale + 
 																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																							settings.number_system, 
 																							options_year);
 	}
 	const months = new Array(12);
-	app_common.APP_GLOBAL.session_currentDate.setMonth(startmonth);
-	app_common.APP_GLOBAL.session_CurrentHijriDate[0] = starthijrimonth;
+	REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
+	REPORT_GLOBAL.session_currentHijriDate[0] = starthijrimonth;
 
 	//TIMETABLE
 	const year_timetable = ()=>{
@@ -1118,7 +1121,7 @@ const displayYear = (prayTimes, settings, item_id) => {
 																													settings.number_system):''}</div>
 								<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?REPORT_GLOBAL.first_language.timezone_text:''}</div>
 								<div ${settings.show_timezone == 1?'class=""':'class="hidden"'}>${settings.show_timezone == 1?settings.timezone:''}</div>
-								<div class='copyright'>${app_common.APP_GLOBAL.app_copyright}</div>
+								<div class='copyright'>${REPORT_GLOBAL.app_copyright}</div>
 							</div>
 						</div>
 					</div>
@@ -1132,9 +1135,9 @@ const displayYear = (prayTimes, settings, item_id) => {
 	};
 	for (let monthindex = 1; monthindex <= 12; monthindex++) { 
 		if (settings.calendartype=='GREGORIAN')
-			app_common.APP_GLOBAL.session_currentDate.setMonth(monthindex -1);
+			REPORT_GLOBAL.session_currentDate.setMonth(monthindex -1);
 		else
-			app_common.APP_GLOBAL.session_CurrentHijriDate[0] = monthindex;
+			REPORT_GLOBAL.session_currentHijriDate[0] = monthindex;
 		months[monthindex-1] = displayMonth(prayTimes, settings, null, settings.timetable_year_month);		
 	}
 	return year_timetable();
