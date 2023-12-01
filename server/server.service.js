@@ -402,8 +402,8 @@ const COMMON = {
                     resolve(db_database.DemoUninstall(app_id));
                     break;
                 }
-                case 'ADMIN_DB_API_/APPS/ADMIN_GET':{
-                    resolve(db_app.getAppsAdmin(app_id, query));
+                case 'ADMIN_APP_/APPS/ADMIN_GET':{
+                    resolve(app.getAppsAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/APPS/ADMIN_PUT':{

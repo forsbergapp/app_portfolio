@@ -11,4 +11,11 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const getApps = async (app_id, query) => service.getApps(app_id, getNumberValue(query.get('id')), query.get('lang_code'));
 
-export{getApps};
+/**
+ * 
+ * @param {number} app_id 
+ * @param {*} query 
+ */
+const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'));
+
+export{getApps, getAppsAdmin};
