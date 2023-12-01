@@ -118,7 +118,7 @@ const { insertUserSettingView} = await import(`file://${process.cwd()}/server/db
  * 			'module_easy.qrcode_color_light':string,
  * 			'module_easy.qrcode_background_color':string,
  * 			session_currentDate:Date,
- * 			session_CurrentHijriDate:[number, number, number],
+ * 			session_currentHijriDate:[number, number, number],
  * 			module_praytimes_methods:{[index:string]:{	name:string,
  *														params:{fajr:string, 
  *																isha:string|null, 
@@ -204,7 +204,7 @@ const REPORT_GLOBAL = {
     'module_easy.qrcode_background_color':'',
 
     session_currentDate:new Date(),
-    session_CurrentHijriDate:[0,0,0],
+    session_currentHijriDate:[0,0,0],
     module_praytimes_methods:{},
 	regional_def_calendar_lang:'',
 	regional_def_locale_ext_prefix:'',
@@ -1498,8 +1498,8 @@ const displayMonth = (prayTimes, settings, year_class='') => {
 					endDate_hijri: 	[0,0,0]};
 		}	
 		else{
-			const month_hijri = REPORT_GLOBAL.session_CurrentHijriDate[0];
-			const year_hijri = REPORT_GLOBAL.session_CurrentHijriDate[1];
+			const month_hijri = REPORT_GLOBAL.session_currentHijriDate[0];
+			const year_hijri = REPORT_GLOBAL.session_currentHijriDate[1];
 			/**@type{[number, number, number]} */
 			const date_hijri 	= [year_hijri,month_hijri,1];
 			/**@type{[number, number, number]} */
@@ -1650,7 +1650,7 @@ const displayMonth = (prayTimes, settings, year_class='') => {
  */
 const displayYear = (prayTimes, settings) => {
 	const startmonth            = REPORT_GLOBAL.session_currentDate.getMonth();
-	const starthijrimonth       = REPORT_GLOBAL.session_CurrentHijriDate[0];
+	const starthijrimonth       = REPORT_GLOBAL.session_currentHijriDate[0];
 	
 	settings.reporttype_year_month        = 'YEAR';
 	
@@ -1691,7 +1691,7 @@ const displayYear = (prayTimes, settings) => {
 	}
 	else{
 		//HIJRI
-		timetable_title = REPORT_GLOBAL.session_CurrentHijriDate[1].toLocaleString(	settings.locale + 
+		timetable_title = REPORT_GLOBAL.session_currentHijriDate[1].toLocaleString(	settings.locale + 
 																					REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																					REPORT_GLOBAL.regional_def_locale_ext_number_system + 
 																					settings.number_system, 
@@ -1699,7 +1699,7 @@ const displayYear = (prayTimes, settings) => {
 	}
 	const months = new Array(12);
 	REPORT_GLOBAL.session_currentDate.setMonth(startmonth);
-	REPORT_GLOBAL.session_CurrentHijriDate[0] = starthijrimonth;
+	REPORT_GLOBAL.session_currentHijriDate[0] = starthijrimonth;
 
 	//TIMETABLE
 	const year_timetable = ()=>{
@@ -1768,7 +1768,7 @@ const displayYear = (prayTimes, settings) => {
 		if (settings.calendartype=='GREGORIAN')
 			REPORT_GLOBAL.session_currentDate.setMonth(monthindex -1);
 		else
-			REPORT_GLOBAL.session_CurrentHijriDate[0] = monthindex;
+			REPORT_GLOBAL.session_currentHijriDate[0] = monthindex;
 		months[monthindex-1] = displayMonth(prayTimes, settings, settings.timetable_year_month);
 	}
 	return year_timetable();
@@ -1862,13 +1862,13 @@ const timetable = async (timetable_parameters) => {
 								import('praytimes').then(({default: prayTimes}) => {
 									//set current date for report month
 									REPORT_GLOBAL.session_currentDate = new Date();
-									REPORT_GLOBAL.session_CurrentHijriDate = [0,0,0];
+									REPORT_GLOBAL.session_currentHijriDate = [0,0,0];
 									//get Hijri date from initial Gregorian date
-									REPORT_GLOBAL.session_CurrentHijriDate[0] = 
+									REPORT_GLOBAL.session_currentHijriDate[0] = 
 										parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
 															REPORT_GLOBAL.session_currentDate.getMonth(),
 															REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-									REPORT_GLOBAL.session_CurrentHijriDate[1] = 
+									REPORT_GLOBAL.session_currentHijriDate[1] = 
 										//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
 										parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
 															REPORT_GLOBAL.session_currentDate.getMonth(),
