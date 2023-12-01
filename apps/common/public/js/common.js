@@ -28,7 +28,6 @@
 const COMMON_GLOBAL = {
     common_app_id:'',
     app_id:null,
-    app_url:'',
     app_logo:'',
     app_sound:'',
     ui:'',
@@ -3421,6 +3420,7 @@ const set_app_service_parameters = async (parameters) => {
     //app info
     COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     COMMON_GLOBAL.app_id = parameters.app_id;
+    COMMON_GLOBAL.app_logo = parameters.app_logo;
     // app sound
     COMMON_GLOBAL.app_sound= parseInt(parameters.app_sound);
 
