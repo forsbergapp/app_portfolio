@@ -331,7 +331,7 @@ const install_db_get_files = async (json_type) =>{
     const {createUserSetting, getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
     const user_account_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
     const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`);
-    const {followUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
+    const user_account_follow = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
     const user_account_app_setting_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
     const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
     const fs = await import('node:fs');
@@ -496,14 +496,14 @@ const install_db_get_files = async (json_type) =>{
     const create_likeuser = async (app_id, id, id_like ) =>{
         return new Promise((resolve, reject) => {
             user_account_like.like(app_id, id, id_like)
-        .then((/**@type{Types.db_result_user_account_like_like}*/result) => {
-            if (result.affectedRows == 1)
-                records_user_account_like++;
-            resolve(null);
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            reject(error);
-        });
+            .then((/**@type{Types.db_result_user_account_like_like}*/result) => {
+                if (result.affectedRows == 1)
+                    records_user_account_like++;
+                resolve(null);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                reject(error);
+            });
         });
     };
     /**
@@ -515,14 +515,14 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_view = async (app_id, data ) =>{
         return new Promise((resolve, reject) => {
             insertUserAccountView(app_id, data)
-        .then((/**@type{Types.db_result_user_account_view_insertUserAccountView}*/result) => {
-            if (result.affectedRows == 1)
-                    records_user_account_view++;
-            resolve(null);
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            reject(error);
-        });
+            .then((/**@type{Types.db_result_user_account_view_insertUserAccountView}*/result) => {
+                if (result.affectedRows == 1)
+                        records_user_account_view++;
+                resolve(null);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                reject(error);
+            });
         });
     };
     /**
@@ -534,15 +534,15 @@ const install_db_get_files = async (json_type) =>{
      */
     const create_user_account_follow = async (app_id, id, id_follow ) =>{
         return new Promise((resolve, reject) => {
-            followUser(app_id, id, id_follow)
-        .then((/**@type{Types.db_result_user_account_follow_follow}*/result)=>{
-            if (result.affectedRows == 1)
-                records_user_account_follow++;
-            resolve(null);
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            reject(error);
-        });
+            user_account_follow.follow(app_id, id, id_follow)
+            .then((/**@type{Types.db_result_user_account_follow_follow}*/result)=>{
+                if (result.affectedRows == 1)
+                    records_user_account_follow++;
+                resolve(null);
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                reject(error);
+            });
         });
     };
     /**
@@ -555,21 +555,21 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
         return new Promise((resolve, reject) => {
             getUserSettingsByUserId(app_id, user1)
-        .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
-            const random_settings_index = Math.floor(1 + Math.random() * result_settings.length - 1 );
-            user_account_app_setting_like.like(app_id, user2, result_settings[random_settings_index].id)
-            .then((/**@type{Types.db_result_user_account_app_setting_like_like}*/result) => {
-                if (result.affectedRows == 1)
-                    records_user_account_setting_like++;
-                resolve(null);
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
+                const random_settings_index = Math.floor(1 + Math.random() * result_settings.length - 1 );
+                user_account_app_setting_like.like(app_id, user2, result_settings[random_settings_index].id)
+                .then((/**@type{Types.db_result_user_account_app_setting_like_like}*/result) => {
+                    if (result.affectedRows == 1)
+                        records_user_account_setting_like++;
+                    resolve(null);
+                })
+                .catch((/**@type{Types.error}*/error)=>{
+                    reject(error);
+                });
             })
             .catch((/**@type{Types.error}*/error)=>{
                 reject(error);
             });
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            reject(error);
-        });
         });
     };
     /**
@@ -583,33 +583,33 @@ const install_db_get_files = async (json_type) =>{
     const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
         return new Promise((resolve, reject) => {
             getUserSettingsByUserId(app_id, user1)
-        .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
-            //choose random setting from user
-                    const random_index = Math.floor(1 + Math.random() * result_settings.length -1);
-                    let user_account_id;
-                    if (social_type == 'SETTINGS_VIEW')
-                        user_account_id = user2;
-                    else
-                        user_account_id = null;
-                    insertUserSettingView(app_id, {  user_account_id: user_account_id,
-                                                user_setting_id: result_settings[random_index].id,
-                                                client_ip: null,
-                                                client_user_agent: null,
-                                                client_longitude: null,
-                                                client_latitude: null
-                                                        })
-                .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
-                    if (result.affectedRows == 1)
-                            records_user_account_setting_view++;
-                        resolve(null);
-                })
-                .catch((/**@type{Types.error}*/error)=>{
-                    reject(error);
-                });
-        })
-        .catch((/**@type{Types.error}*/error)=>{
-            reject(error);
-        });
+            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
+                //choose random setting from user
+                        const random_index = Math.floor(1 + Math.random() * result_settings.length -1);
+                        let user_account_id;
+                        if (social_type == 'SETTINGS_VIEW')
+                            user_account_id = user2;
+                        else
+                            user_account_id = null;
+                        insertUserSettingView(app_id, {  user_account_id: user_account_id,
+                                                    user_setting_id: result_settings[random_index].id,
+                                                    client_ip: null,
+                                                    client_user_agent: null,
+                                                    client_longitude: null,
+                                                    client_latitude: null
+                                                            })
+                    .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
+                        if (result.affectedRows == 1)
+                                records_user_account_setting_view++;
+                            resolve(null);
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        reject(error);
+                    });
+            })
+            .catch((/**@type{Types.error}*/error)=>{
+                reject(error);
+            });
         });
     };
     for (const social_type of social_types){
