@@ -69,6 +69,9 @@ const COMMON = {
     //server auth object
     const auth = await import(`file://${process.cwd()}/server/auth.js`);
 
+    //server app object
+    const app = await import(`file://${process.cwd()}/apps/apps.js`);
+
     //server config object
     const config = await import(`file://${process.cwd()}/server/config.js`);
 
@@ -82,33 +85,33 @@ const COMMON = {
     const socket = await import(`file://${process.cwd()}/server/socket.js`);
 
     //server db api object database
-    const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
+    const db_database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     //server db api object app
-    const app = await import(`file://${process.cwd()}/server/dbapi/object/app.js`);
+    const db_app = await import(`file://${process.cwd()}/server/dbapi/object/app.js`);
     //server db api object app_category
-    const app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
+    const db_app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
     //server db api  object app_log
-    const app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
+    const db_app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
     //server db api object app_object
-    const app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
+    const db_app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
     //server db api object app_parameter
-    const app_parameter = await import(`file://${process.cwd()}/server/dbapi/object/app_parameter.js`);
+    const db_app_parameter = await import(`file://${process.cwd()}/server/dbapi/object/app_parameter.js`);
     //server db api object app_role
-    const app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
+    const db_app_role = await import(`file://${process.cwd()}/server/dbapi/object/app_role.js`);
     //server db api object country
-    const country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
+    const db_country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
     //server db api object locale
-    const locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
+    const db_locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
     //server db api object message
-    const message = await import(`file://${process.cwd()}/server/dbapi/object/message.js`);
+    const db_message = await import(`file://${process.cwd()}/server/dbapi/object/message.js`);
     //server db api object parameter_type
-    const parameter_type = await import(`file://${process.cwd()}/server/dbapi/object/parameter_type.js`);
+    const db_parameter_type = await import(`file://${process.cwd()}/server/dbapi/object/parameter_type.js`);
     //server db api object user account
-    const user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
+    const db_user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
     //server db api object user account app
-    const user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
+    const db_user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
     //server db api object user account app setting
-    const user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.js`);
+    const db_user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.js`);
         
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
@@ -120,16 +123,20 @@ const COMMON = {
                     resolve(auth.login_systemadmin(authorization, res));
                     break;
                 }
+                case 'DATA_APP_/APPS_GET':{
+                    resolve(app.getApps(app_id, query));
+                    break;
+                }
                 case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/LOGIN_PUT':{
-                    resolve(user_account.login(app_id, ip, user_agent, host, query, data, res));
+                    resolve(db_user_account.login(app_id, ip, user_agent, host, query, data, res));
                     break;
                 }
                 case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/PROVIDER_PUT':{
-                    resolve(user_account.login_provider(app_id, ip, user_agent, host, query, data));
+                    resolve(db_user_account.login_provider(app_id, ip, user_agent, host, query, data));
                     break;
                 }
                 case 'DATA_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
-                    resolve(user_account.signup(app_id, host, query, data));
+                    resolve(db_user_account.signup(app_id, host, query, data));
                     break;
                 }
                 case 'DATA_SOCKET_/SOCKET/CONNECTION_PATCH':{
@@ -141,146 +148,146 @@ const COMMON = {
                     break;
                 }
                 case 'DATA_DB_API_/APPS_GET':{
-                    resolve(app.getApp(app_id, query));
+                    resolve(db_app.getApp(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/APP_OBJECT_GET':
                 case 'DATA_DB_API_/APP_OBJECT/ADMIN_GET':{
-                    resolve(app_object.getObjects(app_id, query));
+                    resolve(db_app_object.getObjects(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/COUNTRY_GET':{
-                    resolve(country.getCountries(app_id, query));
+                    resolve(db_country.getCountries(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/LOCALE_GET':
                 case 'DATA_DB_API_/LOCALE/ADMIN_GET':{
-                    resolve(locale.getLocales(app_id, query));
+                    resolve(db_locale.getLocales(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/MESSAGE_GET':{
-                    resolve(message.getMessage(app_id, query));
+                    resolve(db_message.getMessage(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{
-                    resolve(user_account.activate(app_id, ip, user_agent, accept_language, host, query, data));
+                    resolve(db_user_account.activate(app_id, ip, user_agent, accept_language, host, query, data));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/FORGOT_PUT':{
-                    resolve(user_account.forgot(app_id, ip, user_agent, accept_language, host, data));
+                    resolve(db_user_account.forgot(app_id, ip, user_agent, accept_language, host, data));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/TOP_GET':{
-                    resolve(user_account.getProfileTop(app_id, query, res));
+                    resolve(db_user_account.getProfileTop(app_id, query, res));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/ID_POST':
                 case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME_POST':{
-                    resolve(user_account.getProfile(app_id, ip, user_agent, query, data, res));
+                    resolve(db_user_account.getProfile(app_id, ip, user_agent, query, data, res));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHD_POST':{
-                    resolve(user_account.searchProfile(app_id, ip, user_agent, query, data));
+                    resolve(db_user_account.searchProfile(app_id, ip, user_agent, query, data));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/ALL_GET':{
-                    resolve(user_account_app_setting.getUserSettingsByUserId(app_id, query));
+                    resolve(db_user_account_app_setting.getUserSettingsByUserId(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE_GET':{
-                    resolve(user_account_app_setting.getProfileUserSetting(app_id, query, res));
+                    resolve(db_user_account_app_setting.getProfileUserSetting(app_id, query, res));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/ALL_GET':{
-                    resolve(user_account_app_setting.getProfileUserSettings(app_id, query, res));
+                    resolve(db_user_account_app_setting.getProfileUserSettings(app_id, query, res));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/TOP_GET':{
-                    resolve(user_account_app_setting.getProfileTopSetting(app_id, query, res));
+                    resolve(db_user_account_app_setting.getProfileTopSetting(app_id, query, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT/PASSWORD_PUT':{
-                    resolve(user_account.updatePassword(app_id, query, data, res));
+                    resolve(db_user_account.updatePassword(app_id, query, data, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_PUT':{
-                    resolve(user_account.updateUserLocal(app_id, ip, user_agent, host, accept_language, query, data, res));
+                    resolve(db_user_account.updateUserLocal(app_id, ip, user_agent, host, accept_language, query, data, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_GET':{
-                    resolve(user_account.getUserByUserId(app_id, query, res));
+                    resolve(db_user_account.getUserByUserId(app_id, query, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT/COMMON_PUT':{
-                    resolve(user_account.updateUserCommon(app_id, query, data, res));
+                    resolve(db_user_account.updateUserCommon(app_id, query, data, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT/COMMON_DELETE':{
-                    resolve(user_account.deleteUser(app_id, query, data, res));
+                    resolve(db_user_account.deleteUser(app_id, query, data, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT/PROFILE/DETAIL_GET':{
-                    resolve(user_account.getProfileDetail(app_id, query, res));
+                    resolve(db_user_account.getProfileDetail(app_id, query, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHA_POST':{
-                    resolve(user_account.searchProfile(app_id, ip, user_agent, query, data));
+                    resolve(db_user_account.searchProfile(app_id, ip, user_agent, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_POST':{
-                    resolve(user_account.follow(app_id, query, data));
+                    resolve(db_user_account.follow(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_DELETE':{
-                    resolve(user_account.unfollow(app_id, query, data));
+                    resolve(db_user_account.unfollow(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_LIKE_POST':{
-                    resolve(user_account.like(app_id, query, data));
+                    resolve(db_user_account.like(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_LIKE_DELETE':{
-                    resolve(user_account.unlike(app_id, query, data));
+                    resolve(db_user_account.unlike(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_GET':{
-                    resolve(user_account_app.getUserAccountApp(app_id, query));
+                    resolve(db_user_account_app.getUserAccountApp(app_id, query));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP/APPS_GET':{
-                    resolve(user_account_app.getUserAccountApps(app_id, query));
+                    resolve(db_user_account_app.getUserAccountApps(app_id, query));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_PATCH':{
-                    resolve(user_account_app.updateUserAccountApp(app_id, query, data));
+                    resolve(db_user_account_app.updateUserAccountApp(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DELETE':{
-                    resolve(user_account_app.deleteUserAccountApp(app_id, query));
+                    resolve(db_user_account_app.deleteUserAccountApp(app_id, query));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/DETAIL_GET':{
-                    resolve(user_account_app_setting.getProfileUserSettingDetail(app_id, query, res));
+                    resolve(db_user_account_app_setting.getProfileUserSettingDetail(app_id, query, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_POST':{
-                    resolve(user_account_app_setting.createUserSetting(app_id, query, data));
+                    resolve(db_user_account_app_setting.createUserSetting(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_PUT':{
-                    resolve(user_account_app_setting.updateUserSetting(app_id, query, data, res));
+                    resolve(db_user_account_app_setting.updateUserSetting(app_id, query, data, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_DELETE':{
-                    resolve(user_account_app_setting.deleteUserSetting(app_id, query, res));
+                    resolve(db_user_account_app_setting.deleteUserSetting(app_id, query, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_LIKE_POST':{
-                    resolve(user_account_app_setting.like(app_id, query, data));
+                    resolve(db_user_account_app_setting.like(app_id, query, data));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_LIKE_DELETE':{
-                    resolve(user_account_app_setting.unlike(app_id, query, data));
+                    resolve(db_user_account_app_setting.unlike(app_id, query, data));
                     break;
                 }
                 case 'SYSTEMADMIN_SOCKET_/SOCKET/MESSAGE/SYSTEMADMIN_POST':{
@@ -324,27 +331,27 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFO_GET':{
-                    resolve(database.Info(app_id));
+                    resolve(db_database.Info(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACE_GET':{
-                    resolve(database.InfoSpace(app_id));
+                    resolve(db_database.InfoSpace(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACESUM_GET':{
-                    resolve(database.InfoSpaceSum(app_id));
+                    resolve(db_database.InfoSpaceSum(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_POST':{
-                    resolve(database.Install(app_id, query));
+                    resolve(db_database.Install(app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_GET':{
-                    resolve(database.InstalledCheck(app_id));
+                    resolve(db_database.InstalledCheck(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_DELETE':{
-                    resolve(database.Uninstall(app_id));
+                    resolve(db_database.Uninstall(app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/PARAMETERS_GET':{
@@ -368,7 +375,7 @@ const COMMON = {
                     break;
                 }
                 case 'SUPERADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
-                    resolve(user_account.updateAdmin(app_id, query));
+                    resolve(db_user_account.updateAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_SOCKET_/SOCKET/MESSAGE/ADMIN_POST':{
@@ -388,67 +395,67 @@ const COMMON = {
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
-                    resolve(database.DemoInstall(app_id, data));
+                    resolve(db_database.DemoInstall(app_id, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_DELETE':{
-                    resolve(database.DemoUninstall(app_id));
+                    resolve(db_database.DemoUninstall(app_id));
                     break;
                 }
                 case 'ADMIN_DB_API_/APPS/ADMIN_GET':{
-                    resolve(app.getAppsAdmin(app_id, query));
+                    resolve(db_app.getAppsAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/APPS/ADMIN_PUT':{
-                    resolve(app.updateAdmin(app_id, query, data));
+                    resolve(db_app.updateAdmin(app_id, query, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/APP_CATEGORY/ADMIN_GET':{
-                    resolve(app_category.getAppCategoryAdmin(app_id, query));
+                    resolve(db_app_category.getAppCategoryAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/APP_LOG/ADMIN_GET':{
-                    resolve(app_log.getLogsAdmin(app_id, query, res));
+                    resolve(db_app_log.getLogsAdmin(app_id, query, res));
                     break;
                 }
                 case 'ADMIN_DB_API_/APP_LOG/ADMIN/STAT/UNIQUEVISITOR_GET':{
-                    resolve(app_log.getStatUniqueVisitorAdmin(app_id, query, res));
+                    resolve(db_app_log.getStatUniqueVisitorAdmin(app_id, query, res));
                     break;
                 }
                 case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN/ALL_GET':{
-                    resolve(app_parameter.getParametersAllAdmin(app_id, query));
+                    resolve(db_app_parameter.getParametersAllAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN_PUT':{
-                    resolve(app_parameter.setParameter_admin(app_id, data));
+                    resolve(db_app_parameter.setParameter_admin(app_id, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/APP_ROLE/ADMIN_GET':{
-                    resolve(app_role.getAppRoleAdmin(app_id, query));
+                    resolve(db_app_role.getAppRoleAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/PARAMETER_TYPE/ADMIN_GET':{
-                    resolve(parameter_type.getParameterTypeAdmin(app_id, query));
+                    resolve(db_parameter_type.getParameterTypeAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN/COUNT_GET':{
-                    resolve(user_account.getStatCountAdmin(app_id));
+                    resolve(db_user_account.getStatCountAdmin(app_id));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT_APP_GET':{
-                    resolve(user_account_app.getUserAccountApp(app_id, query));
+                    resolve(db_user_account_app.getUserAccountApp(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT_APP_PATCH':{
-                    resolve(user_account_app.update(app_id, ip, user_agent, accept_language, host, query, data));
+                    resolve(db_user_account_app.update(app_id, ip, user_agent, accept_language, host, query, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_GET':{
-                    resolve(user_account.getUsersAdmin(app_id, query));
+                    resolve(db_user_account.getUsersAdmin(app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT_LOGON/ADMIN_GET':{
-                    resolve(user_account.getLogonAdmin(app_id, query));
+                    resolve(db_user_account.getLogonAdmin(app_id, query));
                     break;
                 }
                 case 'SOCKET_SOCKET_/SOCKET/CONNECTION/CONNECT_GET':{
