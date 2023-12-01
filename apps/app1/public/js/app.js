@@ -156,7 +156,7 @@ const app_theme_switch = () => {
 
 const get_apps = () => {
     const old_button = document.querySelector('#apps').innerHTML;
-    common.FFB ('DB_API', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'DATA', null, (err, result) => {
+    common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'DATA', null, (err, result) => {
         if (err)
             document.querySelector('#apps').innerHTML = old_button;
         else{
@@ -165,18 +165,18 @@ const get_apps = () => {
             for (const app of apps) {
                 html +=`<div class='app_link_row'>
                             <div class='app_link_col'>
-                                <div class='app_id'>${app.id}</div>
+                                <div class='app_id'>${app.APP_ID}</div>
                             </div>
                             <div class='app_link_col'>
-                                <div class='app_url'>${app.url}</div>
+                                <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
                             </div>
                             <div class='app_link_col'>
-                                <img class='app_logo' src='${app.logo}' />
+                                <img class='app_logo' src='${app.LOGO}' />
                             </div>
                             <div class='app_link_col'>
-                                <div class='app_name'>${app.app_name}</div>
-                                <div class='app_category'>${app.app_category==null?'':app.app_category}</div>
-                                <div class='app_description'>${app.app_description==null?'':app.app_description}</div>
+                                <div class='app_name'>${app.NAME}</div>
+                                <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
+                                <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
                             </div>
                         </div>`;
             }

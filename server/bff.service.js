@@ -46,7 +46,9 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 };
                 switch (service){
+                    case 'APP':
                     case 'AUTH':
+                    case 'DB_API':
                     case 'SOCKET':{
                         serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
                         .then((/**@type{string}*/result)=>resolve(result))
@@ -69,12 +71,6 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
                             .catch((/**@type{Types.error}*/error)=>reject(error));
                         else
                             return reject ('⛔');
-                        break;
-                    }
-                    case 'DB_API':{                        
-                        serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
-                        .then((/**@type{string}*/result)=>resolve(result))
-                        .catch((/**@type{Types.error}*/error)=>reject(error));
                         break;
                     }
                     case 'GEOLOCATION':{

@@ -81,16 +81,25 @@ const app_portfolio_title = 'App Portfolio';
  };
 /**
  * Config get apps
- * @returns {Types.config_apps}
+ * @returns {Types.config_apps[]}
  */
  const ConfigGetApps = () => {
     //return apps array in the object without secret keys
     const apps = Object.entries(CONFIG_APPS)[0][1].reduce(( /**@type{Types.config_apps} */app, 
                                                             /**@type {Types.config_apps}*/current)=> 
                                                                 app.concat({APP_ID:current.APP_ID,
+                                                                            NAME:current.NAME,
                                                                             CLIENT_ID:current.CLIENT_ID,
-                                                                            ENDPOINT:current.ENDPOINT,
                                                                             PATH:current.PATH,
+                                                                            ENDPOINT:current.ENDPOINT,
+                                                                            LOGO:current.LOGO,
+                                                                            MANIFEST:current.MANIFEST,
+                                                                            JS:current.JS,
+                                                                            JS_REPORT:current.JS_REPORT,
+                                                                            CSS:current.CSS,
+                                                                            CSS_REPORT:current.CSS_REPORT,
+                                                                            FAVICON_32x32:current.FAVICON_32x32,
+                                                                            FAVICON_192x192:current.FAVICON_192x192,
                                                                             SHOWINFO:current.SHOWINFO,
                                                                             SHOWPARAM:current.SHOWPARAM,
                                                                             SUBDOMAIN:current.SUBDOMAIN}) , []);

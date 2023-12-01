@@ -1038,10 +1038,42 @@ const providers_buttons = async (app_id) =>{
         });
     });	
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {number} id 
+ * @param {string} lang_code 
+ */
+const getApps = async (app_id, id, lang_code) =>{
+    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
+    const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+
+    /**@type{Types.db_result_app_getApp[]}*/
+    const apps_db =  await getApp(app_id, id, lang_code);
+    const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps}*/app)=>app.APP_ID==id || id == 0);
+    /**@type{Types.config_apps_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{Types.config_apps} */app, /**@type {Types.config_apps}*/current)=> 
+                                        app.concat({APP_ID:current.APP_ID,
+                                                    NAME:current.NAME,
+                                                    LOGO:current.LOGO,
+                                                    SUBDOMAIN:current.SUBDOMAIN
+                                                    }) , []);    
+    
+    apps.map(app=>{
+        app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
+        app.HOST = ConfigGet('SERVER', 'HOST');
+        app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
+        app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
+        app.APP_DESCRIPTION = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_description;
+    });
+    //return apps with APP_ID, NAME, LOGO, SUBDOMAIN, HOST, PORT, APP_CATEGORY and APP_DESCRIPTION only
+	return apps;
+};
 
 export {/*APP functions */
         app_start, render_app_html,render_report_html ,render_app_with_data,
         /*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */
-        getApp, getReport, getInfo,getMaintenance};
+        getApp, getReport, getInfo,getMaintenance,
+        getApps};
