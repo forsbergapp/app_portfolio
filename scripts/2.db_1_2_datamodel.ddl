@@ -549,19 +549,15 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting T
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting TO role_app_common;
 
 CREATE TABLE app_portfolio.user_account_app_setting_like (
-    id                                  INT NOT NULL AUTO_INCREMENT,
     date_created                        DATETIME,	
     user_account_app_setting_id         INTEGER NOT NULL,
     user_account_app_user_account_id    INTEGER NOT NULL,
     user_account_app_app_id             INTEGER NOT NULL,
-	CONSTRAINT user_account_app_setting_like_pk PRIMARY KEY ( user_account_app_user_account_id, user_account_app_setting_id ),
-    UNIQUE KEY user_account_app_setting_like_id_un (id)
+	CONSTRAINT user_account_app_setting_like_pk PRIMARY KEY ( user_account_app_user_account_id, user_account_app_setting_id )
 );
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting_like TO role_app_admin;
 
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting_like TO role_app_common;
-
-ALTER TABLE app_portfolio.user_account_app_setting_like ADD CONSTRAINT user_account_app_setting_like_un UNIQUE ( id );
 
 CREATE TABLE app_portfolio.user_account_app_setting_view (
     client_ip                           VARCHAR(1000),
@@ -600,11 +596,9 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app_admin;
 
 CREATE TABLE app_portfolio.user_account_follow (
-    id                      INT NOT NULL AUTO_INCREMENT,
     user_account_id         INTEGER NOT NULL,
     user_account_id_follow  INTEGER NOT NULL,
 	date_created            DATETIME,
-    CONSTRAINT user_account_follow_id_un UNIQUE ( id ),
 	CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id, user_account_id_follow )
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app_common;
@@ -612,11 +606,9 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO rol
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow TO role_app_admin;
 
 CREATE TABLE app_portfolio.user_account_like (
-    id                    INT NOT NULL AUTO_INCREMENT,
     user_account_id       INTEGER NOT NULL,
     user_account_id_like  INTEGER NOT NULL,
 	date_created          DATETIME,
-    CONSTRAINT user_account_like_id_un UNIQUE ( id ),
 	CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id, user_account_id_like )
 );
 GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app_common;
