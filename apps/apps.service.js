@@ -123,10 +123,17 @@ const render_report_html = (app_id, files, callBack) => {
                             ['<CommonReportHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html']
                         ];
             read_common_files(report, common_files, (err, report)=>{
+                /** @type {[string, string][]} */
+                const render_variables = [];
                 if (err)
                     callBack(err, null);
-                else
-                    callBack(null, report);
+                else{
+                    if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
+                        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
+                    else
+                        render_variables.push(['APP_CSS_REPORT','']);
+                    callBack(null, render_app_with_data(report, render_variables));
+                }
             });
         }
     });
