@@ -1974,7 +1974,7 @@ const profile_show_user_setting = () => {
             profile_select_user_settings.innerHTML='';
             let html = '';
             let i = 0;
-            for (const profile_setting of JSON.parse(result).items) {
+            for (const profile_setting of JSON.parse(result)) {
                 html += `<option id="${i}" 
                         value=""
                         sid=${profile_setting.id} 
@@ -2002,7 +2002,7 @@ const profile_user_setting_update_stat = () => {
             null;
         else{
             const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
-            for (const profile_setting of JSON.parse(result).items) {
+            for (const profile_setting of JSON.parse(result)) {
                 if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', profile_setting.user_account_id);
                     profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', profile_setting.liked);
