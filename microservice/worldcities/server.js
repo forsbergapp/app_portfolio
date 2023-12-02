@@ -15,17 +15,17 @@ const startserver = async () =>{
 		res.setHeader('Access-Control-Allow-Origin', '*');
 		res.setHeader('Content-Type',  'application/json; charset=utf-8');
 		const params = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
-		req.query = {	app_id:null,
+		req.query = {	app_id:getNumberValue(params.get('app_id')),
 						latitude:'',
 						longitude:'',
 						ip:'',
-						limit:0};
-		req.params = {	search:'',
-						country:''};
-		req.query.app_id = getNumberValue(params.get('app_id'));
+						limit:0,
+						search: params.get('search') ?? '',
+						country: params.get('country') ?? ''
+					};
+		
 		switch (true){
-			case req.url.startsWith('/worldcities/city/search/'):{
-				req.params.search = req.url.substring('/worldcities/city/search/'.length, req.url.indexOf('?'));
+			case req.url.startsWith('/worldcities/city/search'):{
 				if (params.get('limit'))
 					req.query.limit = Number(params.get('limit'));
 				else
@@ -55,8 +55,7 @@ const startserver = async () =>{
 				});
 				break;
 			}
-			case req.url.startsWith('/worldcities/country/'):{
-				req.params.country = req.url.substring('/worldcities/country/'.length, req.url.indexOf('?'));
+			case req.url.startsWith('/worldcities/country'):{
 				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
 					if (result)
 						getCities(req, res);
@@ -89,7 +88,7 @@ const startserver = async () =>{
  */
 const getCities = async (req, res) => {
 	try {
-		const cities = await service.getCities(req.params.country);
+		const cities = await service.getCities(req.query.country);
 		res.statusCode = 200;
 		res.write(JSON.stringify(cities), 'utf8');	
 	} catch (error) {
@@ -121,7 +120,7 @@ const getCityRandom = async (req, res) => {
  */
 const getCitySearch = async (req, res) => {
 	try {
-		const city = await service.getCitySearch(decodeURI(req.params.search), req.query.limit);
+		const city = await service.getCitySearch(decodeURI(req.query.search), req.query.limit);
 		res.statusCode = 200;
 		res.write(JSON.stringify(city), 'utf8');	
 	} catch (error) {

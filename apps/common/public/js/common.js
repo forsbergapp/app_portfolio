@@ -3295,7 +3295,7 @@ const get_gps_from_ip = async () => {
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
-    await FFB ('WORLDCITIES', `/country/${countrycode}?`, 'GET', 'DATA', null, (err, result) => {
+    await FFB ('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'DATA', null, (err, result) => {
         if (err)
             callBack(err, null);
         else{
@@ -3348,7 +3348,7 @@ const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').value;
     const get_cities = async (search) =>{
         return new Promise ((resolve)=>{
-            FFB ('WORLDCITIES', `/city/search/${encodeURI(search)}?`, 'GET', 'DATA', null, (err, result) => {
+            FFB ('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'DATA', null, (err, result) => {
                 if (err)
                     resolve(null);
                 else
