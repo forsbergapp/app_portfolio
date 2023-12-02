@@ -13,10 +13,10 @@ const {default:{sign, verify}} = await import('jsonwebtoken');
 const login_systemadmin =(authorization, res)=>{
     return new Promise((resolve,reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
-            const { default: {compareSync} } = await import('bcryptjs');
+            const { default: {compare} } = await import('bcrypt');
             const config_username = ConfigGetUser('username');
             const config_password = ConfigGetUser('password');
-            if (username == config_username && compareSync(password, config_password)) {
+            if (username == config_username && await compare(password, config_password)) {
                 const jsontoken_at = sign ({tokentimstamp: Date.now()}, ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_SECRET'), {
                                     expiresIn: ConfigGet('SERVICE_AUTH', 'ADMIN_TOKEN_EXPIRE_ACCESS')
                                     });
