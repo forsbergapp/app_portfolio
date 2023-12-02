@@ -572,9 +572,9 @@ const CheckFirstTime = () => {
  * @param {Types.callBack} callBack
  */
 const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
-    const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
+    const { default: {genSalt, hash} } = await import('bcrypt');
     CONFIG_AUTH_USER.username = admin_name;
-    CONFIG_AUTH_USER.password = hashSync(admin_password, genSaltSync(10));
+    CONFIG_AUTH_USER.password = await hash(admin_password, await genSalt(10));
     CONFIG_AUTH_USER.modified = new Date().toISOString();
     import('node:fs').then((fs) => {
         fs.writeFile(process.cwd() + config_files()[6][1], JSON.stringify(CONFIG_AUTH_USER, undefined, 2),  'utf8', (err) => {
