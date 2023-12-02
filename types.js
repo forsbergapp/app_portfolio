@@ -612,6 +612,7 @@
  *              'LOGO'|
  *              'MANIFEST'|
  *              'JS'|
+ *              'JS_SECURE'|
  *              'JS_REPORT'|
  *              'CSS'|
  *              'CSS_REPORT'|
@@ -637,6 +638,7 @@
  * @property {string} LOGO
  * @property {string} MANIFEST
  * @property {string} JS
+ * @property {string} JS_SECURE
  * @property {string} JS_REPORT
  * @property {string} CSS
  * @property {string} CSS_REPORT 

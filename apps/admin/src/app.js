@@ -16,7 +16,6 @@ const createAdmin = (app_id, locale) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['APP', process.cwd() + '/apps/admin/src/index.html'],
-            ['<AppHead/>', process.cwd() + '/apps/admin/src/head.html'],
             ['<AppMenu/>', process.cwd() + '/apps/admin/src/menu.html'],
             ['<AppDialogues/>', process.cwd() + '/apps/admin/src/dialogues.html'],
             ['<AppSecure/>', process.cwd() + '/apps/admin/src/secure.html']

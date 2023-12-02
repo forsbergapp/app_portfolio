@@ -15,7 +15,6 @@ const createApp = (app_id, params) => {
     return new Promise((resolve, reject) => {
         const files = [ 
             ['APP', process.cwd() + '/apps/app3/src/index.html'],
-            ['<AppHead/>', process.cwd() + '/apps/app3/src/head.html'],
             ['<AppDialogues/>', process.cwd() + '/apps/app3/src/dialogues.html']
             ];
         if (params==null || params =='1' || params =='2' || params =='3' ){

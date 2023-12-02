@@ -140,6 +140,7 @@ const app_portfolio_title = 'App Portfolio';
         case 'LOGO':
         case 'MANIFEST':
         case 'JS':
+        case 'JS_SECURE':
         case 'JS_REPORT':
         case 'CSS':
         case 'CSS_REPORT':
