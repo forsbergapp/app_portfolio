@@ -1352,7 +1352,7 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
             profile_top_list.innerHTML = '';
             let html ='';
             let image='';
-            for (const profile_top of JSON.parse(result).items) {
+            for (const profile_top of JSON.parse(result)) {
                 image = list_image_format_src(profile_top.avatar ?? profile_top.provider_image);
                 html +=
                 `<div class='common_profile_top_list_row'>
@@ -1592,13 +1592,13 @@ const search_profile = (click_function) => {
             if (err)
                 null;
             else{
-                if (JSON.parse(result).count > 0){
+                if (JSON.parse(result).length > 0){
                     profile_search_list.style.display = 'inline-block';
                     document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
                 }
                 let html = '';
                 let image= '';
-                for (const search_profile of JSON.parse(result).items) {
+                for (const search_profile of JSON.parse(result)) {
                     image = list_image_format_src(search_profile.avatar ?? search_profile.provider_image);
                     html +=
                     `<div class='common_profile_search_list_row' tabindex=-1>

@@ -57,10 +57,7 @@ const getProfileUserSettings =(app_id, query, res) =>{
         service.getProfileUserSettings(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
         .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettings[]}*/result)=>{
             if (result)
-                resolve({
-                    count: result.length,
-                    items: result
-                });
+                resolve(result);
             else
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
@@ -81,10 +78,7 @@ const getProfileTopSetting = (app_id, query, res) =>{
         service.getProfileTopSetting(app_id, getNumberValue(query.get('statchoice')))
         .then((/**@type{Types.db_result_user_account_app_setting_getProfileTopSetting[]}*/result)=>{
             if (result)
-                resolve({
-                    count: result.length,
-                    items: result
-                }); 
+                resolve(result); 
             else
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
