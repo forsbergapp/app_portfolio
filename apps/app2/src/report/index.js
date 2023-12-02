@@ -16,7 +16,6 @@ const createReport= (app_id, report_parameters) => {
     return new Promise((resolve, reject) => {
         const files = [
             ['REPORT', process.cwd() + `/apps/app2/src/report/${report_parameters.reportname}`],
-            ['<ReportHead/>', process.cwd() + '/apps/app2/src/report/head.html'],
             ['<AppCommonFonts/>', process.cwd() + '/apps/app2/src/fonts.html']
         ];
         render_report_html(app_id, files,(/**@type{Types.error}*/err, /**@type{string}*/report)=>{
