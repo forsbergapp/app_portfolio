@@ -1559,9 +1559,8 @@
  * @property {string}       query.longitude
  * @property {string|null}  query.ip
  * @property {number}       query.limit
- * 
- * @property {{ search:string,
- *              country:string}} params
+ * @property {string}       query.search
+ * @property {string}       query.country
  */
 /**
  * MicroService Config service
