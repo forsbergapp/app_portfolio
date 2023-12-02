@@ -16,8 +16,7 @@ const createApp = (app_id, username, locale) => {
     return new Promise((resolve, reject) => {
         const main = async (/**@type{number}*/app_id) => {
             const files = [
-                ['APP', process.cwd() + '/apps/app1/src/index.html'],                
-                ['<AppHead/>', process.cwd() + '/apps/app1/src/head.html'],
+                ['APP', process.cwd() + '/apps/app1/src/index.html'],
                 ['<AppBackground/>', process.cwd() + '/apps/app1/src/background.html'],
                 ['<AppToolbarBottom/>', process.cwd() + '/apps/app1/src/toolbar_bottom.html'],
                 ['<AppDialogues/>', process.cwd() + '/apps/app1/src/dialogues.html']
