@@ -6,7 +6,7 @@ import * as Types from './../../../types.js';
 const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
 
 
-const { default: {compareSync} } = await import('bcryptjs');
+const { default: {compare} } = await import('bcrypt');
 const { ConfigGet } = await import(`file://${process.cwd()}/server/config.service.js`);
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const { createAccessToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
@@ -68,87 +68,89 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
         service.userLogin(app_id, data_login)
         .then((/**@type{Types.db_result_user_account_userLogin[]}*/result_login)=>{
             if (result_login[0]) {
-                const data_body = { user_account_id:    getNumberValue(result_login[0].id),
-                                    app_id:             getNumberValue(data.app_id),
-                                    result:             Number(compareSync(data.password, result_login[0].password)),
-                                    client_ip:          ip,
-                                    client_user_agent:  user_agent,
-                                    client_longitude:   data.client_longitude ?? null,
-                                    client_latitude:    data.client_latitude ?? null,
-                                    access_token:       null};
-                if (compareSync(data.password, result_login[0].password)) {
-                    if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
-                            app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
-                        createUserAccountApp(app_id, result_login[0].id)
-                        .then(()=>{
-                            //if user not activated then send email with new verification code
-                            const new_code = service.verification_code();
-                            if (result_login[0].active == 0){
-                                service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
-                                .then(()=>{
-                                    getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
-                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                        //send email UNVERIFIED
-                                        sendUserEmail(  app_id, 
-                                                        parameter[0].parameter_value, 
-                                                        host, 
-                                                        result_login[0].id, 
-                                                        new_code, 
-                                                        result_login[0].email)
-                                        .then(()=>{
-                                            data_body.access_token = createAccessToken(app_id);
-                                            insertUserAccountLogon(app_id, data_body)
+                compare(data.password, result_login[0].password).then((result_password)=>{
+                    const data_body = { user_account_id:    getNumberValue(result_login[0].id),
+                                        app_id:             getNumberValue(data.app_id),
+                                        result:             Number(result_password),
+                                        client_ip:          ip,
+                                        client_user_agent:  user_agent,
+                                        client_longitude:   data.client_longitude ?? null,
+                                        client_latitude:    data.client_latitude ?? null,
+                                        access_token:       null};
+                    if (result_password) {
+                        if ((app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && (result_login[0].app_role_id == 0 || result_login[0].app_role_id == 1))||
+                                app_id != ConfigGet('SERVER', 'APP_COMMON_APP_ID')){
+                            createUserAccountApp(app_id, result_login[0].id)
+                            .then(()=>{
+                                //if user not activated then send email with new verification code
+                                const new_code = service.verification_code();
+                                if (result_login[0].active == 0){
+                                    service.updateUserVerificationCode(app_id, result_login[0].id, new_code)
+                                    .then(()=>{
+                                        getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_UNVERIFIED')
+                                        .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                            //send email UNVERIFIED
+                                            sendUserEmail(  app_id, 
+                                                            parameter[0].parameter_value, 
+                                                            host, 
+                                                            result_login[0].id, 
+                                                            new_code, 
+                                                            result_login[0].email)
                                             .then(()=>{
-                                                resolve({
-                                                    accessToken: data_body.access_token,
-                                                    items: Array(result_login[0])
-                                                });
+                                                data_body.access_token = createAccessToken(app_id);
+                                                insertUserAccountLogon(app_id, data_body)
+                                                .then(()=>{
+                                                    resolve({
+                                                        accessToken: data_body.access_token,
+                                                        items: Array(result_login[0])
+                                                    });
+                                                })
+                                                .catch((/**@type{Types.error}*/error)=>reject(error));
                                             })
                                             .catch((/**@type{Types.error}*/error)=>reject(error));
                                         })
                                         .catch((/**@type{Types.error}*/error)=>reject(error));
+                                    });
+                                }
+                                else{
+                                    data_body.access_token = createAccessToken(app_id);
+                                    insertUserAccountLogon(app_id, data_body)
+                                    .then(()=>{
+                                        resolve({
+                                            accessToken: data_body.access_token,
+                                            items: Array(result_login[0])
+                                        });
                                     })
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
-                                });
-                            }
-                            else{
-                                data_body.access_token = createAccessToken(app_id);
-                                insertUserAccountLogon(app_id, data_body)
-                                .then(()=>{
-                                    resolve({
-                                        accessToken: data_body.access_token,
-                                        items: Array(result_login[0])
-                                    });
-                                })
-                                .catch((/**@type{Types.error}*/error)=>reject(error));
-                            }
+                                }
+                            })
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
+                        }
+                        else{
+                            res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
+                            res.statusCode = 401;
+                            //unauthorized, only admin allowed to log in to admin
+                            reject('⛔');
+                        }
+                        
+                    } else {
+                        insertUserAccountLogon(app_id, data_body)
+                        .then(()=>{
+                            res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
+                            res.statusCode = 400;
+                            //Username or password not found
+                            getMessage( app_id,
+                                        getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                        '20300',
+                                        query.get('lang_code'))
+                            .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                                reject(result_message[0].text);
+                            })
+                            .catch((/**@type{Types.error}*/error)=>reject(error));
                         })
                         .catch((/**@type{Types.error}*/error)=>reject(error));
                     }
-                    else{
-                        res.statusMessage = 'unauthorized admin login attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
-                        res.statusCode = 401;
-                        //unauthorized, only admin allowed to log in to admin
-                        reject('⛔');
-                    }
-                    
-                } else {
-                    insertUserAccountLogon(app_id, data_body)
-                    .then(()=>{
-                        res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(result_login[0].id) + ', username:' + data_login.username;
-                        res.statusCode = 400;
-                        //Username or password not found
-                        getMessage( app_id,
-                                    getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                    '20300',
-                                    query.get('lang_code'))
-                        .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                            reject(result_message[0].text);
-                        })
-                        .catch((/**@type{Types.error}*/error)=>reject(error));
-                    })
-                    .catch((/**@type{Types.error}*/error)=>reject(error));
-                }
+                });
             } else{
                 if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
                     res.statusMessage = 'admin user not found:' + data_login.username;
@@ -752,95 +754,97 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
     const result_user_event = await getLastUserEvent(app_id, getNumberValue(query.get('PUT_ID')), 'EMAIL_VERIFIED_CHANGE_EMAIL');
     return new Promise((resolve, reject)=>{
         if (result_user[0]) {
-            if (compareSync(data.password, result_user[0].password ?? '')){
-                let send_email=false;
-                if (data.new_email && data.new_email!=''){
-                    if ((result_user_event[0] && 
-                        (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
-                            result_user_event.length == 0)
-                        send_email=true;
-                }
-                /**@type{Types.db_parameter_user_account_updateUserLocal} */
-                const data_update = {   bio:                data.bio,
-                                        private:            data.private,
-                                        username:           data.username,
-                                        password:           data.password,
-                                        password_new:       (data.password_new && data.password_new!='')==true?data.password_new:null,
-                                        password_reminder:  (data.password_reminder && data.password_reminder!='')==true?data.password_reminder:null,
-                                        email:              data.email,
-                                        email_unverified:   (data.new_email && data.new_email!='')==true?data.new_email:null,
-                                        avatar:             data.avatar,
-                                        verification_code:  send_email==true?service.verification_code():null,
-                                        provider_id:        result_user[0].provider_id,
-                                        admin:              0
-                                    };
-                service.updateUserLocal(app_id, data_update, getNumberValue(query.get('PUT_ID')))
-                .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
-                    if (result_update){
-                        if (send_email){
-                            //no change email in progress or older than at least 1 day
-                            /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
-                            const eventData = {
-                                user_account_id: getNumberValue(query.get('PUT_ID')),
-                                event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
-                                event_status: 'INPROGRESS',
-                                user_language: data.user_language,
-                                user_timezone: data.user_timezone,
-                                user_number_system: data.user_number_system,
-                                user_platform: data.user_platform,
-                                server_remote_addr : ip,
-                                server_user_agent : user_agent,
-                                server_http_host : host,
-                                server_http_accept_language : accept_language,
-                                client_latitude : data.client_latitude,
-                                client_longitude : data.client_longitude
-                            };
-                            insertUserEvent(app_id, eventData)
-                            .then(()=>{
-                                getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
-                                .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
-                                    //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
-                                    sendUserEmail(  app_id, 
-                                                    parameter[0].parameter_value, 
-                                                    host, 
-                                                    getNumberValue(query.get('PUT_ID')),
-                                                    data.verification_code, 
-                                                    data.new_email)
-                                    .then(()=>{
-                                        resolve({sent_change_email: 1});
+            compare(data.password, result_user[0].password ?? '').then((result_compare)=>{
+                if (result_compare){
+                    let send_email=false;
+                    if (data.new_email && data.new_email!=''){
+                        if ((result_user_event[0] && 
+                            (+ new Date(result_user_event[0].current_timestamp) - + new Date(result_user_event[0].date_created))/ (1000 * 60 * 60 * 24) >= 1)||
+                                result_user_event.length == 0)
+                            send_email=true;
+                    }
+                    /**@type{Types.db_parameter_user_account_updateUserLocal} */
+                    const data_update = {   bio:                data.bio,
+                                            private:            data.private,
+                                            username:           data.username,
+                                            password:           data.password,
+                                            password_new:       (data.password_new && data.password_new!='')==true?data.password_new:null,
+                                            password_reminder:  (data.password_reminder && data.password_reminder!='')==true?data.password_reminder:null,
+                                            email:              data.email,
+                                            email_unverified:   (data.new_email && data.new_email!='')==true?data.new_email:null,
+                                            avatar:             data.avatar,
+                                            verification_code:  send_email==true?service.verification_code():null,
+                                            provider_id:        result_user[0].provider_id,
+                                            admin:              0
+                                        };
+                    service.updateUserLocal(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+                    .then((/**@type{Types.db_result_user_account_updateUserLocal}*/result_update)=>{
+                        if (result_update){
+                            if (send_email){
+                                //no change email in progress or older than at least 1 day
+                                /**@type{Types.db_parameter_user_account_event_insertUserEvent}*/
+                                const eventData = {
+                                    user_account_id: getNumberValue(query.get('PUT_ID')),
+                                    event: 'EMAIL_VERIFIED_CHANGE_EMAIL',
+                                    event_status: 'INPROGRESS',
+                                    user_language: data.user_language,
+                                    user_timezone: data.user_timezone,
+                                    user_number_system: data.user_number_system,
+                                    user_platform: data.user_platform,
+                                    server_remote_addr : ip,
+                                    server_user_agent : user_agent,
+                                    server_http_host : host,
+                                    server_http_accept_language : accept_language,
+                                    client_latitude : data.client_latitude,
+                                    client_longitude : data.client_longitude
+                                };
+                                insertUserEvent(app_id, eventData)
+                                .then(()=>{
+                                    getParameter(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),'SERVICE_MAIL_TYPE_CHANGE_EMAIL')
+                                    .then((/**@type{Types.db_result_app_parameter_getParameter[]}*/parameter)=>{
+                                        //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
+                                        sendUserEmail(  app_id, 
+                                                        parameter[0].parameter_value, 
+                                                        host, 
+                                                        getNumberValue(query.get('PUT_ID')),
+                                                        data.verification_code, 
+                                                        data.new_email)
+                                        .then(()=>{
+                                            resolve({sent_change_email: 1});
+                                        })
+                                        .catch((/**@type{Types.error}*/error)=>reject(error));
                                     })
                                     .catch((/**@type{Types.error}*/error)=>reject(error));
                                 })
                                 .catch((/**@type{Types.error}*/error)=>reject(error));
-                            })
-                            .catch((/**@type{Types.error}*/error)=>reject(error));
+                            }
+                            else
+                                resolve({sent_change_email: 0});
                         }
-                        else
-                            resolve({sent_change_email: 0});
-                    }
-                    else{
-                        import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                            record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                        });
-                    }
-                })
-                .catch((/**@type{Types.error}*/error)=>{
-                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
-                });
-            } 
-            else {
-                res.statusCode=400;
-                res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('PUT_ID'));
-                //invalid password
-                getMessage( app_id,
-                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                            '20401',
-                            query.get('lang_code'))
-                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                    reject(result_message[0].text);
-                })
-                .catch((/**@type{Types.error}*/error)=>reject(error));
-            }
+                        else{
+                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                            });
+                        }
+                    })
+                    .catch((/**@type{Types.error}*/error)=>{
+                        checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
+                    });
+                } 
+                else {
+                    res.statusCode=400;
+                    res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('PUT_ID'));
+                    //invalid password
+                    getMessage( app_id,
+                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                '20401',
+                                query.get('lang_code'))
+                    .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                        reject(result_message[0].text);
+                    })
+                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                }
+            });
         } 
         else {
             //user not found
@@ -934,32 +938,35 @@ const getUserByUserId = (app_id, query, res) => {
                     service.checkPassword(app_id, getNumberValue(query.get('DELETE_ID')))
                     .then((/**@type{Types.db_result_user_account_checkPassword[]}*/result_password)=>{
                         if (result_password[0]) {
-                            if (compareSync(data.password, result_password[0].password)){
-                                service.deleteUser(app_id, getNumberValue(query.get('DELETE_ID')))
-                                .then((/**@type{Types.db_result_user_account_deleteUser}*/result_delete)=>{
-                                    if (result_delete)
-                                        resolve(result_delete);
-                                    else{
-                                        import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
-                                            record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
-                                        });
-                                    }
-                                })
-                                .catch((/**@type{Types.error}*/error)=>reject(error));
-                            }
-                            else{
-                                res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('DELETE_ID'));
-                                res.statusCode = 400;
-                                //invalid password
-                                getMessage( app_id,
-                                            getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
-                                            '20401',
-                                            query.get('lang_code'))
-                                .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
-                                    reject(result_message[0].text);
-                                })
-                                .catch((/**@type{Types.error}*/error)=>reject(error));
-                            } 
+                            compare(data.password, result_password[0].password).then((result_password)=>{
+                                if (result_password){
+                                    service.deleteUser(app_id, getNumberValue(query.get('DELETE_ID')))
+                                    .then((/**@type{Types.db_result_user_account_deleteUser}*/result_delete)=>{
+                                        if (result_delete)
+                                            resolve(result_delete);
+                                        else{
+                                            import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
+                                                record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
+                                            });
+                                        }
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                                }
+                                else{
+                                    res.statusMessage = 'invalid password attempt for user id:' + getNumberValue(query.get('DELETE_ID'));
+                                    res.statusCode = 400;
+                                    //invalid password
+                                    getMessage( app_id,
+                                                getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
+                                                '20401',
+                                                query.get('lang_code'))
+                                    .then((/**@type{Types.db_result_message_getMessage[]}*/result_message)=>{
+                                        reject(result_message[0].text);
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>reject(error));
+                                } 
+                            });
+                            
                         }
                         else{
                             //user not found

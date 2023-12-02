@@ -63,7 +63,7 @@ const install_db_get_files = async (json_type) =>{
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {setParameterValue_admin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     const {createHash} = await import('node:crypto');
-    const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
+    const { default: {genSalt, hash} } = await import('bcrypt');
     const fs = await import('node:fs');
     let count_statements = 0;
     let count_statements_optional = 0;
@@ -72,7 +72,7 @@ const install_db_get_files = async (json_type) =>{
     let change_system_admin_pool=true;
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
-    const sql_with_password = (/**@type{string}*/username, /**@type{string}*/sql) =>{
+    const sql_with_password = async (/**@type{string}*/username, /**@type{string}*/sql) =>{
        let password;
        //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
        //Database users use SHA256
@@ -85,13 +85,13 @@ const install_db_get_files = async (json_type) =>{
           password = password.substring(0,28) + random_characters;
           //use singlequote for INSERT, else doublequote for CREATE USER
           if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${hashSync(password, genSaltSync(10))}'`);
+             sql = sql.replace(password_tag, `'${await hash(password, await genSalt(10))}'`);
           else
              sql = sql.replace(password_tag, `"${password}"`);
        }   
        else
           if (sql.toUpperCase().includes('INSERT INTO'))
-             sql = sql.replace(password_tag, `'${hashSync(password, genSaltSync(10))}'`);
+             sql = sql.replace(password_tag, `'${await hash(password, await genSalt(10))}'`);
           else
              sql = sql.replace(password_tag, `'${password}'`);
        install_result.push({[`${username}`]: password});         
@@ -135,9 +135,9 @@ const install_db_get_files = async (json_type) =>{
                 if (file[0] == 0 && sql.includes(password_tag)){
                         let sql_and_pw;
                         if (sql.toUpperCase().includes('INSERT INTO'))
-                        sql_and_pw = sql_with_password('admin', sql);
+                        sql_and_pw = await sql_with_password('admin', sql);
                         else
-                        sql_and_pw = sql_with_password('app_portfolio', sql);
+                        sql_and_pw = await sql_with_password('app_portfolio', sql);
                         sql = sql_and_pw[0];
                 }
                 //if ; must be in wrong place then set tag in import script and convert it
@@ -219,14 +219,14 @@ const install_db_get_files = async (json_type) =>{
             switch (file[0]){
                 case 1:{
                         if (users_row.sql.includes(password_tag)){
-                        const sql_and_pw = sql_with_password('app_admin', users_row.sql);
+                        const sql_and_pw = await sql_with_password('app_admin', users_row.sql);
                         users_row.sql = sql_and_pw[0];
                         }   
                     break;
                 }
                 default:{
                     if (users_row.sql.includes(password_tag)){
-                        const sql_and_pw = sql_with_password('app' + file[2], users_row.sql);
+                        const sql_and_pw = await sql_with_password('app' + file[2], users_row.sql);
                         users_row.sql = sql_and_pw[0];
                         const data = {	
                                         app_id: file[2],

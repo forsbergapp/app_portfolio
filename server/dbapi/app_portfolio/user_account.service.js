@@ -12,8 +12,8 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
  * @returns {Promise.<string|null>}
  */
 const set_password = async password =>{
-	const { default: {genSaltSync, hashSync} } = await import('bcryptjs');
-	return password==null?null:hashSync(password, genSaltSync(10));
+	const { default: {genSalt, hash} } = await import('bcrypt');
+	return password==null?null:await hash(password, await genSalt(10));
 };
 /**
  * Checks password between 10 and 100 characters
