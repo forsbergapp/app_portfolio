@@ -26,7 +26,7 @@ const createUserSetting = async (app_id, data) => {
 							settings_json: JSON.stringify(data.settings_json),
 							user_account_id: data.user_account_id,
 							app_id: app_id,
-							RETURN_ID:true
+							RETURN_ID:'id'
 						};
 			return await db_execute(app_id, sql, parameters, null);
 	};

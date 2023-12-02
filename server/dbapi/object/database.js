@@ -270,13 +270,12 @@ const install_db_get_files = async (json_type) =>{
     const count_statements_fail = 0;
     const fs = await import('node:fs');
     const files = await install_db_get_files('uninstall');
-    const db_use = ConfigGet('SERVICE_DB', 'USE');
+    const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     for (const file of  files){
         const uninstall_sql_file = await fs.promises.readFile(`${process.cwd()}${file[1]}`, 'utf8');
         const uninstall_sql = JSON.parse(uninstall_sql_file).uninstall.filter((/**@type{Types.uninstall_database_script|Types.uninstall_database_app_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')));
         for (const sql_row of uninstall_sql){
-            if (db_use=='3')
-            if (sql_row.sql.toUpperCase().includes('DROP DATABASE')){
+            if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                 //add database name in dba pool
                 await pool_close(null, db_use, DBA);
                 /**@type{Types.pool_parameters} */
