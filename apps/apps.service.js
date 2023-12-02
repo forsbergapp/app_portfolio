@@ -289,6 +289,40 @@ const render_common_html = async (app_id, module, app_config) =>{
             if (err)
                 reject(err);
             else{
+                //render app parameters from apps.json
+                if (ConfigGetApp(app_id, 'JS') != '')
+					render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, 'JS')}",`]);
+				else
+					render_variables.push(['APP_JS','']);
+				if (ConfigGetApp(app_id, 'JS_SECURE') != '')
+					render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, 'JS_SECURE')}",`]);
+				else
+					render_variables.push(['APP_JS_SECURE','']);
+				if (ConfigGetApp(app_id, 'JS_REPORT') != '')
+					render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, 'JS_REPORT')}",`]);
+				else
+					render_variables.push(['APP_JS_REPORT','']);
+				if (ConfigGetApp(app_id, 'CSS') != '')
+					render_variables.push(['APP_CSS',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS')}'/>`]);
+				else
+					render_variables.push(['APP_CSS','']);
+				if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
+					render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
+				else
+					render_variables.push(['APP_CSS_REPORT','']);
+				if (ConfigGetApp(app_id, 'MANIFEST') != '')
+					render_variables.push(['APP_MANIFEST',`<link rel='manifest' href='${ConfigGetApp(app_id, 'MANIFEST')}'/>`]);
+				else
+					render_variables.push(['APP_MANIFEST','']);
+				if (ConfigGetApp(app_id, 'FAVICON_32x32') != '')
+					render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_32x32')}' sizes='32x32'/>`]);
+				else
+					render_variables.push(['APP_FAVICON_32x32','']);
+				if (ConfigGetApp(app_id, 'FAVICON_1922x192') != '')
+					render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_192x192')}' sizes='192x192'/>`]);
+				else
+					render_variables.push(['APP_FAVICON_192x192','']);
+
                 if (app_config.map==false){
                     render_variables.push(['CommonHeadMap','']);
                 }

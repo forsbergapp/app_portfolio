@@ -134,8 +134,7 @@ const createApp = (app_id, username, locale) => {
         const main = async (/**@type{number}*/app_id) => {
             const files = [
                 ['APP', process.cwd() + '/apps/app2/src/index.html'],
-                ['<AppReportsFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],                
-                ['<AppHead/>', process.cwd() + '/apps/app2/src/head.html'],
+                ['<AppReportsFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],
                 ['<AppToolbarTop/>', process.cwd() + '/apps/app2/src/toolbar_top.html'],
                 ['<AppPaper/>', process.cwd() + '/apps/app2/src/paper.html'],
                 ['<AppSettingsTabNavigation/>', process.cwd() + '/apps/app2/src/settings_tab_navigation.html'],

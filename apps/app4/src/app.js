@@ -15,7 +15,6 @@ const createApp = (app_id, params) => {
     return new Promise((resolve, reject) => {
         const files = [ 
             ['APP', process.cwd() + '/apps/app4/src/index.html'],
-            ['<AppHead/>', process.cwd() + '/apps/app4/src/head.html'],
             ['<AppBody/>', process.cwd() + '/apps/app4/src/body.html']
             ];
         if (params==null){
