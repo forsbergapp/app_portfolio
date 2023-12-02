@@ -17,7 +17,7 @@ const getApp = (app_id, query) => service.getApp(app_id, getNumberValue(query.ge
  * 
  * @param {number} app_id 
  * @param {*} query 
- * @returns {Types.db_result_app_getAppAdmin[]}
+ * @returns {Types.db_result_app_getAppsAdmin[]}
  */
 const getAppsAdmin = (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
