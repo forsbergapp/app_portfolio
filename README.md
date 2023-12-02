@@ -283,11 +283,9 @@
 	
 	[docs/4.start_nodejs.md](docs/4.start_nodejs.md)
 
-5. Enter application at http://admin.localhost or http://admin.[yourdomain]
+5. Enter application at http://admin.localhost or http://admin.[DOMAIN] and configure server
 
-   	Set server parameters.
-
-	[docs/5.server_parameters.md](docs/5.server_parameters.md)
+	[docs/5.server_configuration.md](docs/5.server_configuration.md)
 
 6. Set database parameters
 
