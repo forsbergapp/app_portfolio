@@ -379,7 +379,7 @@ const create = async (app_id, data) => {
 						provider_image: data.provider_image,
 						provider_Ximage_url: data.provider_image_url,
 						provider_email: data.provider_email,
-						RETURN_ID:true
+						RETURN_ID:'id'
 					};
 			return await db_execute(app_id, sql, parameters, null);
 	}
