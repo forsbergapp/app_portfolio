@@ -548,10 +548,7 @@ const getProfileTop = (app_id, query, res) =>{
         service.getProfileTop(app_id, getNumberValue(query.get('statchoice')))
         .then((/**@type{Types.db_result_user_account_getProfileTop[]}*/result)=>{
             if (result)
-                resolve({
-                    count: result.length,
-                    items: result
-                });
+                resolve(result);
             else {
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
@@ -584,18 +581,7 @@ const searchProfile = (app_id, ip, user_agent, query, data) =>{
                                         client_latitude:    data.client_latitude};
                 insertProfileSearch(app_id, data_insert)
                 .then(()=>{
-                    if (result_search.length>0)
-                        resolve({
-                            count: result_search.length,
-                            items: result_search
-                        });
-                    else {
-                        //return silent message if not found, no popup message
-                        resolve({
-                            count: 0,
-                            items: null
-                        });
-                    }
+                    resolve(result_search);
                 })
                 .catch((/**@type{Types.error}*/error)=>reject(error));
             });
