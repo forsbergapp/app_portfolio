@@ -33,7 +33,7 @@ import * as Types from './../../../types.js';
                         (SELECT variable_value
                            FROM ${table_global_variables}.global_variables
                           WHERE variable_name='version') version,
-                        :Xdatabase_schema database_schema,
+                        :database_schema database_schema,
                         (SELECT variable_value
                            FROM ${table_global_variables}.global_variables
                           WHERE variable_name='hostname') hostname,
@@ -50,7 +50,7 @@ import * as Types from './../../../types.js';
           sql = `SELECT :database "database_use",
                          version() "database_name",
                          current_setting('server_version') "version",
-                         :Xdatabase_schema "database_schema",
+                         :database_schema "database_schema",
                          inet_server_addr() "hostname", 
                          (SELECT count(*) 
                             FROM pg_stat_activity 
@@ -96,9 +96,9 @@ import * as Types from './../../../types.js';
                             FROM product_component_version) "version", 
                          (SELECT CASE 
                                  WHEN cloud_identity IS NULL THEN 
-                                     :Xdatabase_schema
+                                     :database_schema
                                  ELSE 
-                                     :Xdatabase_schema ||' ('|| REPLACE(JSON_QUERY(cloud_identity, '$.DATABASE_NAME'), CHR(34), NULL) || ')'
+                                     :database_schema ||' ('|| REPLACE(JSON_QUERY(cloud_identity, '$.DATABASE_NAME'), CHR(34), NULL) || ')'
                                  END
                             FROM v$pdbs) "database_schema",
                          (SELECT  CASE 
@@ -118,7 +118,7 @@ import * as Types from './../../../types.js';
     }
     const parameters = {	
                    database: db_use,
-                   Xdatabase_schema: db_schema()
+                   database_schema: db_schema()
                    };
     return await db_execute(app_id, sql, parameters, DBA);
  };
