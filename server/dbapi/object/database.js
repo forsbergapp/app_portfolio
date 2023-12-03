@@ -267,7 +267,7 @@ const install_db_get_files = async (json_type) =>{
     const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     let count_statements = 0;
-    const count_statements_fail = 0;
+    let count_statements_fail = 0;
     const fs = await import('node:fs');
     const files = await install_db_get_files('uninstall');
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
@@ -303,8 +303,10 @@ const install_db_get_files = async (json_type) =>{
                 };
                 await pool_start(json_data);
             }
-            await db_execute(app_id, sql_row.sql, {}, DBA);
-            count_statements += 1;
+            await db_execute(app_id, sql_row.sql, {}, DBA)
+            .then(()=>{count_statements += 1;})
+            .catch(()=>{count_statements_fail += 1;});
+            
         }      
         /*update parameters in config.json
             DB[USE]_SYSTEM_ADMIN_USER = null
