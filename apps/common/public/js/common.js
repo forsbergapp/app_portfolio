@@ -2500,7 +2500,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
             else{
                 const user_login = JSON.parse(result).items[0];
                 COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
-                COMMON_GLOBAL.user_account_id = user_update.id;
+                COMMON_GLOBAL.user_account_id = user_login.id;
                 COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
                 updateOnlineStatus();
                 user_preference_get(() =>{
