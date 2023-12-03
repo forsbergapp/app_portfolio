@@ -124,14 +124,14 @@ const getProfileUserSettings = async (app_id, id, id_current_user) => {
 						 AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
 					  (SELECT COUNT(0)
 						 FROM ${db_schema()}.user_account_app_setting_like u_liked_current_user
-						WHERE u_liked_current_user.user_account_app_user_account_id = :Xuser_Xaccount_id_current
+						WHERE u_liked_current_user.user_account_app_user_account_id = :user_account_id_current
 						  AND u_liked_current_user.user_account_app_setting_id = us.id
 						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked"
 				 FROM ${db_schema()}.user_account_app_setting us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
 		const parameters = {
-						Xuser_Xaccount_id_current: id_current_user,
+						user_account_id_current: id_current_user,
 						user_account_id: id,
 						app_id: app_id
 						};

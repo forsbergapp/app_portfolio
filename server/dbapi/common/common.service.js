@@ -35,10 +35,11 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
 				resolve(result_message[0].text);
 			});
 		}
-		else
+		else{
 			res.statusCode = 500;
 			res.statusMessage = err;
 			resolve(err);
+		}
 	});
 };
 /**
