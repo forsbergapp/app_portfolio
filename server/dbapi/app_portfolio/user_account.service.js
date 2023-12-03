@@ -211,7 +211,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 			search = '%' + search + '%';
 		const parameters = {search: search,
 							offset: offset ?? 0,
-							limit: limit ?? parseInt(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH')),
+							limit: limit ?? parseInt(ConfigGet('SERVICE_DB', 'LIMIT_LIST_SEARCH'))
 							};
 		return await db_execute(app_id, sql, parameters, null);
     };
@@ -379,7 +379,8 @@ const create = async (app_id, data) => {
 						provider_image: data.provider_image,
 						provider_Ximage_url: data.provider_image_url,
 						provider_email: data.provider_email,
-						RETURN_ID:'id'
+						DB_RETURN_ID:'id',
+						DB_CLOB: ['avatar', 'provider_image']
 					};
 			return await db_execute(app_id, sql, parameters, null);
 	}
@@ -806,11 +807,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 					SET bio = :bio,
 						private = :private,
 						username = :username,
-						password = 	CASE WHEN :password_new IS NULL THEN 
-										password 
-									ELSE 
-										:password_new 
-									END,
+						password = 	COALESCE(:password_new, password),
 						password_reminder = :Xpassword_reminder,
 						email = :email,
 						email_unverified = :email_unverified,
@@ -828,7 +825,8 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						email_unverified: data.email_unverified,
 						avatar: data.avatar,
 						verification_code: data.verification_code,
-						id: search_id
+						id: search_id,
+						DB_CLOB: ['avatar']
 					}; 
 		return await db_execute(app_id, sql, parameters, null);
 	}
@@ -928,7 +926,8 @@ const updateSigninProvider = async (app_id, id, data) => {
 						provider_image: data.provider_image,
 						provider_Ximage_url: data.provider_image_url,
 						provider_email: data.provider_email,
-						id: id
+						id: id,
+						DB_CLOB: ['provider_image']
 					};
 		return await db_execute(app_id, sql, parameters);
 	}

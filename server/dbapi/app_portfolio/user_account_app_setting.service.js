@@ -26,7 +26,8 @@ const createUserSetting = async (app_id, data) => {
 							settings_json: JSON.stringify(data.settings_json),
 							user_account_id: data.user_account_id,
 							app_id: app_id,
-							RETURN_ID:'id'
+							DB_RETURN_ID:'id',
+							DB_CLOB: ['settings_json']
 						};
 			return await db_execute(app_id, sql, parameters, null);
 	};
@@ -265,7 +266,7 @@ const getProfileTopSetting = async (app_id, statchoice) => {
 		sql = db_limit_rows(sql,2);
 		const parameters = {
 						app_id: app_id,
-						statchoice: statchoice,
+						statchoice: statchoice
 					};
 		return await db_execute(app_id, sql, parameters, null);
     };
@@ -289,7 +290,8 @@ const updateUserSetting = async (app_id, data, id) => {
 						settings_json: JSON.stringify(data.settings_json),
 						user_account_id: data.user_account_id,
 						app_id: app_id,
-						id: id
+						id: id,
+						DB_CLOB: ['settings_json']
 					};
 		return await db_execute(app_id, sql, parameters, null);
 	};
@@ -302,9 +304,7 @@ const updateUserSetting = async (app_id, data, id) => {
 const deleteUserSetting = async (app_id, id) => {
 		const sql = `DELETE FROM ${db_schema()}.user_account_app_setting
 					WHERE id = :id `;
-		const parameters = {
-						id: id
-						};
+		const parameters = {id: id};
 		return await db_execute(app_id, sql, parameters, null);
 	};
 export{	createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 

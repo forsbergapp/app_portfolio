@@ -248,8 +248,7 @@ const pool_get = (pool_id, db_use, dba) => {
  *                            - 3 PostgreSQL
  *                            - 4 Oracle
  * @param {string} sql
- * @param {*} parameters      - can have an extra RETURN_ID key used for Oracle
- *                            - to add extra RETURNING clause to SQL, syntax specific for Oracle
+ * @param {*} parameters      - can have an extra DB_RETURN_ID and DB_CLOB key
  * @param {number} dba 
  * @returns 
  */
@@ -259,8 +258,12 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          case 1:
          case 2:{
             try {
-               if ('RETURN_ID' in parameters)
-                  delete parameters.RETURN_ID;
+               //DB_RETURN_ID not used here
+               if ('DB_RETURN_ID' in parameters)
+                  delete parameters.DB_RETURN_ID;
+               //DB_CLOB not used here
+               if ('DB_CLOB' in parameters)
+                  delete parameters.DB_CLOB;
                /**@ts-ignore */
                pool_get(pool_id, db_use, dba).getConnection((/**@type{Types.error}*/err, /**@type{Types.pool_connection_1_2}*/conn) => {
                   if (err)
@@ -279,9 +282,8 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                         });
                      };
                      conn.query(sql, parameters, (/**@type{Types.error}*/err, /**@type{[Types.pool_connection_1_2_result]}*/result, /**@type{Types.pool_connection_3_fields}*/fields) => {
-                        if (err){
+                        if (err)
                            return reject (err);
-                        }
                         else{
                            conn.release();
                            //convert blob buffer to string if any column is a BLOB type
@@ -308,10 +310,13 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
          }
          case 3:{
             // add RETURNING statement to get insertId
-            if ('RETURN_ID' in parameters){
-               sql += ` RETURNING ${parameters.RETURN_ID}` ;
-               delete parameters.RETURN_ID;
+            if ('DB_RETURN_ID' in parameters){
+               sql += ` RETURNING ${parameters.DB_RETURN_ID}` ;
+               delete parameters.DB_RETURN_ID;
             }
+            //DB_CLOB not used here
+            if ('DB_CLOB' in parameters)
+                  delete parameters.DB_CLOB;
             /**
              * @param {string} parameterizedSql
              * @param {object} params
@@ -370,12 +375,8 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      else
                         return resolve(result);
                   })
-                  .catch((/**@type{Types.error}*/err) => {
-                     return reject(err);
-                  });
-               }).catch((/**@type{Types.error}*/err)=>{
-                  return reject(err);   
-               });
+                  .catch((/**@type{Types.error}*/err) => reject(err));
+               }).catch((/**@type{Types.error}*/err)=> reject(err));
             } catch (err) {
                return reject(err);
             }
@@ -387,39 +388,29 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                /**@ts-ignore */
                const pool4 = ORACLEDB.getPool(db_pool_id);
                pool4.getConnection().then((pool)=>{
-                  /*
-                  Fix CLOB column syntax to avoid ORA-01461 for these columns:
-                     APP_ACCOUNT.SCREENSHOT
-                     USER_ACCOUNT.AVATAR
-                     USER_ACCOUNT.PROVIDER_IMAGE
-                     USER_ACCOUNT_APP_SETTING.SETTINGS_JSON
-                     use same parameter name as column name
-                  */
-                  Object.keys(parameters).forEach(key => {
-                     if (key.toLowerCase() == 'screenshot' ||
-                        key.toLowerCase() == 'avatar' ||
-                        key.toLowerCase() == 'provider_image' ||
-                        key.toLowerCase() == 'settings_json')
-                        /**@ts-ignore */
-                        parameters[key] = { dir: ORACLEDB.BIND_IN, val: parameters[key], type: ORACLEDB.CLOB };
-                  });
+                  //Fix CLOB column syntax to avoid ORA-01461 for these columns:
+                  if ('DB_CLOB' in parameters){
+                     parameters.DB_CLOB.forEach((/**@type{string}*/column) => {
+                        parameters[column] = {  dir: ORACLEDB.BIND_IN, val: parameters[column], 
+                                                type: ORACLEDB.CLOB };
+                     });
+                     delete parameters.DB_CLOB;
+                  }
                   // add RETURNING statement to get insertId
-                  if ('RETURN_ID' in parameters){
-                     sql += ` RETURNING ${parameters.RETURN_ID} INTO :insertId` ;
-                     delete parameters.RETURN_ID;
+                  if ('DB_RETURN_ID' in parameters){
+                     sql += ` RETURNING ${parameters.DB_RETURN_ID} INTO :insertId` ;
+                     delete parameters.DB_RETURN_ID;
                      Object.assign(parameters, {insertId:   { type: ORACLEDB.NUMBER, dir: ORACLEDB.BIND_OUT }});
                   }
                   /**@ts-ignore */
                   pool.execute(sql, parameters, (/**@type{Types.error}*/err, /**@type{Types.pool_connection_4_result}*/result) => {
-                     if (err) {
+                     if (err)
                         return reject(err);
-                     }
                      else{
                         pool.close();
                         //add common attributes
-                        if (result.outBinds){
+                        if (result.outBinds)
                            result.insertId = result.outBinds.insertId[0];
-                        }
                         if (result.rowsAffected){
                            //add custom key using same name as other databases
                            result.affectedRows = result.rowsAffected;
@@ -431,9 +422,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      }
                   });
                })
-               .catch(err=>{
-                  return reject(err);
-               });
+               .catch(err=> reject(err));
             }catch (err) {
                return reject(err);
             }

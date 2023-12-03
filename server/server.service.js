@@ -132,7 +132,7 @@ const COMMON = {
                     break;
                 }
                 case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/PROVIDER_PUT':{
-                    resolve(db_user_account.login_provider(app_id, ip, user_agent, host, query, data));
+                    resolve(db_user_account.login_provider(app_id, ip, user_agent, query, data));
                     break;
                 }
                 case 'DATA_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
