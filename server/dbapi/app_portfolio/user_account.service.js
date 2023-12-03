@@ -203,7 +203,7 @@ const getUsersAdmin = async (app_id, search, sort, order_by, offset, limit) => {
 				   OR ua.provider_first_name LIKE :search
 				   OR ua.provider_last_name LIKE :search
 				   OR ua.provider_email LIKE :search
-				   OR ua.id LIKE :search)
+				   OR CAST(ua.id as VARCHAR(11)) LIKE :search)
 				   OR :search = '*'
 				ORDER BY ${sort} ${order_by}`;
 		sql = db_limit_rows(sql, null);
@@ -349,7 +349,7 @@ const create = async (app_id, data) => {
 						CURRENT_TIMESTAMP,
 						:username,
 						:password_new,
-						:Xpassword_reminder,
+						:password_reminder,
 						:email,
 						:avatar,
 						:verification_code,
@@ -359,7 +359,7 @@ const create = async (app_id, data) => {
 						:provider_first_name,
 						:provider_last_name,
 						:provider_image,
-						:provider_Ximage_url,
+						:provider_image_url,
 						:provider_email) `;				
 		parameters = {
 						bio: data.bio,
@@ -367,7 +367,7 @@ const create = async (app_id, data) => {
 						user_level: data.user_level,
 						username: data.username,
 						password_new: await set_password(data.password_new),
-						Xpassword_reminder: data.password_reminder,
+						password_reminder: data.password_reminder,
 						email: data.email,
 						avatar: data.avatar,
 						verification_code: data.verification_code,
@@ -377,7 +377,7 @@ const create = async (app_id, data) => {
 						provider_first_name: data.provider_first_name,
 						provider_last_name: data.provider_last_name,
 						provider_image: data.provider_image,
-						provider_Ximage_url: data.provider_image_url,
+						provider_image_url: data.provider_image_url,
 						provider_email: data.provider_email,
 						DB_RETURN_ID:'id',
 						DB_CLOB: ['avatar', 'provider_image']
@@ -808,7 +808,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						private = :private,
 						username = :username,
 						password = 	COALESCE(:password_new, password),
-						password_reminder = :Xpassword_reminder,
+						password_reminder = :password_reminder,
 						email = :email,
 						email_unverified = :email_unverified,
 						avatar = :avatar,
@@ -820,7 +820,7 @@ const updateUserLocal = async (app_id, data, search_id) => {
 						private: data.private,
 						username: data.username,
 						password_new: await set_password(data.password_new),
-						Xpassword_reminder: data.password_reminder,
+						password_reminder: data.password_reminder,
 						email: data.email,
 						email_unverified: data.email_unverified,
 						avatar: data.avatar,
@@ -913,7 +913,7 @@ const updateSigninProvider = async (app_id, id, data) => {
 							provider_first_name = :provider_first_name,
 							provider_last_name = :provider_last_name,
 							provider_image = :provider_image,
-							provider_image_url = :provider_Ximage_url,
+							provider_image_url = :provider_image_url,
 							provider_email = :provider_email,
 							date_modified = CURRENT_TIMESTAMP
 					WHERE id = :id
@@ -924,7 +924,7 @@ const updateSigninProvider = async (app_id, id, data) => {
 						provider_first_name: data.provider_first_name,
 						provider_last_name: data.provider_last_name,
 						provider_image: data.provider_image,
-						provider_Ximage_url: data.provider_image_url,
+						provider_image_url: data.provider_image_url,
 						provider_email: data.provider_email,
 						id: id,
 						DB_CLOB: ['provider_image']

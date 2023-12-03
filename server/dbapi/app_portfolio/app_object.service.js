@@ -97,7 +97,7 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 											 )) t
 				WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
 					AND   ((t.object = :object) OR :object IS NULL)
-					AND   ((t.object_name = :Xobject_Xname) OR :Xobject_Xname IS NULL)
+					AND   ((t.object_name = :object_name) OR :object_name IS NULL)
 			ORDER BY 1, 2, 3, 4, 5, 6`;
 		const parameters = {
 						common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
@@ -106,7 +106,7 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 						lang_code2: get_locale(lang_code, 2),
 						lang_code3: get_locale(lang_code, 3),
 						object : object,
-						Xobject_Xname: object_name
+						object_name: object_name
 						};
 		return await db_execute(app_id, sql, parameters, null);
 	};

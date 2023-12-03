@@ -132,11 +132,11 @@ const COMMON = {
                     break;
                 }
                 case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/PROVIDER_PUT':{
-                    resolve(db_user_account.login_provider(app_id, ip, user_agent, query, data));
+                    resolve(db_user_account.login_provider(app_id, ip, user_agent, query, data, res));
                     break;
                 }
                 case 'DATA_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
-                    resolve(db_user_account.signup(app_id, host, query, data));
+                    resolve(db_user_account.signup(app_id, host, query, data, res));
                     break;
                 }
                 case 'DATA_SOCKET_/SOCKET/CONNECTION_PATCH':{
@@ -170,7 +170,7 @@ const COMMON = {
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{
-                    resolve(db_user_account.activate(app_id, ip, user_agent, accept_language, host, query, data));
+                    resolve(db_user_account.activate(app_id, ip, user_agent, accept_language, host, query, data, res));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/FORGOT_PUT':{
@@ -375,7 +375,7 @@ const COMMON = {
                     break;
                 }
                 case 'SUPERADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
-                    resolve(db_user_account.updateAdmin(app_id, query));
+                    resolve(db_user_account.updateAdmin(app_id, query, data, res));
                     break;
                 }
                 case 'ADMIN_SOCKET_/SOCKET/MESSAGE/ADMIN_POST':{

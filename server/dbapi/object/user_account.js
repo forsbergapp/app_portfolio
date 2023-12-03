@@ -178,9 +178,9 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
  * @param {string} user_agent 
  * @param {*} query 
  * @param {*} data 
- * @returns 
+ * @param {Types.res} res
  */
-const login_provider = (app_id, ip, user_agent, query, data) =>{
+const login_provider = (app_id, ip, user_agent, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
         .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin)=>{
@@ -234,7 +234,7 @@ const login_provider = (app_id, ip, user_agent, query, data) =>{
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 })
                 .catch((/**@type{Types.error}*/error)=>{
-                    checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
+                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                 });            
             } else {
                 //if provider user not found then create user and one user setting
@@ -276,9 +276,10 @@ const login_provider = (app_id, ip, user_agent, query, data) =>{
  * @param {string} host 
  * @param {*} query 
  * @param {*} data 
+ * @param {Types.res} res 
  * @returns 
  */
-const signup = (app_id, host, query, data) =>{
+const signup = (app_id, host, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_create} */
         const data_body = { bio:                    data.bio,
@@ -334,7 +335,7 @@ const signup = (app_id, host, query, data) =>{
                 });
         })
         .catch((/**@type{Types.error}*/error)=>{
-            checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -347,9 +348,9 @@ const signup = (app_id, host, query, data) =>{
  * @param {string} host 
  * @param {*} query 
  * @param {*} data 
- * @returns 
+ * @param {Types.res} res
  */
-const activate = (app_id, ip, user_agent, accept_language, host, query, data) =>{
+const activate = (app_id, ip, user_agent, accept_language, host, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**@type{string|null} */
         let auth_password_new = null;
@@ -406,7 +407,7 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data) =>
             }
         })
         .catch((/**@type{Types.error}*/error)=>{
-            checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
+            checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
         });
     });
 };
@@ -633,7 +634,7 @@ const updateAdmin =(app_id, query, data, res) =>{
                         resolve({data: result_update});
                 })
                 .catch((/**@type{Types.error}*/error)=>{
-                    checked_error(app_id, query.get('lang_code'), error).then((/**@type{string}*/message)=>reject(message));
+                    checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));
                 });
             }
             else{
