@@ -62,6 +62,7 @@ const install_db_get_files = async (json_type) =>{
     const {CreateRandomString} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {setParameterValue_admin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
+    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     const {createHash} = await import('node:crypto');
     const { default: {genSalt, hash} } = await import('bcrypt');
     const fs = await import('node:fs');
@@ -246,6 +247,7 @@ const install_db_get_files = async (json_type) =>{
     install_result.push({'SQL': count_statements});
     install_result.push({'SQL optional': count_statements_optional});
     install_result.push({'finished': new Date().toISOString()});
+    LogServerI(`Database install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {'info': install_result};
  };
  /**
@@ -266,6 +268,7 @@ const install_db_get_files = async (json_type) =>{
  const Uninstall = async (app_id)=> {
     const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
+    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     let count_statements = 0;
     let count_statements_fail = 0;
     const fs = await import('node:fs');
@@ -315,6 +318,7 @@ const install_db_get_files = async (json_type) =>{
             DB[USE]_APP_ADMIN_PASS = null
         */
     }
+    LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {'info':[  { count    : count_statements},
                         {count_fail: count_statements_fail}
                     ]};
