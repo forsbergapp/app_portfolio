@@ -27,7 +27,9 @@ const startserver = async () =>{
 						latitude:'',
 						longitude:'',
 						ip:'',
-						limit:0};
+						limit:0,
+						search:'',
+						country:''};
 		req.query.app_id = getNumberValue(params.get('app_id'));
 		switch (req.url.substring(0, req.url.indexOf('?'))){
 			case '/geolocation/place':{
