@@ -42,19 +42,20 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 						UNION ALL
 						SELECT 'APP_OBJECT_ITEM', aoi.app_object_app_id app_id, aoi.app_object_object_name object_name, aoi.object_item_name, null subitem_name, l.lang_code, s.id, str.text
 						  FROM ${db_schema()}.app_object_item aoi,
-							   ${db_schema()}.setting_type st,
-							   ${db_schema()}.setting s,
-							   ${db_schema()}.setting_translation str,
+							   ${db_schema()}.app_setting_type st,
+							   ${db_schema()}.app_setting s,
+							   ${db_schema()}.app_setting_translation str,
 							   ${db_schema()}.language l
-						 WHERE st.id = aoi.setting_type_id
-						   AND s.setting_type_id = st.id  
-						   AND str.setting_id = s.id
+						 WHERE aoi.app_setting_type_app_setting_type_name = st.app_setting_type_name
+						   AND aoi.app_setting_type_app_id = st.app_id
+						   AND s.app_setting_type_app_setting_type_name = st.app_setting_type_name
+						   AND s.app_setting_type_app_id = st.app_id
 						   AND l.id = str.language_id
 						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
-													 ${db_schema()}.setting_translation str1
+													 ${db_schema()}.app_setting_translation str1
 											   WHERE str1.language_id = l1.id
-												 AND str1.setting_id = s.id
+												 AND str1.app_setting_id = s.id
 												 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 											 )
 						UNION ALL

@@ -76,9 +76,9 @@
  * @property {string} body.verification_code                        - app portfolio parameter
  * @property {string} body.verification_type                        - app portfolio parameter
  * @property {string} body.auth                                     - app portfolio parameter
- * @property {number} body.setting_preference_direction_id          - app portfolio parameter
- * @property {number} body.setting_preference_arabic_script_id      - app portfolio parameter
- * @property {number} body.setting_preference_timezone_id           - app portfolio parameter
+ * @property {number} body.app_setting_preference_direction_id      - app portfolio parameter
+ * @property {number} body.app_setting_preference_arabic_script_id  - app portfolio parameter
+ * @property {number} body.app_setting_preference_timezone_id       - app portfolio parameter
  * @property {string} body.preference_locale                        - app portfolio parameter
  * @property {string} body.description                              - app portfolio parameter
  * @property {object} body.settings_json                            - app portfolio parameter
@@ -1200,7 +1200,7 @@
  * @typedef {db_result_insert} db_result_profile_search_insertProfileSearch
  * SETTING
  * @typedef {{  app_id:number, 
- *              setting_type_name:string, 
+ *              app_setting_type_name:string, 
  *              id:string,
  *              data:string, 
  *              data2:string|null, 
@@ -1413,14 +1413,14 @@
  *              LOGO:string,
  *              date_created:string}} db_result_user_account_app_getUserAccountApps_with_app_registry
  * @typedef {{  preference_locale:string,
- *              setting_preference_timezone_id:number,
- *              setting_preference_direction_id:number,
- *              setting_preference_arabic_script_id:number,
+ *              app_setting_preference_timezone_id:number,
+ *              app_setting_preference_direction_id:number,
+ *              app_setting_preference_arabic_script_id:number,
  *              date_created:string}} db_result_user_account_app_getUserAccountApp
  * @typedef {{  preference_locale:string,
- *              setting_preference_timezone_id:number,
- *              setting_preference_direction_id:number,
- *              setting_preference_arabic_script_id:number}} db_parameter_user_account_app_updateUserAccountApp
+ *              app_setting_preference_timezone_id:number,
+ *              app_setting_preference_direction_id:number,
+ *              app_setting_preference_arabic_script_id:number}} db_parameter_user_account_app_updateUserAccountApp
  * @typedef {   db_result_update} db_result_user_account_app_updateUserAccountApp
  * @typedef {   db_result_delete} db_result_user_account_app_deleteUserAccountApp
  * USER ACCOUNT APP SETTING

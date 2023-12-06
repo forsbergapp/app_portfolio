@@ -107,10 +107,11 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO role_app_adm
 
 
 CREATE TABLE app_portfolio.app_object_item (
-    app_object_app_id            INTEGER NOT NULL,
-    app_object_object_name       VARCHAR(100) NOT NULL,
-    object_item_name             VARCHAR(100) NOT NULL,
-    setting_type_id              INTEGER,
+    app_object_app_id                       INTEGER NOT NULL,
+    app_object_object_name                  VARCHAR(100) NOT NULL,
+    object_item_name                        VARCHAR(100) NOT NULL,
+    app_setting_type_app_setting_type_name  VARCHAR(100),
+    app_setting_type_app_id                 INTEGER,
 	CONSTRAINT app_object_item_pk PRIMARY KEY ( app_object_app_id,
                                                 app_object_object_name,
                                                 object_item_name )
@@ -222,6 +223,46 @@ CREATE TABLE app_portfolio.app_screenshot (
 GRANT SELECT ON app_portfolio.app_screenshot TO role_app_common;
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app_admin;
+
+CREATE TABLE app_portfolio.app_setting (
+    id                                      INT NOT NULL AUTO_INCREMENT,
+    description                             VARCHAR(500) NOT NULL,
+    data                                    VARCHAR(500) NOT NULL,
+    data2                                   VARCHAR(500),
+    data3                                   VARCHAR(500),
+    data4                                   VARCHAR(500),
+    data5                                   VARCHAR(500),
+    app_setting_type_app_setting_type_name  VARCHAR(100) NOT NULL,
+    app_setting_type_app_id                 INTEGER NOT NULL,
+    CONSTRAINT app_setting_pk PRIMARY KEY ( id )
+);
+
+GRANT SELECT ON app_portfolio.app_setting TO role_app_common;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting TO role_app_admin;
+
+CREATE TABLE app_portfolio.app_setting_translation (
+    app_setting_id  INTEGER NOT NULL,
+    language_id     INTEGER NOT NULL,
+    text            VARCHAR(2000) NOT NULL,
+    CONSTRAINT app_setting_translation_pk PRIMARY KEY ( app_setting_id,
+                                                        language_id)
+);
+
+GRANT SELECT ON app_portfolio.app_setting_translation TO role_app_common;
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting_translation TO role_app_admin;
+                    
+CREATE TABLE app_portfolio.app_setting_type (
+    app_setting_type_name   VARCHAR(100) NOT NULL,
+    app_id                  INTEGER NOT NULL,
+    CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_setting_type_name,
+                                                 app_id )
+);
+
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting_type TO role_app_admin;
+
+GRANT SELECT ON app_portfolio.app_setting_type TO role_app_common;
 
 CREATE TABLE app_portfolio.country (
     id            INT NOT NULL AUTO_INCREMENT,
@@ -442,45 +483,6 @@ CREATE TABLE app_portfolio.profile_search (
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO role_app_admin;
 
 GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app_common;
-
-CREATE TABLE app_portfolio.setting (
-    id              INT NOT NULL AUTO_INCREMENT,
-    description     VARCHAR(500) NOT NULL,
-    data            VARCHAR(500) NOT NULL,
-    data2           VARCHAR(500),
-    data3           VARCHAR(500),
-    data4           VARCHAR(500),
-    data5           VARCHAR(500),
-    setting_type_id INTEGER NOT NULL,
-    CONSTRAINT setting_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON app_portfolio.setting TO role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting TO role_app_admin;
-
-CREATE TABLE app_portfolio.setting_translation (
-    setting_id  INTEGER NOT NULL,
-    language_id INTEGER NOT NULL,
-    text        VARCHAR(2000) NOT NULL,
-    CONSTRAINT setting_translation_pk PRIMARY KEY ( setting_id,
-                                                    language_id)
-);
-
-GRANT SELECT ON app_portfolio.setting_translation TO role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting_translation TO role_app_admin;
-                    
-CREATE TABLE app_portfolio.setting_type (
-    id                          INT NOT NULL AUTO_INCREMENT,
-    setting_type_name           VARCHAR(100) NOT NULL,
-    app_id                      INTEGER NOT NULL,
-    CONSTRAINT setting_type_pk PRIMARY KEY ( id )
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.setting_type TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.setting_type TO role_app_common;
 	
 CREATE TABLE app_portfolio.user_account (
     id                    INT NOT NULL AUTO_INCREMENT,
@@ -521,9 +523,9 @@ CREATE TABLE app_portfolio.user_account_app (
     user_account_id                                   INTEGER NOT NULL,
     app_id                                            INTEGER NOT NULL,
     preference_locale                                 VARCHAR(100),
-    setting_preference_timezone_id                    INTEGER,
-    setting_preference_direction_id                   INTEGER,
-    setting_preference_arabic_script_id               INTEGER,
+    app_setting_preference_timezone_id                INTEGER,
+    app_setting_preference_direction_id               INTEGER,
+    app_setting_preference_arabic_script_id           INTEGER,
     date_created                                      DATETIME NOT NULL,
     CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                  app_id
@@ -688,8 +690,10 @@ ALTER TABLE app_portfolio.app_object_item
                                               app_id );
 
 ALTER TABLE app_portfolio.app_object_item
-    ADD CONSTRAINT app_object_item_setting_type_fk FOREIGN KEY ( setting_type_id )
-        REFERENCES app_portfolio.setting_type ( id );
+    ADD CONSTRAINT app_object_item_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
+                                                                     app_setting_type_app_id )
+        REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
+                                                    app_id );
 
 ALTER TABLE app_portfolio.app_object_item_subitem
     ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
@@ -748,6 +752,24 @@ ALTER TABLE app_portfolio.app_screenshot
                                                               app_device_device_id )
         REFERENCES app_portfolio.app_device ( app_id,
                                               device_id );
+
+ALTER TABLE app_portfolio.app_setting
+    ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
+                                                             app_setting_type_app_id )
+        REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
+                                                    app_id );
+
+ALTER TABLE app_portfolio.app_setting_translation
+    ADD CONSTRAINT app_setting_translation_language_fk FOREIGN KEY ( language_id )
+        REFERENCES app_portfolio.language ( id );
+
+ALTER TABLE app_portfolio.app_setting_translation
+    ADD CONSTRAINT app_setting_translation_setting_fk FOREIGN KEY ( app_setting_id )
+        REFERENCES app_portfolio.app_setting ( id );
+
+ALTER TABLE app_portfolio.app_setting_type
+    ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
+        REFERENCES app_portfolio.app ( id );
 
 ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
@@ -814,37 +836,26 @@ ALTER TABLE app_portfolio.profile_search
         REFERENCES app_portfolio.user_account ( id )
         ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.setting
-    ADD CONSTRAINT setting_setting_type_fk FOREIGN KEY ( setting_type_id )
-        REFERENCES app_portfolio.setting_type ( id );
-
-ALTER TABLE app_portfolio.setting_type
-    ADD CONSTRAINT setting_type_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
-
-ALTER TABLE app_portfolio.setting_translation
-    ADD CONSTRAINT setting_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES app_portfolio.language ( id );
-
-ALTER TABLE app_portfolio.setting_translation
-    ADD CONSTRAINT setting_translation_setting_fk FOREIGN KEY ( setting_id )
-        REFERENCES app_portfolio.setting ( id );
-
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
         ON DELETE CASCADE;
+
+ALTER TABLE app_portfolio.user_account_app
+    ADD CONSTRAINT user_account_app_app_setting_arabic_script_fk FOREIGN KEY ( app_setting_preference_arabic_script_id )
+        REFERENCES app_portfolio.app_setting ( id );
+
+ALTER TABLE app_portfolio.user_account_app
+    ADD CONSTRAINT user_account_app_app_setting_direction_fk FOREIGN KEY ( app_setting_preference_direction_id )
+        REFERENCES app_portfolio.app_setting ( id );
+
+ALTER TABLE app_portfolio.user_account_app
+    ADD CONSTRAINT user_account_app_app_setting_timezone_fk FOREIGN KEY ( app_setting_preference_timezone_id )
+        REFERENCES app_portfolio.app_setting ( id );
+
 ALTER TABLE app_portfolio.user_account
     ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
         REFERENCES app_portfolio.app_role ( id );
-
-ALTER TABLE app_portfolio.user_account_app
-    ADD CONSTRAINT user_account_app_setting_arabic_script_fk FOREIGN KEY ( setting_preference_arabic_script_id )
-        REFERENCES app_portfolio.setting ( id );
-
-ALTER TABLE app_portfolio.user_account_app
-    ADD CONSTRAINT user_account_app_setting_direction_fk FOREIGN KEY ( setting_preference_direction_id )
-        REFERENCES app_portfolio.setting ( id );
 
 ALTER TABLE app_portfolio.user_account_app_setting_like
     ADD CONSTRAINT user_account_app_setting_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
@@ -857,10 +868,6 @@ ALTER TABLE app_portfolio.user_account_app_setting_like
     ADD CONSTRAINT user_account_app_setting_like_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
         REFERENCES app_portfolio.user_account_app_setting ( id )
             ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.user_account_app
-    ADD CONSTRAINT user_account_app_setting_timezone_fk FOREIGN KEY ( setting_preference_timezone_id )
-        REFERENCES app_portfolio.setting ( id );
 
 ALTER TABLE app_portfolio.user_account_app_setting
     ADD CONSTRAINT user_account_app_setting_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,

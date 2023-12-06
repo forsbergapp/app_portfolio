@@ -445,7 +445,7 @@ const isToday = checkdate => {
  * @returns {Promise.<null>}
  */
 const set_prayer_method = async(app_id, locale) => {
-    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting.service.js`);
+    const { getSettings } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
 	return new Promise( (resolve, reject) => {
 		/* see more in PrayTimes module
 		original

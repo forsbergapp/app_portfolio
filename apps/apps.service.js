@@ -226,13 +226,13 @@ const render_common_html = async (app_id, module, app_config) =>{
         });
     }
     if (app_config.render_settings){
-        const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/setting.service.js`);
+        const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
         /** @type {Types.db_result_setting_getSettings[]}*/
-        const settings_db = await getSettings(app_id, app_config.locale, null);
+        const app_settings_db = await getSettings(app_id, app_config.locale, null);
         let option;
-        for (const setting of settings_db) {
-            option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
-            switch (setting.setting_type_name){
+        for (const app_setting of app_settings_db) {
+            option = `<option id=${app_setting.id} value='${app_setting.data}'>${app_setting.text}</option>`;
+            switch (app_setting.app_setting_type_name){
                 //static content
                 case 'TIMEZONE':{
                     user_timezones += option;
@@ -250,18 +250,18 @@ const render_common_html = async (app_id, module, app_config) =>{
                 }
                 //map styles
                 case 'MAP_STYLE':{
-                    map_styles.push({  id:setting.id, 
-                                        description:setting.text, 
-                                        data:setting.data, 
-                                        data2:setting.data2, 
-                                        data3:setting.data3, 
-                                        data4:setting.data4, 
+                    map_styles.push({  id:app_setting.id, 
+                                        description:app_setting.text, 
+                                        data:app_setting.data, 
+                                        data2:app_setting.data2, 
+                                        data3:app_setting.data3, 
+                                        data4:app_setting.data4, 
                                         session_map_layer:null});
                     break;
                 }
             }
         }
-        settings = {settings: settings_db, 
+        settings = {settings: app_settings_db, 
                     user_timezones: user_timezones, 
                     user_directions: user_directions, 
                     user_arabic_scripts: user_arabic_scripts,

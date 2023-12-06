@@ -54,9 +54,9 @@ const getUserAccountApps = async (app_id, user_account_id) => {
  */
 const getUserAccountApp = async (app_id, user_account_id) => {
 		const sql = `SELECT preference_locale "preference_locale",
-							setting_preference_timezone_id "setting_preference_timezone_id",
-							setting_preference_direction_id "setting_preference_direction_id",
-							setting_preference_arabic_script_id "setting_preference_arabic_script_id",
+							app_setting_preference_timezone_id "app_setting_preference_timezone_id",
+							app_setting_preference_direction_id "app_setting_preference_direction_id",
+							app_setting_preference_arabic_script_id "app_setting_preference_arabic_script_id",
 							date_created "date_created"
 					   FROM ${db_schema()}.user_account_app
 					  WHERE user_account_id = :user_account_id
@@ -77,17 +77,17 @@ const getUserAccountApp = async (app_id, user_account_id) => {
 const updateUserAccountApp = async (app_id, user_account_id, data) => {
 		const sql = `UPDATE ${db_schema()}.user_account_app
 						SET preference_locale = :preference_locale,
-							setting_preference_timezone_id = :setting_preference_timezone_id,
-							setting_preference_direction_id = :setting_preference_direction_id,
-							setting_preference_arabic_script_id = :setting_preference_arabic_script_id,
+							app_setting_preference_timezone_id = :app_setting_preference_timezone_id,
+							app_setting_preference_direction_id = :app_setting_preference_direction_id,
+							app_setting_preference_arabic_script_id = :app_setting_preference_arabic_script_id,
 							date_created = CURRENT_TIMESTAMP
 					  WHERE user_account_id = :user_account_id
 						AND app_id = :app_id`;
 		const parameters = {
 						preference_locale: data.preference_locale,
-						setting_preference_timezone_id: data.setting_preference_timezone_id,
-						setting_preference_direction_id: data.setting_preference_direction_id,
-						setting_preference_arabic_script_id: data.setting_preference_arabic_script_id,
+						app_setting_preference_timezone_id: data.app_setting_preference_timezone_id,
+						app_setting_preference_direction_id: data.app_setting_preference_direction_id,
+						app_setting_preference_arabic_script_id: data.app_setting_preference_arabic_script_id,
 						user_account_id: user_account_id,
 						app_id: app_id
 						};

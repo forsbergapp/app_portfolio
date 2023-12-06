@@ -6,12 +6,12 @@ INSERT INTO app_portfolio.app (id, enabled, app_category_id) VALUES (1, 1, 1);
 --
 -- setting_type
 --
-INSERT INTO app_portfolio.setting_type (id, setting_type_name, app_id) VALUES (100, 'APP_THEME', 1);
+INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('APP_THEME', 1);
 --
 -- setting
 --
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Sun','sun',NULL,NULL,NULL,NULL,100);
-INSERT INTO app_portfolio.setting (description, data, data2, data3, data4, data5, setting_type_id) VALUES ('Moon','moon',NULL,NULL,NULL,NULL,100);
+INSERT INTO app_portfolio.app_setting (description, data, data2, data3, data4, data5, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES ('Sun','sun',NULL,NULL,NULL,NULL,'APP_THEME', 1);
+INSERT INTO app_portfolio.app_setting (description, data, data2, data3, data4, data5, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES ('Moon','moon',NULL,NULL,NULL,NULL,'APP_THEME', 1);
 --
 -- app_object
 --
