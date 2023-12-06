@@ -351,7 +351,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_DELETE':{
-                    resolve(db_database.Uninstall(app_id));
+                    resolve(db_database.Uninstall(app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/PARAMETERS_GET':{
@@ -395,11 +395,11 @@ const COMMON = {
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
-                    resolve(db_database.DemoInstall(app_id, data));
+                    resolve(db_database.DemoInstall(app_id, query, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_DELETE':{
-                    resolve(db_database.DemoUninstall(app_id));
+                    resolve(db_database.DemoUninstall(app_id, query));
                     break;
                 }
                 case 'ADMIN_APP_/APPS/ADMIN_GET':{

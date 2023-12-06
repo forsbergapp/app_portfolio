@@ -2795,13 +2795,13 @@ const show_installation = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         const old_html = document.querySelector('#install_db_button_install').innerHTML;
                         document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
-                        const path = `/systemadmin/install?optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
+                        const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
                         common.FFB ('DB_API', path, 'POST', 'SYSTEMADMIN', null, (err, result) => {
                             document.querySelector('#install_db_button_install').innerHTML = old_html;
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.add('installed');
                                 const result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+                                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
                     };
@@ -2809,12 +2809,12 @@ const show_installation = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         const old_html = document.querySelector('#install_db_button_uninstall').innerHTML;
                         document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/systemadmin/install?', 'DELETE', 'SYSTEMADMIN', null, (err, result) => {
+                        common.FFB ('DB_API', `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'SYSTEMADMIN', null, (err, result) => {
                             document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
                             if (err == null){
                                 document.querySelector('#install_db_icon').classList.remove('installed');
                                 const result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+                                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
                     };
@@ -2860,11 +2860,11 @@ const show_installation = () =>{
                         const json_data = {demo_password: document.querySelector('#install_demo_password').value};
                         const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                         document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', '/admin/demo?', 'POST', 'ACCESS', json_data, (err, result) => {
+                        common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'ACCESS', json_data, (err, result) => {
                             document.querySelector('#install_demo_button_install').innerHTML = old_html;
                             if (err == null){
                                 const result_obj = JSON.parse(result);
-                                common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+                                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                             }
                         });
                     }
@@ -2873,11 +2873,11 @@ const show_installation = () =>{
                 case 'install_demo_button_uninstall':{
                     const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
                     document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', '/admin/demo?', 'DELETE', 'ACCESS', null, (err, result) => {
+                    common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'ACCESS', null, (err, result) => {
                         document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
                         if (err == null){
                             const result_obj = JSON.parse(result);
-                            common.show_message('INFO', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+                            common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
                         }
                     });
                     break;

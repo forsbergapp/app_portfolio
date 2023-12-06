@@ -111,7 +111,7 @@ const ClientAdd = (newClient) => {
         }
     }
     else
-        if (broadcast_type=='CHAT'){
+        if (broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
             //broadcast CHAT to specific client
             for (const client of CONNECTED_CLIENTS){
                 if (client.id == client_id){
@@ -231,7 +231,7 @@ const ClientAdd = (newClient) => {
  * @param {string} broadcast_message
  */
  const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
-    if (broadcast_type=='INFO' || broadcast_type=='CHAT'){
+    if (broadcast_type=='INFO' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
         //admin can only broadcast INFO or CHAT
         if (broadcast_type=='INFO'){
             for (const client of CONNECTED_CLIENTS){
@@ -242,7 +242,7 @@ const ClientAdd = (newClient) => {
                     }
             }
         }
-        if (broadcast_type=='CHAT'){
+        if (broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
             //broadcast CHAT to specific client
             for (const client of CONNECTED_CLIENTS){
                 if (client.id == client_id){

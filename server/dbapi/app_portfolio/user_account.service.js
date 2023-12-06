@@ -1013,7 +1013,8 @@ const getUserRoleAdmin = async (app_id, user_account_id, dba) => {
  * @returns {Promise.<Types.db_result_user_account_getDemousers[]>}
  */
 const getDemousers = async app_id => {
-	const sql = `SELECT id "id"
+	const sql = `SELECT id "id",
+						username "username"	
 					FROM ${db_schema()}.user_account
 				WHERE user_level = :demo_level`;
 	const parameters ={
