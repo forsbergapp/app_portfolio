@@ -2454,9 +2454,9 @@ const user_preference_save = async () => {
         const json_data =
             {  
                 preference_locale: document.querySelector('#common_user_locale_select').value,
-                setting_preference_timezone_id: document.querySelector('#common_user_timezone_select').options[document.querySelector('#common_user_timezone_select').selectedIndex].id,
-                setting_preference_direction_id: document.querySelector('#common_user_direction_select').options[document.querySelector('#common_user_direction_select').selectedIndex].id,
-                setting_preference_arabic_script_id: document.querySelector('#common_user_arabic_script_select').options[document.querySelector('#common_user_arabic_script_select').selectedIndex].id
+                app_setting_preference_timezone_id: document.querySelector('#common_user_timezone_select').options[document.querySelector('#common_user_timezone_select').selectedIndex].id,
+                app_setting_preference_direction_id: document.querySelector('#common_user_direction_select').options[document.querySelector('#common_user_direction_select').selectedIndex].id,
+                app_setting_preference_arabic_script_id: document.querySelector('#common_user_arabic_script_select').options[document.querySelector('#common_user_arabic_script_select').selectedIndex].id
             };
         await FFB ('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'ACCESS', json_data, (err) => {
             if (err)
@@ -2482,18 +2482,18 @@ const user_preference_get = async (callBack) => {
                 COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
             }
             //timezone
-            if (user_account_app.setting_preference_timezone_id==null){
+            if (user_account_app.app_setting_preference_timezone_id==null){
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(user_account_app.setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
+                SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
                 COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
             }
             //direction
-            SearchAndSetSelectedIndex(user_account_app.setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
             COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
             //arabic script
-            SearchAndSetSelectedIndex(user_account_app.setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
             COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
             user_preferences_update_select();
             return callBack(null, null);

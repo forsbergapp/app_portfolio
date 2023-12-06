@@ -10,19 +10,19 @@ const {render_app_with_data, render_app_html} = await import(`file://${process.c
  * Get themes
  * @param {number} app_id
  * @param {string} locale
- * @param {Types.db_result_setting_getSettings[]} settings
+ * @param {Types.db_result_setting_getSettings[]} app_settings
  * @returns {[string|null,string|null,string|null]}
  */
-const themes = (app_id, locale, settings) =>{
+const themes = (app_id, locale, app_settings) =>{
     let theme_found = false;
     let span_themes_day ='', span_themes_month='', span_themes_year='';
     //get themes and save result in three theme variables
-    for (const setting of settings.filter(setting=>setting.app_id == app_id && setting.setting_type_name.startsWith('REPORT_THEME'))){        
+    for (const app_setting of app_settings.filter(setting=>setting.app_id == app_id && setting.app_setting_type_name.startsWith('REPORT_THEME'))){        
         if (theme_found==false){
             theme_found = true;
         }
         let theme_type;
-        switch (setting.setting_type_name){
+        switch (app_setting.app_setting_type_name){
             case 'REPORT_THEME_BASIC_DAY':
             case 'REPORT_THEME_PREMIUM_DAY':{
                 theme_type = 'day';
@@ -40,11 +40,11 @@ const themes = (app_id, locale, settings) =>{
             }
         }
         const new_span = `<span class="slide slide_${theme_type}">
-                            <div id='theme_${theme_type}_${setting.data}'
-                                data-theme_id='${setting.data}'> 
+                            <div id='theme_${theme_type}_${app_setting.data}'
+                                data-theme_id='${app_setting.data}'> 
                             </div>
                         </span>`;
-        switch (setting.setting_type_name){
+        switch (app_setting.app_setting_type_name){
             case 'REPORT_THEME_BASIC_DAY':{
                 span_themes_day += new_span;
                 break;
@@ -80,14 +80,14 @@ const themes = (app_id, locale, settings) =>{
  * Get places
  * @param {number} app_id
  * @param {string} locale
- * @param {Types.db_result_setting_getSettings[]} settings
+ * @param {Types.db_result_setting_getSettings[]} app_settings
  * @returns {string}
  */
-const places = (app_id, locale, settings) => {
+const places = (app_id, locale, app_settings) => {
     let select_places = '';
     let place_found = false;
     let i = 0;
-    for (const setting of settings.filter(setting=>setting.app_id==app_id && setting.setting_type_name=='PLACE')){
+    for (const app_setting of app_settings.filter(setting=>setting.app_id==app_id && setting.app_setting_type_name=='PLACE')){
         if (place_found==false){
             place_found = true;
             select_places  =`<select id='setting_select_popular_place'>
@@ -100,10 +100,10 @@ const places = (app_id, locale, settings) => {
         //data 5 = icon
         select_places +=
         `<option  value='${i}' 
-                    id='${setting.data}' 
-                    latitude='${setting.data2}' 
-                    longitude='${setting.data3}' 
-                    timezone='${setting.data4}'>${setting.data5} ${setting.text}
+                    id='${app_setting.data}' 
+                    latitude='${app_setting.data2}' 
+                    longitude='${app_setting.data3}' 
+                    timezone='${app_setting.data4}'>${app_setting.data5} ${app_setting.text}
             </option>`;
     }
     if (place_found){
@@ -187,7 +187,7 @@ const createApp = (app_id, username, locale) => {
                     let option;
                     for (const setting of app.settings.settings) {
                         option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
-                        switch (setting.setting_type_name){
+                        switch (setting.app_setting_type_name){
                             case 'TIMEZONE':{
                                 USER_TIMEZONE += option;
                                 break;

@@ -15,9 +15,9 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const update = (app_id, query, data) => {
     return new Promise((resolve, reject)=> {
         /**@type{Types.db_parameter_user_account_app_updateUserAccountApp} */
-        const data_update = {	setting_preference_direction_id: 	getNumberValue(data.setting_preference_direction_id),
-                                setting_preference_arabic_script_id:getNumberValue(data.setting_preference_arabic_script_id),
-                                setting_preference_timezone_id: 	getNumberValue(data.setting_preference_timezone_id),
+        const data_update = {	app_setting_preference_direction_id: 	getNumberValue(data.app_setting_preference_direction_id),
+                                app_setting_preference_arabic_script_id:getNumberValue(data.app_setting_preference_arabic_script_id),
+                                app_setting_preference_timezone_id: 	getNumberValue(data.app_setting_preference_timezone_id),
                                 preference_locale:					data.preference_locale
         };
         service.updateUserAccountApp(app_id, getNumberValue(query.get('PATCH_ID')), data_update)
@@ -77,9 +77,9 @@ const getUserAccountApps = async (app_id, query) => {
 const updateUserAccountApp = (app_id, query, data) => {
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_app_updateUserAccountApp} */
-        const data_update = {	setting_preference_direction_id: 	getNumberValue(data.setting_preference_direction_id),
-                                setting_preference_arabic_script_id:getNumberValue(data.setting_preference_arabic_script_id),
-                                setting_preference_timezone_id: 	getNumberValue(data.setting_preference_timezone_id),
+        const data_update = {	app_setting_preference_direction_id: 	getNumberValue(data.app_setting_preference_direction_id),
+                                app_setting_preference_arabic_script_id:getNumberValue(data.app_setting_preference_arabic_script_id),
+                                app_setting_preference_timezone_id: 	getNumberValue(data.app_setting_preference_timezone_id),
                                 preference_locale:					data.preference_locale
                             };
         service.updateUserAccountApp(app_id, getNumberValue(query.get('PATCH_ID')), data_update)
