@@ -447,7 +447,7 @@ const COMMON = {
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT_APP_PATCH':{
-                    resolve(db_user_account_app.update(app_id, ip, user_agent, accept_language, host, query, data));
+                    resolve(db_user_account_app.update(app_id, query, data));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_GET':{
