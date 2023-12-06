@@ -349,6 +349,7 @@ const install_db_get_files = async (json_type) =>{
     const user_account_app_setting_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
     const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
     const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
+    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     const fs = await import('node:fs');
     const install_result = [];
     install_result.push({'start': new Date().toISOString()});
@@ -720,6 +721,7 @@ const install_db_get_files = async (json_type) =>{
     install_result.push({'user_account_setting_like': records_user_account_setting_like});
     install_result.push({'user_account_setting_view': records_user_account_setting_view});
     install_result.push({'finished': new Date().toISOString()});
+    LogServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {'info': install_result};
 };
 /**
@@ -729,7 +731,9 @@ const install_db_get_files = async (json_type) =>{
  */
 const DemoUninstall = async (app_id, query)=> {
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
-	import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getDemousers, deleteUser})=>{
+    const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
+	const {getDemousers, deleteUser} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
+    return new Promise((resolve, reject)=>{
         getDemousers(app_id)
         .then((/**@type{Types.db_result_user_account_getDemousers[]}*/result_demo_users) =>{
             let deleted_user = 0;
@@ -741,7 +745,7 @@ const DemoUninstall = async (app_id, query)=> {
                         .then(()=>{
                             deleted_user++;
                             if (deleted_user == result_demo_users.length)
-                            return null;
+                                return null;
                         })
                         .catch((/**@type{Types.error}*/error)=>{
                             throw error;
@@ -750,19 +754,23 @@ const DemoUninstall = async (app_id, query)=> {
                 };
                 delete_users()
                 .then(()=>{
-                    return {'info': [{'count': deleted_user}]};
+                    LogServerI(`Demo uninstall count: ${deleted_user}`);
+                    resolve({'info': [{'count': deleted_user}]});
                 })
                 .catch((/**@type{Types.error}*/error)=>{
-                    throw error;
+                    reject(error);
                 });
             }
-            else
-                return {'info': [{'count': result_demo_users.length}]};
+            else{
+                LogServerI(`Demo uninstall count: ${result_demo_users.length}`);
+                resolve({'info': [{'count': result_demo_users.length}]});
+            }
         })
         .catch((/**@type{Types.error}*/error)=>{
-            throw error;
+            reject(error);
         });
-	});
+    });
+    
 };
 
 /**
