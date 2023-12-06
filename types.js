@@ -1399,7 +1399,7 @@
  *              email:string}} db_result_user_account_getEmailUser
  * @typedef {{  app_role_id:number,
  *              icon:string}} db_result_user_account_getUserRoleAdmin
- * @typedef {{  id:number}} db_result_user_account_getDemousers 
+ * @typedef {{  id:number, username:string}} db_result_user_account_getDemousers 
  * USER ACCOUNT APP
  * @typedef {   db_result_insert} db_result_user_account_app_createUserAccountApp
  * @typedef {{  app_id:number,

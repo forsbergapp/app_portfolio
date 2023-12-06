@@ -832,26 +832,42 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
     }
     return null;   
 };
-
-const show_message = (message_type, code, function_event, message_text='', data_app_id=null) => {
+/**
+ * 
+ * @param {'ERROR'|'INFO'|'EXCEPTION'|'CONFIRM'|'PROGRESS'} message_type 
+ * @param {string} code 
+ * @param {function} function_event 
+ * @param {string|{part: number, total:number, text:string}} message 
+ * @param {*} data_app_id 
+ */
+const show_message = (message_type, code, function_event, message=null, data_app_id=null) => {
     const confirm_question = document.querySelector('#common_confirm_question');
+    const progressbar = document.querySelector('#common_message_progressbar');
+    const progressbar_wrap = document.querySelector('#common_message_progressbar_wrap');
     const message_title = document.querySelector('#common_message_title');
     const dialogue = document.querySelector('#common_dialogue_message');
     const old_close = document.querySelector('#common_message_close');
     const button_cancel = document.querySelector('#common_message_cancel');
     const function_close = () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden';};
+    const fontsize_normal = '1em';
+    const fontsize_log = '0.5em';
     const show = 'inline-block';
     const hide = 'none';
     //this removes old eventlistener
     const button_close = old_close.cloneNode(true);
+    
     old_close.parentNode.replaceChild(button_close, old_close);
     //INFO, ERROR, CONFIRM, EXCEPTION
     switch (message_type){
         case 'ERROR':{
             FFB ('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'DATA', null, (err, result) => {
                 confirm_question.style.display = hide;
-                button_cancel.style.display = hide;
                 message_title.style.display = show;
+                message_title.style.fontSize = fontsize_normal;
+                progressbar.style.display = hide;
+                progressbar_wrap.style.display = hide;
+                button_cancel.style.display = hide;
+                button_close.style.display = show;
                 if(err)
                     message_title.innerHTML = err;
                 else
@@ -864,9 +880,13 @@ const show_message = (message_type, code, function_event, message_text='', data_
         }
         case 'INFO':{
             confirm_question.style.display = hide;
-            button_cancel.style.display = hide;
             message_title.style.display = show;
-            message_title.innerHTML = message_text;
+            message_title.style.fontSize = fontsize_normal;
+            message_title.innerHTML = message;
+            progressbar.style.display = hide;
+            progressbar_wrap.style.display = hide;
+            button_cancel.style.display = hide;
+            button_close.style.display = show;
             button_close.addEventListener('click', function_close, false);
             dialogue.style.visibility = 'visible';
             button_close.focus();
@@ -874,32 +894,36 @@ const show_message = (message_type, code, function_event, message_text='', data_
         }
         case 'EXCEPTION':{
             confirm_question.style.display = hide;
-            button_cancel.style.display = hide;
             message_title.style.display = show;
+            message_title.style.fontSize = fontsize_normal;
+            progressbar.style.display = hide;
+            progressbar_wrap.style.display = hide;
+            button_cancel.style.display = hide;
+            button_close.style.display = show;
             try {
                 // dont show code or errno returned from json
-                if (typeof JSON.parse(message_text).message !== 'undefined'){
+                if (typeof JSON.parse(message).message !== 'undefined'){
                     // message from Node controller.js and service.js files
-                    message_title.innerHTML= JSON.parse(message_text).message;
+                    message_title.innerHTML= JSON.parse(message).message;
                 }
                 else{
                     //message from Mysql, code + sqlMessage
-                    if (typeof JSON.parse(message_text).sqlMessage !== 'undefined')
-                        message_title.innerHTML= 'DB Error: ' + JSON.parse(message_text).sqlMessage;
+                    if (typeof JSON.parse(message).sqlMessage !== 'undefined')
+                        message_title.innerHTML= 'DB Error: ' + JSON.parse(message).sqlMessage;
                     else{
                         //message from Oracle, errorNum, offset
-                        if (typeof JSON.parse(message_text).errorNum !== 'undefined')
-                            message_title.innerHTML= 'DB Error: ' + message_text;
+                        if (typeof JSON.parse(message).errorNum !== 'undefined')
+                            message_title.innerHTML= 'DB Error: ' + message;
                         else{
-                            message_text = message_text.replace('<pre>','');
-                            message_text = message_text.replace('</pre>','');
-                            message_title.innerHTML= message_text;
+                            message = message.replace('<pre>','');
+                            message = message.replace('</pre>','');
+                            message_title.innerHTML= message;
                         }
                     }    
                 }
             } catch (e) {
                 //other error and json not returned, return the whole text
-                message_title.innerHTML = message_text;
+                message_title.innerHTML = message;
             }
             button_close.addEventListener('click', function_close, false);
             dialogue.style.visibility = 'visible';
@@ -908,12 +932,43 @@ const show_message = (message_type, code, function_event, message_text='', data_
         }
         case 'CONFIRM':{
             confirm_question.style.display = show;
-            button_cancel.style.display = show;
             message_title.style.display = hide;
+            message_title.style.fontSize = fontsize_normal;
             message_title.innerHTML = '';
+            progressbar.style.display = hide;
+            progressbar_wrap.style.display = hide;
+            button_cancel.style.display = show;
+            button_close.style.display = show;
             button_close.addEventListener('click', function_event, false);
             dialogue.style.visibility = 'visible';
             button_close.focus();
+            break;
+        }
+        case 'LOG':{
+            confirm_question.style.display = hide;
+            message_title.style.display = show;
+            message_title.style.fontSize = fontsize_log;
+            message_title.innerHTML = message;
+            progressbar.style.display = hide;
+            progressbar_wrap.style.display = hide;
+            button_cancel.style.display = hide;
+            button_close.style.display = show;
+            button_close.addEventListener('click', function_close, false);
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
+            break;
+        }
+        case 'PROGRESS':{
+            confirm_question.style.display = hide;
+            message_title.style.display = show;
+            message_title.style.fontSize = fontsize_log;
+            message_title.innerHTML = message.text;
+            progressbar.style.display = show;
+            progressbar_wrap.style.display = show;
+            progressbar.style.width = `${(message.part/message.total)*100}%`;
+            button_cancel.style.display = hide;
+            button_close.style.display = hide;
+            dialogue.style.visibility = 'visible';
             break;
         }
     }
@@ -3123,6 +3178,10 @@ const show_broadcast = (broadcast_message) => {
         case 'CHAT':
         case 'INFO':{
             show_broadcast_info(message);
+            break;
+        }
+		case 'PROGRESS':{
+			show_message('PROGRESS', null, null, JSON.parse(window.atob(message)));
             break;
         }
     }

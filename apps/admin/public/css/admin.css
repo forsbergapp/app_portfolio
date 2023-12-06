@@ -1486,6 +1486,12 @@ a:hover, a:active {
 .common_toolbar_button{
 	color: var(--app_theme_text_color) !important;
 }
+#common_message_progressbar_wrap{
+	border-color: var(--app_theme_main_branding_color1) !important;
+}
+#common_message_progressbar{
+	background-color: var(--app_theme_main_branding_color1);
+}
 .common_dialogue_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
