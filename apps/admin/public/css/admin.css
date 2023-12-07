@@ -976,7 +976,15 @@ ul#admin_login_nav li{
 .list_server_app_log_col:nth-child(2){
 	width:30px;
 }
-
+.list_server_app_log_col:nth-child(3){
+	width:120px;
+}
+.list_server_app_log_col:nth-child(4){
+	width:90px;
+}
+.list_server_app_log_col:nth-child(5){
+	width:20px;
+}
 .list_service_log_col:nth-child(2){
 	width:30px;
 }

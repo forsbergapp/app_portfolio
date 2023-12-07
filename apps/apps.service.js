@@ -757,6 +757,9 @@ const getModule = async (app_id, module_config, callBack) =>{
     //Data token
     const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
     const { BFF } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const { LogAppI } = await import(`file://${process.cwd()}/server/log.service.js`);
+    const { COMMON } = await import(`file://${process.cwd()}/server/server.service.js`);
+    await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '1 ' + new Date().toISOString());
     const datatoken = CreateDataToken(app_id);
     //get GPS from IP
     
@@ -781,6 +784,7 @@ const getModule = async (app_id, module_config, callBack) =>{
         result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
         result_geodata.timezone = null;
     }
+    await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '2 ' +new Date().toISOString());
     /** @type {number} */
     let system_admin_only;
     /** @type {string} */
@@ -827,8 +831,10 @@ const getModule = async (app_id, module_config, callBack) =>{
     else{
         system_admin_only = 0;
         if (module_config.module_type=='APP'){
+            await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '3 ' +new Date().toISOString());
             const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
             app = await createApp(app_id, module_config.params, client_locale(module_config.accept_language));
+            await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '4 ' +new Date().toISOString());
             if (app.app == null)
                 return callBack(null, null);
             app_module_type = 'APP';
@@ -838,6 +844,7 @@ const getModule = async (app_id, module_config, callBack) =>{
             //get translation data
             const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
             const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP', null);
+            await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '5 ' +new Date().toISOString());
             for (const row of result_objects){
                 render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
             }
@@ -897,6 +904,7 @@ const getModule = async (app_id, module_config, callBack) =>{
             return callBack(null, module);
     };
     if (module_config.module_type=='APP'){
+        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '6 ' +new Date().toISOString());
         get_module_with_init({  app_id:             app_id, 
                                 locale:             client_locale(module_config.accept_language),
                                 system_admin_only:  system_admin_only,
