@@ -358,18 +358,13 @@ const toBase64 = (str) => {
 const fromBase64 = (str) => {
     return decodeURIComponent(escape(window.atob(str)));
 };
-const common_translate_ui = async (lang_code, object = null, callBack) => {
-    let object_parameter;
+const common_translate_ui = async (lang_code, callBack) => {
     let path='';
-    if  (object==null)
-        object_parameter ='';
-    else
-        object_parameter = `object=${object}`;
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-        path = `/app_object/admin?data_lang_code=${lang_code}&${object_parameter}`;
+        path = `/app_object/admin?data_lang_code=${lang_code}&object_name=APP`;
     }
     else{
-        path = `/app_object?data_lang_code=${lang_code}&${object_parameter}`;
+        path = `/app_object?data_lang_code=${lang_code}&object_name=APP`;
     }
     //translate objects
     await FFB ('DB_API', path, 'GET', 'DATA', null, (err, result) => {
@@ -378,73 +373,68 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
         else{
             const app_objects = JSON.parse(result);
             for (const app_object of app_objects){
-                switch (app_object.object){
-                    case 'APP_OBJECT_ITEM':{
-                        switch(app_object.object_name){
-                            case 'APP':{
-                                //translate common items
-                                switch  (app_object.object_item_name){
-                                    case 'USERNAME':{
-                                        document.querySelector('#common_login_username').placeholder = app_object.text;
-                                        document.querySelector('#common_signup_username').placeholder = app_object.text;
-                                        document.querySelector('#common_user_edit_input_username').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'EMAIL':{
-                                        document.querySelector('#common_signup_email').placeholder = app_object.text;
-                                        document.querySelector('#common_forgot_email').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'NEW_EMAIL':{
-                                        document.querySelector('#common_user_edit_input_new_email').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'BIO':{
-                                        document.querySelector('#common_user_edit_input_bio').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'PASSWORD':{
-                                        document.querySelector('#common_login_password').placeholder = app_object.text;
-                                        document.querySelector('#common_signup_password').placeholder = app_object.text;
-                                        document.querySelector('#common_user_edit_input_password').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'PASSWORD_CONFIRM':{
-                                        document.querySelector('#common_signup_password_confirm').placeholder = app_object.text;
-                                        document.querySelector('#common_user_edit_input_password_confirm').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'PASSWORD_REMINDER':{
-                                        document.querySelector('#common_signup_password_reminder').placeholder = app_object.text;
-                                        document.querySelector('#common_user_edit_input_password_reminder').placeholder = app_object.text;
-                                        break;
-                                    }
-                                    case 'NEW_PASSWORD_CONFIRM':{
-                                        document.querySelector('#common_user_edit_input_password_new_confirm').placeholder = app_object.text;
-                                        document.querySelector('#common_user_password_new_confirm').placeholder = app_object.text;    
-                                        break;
-                                    }
-                                    case 'NEW_PASSWORD':{
-                                        document.querySelector('#common_user_edit_input_password_new').placeholder = app_object.text;
-                                        document.querySelector('#common_user_password_new').placeholder = app_object.text;    
-                                        break;
-                                    }
-                                    case 'CONFIRM_QUESTION':{
-                                        document.querySelector('#common_confirm_question').innerHTML = app_object.text;
-                                        break;
-                                    }
-                                } 
+                switch (app_object.object_name){
+                    case 'APP':{
+                        //translate common items
+                        switch  (app_object.object_item_name){
+                            case 'USERNAME':{
+                                document.querySelector('#common_login_username').placeholder = app_object.text;
+                                document.querySelector('#common_signup_username').placeholder = app_object.text;
+                                document.querySelector('#common_user_edit_input_username').placeholder = app_object.text;
                                 break;
                             }
-                            case 'APP_LOV':{
-                                //translate items in select lists in current app
-                                const select_element = document.querySelector('#' + app_object.object_item_name.toLowerCase());
-                                for (let option_element = 0; option_element < select_element.options.length; option_element++){
-                                    if (select_element.options[option_element].id == app_object.id)
-                                        select_element.options[option_element].text = app_object.text;
-                                }
+                            case 'EMAIL':{
+                                document.querySelector('#common_signup_email').placeholder = app_object.text;
+                                document.querySelector('#common_forgot_email').placeholder = app_object.text;
                                 break;
                             }
+                            case 'NEW_EMAIL':{
+                                document.querySelector('#common_user_edit_input_new_email').placeholder = app_object.text;
+                                break;
+                            }
+                            case 'BIO':{
+                                document.querySelector('#common_user_edit_input_bio').placeholder = app_object.text;
+                                break;
+                            }
+                            case 'PASSWORD':{
+                                document.querySelector('#common_login_password').placeholder = app_object.text;
+                                document.querySelector('#common_signup_password').placeholder = app_object.text;
+                                document.querySelector('#common_user_edit_input_password').placeholder = app_object.text;
+                                break;
+                            }
+                            case 'PASSWORD_CONFIRM':{
+                                document.querySelector('#common_signup_password_confirm').placeholder = app_object.text;
+                                document.querySelector('#common_user_edit_input_password_confirm').placeholder = app_object.text;
+                                break;
+                            }
+                            case 'PASSWORD_REMINDER':{
+                                document.querySelector('#common_signup_password_reminder').placeholder = app_object.text;
+                                document.querySelector('#common_user_edit_input_password_reminder').placeholder = app_object.text;
+                                break;
+                            }
+                            case 'NEW_PASSWORD_CONFIRM':{
+                                document.querySelector('#common_user_edit_input_password_new_confirm').placeholder = app_object.text;
+                                document.querySelector('#common_user_password_new_confirm').placeholder = app_object.text;    
+                                break;
+                            }
+                            case 'NEW_PASSWORD':{
+                                document.querySelector('#common_user_edit_input_password_new').placeholder = app_object.text;
+                                document.querySelector('#common_user_password_new').placeholder = app_object.text;    
+                                break;
+                            }
+                            case 'CONFIRM_QUESTION':{
+                                document.querySelector('#common_confirm_question').innerHTML = app_object.text;
+                                break;
+                            }
+                        } 
+                        break;
+                    }
+                    case 'APP_LOV':{
+                        //translate items in select lists in current app
+                        const select_element = document.querySelector('#' + app_object.object_item_name.toLowerCase());
+                        for (let option_element = 0; option_element < select_element.options.length; option_element++){
+                            if (select_element.options[option_element].id == app_object.id)
+                                select_element.options[option_element].text = app_object.text;
                         }
                         break;
                     }   

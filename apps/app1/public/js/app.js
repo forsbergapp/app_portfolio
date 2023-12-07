@@ -64,7 +64,7 @@ const setEvents = () => {
     document.querySelector('#common_user_menu_dropdown_log_out').addEventListener('click', (event) => { user_menu_item_click(event.target); }, false);
     //user preferences
     document.querySelector('#app_theme_checkbox').addEventListener('click', () => { app_theme_switch(); }, false);
-    document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, null, ()=>{get_apps();});}, false);
+    document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, ()=>{get_apps();});}, false);
     document.querySelector('#common_user_arabic_script_select').addEventListener('change', () => { app_theme_switch();}, false);
     //common with app specific settings
     //dialogue profile
@@ -423,7 +423,7 @@ const init = (parameters) => {
         init_app().then(()=>{
             document.querySelector('#apps').innerHTML = common.APP_SPINNER;
             if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-                common.common_translate_ui(common.COMMON_GLOBAL.user_locale, null, ()=>{
+                common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{
                         get_apps();
                 });
             else

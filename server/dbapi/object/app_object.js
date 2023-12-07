@@ -8,9 +8,8 @@ const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio
 /**
  * 
  * @param {number} app_id 
- * @param {*} query 
- * @returns 
+ * @param {*} query
  */
-const getObjects = (app_id, query) => service.getObjects(app_id, query.get('data_lang_code'), query.get('object') ?? null, query.get('object_name') ?? null)
+const getObjects = (app_id, query) => service.getObjects(app_id, query.get('data_lang_code'), query.get('object_name'), query.get('object_item_name') ?? null)
                                         .catch((/**@type{Types.error}*/error)=>{throw error;});
 export {getObjects};
