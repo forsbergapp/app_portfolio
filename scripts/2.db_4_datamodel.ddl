@@ -740,6 +740,7 @@ ALTER TABLE app_portfolio.app_category_translation
 ALTER TABLE app_portfolio.app_device
     ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_device
@@ -750,11 +751,13 @@ ALTER TABLE app_portfolio.app_device
 ALTER TABLE app_portfolio.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_message
@@ -765,6 +768,7 @@ ALTER TABLE app_portfolio.app_message
 ALTER TABLE app_portfolio.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_object_item
@@ -772,6 +776,7 @@ ALTER TABLE app_portfolio.app_object_item
                                                                app_object_app_id )
         REFERENCES app_portfolio.app_object ( object_name,
                                               app_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_object_item
@@ -779,6 +784,7 @@ ALTER TABLE app_portfolio.app_object_item
                                                                      app_setting_type_app_id )
         REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
                                                     app_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_object_item_translation
@@ -788,6 +794,7 @@ ALTER TABLE app_portfolio.app_object_item_translation
         REFERENCES app_portfolio.app_object_item ( app_object_app_id,
                                                    app_object_object_name,
                                                    object_item_name )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_object_item_translation
@@ -800,6 +807,7 @@ ALTER TABLE app_portfolio.app_object_translation
                                                                       app_object_app_id )
         REFERENCES app_portfolio.app_object ( object_name,
                                               app_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_object_translation
@@ -810,6 +818,7 @@ ALTER TABLE app_portfolio.app_object_translation
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_parameter
@@ -822,6 +831,7 @@ ALTER TABLE app_portfolio.app_screenshot
                                                               app_device_device_id )
         REFERENCES app_portfolio.app_device ( app_id,
                                               device_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_setting
@@ -829,6 +839,7 @@ ALTER TABLE app_portfolio.app_setting
                                                                  app_setting_type_app_id )
         REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
                                                     app_id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_setting_translation
@@ -839,11 +850,13 @@ ALTER TABLE app_portfolio.app_setting_translation
 ALTER TABLE app_portfolio.app_setting_translation
     ADD CONSTRAINT app_setting_translation_setting_fk FOREIGN KEY ( app_setting_id )
         REFERENCES app_portfolio.app_setting ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.app_setting_type
     ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE
     NOT DEFERRABLE;
 
 ALTER TABLE app_portfolio.country

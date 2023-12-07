@@ -625,7 +625,8 @@ ALTER TABLE app_portfolio.app_category_translation
 
 ALTER TABLE app_portfolio.app_device
     ADD CONSTRAINT app_device_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_device
     ADD CONSTRAINT app_device_device_fk FOREIGN KEY ( device_id )
@@ -633,11 +634,13 @@ ALTER TABLE app_portfolio.app_device
 
 ALTER TABLE app_portfolio.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT app_message_message_fk FOREIGN KEY ( message_code )
@@ -645,19 +648,22 @@ ALTER TABLE app_portfolio.app_message
 
 ALTER TABLE app_portfolio.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_object_item
     ADD CONSTRAINT app_object_item_app_object_fk FOREIGN KEY ( app_object_object_name,
                                                                app_object_app_id )
         REFERENCES app_portfolio.app_object ( object_name,
-                                              app_id );
+                                              app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_object_item
     ADD CONSTRAINT app_object_item_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
                                                                      app_setting_type_app_id )
         REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
-                                                    app_id );
+                                                    app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_object_item_translation
     ADD CONSTRAINT app_object_item_translation_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
@@ -665,7 +671,8 @@ ALTER TABLE app_portfolio.app_object_item_translation
                                                                                 app_object_item_object_item_name )
         REFERENCES app_portfolio.app_object_item ( app_object_app_id,
                                                    app_object_object_name,
-                                                   object_item_name );
+                                                   object_item_name )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_object_item_translation
     ADD CONSTRAINT app_object_item_translation_language_fk FOREIGN KEY ( language_id )
@@ -675,7 +682,8 @@ ALTER TABLE app_portfolio.app_object_translation
     ADD CONSTRAINT app_object_translation_app_object_fk FOREIGN KEY ( app_object_object_name,
                                                                       app_object_app_id )
         REFERENCES app_portfolio.app_object ( object_name,
-                                              app_id );
+                                              app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_object_translation
     ADD CONSTRAINT app_object_translation_language_fk FOREIGN KEY ( language_id )
@@ -683,7 +691,8 @@ ALTER TABLE app_portfolio.app_object_translation
 
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_parameter_type_fk FOREIGN KEY ( parameter_type_id )
@@ -693,13 +702,15 @@ ALTER TABLE app_portfolio.app_screenshot
     ADD CONSTRAINT app_screenshot_app_device_fk FOREIGN KEY ( app_device_app_id,
                                                               app_device_device_id )
         REFERENCES app_portfolio.app_device ( app_id,
-                                              device_id );
+                                              device_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_setting
     ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
                                                              app_setting_type_app_id )
         REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
-                                                    app_id );
+                                                    app_id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_setting_translation
     ADD CONSTRAINT app_setting_translation_language_fk FOREIGN KEY ( language_id )
@@ -707,11 +718,13 @@ ALTER TABLE app_portfolio.app_setting_translation
 
 ALTER TABLE app_portfolio.app_setting_translation
     ADD CONSTRAINT app_setting_translation_setting_fk FOREIGN KEY ( app_setting_id )
-        REFERENCES app_portfolio.app_setting ( id );
+        REFERENCES app_portfolio.app_setting ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_setting_type
     ADD CONSTRAINT app_setting_type_app_fk FOREIGN KEY ( app_id )
-        REFERENCES app_portfolio.app ( id );
+        REFERENCES app_portfolio.app ( id )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
@@ -776,12 +789,12 @@ ALTER TABLE app_portfolio.parameter_type_translation
 ALTER TABLE app_portfolio.profile_search
     ADD CONSTRAINT profile_search_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES app_portfolio.user_account ( id )
-        ON DELETE CASCADE;
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
-        ON DELETE CASCADE;
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_setting_arabic_script_fk FOREIGN KEY ( app_setting_preference_arabic_script_id )
@@ -833,7 +846,7 @@ ALTER TABLE app_portfolio.user_account_app_setting_view
 ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES app_portfolio.user_account ( id )
-        ON DELETE CASCADE;
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_event
     ADD CONSTRAINT user_account_event_event_fk FOREIGN KEY ( event_id )
@@ -851,12 +864,12 @@ ALTER TABLE app_portfolio.user_account_event
 ALTER TABLE app_portfolio.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES app_portfolio.user_account ( id )
-		ON DELETE CASCADE;
+		    ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_follow
     ADD CONSTRAINT user_account_follow_user_account_follow_fk FOREIGN KEY ( user_account_id_follow )
         REFERENCES app_portfolio.user_account ( id )
-		ON DELETE CASCADE;
+		    ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account
     ADD CONSTRAINT user_account_identity_provider_fk FOREIGN KEY ( identity_provider_id )
@@ -865,12 +878,12 @@ ALTER TABLE app_portfolio.user_account
 ALTER TABLE app_portfolio.user_account_like
     ADD CONSTRAINT user_account_like_user_account_fk FOREIGN KEY ( user_account_id )
         REFERENCES app_portfolio.user_account ( id )
-		ON DELETE CASCADE;
+		    ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_like
     ADD CONSTRAINT user_account_like_user_account_like_fk FOREIGN KEY ( user_account_id_like )
         REFERENCES app_portfolio.user_account ( id )
-		ON DELETE CASCADE;
+		    ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_logon
     ADD CONSTRAINT user_account_logon_app_fk FOREIGN KEY ( app_id )
@@ -889,4 +902,4 @@ ALTER TABLE app_portfolio.user_account_view
 ALTER TABLE app_portfolio.user_account_view
     ADD CONSTRAINT user_account_view_user_account_view_fk FOREIGN KEY ( user_account_id_view )
         REFERENCES app_portfolio.user_account ( id )
-        ON DELETE CASCADE;
+            ON DELETE CASCADE;
