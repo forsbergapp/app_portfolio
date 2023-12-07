@@ -837,7 +837,7 @@ const getModule = async (app_id, module_config, callBack) =>{
             config_ui = true;
             //get translation data
             const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
-            const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP_OBJECT_ITEM', 'APP');
+            const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP', null);
             for (const row of result_objects){
                 render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
             }

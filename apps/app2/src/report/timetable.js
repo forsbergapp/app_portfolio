@@ -1157,7 +1157,7 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
 	const fetch_translation = async (locale, first) => {
 		//show translation using first or second language
 		/**@type{Types.db_result_app_object_getObjects[]} */
-		const result_app_object_items = await getObjects(app_id, locale, 'APP_OBJECT_ITEM', 'REPORT');	
+		const result_app_object_items = await getObjects(app_id, locale, 'REPORT', null);	
 		for (const app_object_item of result_app_object_items){
 			if (first == true)
 				REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
