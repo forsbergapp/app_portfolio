@@ -381,7 +381,7 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                 switch (app_object.object){
                     case 'APP_OBJECT_ITEM':{
                         switch(app_object.object_name){
-                            case 'COMMON':{
+                            case 'APP':{
                                 //translate common items
                                 switch  (app_object.object_item_name){
                                     case 'USERNAME':{
@@ -434,12 +434,6 @@ const common_translate_ui = async (lang_code, object = null, callBack) => {
                                         break;
                                     }
                                 } 
-                                break;
-                            }
-                            case 'APP':{
-                                //translate items in current app
-                                if (document.querySelector('#' + app_object.object_item_name.toLowerCase()))
-                                    document.querySelector('#' + app_object.object_item_name.toLowerCase()).innerHTML = app_object.text;
                                 break;
                             }
                             case 'APP_LOV':{

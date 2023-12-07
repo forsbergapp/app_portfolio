@@ -149,23 +149,6 @@ ALTER TABLE app_portfolio.app_object_item
                                                     app_object_object_name,
                                                     object_item_name );
 
-CREATE TABLE app_portfolio.app_object_item_subitem (
-    app_object_item_app_object_app_id      INTEGER NOT NULL,
-    app_object_item_app_object_object_name VARCHAR2(100) NOT NULL,
-    app_object_item_object_item_name       VARCHAR2(100) NOT NULL,
-    subitem_name                           VARCHAR2(100) NOT NULL
-);
-
-GRANT SELECT ON app_portfolio.app_object_item_subitem TO role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item_subitem TO role_app_admin;
-
-ALTER TABLE app_portfolio.app_object_item_subitem
-    ADD CONSTRAINT app_object_item_subitem_pk PRIMARY KEY ( subitem_name,
-                                                            app_object_item_app_object_app_id,
-                                                            app_object_item_app_object_object_name,
-                                                            app_object_item_object_item_name );
-
 CREATE TABLE app_portfolio.app_object_item_translation (
     app_object_item_app_object_app_id      INTEGER NOT NULL,
     app_object_item_app_object_object_name VARCHAR2(100) NOT NULL,
@@ -183,26 +166,6 @@ ALTER TABLE app_portfolio.app_object_item_translation
                                                                 app_object_item_app_object_app_id,
                                                                 app_object_item_app_object_object_name,
                                                                 app_object_item_object_item_name );
-
-CREATE TABLE app_portfolio.app_object_subitem_translation (
-    app_object_item_subitem_app_object_item_app_object_app_id      INTEGER NOT NULL,
-    app_object_item_subitem_app_object_item_app_object_object_name VARCHAR2(100) NOT NULL,
-    app_object_item_subitem_app_object_item_object_item_name       VARCHAR2(100) NOT NULL,
-    app_object_item_subitem_subitem_name                           VARCHAR2(100) NOT NULL,
-    language_id                                                    INTEGER NOT NULL,
-    text                                                           VARCHAR2(2000) NOT NULL
-);
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_subitem_translation TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.app_object_subitem_translation TO role_app_common;
-
-ALTER TABLE app_portfolio.app_object_subitem_translation
-    ADD CONSTRAINT app_object_subitem_translation_pk PRIMARY KEY ( language_id,
-                                                                   app_object_item_subitem_app_object_item_app_object_app_id,
-                                                                   app_object_item_subitem_app_object_item_app_object_object_name,
-                                                                   app_object_item_subitem_app_object_item_object_item_name,
-                                                                   app_object_item_subitem_subitem_name );
 
 CREATE TABLE app_portfolio.app_object_translation (
     app_object_app_id      INTEGER NOT NULL,
@@ -818,15 +781,6 @@ ALTER TABLE app_portfolio.app_object_item
                                                     app_id )
     NOT DEFERRABLE;
 
-ALTER TABLE app_portfolio.app_object_item_subitem
-    ADD CONSTRAINT app_object_item_subitem_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
-                                                                            app_object_item_app_object_object_name,
-                                                                            app_object_item_object_item_name )
-        REFERENCES app_portfolio.app_object_item ( app_object_app_id,
-                                                   app_object_object_name,
-                                                   object_item_name )
-    NOT DEFERRABLE;
-
 ALTER TABLE app_portfolio.app_object_item_translation
     ADD CONSTRAINT app_object_item_translation_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
                                                                                 app_object_item_app_object_object_name,
@@ -838,25 +792,6 @@ ALTER TABLE app_portfolio.app_object_item_translation
 
 ALTER TABLE app_portfolio.app_object_item_translation
     ADD CONSTRAINT app_object_item_translation_language_fk FOREIGN KEY ( language_id )
-        REFERENCES app_portfolio.language ( id )
-    NOT DEFERRABLE;
-
-ALTER TABLE app_portfolio.app_object_subitem_translation
-    ADD CONSTRAINT app_object_subitem_translation_app_object_item_subitem_fk FOREIGN KEY ( app_object_item_subitem_subitem_name,
-                                                                                           app_object_item_subitem_app_object_item_app_object_app_id
-                                                                                           ,
-                                                                                           app_object_item_subitem_app_object_item_app_object_object_name
-                                                                                           ,
-                                                                                           app_object_item_subitem_app_object_item_object_item_name
-                                                                                           )
-        REFERENCES app_portfolio.app_object_item_subitem ( subitem_name,
-                                                           app_object_item_app_object_app_id,
-                                                           app_object_item_app_object_object_name,
-                                                           app_object_item_object_item_name )
-    NOT DEFERRABLE;
-
-ALTER TABLE app_portfolio.app_object_subitem_translation
-    ADD CONSTRAINT app_object_subitem_translation_language_fk FOREIGN KEY ( language_id )
         REFERENCES app_portfolio.language ( id )
     NOT DEFERRABLE;
 
