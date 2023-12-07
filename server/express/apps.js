@@ -5,8 +5,11 @@ import * as Types from './../../types.js';
 
 const {ConfigGet, ConfigGetApps, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {app_start, getInfo, getApp, getReport, getMaintenance} = await import(`file://${process.cwd()}/apps/apps.service.js`);
+const { LogAppI } = await import(`file://${process.cwd()}/server/log.service.js`);
+const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 const fs = await import('node:fs');
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+
 /**
  * Returns parameters for apps
  * @param {Types.req} req 
@@ -113,46 +116,54 @@ const req_report_param = req =>{return{ reportid:               req.query.report
     });
     app.get('/reports',(/** @type{Types.req}*/req, /**@type {Types.res} */ res) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        if (app_id == 0){
-            res.statusCode = 503;
-            res.statusMessage = '';
-            res.send('');
-        }
-        else{
-            //const data = {...}
-            getReport(req_report_param(req), app_id, (/**@type{Types.error}*/err, /**@type{string}*/report_result)=>{
-                //redirect if any error
-                if (err){
-                    res.statusCode = 500;
-                    res.statusMessage = err;
-                    res.send(err.message);
-                }
-                else{
-                    if ((req.headers['content-type']) && req.headers['content-type'].startsWith('application/pdf')){
-                        res.type('application/pdf');
-                        res.send(report_result);
-                        //res.end(report_result, 'binary');
+        LogAppI(app_id, COMMON.app_filename(import.meta.url), 'app.get("/reports")', COMMON.app_line(), '1 ' + new Date().toISOString())
+        .then(()=>{
+            if (app_id == 0){
+                res.statusCode = 503;
+                res.statusMessage = '';
+                res.send('');
+                LogAppI(app_id, COMMON.app_filename(import.meta.url), 'app.get("/reports")', COMMON.app_line(), '2 ' + new Date().toISOString());
+            }
+            else{
+                //const data = {...}
+                getReport(req_report_param(req), app_id, (/**@type{Types.error}*/err, /**@type{string}*/report_result)=>{
+                    //redirect if any error
+                    if (err){
+                        res.statusCode = 500;
+                        res.statusMessage = err;
+                        res.send(err.message);
                     }
-                    else    
-                        res.send(report_result);
-                }
-                    
-            });
-        }
-            
+                    else{
+                        if ((req.headers['content-type']) && req.headers['content-type'].startsWith('application/pdf')){
+                            res.type('application/pdf');
+                            res.send(report_result);
+                            //res.end(report_result, 'binary');
+                        }
+                        else    
+                            res.send(report_result);
+                    }
+                    LogAppI(app_id, COMMON.app_filename(import.meta.url), 'app.get("/reports")', COMMON.app_line(), '2 ' + new Date().toISOString());
+                });
+            }
+        });
     });
     app.get('/',(/** @type{Types.req}*/req, /** @type{Types.res}*/res) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
-        getApp(req_app_param(req), app_id, null,(/**@type{Types.error}*/err, /**@type{string}*/app_result)=>{
-            //show empty if any error
-            if (err){
-                res.statusCode = 500;
-                res.statusMessage = err;
-                res.end();
-            }
-            else
-                res.send(app_result);
+        LogAppI(app_id, COMMON.app_filename(import.meta.url), 'app.get("/")', COMMON.app_line(), '1 ' + new Date().toISOString())
+        .then(()=>{
+            getApp(req_app_param(req), app_id, null,(/**@type{Types.error}*/err, /**@type{string}*/app_result)=>{
+                //show empty if any error
+                if (err){
+                    res.statusCode = 500;
+                    res.statusMessage = err;
+                    res.end();
+                }
+                else
+                    res.send(app_result);
+                LogAppI(app_id, COMMON.app_filename(import.meta.url), 'app.get("/")', COMMON.app_line(), '2 ' + new Date().toISOString());
+            });
         });
+        
     });
     app.get('/:sub',(/** @type{Types.req}*/req, /** @type{Types.res}*/res, /**@type{function}*/next) => {
         const app_id = ConfigGetApp(req.headers.host, 'SUBDOMAIN');
