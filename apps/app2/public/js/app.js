@@ -413,7 +413,7 @@ const slide = (items, prev, next, type) => {
 /* UI                     */
 /*----------------------- */
 const common_translate_ui_app = async (lang_code, callBack) => {
-    await common.common_translate_ui(lang_code, null, (err) => {
+    await common.common_translate_ui(lang_code, (err) => {
         if (err)
             callBack(err,null);
         else{
@@ -442,7 +442,7 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.FFB ('DB_API', `/app_object?data_lang_code=${locale}&object=APP_OBJECT_ITEM&object_name=REPORT`, 'GET', 'DATA', null, (err, result) => {
+        await common.FFB ('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'DATA', null, (err, result) => {
             if (err)
                 null;
             else{
