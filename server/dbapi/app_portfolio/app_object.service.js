@@ -75,26 +75,6 @@ const getObjects = async (app_id, lang_code, object, object_name) => {
 												 AND aoit1.app_object_item_app_object_object_name = aoi.app_object_object_name
 												 AND aoit1.app_object_item_object_item_name = aoi.object_item_name
 												 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
-											 )
-						UNION ALL
-						SELECT 'APP_OBJECT_ITEM_SUBITEM', aois.app_object_item_app_object_app_id app_id, aois.app_object_item_app_object_object_name object_name, aois.app_object_item_object_item_name object_item_name, aois.subitem_name, l.lang_code, null id, aost.text
-						  FROM ${db_schema()}.app_object_item_subitem aois,
-							   ${db_schema()}.app_object_subitem_translation aost,
-							   ${db_schema()}.language l
-						 WHERE l.id = aost.language_id
-						   AND aost.app_object_item_subitem_app_object_item_app_object_app_id = aois.app_object_item_app_object_app_id
-						   AND aost.app_object_item_subitem_app_object_item_app_object_object_name = aois.app_object_item_app_object_object_name
-						   AND aost.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
-						   AND aost.app_object_item_subitem_subitem_name = aois.subitem_name
-						   AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-												FROM ${db_schema()}.language l1,
-													 ${db_schema()}.app_object_subitem_translation aost1
-											   WHERE aost1.language_id = l1.id
-												 AND aost1.app_object_item_subitem_app_object_item_app_object_app_id = aois.app_object_item_app_object_app_id
-												 AND aost1.app_object_item_subitem_app_object_item_app_object_object_name = aois.app_object_item_app_object_object_name
-												 AND aost1.app_object_item_subitem_app_object_item_object_item_name = aois.app_object_item_object_item_name
-												 AND aost1.app_object_item_subitem_subitem_name = aois.subitem_name
-												 AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 											 )) t
 				WHERE   (t.app_id IN(:app_id, :common_app_id) OR t.object_name = 'APP_DESCRIPTION')
 					AND   ((t.object = :object) OR :object IS NULL)

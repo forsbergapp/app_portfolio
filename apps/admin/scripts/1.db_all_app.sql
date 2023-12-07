@@ -522,21 +522,21 @@ INSERT INTO app_portfolio.app_setting (description, data, data2, data3, data4, d
 --
 -- app_object
 --
-INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'COMMON');
+INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'APP');
 INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (0,'APP_DESCRIPTION');
 --
 -- app_object_item
 --
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','BIO',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','CONFIRM_QUESTION',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','EMAIL',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','NEW_EMAIL',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','NEW_PASSWORD',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','NEW_PASSWORD_CONFIRM',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','PASSWORD',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','PASSWORD_CONFIRM',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','PASSWORD_REMINDER',NULL,NULL);
-INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'COMMON','USERNAME',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','BIO',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','CONFIRM_QUESTION',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','EMAIL',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','NEW_EMAIL',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','NEW_PASSWORD',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','NEW_PASSWORD_CONFIRM',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','PASSWORD',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','PASSWORD_CONFIRM',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','PASSWORD_REMINDER',NULL,NULL);
+INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (0,'APP','USERNAME',NULL,NULL);
 --
 -- app_parameter
 --
