@@ -110,8 +110,8 @@ const COMMON = {
     const db_user_account = await import(`file://${process.cwd()}/server/dbapi/object/user_account.js`);
     //server db api object user account app
     const db_user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
-    //server db api object user account app setting
-    const db_user_account_app_setting = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_setting.js`);
+    //server db api object user account app data post
+    const db_user_account_app_data_post = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_data_post.js`);
         
     /**@type{*} */
     const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
@@ -190,20 +190,20 @@ const COMMON = {
                     resolve(db_user_account.searchProfile(app_id, ip, user_agent, query, data));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/ALL_GET':{
-                    resolve(db_user_account_app_setting.getUserSettingsByUserId(app_id, query));
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/ALL_GET':{
+                    resolve(db_user_account_app_data_post.getUserPostsByUserId(app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE_GET':{
-                    resolve(db_user_account_app_setting.getProfileUserSetting(app_id, query, res));
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE_GET':{
+                    resolve(db_user_account_app_data_post.getProfileUserPost(app_id, query, res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/ALL_GET':{
-                    resolve(db_user_account_app_setting.getProfileUserSettings(app_id, query, res));
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/ALL_GET':{
+                    resolve(db_user_account_app_data_post.getProfileUserPosts(app_id, query, res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/TOP_GET':{
-                    resolve(db_user_account_app_setting.getProfileTopSetting(app_id, query, res));
+                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/TOP_GET':{
+                    resolve(db_user_account_app_data_post.getProfileTopPost(app_id, query, res));
                     break;
                 }
                 case 'ACCESS_DB_API_/USER_ACCOUNT/PASSWORD_PUT':{
@@ -266,28 +266,28 @@ const COMMON = {
                     resolve(db_user_account_app.deleteUserAccountApp(app_id, query));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING/PROFILE/DETAIL_GET':{
-                    resolve(db_user_account_app_setting.getProfileUserSettingDetail(app_id, query, res));
+                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/DETAIL_GET':{
+                    resolve(db_user_account_app_data_post.getProfileUserPostDetail(app_id, query, res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_POST':{
-                    resolve(db_user_account_app_setting.createUserSetting(app_id, query, data));
+                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_POST':{
+                    resolve(db_user_account_app_data_post.createUserPost(app_id, query, data));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_PUT':{
-                    resolve(db_user_account_app_setting.updateUserSetting(app_id, query, data, res));
+                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_PUT':{
+                    resolve(db_user_account_app_data_post.updateUserPost(app_id, query, data, res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_DELETE':{
-                    resolve(db_user_account_app_setting.deleteUserSetting(app_id, query, res));
+                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_DELETE':{
+                    resolve(db_user_account_app_data_post.deleteUserPost(app_id, query, res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_LIKE_POST':{
-                    resolve(db_user_account_app_setting.like(app_id, query, data));
+                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_LIKE_POST':{
+                    resolve(db_user_account_app_data_post.like(app_id, query, data));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_SETTING_LIKE_DELETE':{
-                    resolve(db_user_account_app_setting.unlike(app_id, query, data));
+                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE':{
+                    resolve(db_user_account_app_data_post.unlike(app_id, query, data));
                     break;
                 }
                 case 'SYSTEMADMIN_SOCKET_/SOCKET/MESSAGE/SYSTEMADMIN_POST':{

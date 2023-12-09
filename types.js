@@ -81,8 +81,8 @@
  * @property {number} body.app_setting_preference_timezone_id       - app portfolio parameter
  * @property {string} body.preference_locale                        - app portfolio parameter
  * @property {string} body.description                              - app portfolio parameter
- * @property {object} body.settings_json                            - app portfolio parameter
- * @property {number} body.user_setting_id                          - app portfolio parameter
+ * @property {object} body.json_data                                - app portfolio parameter
+ * @property {number} body.user_account_app_data_post_id                          - app portfolio parameter
  * query
  * @property {object} query
  * @property {(string|number|*)} query.id
@@ -1166,6 +1166,16 @@
  * @typedef {{  id:number, 
  *              role_nae:string, 
  *              icon:string}} db_result_app_role_getAppRoleAdmin
+ * APP SETTING
+ * @typedef {{  app_id:number, 
+ *              app_setting_type_name:string, 
+ *              id:string,
+ *              data:string, 
+ *              data2:string|null, 
+ *              data3:string|null, 
+ *              data4:string|null, 
+ *              data5:string|null,
+ *              text:string}} db_result_setting_getSettings
  * COUNTRY
  * @typedef {{  id:string, 
  *              group_name:string, 
@@ -1198,16 +1208,6 @@
  *              client_longitude:string,
  *              client_latitude:string}} db_parameter_profile_search_insertProfileSearch
  * @typedef {db_result_insert} db_result_profile_search_insertProfileSearch
- * SETTING
- * @typedef {{  app_id:number, 
- *              app_setting_type_name:string, 
- *              id:string,
- *              data:string, 
- *              data2:string|null, 
- *              data3:string|null, 
- *              data4:string|null, 
- *              data5:string|null,
- *              text:string}} db_result_setting_getSettings
  * USER ACCOUNT
  * @typedef {{  id:number,
  *              avatar:string,
@@ -1423,34 +1423,34 @@
  *              app_setting_preference_arabic_script_id:number}} db_parameter_user_account_app_updateUserAccountApp
  * @typedef {   db_result_update} db_result_user_account_app_updateUserAccountApp
  * @typedef {   db_result_delete} db_result_user_account_app_deleteUserAccountApp
- * USER ACCOUNT APP SETTING
+ * USER ACCOUNT APP DATA POST
  * @typedef {{  description:string,
- *              settings_json:object,
- *              user_account_id:number}} db_parameter_user_account_app_setting_createUserSetting
- * @typedef {   db_result_insert} db_result_user_account_app_setting_createUserSetting
+ *              json_data:object,
+ *              user_account_id:number}} db_parameter_user_account_app_data_post_createUserPost
+ * @typedef {   db_result_insert} db_result_user_account_app_data_post_createUserPost
  * @typedef {{  id:number,
  *              description:string,
- *              settings_json:string,
+ *              json_data:string,
  *              date_created:string,
  *              date_modified:string,
  *              user_account_app_user_account_id:number,
- *              user_account_app_id: number}} db_result_user_account_app_setting_getUserSetting
+ *              user_account_app_id: number}} db_result_user_account_app_data_post_getUserPost
  * @typedef {{  id:number, 
  *              description:string, 
- *              settings_json:string, 
+ *              json_data:string, 
  *              date_created:string, 
  *              date_modified:string, 
  *              user_account_app_user_account_id:number, 
- *              user_account_app_app_id:number}} db_result_user_account_app_setting_getUserSettingsByUserId
- * @typedef {{  count_user_setting_likes:number,
- *              count_user_setting_liked:number}} db_result_user_account_app_setting_getProfileUserSetting
+ *              user_account_app_app_id:number}} db_result_user_account_app_data_post_getUserPostsByUserId
+ * @typedef {{  count_user_account_app_data_post_likes:number,
+ *              count_user_account_app_data_post_liked:number}} db_result_user_account_app_data_post_getProfileUserPost
  * @typedef {{  id:number,
  *              description:string,
  *              user_account_app_user_account_id:number,
- *              settings_json:string,
+ *              json_data:string,
  *              count_likes:number,
  *              count_views:number,
- *              liked:number}} db_result_user_account_app_setting_getProfileUserSettings
+ *              liked:number}} db_result_user_account_app_data_post_getProfileUserPosts
  * @typedef {{  detail:string,
  *              id:number,
  *              identity_provider_id:number,
@@ -1459,7 +1459,7 @@
  *              provider_image:string,
  *              provider_image_url:string,
  *              username:string,
- *              provider_first_name:string}} db_result_user_account_app_setting_getProfileUserSettingDetail
+ *              provider_first_name:string}} db_result_user_account_app_data_post_getProfileUserPostDetail
  * @typedef {{  top:string,
  *              id:number,
  *              iidentity_provider_id:number,
@@ -1469,23 +1469,23 @@
  *              provider_image_url:string,
  *              username:string,
  *              provider_first_name:string,
- *              count:number}} db_result_user_account_app_setting_getProfileTopSetting
+ *              count:number}} db_result_user_account_app_data_post_getProfileTopPost
  * @typedef {{  description:string,
- *              settings_json:object,
- *              user_account_id:number}} db_parameter_user_account_app_setting_updateUserSetting
- * @typedef {   db_result_update} db_result_user_account_app_setting_updateUserSetting
- * @typedef {   db_result_delete} db_result_user_account_app_setting_deleteUserSetting
- * USER ACCOUNT APP SETTING LIKE
- * @typedef {   db_result_insert} db_result_user_account_app_setting_like_like
- * @typedef {   db_result_delete} db_result_user_account_app_setting_like_unlike
- * USER ACCOUNT APP SETTING VIEW
+ *              json_data:object,
+ *              user_account_id:number}} db_parameter_user_account_app_data_post_updateUserPost
+ * @typedef {   db_result_update} db_result_user_account_app_data_post_updateUserPost
+ * @typedef {   db_result_delete} db_result_user_account_app_data_post_deleteUserPost
+ * USER ACCOUNT APP DATA POST LIKE
+ * @typedef {   db_result_insert} db_result_user_account_app_data_post_like_like
+ * @typedef {   db_result_delete} db_result_user_account_app_data_post_like_unlike
+ * USER ACCOUNT APP DATA POST VIEW
  * @typedef {{  client_ip:string,
  *              client_user_agent:string,
  *              client_longitude:string,
  *              client_latitude:string,
  *              user_account_id:number|null,
- *              user_setting_id:number}} db_parameter_user_account_app_setting_view_insertUserSettingView
- * @typedef {   db_result_insert} db_result_user_account_app_setting_view_insertUserSettingView
+ *              user_account_app_data_post_id:number}} db_parameter_user_account_app_data_post_view_insertUserPostView
+ * @typedef {   db_result_insert} db_result_user_account_app_data_post_view_insertUserPostView
  * USER ACCOUNT EVENT
  * @typedef {{  user_account_id:number,
  *              user_language:string,

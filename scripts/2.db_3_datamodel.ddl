@@ -501,45 +501,45 @@ GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_a
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO role_app_admin;
 
-CREATE TABLE app_portfolio.user_account_app_setting (
+CREATE TABLE app_portfolio.user_account_app_data_post (
     id                                         SERIAL NOT NULL,
     description                                VARCHAR(100),
-    settings_json                              TEXT,
+    json_data                                  TEXT,
     date_created                               TIMESTAMP,
     date_modified                              TIMESTAMP,
     user_account_app_user_account_id           INT NOT NULL,
     user_account_app_app_id                    INT NOT NULL,
-	CONSTRAINT user_account_app_setting_pk PRIMARY KEY ( id )
+	CONSTRAINT user_account_app_data_json_pk PRIMARY KEY ( id )
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post TO role_app_common;
 
-CREATE TABLE app_portfolio.user_account_app_setting_like (
+CREATE TABLE app_portfolio.user_account_app_data_post_like (
     date_created                        TIMESTAMP,	
-    user_account_app_setting_id         INTEGER NOT NULL,
+    user_account_app_data_post_id       INTEGER NOT NULL,
     user_account_app_user_account_id    INTEGER NOT NULL,
     user_account_app_app_id             INTEGER NOT NULL,
-	CONSTRAINT user_account_app_setting_like_pk PRIMARY KEY ( user_account_app_user_account_id, user_account_app_setting_id )
+	CONSTRAINT user_account_app_data_post_like_pk PRIMARY KEY ( user_account_app_user_account_id, user_account_app_data_post_id )
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting_like TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_like TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting_like TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_like TO role_app_common;
 
-CREATE TABLE app_portfolio.user_account_app_setting_view (
+CREATE TABLE app_portfolio.user_account_app_data_post_view (
     client_ip                           VARCHAR(1000),
     client_user_agent                   VARCHAR(1000),
     client_longitude                    VARCHAR(100),
     client_latitude                     VARCHAR(100),
     date_created                        TIMESTAMP NOT NULL,
-    user_account_app_setting_id         INTEGER NOT NULL,
+    user_account_app_data_post_id       INTEGER NOT NULL,
     user_account_app_user_account_id    INTEGER,
     user_account_app_app_id             INTEGER
 );
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_setting_view TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_view TO role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_setting_view TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_view TO role_app_common;
 
 CREATE TABLE app_portfolio.user_account_event (
     user_account_id             INTEGER NOT NULL,
@@ -811,39 +811,39 @@ ALTER TABLE app_portfolio.user_account_app
     ADD CONSTRAINT user_account_app_app_setting_timezone_fk FOREIGN KEY ( app_setting_preference_timezone_id )
         REFERENCES app_portfolio.app_setting ( id );
 
+ALTER TABLE app_portfolio.user_account_app_data_post_like
+    ADD CONSTRAINT user_account_app_data_post_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                                   user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id )
+            ON DELETE CASCADE;
+
+ALTER TABLE app_portfolio.user_account_app_data_post_like
+    ADD CONSTRAINT user_account_app_data_post_like_user_account_app_data_post_fk FOREIGN KEY ( user_account_app_data_post_id )
+        REFERENCES app_portfolio.user_account_app_data_post ( id )
+            ON DELETE CASCADE;
+
+ALTER TABLE app_portfolio.user_account_app_data_post_view
+    ADD CONSTRAINT user_account_app_data_post_view_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+                                                                                   user_account_app_app_id )
+        REFERENCES app_portfolio.user_account_app ( user_account_id,
+                                                    app_id )
+            ON DELETE CASCADE;
+
+ALTER TABLE app_portfolio.user_account_app_data_post_view
+    ADD CONSTRAINT user_account_app_data_post_view_user_account_app_data_post_fk FOREIGN KEY ( user_account_app_data_post_id )
+        REFERENCES app_portfolio.user_account_app_data_post ( id )
+            ON DELETE CASCADE;
+
 ALTER TABLE app_portfolio.user_account
     ADD CONSTRAINT user_account_app_role_fk FOREIGN KEY ( app_role_id )
         REFERENCES app_portfolio.app_role ( id );
 
-ALTER TABLE app_portfolio.user_account_app_setting_like
-    ADD CONSTRAINT user_account_app_setting_like_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
-                                                                                   user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
-                                                    app_id )
-            ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.user_account_app_setting_like
-    ADD CONSTRAINT user_account_app_setting_like_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
-        REFERENCES app_portfolio.user_account_app_setting ( id )
-            ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.user_account_app_setting
-    ADD CONSTRAINT user_account_app_setting_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
+ALTER TABLE app_portfolio.user_account_app_data_post
+    ADD CONSTRAINT user_account_app_data_post_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
                                                                               user_account_app_app_id )
         REFERENCES app_portfolio.user_account_app ( user_account_id,
                                                     app_id )
-            ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.user_account_app_setting_view
-    ADD CONSTRAINT user_account_app_setting_view_user_account_app_fk FOREIGN KEY ( user_account_app_user_account_id,
-                                                                                   user_account_app_app_id )
-        REFERENCES app_portfolio.user_account_app ( user_account_id,
-                                                    app_id )
-            ON DELETE CASCADE;
-
-ALTER TABLE app_portfolio.user_account_app_setting_view
-    ADD CONSTRAINT user_account_app_setting_view_user_account_app_setting_fk FOREIGN KEY ( user_account_app_setting_id )
-        REFERENCES app_portfolio.user_account_app_setting ( id )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.user_account_app
@@ -949,9 +949,9 @@ ALTER TABLE app_portfolio.parameter_type_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.profile_search OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_app OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app_setting OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app_setting_like OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.user_account_app_setting_view OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_data_post OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_data_post_like OWNER TO app_portfolio;
+ALTER TABLE app_portfolio.user_account_app_data_post_view OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_event OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_follow OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.user_account_like OWNER TO app_portfolio;

@@ -1,4 +1,4 @@
-/** @module server/dbapi/app_portfolio/user_account_app_setting */
+/** @module server/dbapi/app_portfolio/user_account_app_data_post */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
@@ -8,26 +8,26 @@ const {db_execute, db_schema, db_limit_rows} = await import(`file://${process.cw
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_app_setting_createUserSetting} data 
- * @returns {Promise.<Types.db_result_user_account_app_setting_createUserSetting>}
+ * @param {Types.db_parameter_user_account_app_data_post_createUserPost} data 
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_createUserPost>}
  */
-const createUserSetting = async (app_id, data) => {
-		const sql = `INSERT INTO ${db_schema()}.user_account_app_setting(
+const createUserPost = async (app_id, data) => {
+		const sql = `INSERT INTO ${db_schema()}.user_account_app_data_post(
 						description, 
-						settings_json,
+						json_data,
 						date_created,
 						date_modified,
 						user_account_app_user_account_id,
 						user_account_app_app_id
 						)
-					VALUES(:description,:settings_json,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:user_account_id,:app_id)`;
+					VALUES(:description,:json_data,CURRENT_TIMESTAMP,CURRENT_TIMESTAMP,:user_account_id,:app_id)`;
 			const parameters = {
 							description: data.description,
-							settings_json: JSON.stringify(data.settings_json),
+							json_data: JSON.stringify(data.json_data),
 							user_account_id: data.user_account_id,
 							app_id: app_id,
 							DB_RETURN_ID:'id',
-							DB_CLOB: ['settings_json']
+							DB_CLOB: ['json_data']
 						};
 			return await db_execute(app_id, sql, parameters, null);
 	};
@@ -35,17 +35,17 @@ const createUserSetting = async (app_id, data) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_app_setting_getUserSetting[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getUserPost[]>}
  */
-const getUserSetting = async (app_id, id) => {
+const getUserPost = async (app_id, id) => {
 		const sql = `SELECT	id "id",
 							description "description",
-							settings_json "settings_json",
+							json_data "json_data",
 							date_created "date_created",
 							date_modified "date_modified",
 							user_account_app_user_account_id "user_account_app_user_account_id",
 							user_account_app_app_id "user_account_app_app_id"
-					   FROM ${db_schema()}.user_account_app_setting 
+					   FROM ${db_schema()}.user_account_app_data_post 
 					  WHERE id = :id `;
 		const parameters = {id: id};
 		return await db_execute(app_id, sql, parameters, null);
@@ -54,17 +54,17 @@ const getUserSetting = async (app_id, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_app_setting_getUserSettingsByUserId[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getUserPostsByUserId[]>}
  */
-const getUserSettingsByUserId = async (app_id, id) => {
+const getUserPostsByUserId = async (app_id, id) => {
 		const sql = `SELECT	id "id",
 						description "description",
-						settings_json "settings_json",
+						json_data "json_data",
 						date_created "date_created",
 						date_modified "date_modified",
 						user_account_app_user_account_id "user_account_app_user_account_id",
 						user_account_app_app_id "app_id"
-				 FROM ${db_schema()}.user_account_app_setting
+				 FROM ${db_schema()}.user_account_app_data_post
 				WHERE user_account_app_user_account_id = :user_account_id 
 				  AND user_account_app_app_id = :app_id`;
 		const parameters = {
@@ -77,23 +77,23 @@ const getUserSettingsByUserId = async (app_id, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileUserSetting[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getProfileUserPost[]>}
  */
-const getProfileUserSetting = async (app_id, id) => {
+const getProfileUserPost = async (app_id, id) => {
 		const sql = `SELECT (SELECT COUNT(DISTINCT us.user_account_app_user_account_id)
-						 FROM ${db_schema()}.user_account_app_setting_like u_like,
-						   	  ${db_schema()}.user_account_app_setting us
+						 FROM ${db_schema()}.user_account_app_data_post_like u_like,
+						   	  ${db_schema()}.user_account_app_data_post us
 						WHERE u_like.user_account_app_user_account_id = u.id
 						  AND u_like.user_account_app_app_id = :app_id
-						  AND us.id = u_like.user_account_app_setting_id
-						  AND us.user_account_app_app_id = u_like.user_account_app_app_id)		"count_user_setting_likes",
+						  AND us.id = u_like.user_account_app_data_post_id
+						  AND us.user_account_app_app_id = u_like.user_account_app_app_id)		"count_user_post_likes",
 					  (SELECT COUNT(DISTINCT u_like.user_account_app_user_account_id)
-					     FROM ${db_schema()}.user_account_app_setting_like u_like,
-							  ${db_schema()}.user_account_app_setting us
+					     FROM ${db_schema()}.user_account_app_data_post_like u_like,
+							  ${db_schema()}.user_account_app_data_post us
 						WHERE us.user_account_app_user_account_id = u.id
 						  AND us.user_account_app_app_id = :app_id
-						  AND u_like.user_account_app_setting_id = us.id
-						  AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_setting_liked"
+						  AND u_like.user_account_app_data_post_id = us.id
+						  AND u_like.user_account_app_app_id = us.user_account_app_app_id)		"count_user_post_liked"
 				 FROM ${db_schema()}.user_account u
 				WHERE u.id = :id`;
 		const parameters ={
@@ -107,27 +107,27 @@ const getProfileUserSetting = async (app_id, id) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} id_current_user 
- * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileUserSettings[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getProfileUserPosts[]>}
  */
-const getProfileUserSettings = async (app_id, id, id_current_user) => {
+const getProfileUserPosts = async (app_id, id, id_current_user) => {
 		const sql = `SELECT us.id "id",
 					  		us.description "description",
 					  		us.user_account_app_user_account_id "user_account_app_user_account_id",
-							us.settings_json "settings_json",
+							us.json_data "json_data",
 					  (SELECT COUNT(0)
-						 FROM ${db_schema()}.user_account_app_setting_like u_like
-						WHERE u_like.user_account_app_setting_id = us.id
+						 FROM ${db_schema()}.user_account_app_data_post_like u_like
+						WHERE u_like.user_account_app_data_post_id = us.id
 						 AND  u_like.user_account_app_app_id = us.user_account_app_app_id)					"count_likes",
 					  (SELECT COUNT(0)
-						 FROM ${db_schema()}.user_account_app_setting_view u_view
-						WHERE u_view.user_account_app_setting_id = us.id
+						 FROM ${db_schema()}.user_account_app_data_post_view u_view
+						WHERE u_view.user_account_app_data_post_id = us.id
 						 AND  u_view.user_account_app_app_id = us.user_account_app_app_id)					"count_views",
 					  (SELECT COUNT(0)
-						 FROM ${db_schema()}.user_account_app_setting_like u_liked_current_user
+						 FROM ${db_schema()}.user_account_app_data_post_like u_liked_current_user
 						WHERE u_liked_current_user.user_account_app_user_account_id = :user_account_id_current
-						  AND u_liked_current_user.user_account_app_setting_id = us.id
+						  AND u_liked_current_user.user_account_app_data_post_id = us.id
 						  AND u_liked_current_user.user_account_app_app_id = us.user_account_app_app_id) 	"liked"
-				 FROM ${db_schema()}.user_account_app_setting us
+				 FROM ${db_schema()}.user_account_app_data_post us
 				WHERE us.user_account_app_user_account_id = :user_account_id
 				  AND us.user_account_app_app_id = :app_id `;
 		const parameters = {
@@ -142,9 +142,9 @@ const getProfileUserSettings = async (app_id, id, id_current_user) => {
  * @param {number} app_id 
  * @param {number} id 
  * @param {number} detailchoice 
- * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileUserSettingDetail[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getProfileUserPostDetail[]>}
  */
-const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
+const getProfileUserPostDetail = async (app_id, id, detailchoice) => {
 		let sql;
 		sql = `SELECT detail "detail", 
 					  id "id", 
@@ -155,7 +155,7 @@ const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
 					  provider_image_url "provider_image_url",
 					  username "username",
 					  provider_first_name "provider_first_name"
-				FROM (SELECT 'LIKE_SETTING' detail,
+				FROM (SELECT 'LIKE_POST' detail,
 							 u.id,
 							 u.identity_provider_id,
 							 u.provider_id,
@@ -166,16 +166,16 @@ const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
 							 u.provider_first_name
 						FROM ${db_schema()}.user_account u
 					   WHERE u.id IN (SELECT us.user_account_app_user_account_id
-										FROM ${db_schema()}.user_account_app_setting_like u_like,
-											 ${db_schema()}.user_account_app_setting us
+										FROM ${db_schema()}.user_account_app_data_post_like u_like,
+											 ${db_schema()}.user_account_app_data_post us
 									   WHERE u_like.user_account_app_user_account_id = :user_account_id
 									     AND u_like.user_account_app_app_id = :app_id
 										 AND us.user_account_app_app_id = u_like.user_account_app_app_id
-										 AND us.id = u_like.user_account_app_setting_id)
+										 AND us.id = u_like.user_account_app_data_post_id)
 						 AND    u.active = 1
 						 AND    6 = :detailchoice
 						UNION ALL
-						SELECT 'LIKED_SETTING' detail,
+						SELECT 'LIKED_POST' detail,
 								u.id,
 								u.identity_provider_id,
 								u.provider_id,
@@ -186,11 +186,11 @@ const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
 								u.provider_first_name
 						  FROM  ${db_schema()}.user_account u
 						 WHERE  u.id IN (SELECT u_like.user_account_app_user_account_id
-										   FROM ${db_schema()}.user_account_app_setting us,
-												${db_schema()}.user_account_app_setting_like u_like
+										   FROM ${db_schema()}.user_account_app_data_post us,
+												${db_schema()}.user_account_app_data_post_like u_like
 										  WHERE us.user_account_app_user_account_id = :user_account_id
 											AND us.user_account_app_app_id = :app_id
-											AND us.id = u_like.user_account_app_setting_id
+											AND us.id = u_like.user_account_app_data_post_id
 											AND u_like.user_account_app_app_id = us.user_account_app_app_id)
 						   AND  u.active = 1
 						   AND  7 = :detailchoice) t
@@ -207,9 +207,9 @@ const getProfileUserSettingDetail = async (app_id, id, detailchoice) => {
  * 
  * @param {number} app_id 
  * @param {number} statchoice 
- * @returns {Promise.<Types.db_result_user_account_app_setting_getProfileTopSetting[]>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_getProfileTopPost[]>}
  */
-const getProfileTopSetting = async (app_id, statchoice) => {
+const getProfileTopPost = async (app_id, statchoice) => {
 		let sql;
 		sql = `SELECT top "top", 
 					  id "id", 
@@ -221,7 +221,7 @@ const getProfileTopSetting = async (app_id, statchoice) => {
 					  username "username",
 					  provider_first_name "provider_first_name",
 					  count "count"
-				FROM (	SELECT 'LIKE_SETTING' top,
+				FROM (	SELECT 'LIKE_POST' top,
 								u.id,
 								u.identity_provider_id,
 								u.provider_id,
@@ -231,18 +231,18 @@ const getProfileTopSetting = async (app_id, statchoice) => {
 								u.username,
 								u.provider_first_name,
 								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM ${db_schema()}.user_account_app_setting_like u_like,
-										${db_schema()}.user_account_app_setting us
+								   FROM ${db_schema()}.user_account_app_data_post_like u_like,
+										${db_schema()}.user_account_app_data_post us
 								  WHERE us.user_account_app_user_account_id = u.id
 									AND us.user_account_app_app_id = :app_id
-									AND u_like.user_account_app_setting_id = us.id
+									AND u_like.user_account_app_data_post_id = us.id
 									AND u_like.user_account_app_app_id = us.user_account_app_app_id) count
 						  FROM  ${db_schema()}.user_account u
 						 WHERE  u.active = 1
 						   AND  u.private <> 1
 						   AND  4 = :statchoice
 						UNION ALL
-						SELECT 'VISITED_SETTING' top,
+						SELECT 'VISITED_POST' top,
 								u.id,
 								u.identity_provider_id,
 								u.provider_id,
@@ -252,11 +252,11 @@ const getProfileTopSetting = async (app_id, statchoice) => {
 								u.username,
 								u.provider_first_name,
 								(SELECT COUNT(us.user_account_app_user_account_id)
-								   FROM ${db_schema()}.user_account_app_setting_view u_view,
-										${db_schema()}.user_account_app_setting us
+								   FROM ${db_schema()}.user_account_app_data_post_view u_view,
+										${db_schema()}.user_account_app_data_post us
 								  WHERE us.user_account_app_user_account_id = u.id
 									AND us.user_account_app_app_id = :app_id
-									AND u_view.user_account_app_setting_id = us.id
+									AND u_view.user_account_app_data_post_id = us.id
 									AND u_view.user_account_app_app_id = us.user_account_app_app_id) count
 						  FROM  ${db_schema()}.user_account u
 						 WHERE  u.active = 1
@@ -273,25 +273,25 @@ const getProfileTopSetting = async (app_id, statchoice) => {
 /**
  * 
  * @param {number} app_id 
- * @param {Types.db_parameter_user_account_app_setting_updateUserSetting} data 
+ * @param {Types.db_parameter_user_account_app_data_post_updateUserPost} data 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_app_setting_updateUserSetting>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_updateUserPost>}
  */
-const updateUserSetting = async (app_id, data, id) => {
-		const sql = `UPDATE ${db_schema()}.user_account_app_setting
+const updateUserPost = async (app_id, data, id) => {
+		const sql = `UPDATE ${db_schema()}.user_account_app_data_post
 						SET description = :description,
-							settings_json = :settings_json,
+							json_data = :json_data,
 							user_account_app_user_account_id = :user_account_id,
 							user_account_app_app_id = :app_id,
 							date_modified = CURRENT_TIMESTAMP
 					  WHERE id = :id `;
 		const parameters = {
 						description: data.description,
-						settings_json: JSON.stringify(data.settings_json),
+						json_data: JSON.stringify(data.json_data),
 						user_account_id: data.user_account_id,
 						app_id: app_id,
 						id: id,
-						DB_CLOB: ['settings_json']
+						DB_CLOB: ['json_data']
 					};
 		return await db_execute(app_id, sql, parameters, null);
 	};
@@ -299,13 +299,13 @@ const updateUserSetting = async (app_id, data, id) => {
  * 
  * @param {number} app_id 
  * @param {number} id 
- * @returns {Promise.<Types.db_result_user_account_app_setting_deleteUserSetting>}
+ * @returns {Promise.<Types.db_result_user_account_app_data_post_deleteUserPost>}
  */
-const deleteUserSetting = async (app_id, id) => {
-		const sql = `DELETE FROM ${db_schema()}.user_account_app_setting
+const deleteUserPost = async (app_id, id) => {
+		const sql = `DELETE FROM ${db_schema()}.user_account_app_data_post
 					WHERE id = :id `;
 		const parameters = {id: id};
 		return await db_execute(app_id, sql, parameters, null);
 	};
-export{	createUserSetting, getUserSetting, getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, 
-		getProfileUserSettingDetail, getProfileTopSetting, updateUserSetting, deleteUserSetting};
+export{	createUserPost, getUserPost, getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, 
+		getProfileUserPostDetail, getProfileTopPost, updateUserPost, deleteUserPost};
