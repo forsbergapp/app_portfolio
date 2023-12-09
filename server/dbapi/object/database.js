@@ -342,12 +342,12 @@ const install_db_get_files = async (json_type) =>{
     const {getAppsAdminId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     const {create} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`);
     const {createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
-    const {createUserSetting, getUserSettingsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
     const user_account_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_like.service.js`);
     const {insertUserAccountView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_view.service.js`);
     const user_account_follow = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_follow.service.js`);
-    const user_account_app_setting_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
-    const {insertUserSettingView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_view.service.js`);
+    const {createUserPost, getUserPostsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
+    const user_account_app_data_post_like = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_like.service.js`);
+    const {insertUserPostView} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_view.service.js`);
     const {SocketSendAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     const fs = await import('node:fs');
@@ -370,11 +370,11 @@ const install_db_get_files = async (json_type) =>{
     /**@type{[Types.demo_user]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).demo_users;
     //create social records
-    const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'SETTINGS_LIKE', 'SETTINGS_VIEW', 'SETTINGS_VIEW_ANONYMOUS'];
+    const social_types = ['LIKE', 'VIEW', 'VIEW_ANONYMOUS', 'FOLLOWER', 'POSTS_LIKE', 'POSTS_VIEW', 'POSTS_VIEW_ANONYMOUS'];
     let email_index = 1000;
     let records_user_account = 0;
     let records_user_account_app = 0;
-    let records_user_account_app_setting = 0;
+    let records_user_account_app_data_post = 0;
     let install_count=0;
     const install_total_count = demo_users.length + social_types.length;
     install_count++;
@@ -444,17 +444,17 @@ const install_db_get_files = async (json_type) =>{
         });
     };
     /**
-     * Create user setting
-     * @param {number} user_setting_app_id 
+     * Create user post
+     * @param {number} user_account_post_app_id 
      * @param {object} data 
      * @returns {Promise.<null>}
      */
-    const create_setting = async (user_setting_app_id, data) => {
+    const create_user_post = async (user_account_post_app_id, data) => {
         return new Promise((resolve, reject) => {
-            createUserSetting(user_setting_app_id, data)
-            .then((/**@type{Types.db_result_user_account_app_setting_createUserSetting}*/result)=>{
+            createUserPost(user_account_post_app_id, data)
+            .then((/**@type{Types.db_result_user_account_app_data_post_createUserPost}*/result)=>{
                 if (result.affectedRows == 1)
-                            records_user_account_app_setting++;
+                            records_user_account_app_data_post++;
                         resolve(null);
             })
             .catch((/**@type{Types.error}*/error)=>{
@@ -465,7 +465,7 @@ const install_db_get_files = async (json_type) =>{
     //create all users first and update with id
     await create_users(demo_users);
     const apps = await getAppsAdminId(app_id);
-    //create user settings
+    //create user posts
     for (const demo_user of demo_users){
         SocketSendAdmin(app_id, getNumberValue(query.get('client_id')), null, 'PROGRESS', btoa(JSON.stringify({part:install_count, total:install_total_count, text:demo_user.username})));
         install_count++;
@@ -473,11 +473,11 @@ const install_db_get_files = async (json_type) =>{
         for (const app of apps){
             await create_user_account_app(app.id, demo_user.id);
         }
-        for (const demo_user_setting of demo_user.settings){
+        for (const demo_user_account_app_data_post of demo_user.settings){
             let settings_header_image;
             //use file in settings or if missing then use filename same as demo username
-            if (demo_user_setting.image_header_image_img)
-                settings_header_image = `${demo_user_setting.image_header_image_img}.webp`;
+            if (demo_user_account_app_data_post.image_header_image_img)
+                settings_header_image = `${demo_user_account_app_data_post.image_header_image_img}.webp`;
             else
                 settings_header_image = `${demo_user.username}.webp`;
             /**@type{Buffer} */
@@ -485,28 +485,28 @@ const install_db_get_files = async (json_type) =>{
             /**@ts-ignore */
             const image_string = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
             //update settings with loaded image into BASE64 format
-            demo_user_setting.image_header_image_img = image_string;
+            demo_user_account_app_data_post.image_header_image_img = image_string;
             //use random day and month themes
             //day 10001-10010
-            demo_user_setting.design_theme_day_id = Math.floor(10001 + Math.random() * 10);
+            demo_user_account_app_data_post.design_theme_day_id = Math.floor(10001 + Math.random() * 10);
             //month 20001-20022
-            demo_user_setting.design_theme_month_id = Math.floor(20001 + Math.random() * 22);
-            demo_user_setting.design_theme_year_id = 30001;
-            const settings_no_app_id = JSON.parse(JSON.stringify(demo_user_setting));
+            demo_user_account_app_data_post.design_theme_month_id = Math.floor(20001 + Math.random() * 22);
+            demo_user_account_app_data_post.design_theme_year_id = 30001;
+            const settings_no_app_id = JSON.parse(JSON.stringify(demo_user_account_app_data_post));
             delete settings_no_app_id.app_id;
-            const json_data_user_setting = {
-                                            description: demo_user_setting.description,
-                                            settings_json: settings_no_app_id,
+            const json_data_user_account_app_data_post = {
+                                            description: demo_user_account_app_data_post.description,
+                                            json_data: settings_no_app_id,
                                             user_account_id: demo_user.id
                                         };	
-            await create_setting(demo_user_setting.app_id, json_data_user_setting);
+            await create_user_post(demo_user_account_app_data_post.app_id, json_data_user_account_app_data_post);
         }
     }
     let records_user_account_like = 0;
     let records_user_account_view = 0;
     let records_user_account_follow = 0;
-    let records_user_account_setting_like = 0;
-    let records_user_account_setting_view = 0;
+    let records_user_account_app_data_post_like = 0;
+    let records_user_account_app_data_post_view = 0;
     
     /**
      * Create like user
@@ -574,15 +574,15 @@ const install_db_get_files = async (json_type) =>{
      * @param {number} user2 
      * @returns {Promise.<null>}
      */
-    const create_user_account_app_setting_like = async (app_id, user1, user2 ) =>{
+    const create_user_account_app_data_post_like = async (app_id, user1, user2 ) =>{
         return new Promise((resolve, reject) => {
-            getUserSettingsByUserId(app_id, user1)
-            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
-                const random_settings_index = Math.floor(1 + Math.random() * result_settings.length - 1 );
-                user_account_app_setting_like.like(app_id, user2, result_settings[random_settings_index].id)
-                .then((/**@type{Types.db_result_user_account_app_setting_like_like}*/result) => {
+            getUserPostsByUserId(app_id, user1)
+            .then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_posts)=>{
+                const random_posts_index = Math.floor(1 + Math.random() * result_posts.length - 1 );
+                user_account_app_data_post_like.like(app_id, user2, result_posts[random_posts_index].id)
+                .then((/**@type{Types.db_result_user_account_app_data_post_like_like}*/result) => {
                     if (result.affectedRows == 1)
-                        records_user_account_setting_like++;
+                        records_user_account_app_data_post_like++;
                     resolve(null);
                 })
                 .catch((/**@type{Types.error}*/error)=>{
@@ -602,27 +602,27 @@ const install_db_get_files = async (json_type) =>{
      * @param {string} social_type 
      * @returns {Promise.<null>}
      */
-    const create_user_account_app_setting_view = async (app_id, user1, user2 , social_type) =>{
+    const create_user_account_app_data_post_view = async (app_id, user1, user2 , social_type) =>{
         return new Promise((resolve, reject) => {
-            getUserSettingsByUserId(app_id, user1)
-            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result_settings)=>{
-                //choose random setting from user
-                        const random_index = Math.floor(1 + Math.random() * result_settings.length -1);
+            getUserPostsByUserId(app_id, user1)
+            .then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_posts)=>{
+                //choose random post from user
+                        const random_index = Math.floor(1 + Math.random() * result_posts.length -1);
                         let user_account_id;
-                        if (social_type == 'SETTINGS_VIEW')
+                        if (social_type == 'POSTS_VIEW')
                             user_account_id = user2;
                         else
                             user_account_id = null;
-                        insertUserSettingView(app_id, {  user_account_id: user_account_id,
-                                                    user_setting_id: result_settings[random_index].id,
+                        insertUserPostView(app_id, {  user_account_id: user_account_id,
+                                                    user_account_app_data_post_id: result_posts[random_index].id,
                                                     client_ip: null,
                                                     client_user_agent: null,
                                                     client_longitude: null,
                                                     client_latitude: null
                                                             })
-                    .then((/**@type{Types.db_result_user_account_app_setting_view_insertUserSettingView}*/result)=>{
+                    .then((/**@type{Types.db_result_user_account_app_data_post_view_insertUserPostView}*/result)=>{
                         if (result.affectedRows == 1)
-                                records_user_account_setting_view++;
+                                records_user_account_app_data_post_view++;
                             resolve(null);
                     })
                     .catch((/**@type{Types.error}*/error)=>{
@@ -693,19 +693,19 @@ const install_db_get_files = async (json_type) =>{
                         await create_user_account_follow(app_id, user1, user2);
                         break;
                     }
-                    case 'SETTINGS_LIKE':{
+                    case 'POSTS_LIKE':{
                         //pick a random user setting from the user and return the app_id
-                        const user_settings = demo_users.filter(user=>user.id == user1)[0].settings;
-                        const settings_app_id = user_settings[Math.floor(1 + Math.random() * user_settings.length - 1 )].app_id;
-                        await create_user_account_app_setting_like(settings_app_id, user1, user2);
+                        const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].settings;
+                        const settings_app_id = user_account_app_data_posts[Math.floor(1 + Math.random() * user_account_app_data_posts.length - 1 )].app_id;
+                        await create_user_account_app_data_post_like(settings_app_id, user1, user2);
                         break;
                     }
-                    case 'SETTINGS_VIEW':
-                    case 'SETTINGS_VIEW_ANONYMOUS':{
+                    case 'POSTS_VIEW':
+                    case 'POSTS_VIEW_ANONYMOUS':{
                         //pick a random user setting from the user and return the app_id
-                        const user_settings = demo_users.filter(user=>user.id == user1)[0].settings;
-                        const settings_app_id = user_settings[Math.floor(1 + Math.random() * user_settings.length - 1 )].app_id;
-                        await create_user_account_app_setting_view(settings_app_id, user1, user2 , social_type) ;
+                        const user_account_app_data_posts = demo_users.filter(user=>user.id == user1)[0].settings;
+                        const settings_app_id = user_account_app_data_posts[Math.floor(1 + Math.random() * user_account_app_data_posts.length - 1 )].app_id;
+                        await create_user_account_app_data_post_view(settings_app_id, user1, user2 , social_type) ;
                         break;
                     }
                 }						
@@ -714,12 +714,12 @@ const install_db_get_files = async (json_type) =>{
     }
     install_result.push({'user_account': records_user_account});
     install_result.push({'user_account_app': records_user_account_app});
-    install_result.push({'user_account_app_setting': records_user_account_app_setting});
     install_result.push({'user_account_like': records_user_account_like});
     install_result.push({'user_account_view': records_user_account_view});
     install_result.push({'user_account_follow': records_user_account_follow});
-    install_result.push({'user_account_setting_like': records_user_account_setting_like});
-    install_result.push({'user_account_setting_view': records_user_account_setting_view});
+    install_result.push({'user_account_app_data_post': records_user_account_app_data_post});
+    install_result.push({'user_account_app_data_post_like': records_user_account_app_data_post_like});
+    install_result.push({'user_account_app_data_post_view': records_user_account_app_data_post_view});
     install_result.push({'finished': new Date().toISOString()});
     LogServerI(`Demo install result: ${install_result.reduce((result, current)=> result += `${Object.keys(current)[0]}:${Object.values(current)[0]} `, '')}`);
     return {'info': install_result};
