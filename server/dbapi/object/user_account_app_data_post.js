@@ -1,10 +1,10 @@
-/** @module server/dbapi/object/user_account_app_setting */
+/** @module server/dbapi/object/user_account_app_data_post */
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../../types.js';
 
-const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting.service.js`);
-const user_account_app_setting_like_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_setting_like.service.js`);
+const service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
+const user_account_app_data_post_like_service = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post_like.service.js`);
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
@@ -14,10 +14,10 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * @param {*} query 
  * @param {Types.error} res
  */
-const getUserSettingsByUserId = (app_id, query, res) =>{
+const getUserPostsByUserId = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getUserSettingsByUserId(app_id, getNumberValue(query.get('user_account_id')))
-        .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result)=>{
+        service.getUserPostsByUserId(app_id, getNumberValue(query.get('user_account_id')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result)=>{
             if (result)
                 resolve(result);
             else
@@ -33,10 +33,10 @@ const getUserSettingsByUserId = (app_id, query, res) =>{
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileUserSetting = (app_id, query, res) =>{
+const getProfileUserPost = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileUserSetting(app_id, getNumberValue(query.get('id')))
-        .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSetting[]}*/result)=>{
+        service.getProfileUserPost(app_id, getNumberValue(query.get('id')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPost[]}*/result)=>{
             if (result[0])
                 resolve({items: result[0]});
             else
@@ -52,10 +52,10 @@ const getProfileUserSetting = (app_id, query, res) =>{
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileUserSettings =(app_id, query, res) =>{
+const getProfileUserPosts =(app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileUserSettings(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
-        .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettings[]}*/result)=>{
+        service.getProfileUserPosts(app_id, getNumberValue(query.get('id')), getNumberValue(query.get('id_current_user')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPosts[]}*/result)=>{
             if (result)
                 resolve(result);
             else
@@ -73,10 +73,10 @@ const getProfileUserSettings =(app_id, query, res) =>{
  * @param {*} query
  * @param {Types.res} res
  */
-const getProfileTopSetting = (app_id, query, res) =>{
+const getProfileTopPost = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
-        service.getProfileTopSetting(app_id, getNumberValue(query.get('statchoice')))
-        .then((/**@type{Types.db_result_user_account_app_setting_getProfileTopSetting[]}*/result)=>{
+        service.getProfileTopPost(app_id, getNumberValue(query.get('statchoice')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileTopPost[]}*/result)=>{
             if (result)
                 resolve(result); 
             else
@@ -93,10 +93,10 @@ const getProfileTopSetting = (app_id, query, res) =>{
  * @param {*} query 
  * @param {*} res
  */
-const getProfileUserSettingDetail = (app_id, query, res) => {
+const getProfileUserPostDetail = (app_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.getProfileUserSettingDetail(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(query.get('detailchoice')))
-        .then((/**@type{Types.db_result_user_account_app_setting_getProfileUserSettingDetail[]}*/result)=>{
+        service.getProfileUserPostDetail(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(query.get('detailchoice')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPostDetail[]}*/result)=>{
             if (result)
                 resolve(result);
             else
@@ -113,16 +113,16 @@ const getProfileUserSettingDetail = (app_id, query, res) => {
  * @param {*} query
  * @param {*} data
  */
-const createUserSetting = (app_id, query, data) => {
+const createUserPost = (app_id, query, data) => {
     return new Promise((resolve, reject)=>{
-        /**@type{Types.db_parameter_user_account_app_setting_createUserSetting} */
+        /**@type{Types.db_parameter_user_account_app_data_post_createUserPost} */
         const data_create = {	description:		data.description,
-                                settings_json: 		data.settings_json,
+                                json_data: 		    data.json_data,
                                 user_account_id:	getNumberValue(data.user_account_id)
                             };
         const call_service = ()=> {
-            service.createUserSetting(app_id, data_create)
-            .then((/**@type{Types.db_result_user_account_app_setting_createUserSetting}*/result)=>{
+            service.createUserPost(app_id, data_create)
+            .then((/**@type{Types.db_result_user_account_app_data_post_createUserPost}*/result)=>{
                 resolve({
                     id: result.insertId,
                     data: result
@@ -132,8 +132,8 @@ const createUserSetting = (app_id, query, data) => {
         };
         //Check if first time
         if (getNumberValue(query.get('initial'))==1){
-            service.getUserSettingsByUserId(app_id, getNumberValue(data.user_account_id))
-            .then((/**@type{Types.db_result_user_account_app_setting_getUserSettingsByUserId[]}*/result)=>{
+            service.getUserPostsByUserId(app_id, getNumberValue(data.user_account_id))
+            .then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result)=>{
                 if (result.length==0){
                     //no user settings found, ok to create initial user setting
                     call_service();
@@ -158,14 +158,14 @@ const createUserSetting = (app_id, query, data) => {
  * @param {*} data 
  * @param {Types.res} res
  */
-const updateUserSetting = (app_id, query, data, res) => {
+const updateUserPost = (app_id, query, data, res) => {
     return new Promise((resolve, reject)=>{
-        /**@type{Types.db_parameter_user_account_app_setting_updateUserSetting} */
+        /**@type{Types.db_parameter_user_account_app_data_post_updateUserPost} */
         const data_update = {	description:		data.description,
-                                settings_json: 		data.settings_json,
+                                json_data: 		    data.json_data,
                                 user_account_id:	getNumberValue(data.user_account_id)};
-        service.updateUserSetting(app_id, data_update, getNumberValue(query.get('PUT_ID')))
-        .then((/**@type{Types.db_result_user_account_app_setting_updateUserSetting}*/result)=>{
+        service.updateUserPost(app_id, data_update, getNumberValue(query.get('PUT_ID')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_updateUserPost}*/result)=>{
             if (result)
                 resolve(result);
             else
@@ -182,10 +182,10 @@ const updateUserSetting = (app_id, query, data, res) => {
  * @param {*} query 
  * @param {Types.res} res
  */
-const deleteUserSetting = (app_id, query, res) => {
+const deleteUserPost = (app_id, query, res) => {
     return new Promise((resolve, reject)=>{
-        service.deleteUserSetting(app_id, getNumberValue(query.get('DELETE_ID')))
-        .then((/**@type{Types.db_result_user_account_app_setting_deleteUserSetting}*/result)=>{
+        service.deleteUserPost(app_id, getNumberValue(query.get('DELETE_ID')))
+        .then((/**@type{Types.db_result_user_account_app_data_post_deleteUserPost}*/result)=>{
             if (result)
                 resolve(result);
             else
@@ -202,7 +202,7 @@ const deleteUserSetting = (app_id, query, res) => {
  * @param {*} query 
  * @param {*} data
  */
-const like = (app_id, query, data) => user_account_app_setting_like_service.like(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id))
+const like = (app_id, query, data) => user_account_app_data_post_like_service.like(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_account_app_data_post_id))
                                         .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
@@ -211,9 +211,9 @@ const like = (app_id, query, data) => user_account_app_setting_like_service.like
  * @param {*} query 
  * @param {*} data
  */
-const unlike = (app_id, query, data) => user_account_app_setting_like_service.unlike(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_setting_id))
+const unlike = (app_id, query, data) => user_account_app_data_post_like_service.unlike(app_id, getNumberValue(query.get('user_account_id')), getNumberValue(data.user_account_app_data_post_id))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
-export{ getUserSettingsByUserId, getProfileUserSetting, getProfileUserSettings, getProfileTopSetting,
+export{ getUserPostsByUserId, getProfileUserPost, getProfileUserPosts, getProfileTopPost,
         /*ACCESS */
-        getProfileUserSettingDetail, createUserSetting, updateUserSetting, deleteUserSetting, like, unlike};
+        getProfileUserPostDetail, createUserPost, updateUserPost, deleteUserPost, like, unlike};

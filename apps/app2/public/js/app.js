@@ -1247,7 +1247,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 /*----------------------- */
 const user_settings_get = async () => {
     const select = document.querySelector('#setting_select_user_setting');
-    await common.FFB ('DB_API', `/user_account_app_setting/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'DATA', null, (err, result) => {
+    await common.FFB ('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
         else{
@@ -1256,7 +1256,7 @@ const user_settings_get = async () => {
             let option_html = '';
             let i=0;
             for (const user_account_app_setting of JSON.parse(result)) {
-                const settings = JSON.parse(user_account_app_setting.settings_json);
+                const settings = JSON.parse(user_account_app_setting.json_data);
                 option_html += `<option value=${i} id=${user_account_app_setting.id} description='${settings.description}'
                                     regional_language_locale=${settings.regional_language_locale}
                                     regional_timezone=${settings.regional_timezone}
@@ -1625,7 +1625,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             prayer_column_fast_start_end: document.querySelector('#setting_select_report_show_fast_start_end').value
          };
     const json_data = { description:        description,
-                        settings_json:      json_settings,
+                        json_data:          json_settings,
                         user_account_id:    common.COMMON_GLOBAL.user_account_id
                     };
     let method;
@@ -1642,7 +1642,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
                 spinner_item.innerHTML = common.APP_SPINNER;    
             }
             method = 'POST';
-            path = `/user_account_app_setting?initial=${initial_user_setting==true?1:0}`;
+            path = `/user_account_app_data_post?initial=${initial_user_setting==true?1:0}`;
             break;
         }
         case 'SAVE':{
@@ -1652,7 +1652,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             method = 'PUT';
             const select_user_setting = document.querySelector('#setting_select_user_setting');
             const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            path = `/user_account_app_setting?PUT_ID=${user_setting_id}`;
+            path = `/user_account_app_data_post?PUT_ID=${user_setting_id}`;
             break;
         }
         default:{
@@ -1708,7 +1708,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 const old_button = document.querySelector('#setting_btn_user_delete').innerHTML;
                 document.querySelector('#setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB_API', `/user_account_app_setting?DELETE_ID=${user_setting_id}`, 'DELETE', 'ACCESS', null, (err) => {
+                common.FFB ('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'ACCESS', null, (err) => {
                     if (err){
                         document.querySelector('#setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -1918,12 +1918,12 @@ const set_settings_select = () => {
 };
 
 const profile_user_setting_stat = (id) => {
-    common.FFB ('DB_API', `/user_account_app_setting/profile?id=${id}`, 'GET', 'DATA', null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
         else{
-            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result).items.count_user_setting_likes;
-            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result).items.count_user_setting_liked;
+            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result).items.count_user_post_likes;
+            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result).items.count_user_post_liked;
         }
     });
 };
@@ -1965,7 +1965,7 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
 const profile_show_user_setting = () => {
     document.querySelector('#profile_user_settings_row').style.display = 'block';
 
-    common.FFB ('DB_API', `/user_account_app_setting/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
+    common.FFB ('DB_API', `/user_account_app_data_post/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
@@ -1982,7 +1982,7 @@ const profile_show_user_setting = () => {
                         liked=${profile_setting.liked}
                         count_likes=${profile_setting.count_likes}
                         count_views=${profile_setting.count_views}
-                        paper_size=${JSON.parse(profile_setting.settings_json).design_paper_size}
+                        paper_size=${JSON.parse(profile_setting.json_data).design_paper_size}
                         >${profile_setting.description}
                         </option>`;
                 i++;
@@ -1996,7 +1996,7 @@ const profile_show_user_setting = () => {
 };
 const profile_user_setting_update_stat = () => {
     const profile_id = document.querySelector('#common_profile_id').innerHTML;
-    common.FFB ('DB_API', `/user_account_app_setting/profile/all?id=${profile_id}` +
+    common.FFB ('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'DATA', null, (err, result) => {
         if (err)
             null;
@@ -2018,10 +2018,10 @@ const profile_user_setting_update_stat = () => {
         }
     });
 };
-const user_settings_like = (user_setting_id) => {
+const user_settings_like = (user_account_app_data_post_id) => {
     let method;
 
-    const json_data = {user_setting_id: user_setting_id};
+    const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
 
     if (common.COMMON_GLOBAL.user_account_id == '')
         common.show_common_dialogue('LOGIN');
@@ -2032,7 +2032,7 @@ const user_settings_like = (user_setting_id) => {
         else {
             method = 'DELETE';
         }
-        common.FFB ('DB_API', `/user_account_app_setting_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'ACCESS', json_data, (err) => {
+        common.FFB ('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'ACCESS', json_data, (err) => {
             if (err)
                 null;
             else{
@@ -2240,21 +2240,21 @@ const setEvents = () => {
     }, false);
     
     //profile
-    document.querySelector('#profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/user_account_app_setting/profile/detail', false); }, false);
-    document.querySelector('#profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/user_account_app_setting/profile/detail', true, 
+    document.querySelector('#profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/user_account_app_data_post/profile/detail', false); }, false);
+    document.querySelector('#profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
          <div > ${common.ICONS.regional_day +
                   common.ICONS.regional_month +
                   common.ICONS.regional_year +
                   common.ICONS.user_follows}</div>`, show_profile_function); }, false);
-    document.querySelector('#profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/user_account_app_setting/profile/detail', true, 
+    document.querySelector('#profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
         `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
          <div > ${common.ICONS.regional_day +
                   common.ICONS.regional_month +
                   common.ICONS.regional_year +
                   common.ICONS.user_followed}</div>`, show_profile_function); }, false);
-    document.querySelector('#profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/user_account_app_setting/profile/top', show_profile_function); }, false);
-    document.querySelector('#profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/user_account_app_setting/profile/top', show_profile_function); }, false);
+    document.querySelector('#profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/user_account_app_data_post/profile/top', show_profile_function); }, false);
+    document.querySelector('#profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/user_account_app_data_post/profile/top', show_profile_function); }, false);
     document.querySelector('#profile_user_settings_day').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
     document.querySelector('#profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
     document.querySelector('#profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
