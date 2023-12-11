@@ -24,3 +24,30 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='GREGORIAN'),107,'格里高利安');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='HIJRI'),107,'Hijri');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20100',107,'用户名 5 - 100 个字符');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20101',107,'无效的用户名');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20102',107,'简历最多 100 个字符');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20103',107,'电子邮件最多 100 个字符');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20104',107,'提醒最多 100 个字符');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20105',107,'无效的电子邮件');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20106',107,'密码 10 - 100 个字符');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20107',107,'需要用户名、密码和电子邮件');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20200',107,'电子邮件已存在');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20201',107,'Provider 已存在');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',107,'用户名已存在');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',107,'值太长');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',107,'未找到用户名或密码');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',107,'密码不一样');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',107,'请输入用户名');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',107,'请输入密码');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',107,'未找到用户');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',107,'代码无效');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',107,'不允许的文件类型');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',107,'文件过大');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',107,'文本无效');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',107,'文本太长');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',107,'记录不存在');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',107,'无效的密码');

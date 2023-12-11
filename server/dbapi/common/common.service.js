@@ -17,7 +17,7 @@ const {LogDBI, LogDBE} = await import(`file://${process.cwd()}/server/log.servic
  * @param {Types.res} res
  */
  const checked_error = async (app_id, lang_code, err, res) =>{
-	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
+	const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_message.service.js`);
     return new Promise((resolve)=>{
 		const app_code = get_app_code(  err.errorNum, 
 										err.message, 
@@ -105,7 +105,7 @@ const get_app_code = (errorNum, message, code, errno, sqlMessage) => {
 const record_not_found = async (app_id, lang_code, res) => {
 	return new Promise((resolve)=>{
 		import(`file://${process.cwd()}/server/config.service.js`).then(({ConfigGet}) => {
-			import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`).then(({ getMessage }) => {
+			import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_message.service.js`).then(({ getMessage }) => {
 				getMessage( app_id,
 							getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 
 							'20400',
@@ -223,11 +223,20 @@ const db_limit_rows = (sql, limit_type = null) => {
 			const database_error = 'DATABASE ERROR';
 			LogDBE(app_id, getNumberValue(ConfigGet('SERVICE_DB', 'USE')), sql, parameters, error)
 			.then(()=>{
-				//return full error to admin
-				if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-					reject(error);
-				else
-					reject(database_error);
+				const app_code = get_app_code(error.errorNum, 
+					error.message, 
+					error.code, 
+					error.errno, 
+					error.sqlMessage);
+				if (app_code != null)
+					return reject(error);
+				else{
+					//return full error to admin
+					if (app_id==getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+						reject(error);
+					else
+						reject(database_error);
+				}
 			});
 		});
 	});

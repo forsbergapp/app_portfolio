@@ -12,7 +12,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const { createAccessToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
 
 const { getParameter } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/message.service.js`);
+const { getMessage } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_message.service.js`);
 const { createUserAccountApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`);
 
 const { insertUserAccountLogon, getUserAccountLogonAdmin } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`);

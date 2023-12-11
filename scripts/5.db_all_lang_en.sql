@@ -893,34 +893,6 @@ INSERT INTO app_portfolio.language_translation (language_id, language_translatio
 INSERT INTO app_portfolio.language_translation (language_id, language_translation_id, text) VALUES (1041,147,'Uzbek (Cyrillic)');
 INSERT INTO app_portfolio.language_translation (language_id, language_translation_id, text) VALUES (1042,147,'Uzbek (Latin)');
 --
--- message_translation
---
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20100','Username 5 - 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20101','Not valid username');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20102','Bio max 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20103','Email max 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20104','Reminder max 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20105','Not valid email');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20106','Password 10 - 100 characters');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20107','Username, password and email are required');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20200','Email already exist');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20201','Provider already exist');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20203','Username already exist');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20204','Too long value');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20300','Username or password not found');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20301','Password not the same');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20302','You can not delete last user setting');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20303','Please enter username');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20304','Please enter password');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20305','User not found');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20306','Code not valid');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20307','File type not allowed');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20308','File size too large');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20309','Text not valid');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20310','Text too long');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20400','Record not found');
-INSERT INTO app_portfolio.message_translation (language_id, message_code, text) VALUES (147,'20401','Invalid password');
---
 -- parameter_type_translation
 --
 INSERT INTO app_portfolio.parameter_type_translation (text, parameter_type_id, language_id) VALUES ('Public','0',147);

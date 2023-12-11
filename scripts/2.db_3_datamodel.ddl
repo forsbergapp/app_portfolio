@@ -87,10 +87,12 @@ GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app_common;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO role_app_admin;
 
 CREATE TABLE app_portfolio.app_message (
-    message_code      VARCHAR(100) NOT NULL,
     app_id            INTEGER NOT NULL,
-	CONSTRAINT app_message_pk PRIMARY KEY ( message_code,
-                                            app_id )
+    code              VARCHAR(100) NOT NULL,
+    message_level_id  INTEGER NOT NULL,
+    message_type_id   INTEGER NOT NULL,
+	CONSTRAINT app_message_pk PRIMARY KEY ( app_id, 
+                                            code )
 );
 
 GRANT SELECT ON app_portfolio.app_message TO role_app_common;
@@ -372,16 +374,6 @@ GRANT SELECT ON app_portfolio.locale TO role_app_common;
 ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                      country_id );
 
-CREATE TABLE app_portfolio.message (
-    message_level_id INTEGER NOT NULL,
-    message_type_id  INTEGER NOT NULL,
-    code             VARCHAR(100) NOT NULL,
-    CONSTRAINT message_pk PRIMARY KEY ( code )
-);
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message TO role_app_admin;
-
-GRANT SELECT ON app_portfolio.message TO role_app_common;
-
 CREATE TABLE app_portfolio.message_level (
     id             SERIAL NOT NULL,
     message_level  VARCHAR(10) NOT NULL,
@@ -645,10 +637,6 @@ ALTER TABLE app_portfolio.app_message
         REFERENCES app_portfolio.app ( id )
             ON DELETE CASCADE;
 
-ALTER TABLE app_portfolio.app_message
-    ADD CONSTRAINT app_message_message_fk FOREIGN KEY ( message_code )
-        REFERENCES app_portfolio.message ( code );
-
 ALTER TABLE app_portfolio.app_object
     ADD CONSTRAINT app_object_app_fk FOREIGN KEY ( app_id )
         REFERENCES app_portfolio.app ( id )
@@ -765,11 +753,11 @@ ALTER TABLE app_portfolio.locale
     ADD CONSTRAINT locale_language_fk FOREIGN KEY ( language_id )
         REFERENCES app_portfolio.language ( id );
 
-ALTER TABLE app_portfolio.message
+ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT message_message_level_fk FOREIGN KEY ( message_level_id )
         REFERENCES app_portfolio.message_level ( id );
 
-ALTER TABLE app_portfolio.message
+ALTER TABLE app_portfolio.app_message
     ADD CONSTRAINT message_message_type_fk FOREIGN KEY ( message_type_id )
         REFERENCES app_portfolio.message_type ( id );
 
@@ -778,8 +766,10 @@ ALTER TABLE app_portfolio.message_translation
         REFERENCES app_portfolio.language ( id );
 
 ALTER TABLE app_portfolio.message_translation
-    ADD CONSTRAINT message_translation_message_fk FOREIGN KEY ( message_code )
-        REFERENCES app_portfolio.message ( code );
+    ADD CONSTRAINT message_translation_message_fk FOREIGN KEY ( app_message_app_id,
+                                                                app_message_code )
+        REFERENCES app_portfolio.app_message (  app_id,
+                                                code );
 
 ALTER TABLE app_portfolio.parameter_type_translation
     ADD CONSTRAINT parameter_type_translation_language_fk FOREIGN KEY ( language_id )

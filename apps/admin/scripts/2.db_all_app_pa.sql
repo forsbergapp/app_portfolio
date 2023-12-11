@@ -24,3 +24,30 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='GREGORIAN'),438,'ਗ੍ਰੈਗੋਰੀਅਨ');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='HIJRI'),438,'ਹਿਜਰੀ');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20100',438,'ਉਪਭੋਗਤਾ ਨਾਮ 5 - 100 ਅੱਖਰ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20101',438,'ਵੈਧ ਉਪਭੋਗਤਾ ਨਾਮ ਨਹੀਂ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20102',438,'ਬਾਇਓ ਅਧਿਕਤਮ 100 ਅੱਖਰ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20103',438,'ਈਮੇਲ ਅਧਿਕਤਮ 100 ਅੱਖਰ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20104',438,'ਰੀਮਾਈਂਡਰ ਅਧਿਕਤਮ 100 ਅੱਖਰ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20105',438,'ਵੈਧ ਈਮੇਲ ਨਹੀਂ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20106',438,'ਪਾਸਵਰਡ 10 - 100 ਅੱਖਰ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20107',438,'ਉਪਭੋਗਤਾ ਨਾਮ, ਪਾਸਵਰਡ ਅਤੇ ਈਮੇਲ ਦੀ ਲੋੜ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20200',438,'ਈਮੇਲ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20201',438,'ਪ੍ਰਦਾਤਾ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',438,'ਉਪਭੋਗਤਾ ਨਾਮ ਪਹਿਲਾਂ ਹੀ ਮੌਜੂਦ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',438,'ਬਹੁਤ ਲੰਮਾ ਮੁੱਲ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',438,'ਯੂਜ਼ਰਨਾਮ ਜਾਂ ਪਾਸਵਰਡ ਨਹੀਂ ਮਿਲਿਆ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',438,'ਪਾਸਵਰਡ ਇੱਕੋ ਜਿਹਾ ਨਹੀਂ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',438,'ਕਿਰਪਾ ਕਰਕੇ ਉਪਭੋਗਤਾ ਨਾਮ ਦਾਖਲ ਕਰੋ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',438,'ਕਿਰਪਾ ਕਰਕੇ ਪਾਸਵਰਡ ਦਾਖਲ ਕਰੋ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',438,'ਉਪਭੋਗਤਾ ਨਹੀਂ ਮਿਲਿਆ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',438,'ਕੋਡ ਵੈਧ ਨਹੀਂ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',438,'ਫ਼ਾਈਲ ਕਿਸਮ ਦੀ ਇਜਾਜ਼ਤ ਨਹੀਂ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',438,'ਫ਼ਾਈਲ ਦਾ ਆਕਾਰ ਬਹੁਤ ਵੱਡਾ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',438,'ਲਿਖਤ ਵੈਧ ਨਹੀਂ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',438,'ਟੈਕਸਟ ਬਹੁਤ ਲੰਮਾ ਹੈ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',438,'ਰਿਕਾਰਡ ਨਹੀਂ ਮਿਲਿਆ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',438,'ਗਲਤ ਪਾਸਵਰਡ');
