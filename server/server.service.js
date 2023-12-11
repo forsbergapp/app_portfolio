@@ -92,6 +92,8 @@ const COMMON = {
     const db_app_category = await import(`file://${process.cwd()}/server/dbapi/object/app_category.js`);
     //server db api  object app_log
     const db_app_log = await import(`file://${process.cwd()}/server/dbapi/object/app_log.js`);
+    //server db api object app_message
+    const db_app_message = await import(`file://${process.cwd()}/server/dbapi/object/app_message.js`);
     //server db api object app_object
     const db_app_object = await import(`file://${process.cwd()}/server/dbapi/object/app_object.js`);
     //server db api object app_parameter
@@ -102,8 +104,7 @@ const COMMON = {
     const db_country = await import(`file://${process.cwd()}/server/dbapi/object/country.js`);
     //server db api object locale
     const db_locale = await import(`file://${process.cwd()}/server/dbapi/object/locale.js`);
-    //server db api object message
-    const db_message = await import(`file://${process.cwd()}/server/dbapi/object/message.js`);
+    
     //server db api object parameter_type
     const db_parameter_type = await import(`file://${process.cwd()}/server/dbapi/object/parameter_type.js`);
     //server db api object user account
@@ -166,7 +167,7 @@ const COMMON = {
                     break;
                 }
                 case 'DATA_DB_API_/MESSAGE_GET':{
-                    resolve(db_message.getMessage(app_id, query));
+                    resolve(db_app_message.getMessage(app_id, query));
                     break;
                 }
                 case 'DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{

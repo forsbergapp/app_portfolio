@@ -585,30 +585,39 @@ INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_na
 --
 -- app_message
 --
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20100',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20101',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20102',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20103',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20104',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20105',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20106',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20107',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20200',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20201',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20203',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20204',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20300',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20301',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20303',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20304',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20305',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20306',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20307',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20308',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20309',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20310',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',0);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20401',0);
+--  db info/errors
+--	20100-20199
+--	db constraints info/error
+--	20200-20299
+--	app info/error
+--	20300-20399
+--	node rest api info/error
+--	20400-20499
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20100', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20101', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20102', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20103', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20104', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20105', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20106', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20107', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20108', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20200', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20201', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20203', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20204', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20300', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20301', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20303', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20304', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20305', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20306', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20307', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20308', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20309', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20310', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20400', 1, 1);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20401', 1, 1);
 --
 -- app_device
 --

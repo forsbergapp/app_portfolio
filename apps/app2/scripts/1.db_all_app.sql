@@ -198,8 +198,7 @@ INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_
 --
 -- app_message
 --
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20302',2);
-INSERT INTO app_portfolio.app_message (message_code, app_id) VALUES ('20400',2);
+INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (2, '20302', 1, 1);
 --
 -- app_parameter
 --

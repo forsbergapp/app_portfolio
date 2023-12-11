@@ -1728,7 +1728,7 @@ const user_settings_delete = (choice=null) => {
                 });       
             } else {
                 //You can't delete last user setting
-                common.show_message('ERROR', 20302, null, null, common.COMMON_GLOBAL.app_id);
+                common.show_message('ERROR', 20302, null, null, common.COMMON_GLOBAL.common_app_id);
             }
         }
     }

@@ -24,3 +24,30 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='GREGORIAN'),201,'ग्रेगोरियन');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='HIJRI'),201,'हिजरी');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20100',201,'उपयोगकर्ता नाम 5 - 100 वर्ण');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20101',201,'मान्य उपयोगकर्ता नाम नहीं');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20102',201,'जैव अधिकतम 100 वर्ण');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20103',201,'ईमेल अधिकतम 100 वर्ण');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20104',201,'रिमाइंडर अधिकतम 100 वर्ण');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20105',201,'मान्य ईमेल नहीं');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20106',201,'पासवर्ड 10 - 100 अक्षर');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20107',201,'उपयोगकर्ता नाम, पासवर्ड और ईमेल की आवश्यकता है');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20200',201,'ईमेल पहले से मौजूद है');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20201',201,'प्रदाता पहले से मौजूद है');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',201,'उपयोगकर्ता नाम पहले से मौजूद');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',201,'बहुत लंबा मान');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',201,'उपयोगकर्ता नाम या पासवर्ड नहीं मिला');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',201,'पासवर्ड समान नहीं');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',201,'कृपया उपयोगकर्ता नाम दर्ज करें');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',201,'कृप्या पास्वर्ड भरो');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',201,'उपयोगकर्ता नहीं मिला');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',201,'कोड मान्य नहीं है');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',201,'फ़ाइल प्रकार की अनुमति नहीं है');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',201,'फ़ाइल का आकार बहुत बड़ा');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',201,'टेक्स्ट मान्य नहीं है');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',201,'टेक्स्ट बहुत लंबा');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',201,'रिकॉर्ड नहीं मिला');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',201,'अवैध पासवर्ड');

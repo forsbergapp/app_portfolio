@@ -74,3 +74,7 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'FAST_START_END' AND app_setting_type_app_id = 2 AND data='2'),438,'ਇਮਸਕ ਅਤੇ ਮਗਰੀਬ');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'FAST_START_END' AND app_setting_type_app_id = 2 AND data='3'),438,'ਫਜਰ ਅਤੇ ਈਸ਼ਾ');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'FAST_START_END' AND app_setting_type_app_id = 2 AND data='4'),438,'ਇਮਸਾਕ ਅਤੇ ਈਸ਼ਾ');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (2,'20302',438,'ਤੁਸੀਂ ਆਖਰੀ ਉਪਭੋਗਤਾ ਸੈਟਿੰਗ ਨੂੰ ਮਿਟਾ ਨਹੀਂ ਸਕਦੇ ਹੋ');

@@ -24,3 +24,30 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='GREGORIAN'),531,'గ్రెగోరియన్');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'CALENDAR_TYPE' and app_setting_type_app_id = 0 AND data='HIJRI'),531,'హిజ్రీ');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20100',531,'వినియోగదారు పేరు 5 - 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20101',531,'చెల్లుబాటు అయ్యే వినియోగదారు పేరు కాదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20102',531,'బయో గరిష్టంగా 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20103',531,'గరిష్టంగా 100 అక్షరాలు ఇమెయిల్ చేయండి');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20104',531,'రిమైండర్ గరిష్టంగా 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20105',531,'చెల్లని ఇమెయిల్');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20106',531,'పాస్వర్డ్ 10 - 100 అక్షరాలు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20107',531,'వినియోగదారు పేరు, పాస్‌వర్డ్ మరియు ఇమెయిల్ అవసరం');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20200',531,'ఇమెయిల్ ఇప్పటికే ఉంది');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20201',531,'ప్రొవైడర్ ఇప్పటికే ఉన్నారు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',531,'వినియోగదారు పేరు ఇప్పటికే ఉంది');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',531,'చాలా పొడవు విలువ');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',531,'వినియోగదారు పేరు లేదా పాస్‌వర్డ్ కనుగొనబడలేదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',531,'పాస్‌వర్డ్ ఒకేలా ఉండదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',531,'దయచేసి వినియోగదారు పేరును నమోదు చేయండి');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',531,'దయచేసి పాస్‌వర్డ్‌ని నమోదు చేయండి');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',531,'వినియోగదారుడు కనపడలేదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',531,'కోడ్ చెల్లదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',531,'ఫైల్ రకం అనుమతించబడదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',531,'ఫైల్ పరిమాణం చాలా పెద్దది');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',531,'వచనం చెల్లదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',531,'టెక్స్ట్ చాలా పొడవుగా ఉంది');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',531,'రికార్డు దొరకలేదు');
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',531,'చెల్లని పాస్వర్డ్');
