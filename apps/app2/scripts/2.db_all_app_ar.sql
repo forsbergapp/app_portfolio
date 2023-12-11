@@ -75,3 +75,7 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' AND app_setting_type_app_id = 2 AND data='1'),25,'حرفي, ترجمة');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' AND app_setting_type_app_id = 2 AND data='2'),25,'ترجمة, حرفي');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'COLUMN_TITLE' AND app_setting_type_app_id = 2 AND data='3'),25,'ترجمة');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (2,'20302',25,'لا يمكنك حذف إعداد المستخدم الأخير');

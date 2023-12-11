@@ -73,3 +73,7 @@ INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, 
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'FAST_START_END' AND app_setting_type_app_id = 2 AND data='2'),1035,'Imsak & Mahgrib');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'FAST_START_END' AND app_setting_type_app_id = 2 AND data='3'),1035,'Fajr & Isha');
 INSERT INTO app_portfolio.app_setting_translation (app_setting_id, language_id, text) VALUES ((SELECT id FROM app_portfolio.app_setting WHERE app_setting_type_app_setting_type_name = 'FAST_START_END' AND app_setting_type_app_id = 2 AND data='4'),1035,'Imsak & Isha');
+--
+-- message_translation
+--
+INSERT INTO app_portfolio.message_translation (app_message_app_id, app_message_code, language_id, text) VALUES (2,'20302',1035,'You can not delete last user setting');
