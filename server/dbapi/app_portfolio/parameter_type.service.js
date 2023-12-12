@@ -17,12 +17,12 @@ const getParameterTypeAdmin = async (app_id, id, lang_code) => {
 					  pt.parameter_type_name "parameter_type_name",
 					  ptt.text "parameter_type_text"
 				 FROM ${db_schema()}.parameter_type pt
-				 LEFT OUTER JOIN ${db_schema()}.parameter_type_translation ptt
+				 LEFT OUTER JOIN ${db_schema()}.app_translation ptt
 				   ON ptt.parameter_type_id = pt.id
 				  AND ptt.language_id IN (SELECT id 
 											FROM ${db_schema()}.language l
 										   WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-																  FROM ${db_schema()}.parameter_type_translation ptt1,
+																  FROM ${db_schema()}.app_translation ptt1,
 																	   ${db_schema()}.language l1
 																 WHERE l1.id  = ptt1.language_id
 																   AND ptt1.parameter_type_id  = pt.id

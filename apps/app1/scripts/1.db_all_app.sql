@@ -10,12 +10,8 @@ INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUE
 --
 -- setting
 --
-INSERT INTO app_portfolio.app_setting (description, data, data2, data3, data4, data5, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES ('Sun','sun',NULL,NULL,NULL,NULL,'APP_THEME', 1);
-INSERT INTO app_portfolio.app_setting (description, data, data2, data3, data4, data5, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES ('Moon','moon',NULL,NULL,NULL,NULL,'APP_THEME', 1);
---
--- app_object
---
-INSERT INTO app_portfolio.app_object (app_id, object_name) VALUES (1,'APP_DESCRIPTION');
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (1,'APP_THEME','sun','Sun',NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (1,'APP_THEME','moon','Moon',NULL,NULL,NULL,NULL);
 --
 -- app_parameter
 --

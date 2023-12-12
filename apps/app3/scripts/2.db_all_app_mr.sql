@@ -1,4 +1,4 @@
 --
--- app_object_translation
+-- app_translation app_object
 --
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (3,'APP_DESCRIPTION',338,'कागदपत्रांचे सादरीकरण');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (3,338,'कागदपत्रांचे सादरीकरण');
