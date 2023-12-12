@@ -22,14 +22,14 @@ const getMessage = async (app_id, data_app_id, code, lang_code) => {
 							l.lang_code "lang_code",
 							mt.text "text"
 					  FROM ${db_schema()}.app_message am,
-							 ${db_schema()}.message_translation mt,
+							 ${db_schema()}.app_translation mt,
 							 ${db_schema()}.language l
 					  WHERE am.code = :code
 						AND am.app_id = :app_id
 						AND mt.language_id = l.id
 						AND mt.app_message_code = am.code
 						AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-											 FROM ${db_schema()}.message_translation mt1,
+											 FROM ${db_schema()}.app_translation mt1,
 													${db_schema()}.language l1
 											WHERE mt1.app_message_code = mt.app_message_code
 											  AND mt1.app_message_app_id = mt.app_message_app_id

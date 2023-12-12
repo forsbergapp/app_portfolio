@@ -19,13 +19,13 @@ const getCountries = async (app_id, lang_code) => {
                    cg.group_name "group_name"
               FROM ${db_schema()}.country  c,
                    ${db_schema()}.country_group cg,
-                   ${db_schema()}.country_translation ct
+                   ${db_schema()}.app_translation ct
              WHERE ct.country_id = c.id
                AND cg.id = c.country_group_id
-               AND ct.language_id IN (SELECT id 
+               AND ct.language_id =  (SELECT id 
                                         FROM ${db_schema()}.language l
                                        WHERE l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-                                                              FROM ${db_schema()}.country_translation ct1,
+                                                              FROM ${db_schema()}.app_translation ct1,
                                                                    ${db_schema()}.language l1
                                                              WHERE ct1.country_id = ct.country_id
                                                                AND l1.id = ct1.language_id

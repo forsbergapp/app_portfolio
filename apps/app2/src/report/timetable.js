@@ -556,11 +556,11 @@ const set_prayer_method = async(app_id, locale) => {
 					midnight: (midnight_data==null || midnight_data=='')?{}:{midnight: midnight_data}};
 		};
         getSettings(app_id, locale, 'METHOD')
-		.then((/**@type{Types.db_result_setting_getSettings[]}*/result_settings)=>{
+		.then((/**@type{Types.db_result_app_setting_getSettings[]}*/result_settings)=>{
 			for (const setting of result_settings){
 				const prayer_value = set_prayer_value(setting.data2, setting.data3,setting.data4,setting.data5);
 				//ES6 object spread 
-				Object.assign(REPORT_GLOBAL.module_praytimes_methods, {[setting.data.toUpperCase()]:{
+				Object.assign(REPORT_GLOBAL.module_praytimes_methods, {[setting.value.toUpperCase()]:{
 																				name:  setting.text,
 																				params: { 	...prayer_value.fajr,
 																							...prayer_value.isha,
