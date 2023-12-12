@@ -227,11 +227,11 @@ const render_common_html = async (app_id, module, app_config) =>{
     }
     if (app_config.render_settings){
         const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
-        /** @type {Types.db_result_setting_getSettings[]}*/
+        /** @type {Types.db_result_app_setting_getSettings[]}*/
         const app_settings_db = await getSettings(app_id, app_config.locale, null);
         let option;
         for (const app_setting of app_settings_db) {
-            option = `<option id=${app_setting.id} value='${app_setting.data}'>${app_setting.text}</option>`;
+            option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
             switch (app_setting.app_setting_type_name){
                 //static content
                 case 'TIMEZONE':{
@@ -252,7 +252,7 @@ const render_common_html = async (app_id, module, app_config) =>{
                 case 'MAP_STYLE':{
                     map_styles.push({  id:app_setting.id, 
                                         description:app_setting.text, 
-                                        data:app_setting.data, 
+                                        data:app_setting.value, 
                                         data2:app_setting.data2, 
                                         data3:app_setting.data3, 
                                         data4:app_setting.data4, 

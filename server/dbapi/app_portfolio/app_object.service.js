@@ -22,28 +22,25 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							lang_code "lang_code", 
 							id "id",
 							text "text"
-					FROM (SELECT 	ao.object_name, 
-									ao.app_id, 
-									null object_item_name,
-									l.lang_code, 
-									null id, 
-									aot.text
-							FROM ${db_schema()}.app_object ao,
-								${db_schema()}.app_object_translation aot,
+					FROM (SELECT 	aot.app_object_object_name	object_name, 
+									aot.app_object_app_id		app_id, 
+									null 						object_item_name,
+									l.lang_code					lang_code, 
+									null 						id, 
+									aot.text					text
+							FROM ${db_schema()}.app_translation aot,
 								${db_schema()}.language l
 							WHERE l.id = aot.language_id
-							AND aot.app_object_app_id = ao.app_id
-							AND aot.app_object_object_name = ao.object_name
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
-														${db_schema()}.app_object_translation aot1
+														${db_schema()}.app_translation aot1
 												WHERE aot1.language_id = l1.id
-													AND aot1.app_object_app_id = ao.app_id
-													AND aot1.app_object_object_name = ao.object_name
+													AND aot1.app_object_app_id = aot.app_object_app_id
+													AND aot1.app_object_object_name = aot.app_object_object_name
 													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 												)
-							AND ao.app_id IN(:app_id, :common_app_id)							
-							AND ao.object_name = :object_name
+							AND aot.app_object_app_id IN(:app_id, :common_app_id)							
+							AND aot.app_object_object_name = :object_name
 						UNION ALL
 						SELECT 		aoi.app_object_object_name object_name, 
 									aoi.app_object_app_id app_id, 
@@ -54,16 +51,17 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 							FROM ${db_schema()}.app_object_item aoi,
 								${db_schema()}.app_setting_type st,
 								${db_schema()}.app_setting s,
-								${db_schema()}.app_setting_translation str,
+								${db_schema()}.app_translation str,
 								${db_schema()}.language l
 							WHERE aoi.app_setting_type_app_setting_type_name = st.app_setting_type_name
 							AND aoi.app_setting_type_app_id = st.app_id
 							AND s.app_setting_type_app_setting_type_name = st.app_setting_type_name
 							AND s.app_setting_type_app_id = st.app_id
 							AND l.id = str.language_id
+							AND str.app_setting_id = s.id
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
-														${db_schema()}.app_setting_translation str1
+														${db_schema()}.app_translation str1
 												WHERE str1.language_id = l1.id
 													AND str1.app_setting_id = s.id
 													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
@@ -74,31 +72,27 @@ const getObjects = async (app_id, lang_code, object_name, object_item_name) => {
 								OR aoi.app_object_object_name <> 'APP')
 							AND (aoi.object_item_name = :object_item_name OR :object_item_name IS NULL)
 						UNION ALL
-						SELECT 	aoi.app_object_object_name object_name, 
-								aoi.app_object_app_id app_id, 
-								aoi.object_item_name,
+						SELECT 	aoit.app_object_item_app_object_object_name object_name, 
+								aoit.app_object_item_app_object_app_id 		app_id, 
+								aoit.app_object_item_object_item_name 		object_item_name,
 								l.lang_code, 
 								null id, 
 								aoit.text
-							FROM ${db_schema()}.app_object_item aoi,
-								${db_schema()}.app_object_item_translation aoit,
+							FROM ${db_schema()}.app_translation aoit,
 								${db_schema()}.language l
 							WHERE l.id = aoit.language_id
-							AND aoit.app_object_item_app_object_app_id = aoi.app_object_app_id
-							AND aoit.app_object_item_app_object_object_name = aoi.app_object_object_name
-							AND aoit.app_object_item_object_item_name = aoi.object_item_name
 							AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
 												FROM ${db_schema()}.language l1,
-														${db_schema()}.app_object_item_translation aoit1
+														${db_schema()}.app_translation aoit1
 												WHERE aoit1.language_id = l1.id
-													AND aoit1.app_object_item_app_object_app_id = aoi.app_object_app_id
-													AND aoit1.app_object_item_app_object_object_name = aoi.app_object_object_name
-													AND aoit1.app_object_item_object_item_name = aoi.object_item_name
+													AND aoit1.app_object_item_app_object_app_id = aoit.app_object_item_app_object_app_id
+													AND aoit1.app_object_item_app_object_object_name = aoit.app_object_item_app_object_object_name
+													AND aoit1.app_object_item_object_item_name = aoit.app_object_item_object_item_name
 													AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
 												)
-							AND aoi.app_object_app_id IN(:app_id, :common_app_id)
-							AND aoi.app_object_object_name = :object_name
-							AND (aoi.object_item_name = :object_item_name OR :object_item_name IS NULL)) t
+							AND aoit.app_object_item_app_object_app_id IN(:app_id, :common_app_id)
+							AND aoit.app_object_item_app_object_object_name = :object_name
+							AND (aoit.app_object_item_object_item_name = :object_item_name OR :object_item_name IS NULL)) t
 			ORDER BY 1, 2, 3, 4, 5, 6`;
 	const parameters = {
 					common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),

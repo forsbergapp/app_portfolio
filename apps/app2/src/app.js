@@ -10,7 +10,7 @@ const {render_app_with_data, render_app_html} = await import(`file://${process.c
  * Get themes
  * @param {number} app_id
  * @param {string} locale
- * @param {Types.db_result_setting_getSettings[]} app_settings
+ * @param {Types.db_result_app_setting_getSettings[]} app_settings
  * @returns {[string|null,string|null,string|null]}
  */
 const themes = (app_id, locale, app_settings) =>{
@@ -40,8 +40,8 @@ const themes = (app_id, locale, app_settings) =>{
             }
         }
         const new_span = `<span class="slide slide_${theme_type}">
-                            <div id='theme_${theme_type}_${app_setting.data}'
-                                data-theme_id='${app_setting.data}'> 
+                            <div id='theme_${theme_type}_${app_setting.value}'
+                                data-theme_id='${app_setting.value}'> 
                             </div>
                         </span>`;
         switch (app_setting.app_setting_type_name){
@@ -80,7 +80,7 @@ const themes = (app_id, locale, app_settings) =>{
  * Get places
  * @param {number} app_id
  * @param {string} locale
- * @param {Types.db_result_setting_getSettings[]} app_settings
+ * @param {Types.db_result_app_setting_getSettings[]} app_settings
  * @returns {string}
  */
 const places = (app_id, locale, app_settings) => {
@@ -100,7 +100,7 @@ const places = (app_id, locale, app_settings) => {
         //data 5 = icon
         select_places +=
         `<option  value='${i}' 
-                    id='${app_setting.data}' 
+                    id='${app_setting.value}' 
                     latitude='${app_setting.data2}' 
                     longitude='${app_setting.data3}' 
                     timezone='${app_setting.data4}'>${app_setting.data5} ${app_setting.text}
@@ -186,7 +186,7 @@ const createApp = (app_id, username, locale) => {
                     //render settings
                     let option;
                     for (const setting of app.settings.settings) {
-                        option = `<option id=${setting.id} value='${setting.data}'>${setting.text}</option>`;
+                        option = `<option id=${setting.id} value='${setting.value}'>${setting.text}</option>`;
                         switch (setting.app_setting_type_name){
                             case 'TIMEZONE':{
                                 USER_TIMEZONE += option;
@@ -225,7 +225,7 @@ const createApp = (app_id, username, locale) => {
                                 break;
                             }
                             case 'METHOD':{
-                                option = `<option id=${setting.id} value='${setting.data}' ` +
+                                option = `<option id=${setting.id} value='${setting.value}' ` +
                                             `data2='${nvl(setting.data2)}' data3='${nvl(setting.data3)}' data4='${nvl(setting.data4)}' data5='${nvl(setting.data5)}'>${setting.text}</option>`;
                                 APP_METHOD += option;
                                 break;

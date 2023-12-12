@@ -1,4 +1,4 @@
 --
--- app_object_translation
+-- app_translation app_object
 --
-INSERT INTO app_portfolio.app_object_translation (app_object_app_id, app_object_object_name, language_id, text) VALUES (1,'APP_DESCRIPTION',198,'פלטפורמת אפליקציה אפליקציית עמוד בודד (SPA) בכל שפה ובכל הגדרה אזורית');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (1,198,'פלטפורמת אפליקציה אפליקציית עמוד בודד (SPA) בכל שפה ובכל הגדרה אזורית');

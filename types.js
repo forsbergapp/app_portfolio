@@ -315,7 +315,7 @@
 /**
  * Apps - App render common info settings
  * @typedef {object} render_common_settings
- * @property {db_result_setting_getSettings[]} settings - db result
+ * @property {db_result_app_setting_getSettings[]} settings - db result
  * @property {string} user_timezones        - HTML option format
  * @property {string} user_directions       - HTML option format
  * @property {string} user_arabic_scripts   - HTML option format
@@ -1167,15 +1167,15 @@
  *              role_nae:string, 
  *              icon:string}} db_result_app_role_getAppRoleAdmin
  * APP SETTING
- * @typedef {{  app_id:number, 
- *              app_setting_type_name:string, 
- *              id:string,
- *              data:string, 
+ * @typedef {{  id:string,
+ *              app_id:number, 
+ *              app_setting_type_name:string,
+ *              value:string, 
  *              data2:string|null, 
  *              data3:string|null, 
  *              data4:string|null, 
  *              data5:string|null,
- *              text:string}} db_result_setting_getSettings
+ *              text:string}} db_result_app_setting_getSettings
  * COUNTRY
  * @typedef {{  id:string, 
  *              group_name:string, 
