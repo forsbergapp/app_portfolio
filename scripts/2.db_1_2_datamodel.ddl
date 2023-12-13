@@ -97,14 +97,14 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO role_app_adm
 
 
 CREATE TABLE app_portfolio.app_object_item (
-    app_object_app_id                       INTEGER NOT NULL,
     app_object_object_name                  VARCHAR(100) NOT NULL,
     object_item_name                        VARCHAR(100) NOT NULL,
+    app_object_app_id                       INTEGER NOT NULL,
     app_setting_type_app_setting_type_name  VARCHAR(100),
     app_setting_type_app_id                 INTEGER,
-	CONSTRAINT app_object_item_pk PRIMARY KEY ( app_object_app_id,
+	CONSTRAINT app_object_item_pk PRIMARY KEY ( object_item_name,
                                                 app_object_object_name,
-                                                object_item_name )
+                                                app_object_app_id )
 );
 
 GRANT SELECT ON app_portfolio.app_object_item TO role_app_common;
@@ -166,15 +166,15 @@ GRANT SELECT ON app_portfolio.app_setting TO role_app_common;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting TO role_app_admin;
 
 ALTER TABLE app_portfolio.app_setting
-    ADD CONSTRAINT app_setting_un UNIQUE ( app_setting_type_app_id,
-                                           app_setting_type_app_setting_type_name,
-                                           value );
+    ADD CONSTRAINT app_setting_un UNIQUE ( app_setting_type_app_setting_type_name,
+                                           value,
+                                           app_setting_type_app_id );
                                                                
 CREATE TABLE app_portfolio.app_setting_type (
     app_id                  INTEGER NOT NULL,
     app_setting_type_name   VARCHAR(100) NOT NULL,
-    CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_id,
-                                                 app_setting_type_name )
+    CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_setting_type_name,
+                                                 app_id )
 );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting_type TO role_app_admin;
@@ -192,206 +192,171 @@ CREATE TABLE app_portfolio.app_translation (
     app_object_item_app_object_object_name VARCHAR(100),
     app_object_item_object_item_name       VARCHAR(100),
     parameter_type_id                      VARCHAR(100),
-    app_message_app_id                     INTEGER,
     app_message_code                       VARCHAR(100),
+    app_message_app_id                     INTEGER,
     country_id                             INTEGER,
     language_id_translation                INTEGER,
     text                                   VARCHAR(2000) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_translation TO role_app_common;
+ALTER TABLE app_portfolio.app_translation
+    ADD CONSTRAINT arc_3 CHECK ( ( ( app_object_object_name IS NOT NULL )
+                                   AND ( app_object_app_id IS NOT NULL )
+                                   AND ( app_object_item_object_item_name IS NULL )
+                                   AND ( app_object_item_app_object_object_name IS NULL )
+                                   AND ( app_object_item_app_object_app_id IS NULL )
+                                   AND ( app_setting_id IS NULL )
+                                   AND ( parameter_type_id IS NULL )
+                                   AND ( app_id IS NULL )
+                                   AND ( app_category_id IS NULL )
+                                   AND ( country_id IS NULL )
+                                   AND ( app_message_app_id IS NULL )
+                                   AND ( app_message_code IS NULL )
+                                   AND ( language_id_translation IS NULL ) )
+                                 OR ( ( app_object_item_object_item_name IS NOT NULL )
+                                      AND ( app_object_item_app_object_object_name IS NOT NULL )
+                                      AND ( app_object_item_app_object_app_id IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( app_setting_id IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( parameter_type_id IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( app_id IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( app_category_id IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( country_id IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( app_message_app_id IS NOT NULL )
+                                      AND ( app_message_code IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( language_id_translation IS NULL ) )
+                                 OR ( ( language_id_translation IS NOT NULL )
+                                      AND ( app_object_object_name IS NULL )
+                                      AND ( app_object_app_id IS NULL )
+                                      AND ( app_object_item_object_item_name IS NULL )
+                                      AND ( app_object_item_app_object_object_name IS NULL )
+                                      AND ( app_object_item_app_object_app_id IS NULL )
+                                      AND ( app_setting_id IS NULL )
+                                      AND ( parameter_type_id IS NULL )
+                                      AND ( app_id IS NULL )
+                                      AND ( app_category_id IS NULL )
+                                      AND ( country_id IS NULL )
+                                      AND ( app_message_app_id IS NULL )
+                                      AND ( app_message_code IS NULL ) ) );
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO role_app_admin;
 
+GRANT SELECT ON app_portfolio.app_translation TO role_app_common;
+
 ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT fkarc_1 CHECK ( ( ( language_id_translation IS NOT NULL )
-                                     AND ( app_setting_id IS NULL )
-                                     AND ( app_object_item_app_object_app_id IS NULL )
-                                     AND ( app_object_item_app_object_object_name IS NULL )
-                                     AND ( app_object_item_object_item_name IS NULL )
-                                     AND ( app_object_object_name IS NULL )
-                                     AND ( app_object_app_id IS NULL )
-                                     AND ( parameter_type_id IS NULL )
-                                     AND ( app_id IS NULL )
-                                     AND ( app_category_id IS NULL )
-                                     AND ( app_message_app_id IS NULL )
-                                     AND ( app_message_code IS NULL )
-                                     AND ( country_id IS NULL ) )
-                                   OR ( ( app_setting_id IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( app_object_item_app_object_app_id IS NOT NULL )
-                                        AND ( app_object_item_app_object_object_name IS NOT NULL )
-                                        AND ( app_object_item_object_item_name IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( app_object_object_name IS NOT NULL )
-                                        AND ( app_object_app_id IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( parameter_type_id IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( app_id IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( app_category_id IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( app_message_app_id IS NOT NULL )
-                                        AND ( app_message_code IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( country_id IS NULL ) )
-                                   OR ( ( country_id IS NOT NULL )
-                                        AND ( language_id_translation IS NULL )
-                                        AND ( app_setting_id IS NULL )
-                                        AND ( app_object_item_app_object_app_id IS NULL )
-                                        AND ( app_object_item_app_object_object_name IS NULL )
-                                        AND ( app_object_item_object_item_name IS NULL )
-                                        AND ( app_object_object_name IS NULL )
-                                        AND ( app_object_app_id IS NULL )
-                                        AND ( parameter_type_id IS NULL )
-                                        AND ( app_id IS NULL )
-                                        AND ( app_category_id IS NULL )
-                                        AND ( app_message_app_id IS NULL )
-                                        AND ( app_message_code IS NULL ) ) );
+    ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
+                                                            app_id,
+                                                            language_id );
 
-CREATE INDEX app_translation_app_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        app_id
-    ASC );
+ALTER TABLE app_portfolio.app_translation
+    ADD CONSTRAINT app_translation_app_message_un UNIQUE ( app_message_code,
+                                                           app_message_app_id,
+                                                           language_id );
 
-CREATE INDEX app_translation_app_category_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        app_category_id
-    ASC );
+ALTER TABLE app_portfolio.app_translation
+    ADD CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_object_item_name,
+                                                               app_object_item_app_object_object_name,
+                                                               app_object_item_app_object_app_id,
+                                                               language_id );
 
-CREATE INDEX app_translation_app_setting_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        app_setting_id
-    ASC );
+ALTER TABLE app_portfolio.app_translation
+    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
+                                                          app_object_app_id,
+                                                          language_id );
 
-CREATE INDEX app_translation_app_object_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        app_object_object_name
-    ASC,
-        app_object_app_id
-    ASC );
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
+                                                                                                 language_id );
 
-CREATE INDEX app_translation_app_object_item_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        app_object_item_app_object_app_id
-    ASC,
-        app_object_item_app_object_object_name
-    ASC,
-        app_object_item_object_item_name
-    ASC );
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
+                                                                                         language_id );
 
-CREATE INDEX app_translation_parameter_type_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        parameter_type_id
-    ASC );
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
+                                                                                             language_id );
 
-CREATE INDEX app_translation_app_message_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        app_message_app_id
-    ASC,
-        app_message_code
-    ASC );
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation,
+                                                                                                          language_id );
 
-CREATE INDEX app_translation_country_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        country_id
-    ASC );
-
-CREATE INDEX app_translation_language_translation_search_idx ON
-    app_portfolio.app_translation (
-        language_id
-    ASC,
-        language_id_translation
-    ASC );
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_parameter_type_un UNIQUE ( parameter_type_id,
+                                                                                                    language_id );
 
 CREATE TABLE app_portfolio.country (
     id            INT NOT NULL AUTO_INCREMENT,
@@ -765,10 +730,10 @@ ALTER TABLE app_portfolio.app_object_item
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_object_item
-    ADD CONSTRAINT app_object_item_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_id,
-                                                                     app_setting_type_app_setting_type_name )
-        REFERENCES app_portfolio.app_setting_type ( app_id,
-                                                    app_setting_type_name )
+    ADD CONSTRAINT app_object_item_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
+                                                                     app_setting_type_app_id )
+        REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
+                                                    app_id )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_parameter
@@ -788,10 +753,10 @@ ALTER TABLE app_portfolio.app_screenshot
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_setting
-    ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_id,
-                                                                 app_setting_type_app_setting_type_name )
-        REFERENCES app_portfolio.app_setting_type ( app_id,
-                                                    app_setting_type_name )
+    ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
+                                                                 app_setting_type_app_id )
+        REFERENCES app_portfolio.app_setting_type ( app_setting_type_name,
+                                                    app_id )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_setting_type
@@ -812,7 +777,8 @@ ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_message_fk FOREIGN KEY ( app_message_app_id,
                                                                 app_message_code )
         REFERENCES app_portfolio.app_message ( app_id,
-                                               code );
+                                               code )
+            ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_object_fk FOREIGN KEY ( app_object_object_name,
@@ -822,12 +788,12 @@ ALTER TABLE app_portfolio.app_translation
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_app_object_item_fk FOREIGN KEY ( app_object_item_app_object_app_id,
+    ADD CONSTRAINT app_translation_app_object_item_fk FOREIGN KEY ( app_object_item_object_item_name,
                                                                     app_object_item_app_object_object_name,
-                                                                    app_object_item_object_item_name )
-        REFERENCES app_portfolio.app_object_item ( app_object_app_id,
+                                                                    app_object_item_app_object_app_id )
+        REFERENCES app_portfolio.app_object_item ( object_item_name,
                                                    app_object_object_name,
-                                                   object_item_name )
+                                                   app_object_app_id )
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_translation

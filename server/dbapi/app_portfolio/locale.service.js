@@ -17,26 +17,37 @@ const getLocales = async (app_id, lang_code) => {
                                           CONCAT('-', c.country_code) 
                                         ELSE 
                                           '' 
-                                        END) "locale", 
-                  CONCAT(UPPER(SUBSTR(CONCAT(lt.text, 
-                                              CASE 
-                                              WHEN ct.text IS NOT NULL THEN 
-                                                CONCAT(' (', CONCAT(ct.text,')')) 
-                                              ELSE 
-                                                '' 
-                                              END),1,1)),SUBSTR(CONCAT(lt.text, 
-                                                                  CASE 
-                                                                  WHEN ct.text IS NOT NULL THEN 
-                                                                    CONCAT(' (', CONCAT(ct.text,')')) 
-                                                                  ELSE 
-                                                                    '' 
-                                                                  END),2)) "text"
+                                        END) "locale",
+                  (SELECT CONCAT(UPPER(SUBSTR(CONCAT(lt.text, 
+                            CASE 
+                            WHEN ct.text IS NOT NULL THEN 
+                              CONCAT(' (', CONCAT(ct.text,')')) 
+                            ELSE 
+                              '' 
+                            END),1,1)),SUBSTR(CONCAT(lt.text, 
+                                                CASE 
+                                                WHEN ct.text IS NOT NULL THEN 
+                                                  CONCAT(' (', CONCAT(ct.text,')')) 
+                                                ELSE 
+                                                  '' 
+                                                END),2))
+                    FROM ${db_schema()}.language l3,
+                         ${db_schema()}.app_translation ct
+                    WHERE ct.country_id = c.id
+                      AND ct.language_id = l3.id
+                      AND l3.lang_code = (
+                                          SELECT COALESCE(MAX(l1.lang_code), :lang_code_default)
+                                            FROM ${db_schema()}.app_translation ct1,
+                                                  ${db_schema()}.language l1
+                                            WHERE l1.id  = ct1.language_id
+                                              AND ct1.country_id = c.id
+                                              AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                        )
+                  )  "text"
              FROM ${db_schema()}.app_translation lt,
                   ${db_schema()}.language l2,
-                  ${db_schema()}.country c,
-                  ${db_schema()}.app_translation ct
+                  ${db_schema()}.country c
             WHERE l2.id = lt.language_id
-              AND ct.country_id = c.id
               AND EXISTS( SELECT NULL
                             FROM ${db_schema()}.locale loc
                            WHERE loc.country_id = c.id
@@ -52,17 +63,6 @@ const getLocales = async (app_id, lang_code) => {
                                                          AND l4.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
                                                                       )
                                                )
-              AND ct.language_id = (SELECT l3.id
-                                      FROM ${db_schema()}.language l3
-                                     WHERE l3.lang_code = (
-                                          SELECT COALESCE(MAX(l1.lang_code), :lang_code_default)
-                                            FROM ${db_schema()}.app_translation ct1,
-                                                 ${db_schema()}.language l1
-                                           WHERE l1.id  = ct1.language_id
-                                             AND ct1.country_id = c.id
-                                             AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
-                                                          )
-                                   )
           UNION ALL
           SELECT l2.lang_code "locale",
                  CONCAT(UPPER(SUBSTR(lt.text,1,1)), SUBSTR(lt.text,2)) "text"
