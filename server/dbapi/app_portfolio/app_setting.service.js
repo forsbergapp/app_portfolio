@@ -25,22 +25,20 @@ const getSettings = async (app_id, lang_code, app_setting_type_name) => {
                          s.data3 "data3",
                          s.data4 "data4",
                          s.data5 "data5",
-                         str.text "text"
+                         (SELECT str.text
+                            FROM ${db_schema()}.language l,
+                                 ${db_schema()}.app_translation str
+                           WHERE l.id = str.language_id
+                             AND str.app_setting_id = s.id
+                             AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
+                                                  FROM ${db_schema()}.app_translation str1,
+                                                       ${db_schema()}.language l1
+                                                  WHERE l1.id  = str1.language_id
+                                                  AND str1.app_setting_id = str.app_setting_id
+                                                  AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
+                                                  )
+                         ) "text"
                     FROM ${db_schema()}.app_setting s
-                    LEFT OUTER JOIN(SELECT str.app_setting_id,
-                                             str.text
-                                        FROM ${db_schema()}.app_translation str,
-                                             ${db_schema()}.language l
-                                        WHERE l.id = str.language_id
-                                        AND l.lang_code = (SELECT COALESCE(MAX(l1.lang_code),'en')
-                                                            FROM ${db_schema()}.app_translation str1,
-                                                                 ${db_schema()}.language l1
-                                                            WHERE l1.id  = str1.language_id
-                                                            AND str1.app_setting_id = str.app_setting_id
-                                                            AND l1.lang_code IN (:lang_code1, :lang_code2, :lang_code3)
-                                                            )
-                                   )  str
-                              ON str.app_setting_id = s.id
                     WHERE s.app_setting_type_app_setting_type_name LIKE COALESCE(:app_setting_type_name, s.app_setting_type_app_setting_type_name)
                     AND (((s.app_setting_type_app_id = :app_id) OR :app_id IS NULL)
                          OR
