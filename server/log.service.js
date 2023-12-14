@@ -397,7 +397,7 @@ const LogApp = async (app_id, level_info, app_filename, app_function_name, app_l
  */
 const LogAppI = async (app_id, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
-        if (ConfigGet('SERVICE_AUTH', 'ENABLE_APPLOG')=='1')
+        if (ConfigGet('SERVER', 'APP_LOG')=='1')
             resolve(LogApp(app_id, ConfigGet('SERVICE_LOG', 'LEVEL_INFO'), app_filename, app_function_name, app_line, logtext));
         else
             resolve(null);

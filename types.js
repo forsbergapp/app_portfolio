@@ -129,7 +129,7 @@
  * @property {number} query.identity_provider_id
  * @property {0|1|2|3|4|5|6} query.config_type_no - Server parameter
  * @property {  'SERVER'|
- *              'SERVICE_AUTH'|
+ *              'SERVICE_IAM'|
  *              'SERVICE_SOCKET'|
  *              'SERVICE_DB'|
  *              'SERVICE_LOG'} query.config_group                   - Server parameter
@@ -416,9 +416,9 @@
  * @property {string} info_link_about_url
  */ 
 /**
- * Server - Request control
+ * Server - authenticate request
  * @typedef {{statusCode:number,
- *            statusMessage:string}|null} request_control
+ *            statusMessage:string}|null} authenticate_request
  * Server - Info
  * @typedef {{  os:{        hostname:string,
  *                          platform:NodeJS.Platform,
@@ -465,10 +465,10 @@
  *              ['MAINTENANCE']:string,
  *              ['FILE_CONFIG_SERVER']:string,
  *              ['FILE_CONFIG_APPS']:string,
- *              ['FILE_CONFIG_AUTH_BLOCKIP']:string,
- *              ['FILE_CONFIG_AUTH_POLICY']:string,
- *              ['FILE_CONFIG_AUTH_USERAGENT']:string,
- *              ['FILE_CONFIG_AUTH_USER']:string,
+ *              ['FILE_CONFIG_IAM_BLOCKIP']:string,
+ *              ['FILE_CONFIG_IAM_POLICY']:string,
+ *              ['FILE_CONFIG_IAM_USERAGENT']:string,
+ *              ['FILE_CONFIG_IAM_USER']:string,
  *              ['FILE_CONFIG_MICROSERVICE']:string,
  *              ['FILE_CONFIG_MICROSERVICE_BATCH']:string,
  *              ['FILE_CONFIG_MICROSERVICE_PDF']:string,
@@ -485,10 +485,10 @@
  *              'MODIFIED'|
  *              'MAINTENANCE'|
  *              'FILE_CONFIG_SERVER'|
- *              'FILE_CONFIG_AUTH_BLOCKIP'|
- *              'FILE_CONFIG_AUTH_USERAGENT'|
- *              'FILE_CONFIG_AUTH_POLICY'|
- *              'FILE_CONFIG_AUTH_USER'|
+ *              'FILE_CONFIG_IAM_BLOCKIP'|
+ *              'FILE_CONFIG_IAM_USERAGENT'|
+ *              'FILE_CONFIG_IAM_POLICY'|
+ *              'FILE_CONFIG_IAM_USER'|
  *              'FILE_CONFIG_APPS'|
  *              'PATH_LOG'} config_init_parameter
  */
@@ -499,7 +499,7 @@
  */
 /**
  * Server - Config group
- * @typedef {'SERVER'|'SERVICE_AUTH'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'} config_group
+ * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'} config_group
  */
 
 /**
@@ -513,6 +513,7 @@
  *                              HTTPS_SSL_VERIFICATION_PATH:string,
  *                              JSON_LIMIT:string,
  *                              TEST_SUBDOMAIN:string,
+ *                              APP_LOG:string,
  *                              APP_START:string,
  *                              APP_SOUND:string,
  *                              APP_COMMON_APP_ID:string,
@@ -521,25 +522,25 @@
  *                              SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD:string,
  *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT:string,
  *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN:string}], 
- *              ['SERVICE_AUTH']:[{ REQUEST_CONTROL_ENABLE:string,
- *                                  REQUEST_CONTROL_IP:string,
- *                                  REQUEST_CONTROL_HOST_EXIST:string,
- *                                  REQUEST_CONTROL_ACCESS_FROM:string,
- *                                  REQUEST_CONTROL_USER_AGENT:string,
- *                                  REQUEST_CONTROL_USER_AGENT_EXIST:string,
- *                                  REQUEST_CONTROL_ACCEPT_LANGUAGE:string,
- *                                  ADMIN_TOKEN_EXPIRE_ACCESS:string,
- *                                  ADMIN_TOKEN_SECRET:string,
- *                                  ENABLE_CONTENT_SECURITY_POLICY:string,
- *                                  ENABLE_GEOLOCATION:string,
- *                                  ENABLE_USER_REGISTRATION:string,
- *                                  ENABLE_USER_LOGIN:string,
- *                                  ENABLE_DBLOG:string}],
+ *              ['SERVICE_IAM']:[{ AUTHENTICATE_REQUEST_ENABLE:string,
+ *                                 AUTHENTICATE_REQUEST_IP:string,
+ *                                 AUTHENTICATE_REQUEST_HOST_EXIST:string,
+ *                                 AUTHENTICATE_REQUEST_ACCESS_FROM:string,
+ *                                 AUTHENTICATE_REQUEST_USER_AGENT:string,
+ *                                 AUTHENTICATE_REQUEST_USER_AGENT_EXIST:string,
+ *                                 AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE:string,
+ *                                 ADMIN_TOKEN_EXPIRE_ACCESS:string,
+ *                                 ADMIN_TOKEN_SECRET:string,
+ *                                 ENABLE_CONTENT_SECURITY_POLICY:string,
+ *                                 ENABLE_GEOLOCATION:string,
+ *                                 ENABLE_USER_REGISTRATION:string,
+ *                                 ENABLE_USER_LOGIN:string}],
  *              ['SERVICE_SOCKET']:[{CHECK_INTERVAL:string}],
  *              ['SERVICE_DB']:[{   START:string,
  *                                  USE:string,
  *                                  LIMIT_LIST_SEARCH:string,
  *                                  LIMIT_PROFILE_TOP:string,
+ *                                  LOG:string,
  *                                  DB1_SYSTEM_ADMIN_USER:string,
  *                                  DB1_SYSTEM_ADMIN_PASS:string,
  *                                  DB1_APP_ADMIN_USER:string,
@@ -700,18 +701,18 @@
  * @property {string} HOST
  * @property {number} PORT
  *
- * Server - Config auth blockip
- * @typedef {[string,string][]} config_auth_blockip
- * Server - Config auth policy
- * @typedef {{'content-security-policy':string}} config_auth_policy
- * Server - Config auth user agent
+ * Server - Config IAM blockip
+ * @typedef {[string,string][]} config_iam_blockip
+ * Server - Config IAM policy
+ * @typedef {{'content-security-policy':string}} config_iam_policy
+ * Server - Config IAM user agent
  * @typedef {{ user_agent:[{Name:string, 
- *                          user_agent:string}]}} config_auth_user_agent
- * Server - Config auth user
+ *                          user_agent:string}]}} config_iam_user_agent
+ * Server - Config IAM user
  * @typedef {{  ['username']:string, 
  *              ['password']:string, 
  *              ['created']:string,
- *              ['modified']:string}} config_auth_user
+ *              ['modified']:string}} config_iam_user
  *
  *  Server - Config user parameter
  * @typedef {'username'|'password'|'created'|'modified'} config_user_parameter

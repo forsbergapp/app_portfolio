@@ -66,8 +66,8 @@ const COMMON = {
  */
  const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, accept_language, authorization, host, parameters, data, res) =>{
     
-    //server auth object
-    const auth = await import(`file://${process.cwd()}/server/auth.js`);
+    //server iam object
+    const iam = await import(`file://${process.cwd()}/server/iam.js`);
 
     //server app object
     const app = await import(`file://${process.cwd()}/apps/apps.js`);
@@ -120,8 +120,8 @@ const COMMON = {
     return new Promise((resolve, reject)=>{
         try {
             switch (endpoint + '_' + service + '_' + routeFunction + '_' + method){
-                case 'AUTH_AUTH_/AUTH/SYSTEMADMIN_POST':{
-                    resolve(auth.login_systemadmin(authorization, res));
+                case 'IAM_IAM_/IAM/SYSTEMADMIN_POST':{
+                    resolve(iam.AuthenticateSystemadmin(app_id, authorization, res));
                     break;
                 }
                 case 'DATA_APP_/APPS_GET':{
