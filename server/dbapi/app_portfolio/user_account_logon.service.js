@@ -81,7 +81,7 @@ const insertUserAccountLogon = async (app_id, data) => {
 				VALUES(:user_account_id, :app_id, :result_insert,:access_token,:client_ip,:client_user_agent, :client_longitude, :client_latitude, CURRENT_TIMESTAMP) `;
 	const parameters = {
 						user_account_id: data.user_account_id,
-						app_id: data.app_id,
+						app_id: app_id,
 						result_insert: data.result,
 						access_token: data.access_token,
 						client_ip: data.client_ip,

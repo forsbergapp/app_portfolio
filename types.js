@@ -1532,7 +1532,6 @@
  * @typedef {{  login:number}} db_result_user_account_logon_Checklogin
  * @typedef {{  access_token:string,
  *              user_account_id:number,
- *              app_id:number,
  *              result:number,
  *              client_ip:string,
  *              client_user_agent:string,

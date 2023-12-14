@@ -67,7 +67,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
  const serverExpressRoutes = async (app) => {
     //apps
-    const { BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { BFF_data, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
     
     //auth
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
@@ -77,7 +77,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/server/bff/data').patch           (iam.AuthenticateDataToken, BFF_data);
     app.route('/server/bff/data').post            (iam.AuthenticateDataToken, BFF_data);
     app.route('/server/bff/data').put             (iam.AuthenticateDataToken, BFF_data);
-    app.route('/server/bff/data_login').put       (iam.AuthenticateDataTokenLogin, BFF_data_login);
     app.route('/server/bff/data_signup').post     (iam.AuthenticateDataTokenRegistration, BFF_data_signup);
     app.route('/server/bff/access').delete        (iam.AuthenticateAccessToken, BFF_access);
     app.route('/server/bff/access').get           (iam.AuthenticateAccessToken, BFF_access);
@@ -97,7 +96,6 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/server/bff/systemadmin').put      (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);    
     app.route('/server/bff/socket').get           (iam.AuthenticateSocket, BFF_socket);
     app.route('/server/bff/iam').post             (iam.AuthenticateIAM, BFF_iam);
-
 };
 /**
  * server Express

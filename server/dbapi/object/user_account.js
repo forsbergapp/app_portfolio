@@ -70,7 +70,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
             if (result_login[0]) {
                 compare(data.password, result_login[0].password).then((result_password)=>{
                     const data_body = { user_account_id:    getNumberValue(result_login[0].id),
-                                        app_id:             getNumberValue(data.app_id),
+                                        app_id:             app_id,
                                         result:             Number(result_password),
                                         client_ip:          ip,
                                         client_user_agent:  user_agent,
@@ -206,7 +206,6 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                                 provider_email:         data.provider_email,
                                 admin:                  0};
             const data_login = {user_account_id:        data.user_account_id,
-                                app_id:                 data.app_id,
                                 result:                 1,
                                 client_ip:              ip,
                                 client_user_agent:      user_agent,
