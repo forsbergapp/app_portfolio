@@ -4,7 +4,8 @@
 import * as Types from './../../types.js';
 
 const service = await import('./service.js');
-const { getNumberValue, MicroServiceServer, IAM} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { getNumberValue, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
  * Starts the server
  */
@@ -30,7 +31,7 @@ const startserver = async () =>{
 					req.query.limit = Number(params.get('limit'));
 				else
 					req.query.limit = 0;
-				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+					AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
 					if (result)
 						getCitySearch(req, res);
 					else
@@ -43,7 +44,7 @@ const startserver = async () =>{
 				break;
 			}
 			case req.url.startsWith('/worldcities/city/random'):{
-				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
 					if (result)
 						getCityRandom(req, res);
 					else
@@ -56,7 +57,7 @@ const startserver = async () =>{
 				break;
 			}
 			case req.url.startsWith('/worldcities/country'):{
-				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
 					if (result)
 						getCities(req, res);
 					else

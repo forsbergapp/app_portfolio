@@ -459,20 +459,20 @@
  *                          start_arg_1 : string
  *                  }}} server_info
  * Server - Config init
- * @typedef {{  ['CONFIGURATION']:string, 
- *              ['CREATED']:string, 
- *              ['MODIFIED']:string,
- *              ['MAINTENANCE']:string,
- *              ['FILE_CONFIG_SERVER']:string,
- *              ['FILE_CONFIG_APPS']:string,
- *              ['FILE_CONFIG_IAM_BLOCKIP']:string,
- *              ['FILE_CONFIG_IAM_POLICY']:string,
- *              ['FILE_CONFIG_IAM_USERAGENT']:string,
- *              ['FILE_CONFIG_IAM_USER']:string,
- *              ['FILE_CONFIG_MICROSERVICE']:string,
- *              ['FILE_CONFIG_MICROSERVICE_BATCH']:string,
- *              ['FILE_CONFIG_MICROSERVICE_PDF']:string,
- *              ['PATH_LOG']:string}} config_init
+ * @typedef {{  CONFIGURATION:string, 
+ *              CREATED:string, 
+ *              MODIFIED:string,
+ *              MAINTENANCE:string,
+ *              FILE_CONFIG_SERVER:string,
+ *              FILE_CONFIG_APPS:string,
+ *              FILE_CONFIG_IAM_BLOCKIP:string,
+ *              FILE_CONFIG_IAM_POLICY:string,
+ *              FILE_CONFIG_IAM_USERAGENT:string,
+ *              FILE_CONFIG_IAM_USER:string,
+ *              FILE_CONFIG_MICROSERVICE:string,
+ *              FILE_CONFIG_MICROSERVICE_BATCH:string,
+ *              FILE_CONFIG_MICROSERVICE_PDF:string,
+ *              PATH_LOG:string}} config_init
 */
 /**
  * Server - Config files
@@ -485,11 +485,14 @@
  *              'MODIFIED'|
  *              'MAINTENANCE'|
  *              'FILE_CONFIG_SERVER'|
+ *              'FILE_CONFIG_APPS'|
  *              'FILE_CONFIG_IAM_BLOCKIP'|
  *              'FILE_CONFIG_IAM_USERAGENT'|
  *              'FILE_CONFIG_IAM_POLICY'|
  *              'FILE_CONFIG_IAM_USER'|
- *              'FILE_CONFIG_APPS'|
+ *              'FILE_CONFIG_MICROSERVICE'|
+ *              'FILE_CONFIG_MICROSERVICE_BATCH'|
+ *              'FILE_CONFIG_MICROSERVICE_PDF'|
  *              'PATH_LOG'} config_init_parameter
  */
 
@@ -1568,7 +1571,6 @@
  * @typedef {{SERVICE:string, PORT:number, HTTPS_PORT:number}} microservice_config_service
  * 
  * @typedef {   'SERVER_CONFIG'|
- *              'APPS_CONFIG'|
  *              'MICROSERVICE_CONFIG'|
  *              'MICROSERVICE_CONFIG_BATCH'|
  *              'MICROSERVICE_CONFIG_PDF'|
@@ -1584,7 +1586,6 @@
  *              'MICROSERVICE_PATH_TEMP'} microservice_config_keys
  * MicroService config
  * @typedef {{  SERVER_CONFIG                       : string,
- *              APPS_CONFIG                         : string,
  *              MICROSERVICE_CONFIG                 : string,
  *              MICROSERVICE_CONFIG_BATCH           : string,
  *              MICROSERVICE_CONFIG_PDF             : string,
