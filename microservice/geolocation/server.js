@@ -4,8 +4,8 @@
 import * as Types from './../../types.js';
 
 const service = await import('./service.js');
-const { getNumberValue, MicroServiceServer, IAM } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-
+const { getNumberValue, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { AuthenticateApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
 /**
  * Starts the server
  */
@@ -35,7 +35,7 @@ const startserver = async () =>{
 			case '/geolocation/place':{
 				req.query.latitude = params.get('latitude') ?? '';
 				req.query.longitude = params.get('longitude') ?? '';
-				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
 					if (result)
 						getPlace(req, res);
 					else
@@ -49,7 +49,7 @@ const startserver = async () =>{
 			}
 			case '/geolocation/ip':{
 				req.query.ip = params.get('ip');
-				IAM(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
+				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/result)=>{
 					if (result)
 						getIp(req, res);
 					else

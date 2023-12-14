@@ -20,7 +20,6 @@ else
 /**@type{Types.microservice_config} */
 const CONFIG = {
     SERVER_CONFIG                       : `${SLASH}config${SLASH}config.json`,
-    APPS_CONFIG                         : `${SLASH}config${SLASH}apps.json`,
     MICROSERVICE_CONFIG                 : `${SLASH}microservice${SLASH}config${SLASH}config.json`,
     MICROSERVICE_CONFIG_BATCH           : `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
     MICROSERVICE_CONFIG_PDF             : `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
@@ -112,27 +111,6 @@ const MicroServiceServer = async (service) =>{
             server  : http,
             port 	: MICROSERVICE.filter(row=>row.SERVICE==service)[0].PORT
         };
-};
-
-
-/**
- * 
- * @param {number} app_id 
- * @param {string} authorization 
- * @returns {Promise.<boolean>}
- */
-const IAM = async (app_id, authorization) =>{
-    const apps = await fs.promises.readFile(`${process.cwd()}${CONFIG.APPS_CONFIG}`, 'utf8');
-    /**@type{Types.config_apps[]} */
-    const rows =  await  JSON.parse(apps).APPS;
-    const CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
-    const CLIENT_SECRET = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_SECRET;
-
-    const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
-    if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
-        return true;
-    else
-        return false;
 };
 
 /**
@@ -516,4 +494,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {getNumberValue, IAM, MicroServiceConfig, MicroServiceConfigGet, MicroServiceServer, MICROSERVICE, CircuitBreaker, MessageQueue};
+export {getNumberValue, MicroServiceConfig, MicroServiceConfigGet, MicroServiceServer, MICROSERVICE, CircuitBreaker, MessageQueue};

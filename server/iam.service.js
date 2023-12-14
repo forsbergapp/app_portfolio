@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin,ConfigInitReadFile} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
 /**
  * Middleware authenticates system admin login
@@ -420,6 +420,29 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
 };
 
 /**
+ * 
+ * @param {number} app_id 
+ * @param {string} authorization 
+ * @returns {Promise.<boolean>}
+ */
+ const AuthenticateApp = async (app_id, authorization) =>{
+    const fs = await import('node:fs');
+    const config_init = await ConfigInitReadFile();
+    const apps = await fs.promises.readFile(`${process.cwd()}${config_init.FILE_CONFIG_APPS}`, 'utf8');
+    /**@type{Types.config_apps[]} */
+    const rows =  await  JSON.parse(apps).APPS;
+    const CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
+    const CLIENT_SECRET = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_SECRET;
+
+    const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
+    if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
+        return true;
+    else
+        return false;
+};
+
+
+/**
  * Authorize token
  * 
  * @param {number} app_id
@@ -457,4 +480,5 @@ export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin,
         AuthenticateDataTokenSocket,
         AuthenticateIAM,
         AuthenticateRequest,
+        AuthenticateApp,
         AuthorizeToken}; 
