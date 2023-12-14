@@ -297,18 +297,18 @@ const ClientAdd = (newClient) => {
  * @param {string} ip
  * @param {Types.res} response
  */
- const SocketConnect = async (   app_id, 
-                                    identity_provider_id, 
-                                    user_account_logon_user_account_id, 
-                                    system_admin,
-                                    latitude, 
-                                    longitude, 
-                                    authorization, 
-                                    headers_user_agent, 
-                                    ip, 
-                                    response) =>{
-    const {checkDataTokenSocket} = await import(`file://${process.cwd()}/server/auth.service.js`);
-    if (checkDataTokenSocket(app_id, authorization)){
+ const SocketConnect = async (  app_id, 
+                                identity_provider_id, 
+                                user_account_logon_user_account_id, 
+                                system_admin,
+                                latitude, 
+                                longitude, 
+                                authorization, 
+                                headers_user_agent, 
+                                ip, 
+                                response) =>{
+    const {AuthenticateDataTokenSocket} = await import(`file://${process.cwd()}/server/iam.service.js`);
+    if (AuthenticateDataTokenSocket(app_id, authorization)){
         const client_id = Date.now();
         ClientConnect(response);
         ClientOnClose(response, client_id);
