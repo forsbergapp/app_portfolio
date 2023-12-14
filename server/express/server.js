@@ -67,36 +67,36 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
  const serverExpressRoutes = async (app) => {
     //apps
-    const { BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_auth} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
     
     //auth
-    const auth = await import(`file://${process.cwd()}/server/auth.js`);
+    const iam = await import(`file://${process.cwd()}/server/iam.js`);
     
-    app.route('/server/bff/data').delete          (auth.checkDataToken, BFF_data);
-    app.route('/server/bff/data').get             (auth.checkDataToken, BFF_data);
-    app.route('/server/bff/data').patch           (auth.checkDataToken, BFF_data);
-    app.route('/server/bff/data').post            (auth.checkDataToken, BFF_data);
-    app.route('/server/bff/data').put             (auth.checkDataToken, BFF_data);
-    app.route('/server/bff/data_login').put       (auth.checkDataTokenLogin, BFF_data_login);
-    app.route('/server/bff/data_signup').post     (auth.checkDataTokenRegistration, BFF_data_signup);
-    app.route('/server/bff/access').delete        (auth.checkAccessToken, BFF_access);
-    app.route('/server/bff/access').get           (auth.checkAccessToken, BFF_access);
-    app.route('/server/bff/access').patch         (auth.checkAccessToken, BFF_access);
-    app.route('/server/bff/access').post          (auth.checkAccessToken, BFF_access);
-    app.route('/server/bff/access').put           (auth.checkAccessToken, BFF_access);
-    app.route('/server/bff/admin').delete         (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').get            (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').patch          (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').post           (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').put            (auth.checkAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/superadmin').put       (auth.checkAccessTokenSuperAdmin, BFF_superadmin);
-    app.route('/server/bff/systemadmin').delete   (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').get      (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').patch    (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').post     (auth.checkSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').put      (auth.checkSystemAdmin, BFF_systemadmin);    
-    app.route('/server/bff/socket').get           (BFF_socket);
-    app.route('/server/bff/auth').post            (BFF_auth);    
+    app.route('/server/bff/data').delete          (iam.AuthenticateDataToken, BFF_data);
+    app.route('/server/bff/data').get             (iam.AuthenticateDataToken, BFF_data);
+    app.route('/server/bff/data').patch           (iam.AuthenticateDataToken, BFF_data);
+    app.route('/server/bff/data').post            (iam.AuthenticateDataToken, BFF_data);
+    app.route('/server/bff/data').put             (iam.AuthenticateDataToken, BFF_data);
+    app.route('/server/bff/data_login').put       (iam.AuthenticateDataTokenLogin, BFF_data_login);
+    app.route('/server/bff/data_signup').post     (iam.AuthenticateDataTokenRegistration, BFF_data_signup);
+    app.route('/server/bff/access').delete        (iam.AuthenticateAccessToken, BFF_access);
+    app.route('/server/bff/access').get           (iam.AuthenticateAccessToken, BFF_access);
+    app.route('/server/bff/access').patch         (iam.AuthenticateAccessToken, BFF_access);
+    app.route('/server/bff/access').post          (iam.AuthenticateAccessToken, BFF_access);
+    app.route('/server/bff/access').put           (iam.AuthenticateAccessToken, BFF_access);
+    app.route('/server/bff/admin').delete         (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').get            (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').patch          (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').post           (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/admin').put            (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/server/bff/superadmin').put       (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
+    app.route('/server/bff/systemadmin').delete   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').get      (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').patch    (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').post     (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/server/bff/systemadmin').put      (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);    
+    app.route('/server/bff/socket').get           (iam.AuthenticateSocket, BFF_socket);
+    app.route('/server/bff/iam').post             (iam.AuthenticateIAM, BFF_iam);
 
 };
 /**
@@ -108,7 +108,7 @@ const serverExpress = async () => {
     const {default:express} = await import('express');
     const {CheckFirstTime, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {default:compression} = await import('compression');
-    const {RequestControl} = await import(`file://${process.cwd()}/server/auth.service.js`);
+    const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
     const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);    
     const ContentSecurityPolicy = ConfigGetSaved(4)['content-security-policy'];
     const {randomUUID, createHash} = await import('node:crypto');
@@ -146,7 +146,7 @@ const serverExpress = async () => {
             res.setHeader('Access-Control-Max-Age','5');
             res.setHeader('Access-Control-Allow-Headers', 'Authorization, Origin, Content-Type, Accept');
             res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, PATCH, DELETE');
-            if (ConfigGet('SERVICE_AUTH', 'ENABLE_CONTENT_SECURITY_POLICY') == '1')
+            if (ConfigGet('SERVICE_IAM', 'ENABLE_CONTENT_SECURITY_POLICY') == '1')
                 res.setHeader('content-security-policy', ContentSecurityPolicy);
             res.setHeader('cross-origin-opener-policy','same-origin');
             res.setHeader('cross-origin-resource-policy',	'same-origin');
@@ -166,9 +166,9 @@ const serverExpress = async () => {
         
         app.use((/**@type{Types.req}*/req, /**@type{Types.res}*/ res, /**@type{function}*/ next) => {
             //access control that stops request if not passing controls
-            if (ConfigGet('SERVICE_AUTH', 'REQUEST_CONTROL_ENABLE')=='1'){
-                RequestControl(req.ip, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.path)
-                .then((/**@type{Types.request_control}*/result)=>{
+            if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_ENABLE')=='1'){
+                AuthenticateRequest(req.ip, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.path)
+                .then((/**@type{Types.authenticate_request}*/result)=>{
                     if (result == null){                            
                         next();
                     }
@@ -181,7 +181,7 @@ const serverExpress = async () => {
                     }
                 })
                 .catch((/**@type{Types.error}*/error)=>{
-                    //access control caused unknown error, continue, will be logged when response closed
+                    //authorize request caused unknown error, continue, will be logged when response closed
                     res.statusCode = 500;
                     res.statusMessage = error;
                     next();

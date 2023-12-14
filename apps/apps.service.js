@@ -755,12 +755,12 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
  */
 const getModule = async (app_id, module_config, callBack) =>{
     //Data token
-    const { CreateDataToken } = await import(`file://${process.cwd()}/server/auth.service.js`);
+    const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
     const { BFF } = await import(`file://${process.cwd()}/server/bff.service.js`);
     const { LogAppI } = await import(`file://${process.cwd()}/server/log.service.js`);
     const { COMMON } = await import(`file://${process.cwd()}/server/server.service.js`);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '1 ' + new Date().toISOString());
-    const datatoken = CreateDataToken(app_id);
+    const datatoken = AuthorizeToken(app_id, 'DATA');
     //get GPS from IP
     
     const result_gps = await BFF(app_id, null, 'GEOLOCATION', new Buffer(`/ip?ip=${module_config.ip}`).toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.host, module_config.user_agent, module_config.accept_language, module_config.body)

@@ -12,14 +12,14 @@ let CONFIG_INIT;
 let CONFIG;
 /**@type{Types.config_apps[]} */
 let CONFIG_APPS;
-/**@type{Types.config_auth_blockip} */
-let CONFIG_AUTH_BLOCKIP;
-/**@type{Types.config_auth_policy} */
-let CONFIG_AUTH_POLICY;
-/**@type{Types.config_auth_user_agent} */
-let CONFIG_AUTH_USERAGENT;
-/**@type{Types.config_auth_user} */
-let CONFIG_AUTH_USER;
+/**@type{Types.config_iam_blockip} */
+let CONFIG_IAM_BLOCKIP;
+/**@type{Types.config_iam_policy} */
+let CONFIG_IAM_POLICY;
+/**@type{Types.config_iam_user_agent} */
+let CONFIG_IAM_USERAGENT;
+/**@type{Types.config_iam_user} */
+let CONFIG_IAM_USER;
 /**@type{string} */
 let SLASH;
 if (process.platform == 'win32')
@@ -54,10 +54,10 @@ const app_portfolio_title = 'App Portfolio';
             [0, SERVER_CONFIG_INIT_PATH],
             [1, CONFIG_INIT.FILE_CONFIG_SERVER],
             [2, CONFIG_INIT.FILE_CONFIG_APPS],
-            [3, CONFIG_INIT.FILE_CONFIG_AUTH_BLOCKIP],
-            [4, CONFIG_INIT.FILE_CONFIG_AUTH_POLICY],
-            [5, CONFIG_INIT.FILE_CONFIG_AUTH_USERAGENT],
-            [6, CONFIG_INIT.FILE_CONFIG_AUTH_USER],
+            [3, CONFIG_INIT.FILE_CONFIG_IAM_BLOCKIP],
+            [4, CONFIG_INIT.FILE_CONFIG_IAM_POLICY],
+            [5, CONFIG_INIT.FILE_CONFIG_IAM_USERAGENT],
+            [6, CONFIG_INIT.FILE_CONFIG_IAM_USER],
             [7, CONFIG_INIT.FILE_CONFIG_MICROSERVICE],
             [8, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_BATCH],
             [9, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_PDF]
@@ -77,7 +77,7 @@ const app_portfolio_title = 'App Portfolio';
  * @returns {string}
  */
  const ConfigGetUser = (parameter) => {
-    return CONFIG_AUTH_USER[parameter];
+    return CONFIG_IAM_USER[parameter];
  };
 /**
  * Config get apps
@@ -237,10 +237,10 @@ const DefaultConfig = async () => {
     const default_files = [
                             [1, `${SLASH}server${SLASH}default_config.json`],
                             [2, `${SLASH}server${SLASH}default_apps.json`],
-                            [3, `${SLASH}server${SLASH}default_auth_blockip.json`],
-                            [4, `${SLASH}server${SLASH}default_auth_policy.json`],
-                            [5, `${SLASH}server${SLASH}default_auth_useragent.json`],
-                            [6, `${SLASH}server${SLASH}default_auth_user.json`],
+                            [3, `${SLASH}server${SLASH}default_iam_blockip.json`],
+                            [4, `${SLASH}server${SLASH}default_iam_policy.json`],
+                            [5, `${SLASH}server${SLASH}default_iam_useragent.json`],
+                            [6, `${SLASH}server${SLASH}default_iam_user.json`],
                             [7, `${SLASH}microservice${SLASH}default_microservice_config.json`],
                             [8, `${SLASH}microservice${SLASH}default_microservice_config_batch.json`],
                             [9, `${SLASH}microservice${SLASH}default_microservice_config_pdf.json`]
@@ -272,7 +272,7 @@ const DefaultConfig = async () => {
         } 
     });
     //generate hash
-    config_obj[0].SERVICE_AUTH.map(row=>{
+    config_obj[0].SERVICE_IAM.map(row=>{
         for (const key of Object.keys(row))
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
@@ -295,10 +295,10 @@ const DefaultConfig = async () => {
         'MAINTENANCE':                      '0',
         'FILE_CONFIG_SERVER':               `${SLASH}config${SLASH}config.json`,
         'FILE_CONFIG_APPS':                 `${SLASH}config${SLASH}apps.json`,
-        'FILE_CONFIG_AUTH_BLOCKIP':         `${SLASH}config${SLASH}auth_blockip.json`,
-        'FILE_CONFIG_AUTH_POLICY':          `${SLASH}config${SLASH}auth_policy.json`,
-        'FILE_CONFIG_AUTH_USERAGENT':       `${SLASH}config${SLASH}auth_useragent.json`,
-        'FILE_CONFIG_AUTH_USER':            `${SLASH}config${SLASH}auth_user.json`,
+        'FILE_CONFIG_IAM_BLOCKIP':          `${SLASH}config${SLASH}iam_blockip.json`,
+        'FILE_CONFIG_IAM_POLICY':           `${SLASH}config${SLASH}iam_policy.json`,
+        'FILE_CONFIG_IAM_USERAGENT':        `${SLASH}config${SLASH}iam_useragent.json`,
+        'FILE_CONFIG_IAM_USER':             `${SLASH}config${SLASH}iam_user.json`,
         'FILE_CONFIG_MICROSERVICE':         `${SLASH}microservice${SLASH}config${SLASH}config.json`,
         'FILE_CONFIG_MICROSERVICE_BATCH':   `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
         'FILE_CONFIG_MICROSERVICE_PDF':     `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
@@ -345,19 +345,19 @@ const InitConfig = async () => {
                         break;
                     }
                     case 3:{
-                        CONFIG_AUTH_BLOCKIP = JSON.parse(fileBuffer.toString());
+                        CONFIG_IAM_BLOCKIP = JSON.parse(fileBuffer.toString());
                         break;
                     }
                     case 4:{
-                        CONFIG_AUTH_POLICY = JSON.parse(fileBuffer.toString());
+                        CONFIG_IAM_POLICY = JSON.parse(fileBuffer.toString());
                         break;
                     }
                     case 5:{
-                        CONFIG_AUTH_USERAGENT = JSON.parse(fileBuffer.toString());
+                        CONFIG_IAM_USERAGENT = JSON.parse(fileBuffer.toString());
                         break;
                     }
                     case 6:{
-                        CONFIG_AUTH_USER = JSON.parse(fileBuffer.toString());
+                        CONFIG_IAM_USER = JSON.parse(fileBuffer.toString());
                         break;
                     }
                     default:{
@@ -421,10 +421,10 @@ const ConfigMaintenanceGet = async () => {
  *   0 = config_init                path + file
  *   1 = config                     path + file
  *   2 = apps                       path + file
- *   3 = auth blockip               path + file
- *   4 = auth policy                path + file 
- *   5 = auth useragent             path + file
- *   6 = auth user                  path + file
+ *   3 = iam blockip                path + file
+ *   4 = iam policy                 path + file 
+ *   5 = iam useragent              path + file
+ *   6 = iam user                   path + file
  *   7 = microservice config        path + file
  *   8 = microservice config batch  path + file
  *   9 = microservice config pdf    path + file
@@ -444,16 +444,16 @@ const ConfigGetSaved = (config_type_no) => {
             return CONFIG_APPS;
         }
         case 3:{
-            return CONFIG_AUTH_BLOCKIP;
+            return CONFIG_IAM_BLOCKIP;
         }
         case 4:{
-            return CONFIG_AUTH_POLICY;
+            return CONFIG_IAM_POLICY;
         }
         case 5:{
-            return CONFIG_AUTH_USERAGENT;
+            return CONFIG_IAM_USERAGENT;
         }
         case 6:{
-            return CONFIG_AUTH_USER;
+            return CONFIG_IAM_USER;
         }
         default:{
             return {};
@@ -488,19 +488,19 @@ const ConfigSave = async (config_no, config_json, first_time) => {
                             break;
                         }
                         case 3:{
-                            CONFIG_AUTH_BLOCKIP = JSON.parse(config_json);
+                            CONFIG_IAM_BLOCKIP = JSON.parse(config_json);
                             break;
                         }
                         case 4:{
-                            CONFIG_AUTH_POLICY = JSON.parse(config_json);
+                            CONFIG_IAM_POLICY = JSON.parse(config_json);
                             break;
                         }
                         case 5:{
-                            CONFIG_AUTH_USERAGENT = JSON.parse(config_json);
+                            CONFIG_IAM_USERAGENT = JSON.parse(config_json);
                             break;
                         }
                         case 6:{
-                            CONFIG_AUTH_USER = JSON.parse(config_json);
+                            CONFIG_IAM_USER = JSON.parse(config_json);
                             break;
                         }
                         
@@ -559,7 +559,7 @@ const ConfigSave = async (config_no, config_json, first_time) => {
  * @returns {boolean}
  */
 const CheckFirstTime = () => {
-    if (CONFIG_AUTH_USER.username=='')
+    if (CONFIG_IAM_USER.username=='')
         return true;
     else
         return false;
@@ -573,11 +573,11 @@ const CheckFirstTime = () => {
  */
 const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
     const { default: {genSalt, hash} } = await import('bcrypt');
-    CONFIG_AUTH_USER.username = admin_name;
-    CONFIG_AUTH_USER.password = await hash(admin_password, await genSalt(10));
-    CONFIG_AUTH_USER.modified = new Date().toISOString();
+    CONFIG_IAM_USER.username = admin_name;
+    CONFIG_IAM_USER.password = await hash(admin_password, await genSalt(10));
+    CONFIG_IAM_USER.modified = new Date().toISOString();
     import('node:fs').then((fs) => {
-        fs.writeFile(process.cwd() + config_files()[6][1], JSON.stringify(CONFIG_AUTH_USER, undefined, 2),  'utf8', (err) => {
+        fs.writeFile(process.cwd() + config_files()[6][1], JSON.stringify(CONFIG_IAM_USER, undefined, 2),  'utf8', (err) => {
             if (err)
                 callBack(err, null);
             else

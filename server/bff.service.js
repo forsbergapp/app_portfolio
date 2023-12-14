@@ -47,7 +47,7 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
                 };
                 switch (service){
                     case 'APP':
-                    case 'AUTH':
+                    case 'IAM':
                     case 'DB_API':
                     case 'SOCKET':{
                         serverRoutes(app_id, service, endpoint, method.toUpperCase(), ip, headers_user_agent, headers_accept_language, authorization, host, decodedparameters, data, res)
@@ -78,7 +78,7 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
                         // /ip?app_id=[id]&lang_code=en
                         // /place?latitude[latitude]&longitude=[longitude]
                         //ENABLE_GEOLOCATION control is for ip to geodata service /place and /timezone should be allowed
-                        if (ConfigGet('SERVICE_AUTH', 'ENABLE_GEOLOCATION')=='1' || decodedparameters.startsWith('/ip')==false){
+                        if (ConfigGet('SERVICE_IAM', 'ENABLE_GEOLOCATION')=='1' || decodedparameters.startsWith('/ip')==false){
                             if (method=='GET'){
                                 //set ip from client in case ip query parameter is missing
                                 const basepath = decodedparameters.split('?')[0];

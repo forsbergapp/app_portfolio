@@ -119,43 +119,21 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
 };
 
 /**
- * Backend for frontend (BFF) without authorization
+ * Backend for frontend (BFF) socket
  * 
- * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
 const BFF_socket = (req, res) =>{
-    //check inparameters
-    if (req.query.service.toUpperCase()=='SOCKET' && 
-        Buffer.from(req.query.parameters, 'base64').toString('utf-8').startsWith('/socket/connection/connect')){
-            BFF(getNumberValue(req.query.app_id), 'SOCKET', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
-        }
-    else{
-        //required parameters not provided
-        //use common app id to get message and use first lang_code form app or if missing use language in headers
-        res.status(401).send({
-            message: '⛔'
-        });
-    }
+    BFF(getNumberValue(req.query.app_id), 'SOCKET', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 /**
- * Backend for frontend (BFF) with basic authorization and no middleware
+ * Backend for frontend (BFF) IAM
  * 
- * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
-const BFF_auth = (req, res) =>{
-    //check inparameters
-    if (req.query.service.toUpperCase()=='AUTH' && req.headers.authorization.toUpperCase().startsWith('BASIC'))
-        BFF(getNumberValue(req.query.app_id), 'AUTH', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
-    else{
-        //required parameters not provided
-        //use common app id to get message and use first lang_code form app or if missing use language in headers
-        res.status(401).send({
-            message: '⛔'
-        });
-    }
+const BFF_iam = (req, res) =>{
+    BFF(getNumberValue(req.query.app_id), 'IAM', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
-export{BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_auth};
+export{BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};

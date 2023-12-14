@@ -1197,8 +1197,8 @@ const button_save = async (item) => {
                     );
                     return {   
                                 SERVER:             config_json[0],
-                                SERVICE_AUTH:       config_json[1],
-                                SERVICE_SOCKET:  config_json[2],
+                                SERVICE_IAM:        config_json[1],
+                                SERVICE_SOCKET:     config_json[2],
                                 SERVICE_DB:         config_json[3],
                                 SERVICE_LOG:        config_json[4]
                             };

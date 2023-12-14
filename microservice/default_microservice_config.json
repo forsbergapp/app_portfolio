@@ -1,5 +1,5 @@
 [
-    {"SERVICE":"GEOLOCATION", "PORT":3001, "HTTPS_PORT": 4001 },
-    {"SERVICE":"WORLDCITIES", "PORT":3002, "HTTPS_PORT": 4002 },
-    {"SERVICE":"BATCH",       "PORT":3003, "HTTPS_PORT": 4003 }
+    {"SERVICE":"GEOLOCATION", "HOST": "localhost", "PORT":3001, "HTTPS_ENABLE": "0", "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": "0", "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4001 },
+    {"SERVICE":"WORLDCITIES", "HOST": "localhost", "PORT":3002, "HTTPS_ENABLE": "0", "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": "0", "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4002 },
+    {"SERVICE":"BATCH",       "HOST": "localhost", "PORT":3003, "HTTPS_ENABLE": "0", "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": "0", "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4003 }
 ]

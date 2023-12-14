@@ -3017,11 +3017,11 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             break;
         }
         case 'SYSTEMADMIN':{
-            if (service=='AUTH'){
+            if (service=='IAM'){
                 //admin login authorization post
                 authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
                 json_data = null;
-                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/auth`;
+                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
             }
             else{
                 //systemadmin authorization
