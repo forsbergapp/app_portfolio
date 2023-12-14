@@ -289,20 +289,20 @@ const DefaultConfig = async () => {
     config_obj[5].created = new Date().toISOString();
     //server metadata
     const config_init = {
-        'CONFIGURATION':                    app_portfolio_title,
-        'CREATED':                          `${new Date().toISOString()}`,
-        'MODIFIED':                         '',
-        'MAINTENANCE':                      '0',
-        'FILE_CONFIG_SERVER':               `${SLASH}config${SLASH}config.json`,
-        'FILE_CONFIG_APPS':                 `${SLASH}config${SLASH}apps.json`,
-        'FILE_CONFIG_IAM_BLOCKIP':          `${SLASH}config${SLASH}iam_blockip.json`,
-        'FILE_CONFIG_IAM_POLICY':           `${SLASH}config${SLASH}iam_policy.json`,
-        'FILE_CONFIG_IAM_USERAGENT':        `${SLASH}config${SLASH}iam_useragent.json`,
-        'FILE_CONFIG_IAM_USER':             `${SLASH}config${SLASH}iam_user.json`,
-        'FILE_CONFIG_MICROSERVICE':         `${SLASH}microservice${SLASH}config${SLASH}config.json`,
-        'FILE_CONFIG_MICROSERVICE_BATCH':   `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
-        'FILE_CONFIG_MICROSERVICE_PDF':     `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
-        'PATH_LOG':                         `${SLASH}logs${SLASH}`
+        CONFIGURATION:                    app_portfolio_title,
+        CREATED:                          `${new Date().toISOString()}`,
+        MODIFIED:                         '',
+        MAINTENANCE:                      '0',
+        FILE_CONFIG_SERVER:               `${SLASH}config${SLASH}config.json`,
+        FILE_CONFIG_APPS:                 `${SLASH}config${SLASH}apps.json`,
+        FILE_CONFIG_IAM_BLOCKIP:          `${SLASH}config${SLASH}iam_blockip.json`,
+        FILE_CONFIG_IAM_POLICY:           `${SLASH}config${SLASH}iam_policy.json`,
+        FILE_CONFIG_IAM_USERAGENT:        `${SLASH}config${SLASH}iam_useragent.json`,
+        FILE_CONFIG_IAM_USER:             `${SLASH}config${SLASH}iam_user.json`,
+        FILE_CONFIG_MICROSERVICE:         `${SLASH}microservice${SLASH}config${SLASH}config.json`,
+        FILE_CONFIG_MICROSERVICE_BATCH:   `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
+        FILE_CONFIG_MICROSERVICE_PDF:     `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
+        PATH_LOG:                         `${SLASH}logs${SLASH}`
         };
     //save initial config files with metadata including path to config files
     await fs.promises.writeFile(process.cwd() + SERVER_CONFIG_INIT_PATH, JSON.stringify(config_init, undefined, 2),  'utf8');
@@ -390,14 +390,22 @@ const InitConfig = async () => {
     });
 };
 /**
+ * Config init read file
+ * @returns {Promise<Types.config_init>}
+ */
+ const ConfigInitReadFile = async () => {
+    const fs = await import('node:fs');
+    const fileBuffer = await fs.promises.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, 'utf8'); 
+    return JSON.parse(fileBuffer.toString());
+};
+
+/**
  * Config maintenance set
  * @param {string} value
  */
  const ConfigMaintenanceSet = async (value) => {
     const fs = await import('node:fs');
-    const fileBuffer = await fs.promises.readFile(process.cwd() + SERVER_CONFIG_INIT_PATH, 'utf8'); 
-    /**@type{Types.config_init} */
-    const config_init = JSON.parse(fileBuffer.toString());
+    const config_init = await ConfigInitReadFile();
     config_init.MAINTENANCE = value;
     config_init.MODIFIED = new Date().toISOString();
     //maintenance in this config file is only updated so no need for backup files
@@ -589,4 +597,4 @@ const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
 export{ CreateRandomString,
         ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, 
-        ConfigGet, ConfigGetInit, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig};
+        ConfigGet, ConfigGetInit, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig, ConfigInitReadFile};
