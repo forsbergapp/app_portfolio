@@ -120,20 +120,20 @@ const COMMON = {
     return new Promise((resolve, reject)=>{
         try {
             switch (endpoint + '_' + service + '_' + routeFunction + '_' + method){
-                case 'IAM_IAM_/IAM/SYSTEMADMIN_POST':{
+                case 'IAM_IAM_/SYSTEMADMIN_POST':{
                     resolve(iam.AuthenticateSystemadmin(app_id, authorization, res));
+                    break;
+                }
+                case 'IAM_IAM_/USER_POST':{
+                    resolve(db_user_account.login(app_id, ip, user_agent, host, query, data, res));
+                    break;
+                }
+                case 'IAM_IAM_/PROVIDER_POST':{
+                    resolve(db_user_account.login_provider(app_id, ip, user_agent, query, data, res));
                     break;
                 }
                 case 'DATA_APP_/APPS_GET':{
                     resolve(app.getApps(app_id, query));
-                    break;
-                }
-                case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/LOGIN_PUT':{
-                    resolve(db_user_account.login(app_id, ip, user_agent, host, query, data, res));
-                    break;
-                }
-                case 'DATA_LOGIN_DB_API_/USER_ACCOUNT/PROVIDER_PUT':{
-                    resolve(db_user_account.login_provider(app_id, ip, user_agent, query, data, res));
                     break;
                 }
                 case 'DATA_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{

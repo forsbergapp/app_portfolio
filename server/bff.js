@@ -63,15 +63,6 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
     BFF(getNumberValue(req.query.app_id), 'DATA', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
 /**
- * Backend for frontend (BFF) data login
- * 
- * @param {Types.req} req - Request
- * @param {Types.res} res
- */
- const BFF_data_login = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'DATA_LOGIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
-};
-/**
  * Backend for frontend (BFF) data signup
  * 
  * @param {Types.req} req - Request
@@ -136,4 +127,4 @@ const BFF_socket = (req, res) =>{
 const BFF_iam = (req, res) =>{
     BFF(getNumberValue(req.query.app_id), 'IAM', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
 };
-export{BFF_data, BFF_data_login, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};
+export{BFF_data, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};

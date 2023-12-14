@@ -83,8 +83,8 @@ const admin_login = async () => {
                 return;
             }
         }
-        common.FFB ('IAM', '/iam/systemadmin?', 'POST', 'SYSTEMADMIN', {username: encodeURI(document.querySelector('#system_admin_login_username_input').value),
-                                                        password: encodeURI(document.querySelector('#system_admin_login_password_input').value)}, (err, result_login) => {
+        common.FFB ('IAM', '/systemadmin?', 'POST', 'IAM', {username: encodeURI(document.querySelector('#system_admin_login_username_input').value),
+                                                            password: encodeURI(document.querySelector('#system_admin_login_password_input').value)}, (err, result_login) => {
             document.querySelector('#admin_login_button').innerHTML = old_button;
             if (err)
                 null;

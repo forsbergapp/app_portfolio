@@ -1903,13 +1903,12 @@ const user_login = async (username, password, callBack) => {
         return callBack('ERROR', null);
     }
     // ES6 object spread operator for user variables
-    const json_data = { app_id:    COMMON_GLOBAL.app_id,
-                        username:  encodeURI(username),
+    const json_data = { username:  encodeURI(username),
                         password:  encodeURI(password),
                         ...get_uservariables()
                     };
 
-    FFB ('DB_API', '/user_account/login?', 'PUT', 'DATA_LOGIN', json_data, (err, result) => {
+    FFB ('IAM', '/user?', 'POST', 'IAM', json_data, (err, result) => {
         if (err)
             return callBack(err, null);
         else{
@@ -2522,7 +2521,8 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
     convert_image(profile_image_url, 
                   COMMON_GLOBAL.image_avatar_width,
                   COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
-        const json_data ={  app_id:                 COMMON_GLOBAL.app_id,
+        const json_data ={  username:               null,
+                            password:               null,
                             active:                 1,
                             identity_provider_id:   identity_provider_id,
                             provider_id:            profile_id,
@@ -2533,7 +2533,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                             provider_email:         profile_email,
                             ...get_uservariables()
                         };
-        FFB ('DB_API', `/user_account/provider?PUT_ID=${profile_id}`, 'PUT', 'DATA_LOGIN', json_data, (err, result) => {
+        FFB ('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data, (err, result) => {
             if (err)
                 return callBack(err, null);
             else{
@@ -2989,10 +2989,10 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             bff_path = `${COMMON_GLOBAL.rest_resource_bff}/data`;
             break;
         }
-        case 'DATA_LOGIN':{
-            //data token login authorization check
-            authorization = `Bearer ${COMMON_GLOBAL.rest_dt}`;
-            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/data_login`;
+        case 'IAM':{
+            //user,admin or system admin login
+            authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
             break;
         }
         case 'DATA_SIGNUP':{
@@ -3017,17 +3017,9 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             break;
         }
         case 'SYSTEMADMIN':{
-            if (service=='IAM'){
-                //admin login authorization post
-                authorization = `Basic ${window.btoa(json_data.username + ':' + json_data.password)}`;
-                json_data = null;
-                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/iam`;
-            }
-            else{
-                //systemadmin authorization
-                authorization = `Bearer ${COMMON_GLOBAL.rest_admin_at}`;
-                bff_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
-            }
+            //systemadmin authorization
+            authorization = `Bearer ${COMMON_GLOBAL.rest_admin_at}`;
+            bff_path = `${COMMON_GLOBAL.rest_resource_bff}/systemadmin`;
             break;
         }
         case 'SOCKET':{
