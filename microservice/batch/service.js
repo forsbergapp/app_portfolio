@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 /**@type{{  jobid:number,
             log_id: number, 
             filename: string, 
@@ -86,7 +86,7 @@ const get_batchlog_filename = () => {
     const logdate = new Date();
     const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
     const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${MicroServiceConfigGet('MICROSERVICE_PATH_LOGS')}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
+    return `${CONFIG.PATH_LOGS}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
 };
 /**
  * 
@@ -317,10 +317,17 @@ const schedule_job = async (jobid, command_type, path, command, argument, cron_e
 };
     
 const start_jobs = async () =>{
-    const fs = await import('node:fs');
     const os = await import('node:os');
-    /**@type{string} */
-    const jobs_string = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_CONFIG_BATCH')}`, 'utf8');
+    //add server start in log, meaning all jobs were terminated
+    await joblog_add({  log_id: null,
+                        jobid: null, 
+                        scheduled_start: null, 
+                        start:new Date().toISOString(), 
+                        end:null, 
+                        status:'CANCELED', 
+                        result:'SERVER RESTART'});
+    /**@type{Types.microservice_config_service_record}*/
+    const config = ConfigServices('BATCH');
     /**@type{{  jobid:number,
      *          name:string,
      *          command_type:'OS',
@@ -331,15 +338,7 @@ const start_jobs = async () =>{
      *          cron_expression:string,
      *          enabled:boolean}[]} 
      */
-    const jobs = JSON.parse(jobs_string);
-    //add server start in log, meaning all jobs were terminated
-    await joblog_add({  log_id: null,
-                        jobid: null, 
-                        scheduled_start: null, 
-                        start:new Date().toISOString(), 
-                        end:null, 
-                        status:'CANCELED', 
-                        result:'SERVER RESTART'});
+    const jobs = config.CONFIG;
     for (const job of jobs){
         //schedule enabled jobs and for current platform
         //use cron expression syntax

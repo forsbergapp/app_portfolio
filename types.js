@@ -470,8 +470,7 @@
  *              FILE_CONFIG_IAM_USERAGENT:string,
  *              FILE_CONFIG_IAM_USER:string,
  *              FILE_CONFIG_MICROSERVICE:string,
- *              FILE_CONFIG_MICROSERVICE_BATCH:string,
- *              FILE_CONFIG_MICROSERVICE_PDF:string,
+ *              FILE_CONFIG_MICROSERVICE_SERVICES:string,
  *              PATH_LOG:string}} config_init
 */
 /**
@@ -491,8 +490,7 @@
  *              'FILE_CONFIG_IAM_POLICY'|
  *              'FILE_CONFIG_IAM_USER'|
  *              'FILE_CONFIG_MICROSERVICE'|
- *              'FILE_CONFIG_MICROSERVICE_BATCH'|
- *              'FILE_CONFIG_MICROSERVICE_PDF'|
+ *              'FILE_CONFIG_MICROSERVICE_SERVICES'|
  *              'PATH_LOG'} config_init_parameter
  */
 
@@ -520,11 +518,7 @@
  *                              APP_START:string,
  *                              APP_SOUND:string,
  *                              APP_COMMON_APP_ID:string,
- *                              REST_RESOURCE_BFF:string,
- *                              SERVICE_CIRCUITBREAKER_FAILURETHRESHOLD:string,
- *                              SERVICE_CIRCUITBREAKER_COOLDOWNPERIOD:string,
- *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT:string,
- *                              SERVICE_CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN:string}], 
+ *                              REST_RESOURCE_BFF:string}], 
  *              ['SERVICE_IAM']:[{ AUTHENTICATE_REQUEST_ENABLE:string,
  *                                 AUTHENTICATE_REQUEST_IP:string,
  *                                 AUTHENTICATE_REQUEST_HOST_EXIST:string,
@@ -604,7 +598,15 @@
  *              ['comment']:string,
  *              ['created']:string,
  *              ['modified']:string,
- *              ['content-security-policy']:string}} config
+ *              ['content-security-policy']:string,
+ *              ['PATH_LOGS']:string,
+ *              ['PATH_TEMP']:string,
+ *              ['MESSAGE_QUEUE_ERROR']:string,
+ *              ['MESSAGE_QUEUE_PUBLISH']:string,
+ *              ['MESSAGE_QUEUE_CONSUME']:string,
+ *              ['SERVICES']:[{HTTPS_KEY:string,
+ *                             HTTPS_CERT:string,
+ *                             PATH:string}]}} config
  */
 /**
  * Server/MicroService - Config apps
@@ -1564,40 +1566,35 @@
  * @property {number}       query.limit
  * @property {string}       query.search
  * @property {string}       query.country
- */
-/**
- * MicroService Config service
- * @typedef {{SERVICE:string, PORT:number, HTTPS_PORT:number}} microservice_config_service
  * 
- * @typedef {   'SERVER_CONFIG'|
- *              'MICROSERVICE_CONFIG'|
- *              'MICROSERVICE_CONFIG_BATCH'|
- *              'MICROSERVICE_CONFIG_PDF'|
- *              'MICROSERVICE_MESSAGE_QUEUE_ERROR'|
- *              'MICROSERVICE_MESSAGE_QUEUE_PUBLISH'|
- *              'MICROSERVICE_MESSAGE_QUEUE_CONSUME'|
- *              'MICROSERVICE_PATH_BATCH'|
- *              'MICROSERVICE_PATH_GEOLOCATION'|
- *              'MICROSERVICE_PATH_MAIL'|
- *              'MICROSERVICE_PATH_PDF'|
- *              'MICROSERVICE_PATH_WORLDCITIES'|
- *              'MICROSERVICE_PATH_LOGS'|
- *              'MICROSERVICE_PATH_TEMP'} microservice_config_keys
- * MicroService config
- * @typedef {{  SERVER_CONFIG                       : string,
- *              MICROSERVICE_CONFIG                 : string,
- *              MICROSERVICE_CONFIG_BATCH           : string,
- *              MICROSERVICE_CONFIG_PDF             : string,
- *              MICROSERVICE_MESSAGE_QUEUE_ERROR    : string,
- *              MICROSERVICE_MESSAGE_QUEUE_PUBLISH  : string,
- *              MICROSERVICE_MESSAGE_QUEUE_CONSUME  : string,
- *              MICROSERVICE_PATH_BATCH             : string
- *              MICROSERVICE_PATH_GEOLOCATION       : string
- *              MICROSERVICE_PATH_MAIL              : string
- *              MICROSERVICE_PATH_PDF               : string
- *              MICROSERVICE_PATH_WORLDCITIES       : string
- *              MICROSERVICE_PATH_LOGS              : string,
- *              MICROSERVICE_PATH_TEMP              : string}} microservice_config
+ * MicroService Config
+ * @typedef {{  PATH_LOGS                                   : string,
+ *              PATH_TEMP                                   : string,
+ *              MESSAGE_QUEUE_ERROR                         : string,
+ *              MESSAGE_QUEUE_PUBLISH                       : string,
+ *              MESSAGE_QUEUE_CONSUME                       : string,
+ *              CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS     : number,
+ *              CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS       : number
+ *              CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS       : number
+ *              CIRCUITBREAKER_REQUESTTIMEOUT_ADMIN_MINUTES : number}|null} microservice_config
+ * Microservice Config services
+ * @typedef {'NAME'|'HOST'|'PORT'|'HTTPS_ENABLE'|'HTTPS_KEYS'|'HTTPS_CERT'|'HTTPS_SSL_VERIFICATION'|
+ *           'HTTPS_SSL_VERIFICATION_PATH'|'HTTPS_PORT'|'STATUS'|'PATH'|'CONFIG'} microservice_config_service_keys
+ * 
+ * @typedef {{NAME:string, 
+ *            HOST:number, 
+ *            PORT:number,
+ *            HTTPS_ENABLE:number,
+ *            HTTPS_KEY:string,
+ *            HTTPS_CERT:string,
+ *            HTTPS_SSL_VERIFICATION:number,
+ *            HTTPS_SSL_VERIFICATION_PATH:string,
+ *            HTTPS_PORT:number,
+ *            STATUS: string,
+ *            PATH:string,
+ *            CONFIG:[*]}} microservice_config_service_record
+ * 
+ * @typedef {{['SERVICES']:microservice_config_service_record}} microservice_config_service
  * 
  * MicroService - Response
  * @typedef {object}    res_microservice
