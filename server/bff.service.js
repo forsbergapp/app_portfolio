@@ -2,8 +2,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const microservice = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-const microservice_circuitbreak = new microservice.CircuitBreaker();
+const {microserviceRequest}= await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 
 /**
@@ -26,6 +25,7 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
  */
  const BFF = async (app_id, endpoint, service, parameters, ip, method, authorization, host, headers_user_agent, headers_accept_language, data, user_account_logon_user_account_id=null, res=null) => {
     const {serverRoutes} = await import(`file://${process.cwd()}/server/server.service.js`);
+    const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
     return new Promise((resolve, reject) => {
         if (!app_id && !service && !parameters){
             //required parameters not provided
@@ -41,7 +41,8 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
                 decodedparameters += (user_account_logon_user_account_id)?`&user_account_logon_user_account_id=${user_account_logon_user_account_id}`:'';
                 let path = '';
                 const call_service = (/**@type{string}*/path, /**@type{string}*/service) => {
-                    microservice_circuitbreak.MicroServiceCall(app_id,path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
+                    microserviceRequest(app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), //if appid = APP_COMMON_APP_ID then send true
+                                        path,service, method,ip,authorization, headers_user_agent, headers_accept_language, data?data:null)
                     .then((/**@type{string}*/result)=>resolve(result))
                     .catch((/**@type{Types.error}*/error)=>reject(error));
                 };

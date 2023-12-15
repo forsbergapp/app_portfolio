@@ -1,0 +1,40 @@
+{
+    "SERVICES":[
+    {"NAME":"BATCH",       "HOST": "localhost", "PORT":3001, "HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4001, "STATUS":"ONLINE",     "PATH":"batch",
+        "CONFIG":[
+            {"jobid":1 , "name": "Pipeline every minute", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"* * * * *", "enabled":false},
+            {"jobid":2 , "name": "Pipeline 08.00 every day", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 8 * * *", "enabled":false},
+            {"jobid":3 , "name": "Pipeline 12.00 every day", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 12 * * *", "enabled":false},
+            {"jobid":4 , "name": "Pipeline 17.00 every day", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 17 * * *", "enabled":false},
+            {"jobid":5 , "name": "Pipeline 16.00 every friday", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 16 * * 5", "enabled":false},
+            {"jobid":6 , "name": "Pipeline every minute", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"* * * * *", "enabled":false},
+            {"jobid":7 , "name": "Pipeline 08.00 every day", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 8 * * *", "enabled":false},
+            {"jobid":8 , "name": "Pipeline 12.00 every day", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 12 * * *", "enabled":false},
+            {"jobid":9 , "name": "Pipeline 17.00 every day", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 17 * * *", "enabled":false},
+            {"jobid":10 , "name": "Pipeline 16.00 every friday", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 16 * * 5", "enabled":false}
+            ] },
+    {"NAME":"GEOLOCATION", "HOST": "localhost", "PORT":3002,"HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4002, "STATUS":"ONLINE",  "PATH":"geolocation",
+        "CONFIG":"" },
+    {"NAME":"WORLDCITIES", "HOST": "localhost", "PORT":3003,"HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4003, "STATUS":"ONLINE",  "PATH":"worldcities",
+        "CONFIG":"" },
+    {"NAME":"MAIL",        "HOST": "",          "PORT":0,   "HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 0,    "STATUS":"OFFLINE", "PATH":"mail",
+        "CONFIG":"" },
+    {"NAME":"PDF",         "HOST": "",          "PORT":0,   "HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 0,    "STATUS":"OFFLINE", "PATH":"pdf",
+        "CONFIG":[
+            {"EXECUTABLE_PATH":"","COMMENT":"/ex /snap/bin/chromium or Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe"},
+            {"USER_AGENT":"PDF","COMMENT":""},
+            {"ACCEPT_LANGUAGE":"*","COMMENT":""},
+            {"PDF_TIMEOUT":20000,"COMMENT":"milliseconds"},
+            {"A4_WIDTH_VIEWPORT":794,"COMMENT":"https://pixelsconverter.com/a-paper-sizes-to-pixels 960DPI"},
+            {"A4_HEIGHT_VIEWPORT":1123,"COMMENT":"https://pixelsconverter.com/a-paper-sizes-to-pixels 960DPI"},
+            {"LETTER_WIDTH_VIEWPORT":816,"COMMENT":"https://pixelsconverter.com/us-paper-sizes-to-pixels 960DPI"},
+            {"LETTER_HEIGHT_VIEWPORT":1054,"COMMENT":"https://pixelsconverter.com/us-paper-sizes-to-pixels 960DPI"},
+            {"DEVICE_SCALEFACTOR":1,"COMMENT":""},
+            {"MARGIN_TOP":"0px","COMMENT":""},
+            {"MARGIN_BOTTOM":"0px","COMMENT":""},
+            {"MARGIN_LEFT":"0px","COMMENT":""},
+            {"MARGIN_RIGHT":"0px","COMMENT":""}
+        ]
+        }
+    ]
+}

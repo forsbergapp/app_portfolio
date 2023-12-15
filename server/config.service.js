@@ -59,8 +59,7 @@ const app_portfolio_title = 'App Portfolio';
             [5, CONFIG_INIT.FILE_CONFIG_IAM_USERAGENT],
             [6, CONFIG_INIT.FILE_CONFIG_IAM_USER],
             [7, CONFIG_INIT.FILE_CONFIG_MICROSERVICE],
-            [8, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_BATCH],
-            [9, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_PDF]
+            [8, CONFIG_INIT.FILE_CONFIG_MICROSERVICE_SERVICES]
            ];
 };
 /**
@@ -242,8 +241,7 @@ const DefaultConfig = async () => {
                             [5, `${SLASH}server${SLASH}default_iam_useragent.json`],
                             [6, `${SLASH}server${SLASH}default_iam_user.json`],
                             [7, `${SLASH}microservice${SLASH}default_microservice_config.json`],
-                            [8, `${SLASH}microservice${SLASH}default_microservice_config_batch.json`],
-                            [9, `${SLASH}microservice${SLASH}default_microservice_config_pdf.json`]
+                            [8, `${SLASH}microservice${SLASH}default_microservices.json`],
                         ]; 
     //ES2020 import() with ES6 promises
     const config_json = await Promise.all(default_files.map(file => {
@@ -257,8 +255,7 @@ const DefaultConfig = async () => {
                         JSON.parse(config_json[4]),
                         JSON.parse(config_json[5]),
                         JSON.parse(config_json[6]),
-                        JSON.parse(config_json[7]),
-                        JSON.parse(config_json[8])];
+                        JSON.parse(config_json[7])];
     //set server parameters
     //update path
     config_obj[0].SERVER.map(row=>{
@@ -287,6 +284,21 @@ const DefaultConfig = async () => {
     });
     //set created for user
     config_obj[5].created = new Date().toISOString();
+    
+    //set paths in microservice config
+    config_obj[6].PATH_LOGS             = `${SLASH}microservice${SLASH}${config_obj[6].PATH_LOGS}${SLASH}`;
+    config_obj[6].PATH_TEMP             = `${SLASH}microservice${SLASH}${config_obj[6].PATH_TEMP}${SLASH}`;
+    config_obj[6].MESSAGE_QUEUE_ERROR   = `${config_obj[6].PATH_LOGS}${config_obj[6].MESSAGE_QUEUE_ERROR}`;
+    config_obj[6].MESSAGE_QUEUE_PUBLISH = `${config_obj[6].PATH_LOGS}${config_obj[6].MESSAGE_QUEUE_PUBLISH}`;
+    config_obj[6].MESSAGE_QUEUE_CONSUME = `${config_obj[6].PATH_LOGS}${config_obj[6].MESSAGE_QUEUE_CONSUME}`;
+    //set paths in microservice services
+    config_obj[7].SERVICES.map(row=>{
+        row.HTTPS_KEY             = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_KEY}`;
+        row.HTTPS_CERT            = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_CERT}`;
+        row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
+    });
+    
+    
     //server metadata
     const config_init = {
         CONFIGURATION:                    app_portfolio_title,
@@ -300,8 +312,7 @@ const DefaultConfig = async () => {
         FILE_CONFIG_IAM_USERAGENT:        `${SLASH}config${SLASH}iam_useragent.json`,
         FILE_CONFIG_IAM_USER:             `${SLASH}config${SLASH}iam_user.json`,
         FILE_CONFIG_MICROSERVICE:         `${SLASH}microservice${SLASH}config${SLASH}config.json`,
-        FILE_CONFIG_MICROSERVICE_BATCH:   `${SLASH}microservice${SLASH}config${SLASH}config_batch.json`,
-        FILE_CONFIG_MICROSERVICE_PDF:     `${SLASH}microservice${SLASH}config${SLASH}config_pdf.json`,
+        FILE_CONFIG_MICROSERVICE_SERVICES:`${SLASH}microservice${SLASH}config${SLASH}services.json`,
         PATH_LOG:                         `${SLASH}logs${SLASH}`
         };
     //save initial config files with metadata including path to config files
@@ -327,7 +338,6 @@ const InitConfig = async () => {
     return await new Promise((resolve, reject) => {
         const setVariables = async () => {
             const fs = await import('node:fs');
-            const {MicroServiceConfig} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
             const files = config_files();         
             for (const file of files){
                 const fileBuffer = await fs.promises.readFile(process.cwd() + file[1], 'utf8');
@@ -365,8 +375,6 @@ const InitConfig = async () => {
                     }
                 }
             }
-            //sets MICROSERVICE module variable so main server can read configuration with better performance
-            await MicroServiceConfig();
         };
         ConfigExists().then((result) => {
             if (result==true)
