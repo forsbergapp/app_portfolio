@@ -113,8 +113,22 @@ class CircuitBreaker {
         };
     }
 }
- const microservice_circuitbreak = new CircuitBreaker();
- const microserviceRequest = microservice_circuitbreak.MicroServiceCall;
+const microservice_circuitbreak = new CircuitBreaker();
+/**
+ * 
+ * @param {boolean} admin 
+ * @param {string} path 
+ * @param {string} service 
+ * @param {string} method 
+ * @param {string} client_ip 
+ * @param {string} authorization 
+ * @param {string} headers_user_agent 
+ * @param {string} headers_accept_language 
+ * @param {object} data 
+ */
+const microserviceRequest = async (admin, path,service, method,client_ip,authorization, headers_user_agent, headers_accept_language, data) =>{
+    return microservice_circuitbreak.MicroServiceCall(admin, path,service, method,client_ip,authorization, headers_user_agent, headers_accept_language, data);
+}; 
 
 /**
  * Get number value from request key
@@ -130,7 +144,7 @@ class CircuitBreaker {
  * @param {string} servicename
  * @returns {Types.microservice_config_service_record}
  */
-const ConfigServices = (servicename) =>{    
+const ConfigServices = (servicename) =>{
     return CONFIG_SERVICES.filter((/**@type{Types.microservice_config_service_record}*/service)=>service.NAME == servicename)[0];        
 };
 
@@ -430,4 +444,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {getNumberValue, MicroServiceServer, microserviceRequest, MessageQueue};
+export {getNumberValue, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};
