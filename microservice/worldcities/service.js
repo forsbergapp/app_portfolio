@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
-const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const {ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**
  * @typedef {{  city:       string,
@@ -38,7 +38,9 @@ const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservi
  */
 const getService = async () => {
     const fs = await import('node:fs');
-    const fileBuffer = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_PATH_WORLDCITIES')}worldcities.json`, 'utf8')
+    /**@type{Types.microservice_config_service_record}*/
+    const config = ConfigServices('WORLDCITIES');
+    const fileBuffer = await fs.promises.readFile(`${process.cwd()}${config.PATH}worldcities.json`, 'utf8')
     .catch(error=>{throw error;});
     return JSON.parse(fileBuffer.toString());
 };

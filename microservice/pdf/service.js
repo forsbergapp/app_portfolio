@@ -4,7 +4,7 @@
 import * as Types from './../../types.js';
 
 const puppeteer = await import('puppeteer');
-const {MicroServiceConfigGet} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**@type{*} */
 let BROWSER;
@@ -13,11 +13,10 @@ let BROWSER;
  * @param {string} parameter 
  * @returns {Promise.<string|null>}
  */
-const ConfigGet = async (parameter)=>{
-    const fs = await import('node:fs');    
-    const config_json = await fs.promises.readFile(`${process.cwd()}${MicroServiceConfigGet('MICROSERVICE_CONFIG_PDF')}`, 'utf8');
-    const CONFIG = JSON.parse(config_json)['PDF'];
-    for (const row of CONFIG){
+const ConfigServiceGet = async (parameter)=>{
+    /**@type{Types.microservice_config_service_record}*/
+    const config = ConfigServices('PDF');
+    for (const row of config.CONFIG){
         for (const key in row)
             if (key == parameter)
                 return row[key];
@@ -31,7 +30,7 @@ const initPDFService = async () => {
     if (!BROWSER){
         BROWSER = await puppeteer.launch({  pipe:true,
                                             headless: 'new',
-                                            executablePath: await ConfigGet('EXECUTABLE_PATH') ?? '',
+                                            executablePath: await ConfigServiceGet('EXECUTABLE_PATH') ?? '',
                                             ignoreHTTPSErrors: true,
                                             ignoreDefaultArgs: ['--enable-automation'],
                                             args: [ '--disable-3d-apis',
@@ -74,7 +73,7 @@ const initPDFService = async () => {
                                                     '--no-experiments',
                                                     '--no-default-browser-check',
                                                     '--no-pings',
-                                                    '--user-data-dir=' + process.cwd() + MicroServiceConfigGet('MICROSERVICE_PATH_TEMP')]
+                                                    '--user-data-dir=' + process.cwd() + CONFIG.PATH_TEMP]
         }).catch(error=>{
             console.log(error);
             throw error;
@@ -94,18 +93,18 @@ const getPDF = async (message) => {
         throw error;
     });
     
-    const user_agent = await ConfigGet('USER_AGENT');
-    const accept_language = await ConfigGet('ACCEPT_LANGUAGE');
-    const pdf_timeout = await ConfigGet('PDF_TIMEOUT');
-    const a4_width_viewport = await ConfigGet('A4_WIDTH_VIEWPORT');
-    const a4_height_viewport = await ConfigGet('A4_HEIGHT_VIEWPORT');
-    const letter_width_viewport = ConfigGet('LETTER_WIDTH_VIEWPORT');
-    const letter_height_viewport = ConfigGet('LETTER_HEIGHT_VIEWPORT');
-    const device_scalefactor = await ConfigGet('DEVICE_SCALEFACTOR');
-    const margin_top = await ConfigGet('MARGIN_TOP');
-    const margin_bottom = await ConfigGet('MARGIN_BOTTOM');
-    const margin_left = await ConfigGet('MARGIN_LEFT');
-    const margin_right = await ConfigGet('MARGIN_RIGHT');
+    const user_agent = await ConfigServiceGet('USER_AGENT');
+    const accept_language = await ConfigServiceGet('ACCEPT_LANGUAGE');
+    const pdf_timeout = await ConfigServiceGet('PDF_TIMEOUT');
+    const a4_width_viewport = await ConfigServiceGet('A4_WIDTH_VIEWPORT');
+    const a4_height_viewport = await ConfigServiceGet('A4_HEIGHT_VIEWPORT');
+    const letter_width_viewport = ConfigServiceGet('LETTER_WIDTH_VIEWPORT');
+    const letter_height_viewport = ConfigServiceGet('LETTER_HEIGHT_VIEWPORT');
+    const device_scalefactor = await ConfigServiceGet('DEVICE_SCALEFACTOR');
+    const margin_top = await ConfigServiceGet('MARGIN_TOP');
+    const margin_bottom = await ConfigServiceGet('MARGIN_BOTTOM');
+    const margin_left = await ConfigServiceGet('MARGIN_LEFT');
+    const margin_right = await ConfigServiceGet('MARGIN_RIGHT');
 
     const webPage = await BROWSER.newPage();
     await webPage.setJavaScriptEnabled(true);
