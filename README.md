@@ -313,24 +313,31 @@
 
 12. Issues
    
-	Not supported:
+	PM2 and NodeJS:
 
-	Hijri transliteration on Android.
+    	PM2 cluster mode and native nodejs cluster functionality are not supported at the momment since configuration 
+		functions use module variables for performance and socket uses in memory module variable for connected clients 
+		and no replication method still implemented.
 
-	Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
+	Javascript:
+		Hijri transliteration on Android.
 
-	Hanidec numbers Javascript bugs:
+		Armenian language on Chrome or Chromium, use Edge or other for Puppeteer if needed.
 
-	Javascript does not support Hanidec numbers used in Chinese and North Korean numbers from 10 and above. Fore example 10 in latn number system will display the individual numbers 1 and 0 in Hanidec 一〇 (Yī and Líng) and not 10 in Hanidec that should be 十 (Shí). 
+		Hanidec numbers Javascript bugs:
 
-	new Intl.NumberFormat('zh-u-nu-hanidec').format(10); 
-	result: 一〇 (Yī and Líng) should be 十 (Shí)
-	or
-	(10).toLocaleString('zh-u-nu-hanidec')
-	result: 一〇 (Yī and Líng) should be 十 (Shí)
+		Javascript does not support Hanidec numbers used in Chinese and North Korean numbers from 10 and above. 
+		For example 10 in latn number system will display the individual numbers 1 and 0 in Hanidec 一〇 (Yī and Líng) 
+		and not 10 in Hanidec that should be 十 (Shí). 
 
-	(十).toLocaleString('en') should convert hanidec to 10 in latn numbers but returns NaN
+		new Intl.NumberFormat('zh-u-nu-hanidec').format(10); 
+		result: 一〇 (Yī and Líng) should be 十 (Shí)
+		or
+		(10).toLocaleString('zh-u-nu-hanidec')
+		result: 一〇 (Yī and Líng) should be 十 (Shí)
 
-	String.fromCharCode(0x5341).toLocaleString('en-u-nu-latin') 
-	UTF-16 code unit of Hanidec 十 (Shí),
-	should return 10 in latin number but returns 十.
+		(十).toLocaleString('en') should convert hanidec to 10 in latn numbers but returns NaN
+
+		String.fromCharCode(0x5341).toLocaleString('en-u-nu-latin') 
+		UTF-16 code unit of Hanidec 十 (Shí),
+		should return 10 in latin number but returns 十.
