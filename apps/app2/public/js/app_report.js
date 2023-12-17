@@ -82,6 +82,120 @@ const REPORT_GLOBAL = {
 /*----------------------- */
 /* COMMON APP & REPORT    */
 /*----------------------- */
+const getNumberString = (numbersystem, number) => {
+	const hanidec_numbers = 	[
+								[0,'〇','líng'],
+								[1,'一','yī'],
+								[2,'二','èr'],
+								[3,'三','sān'],
+								[4,'四','sì'],
+								[5,'五','wǔ'],
+								[6,'六','liù'],
+								[7,'七','qī'],
+								[8,'八','bā'],
+								[9,'九','jiǔ'],
+								[10,'十','shí'],
+								[0,'零','líng'],
+								[10,'十','shí'],
+								[11,'十一','shí yī'],
+								[12,'十二','shí èr'],
+								[13,'十三','shí sān'],
+								[14,'十四','shí sì'],
+								[15,'十五','shí wǔ'],
+								[16,'十六','shí liù'],
+								[17,'十七','shí qī'],
+								[18,'十八','shí bā'],
+								[19,'十九','shí jiǔ'],
+								[20,'二十','èr shí'],
+								[21,'二十一','èr shí yī'],
+								[22,'二十二','èr shí èr'],
+								[23,'二十三','èr shí sān'],
+								[24,'二十四','èr shí sì'],
+								[25,'二十五','èr shí wǔ'],
+								[26,'二十六','èr shí liù'],
+								[27,'二十七','èr shí qī'],
+								[28,'二十八','èr shí bā '],
+								[29,'二十九','èr shí jiǔ'],
+								[30,'三十','sān shí'],
+								[31,'三十一','sān shí yī'],
+								[32,'三十二','sān shí èr'],
+								[33,'三十三','sān shí sān'],
+								[34,'三十四','sān shí sì'],
+								[35,'三十五','sān shí wǔ'],
+								[36,'三十六','sān shí liù'],
+								[37,'三十七','sān shí qī'],
+								[38,'三十八','sān shí bā '],
+								[39,'三十九','sān shí jiǔ'],
+								[40,'四十','sì shí'],
+								[41,'四十一','sì shí yī'],
+								[42,'四十二','sì shí èr'],
+								[43,'四十三','sì shí sān'],
+								[44,'四十四','sì shí sì'],
+								[45,'四十五','sì shí wǔ'],
+								[46,'四十六','sì shí liù'],
+								[47,'四十七','sì shí qī'],
+								[48,'四十八','sì shí bā'],
+								[49,'四十九','sì shí jiǔ'],
+								[50,'五十','wǔ shí'],
+								[51,'五十一','wǔ shí yī'],
+								[52,'五十二','wǔ shí èr'],
+								[53,'五十三','wǔ shí sān'],
+								[54,'五十四','wǔ shí sì'],
+								[55,'五十五','wǔ shí wǔ'],
+								[56,'五十六','wǔ shí liù'],
+								[57,'五十七','wǔ shí qī'],
+								[58,'五十八','wǔ shí bā'],
+								[59,'五十九','wǔ shí jiǔ'],
+								[60,'六十','liù shí'],
+								[61,'六十一','liù shí yī'],
+								[62,'六十二','liù shí èr'],
+								[63,'六十三','liù shí sān'],
+								[64,'六十四','liù shí sì'],
+								[65,'六十五','liù shí wǔ'],
+								[66,'六十六','liù shí liù'],
+								[67,'六十七','liù shí qī'],
+								[68,'六十八','liù shí bā'],
+								[69,'六十九','liù shí jiǔ'],
+								[70,'七十','qī shí'],
+								[71,'七十一','qī shí yī'],
+								[72,'七十二','qī shí èr'],
+								[73,'七十三','qī shí sān'],
+								[74,'七十四','qī shí sì'],
+								[75,'七十五','qī shí wǔ'],
+								[76,'七十六','qī shí liù'],
+								[77,'七十七','qī shí qī'],
+								[78,'七十八','qī shí bā'],
+								[79,'七十九','qī shí jiǔ'],
+								[80,'八十','bā shí'],
+								[81,'八十一','bā shí yī'],
+								[82,'八十二','bā shí èr'],
+								[83,'八十三','bā shí sān'],
+								[84,'八十四','bā shí sì'],
+								[85,'八十五','bā shí wǔ'],
+								[86,'八十六','bā shí liù'],
+								[87,'八十七','bā shí qī'],
+								[88,'八十八','bā shí bā'],
+								[89,'八十九','bā shí jiǔ'],
+								[90,'九十','jiǔ shí'],
+								[91,'九十一','jiǔ shí yī'],
+								[92,'九十二','jiǔ shí èr'],
+								[93,'九十三','jiǔ shí sān'],
+								[94,'九十四','jiǔ shí sì'],
+								[95,'九十五','jiǔ shí wǔ'],
+								[96,'九十六','jiǔ shí liù'],
+								[97,'九十七','jiǔ shí qī'],
+								[98,'九十八','jiǔ shí bā'],
+								[99,'九十九','jiǔ shí jiǔ'],
+								[100,'一百','yì bǎi']
+							];
+	switch (numbersystem){
+		case 'hanidec':{
+			return hanidec_numbers.filter(hanidec_number=>hanidec_number[0] == number)[0][1]; 
+		}
+		default:
+			return number;
+	}
+};
 const getColumnTitles = (transliteration = 0, calendartype, locale, second_locale, first_locale) => {
 	const coltitle = {day: '',
 					weekday: '',
@@ -398,19 +512,61 @@ const localTime = (value, locale, format, hours=null, minutes=null) =>{
 	switch (format){
 		//24h
 		case '24h':{
-			return (hours==null?calc.hours:hours).toLocaleString(locale) + ':' + (minutes==null?calc.minutes:minutes).toLocaleString(locale).padStart(2,'0');
+			if (locale.toLowerCase().endsWith('hanidec'))
+				if ((minutes ?? calc.minutes)<10 ){
+					//padStart does not work for Hanidec numbers
+					return 	getNumberString('hanidec', hours ?? calc.hours) + ':' + 
+							(0).toLocaleString(locale) + getNumberString('hanidec', minutes ?? calc.minutes);
+				}
+				else
+					return 	getNumberString('hanidec', hours ?? calc.hours) + ':' + 
+							getNumberString('hanidec', minutes ?? calc.minutes);
+			else
+				return 	(hours ?? calc.hours).toLocaleString(locale) + ':' + 
+						(minutes ?? calc.minutes).toLocaleString(locale).padStart(2,(0).toLocaleString(locale));
 		}
 		//12h with suffix
 		case '12h':{
 			const localtime = new Date(1970,1,1, hours==null?calc.hours:hours, minutes==null?calc.minutes:minutes);
-			return localtime.toLocaleTimeString(locale, {hour: 'numeric',minute: '2-digit', hour12:true});
+			if (locale.toLowerCase().endsWith('hanidec')){
+				const time_latn_no_dayperiod	= localtime.toLocaleString(locale.replace('hanidec','latn'), {hour: 'numeric',minute: '2-digit', hour12:false}).split(':');
+				//adjust 24 to 12 format
+				time_latn_no_dayperiod[0] = ((Number(time_latn_no_dayperiod[0]) + 12 -1)% 12+ 1).toString();
+				//to find dayperiod using localtime.toLocaleString('es-pe-u-nu-latin', {dayPeriod:'short'}) returns too long text
+				let dayperiod 					= localtime.toLocaleString(locale.replace('hanidec','latn'), {hour: '2-digit',minute: '2-digit', hour12:true});
+				dayperiod						= dayperiod.indexOf(':')==2?dayperiod.substring(5):dayperiod.substring(0,dayperiod.length-5);
+				const time_latn_with_dayperiod	= localtime.toLocaleString(locale.replace('hanidec','latn'), {hour: 'numeric',minute: '2-digit', hour12:true, dayPeriod:'short'});
+				const dayperiod_first			= (time_latn_with_dayperiod.indexOf(time_latn_no_dayperiod[0]+':'+time_latn_no_dayperiod[1])>0);
+				if (dayperiod_first)
+					return 	dayperiod + 
+							getNumberString('hanidec', Number(time_latn_no_dayperiod[0])) + ':' + 
+							getNumberString('hanidec', Number(time_latn_no_dayperiod[1]));
+				else
+					return 	getNumberString('hanidec', Number(time_latn_no_dayperiod[0])) + ':' + 
+							getNumberString('hanidec', Number(time_latn_no_dayperiod[1])) +
+							dayperiod;
+			}
+			else
+				return localtime.toLocaleTimeString(locale, {hour: 'numeric',minute: '2-digit', hour12:true});
 		}
 		//12h without suffix
 		case '12hNS':
 		default:{
 			//adjust 24 to 12 format
 			const hour12 = ((hours==null?calc.hours:hours) + 12 -1)% 12+ 1;
-			return (hour12).toLocaleString(locale) + ':' + (minutes==null?calc.minutes:minutes).toLocaleString(locale).padStart(2,'0');
+			if (locale.toLowerCase().endsWith('hanidec')){
+				if ((minutes ?? calc.minutes)<10 ){
+					//padStart does not work for Hanidec numbers
+					return getNumberString('hanidec', hour12) + ':' + 
+									(0).toLocaleString(locale) + getNumberString('hanidec', minutes ?? calc.minutes);
+				}
+				else
+					return getNumberString('hanidec', hour12) + ':' + 
+									getNumberString('hanidec', minutes ?? calc.minutes);
+			}
+			else
+				return 	(hour12).toLocaleString(locale) + ':' + 
+						(minutes ?? calc.minutes).toLocaleString(locale).padStart(2,(0).toLocaleString(locale));
 		}
 	}
 };
@@ -485,6 +641,16 @@ const makeTableRow = (data, columns, year, month, settings, date) => {
 			null;
 		else{
 			switch(column){
+			case 'day':{
+				if (settings.number_system=='hanidec')
+					html += `<div class='timetable_month_data_col'>${getNumberString(settings.number_system, data[column])}</div>`;
+				else
+					html += `<div class='timetable_month_data_col'>${data[column].toLocaleString(	settings.locale + 
+																									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
+																									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
+																									settings.number_system)}</div>`;
+				break;
+				}
 			case 'caltype':{
 				if (settings.calendartype=='GREGORIAN'){
 					const date_temp = new Date(year,month,data.day);
@@ -494,7 +660,7 @@ const makeTableRow = (data, columns, year, month, settings, date) => {
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										settings.calendar_hijri_type + 
 																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										settings.number_system, options_calendartype)}</div>`;
+																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;
 				}
 				else{							
 					html += `<div class='timetable_month_data_col timetable_month_data_calendartype	'>${new Date(date[0],date[1]-1,date[2]).toLocaleDateString(settings.locale + 
@@ -502,16 +668,10 @@ const makeTableRow = (data, columns, year, month, settings, date) => {
 																										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 																										REPORT_GLOBAL.regional_def_calendar_type_greg + 
 																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										settings.number_system, options_calendartype)}</div>`;							
+																										(settings.number_system=='hanidec'?'latn':settings.number_system), options_calendartype)}</div>`;							
 				}
 				break;
 				}
-			case 'day':
-				html += `<div class='timetable_month_data_col'>${data[column].toLocaleString(settings.locale + 
-																										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
-																										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																										settings.number_system)}</div>`;
-				break;
 			case 'weekday':
 			case 'weekday_tr':{
 				if (settings.calendartype=='GREGORIAN'){
@@ -662,7 +822,7 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 					title:			new Date(year_greogrian,month_gregorian,1).toLocaleDateString(settings.locale + 
 										REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-										settings.number_system, 
+										(settings.number_system=='hanidec'?'latn':settings.number_system), 
 										options).toLocaleUpperCase(),
 					date:			new Date(year_greogrian, month_gregorian, 1),
 					endDate: 		new Date(year_greogrian, month_gregorian+ 1, 1),
@@ -685,7 +845,7 @@ const displayMonth = (prayTimes, settings, item_id, year_class='') => {
 										REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 										settings.calendar_hijri_type + 
 										REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-										settings.number_system, 
+										(settings.number_system=='hanidec'?'latn':settings.number_system),
 										/**@ts-ignore */
 										options).toLocaleUpperCase(),
 					date:			new Date(dateGregorian[0], dateGregorian[1]-1, dateGregorian[2]),
@@ -884,14 +1044,14 @@ const displayDay = (prayTimes, settings, item_id, user_settings) => {
 	const date_title4 = date_current.toLocaleDateString(settings.locale + 
 									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-									settings.number_system, options).toLocaleUpperCase();
+									(settings.number_system=='hanidec'?'latn':settings.number_system), options).toLocaleUpperCase();
 	date_current.setDate(date_current.getDate() + settings.hijri_adj);
 	const date_title5 = date_current.toLocaleDateString(settings.locale + 
 									REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 									REPORT_GLOBAL.regional_def_locale_ext_calendar + 
 									settings.calendar_hijri_type + 
 									REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-									settings.number_system, options_hijri).toLocaleUpperCase();
+									(settings.number_system=='hanidec'?'latn':settings.number_system), options_hijri).toLocaleUpperCase();
 	
 	const timetable_data = () => {
 		const day_timetable = (	user_locale, user_timezone, user_number_system, user_calendar_hijri_type,
@@ -1055,7 +1215,7 @@ const displayYear = (prayTimes, settings, item_id) => {
 		timetable_title = REPORT_GLOBAL.session_currentDate.getFullYear().toLocaleString(settings.locale + 
 																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																							settings.number_system, 
+																							(settings.number_system=='hanidec'?'latn':settings.number_system), 
 																							options_year);
 	}
 	else{
@@ -1063,7 +1223,7 @@ const displayYear = (prayTimes, settings, item_id) => {
 		timetable_title = REPORT_GLOBAL.session_currentHijriDate[1].toLocaleString(settings.locale + 
 																							REPORT_GLOBAL.regional_def_locale_ext_prefix + 
 																							REPORT_GLOBAL.regional_def_locale_ext_number_system + 
-																							settings.number_system, 
+																							(settings.number_system=='hanidec'?'latn':settings.number_system), 
 																							options_year);
 	}
 	const months = new Array(12);
