@@ -341,3 +341,9 @@
 		String.fromCharCode(0x5341).toLocaleString('en-u-nu-latin') 
 		UTF-16 code unit of Hanidec 十 (Shí),
 		should return 10 in latin number but returns 十.
+
+		Workaround for chinese numbers in app 2:
+		Hijri dates and timetables date titles will use latn numbers if hanidec numbersystem is used.
+		Using number mapping for chinese numbers 1-100 as workaround for timetables.
+		
+		Other apps are using latn numbers.
