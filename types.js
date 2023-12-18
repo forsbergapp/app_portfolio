@@ -30,7 +30,7 @@
  * @property {object} body
  * @property {string} body.value                                    - Server parameter
  * @property {string} body.config_no                                - Server parameter
- * @property {config} body.config_json                              - Server parameter
+ * @property {db_file_config_files} body.config_json                - Server parameter
  * @property {number} body.app_id
  * @property {number} body.client_id                                - Socket parameter
  * @property {number} body.client_id_current                        - Socket parameter
@@ -127,12 +127,8 @@
  * @property {string} query.parameter                               - Server parameter
  * @property {number|null} query.system_admin
  * @property {number} query.identity_provider_id
- * @property {0|1|2|3|4|5|6} query.config_type_no - Server parameter
- * @property {  'SERVER'|
- *              'SERVICE_IAM'|
- *              'SERVICE_SOCKET'|
- *              'SERVICE_DB'|
- *              'SERVICE_LOG'} query.config_group                   - Server parameter
+ * @property {0|1|2|3|4|5|6} query.config_type_no                   - Server parameter
+ * @property {config_group} query.config_group                      - Server parameter
  * 
  * @property {{ authorization: string, 
  *              'user-agent': string, 
@@ -458,156 +454,117 @@
  *                          start_arg_0 : string,
  *                          start_arg_1 : string
  *                  }}} server_info
- * Server - Config init
- * @typedef {{  CONFIGURATION:string, 
- *              CREATED:string, 
- *              MODIFIED:string,
- *              MAINTENANCE:string,
- *              FILE_CONFIG_SERVER:string,
- *              FILE_CONFIG_APPS:string,
- *              FILE_CONFIG_IAM_BLOCKIP:string,
- *              FILE_CONFIG_IAM_POLICY:string,
- *              FILE_CONFIG_IAM_USERAGENT:string,
- *              FILE_CONFIG_IAM_USER:string,
- *              FILE_CONFIG_MICROSERVICE:string,
- *              FILE_CONFIG_MICROSERVICE_SERVICES:string,
- *              PATH_LOG:string}} config_init
-*/
-/**
- * Server - Config files
- * @typedef {[number, string]} config_files
- */
-/**
- * Server - Config init parameter
- * @typedef {   'CONFIGURATION'|
- *              'CREATED'|
- *              'MODIFIED'|
- *              'MAINTENANCE'|
- *              'FILE_CONFIG_SERVER'|
- *              'FILE_CONFIG_APPS'|
- *              'FILE_CONFIG_IAM_BLOCKIP'|
- *              'FILE_CONFIG_IAM_USERAGENT'|
- *              'FILE_CONFIG_IAM_POLICY'|
- *              'FILE_CONFIG_IAM_USER'|
- *              'FILE_CONFIG_MICROSERVICE'|
- *              'FILE_CONFIG_MICROSERVICE_SERVICES'|
- *              'PATH_LOG'} config_init_parameter
+ * 
  */
 
 /**
- * Server - Config type no
- * @typedef {number|null} config_type_no
- */
-/**
+ * 
  * Server - Config group
  * @typedef {'SERVER'|'SERVICE_IAM'|'SERVICE_SOCKET'|'SERVICE_DB'|'SERVICE_LOG'} config_group
+ * 
+ * Server - Config
+ * @typedef {{   HTTPS_KEY:string,
+ *               HTTPS_CERT:string,
+ *               PORT:string,
+ *               HTTPS_ENABLE:string,
+ *               HTTPS_PORT:string,
+ *               HTTPS_SSL_VERIFICATION:string,
+ *               HTTPS_SSL_VERIFICATION_PATH:string,
+ *               JSON_LIMIT:string,
+ *               TEST_SUBDOMAIN:string,
+ *               APP_LOG:string,
+ *               APP_START:string,
+ *               APP_SOUND:string,
+ *               APP_COMMON_APP_ID:string,
+ *               REST_RESOURCE_BFF:string}} config_server_server
+ * @typedef {{ AUTHENTICATE_REQUEST_ENABLE:string,
+ *             AUTHENTICATE_REQUEST_IP:string,
+ *             AUTHENTICATE_REQUEST_HOST_EXIST:string,
+ *             AUTHENTICATE_REQUEST_ACCESS_FROM:string,
+ *             AUTHENTICATE_REQUEST_USER_AGENT:string,
+ *             AUTHENTICATE_REQUEST_USER_AGENT_EXIST:string,
+ *             AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE:string,
+ *             ADMIN_TOKEN_EXPIRE_ACCESS:string,
+ *             ADMIN_TOKEN_SECRET:string,
+ *             ENABLE_CONTENT_SECURITY_POLICY:string,
+ *             ENABLE_GEOLOCATION:string,
+ *             ENABLE_USER_REGISTRATION:string,
+ *             ENABLE_USER_LOGIN:string}} config_server_service_iam
+ * @typedef {{CHECK_INTERVAL:string}} config_server_socket
+ * @typedef {{   START:string,
+ *               USE:string,
+ *               LIMIT_LIST_SEARCH:string,
+ *               LIMIT_PROFILE_TOP:string,
+ *               LOG:string,
+ *               DB1_SYSTEM_ADMIN_USER:string,
+ *               DB1_SYSTEM_ADMIN_PASS:string,
+ *               DB1_APP_ADMIN_USER:string,
+ *               DB1_APP_ADMIN_PASS:string,
+ *               DB1_PORT:string,
+ *               DB1_HOST:string,
+ *               DB1_NAME:string,
+ *               DB1_CHARACTERSET:string,
+ *               DB1_CONNECTION_LIMIT:string,
+ *               DB2_SYSTEM_ADMIN_USER:string,
+ *               DB2_SYSTEM_ADMIN_PASS:string,
+ *               DB2_APP_ADMIN_USER:string,
+ *               DB2_APP_ADMIN_PASS:string,
+ *               DB2_PORT:string,
+ *               DB2_HOST:string,
+ *               DB2_NAME:string,
+ *               DB2_CHARACTERSET:string,
+ *               DB2_CONNECTION_LIMIT:string,
+ *               DB3_SYSTEM_ADMIN_USER:string,
+ *               DB3_SYSTEM_ADMIN_PASS:string,
+ *               DB3_APP_ADMIN_USER:string,
+ *               DB3_APP_ADMIN_PASS:string,
+ *               DB3_PORT:string,
+ *               DB3_HOST:string,
+ *               DB3_NAME:string,
+ *               DB3_TIMEOUT_CONNECTION:string,
+ *               DB3_TIMEOUT_IDLE:string,
+ *               DB3_MAX:string,
+ *               DB4_SYSTEM_ADMIN_USER:string,
+ *               DB4_SYSTEM_ADMIN_PASS:string,
+ *               DB4_APP_ADMIN_USER:string,
+ *               DB4_APP_ADMIN_PASS:string,
+ *               DB4_HOST:string,
+ *               DB4_NAME:string,
+ *               DB4_CONNECT_STRING:string,
+ *               DB4_POOL_MIN:string,
+ *               DB4_POOL_MAX:string,
+ *               DB4_POOL_INCREMENT:string}} config_server_service_db
+ * @typedef {{  SCOPE_REQUEST:string,
+ *              SCOPE_SERVER:string,
+ *              SCOPE_APP:string,
+ *              SCOPE_SERVICE:string,
+ *              SCOPE_DB:string,
+ *              ENABLE_REQUEST_INFO:string,
+ *              ENABLE_REQUEST_VERBOSE:string,
+ *              ENABLE_DB:string,
+ *              ENABLE_SERVICE:string,
+ *              LEVEL_VERBOSE:string,
+ *              LEVEL_ERROR:string,
+ *              LEVEL_INFO:string,
+ *              FILE_INTERVAL:string,
+ *              DATE_FORMAT:string,
+ *              PATH_LOG:string}} config_server_service_log
+ * @typedef  {{ ['SERVER']:[config_server_server], 
+ *              ['SERVICE_IAM']:[config_server_service_iam],
+ *              ['SERVICE_SOCKET']:[config_server_socket],
+ *              ['SERVICE_DB']:[config_server_service_db],
+ *              ['SERVICE_LOG']:[config_server_service_log],
+ *              ['MAINTENANCE']:number,
+ *              ['CREATED']:string,
+ *              ['MODIFIED']:string}} config_server
+ * 
+ * @typedef {   config_apps|
+ *              config_server|
+ *              config_iam_blockip|config_iam_policy|config_iam_user|config_iam_user_agent|microservice_config|microservice_config_service} db_file_config_files
+ * 
+ *@typedef {[db_file_db_name, string]} db_file_default_files
  */
 
-/**
- * Server - Config
- * @typedef  {{ ['SERVER']:[{   HTTPS_KEY:string,
- *                              HTTPS_CERT:string,
- *                              PORT:string,
- *                              HTTPS_ENABLE:string,
- *                              HTTPS_PORT:string,
- *                              HTTPS_SSL_VERIFICATION:string,
- *                              HTTPS_SSL_VERIFICATION_PATH:string,
- *                              JSON_LIMIT:string,
- *                              TEST_SUBDOMAIN:string,
- *                              APP_LOG:string,
- *                              APP_START:string,
- *                              APP_SOUND:string,
- *                              APP_COMMON_APP_ID:string,
- *                              REST_RESOURCE_BFF:string}], 
- *              ['SERVICE_IAM']:[{ AUTHENTICATE_REQUEST_ENABLE:string,
- *                                 AUTHENTICATE_REQUEST_IP:string,
- *                                 AUTHENTICATE_REQUEST_HOST_EXIST:string,
- *                                 AUTHENTICATE_REQUEST_ACCESS_FROM:string,
- *                                 AUTHENTICATE_REQUEST_USER_AGENT:string,
- *                                 AUTHENTICATE_REQUEST_USER_AGENT_EXIST:string,
- *                                 AUTHENTICATE_REQUEST_ACCEPT_LANGUAGE:string,
- *                                 ADMIN_TOKEN_EXPIRE_ACCESS:string,
- *                                 ADMIN_TOKEN_SECRET:string,
- *                                 ENABLE_CONTENT_SECURITY_POLICY:string,
- *                                 ENABLE_GEOLOCATION:string,
- *                                 ENABLE_USER_REGISTRATION:string,
- *                                 ENABLE_USER_LOGIN:string}],
- *              ['SERVICE_SOCKET']:[{CHECK_INTERVAL:string}],
- *              ['SERVICE_DB']:[{   START:string,
- *                                  USE:string,
- *                                  LIMIT_LIST_SEARCH:string,
- *                                  LIMIT_PROFILE_TOP:string,
- *                                  LOG:string,
- *                                  DB1_SYSTEM_ADMIN_USER:string,
- *                                  DB1_SYSTEM_ADMIN_PASS:string,
- *                                  DB1_APP_ADMIN_USER:string,
- *                                  DB1_APP_ADMIN_PASS:string,
- *                                  DB1_PORT:string,
- *                                  DB1_HOST:string,
- *                                  DB1_NAME:string,
- *                                  DB1_CHARACTERSET:string,
- *                                  DB1_CONNECTION_LIMIT:string,
- *                                  DB2_SYSTEM_ADMIN_USER:string,
- *                                  DB2_SYSTEM_ADMIN_PASS:string,
- *                                  DB2_APP_ADMIN_USER:string,
- *                                  DB2_APP_ADMIN_PASS:string,
- *                                  DB2_PORT:string,
- *                                  DB2_HOST:string,
- *                                  DB2_NAME:string,
- *                                  DB2_CHARACTERSET:string,
- *                                  DB2_CONNECTION_LIMIT:string,
- *                                  DB3_SYSTEM_ADMIN_USER:string,
- *                                  DB3_SYSTEM_ADMIN_PASS:string,
- *                                  DB3_APP_ADMIN_USER:string,
- *                                  DB3_APP_ADMIN_PASS:string,
- *                                  DB3_PORT:string,
- *                                  DB3_HOST:string,
- *                                  DB3_NAME:string,
- *                                  DB3_TIMEOUT_CONNECTION:string,
- *                                  DB3_TIMEOUT_IDLE:string,
- *                                  DB3_MAX:string,
- *                                  DB4_SYSTEM_ADMIN_USER:string,
- *                                  DB4_SYSTEM_ADMIN_PASS:string,
- *                                  DB4_APP_ADMIN_USER:string,
- *                                  DB4_APP_ADMIN_PASS:string,
- *                                  DB4_HOST:string,
- *                                  DB4_NAME:string,
- *                                  DB4_CONNECT_STRING:string,
- *                                  DB4_POOL_MIN:string,
- *                                  DB4_POOL_MAX:string,
- *                                  DB4_POOL_INCREMENT:string}],
- *              ['SERVICE_LOG']:[{  SCOPE_REQUEST:string,
- *                                  SCOPE_SERVER:string,
- *                                  SCOPE_APP:string,
- *                                  SCOPE_SERVICE:string,
- *                                  SCOPE_DB:string,
- *                                  ENABLE_REQUEST_INFO:string,
- *                                  ENABLE_REQUEST_VERBOSE:string,
- *                                  ENABLE_DB:string,
- *                                  ENABLE_SERVICE:string,
- *                                  LEVEL_VERBOSE:string,
- *                                  LEVEL_ERROR:string,
- *                                  LEVEL_INFO:string,
- *                                  FILE_INTERVAL:string,
- *                                  DATE_FORMAT:string}],
- *              ['APPS']:[{ CLIENT_ID:string, 
- *                          CLIENT_SECRET:string, 
- *                          DATA_SECRET:string, 
- *                          ACCESS_SECRET:string}],
- *              ['configuration']:string,
- *              ['comment']:string,
- *              ['created']:string,
- *              ['modified']:string,
- *              ['content-security-policy']:string,
- *              ['PATH_LOGS']:string,
- *              ['PATH_TEMP']:string,
- *              ['MESSAGE_QUEUE_ERROR']:string,
- *              ['MESSAGE_QUEUE_PUBLISH']:string,
- *              ['MESSAGE_QUEUE_CONSUME']:string,
- *              ['SERVICES']:[{HTTPS_KEY:string,
- *                             HTTPS_CERT:string,
- *                             PATH:string}]}} config
- */
 /**
  * Server/MicroService - Config apps
  * @typedef  {  'APP_ID'|
@@ -772,13 +729,11 @@
  */
 
 /**
- * Server - pool db
- * @typedef {[number, object|null, [object|pool_4|null]|null]} pool_db
- */
-
-/**
- * Server - pool parameters
- * @typedef {object}        pool_parameters
+ * Server - db pool
+ * @typedef {[number, object|null, [object|db_pool_4|null]|null]} db_pool
+ * 
+ * Server - db pool parameters
+ * @typedef {object}        db_pool_parameters
  * @property {number}       use
  * @property {number|null}  pool_id
  * @property {number}       port
@@ -796,46 +751,38 @@
  * @property {number|null}  poolMin                 - DB 4 Oracle
  * @property {number|null}  poolMax                 - DB 4 Oracle
  * @property {number|null}  poolIncrement           - DB 4 Oracle
- */
-/**
- * Server - pool connection 1 + 2
- * @typedef {object}    pool_connection_1_2
+ * 
+ * Server - db pool connection 1 + 2
+ * @typedef {object}    db_pool_connection_1_2
  * @property {function} release
  * @property {function} query
  * @property {object}   config
  * @property {function} config.queryFormat
  * @property {function} escape
- */
-/**
- * Server - pool connection 1 + 2 result
- * @typedef {*}         pool_connection_1_2_result
- */
-
-/**
- * Server - pool connection 3
- * @typedef {object}    pool_connection_3
+ * 
+ * Server - db pool connection 1 + 2 result
+ * @typedef {*}         db_pool_connection_1_2_result
+ * 
+ * Server - db pool connection 3
+ * @typedef {object}    db_pool_connection_3
  * @property {function} release
  * @property {function} query
- */
-/**
- * Server - pool connection 3 result
- * @typedef {object}    pool_connection_3_result
+ * 
+ * Server - db pool connection 3 result
+ * @typedef {object}    db_pool_connection_3_result
  * @property {string}   command
  * @property {number}   insertId
  * @property {number}   affectedRows
  * @property {number}   rowCount
  * @property {[{dataTypeID:number, name:string}]}      fields
  * @property {[*]}      rows
- */
-/**
- * Server - pool connection 3 fields
+ * 
+ * Server - db pool connection 3 fields
  * @typedef {[{ type:number, 
- *              name:string}]}    pool_connection_3_fields
- */
-
-/**
- * Server - pool connection 4 result
- * @typedef {object}    pool_connection_4_result
+ *              name:string}]}    db_pool_connection_3_fields
+ * 
+ * Server - db pool connection 4 result
+ * @typedef {object}    db_pool_connection_4_result
  * @property {object}   outBinds
  * @property {[number]} outBinds.insertId
  * @property {string}   lastRowid
@@ -843,12 +790,55 @@
  * @property {number}   affectedRows
  * @property {number}   rowsAffected
  * @property {[*]}      rows
- */
-
-/**
- * Server - pool 4
- * @typedef {object|null}   pool_4
+ * 
+ * Server - db pool 4
+ * @typedef {object|null}   db_pool_4
  * @property {string}       pool_id_app
+ * 
+ * Server - db file
+ * @typedef {[  {APPS:number,                   TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {CONFIG:number,                 TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {IAM_BLOCKIP:number,            TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {IAM_POLICY:number,             TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {IAM_USER:number,               TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {IAM_USER_AGENT:number,         TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {LOG_APP_INFO:number,           TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_APP_ERROR:number,          TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_DB_INFO:number,            TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_DB_ERROR:number,           TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_REQUEST_INFO:number,       TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_REQUEST_ERROR:number,      TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_SERVER_INFO:number,        TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_SERVER_ERROR:number,       TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_SERVICE_INFO:number,       TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {LOG_SERVICE_ERROR:number,      TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
+ *              {MICROSERVICE_CONFIG:number,    TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {MICROSERVICE_SERVICES:number,  TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null}
+ *              ]} db_file_db
+ * 
+ * @typedef {   'APPS'|
+ *              'CONFIG'|
+ *              'IAM_BLOCKIP'|
+ *              'IAM_POLICY'|
+ *              'IAM_USER'|
+ *              'IAM_USER_AGENT'|
+ *              'IAM_APP_TOKEN'|
+ *              'IAM_SYSTEMADMIN_LOGIN'|
+ *              'LOG_APP_INFO'|
+ *              'LOG_APP_ERROR'|
+ *              'LOG_DB_INFO'|
+ *              'LOG_DB_ERROR'|
+ *              'LOG_REQUEST_INFO'|
+ *              'LOG_REQUEST_ERROR'|
+ *              'LOG_SERVER_INFO'|
+ *              'LOG_SERVER_ERROR'|
+ *              'LOG_SERVICE_INFO'|
+ *              'LOG_SERVICE_ERROR'|
+ *              'MICROSERVICE_CONFIG'|
+ *              'MICROSERVICE_SERVICES'} db_file_db_name
+ * @typedef{{   file_content:   *, 
+ *              lock:           boolean, 
+ *              transaction_id: number|null}} db_file_result_file_get
  */
 
 /**
