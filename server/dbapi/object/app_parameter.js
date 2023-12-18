@@ -23,7 +23,7 @@ const getParametersAllAdmin = (app_id, query) =>service.getParametersAllAdmin(ap
  */
 const setParameter_admin = (app_id, data) =>{
     /**@type{Types.db_parameter_app_parameter_setParameter_admin} */
-    const body = {	app_id: 			app_id,
+    const body = {	app_id: 		    data.app_id,
                     parameter_type_id: 	data.parameter_type_id,
                     parameter_name: 	data.parameter_name,
                     parameter_value: 	data.parameter_value, 
