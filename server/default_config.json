@@ -1,5 +1,4 @@
 { "SERVER":[
-    {"MAINTENANCE": 0, "COMMENT": "0=NO, 1=YES"},
     {"HOST": "localhost", "COMMENT": "localhost or domain where server is installed, apps use subdomain in app registry + this parameter + HTTP/HTTPS_PORT"},
     {"HTTP_PORT": "80", "COMMENT": ""},
     {"HTTPS_ENABLE": "0", "COMMENT": ""},
@@ -78,6 +77,7 @@
     {"DB4_POOL_INCREMENT": "0", "COMMENT": ""}
 ],
 "SERVICE_LOG":[
+    {"PATH_LOG": "", "COMMENT": ""},
     {"SCOPE_REQUEST": "REQUEST", "COMMENT": ""},
     {"SCOPE_SERVER": "SERVER", "COMMENT": ""},
     {"SCOPE_APP": "APP", "COMMENT": ""},
@@ -92,7 +92,9 @@
     {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"},
     {"DATE_FORMAT": "", "COMMENT": "empty uses ISO8601 format 'yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z' "}
 ],
+"MAINTENANCE":0,
 "CONFIGURATION":"",
+"COMMENT":"",
 "CREATED":"",
 "MODIFIED":""
 }

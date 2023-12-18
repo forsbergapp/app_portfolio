@@ -45,7 +45,6 @@ const app_portfolio_title = 'App Portfolio';
                                                             /**@type {Types.config_apps}*/current)=> 
                                                                 app.concat({APP_ID:current.APP_ID,
                                                                             NAME:current.NAME,
-                                                                            CLIENT_ID:current.CLIENT_ID,
                                                                             PATH:current.PATH,
                                                                             ENDPOINT:current.ENDPOINT,
                                                                             LOGO:current.LOGO,
@@ -137,7 +136,6 @@ const ConfigGet = (config_group, parameter) => {
 };
 /**
  * Config exists
- * @async
  * @returns {Promise<boolean>}
  */
 const ConfigExists = async () => {
@@ -150,7 +148,6 @@ const ConfigExists = async () => {
 };
 /**
  * Default config
- * @async
  * @throws {object}
  * @returns {Promise<null>}
  */
@@ -246,13 +243,12 @@ const DefaultConfig = async () => {
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
     });
     for (const config_row of config_obj){
-        await ConfigSave( config_row, true);
+        await ConfigSave( config_row[0], config_row[1], true);
     }
     return null;
 };
 /**
  * Init config
- * @async
  * @throws {object}
  * @returns {Promise<null>}
  */
@@ -300,8 +296,6 @@ const ConfigMaintenanceGet = async () => {
 };
 /**
  * Config get saved
- * 
- * @async
  * @param {Types.db_file_db_name} file
  * @returns {object}
  */
@@ -310,20 +304,25 @@ const ConfigGetSaved = file => file_get_cached(file);
 /**
  * Config save
  * @async
- * @param {[Types.db_file_db_name, Types.db_file_config_files]} file
+ * @param {Types.db_file_db_name} file
+ * @param {Types.db_file_config_files} file_content
  * @param {boolean} first_time
  */
-const ConfigSave = async (file, first_time) => {
+const ConfigSave = async (file, file_content, first_time) => {
     if (first_time){
-        await file_create(file[0], file[1]);
+        await file_create(file, file_content);
     }
     else{
-        const file_config = await file_get(file[0], true);
-        if (file[0]=='CONFIG'){
-            if (file[1])
-                file[1].MODIFIED = new Date().toISOString();
+        const file_config = await file_get(file, true);
+        if (file=='CONFIG'){
+            if (file_content){
+                file_content.CONFIGURATION = file_config.file_content.CONFIGURATION;
+                file_content.COMMENT = file_config.file_content.COMMENT;
+                file_content.CREATED = file_config.file_content.CREATED;
+                file_content.MODIFIED = new Date().toISOString();
+            }
         }
-        await file_update(file[0], file_config.transaction_id, file[1]);
+        await file_update(file, file_config.transaction_id, file_content);
     }
 };
 /**
