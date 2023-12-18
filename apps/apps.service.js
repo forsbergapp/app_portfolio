@@ -3,7 +3,7 @@
 import * as Types from './../types.js';
 
 
-const {CheckFirstTime, ConfigGet, ConfigGetApp, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 
 
 const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
@@ -17,7 +17,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  const app_start = async (app_id=null, lang_code=null)=>{
     const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     return new Promise((resolve)=>{
-        if (ConfigGetInit('MAINTENANCE')=='0' && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
+        if (getNumberValue(ConfigGet('SERVER', 'MAINTENANCE'))==0 && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
             ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
             if (app_id == null)
                 resolve(true);

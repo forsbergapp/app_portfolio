@@ -24,10 +24,10 @@ const ConfigGet = (config_group, parameter) => {return {data: service.ConfigGet(
 const ConfigGetApps = () => service.ConfigGetApps();
 /**
  * 
- * @param {string} config_type_no 
+ * @param {Types.db_file_db_name} file
  * @returns 
  */
-const ConfigGetSaved = (config_type_no) => service.ConfigGetSaved(config_type_no);
+const ConfigGetSaved = file => service.ConfigGetSaved(file);
 /**
  * 
  */

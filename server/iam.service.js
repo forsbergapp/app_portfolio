@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin,ConfigInitReadFile} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
 /**
  * Middleware authenticates system admin login
@@ -307,7 +307,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
     const block_ip_control = async (ip_v4) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_IP') == '1'){
             const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const ranges = ConfigGetSaved(3);
+            const ranges = ConfigGetSaved('IAM_BLOCKIP');
             //check if IP is blocked
             if ((ip_v4.match(/\./g)||[]).length==3){
                 for (const element of ranges) {
@@ -332,7 +332,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
     const safe_user_agents = async (client_user_agent) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
             const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const {user_agents} = ConfigGetSaved(5);
+            const {user_agents} = ConfigGetSaved('IAM_USER_AGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
                     return true;
@@ -426,13 +426,10 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  * @returns {Promise.<boolean>}
  */
  const AuthenticateApp = async (app_id, authorization) =>{
-    const fs = await import('node:fs');
-    const config_init = await ConfigInitReadFile();
-    const apps = await fs.promises.readFile(`${process.cwd()}${config_init.FILE_CONFIG_APPS}`, 'utf8');
-    /**@type{Types.config_apps[]} */
-    const rows =  await  JSON.parse(apps).APPS;
-    const CLIENT_ID = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_ID;
-    const CLIENT_SECRET = rows.filter(row=>row.APP_ID == app_id)[0].CLIENT_SECRET;
+    const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+    const file = await file_get('APPS');
+    const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps}*/row)=>row.APP_ID == app_id)[0].CLIENT_ID;
+    const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps}*/row)=>row.APP_ID == app_id)[0].CLIENT_SECRET;
 
     const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
     if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)

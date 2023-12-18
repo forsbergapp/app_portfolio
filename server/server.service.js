@@ -316,7 +316,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/SAVED_GET':{
-                    resolve(config.ConfigGetSaved(getNumberValue(query.get('config_type_no'))));
+                    resolve(config.ConfigGetSaved(getNumberValue(query.get('file'))));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/MAINTENANCE_GET':{

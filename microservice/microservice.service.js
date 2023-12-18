@@ -7,23 +7,10 @@ const http = await import('node:http');
 const https = await import('node:https');
 const fs = await import('node:fs');
 
-let SLASH;
-if (process.platform == 'win32')
-    SLASH = '\\';
-else
-    SLASH = '/';
+const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
-const CONFIG_FILE = `${SLASH}microservice${SLASH}config${SLASH}config.json`;
-const CONFIG_SERVICES_FILE = `${SLASH}microservice${SLASH}config${SLASH}services.json`;
-
-const CONFIG_JSON = await fs.promises.readFile(`${process.cwd()}${CONFIG_FILE}`, 'utf8');
-/**@type {Types.microservice_config}*/
-const CONFIG = JSON.parse(CONFIG_JSON);
-
-const CONFIG_SERVICES_JSON = await fs.promises.readFile(`${process.cwd()}${CONFIG_SERVICES_FILE}`, 'utf8');
-    
-/**@type {Types.microservice_config_service_record[]}*/
-const CONFIG_SERVICES = JSON.parse(CONFIG_SERVICES_JSON).SERVICES;
+const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content);
+const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
 
 const timeout_message = '🗺⛔?';
 

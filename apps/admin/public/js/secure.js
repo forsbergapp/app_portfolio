@@ -2694,7 +2694,7 @@ const show_server_config = () =>{
 };
 const show_config = async (config_nav=1) => {
     document.querySelector('#list_config').innerHTML = common.APP_SPINNER;
-    await common.FFB ('SERVER', `/config/systemadmin/saved?config_type_no=${config_nav}`, 'GET', 'SYSTEMADMIN', null, (err, result) => {
+    await common.FFB ('SERVER', `/config/systemadmin/saved?file=${config_nav}`, 'GET', 'SYSTEMADMIN', null, (err, result) => {
         if (err)
             document.querySelector('#list_config').innerHTML = '';
         else{
