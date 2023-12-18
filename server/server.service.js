@@ -304,11 +304,11 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_PUT':{
-                    resolve(config.ConfigSave(getNumberValue(data.config_no), data.config_json, false));
+                    resolve(config.ConfigSave(data));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_GET':{
-                    resolve(config.ConfigGet(query.get('config_group'), query.get('parameter')));
+                    resolve(config.ConfigGet(query));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/APPS_GET':{
@@ -316,7 +316,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/SAVED_GET':{
-                    resolve(config.ConfigGetSaved(getNumberValue(query.get('file'))));
+                    resolve(config.ConfigGetSaved(query));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/MAINTENANCE_GET':{
@@ -324,7 +324,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/MAINTENANCE_PATCH':{
-                    resolve(config.ConfigMaintenanceSet(data.value));
+                    resolve(config.ConfigMaintenanceSet(data));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/INFO_GET':{

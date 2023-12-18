@@ -801,7 +801,7 @@
  *              {IAM_BLOCKIP:number,            TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
  *              {IAM_POLICY:number,             TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
  *              {IAM_USER:number,               TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {IAM_USER_AGENT:number,         TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
+ *              {IAM_USERAGENT:number,          TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
  *              {LOG_APP_INFO:number,           TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
  *              {LOG_APP_ERROR:number,          TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
  *              {LOG_DB_INFO:number,            TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
@@ -821,7 +821,7 @@
  *              'IAM_BLOCKIP'|
  *              'IAM_POLICY'|
  *              'IAM_USER'|
- *              'IAM_USER_AGENT'|
+ *              'IAM_USERAGENT'|
  *              'IAM_APP_TOKEN'|
  *              'IAM_SYSTEMADMIN_LOGIN'|
  *              'LOG_APP_INFO'|

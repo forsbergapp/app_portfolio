@@ -18,7 +18,7 @@ const FILE_DB = [   {APPS:0,                    TRANSACTION_ID:0,   TRANSACTION_
                     {IAM_BLOCKIP:0,             TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_blockip.json`, CACHE_CONTENT:null},
                     {IAM_POLICY:0,              TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_policy.json`, CACHE_CONTENT:null},
                     {IAM_USER:0,                TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_user.json`, CACHE_CONTENT:null},
-                    {IAM_USER_AGENT:0,          TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_user_agent.json`, CACHE_CONTENT:null},
+                    {IAM_USERAGENT:0,          TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_useragent.json`, CACHE_CONTENT:null},
                     {LOG_APP_INFO:0,            TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
                     {LOG_APP_ERROR:0,           TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
                     {LOG_DB_INFO:0,             TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
