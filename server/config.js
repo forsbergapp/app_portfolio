@@ -4,39 +4,34 @@
 import * as Types from './../types.js';
 
 const service = await import(`file://${process.cwd()}/server/config.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 /**
  * 
- * @param {string} config_no 
- * @param {string} config_json 
- * @returns 
+ * @param {*} data
  */
-const ConfigSave = (config_no, config_json) => service.ConfigSave(config_no, config_json, false);
+const ConfigSave =  data => service.ConfigSave(data.file, data.config_json, false);
 /**
  * 
- * @param {string} config_group 
- * @param {string} parameter 
- * @returns 
+ * @param {*} query
  */
-const ConfigGet = (config_group, parameter) => {return {data: service.ConfigGet(config_group, parameter)};};
+const ConfigGet = query => {return {data: service.ConfigGet(query.get('config_group'), query.get('parameter'))};};
 /**
  * 
  */
 const ConfigGetApps = () => service.ConfigGetApps();
 /**
  * 
- * @param {Types.db_file_db_name} file
- * @returns 
+ * @param {*} query
  */
-const ConfigGetSaved = file => service.ConfigGetSaved(file);
+const ConfigGetSaved = query => service.ConfigGetSaved(query.get('file'));
 /**
  * 
  */
 const ConfigMaintenanceGet = () => service.ConfigMaintenanceGet();
 /**
  * 
- * @param {string} value 
- * @returns 
+ * @param {*} data
  */
-const ConfigMaintenanceSet = (value) => service.ConfigMaintenanceSet(value);
+const ConfigMaintenanceSet = data => service.ConfigMaintenanceSet(getNumberValue(data.value));
         
 export {ConfigSave, ConfigGet, ConfigGetApps, ConfigGetSaved, ConfigMaintenanceGet, ConfigMaintenanceSet};

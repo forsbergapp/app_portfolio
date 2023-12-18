@@ -1113,7 +1113,6 @@ const getApps = async (app_id, id, lang_code) =>{
         app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
         app.APP_DESCRIPTION = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_description;
     });
-    //return apps with APP_ID, NAME, LOGO, SUBDOMAIN, PROTOCOL, HOST, PORT, APP_CATEGORY and APP_DESCRIPTION only
 	return apps;
 };
 

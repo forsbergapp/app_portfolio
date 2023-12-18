@@ -1204,24 +1204,18 @@ const button_save = async (item) => {
                             };
                 };
                 //no fetched from end of item name list_config_nav_X
-                const config_no = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16);
-                if (config_no == 0){
-                    //no action, just display info of config_init.json
-                    null;
-                }
-                else{
-                    if (config_no == 1)
-                        json_data = {   config_no:   config_no,
-                                        config_json: config_create_server_json()};
-                    else
-                        json_data = {   config_no:   config_no,
-                                        config_json: document.querySelector('#list_config_edit').innerHTML};
-                    const old_button = document.querySelector('#' + item).innerHTML;
-                    document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
-                    common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data, () => {
-                        document.querySelector('#' + item).innerHTML = old_button;
-                    });
-                }
+                const file = document.querySelectorAll('#menu_6_content .list_nav li')[0].id.substring(16).toUpperCase();
+                if (file == 'CONFIG')
+                    json_data = {   file:           file,
+                                    config_json:    config_create_server_json()};
+                else
+                    json_data = {   file:           file,
+                                    config_json:    document.querySelector('#list_config_edit').innerHTML};
+                const old_button = document.querySelector('#' + item).innerHTML;
+                document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
+                common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data, () => {
+                    document.querySelector('#' + item).innerHTML = old_button;
+                });
             }    
 };
 const update_record = async (table, 
@@ -1675,11 +1669,10 @@ const nav_click = (item_id) => {
         document.querySelector('#list_monitor_nav_3').classList='';
     };
     const reset_config = () => {
-        document.querySelector('#list_config_nav_1').classList='';
-        document.querySelector('#list_config_nav_2').classList='';
-        document.querySelector('#list_config_nav_3').classList='';
-        document.querySelector('#list_config_nav_4').classList='';
-        document.querySelector('#list_config_nav_0').classList='';
+        document.querySelector('#list_config_nav_config').classList='';
+        document.querySelector('#list_config_nav_iam_blockip').classList='';
+        document.querySelector('#list_config_nav_iam_useragent').classList='';
+        document.querySelector('#list_config_nav_iam_policy').classList='';
     };
     
     switch (item_id){
@@ -1715,32 +1708,26 @@ const nav_click = (item_id) => {
         //SERVER CONFIG
         case 'list_config_server_title':{
             reset_config();
-            document.querySelector('#list_config_nav_1').classList= 'list_nav_selected_tab';
-            show_config(1);
+            document.querySelector('#list_config_nav_config').classList= 'list_nav_selected_tab';
+            show_config('CONFIG');
             break;
         }
         case 'list_config_blockip_title':{
             reset_config();
-            document.querySelector('#list_config_nav_2').classList= 'list_nav_selected_tab';
-            show_config(2);
+            document.querySelector('#list_config_nav_iam_blockip').classList= 'list_nav_selected_tab';
+            show_config('IAM_BLOCKIP');
             break;
         }
         case 'list_config_useragent_title':{
             reset_config();
-            document.querySelector('#list_config_nav_3').classList= 'list_nav_selected_tab';
-            show_config(3);
+            document.querySelector('#list_config_nav_iam_useragent').classList= 'list_nav_selected_tab';
+            show_config('IAM_USERAGENT');
             break;
         }
         case 'list_config_policy_title':{
             reset_config();
-            document.querySelector('#list_config_nav_4').classList= 'list_nav_selected_tab';
-            show_config(4);
-            break;
-        }
-        case 'list_config_info_title':{
-            reset_config();
-            document.querySelector('#list_config_nav_0').classList= 'list_nav_selected_tab';
-            show_config(0);
+            document.querySelector('#list_config_nav_iam_policy').classList= 'list_nav_selected_tab';
+            show_config('IAM_POLICY');
             break;
         }
     }
@@ -2673,11 +2660,10 @@ const show_server_config = () =>{
     document.querySelector('#menu_6_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
             <ul id='list_config_nav' class='list_nav'>
-                <li id='list_config_nav_1'><button id='list_config_server_title' class='list_button' >${common.ICONS.app_server}</button></li>
-                <li id='list_config_nav_2'><button id='list_config_blockip_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.regional_numbersystem}</button></li>
-                <li id='list_config_nav_3'><button id='list_config_useragent_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.app_browser}</button></li>
-                <li id='list_config_nav_4'><button id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</button></li>
-                <li id='list_config_nav_0'><button id='list_config_info_title' class='list_button' >${common.ICONS.app_info}</button></li>
+                <li id='list_config_nav_config'><button id='list_config_server_title' class='list_button' >${common.ICONS.app_server}</button></li>
+                <li id='list_config_nav_iam_blockip'><button id='list_config_blockip_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.regional_numbersystem}</button></li>
+                <li id='list_config_nav_iam_useragent'><button id='list_config_useragent_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.app_browser}</button></li>
+                <li id='list_config_nav_iam_policy'><button id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</button></li>
             </ul>
             <div id='list_config' class='common_list_scrollbar'></div>
             <pre id='list_config_edit'></pre>
@@ -2692,31 +2678,28 @@ const show_server_config = () =>{
 
     nav_click(document.querySelector('#list_config_server_title').id);
 };
-const show_config = async (config_nav=1) => {
+const show_config = async (file) => {
     document.querySelector('#list_config').innerHTML = common.APP_SPINNER;
-    await common.FFB ('SERVER', `/config/systemadmin/saved?file=${config_nav}`, 'GET', 'SYSTEMADMIN', null, (err, result) => {
+    await common.FFB ('SERVER', `/config/systemadmin/saved?file=${file}`, 'GET', 'SYSTEMADMIN', null, (err, result) => {
         if (err)
             document.querySelector('#list_config').innerHTML = '';
         else{
             const config = JSON.parse(result);
             let i = 0;
-            if (config_nav==0)
-                document.querySelector('#list_config_edit').contentEditable = false;
-            else
-                document.querySelector('#list_config_edit').contentEditable = true;
-            switch (config_nav){
-                case 1:{
+            document.querySelector('#list_config_edit').contentEditable = true;
+            switch (file){
+                case 'CONFIG':{
                     let html = `<div id='list_config_row_title' class='list_config_row'>
-                            <div id='list_config_col_title1' class='list_config_col list_title'>
-                                <div>PARAMETER NAME</div>
-                            </div>
-                            <div id='list_config_col_title2' class='list_config_col list_title'>
-                                <div>PARAMETER VALUE</div>
-                            </div>
-                            <div id='list_config_col_title3' class='list_config_col list_title'>
-                                <div>COMMENT</div>
-                            </div>
-                        </div>`;
+                                    <div id='list_config_col_title1' class='list_config_col list_title'>
+                                        <div>PARAMETER NAME</div>
+                                    </div>
+                                    <div id='list_config_col_title2' class='list_config_col list_title'>
+                                        <div>PARAMETER VALUE</div>
+                                    </div>
+                                    <div id='list_config_col_title3' class='list_config_col list_title'>
+                                        <div>COMMENT</div>
+                                    </div>
+                                </div>`;
                     //create div groups with parameters, each group with a title
                     //first 5 attributes in config json contains array of parameter records
                     //metadata is saved last in config
