@@ -3,7 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {ConfigGet, ConfigGetInit} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
 const fs = await import('node:fs');
 /**
  * Get log parameters
@@ -49,7 +49,7 @@ const fs = await import('node:fs');
                 else
                     filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
             }
-            fs.appendFile(process.cwd() + ConfigGetInit('PATH_LOG') + filename, log_json + '\r\n', 'utf8', (err) => {
+            fs.appendFile(process.cwd() + ConfigGet('SERVICE_LOG','PATH_LOG') + filename, log_json + '\r\n', 'utf8', (err) => {
                 if (err) {
                     console.log(err);
                     console.log(log);
@@ -457,7 +457,7 @@ const getLogs = async (data) => {
             return false;
         };
         //read log file
-        fs.promises.readFile(`${process.cwd()}${ConfigGetInit('PATH_LOG')}${filename}`, 'utf8')
+        fs.promises.readFile(`${process.cwd()}${ConfigGet('SERVICE_LOG','PATH_LOG')}${filename}`, 'utf8')
         .then(fileBuffer=>{
             //read log records in the file
             /**@type{string[]} */
@@ -568,7 +568,7 @@ const getLogsStats = async (data) => {
     const fs = await import('node:fs');
     if (data.month <10)
         data.month = 0 + data.month;
-    const files = await fs.promises.readdir(`${process.cwd()}${ConfigGetInit('PATH_LOG')}`);
+    const files = await fs.promises.readdir(`${process.cwd()}${ConfigGet('SERVICE_LOG','PATH_LOG')}`);
     let sample;
     let day = '';
     //declare ES6 Set to save unique status codes and days
@@ -584,7 +584,7 @@ const getLogsStats = async (data) => {
             else
                 sample = `${data.year}${data.month}`;
             const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const fileBuffer = await fs.promises.readFile(`${process.cwd() + ConfigGetInit('PATH_LOG') + `REQUEST_INFO_${sample}.log`}`, 'utf8');
+            const fileBuffer = await fs.promises.readFile(`${process.cwd() + ConfigGet('SERVICE_LOG','PATH_LOG') + `REQUEST_INFO_${sample}.log`}`, 'utf8');
             fileBuffer.toString().split('\r\n').forEach((record) => {
                 if (record != ''){
                     const  record_obj = JSON.parse(record);
@@ -647,7 +647,7 @@ const getFiles = async () => {
     /**@type{[Types.admin_log_files]|[]} */
     const logfiles =[];
     const fs = await import('node:fs');
-    const files = await fs.promises.readdir(process.cwd() + ConfigGetInit('PATH_LOG'));
+    const files = await fs.promises.readdir(process.cwd() + ConfigGet('SERVICE_LOG','PATH_LOG'));
     let i =1;
     files.forEach(file => {
         if (file.indexOf('REQUEST_INFO_')==0||

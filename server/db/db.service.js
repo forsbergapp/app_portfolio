@@ -13,7 +13,7 @@ const {default: ORACLEDB} = await import('oracledb');
  * POOL_DB
  * All database pool connections are saved here
  * Oracle uses number to 
- * @type{Types.pool_db[]}
+ * @type{Types.db_pool[]}
  */
 const POOL_DB =[ 
                   [1, null, null], //MySQL pools        [db number, dba pool object, apps pool object]
@@ -71,7 +71,7 @@ const pool_delete_all = (db)=>{
  *      "poolMin":                 pool min
  *      "poolMax":                 pool max
  *      "poolIncrement":           pool increment
- * @param {Types.pool_parameters} dbparameters 
+ * @param {Types.db_pool_parameters} dbparameters 
  * @returns {Promise.<null>}
  */
 const pool_start = async (dbparameters) =>{
@@ -281,7 +281,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                            return txt;
                         });
                      };
-                     conn.query(sql, parameters, (/**@type{Types.error}*/err, /**@type{[Types.pool_connection_1_2_result]}*/result, /**@type{Types.pool_connection_3_fields}*/fields) => {
+                     conn.query(sql, parameters, (/**@type{Types.error}*/err, /**@type{[Types.db_pool_connection_1_2_result]}*/result, /**@type{Types.db_pool_connection_3_fields}*/fields) => {
                         if (err)
                            return reject (err);
                         else{
@@ -348,7 +348,7 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                /**@ts-ignore */
                pool_get(pool_id, db_use, dba).connect().then((/**@type{Types.pool_connection_3}*/pool3)=>{
                   pool3.query(parsed_result.text, parsed_result.values)
-                  .then((/**@type{Types.pool_connection_3_result}*/result) => {
+                  .then((/**@type{Types.db_pool_connection_3_result}*/result) => {
                      pool3.release();
                      //add common attributes
                      if (result.command == 'INSERT' && result.rows.length>0)
