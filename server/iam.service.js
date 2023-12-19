@@ -428,8 +428,8 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  const AuthenticateApp = async (app_id, authorization) =>{
     const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
     const file = await file_get('APPS');
-    const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps}*/row)=>row.APP_ID == app_id)[0].CLIENT_ID;
-    const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps}*/row)=>row.APP_ID == app_id)[0].CLIENT_SECRET;
+    const CLIENT_ID = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].CLIENT_ID;
+    const CLIENT_SECRET = file.file_content.APPS.filter((/**@type{Types.config_apps_record}*/row)=>row.APP_ID == app_id)[0].CLIENT_SECRET;
 
     const userpass = Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
     if (userpass == CLIENT_ID + ':' + CLIENT_SECRET)
