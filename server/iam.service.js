@@ -332,7 +332,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
     const safe_user_agents = async (client_user_agent) => {
         if (ConfigGet('SERVICE_IAM', 'AUTHENTICATE_REQUEST_USER_AGENT') == '1'){
             const {ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const {user_agents} = ConfigGetSaved('IAM_USER_AGENT');
+            const {user_agents} = ConfigGetSaved('IAM_USERAGENT');
             for (const user_agent of user_agents){
                 if (user_agent.user_agent == client_user_agent)
                     return true;
