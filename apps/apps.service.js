@@ -1097,9 +1097,9 @@ const getApps = async (app_id, id, lang_code) =>{
 
     /**@type{Types.db_result_app_getApp[]}*/
     const apps_db =  await getApp(app_id, id, lang_code);
-    const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps}*/app)=>app.APP_ID==id || id == 0);
+    const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps_record}*/app)=>app.APP_ID==id || id == 0);
     /**@type{Types.config_apps_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{Types.config_apps} */app, /**@type {Types.config_apps}*/current)=> 
+    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
                                         app.concat({APP_ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     LOGO:current.LOGO,
@@ -1129,7 +1129,7 @@ const getApps = async (app_id, id, lang_code) =>{
     const apps_db =  await getAppsAdmin(app_id, lang_code);
     const apps_registry = ConfigGetApps();
     /**@type{Types.config_apps_admin_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{Types.config_apps} */app, /**@type {Types.config_apps}*/current)=> 
+    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
                                         app.concat({ID:current.APP_ID,
                                                     NAME:current.NAME,
                                                     LOGO:current.LOGO,

@@ -46,7 +46,7 @@ const getUserAccountApps = async (app_id, query) => {
         .then((/**@type{Types.db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/apps_db)=>{
             const apps_registry = ConfigGetApps();
             /**@type{Types.config_apps_with_db_columns[]}*/
-            const apps = apps_registry.reduce(( /**@type{Types.config_apps} */app, /**@type {Types.config_apps}*/current)=> 
+            const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
                                                 app.concat({APP_ID:current.APP_ID,
                                                             NAME:current.NAME,
                                                             LOGO:current.LOGO,
