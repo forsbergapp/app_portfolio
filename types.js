@@ -560,7 +560,7 @@
  * 
  * @typedef {   config_apps|
  *              config_server|
- *              config_iam_blockip|config_iam_policy|config_iam_user|config_iam_user_agent|microservice_config|microservice_config_service} db_file_config_files
+ *              config_iam_blockip|config_iam_policy|config_iam_user|config_iam_useragent|microservice_config|microservice_config_service} db_file_config_files
  * 
  *@typedef {[db_file_db_name, string]} db_file_default_files
  */
@@ -669,7 +669,7 @@
  * @typedef {{'content-security-policy':string}} config_iam_policy
  * Server - Config IAM user agent
  * @typedef {{ user_agent:[{Name:string, 
- *                          user_agent:string}]}} config_iam_user_agent
+ *                          user_agent:string}]}} config_iam_useragent
  * Server - Config IAM user
  * @typedef {{  ['username']:string, 
  *              ['password']:string, 
