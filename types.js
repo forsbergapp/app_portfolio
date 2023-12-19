@@ -796,25 +796,6 @@
  * @property {string}       pool_id_app
  * 
  * Server - db file
- * @typedef {[  {APPS:number,                   TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {CONFIG:number,                 TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {IAM_BLOCKIP:number,            TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {IAM_POLICY:number,             TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {IAM_USER:number,               TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {IAM_USERAGENT:number,          TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {LOG_APP_INFO:number,           TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_APP_ERROR:number,          TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_DB_INFO:number,            TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_DB_ERROR:number,           TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_REQUEST_INFO:number,       TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_REQUEST_ERROR:number,      TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_SERVER_INFO:number,        TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_SERVER_ERROR:number,       TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_SERVICE_INFO:number,       TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {LOG_SERVICE_ERROR:number,      TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null},
- *              {MICROSERVICE_CONFIG:number,    TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null},
- *              {MICROSERVICE_SERVICES:number,  TRANSACTION_ID:number|null, TRANSACTION_CONTENT: object|null, PATH:string|null, CACHE_CONTENT:object|null}
- *              ]} db_file_db
  * 
  * @typedef {   'APPS'|
  *              'CONFIG'|
@@ -836,7 +817,15 @@
  *              'LOG_SERVICE_ERROR'|
  *              'MICROSERVICE_CONFIG'|
  *              'MICROSERVICE_SERVICES'} db_file_db_name
- * @typedef{{   file_content:   *, 
+ * 
+ * @typedef {{  NAME:db_file_db_name, 
+ *              LOCK:number, 
+ *              TRANSACTION_ID:number|null, 
+ *              TRANSACTION_CONTENT: object|null, 
+ *              PATH:string|null, 
+ *              CACHE_CONTENT?:object|null }} db_file_db_record
+ * 
+ * @typedef {{  file_content:   *, 
  *              lock:           boolean, 
  *              transaction_id: number|null}} db_file_result_file_get
  */
