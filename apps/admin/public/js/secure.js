@@ -1203,14 +1203,14 @@ const button_save = async (item) => {
                                 SERVICE_LOG:        config_json[4]
                             };
                 };
-                //no fetched from end of item name list_config_nav_X
-                const file = document.querySelectorAll('#menu_6_content .list_nav li')[0].id.substring(16).toUpperCase();
+                //the filename is fetched from end of item name list_config_nav_X that is a li element
+                const file = document.querySelectorAll('#menu_6_content .list_nav li.list_nav_selected_tab')[0].id.substring(16).toUpperCase();
                 if (file == 'CONFIG')
                     json_data = {   file:           file,
                                     config_json:    config_create_server_json()};
                 else
                     json_data = {   file:           file,
-                                    config_json:    document.querySelector('#list_config_edit').innerHTML};
+                                    config_json:    JSON.parse(document.querySelector('#list_config_edit').innerHTML)};
                 const old_button = document.querySelector('#' + item).innerHTML;
                 document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
                 common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data, () => {

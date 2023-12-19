@@ -12,26 +12,33 @@ if (process.platform == 'win32')
 else
     SLASH = '/';
 
-/**@type{Types.db_file_db} */
-const FILE_DB = [   {APPS:0,                    TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}apps.json`, CACHE_CONTENT:null},
-                    {CONFIG:0,                  TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
-                    {IAM_BLOCKIP:0,             TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_blockip.json`, CACHE_CONTENT:null},
-                    {IAM_POLICY:0,              TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_policy.json`, CACHE_CONTENT:null},
-                    {IAM_USER:0,                TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_user.json`, CACHE_CONTENT:null},
-                    {IAM_USERAGENT:0,          TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_useragent.json`, CACHE_CONTENT:null},
-                    {LOG_APP_INFO:0,            TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_APP_ERROR:0,           TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_DB_INFO:0,             TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_DB_ERROR:0,            TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_REQUEST_INFO:0,        TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_REQUEST_ERROR:0,       TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_SERVER_INFO:0,         TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_SERVER_ERROR:0,        TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_SERVICE_INFO:0,        TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {LOG_SERVICE_ERROR:0,       TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {MICROSERVICE_CONFIG:0,     TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
-                    {MICROSERVICE_SERVICES:0,   TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}services.json`, CACHE_CONTENT:null}];
+/**@type{Types.db_file_db_record[]} */
+const FILE_DB = [   {NAME:'APPS',                   LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}apps.json`, CACHE_CONTENT:null},
+                    {NAME:'CONFIG',                 LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
+                    {NAME:'IAM_BLOCKIP',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_blockip.json`, CACHE_CONTENT:null},
+                    {NAME:'IAM_POLICY',             LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_policy.json`, CACHE_CONTENT:null},
+                    {NAME:'IAM_USER',               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_user.json`, CACHE_CONTENT:null},
+                    {NAME:'IAM_USERAGENT',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_useragent.json`, CACHE_CONTENT:null},
+                    {NAME:'LOG_APP_INFO',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_APP_ERROR',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_DB_INFO',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_DB_ERROR',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_REQUEST_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_REQUEST_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_SERVER_INFO',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_SERVER_ERROR',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_SERVICE_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'LOG_SERVICE_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'MICROSERVICE_CONFIG',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
+                    {NAME:'MICROSERVICE_SERVICES',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}services.json`, CACHE_CONTENT:null}];
 Object.seal(FILE_DB);
+
+/**
+ * 
+ * @param {Types.db_file_db_name} filename 
+ * @returns {Types.db_file_db_record}
+ */
+const fileDB = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 
 /**
  * 
@@ -41,13 +48,13 @@ Object.seal(FILE_DB);
  */
 const transaction_start = async (file, filecontent)=>{
     return new Promise((resolve, reject)=>{
-        if  (FILE_DB.filter(file_db_record=>(file in file_db_record))[0][file]==0){
-            FILE_DB.filter(file_db_record=>(file in file_db_record))[0][file] = 1;
+        if  (fileDB(file).LOCK==0){
+            fileDB(file).LOCK = 1;
             //add 1ms wait so transaction_id will be guaranteed unique on a fast server
             setTimeout(()=>{
                 const transaction_id = Date.now();
-                FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID = transaction_id;
-                FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_CONTENT = filecontent;
+                fileDB(file).TRANSACTION_ID = transaction_id;
+                fileDB(file).TRANSACTION_CONTENT = filecontent;
                 resolve(transaction_id);}, 1);
         }
         else{
@@ -56,11 +63,11 @@ const transaction_start = async (file, filecontent)=>{
                 if (tries > 100)
                     reject ('timeout');
                 else
-                    if (FILE_DB.filter(file_db_record=>(file in file_db_record))[0][file]==0){
-                        FILE_DB.filter(file_db_record=>(file in file_db_record))[0][file] = 1;
+                    if (fileDB(file).LOCK==0){
+                        fileDB(file).LOCK = 1;
                         const transaction_id = Date.now();
-                        FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID = transaction_id;
-                        FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_CONTENT = filecontent;
+                        fileDB(file).TRANSACTION_ID = transaction_id;
+                        fileDB(file).TRANSACTION_CONTENT = filecontent;
                         clearInterval(timer);
                         resolve(transaction_id);
                     }
@@ -76,10 +83,10 @@ const transaction_start = async (file, filecontent)=>{
  * @returns {boolean}
  */
 const transaction_commit = (file, transaction_id)=>{
-    if (FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID==transaction_id){
-        FILE_DB.filter(file_db_record=>(file in file_db_record))[0][file] = 0;
-        FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID = null;
-        FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_CONTENT = null;
+    if (fileDB(file).TRANSACTION_ID==transaction_id){
+        fileDB(file).LOCK = 0;
+        fileDB(file).TRANSACTION_ID = null;
+        fileDB(file).TRANSACTION_CONTENT = null;
         return true;
     }
     else{
@@ -93,10 +100,11 @@ const transaction_commit = (file, transaction_id)=>{
  * @returns {boolean}
  */
 const transaction_rollback = (file, transaction_id)=>{
-    if (FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID==transaction_id){
-        FILE_DB.filter(file_db_record=>(file in file_db_record))[0][file] = 0;
-        FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID = null;
-        FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_CONTENT = null;
+
+    if (fileDB(file).TRANSACTION_ID==transaction_id){
+        fileDB(file).LOCK = 0;
+        fileDB(file).TRANSACTION_ID = null;
+        fileDB(file).TRANSACTION_CONTENT = null;
         
         return true;
     }
@@ -112,7 +120,7 @@ const transaction_rollback = (file, transaction_id)=>{
  * @returns {Promise.<Types.db_file_result_file_get>}
  */
 const file_get = async (file, lock=false) =>{
-    const filepath = FILE_DB.filter(file_db_record=>(file in file_db_record))[0].PATH;
+    const filepath = fileDB(file).PATH;
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');    
     if (lock){
         const transaction_id = await transaction_start(file, JSON.parse(fileBuffer.toString()));
@@ -131,7 +139,7 @@ const file_get = async (file, lock=false) =>{
  * @param {Types.db_file_db_name} file
  * @returns {object|null}
  */
- const file_get_cached = (file) => FILE_DB.filter(file_db_record=>(file in file_db_record))[0].CACHE_CONTENT;
+ const file_get_cached = file => fileDB(file).CACHE_CONTENT ?? null;
 /**
  * 
  * @returns {Promise.<void>}
@@ -152,20 +160,20 @@ const file_get = async (file, lock=false) =>{
  * @returns 
  */
 const file_update = async (file, transaction_id, file_content) =>{
-    if (FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_ID != transaction_id)
+    if (fileDB(file).TRANSACTION_ID != transaction_id)
         return ('⛔');
     else{
-        const filepath = FILE_DB.filter(file_db_record=>(file in file_db_record))[0].PATH;
+        const filepath = fileDB(file).PATH;
         //write backup of old file
         await fs.promises.writeFile(process.cwd() + `${filepath}.${new Date().toISOString().replace(new RegExp(':', 'g'),'.')}`, 
-                                    JSON.stringify(FILE_DB.filter(file_db_record=>(file in file_db_record))[0].TRANSACTION_CONTENT, undefined, 2),  
+                                    JSON.stringify(fileDB(file).TRANSACTION_CONTENT, undefined, 2),  
                                     'utf8');
         //write new file content
         await fs.promises.writeFile(process.cwd() + filepath, 
                                     JSON.stringify(file_content, undefined, 2),  
                                     'utf8')
         .then(()=>{
-            FILE_DB.filter(file_db_record=>(file in file_db_record))[0].CACHE_CONTENT = file_content;
+            fileDB(file).CACHE_CONTENT = file_content;
             if (transaction_commit(file, transaction_id))
                 return null;
             else
@@ -185,7 +193,7 @@ const file_update = async (file, transaction_id, file_content) =>{
  * @param {object} file_content 
  */
 const file_create = async (file, file_content) =>{
-    const filepath = FILE_DB.filter(file_db_record=>(file in file_db_record))[0].PATH;
+    const filepath = fileDB(file).PATH;
     await fs.promises.writeFile(process.cwd() + filepath, JSON.stringify(file_content, undefined, 2),  'utf8')
     .then(() => {
         return null;

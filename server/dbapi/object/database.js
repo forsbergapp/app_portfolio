@@ -153,7 +153,7 @@ const install_db_get_files = async (json_type) =>{
                         if (sql.toUpperCase().includes('CREATE DATABASE')){
                             //remove database name in dba pool
                             await pool_close(null, db_use, DBA);
-                            /**@type{Types.pool_parameters} */
+                            /**@type{Types.db_pool_parameters} */
                             const json_data = {
                                     use:                       db_use,
                                     pool_id:                   null,
@@ -182,7 +182,7 @@ const install_db_get_files = async (json_type) =>{
                             if (change_system_admin_pool == true){
                             //add database name in dba pool
                             await pool_close(null, db_use, DBA);
-                            /**@type{Types.pool_parameters} */
+                            /**@type{Types.db_pool_parameters} */
                             const json_data = {
                                 use:                       db_use,
                                 pool_id:                   null,
@@ -289,7 +289,7 @@ const install_db_get_files = async (json_type) =>{
             if (db_use==3 && sql_row.sql.toUpperCase().includes('DROP DATABASE')){
                 //add database name in dba pool
                 await pool_close(null, db_use, DBA);
-                /**@type{Types.pool_parameters} */
+                /**@type{Types.db_pool_parameters} */
                 const json_data = {
                     use:                       db_use,
                     pool_id:                   null,
@@ -786,7 +786,7 @@ const DemoUninstall = async (app_id, query)=> {
     const {pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
     return new Promise ((resolve, reject)=>{
-       /**@type{Types.pool_parameters} */
+       /**@type{Types.db_pool_parameters} */
        const dbparameters = {
           use:                       db_use,
           pool_id:                   pool_id,
