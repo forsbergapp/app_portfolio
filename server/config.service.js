@@ -166,7 +166,7 @@ const DefaultConfig = async () => {
                             ['APPS',                        `${SLASH}server${SLASH}default_apps.json`],
                             ['IAM_BLOCKIP',                 `${SLASH}server${SLASH}default_iam_blockip.json`],
                             ['IAM_POLICY',                  `${SLASH}server${SLASH}default_iam_policy.json`],
-                            ['IAM_USER_AGENT',              `${SLASH}server${SLASH}default_iam_useragent.json`],
+                            ['IAM_USERAGENT',               `${SLASH}server${SLASH}default_iam_useragent.json`],
                             ['IAM_USER',                    `${SLASH}server${SLASH}default_iam_user.json`],
                             ['MICROSERVICE_CONFIG',         `${SLASH}microservice${SLASH}default_microservice_config.json`],
                             ['MICROSERVICE_SERVICES',       `${SLASH}microservice${SLASH}default_microservices.json`],
