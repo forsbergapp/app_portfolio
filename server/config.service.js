@@ -37,12 +37,12 @@ const app_portfolio_title = 'App Portfolio';
  };
 /**
  * Config get apps
- * @returns {Types.config_apps[]}
+ * @returns {Types.config_apps_record[]}
  */
  const ConfigGetApps = () => {
     //return apps array in the object without secret keys
-    const apps = Object.entries(file_get_cached('APPS'))[0][1].reduce(( /**@type{Types.config_apps} */app, 
-                                                            /**@type {Types.config_apps}*/current)=> 
+    const apps = Object.entries(file_get_cached('APPS'))[0][1].reduce(( /**@type{Types.config_apps_record} */app, 
+                                                            /**@type {Types.config_apps_record}*/current)=> 
                                                                 app.concat({APP_ID:current.APP_ID,
                                                                             NAME:current.NAME,
                                                                             PATH:current.PATH,
@@ -75,12 +75,12 @@ const app_portfolio_title = 'App Portfolio';
                 case 'www':{
                     //localhost
                     return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                        (/**@type{Types.config_apps}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
+                        (/**@type{Types.config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
                 }
                 default:{
                     try {
                         return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                            (/**@type{Types.config_apps}*/app)=>{return config_group.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+                            (/**@type{Types.config_apps_record}*/app)=>{return config_group.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
                     } catch (error) {
                         //request can be called from unkown hosts
                         return null;
@@ -110,7 +110,7 @@ const app_portfolio_title = 'App Portfolio';
         case 'ACCESS_SECRET':
         case 'ACCESS_EXPIRE':{
             return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps}*/app)=>{return app.APP_ID == config_group;})[0][parameter];
+                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == config_group;})[0][parameter];
         }
         default:{
             return null;
@@ -160,38 +160,28 @@ const DefaultConfig = async () => {
     }); 
     const i = 0;
     //read all default files
-    /**@type{Types.db_file_default_files[]} */
-    const default_files = [
-                            ['CONFIG',                      `${SLASH}server${SLASH}default_config.json`],
-                            ['APPS',                        `${SLASH}server${SLASH}default_apps.json`],
-                            ['IAM_BLOCKIP',                 `${SLASH}server${SLASH}default_iam_blockip.json`],
-                            ['IAM_POLICY',                  `${SLASH}server${SLASH}default_iam_policy.json`],
-                            ['IAM_USERAGENT',               `${SLASH}server${SLASH}default_iam_useragent.json`],
-                            ['IAM_USER',                    `${SLASH}server${SLASH}default_iam_user.json`],
-                            ['MICROSERVICE_CONFIG',         `${SLASH}microservice${SLASH}default_microservice_config.json`],
-                            ['MICROSERVICE_SERVICES',       `${SLASH}microservice${SLASH}default_microservices.json`],
-                        ]; 
-    //ES2020 import() with ES6 promises
-    const config_json = await Promise.all(default_files.map(file => {
-        return [file[0], fs.promises.readFile(process.cwd() + file[1], 'utf8')];
-    }));
-    /*
-    const config_obj2 = await Promise.all(default_files.map(file => {
-        fs.promises.readFile(process.cwd() + file[1], 'utf8')
-        .then((file_content)=> {return [file[0], JSON.parse(file_content)];});
-    }));
+
+    /**@type{[  [Types.db_file_db_name, Types.config_server],
+                [Types.db_file_db_name, Types.config_apps],
+                [Types.db_file_db_name, Types.config_iam_blockip],
+                [Types.db_file_db_name, Types.config_iam_policy],
+                [Types.db_file_db_name, Types.config_iam_useragent],
+                [Types.db_file_db_name, Types.config_iam_user],
+                [Types.db_file_db_name, Types.microservice_config],
+                [Types.db_file_db_name, Types.microservice_config_service]]} 
     */
-    const config_obj = [[config_json[0][0], JSON.parse(config_json[0][1])],
-                        [config_json[1][0], JSON.parse(config_json[1][1])],
-                        [config_json[2][0], JSON.parse(config_json[2][1])],
-                        [config_json[3][0], JSON.parse(config_json[3][1])],
-                        [config_json[4][0], JSON.parse(config_json[4][1])],
-                        [config_json[5][0], JSON.parse(config_json[5][1])],
-                        [config_json[6][0], JSON.parse(config_json[6][1])],
-                        [config_json[7][0], JSON.parse(config_json[7][1])]
-                    ];
+    const config_obj = [
+                            ['CONFIG',                      await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_config.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['APPS',                        await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_apps.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_BLOCKIP',                 await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_blockip.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_POLICY',                  await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_policy.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_USERAGENT',               await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_useragent.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['IAM_USER',                    await fs.promises.readFile(process.cwd() + `${SLASH}server${SLASH}default_iam_user.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['MICROSERVICE_CONFIG',         await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservice_config.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))],
+                            ['MICROSERVICE_SERVICES',       await fs.promises.readFile(process.cwd() + `${SLASH}microservice${SLASH}default_microservices.json`).then(filebuffer=>JSON.parse(filebuffer.toString()))]
+                        ]; 
     //set server parameters
-    config_obj.filter(file=>('CONFIG' in Object.keys(file)))[0][1].SERVER.map((/**@type{Types.config_server_server}*/row)=>{
+    config_obj[0][1].SERVER.map((/**@type{Types.config_server_server}*/row)=>{
         for (const key of Object.keys(row)){
             if (key=='HTTPS_KEY')
                 row.HTTPS_KEY = `${SLASH}config${SLASH}ssl${SLASH}${Object.values(row)[i]}`;
@@ -200,44 +190,44 @@ const DefaultConfig = async () => {
         } 
     });
     //generate hash
-    config_obj.filter(file=>('CONFIG' in Object.keys(file)))[0][1].SERVICE_IAM.map((/**@type{Types.config_server_service_iam}*/row)=>{
+    config_obj[0][1].SERVICE_IAM.map((/**@type{Types.config_server_service_iam}*/row)=>{
         for (const key of Object.keys(row))
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
             }
     });
     //set log path
-    config_obj.filter(file=>('CONFIG' in Object.keys(file)))[0][1].SERVICE_LOG.map((/**@type{Types.config_server_service_log}*/row)=>{
+    config_obj[0][1].SERVICE_LOG.map((/**@type{Types.config_server_service_log}*/row)=>{
         for (const key of Object.keys(row))
             if (key== 'PATH_LOG'){
                 row.PATH_LOG = `${SLASH}logs${SLASH}`;
             }
     });
     //set server metadata
-    config_obj.filter(file=>('CONFIG' in Object.keys(file)))[0][1].CONFIGURATION    = app_portfolio_title;
-    config_obj.filter(file=>('CONFIG' in Object.keys(file)))[0][1].CREATED          = `${new Date().toISOString()}`;
-    config_obj.filter(file=>('CONFIG' in Object.keys(file)))[0][1].MODIFIED         = '';
+    config_obj[0][1].CONFIGURATION    = app_portfolio_title;
+    config_obj[0][1].CREATED          = `${new Date().toISOString()}`;
+    config_obj[0][1].MODIFIED         = '';
 
     //generate hash for apps
-    config_obj.filter(file=>('APPS' in Object.keys(file)))[0][1].APPS.map((/**@type{Types.config_apps}*/row)=>{
+    config_obj[1][1].APPS.map((/**@type{Types.config_apps_record}*/row)=>{
         row.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
     });
     //set created for user
-    config_obj.filter(file=>('IAM_USER' in Object.keys(file)))[0][1].created = new Date().toISOString();
+    config_obj[5][1].created = new Date().toISOString();
     
     //set paths in microservice config
     /**@type{Types.microservice_config} */
-    const microservice_config = config_obj.filter((file)=>('MICROSERVICE_CONFIG' in Object.keys(file)))[0][1];
+    const microservice_config = config_obj[6][1];
     microservice_config?microservice_config.PATH_LOGS             = `${SLASH}microservice${SLASH}${microservice_config.PATH_LOGS}${SLASH}`:'';
     microservice_config?microservice_config.PATH_TEMP             = `${SLASH}microservice${SLASH}${microservice_config.PATH_TEMP}${SLASH}`:'';
     microservice_config?microservice_config.MESSAGE_QUEUE_ERROR   = `${microservice_config.PATH_LOGS}${microservice_config.MESSAGE_QUEUE_ERROR}`:'';
     microservice_config?microservice_config.MESSAGE_QUEUE_PUBLISH = `${microservice_config.PATH_LOGS}${microservice_config.MESSAGE_QUEUE_PUBLISH}`:'';
     microservice_config?microservice_config.MESSAGE_QUEUE_CONSUME = `${microservice_config.PATH_LOGS}${microservice_config.MESSAGE_QUEUE_CONSUME}`:'';
     //set paths in microservice services
-    config_obj.filter(file=>('MICROSERVICE_SERVICES' in Object.keys(file)))[0][1].SERVICES.map((/**@type{Types.microservice_config_service_record}*/row)=>{
+    config_obj[7][1].SERVICES.map((/**@type{Types.microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_KEY}`;
         row.HTTPS_CERT            = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_CERT}`;
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
@@ -316,6 +306,7 @@ const ConfigSave = async (file, file_content, first_time) => {
         const file_config = await file_get(file, true);
         if (file=='CONFIG'){
             if (file_content){
+                file_content.MAINTENANCE = file_config.file_content.MAINTENANCE;
                 file_content.CONFIGURATION = file_config.file_content.CONFIGURATION;
                 file_content.COMMENT = file_config.file_content.COMMENT;
                 file_content.CREATED = file_config.file_content.CREATED;

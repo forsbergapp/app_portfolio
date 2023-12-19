@@ -554,15 +554,15 @@
  *              ['SERVICE_SOCKET']:[config_server_socket],
  *              ['SERVICE_DB']:[config_server_service_db],
  *              ['SERVICE_LOG']:[config_server_service_log],
+ *              ['CONFIGURATION']:string,
  *              ['MAINTENANCE']:number,
+ *              ['COMMENT']:number,
  *              ['CREATED']:string,
  *              ['MODIFIED']:string}} config_server
  * 
  * @typedef {   config_apps|
  *              config_server|
  *              config_iam_blockip|config_iam_policy|config_iam_user|config_iam_useragent|microservice_config|microservice_config_service} db_file_config_files
- * 
- *@typedef {[db_file_db_name, string]} db_file_default_files
  */
 
 /**
@@ -589,7 +589,7 @@
  *              'DATA_EXPIRE'|
  *              'ACCESS_SECRET'|
  *              'ACCESS_EXPIRE'} config_apps_keys
- * @typedef  {object} config_apps
+ * @typedef  {object} config_apps_record
  * @property {function} filter
  * @property {function} reduce
  * @property {function} concat
@@ -663,6 +663,7 @@
  * @property {string} HOST
  * @property {number} PORT
  *
+ * @typedef {{['APPS']:config_apps_record[]}} config_apps
  * Server - Config IAM blockip
  * @typedef {[string,string][]} config_iam_blockip
  * Server - Config IAM policy
@@ -1573,7 +1574,7 @@
  *            PATH:string,
  *            CONFIG:[*]}} microservice_config_service_record
  * 
- * @typedef {{['SERVICES']:microservice_config_service_record}} microservice_config_service
+ * @typedef {{['SERVICES']:microservice_config_service_record[]}} microservice_config_service
  * 
  * MicroService - Response
  * @typedef {object}    res_microservice
