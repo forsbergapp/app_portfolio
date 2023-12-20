@@ -64,118 +64,60 @@ const client_locale = (accept_language) =>{
     return locale;
 };
 /**
+ * @param {number} app_id
+ * @param { 'APP'|'APP_COMMON'|
+ *          'REPORT'|'REPORT_COMMON'|
+ *          'MAINTENANCE'|'MAIL'} type
+ * @param {string|null} component
+ */ 
+const render_files = (app_id, type, component=null) => {
+    /**@type{Types.config_apps_render_files[]} */
+    const files = ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]==type && (filetype[1] == component || component == null));
+    let app ='';
+    files.forEach(file => {
+        if (app=='')
+            app = file[4] ?? '';
+        else
+            app = app.replace(`<${file[2]}/>`, file[4] ?? '');
+    });
+    return app;
+};
+
+/**
  * Render html for APP or REPORT
  * 
- * @param {number} app_id                       - application_id
- * @param {[string, string][]} files              - array with files
- * @param {(Types.app_config|null)} app_config  - app configuration
- * @param {Types.callBack} callBack             - CallBack with error and app/report html
+ * @param {number} app_id
+ * @param {'APP'} type
+ * @param {string|null} locale
+ * @param {Types.callBack} callBack
+ * 
  */
- const render_app_html = (app_id, files, app_config, callBack) => {
-    let i = 0;
-    //ES2020 import() with ES6 promises, object destructuring
-    import('node:fs').then(({promises: {readFile}}) => {
-        Promise.all(files.map(file => {
-            return readFile(file[1], 'utf8');
-        })).then(fileBuffers => {
-            let app_files ='';
-            fileBuffers.forEach(fileBuffer => {
-                if (app_files=='')
-                    app_files = fileBuffer.toString();
-                else
-                    app_files = app_files.replace(
-                                    files[i][0],
-                                    `${fileBuffer.toString()}`);
-                i++;
-            });
-            if (app_config)
-                render_common_html(app_id, app_files, app_config).then((app)=>{
-                    callBack(null, app);
-                });
-            else{
-                //app that does not need common like maintenance and email
-                callBack(null, {app:app_files,
-                                locales: null, 
-                                settings: null});
-            }
-        })
-        .catch(err => {
-            callBack(err, null);
+ const render_app_html = (app_id, type, locale, callBack) => {
+        render_common_html(app_id, render_files(app_id, type), locale ?? '').then((app_with_common)=>{
+            callBack(null, app_with_common);
         });
-    });
 };
 /**
  * Render html for REPORT
  * 
- * @param {number} app_id               - application_id
- * @param {[string, string][]} files    - array with files
- * @param {Types.callBack} callBack     - CallBack with error and app/report html
+ * @param {number} app_id
+ * @param {string} reportname
  */
-const render_report_html = (app_id, files, callBack) => {
-    read_module_files(files, (err, report)=>{
-        if (err)
-            callBack(err, null);
-        else{
-            /**@type {[string, string][]} */
-            const common_files = [
-                            //HEAD
-                            ['<CommonReportHead/>', process.cwd() + '/apps/common/src/report/head.html'],
-                            ['<CommonReportHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html']
-                        ];
-            read_common_files(report, common_files, (err, report)=>{
-                /** @type {[string, string][]} */
-                const render_variables = [];
-                if (err)
-                    callBack(err, null);
-                else{
-                    if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
-                        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
-                    else
-                        render_variables.push(['APP_CSS_REPORT','']);
-                    callBack(null, render_app_with_data(report, render_variables));
-                }
-            });
-        }
-    });
-};
-/**
- * Reads module files in sequential order
- * 
- * @async
- * @param {[string, string][]} files
- * @param {Types.callBack} callBack   - CallBack with error and app/report html
- */
- const read_module_files = async (files, callBack) => {
-    const fs = await import('node:fs');
-    let module = '';
-    for (const file of files){
-        const filecontent = await fs.promises.readFile(file[1]);
-        if (module=='')
-            module = filecontent.toString();
-        else
-            module = module.replace(file[0],`${filecontent.toString()}`);
-    }
-    callBack(null, module);
+const render_report_html = (app_id, reportname) => {
+    const report = render_files(app_id, 'REPORT', reportname);
+    //list config files and return only tag and file content
+    /**@type {[string,string][]} */
+    const common_files = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='REPORT_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];});
+    const report_with_common = render_app_with_data(report, common_files);
+    /** @type {[string, string][]} */
+    const render_variables = [];
+    if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
+        render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
+    else
+        render_variables.push(['APP_CSS_REPORT','']);
+    return render_app_with_data(report_with_common, render_variables);
 };
 
-/**
- * Reads common html files in sequential order
- * 
- * @async
- * @param {string} module       - html
- * @param {[string, string][]} files
- * @param {Types.callBack} callBack   - CallBack with error and app/report html
- */
-const read_common_files = async (module, files, callBack) => {
-    const fs = await import('node:fs');
-    for (const file of files){
-        const filecontent = await fs.promises.readFile(file[1]);
-        module = module.replace(
-            file[0],
-            `${filecontent.toString()}`);
-    }
-    callBack(null, module);
-};
 /**
  * Renders app html with data
  * 
@@ -198,10 +140,13 @@ const render_app_with_data = (app, data)=>{
  * @async
  * @param {number} app_id                   - application_id
  * @param {string} module                   - html
- * @param {Types.app_config} app_config     - app configuration
+ * @param {string} locale                   - locale
  * @returns {Promise<Types.render_common>}  - app HTML with rendered data
  */
-const render_common_html = async (app_id, module, app_config) =>{
+const render_common_html = async (app_id, module, locale) =>{
+    /**@type{Types.config_apps_config} */
+    const app_config = ConfigGetApp(app_id, 'CONFIG');
+
     /** @type {string}*/
     let user_locales='';
     /** @type {Types.render_common_settings}*/
@@ -213,22 +158,34 @@ const render_common_html = async (app_id, module, app_config) =>{
     const map_styles = [];
     /** @type {[string, string][]} */
     const render_variables = [];
-    if (app_config.render_locales){
+
+    if ((app_id== getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && await app_start())){
+            //if admin app and system admin only
+            app_config.RENDER_LOCALES = false;
+            app_config.RENDER_SETTINGS = false;
+            app_config.RENDER_PROVIDER_BUTTONS = false;
+    }
+
+    if (app_config.RENDER_LOCALES){
         const {getLocales}  = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/locale.service.js`);            
-        await getLocales(app_id, app_config.locale)
+        await getLocales(app_id, locale)
         .then((/**@type{Types.db_result_locale_getLocales[]} */result_user_locales)=> {
             result_user_locales.forEach((locale, i) => {
                 user_locales += `<option id=${i} value=${locale.locale}>${locale.text}</option>`;
             });
+            render_variables.push(['COMMON_USER_LOCALE',user_locales]);
         })
         .catch((/**@type{Types.error}*/error)=>{
             throw error;
         });
     }
-    if (app_config.render_settings){
+    else
+        render_variables.push(['COMMON_USER_LOCALE','']);
+
+    if (app_config.RENDER_SETTINGS){
         const {getSettings} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_setting.service.js`);
         /** @type {Types.db_result_app_setting_getSettings[]}*/
-        const app_settings_db = await getSettings(app_id, app_config.locale, null);
+        const app_settings_db = await getSettings(app_id, locale, null);
         let option;
         for (const app_setting of app_settings_db) {
             option = `<option id=${app_setting.id} value='${app_setting.value}'>${app_setting.text}</option>`;
@@ -265,116 +222,145 @@ const render_common_html = async (app_id, module, app_config) =>{
                     user_timezones: user_timezones, 
                     user_directions: user_directions, 
                     user_arabic_scripts: user_arabic_scripts,
-                    map_styles: app_config.map==true?map_styles:null};
-    }               
-    return new Promise((resolve, reject)=>{
-        /**@type {[string, string][]} */
-        const common_files = [
-            //HEAD
-            ['<CommonHead/>', process.cwd() + '/apps/common/src/head.html'],
-            ['<CommonHeadFonts/>', process.cwd() + '/apps/common/src/fonts.html'],
-            //BODY
-            ['<CommonBody/>', process.cwd() + '/apps/common/src/body.html'],
-            ['<CommonBodyDialogues/>', process.cwd() + '/apps/common/src/body_dialogues.html'],
-            ['<CommonBodyWindowInfo/>', process.cwd() + '/apps/common/src/body_window_info.html'],
-            ['<CommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
-            ['<CommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'],    
-            //Profile tag CommonBodyProfileDetail in common body
-            ['<CommonBodyProfileDetail/>', process.cwd() + '/apps/common/src/profile_detail.html'], 
-            ['<CommonBodyProfileBtnTop/>', process.cwd() + '/apps/common/src/profile_btn_top.html'],
-            [app_config.custom_tag_profile_search==null?'<CommonBodyProfileSearch/>':app_config.custom_tag_profile_search, process.cwd() + '/apps/common/src/profile_search.html'],
-            [app_config.custom_tag_user_account==null?'<CommonBodyUserAccount/>':app_config.custom_tag_user_account, process.cwd() + '/apps/common/src/user_account.html'],
-            [app_config.custom_tag_profile_top==null?'<CommonBodyProfileBtnTop/>':app_config.custom_tag_profile_top, process.cwd() + '/apps/common/src/profile_btn_top.html']
-        ];
-        if (app_config.map==true)
-            common_files.push(['<CommonHeadMap/>', process.cwd() + '/apps/common/src/head_map.html']);
-        if (app_config.app_themes==true){
-            //CommonBodyThemes inside common User account div
-            common_files.push(['<CommonBodyThemes/>', process.cwd() + '/apps/common/src/app_themes.html']);
-        }
-        read_common_files(module, common_files, (err, app)=>{
-            if (err)
-                reject(err);
-            else{
-                //render app parameters from apps.json
-                if (ConfigGetApp(app_id, 'JS') != '')
-					render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, 'JS')}",`]);
-				else
-					render_variables.push(['APP_JS','']);
-				if (ConfigGetApp(app_id, 'JS_SECURE') != '')
-					render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, 'JS_SECURE')}",`]);
-				else
-					render_variables.push(['APP_JS_SECURE','']);
-				if (ConfigGetApp(app_id, 'JS_REPORT') != '')
-					render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, 'JS_REPORT')}",`]);
-				else
-					render_variables.push(['APP_JS_REPORT','']);
-				if (ConfigGetApp(app_id, 'CSS') != '')
-					render_variables.push(['APP_CSS',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS')}'/>`]);
-				else
-					render_variables.push(['APP_CSS','']);
-				if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
-					render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
-				else
-					render_variables.push(['APP_CSS_REPORT','']);
-				if (ConfigGetApp(app_id, 'MANIFEST') != '')
-					render_variables.push(['APP_MANIFEST',`<link rel='manifest' href='${ConfigGetApp(app_id, 'MANIFEST')}'/>`]);
-				else
-					render_variables.push(['APP_MANIFEST','']);
-				if (ConfigGetApp(app_id, 'FAVICON_32x32') != '')
-					render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_32x32')}' sizes='32x32'/>`]);
-				else
-					render_variables.push(['APP_FAVICON_32x32','']);
-				if (ConfigGetApp(app_id, 'FAVICON_1922x192') != '')
-					render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_192x192')}' sizes='192x192'/>`]);
-				else
-					render_variables.push(['APP_FAVICON_192x192','']);
+                    map_styles: app_config.MAP==true?map_styles:null};
 
-                if (app_config.map==false){
-                    render_variables.push(['CommonHeadMap','']);
-                }
-                //remove common tags already used in optional app custom tags
-                if(app_config.custom_tag_profile_search!='')
-                    render_variables.push(['CommonBodyProfileSearch','']);
-                if(app_config.custom_tag_user_account!='')
-                    render_variables.push(['CommonBodyUserAccount','']);
-                if(app_config.custom_tag_profile_top!='')
-                    render_variables.push(['CommonBodyProfileBtnTop','']);
-
-                //render locales
-                if (app_config.render_locales){
-                    render_variables.push(['COMMON_USER_LOCALE',user_locales]);
-                }
-                else{
-                    render_variables.push(['COMMON_USER_LOCALE','']);
-                }
-                //render settings
-                if (app_config.render_settings){
-                    render_variables.push(['COMMON_USER_TIMEZONE',user_timezones]);
-                    render_variables.push(['COMMON_USER_DIRECTION',`<option id='' value=''></option>${user_directions}`]);
-                    render_variables.push(['COMMON_USER_ARABIC_SCRIPT',`<option id='' value=''></option>${user_arabic_scripts}`]);
-                }
-                else{
-                    render_variables.push(['COMMON_USER_TIMEZONE','']);
-                    render_variables.push(['COMMON_USER_DIRECTION','']);
-                    render_variables.push(['COMMON_USER_ARABIC_SCRIPT','']);
-                }
-                if (app_config.render_provider_buttons){
-                    providers_buttons(app_id).then((buttons)=>{
-                        render_variables.push(['COMMON_PROVIDER_BUTTONS',buttons]);                        
-                        resolve({   app:render_app_with_data(app, render_variables), 
-                                    locales: user_locales, 
-                                    settings: settings});
-                    });
-                }
-                else{
-                    render_variables.push(['COMMON_PROVIDER_BUTTONS','']);
-                    resolve({   app:render_app_with_data(app, render_variables),
-                                locales: user_locales, 
-                                settings: settings});
-                }
-            }
+        render_variables.push(['COMMON_USER_TIMEZONE',user_timezones]);
+        render_variables.push(['COMMON_USER_DIRECTION',`<option id='' value=''></option>${user_directions}`]);
+        render_variables.push(['COMMON_USER_ARABIC_SCRIPT',`<option id='' value=''></option>${user_arabic_scripts}`]);
+    }
+    else{
+        render_variables.push(['COMMON_USER_TIMEZONE','']);
+        render_variables.push(['COMMON_USER_DIRECTION','']);
+        render_variables.push(['COMMON_USER_ARABIC_SCRIPT','']);
+    }
+    if (app_config.RENDER_PROVIDER_BUTTONS){
+        await providers_buttons(app_id).then((buttons)=>{
+            render_variables.push(['COMMON_PROVIDER_BUTTONS',buttons]);
         });
+    }
+    else
+        render_variables.push(['COMMON_PROVIDER_BUTTONS','']);
+    
+    return new Promise((resolve)=>{
+        //list config files and return only tag and file content
+        /**@type {[string, string][]} */
+        const common_files = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON').map((/**@type{Types.config_apps_render_files}*/row)=> {return [row[2],row[4]];} );
+
+        if (app_config.RENDER_PROFILE_SEARCH==true){
+            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileSearch')[0][4];
+            if (app_config.CUSTOM_TAG_PROFILE_SEARCH){
+                common_files.push([app_config.CUSTOM_TAG_PROFILE_SEARCH, common_file]);
+                common_files.push(['CommonBodyProfileSearch', '']);
+            }
+            else
+                common_files.push(['CommonBodyProfileSearch', common_file]);
+        }
+        else
+            common_files.push(['CommonBodyUserAccount', '']);
+        if (app_config.RENDER_USER_ACCOUNT==true){
+            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyUserAccount')[0][4];
+            if (app_config.CUSTOM_TAG_USER_ACCOUNT){
+                common_files.push([app_config.CUSTOM_TAG_USER_ACCOUNT, common_file]);
+                common_files.push(['CommonBodyUserAccount', '']);
+            }
+            else
+                common_files.push(['CommonBodyUserAccount', common_file]);
+        }
+        else
+            common_files.push(['CommonBodyUserAccount', '']);
+        if (app_config.RENDER_PROFILE_TOP==true){
+            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileBtnTop')[0][4];
+            if (app_config.CUSTOM_TAG_PROFILE_TOP){
+                common_files.push([app_config.CUSTOM_TAG_PROFILE_TOP, common_file]);
+                common_files.push(['CommonBodyProfileBtnTop', '']);
+            }
+            else
+                common_files.push(['CommonBodyProfileBtnTop', common_file]);
+        }
+        else
+            common_files.push(['CommonBodyProfileBtnTop', '']);
+        
+        if (app_config.MAP==true){
+            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonHeadMap')[0][4];
+            common_files.push(['CommonHeadMap', common_file]);
+        }
+        else
+            common_files.push(['CommonHeadMap', '']);
+
+        if (app_config.RENDER_APP_THEMES==true){
+            //themes always in same place but choose what content to display
+            if (ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0])
+                common_files.push(['CommonBodyThemes', ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4]]);
+            else{
+                const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyThemes')[0][4];
+                common_files.push(['CommonBodyThemes', common_file]);
+            }
+        }
+        else
+            common_files.push(['CommonBodyThemes', '']);
+
+                //app optional content
+                if (ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0])
+                common_files.push(['AppProfileInfo', ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileInfo')[0][4]]);
+            else
+                common_files.push(['AppProfileInfo', '']);
+    
+        if (app_config.RENDER_PROFILE_APPS==true){
+            const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyProfileInfoApps')[0][4];
+            if (app_config.CUSTOM_TAG_PROFILE_APPS){
+                common_files.push([app_config.CUSTOM_TAG_PROFILE_APPS, common_file]);
+                common_files.push(['CommonBodyProfileInfoApps', '']);
+            }
+            else
+                common_files.push(['CommonBodyProfileInfoApps', common_file]);
+        }
+        else
+            common_files.push(['CommonBodyProfileInfoApps', '']);
+    
+        if (ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0])
+            common_files.push(['AppProfileTop', ConfigGetApp(app_id, 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_OPTIONAL' && filetype[2]=='AppProfileTop')[0][4]]);
+        else
+            common_files.push(['AppProfileTop', '']);
+        
+        const app = render_app_with_data(module, common_files);
+        
+        //render app parameters from apps.json
+        if (ConfigGetApp(app_id, 'JS') != '')
+            render_variables.push(['APP_JS',`"app" 			: "${ConfigGetApp(app_id, 'JS')}",`]);
+        else
+            render_variables.push(['APP_JS','']);
+        if (ConfigGetApp(app_id, 'JS_SECURE') != '')
+            render_variables.push(['APP_JS_SECURE',`"app_secure" 			: "${ConfigGetApp(app_id, 'JS_SECURE')}",`]);
+        else
+            render_variables.push(['APP_JS_SECURE','']);
+        if (ConfigGetApp(app_id, 'JS_REPORT') != '')
+            render_variables.push(['APP_JS_REPORT',`"app_report" 			: "${ConfigGetApp(app_id, 'JS_REPORT')}",`]);
+        else
+            render_variables.push(['APP_JS_REPORT','']);
+        if (ConfigGetApp(app_id, 'CSS') != '')
+            render_variables.push(['APP_CSS',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS')}'/>`]);
+        else
+            render_variables.push(['APP_CSS','']);
+        if (ConfigGetApp(app_id, 'CSS_REPORT') != '')
+            render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
+        else
+            render_variables.push(['APP_CSS_REPORT','']);
+        if (ConfigGetApp(app_id, 'MANIFEST') != '')
+            render_variables.push(['APP_MANIFEST',`<link rel='manifest' href='${ConfigGetApp(app_id, 'MANIFEST')}'/>`]);
+        else
+            render_variables.push(['APP_MANIFEST','']);
+        if (ConfigGetApp(app_id, 'FAVICON_32x32') != '')
+            render_variables.push(['APP_FAVICON_32x32',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_32x32')}' sizes='32x32'/>`]);
+        else
+            render_variables.push(['APP_FAVICON_32x32','']);
+        if (ConfigGetApp(app_id, 'FAVICON_1922x192') != '')
+            render_variables.push(['APP_FAVICON_192x192',`<link rel='icon' type='image/png' href='${ConfigGetApp(app_id, 'FAVICON_192x192')}' sizes='192x192'/>`]);
+        else
+            render_variables.push(['APP_FAVICON_192x192','']);
+
+        resolve({   app:render_app_with_data(app, render_variables),
+                    locales: user_locales, 
+                    settings: settings});
     });
 };
 /**
@@ -507,8 +493,6 @@ const get_module_with_init = async (app_info, callBack) => {
 const createMail = async (app_id, data) =>{
     const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     return new Promise((resolve, reject) => {
-        /** @type {[string, string][]} */
-        let files= [];
         /** @type {string} */
         let db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
         /** @type {string} */
@@ -533,80 +517,69 @@ const createMail = async (app_id, data) =>{
             parseInt(data.emailtype)==3 ||
             parseInt(data.emailtype)==4){
 
-            files = [
-                ['MAIL', process.cwd() + '/apps/common/src/mail.html'],
-                ['<MailHeader/>', process.cwd() + '/apps/common/src/mail_header_verification.html'],
-                ['<MailBody/>', process.cwd() + '/apps/common/src/mail_body_verification.html']
-            ];
-            render_app_html(app_id, files, null, (err, email)=>{
-                if (err)
-                    reject(err);
-                else{                
-                    getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
-                    .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
-                        for (const parameter of result_parameters){
-                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
-                                db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
-                                db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
-                                db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
-                                db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
+            getParameters_server(app_id, getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')))
+            .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
+                for (const parameter of result_parameters){
+                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME')
+                        db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME = parameter.parameter_value;
 
-                            if (parameter.parameter_name=='SERVICE_MAIL_HOST')
-                                db_SERVICE_MAIL_HOST = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_PORT')
-                                db_SERVICE_MAIL_PORT = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
-                                db_SERVICE_MAIL_SECURE = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
-                                db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
-                            if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
-                                db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
-                        }
-                        /** @type {string} */
-                        let email_from = '';
-                        switch (parseInt(data.emailtype)){
-                            case 1:{
-                                email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
-                                break;
-                            }
-                            case 2:{
-                                email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
-                                break;
-                            }
-                            case 3:{
-                                email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
-                                break;
-                            }
-                            case 4:{
-                                email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
-                                break;
-                            }
-                        }
-                        /** @type {[string, string][]} */
-                        const render_variables = [];
-                        render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
-                        render_variables.push(['Verification_code',data.verificationCode]);
-                        render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
-
-                        resolve ({
-                            'email_host':         db_SERVICE_MAIL_HOST,
-                            'email_port':         db_SERVICE_MAIL_PORT,
-                            'email_secure':       db_SERVICE_MAIL_SECURE,
-                            'email_auth_user':    db_SERVICE_MAIL_USERNAME,
-                            'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
-                            'from':               email_from,
-                            'to':                 data.to,
-                            'subject':            '❂❂❂❂❂❂',
-                            'html':               render_app_with_data( email.app, render_variables)
-                        });
-                    })
-                    .catch((/**@type{Types.error}*/err)=>{
-                        reject(err);
-                    });
+                    if (parameter.parameter_name=='SERVICE_MAIL_HOST')
+                        db_SERVICE_MAIL_HOST = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_PORT')
+                        db_SERVICE_MAIL_PORT = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_SECURE')
+                        db_SERVICE_MAIL_SECURE = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_USERNAME')
+                        db_SERVICE_MAIL_USERNAME = parameter.parameter_value;
+                    if (parameter.parameter_name=='SERVICE_MAIL_PASSWORD')
+                        db_SERVICE_MAIL_PASSWORD = parameter.parameter_value;                                        
                 }
+                /** @type {string} */
+                let email_from = '';
+                switch (parseInt(data.emailtype)){
+                    case 1:{
+                        email_from = db_SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME;
+                        break;
+                    }
+                    case 2:{
+                        email_from = db_SERVICE_MAIL_TYPE_UNVERIFIED_FROM_NAME;
+                        break;
+                    }
+                    case 3:{
+                        email_from = db_SERVICE_MAIL_TYPE_PASSWORD_RESET_FROM_NAME;
+                        break;
+                    }
+                    case 4:{
+                        email_from = db_SERVICE_MAIL_TYPE_CHANGE_EMAIL_FROM_NAME;
+                        break;
+                    }
+                }
+                /** @type {[string, string][]} */
+                const render_variables = [];
+                render_variables.push(['Logo','<img id=\'app_logo\' src=\'/apps/common/images/logo.png\'>']);
+                render_variables.push(['Verification_code',data.verificationCode]);
+                render_variables.push(['Footer',`<a target='_blank' href='https://${data.host}'>${data.host}</a>`]);
+
+                resolve ({
+                    'email_host':         db_SERVICE_MAIL_HOST,
+                    'email_port':         db_SERVICE_MAIL_PORT,
+                    'email_secure':       db_SERVICE_MAIL_SECURE,
+                    'email_auth_user':    db_SERVICE_MAIL_USERNAME,
+                    'email_auth_pass':    db_SERVICE_MAIL_PASSWORD,
+                    'from':               email_from,
+                    'to':                 data.to,
+                    'subject':            '❂❂❂❂❂❂',
+                    'html':               render_app_with_data( render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAIL'), render_variables)
+                });
+            })
+            .catch((/**@type{Types.error}*/err)=>{
+                reject(err);
             });
         }
         else
@@ -953,9 +926,7 @@ const getApp = async (req, app_id, params, callBack) => {
         });
     }
     else
-        getMaintenance(app_id).then((result_maintenance) => {
-            callBack(null, result_maintenance);
-        });
+        callBack(null, getMaintenance(app_id));
 };
 /**
  * Creates report that performs these tasks:
@@ -971,7 +942,7 @@ const getReport = async (req, app_id, callBack) => {
     if (await app_start(app_id) ==true){
         const decodedparameters = Buffer.from(req.reportid, 'base64').toString('utf-8');
         //example string:
-        //'app_id=2&module=timetable.html&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
+        //'app_id=2&module=TIMETABLE&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
         
         let query_parameters = '{';
         decodedparameters.split('&').forEach((parameter, index)=>{
@@ -1021,41 +992,24 @@ const getReport = async (req, app_id, callBack) => {
         }
     }
     else
-        getMaintenance(app_id).then((result_maintenance) => {
-            callBack(null, result_maintenance);
-        });
+        callBack(null, getMaintenance(app_id));
 };
 /**
  * Gets module maintenance
  * 
  * @param {number} app_id
- * @returns {Promise<string>}
+ * @returns {string}
  */
 const getMaintenance = (app_id) => {
-    return new Promise((resolve, reject) => {
-        /** @type {[string, string][]} */
-        const files = [
-            ['APP', process.cwd() + '/apps/common/src/index_maintenance.html'],
-            ['<AppCommonHeadMaintenance/>', process.cwd() + '/apps/common/src/head_maintenance.html'],
-            ['<AppCommonBodyMaintenance/>', process.cwd() + '/apps/common/src/body_maintenance.html'],
-            ['<AppCommonBodyBroadcast/>', process.cwd() + '/apps/common/src/body_broadcast.html'] 
-            ];
-        /** @type {[string, string][]} */
-        const render_variables = [];
-        render_app_html(app_id, files, null, (err, app)=>{
-            if (err)
-                reject(err);
-            else{
-                //maintenance can be used from all app_id
-                const parameters = {   
-                    app_id: app_id,
-                    rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
-                };
-                render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
-                resolve(render_app_with_data(app.app, render_variables));
-            }
-        });
-    });
+    //maintenance can be used from all app_id
+    const parameters = {   
+        app_id: app_id,
+        rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
+    };
+    /** @type {[string, string][]} */
+    const render_variables = [];
+    render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
+    return render_app_with_data(render_files(app_id, 'MAINTENANCE'), render_variables);
 };
 /**
  * Renders provider buttons

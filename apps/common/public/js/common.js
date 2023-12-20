@@ -3553,7 +3553,8 @@ const assign_icons = () => {
     document.querySelector('#common_profile_detail_header_liked_heart').innerHTML = ICONS.user_like;
     document.querySelector('#common_profile_detail_header_liked_users').innerHTML =  ICONS.user_followed;
     //profile info search
-    document.querySelector('#common_profile_search_icon').innerHTML = ICONS.app_search;
+    if (document.querySelector('#common_profile_search_icon'))
+        document.querySelector('#common_profile_search_icon').innerHTML = ICONS.app_search;
     //profile info
     document.querySelector('#common_profile_joined_date_icon').innerHTML = ICONS.user_account_created;
     document.querySelector('#common_profile_follow_follow').innerHTML = ICONS.user_follow_user;
@@ -3591,16 +3592,18 @@ const assign_icons = () => {
     document.querySelector('#common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS.app_fullscreen;
     
     //user menu
-    //document.querySelector('#common_user_menu_dropdown_profile').innerHTML = ICONS.button_default_icon_profile;
-    document.querySelector('#common_user_menu_dropdown_edit').innerHTML = ICONS.app_edit;
-    document.querySelector('#common_user_menu_dropdown_log_out').innerHTML = ICONS.app_logoff;
-    document.querySelector('#common_user_menu_dropdown_signup').innerHTML = ICONS.app_signup;
-    document.querySelector('#common_user_menu_dropdown_log_in').innerHTML = ICONS.app_login;
-    document.querySelector('#common_user_menu_default_avatar').innerHTML = ICONS.user_avatar;
-    document.querySelector('#common_user_preference_locale').innerHTML = ICONS.regional_locale;
-    document.querySelector('#common_user_preference_timezone').innerHTML = ICONS.regional_timezone;
-    document.querySelector('#common_user_preference_direction').innerHTML = ICONS.regional_direction;
-    document.querySelector('#common_user_preference_arabic_script').innerHTML = ICONS.regional_script;
+    if (document.querySelector('#common_user_menu_dropdown_edit')){
+        document.querySelector('#common_user_menu_dropdown_edit').innerHTML = ICONS.app_edit;
+        document.querySelector('#common_user_menu_dropdown_log_out').innerHTML = ICONS.app_logoff;
+        document.querySelector('#common_user_menu_dropdown_signup').innerHTML = ICONS.app_signup;
+        document.querySelector('#common_user_menu_dropdown_log_in').innerHTML = ICONS.app_login;
+        document.querySelector('#common_user_menu_default_avatar').innerHTML = ICONS.user_avatar;
+        document.querySelector('#common_user_preference_locale').innerHTML = ICONS.regional_locale;
+        document.querySelector('#common_user_preference_timezone').innerHTML = ICONS.regional_timezone;
+        document.querySelector('#common_user_preference_direction').innerHTML = ICONS.regional_direction;
+        document.querySelector('#common_user_preference_arabic_script').innerHTML = ICONS.regional_script;
+    }
+
 };
 const set_event_user_menu = () =>{
     //user menu also for system admin
@@ -3722,54 +3725,58 @@ const set_events = () => {
         }
     }, false);
     //usermenu
-    set_event_user_menu();
-    document.querySelector('#common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';}, false);
-    document.querySelector('#common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
-    document.querySelector('#common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
-    //user preferences
-    //define globals and save settings here, in apps define what should happen when changing
-    if (document.querySelector('#common_user_locale_select'))
-        document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { 
-                                                                                    COMMON_GLOBAL.user_locale = event.target.value;
-                                                                                    //change navigator.language, however when logging out default navigator.language will be set
-                                                                                    //commented at the moment
-                                                                                    //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                                                                                    user_preference_save();
-                                                                                }, false);
-    if (document.querySelector('#common_user_timezone_select'))
-        document.querySelector('#common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_timezone = event.target.value;
-                                                                                                user_preference_save().then(()=>{
-                                                                                                    if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
-                                                                                                        dialogue_user_edit_clear();
-                                                                                                        user_edit();
-                                                                                                    }
-                                                                                                });
-                                                                                                }, false);
-    //define also in app if needed to adjust ui
-    if (document.querySelector('#common_user_direction_select'))
-        document.querySelector('#common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
-                                                                                                COMMON_GLOBAL.user_direction = event.target.value;  
-                                                                                                user_preference_save();
-                                                                                                }, false);
-    if (document.querySelector('#common_user_arabic_script_select'))
-        document.querySelector('#common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_arabic_script = event.target.value;
+    if (document.querySelector('#common_user_menu')){
+        set_event_user_menu();
+        document.querySelector('#common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';}, false);
+        document.querySelector('#common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+        document.querySelector('#common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
+        //user preferences
+        //define globals and save settings here, in apps define what should happen when changing
+        if (document.querySelector('#common_user_locale_select'))
+            document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { 
+                                                                                        COMMON_GLOBAL.user_locale = event.target.value;
+                                                                                        //change navigator.language, however when logging out default navigator.language will be set
+                                                                                        //commented at the moment
+                                                                                        //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                                                                                        user_preference_save();
+                                                                                    }, false);
+        if (document.querySelector('#common_user_timezone_select'))
+            document.querySelector('#common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_timezone = event.target.value;
+                                                                                                    user_preference_save().then(()=>{
+                                                                                                        if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
+                                                                                                            dialogue_user_edit_clear();
+                                                                                                            user_edit();
+                                                                                                        }
+                                                                                                    });
+                                                                                                    }, false);
+        //define also in app if needed to adjust ui
+        if (document.querySelector('#common_user_direction_select'))
+            document.querySelector('#common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
+                                                                                                    COMMON_GLOBAL.user_direction = event.target.value;  
                                                                                                     user_preference_save();
                                                                                                     }, false);
-    
-    
-    set_user_account_app_settings();
-    
-    //dialogue user edit
-    document.querySelector('#common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
-    document.querySelector('#common_user_edit_btn_avatar_img').addEventListener('click', () => { document.querySelector('#common_user_edit_input_avatar_img').click(); }, false);
-    document.querySelector('#common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height); }, false);
-    document.querySelector('#common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
+        if (document.querySelector('#common_user_arabic_script_select'))
+            document.querySelector('#common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_arabic_script = event.target.value;
+                                                                                                        user_preference_save();
+                                                                                                        }, false);
+        
+        
+        set_user_account_app_settings();
+        
+        //dialogue user edit
+        document.querySelector('#common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
+        document.querySelector('#common_user_edit_btn_avatar_img').addEventListener('click', () => { document.querySelector('#common_user_edit_input_avatar_img').click(); }, false);
+        document.querySelector('#common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height); }, false);
+        document.querySelector('#common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
+    }  
 };
 const set_user_account_app_settings = () =>{
+    if (document.querySelector('#common_user_menu')){
     SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.querySelector('#common_user_locale_select'), 1);
     SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.querySelector('#common_user_timezone_select'), 1);
     SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.querySelector('#common_user_direction_select'), 1);
     SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.querySelector('#common_user_arabic_script_select'), 1);
+    }
 };
 const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app

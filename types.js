@@ -265,7 +265,6 @@
  *
  * @typedef {object} app_config                  - app configuration
  * @property {string} locale                     - locale
- * @property {string} module_type                - module_type APP or REPORT
  * @property {boolean} map                       - return map styles and map header, true/false
  * @property {string} custom_tag_profile_search  - [custom tag]/null, optional custom app placement of component
  * @property {string} custom_tag_user_account    - [custom tag]/null, optional custom app placement of component
@@ -588,7 +587,23 @@
  *              'DATA_SECRET'|
  *              'DATA_EXPIRE'|
  *              'ACCESS_SECRET'|
- *              'ACCESS_EXPIRE'} config_apps_keys
+ *              'ACCESS_EXPIRE'|
+ *              'CONFIG'|
+ *              'RENDER_FILES'} config_apps_keys
+ * @typedef {{ MAP: boolean, 
+ *              RENDER_PROFILE_APPS:boolean,
+ *              CUSTOM_TAG_PROFILE_APPS:string|null,
+ *              RENDER_PROFILE_SEARCH:boolean,
+ *              CUSTOM_TAG_PROFILE_SEARCH:string|null,
+ *              RENDER_USER_ACCOUNT:boolean,
+ *              CUSTOM_TAG_USER_ACCOUNT:string|null,
+ *              RENDER_PROFILE_TOP:boolean,
+ *              CUSTOM_TAG_PROFILE_TOP:string|null,
+ *              RENDER_APP_THEMES:boolean, 
+ *              RENDER_LOCALES:boolean, 
+ *              RENDER_SETTINGS:boolean, 
+ *              RENDER_PROVIDER_BUTTONS:boolean}} config_apps_config
+ * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
  * @typedef  {object} config_apps_record
  * @property {function} filter
  * @property {function} reduce
@@ -615,6 +630,8 @@
  * @property {string} [DATA_EXPIRE]
  * @property {string} [ACCESS_SECRET]
  * @property {string} [ACCESS_EXPIRE]
+ * @property {config_apps_config} [CONFIG]
+ * @property {config_apps_render_files[]} [RENDER_FILES]
  * 
  * @typedef  {object} config_apps_with_db_columns
  * @property {number} APP_ID
