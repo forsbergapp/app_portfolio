@@ -9,7 +9,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  * 
  * @param {*} data
  */
-const ConfigSave =  data => service.ConfigSave(data.file, data.config_json, false);
+const ConfigSave =  data => service.ConfigSave(data.config_json);
 /**
  * 
  * @param {*} query

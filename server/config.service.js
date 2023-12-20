@@ -233,7 +233,7 @@ const DefaultConfig = async () => {
         row.PATH                  = `${SLASH}microservice${SLASH}${row.PATH}${SLASH}`;
     });
     for (const config_row of config_obj){
-        await ConfigSave( config_row[0], config_row[1], true);
+        await file_create(config_row[0], config_row[1]);
     }
     return null;
 };
@@ -293,28 +293,26 @@ const ConfigGetSaved = file => file_get_cached(file);
 
 /**
  * Config save
- * @async
- * @param {Types.db_file_db_name} file
- * @param {Types.db_file_config_files} file_content
- * @param {boolean} first_time
+ * only one row should have second column not null
+ * @param {[  ['CONFIG', Types.config_server],
+ *            ['APPS', Types.config_apps],
+ *            ['IAM_BLOCKIP', Types.config_iam_blockip],
+ *            ['IAM_POLICY', Types.config_iam_policy],
+ *            ['IAM_USERAGENT', Types.config_iam_useragent],
+ *            ['IAM_USER', Types.config_iam_user],
+ *            ['MICROSERVICE_CONFIG', Types.microservice_config],
+ *            ['MICROSERVICE_SERVICES', Types.microservice_config_service]]} file_content
  */
-const ConfigSave = async (file, file_content, first_time) => {
-    if (first_time){
-        await file_create(file, file_content);
+const ConfigSave = async (file_content) => {
+    const file_config = await file_get(file_content.filter(file=>(file[1]))[0][0], true);
+    if (file_content[0][1]){
+        file_content[0][1].MAINTENANCE = file_config.file_content.MAINTENANCE;
+        file_content[0][1].CONFIGURATION = file_config.file_content.CONFIGURATION;
+        file_content[0][1].COMMENT = file_config.file_content.COMMENT;
+        file_content[0][1].CREATED = file_config.file_content.CREATED;
+        file_content[0][1].MODIFIED = new Date().toISOString();
     }
-    else{
-        const file_config = await file_get(file, true);
-        if (file=='CONFIG'){
-            if (file_content){
-                file_content.MAINTENANCE = file_config.file_content.MAINTENANCE;
-                file_content.CONFIGURATION = file_config.file_content.CONFIGURATION;
-                file_content.COMMENT = file_config.file_content.COMMENT;
-                file_content.CREATED = file_config.file_content.CREATED;
-                file_content.MODIFIED = new Date().toISOString();
-            }
-        }
-        await file_update(file, file_config.transaction_id, file_content);
-    }
+    await file_update(file_content.filter(file=>(file[1]))[0][0], file_config.transaction_id, file_content.filter(file=>(file[1]))[0][1]);
 };
 /**
  * Check first time
