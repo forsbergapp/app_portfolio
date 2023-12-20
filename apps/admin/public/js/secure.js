@@ -1178,7 +1178,6 @@ const button_save = async (item) => {
         }
         else
             if (item == 'config_save'){
-                let json_data;
                 const config_create_server_json = () => {
                     const config_json = [];
                     document.querySelectorAll('#list_config .list_config_group').forEach(e_group => 
@@ -1205,12 +1204,16 @@ const button_save = async (item) => {
                 };
                 //the filename is fetched from end of item name list_config_nav_X that is a li element
                 const file = document.querySelectorAll('#menu_6_content .list_nav li.list_nav_selected_tab')[0].id.substring(16).toUpperCase();
-                if (file == 'CONFIG')
-                    json_data = {   file:           file,
-                                    config_json:    config_create_server_json()};
-                else
-                    json_data = {   file:           file,
-                                    config_json:    JSON.parse(document.querySelector('#list_config_edit').innerHTML)};
+                const json_data = { config_json:    [
+                                                    ['CONFIG',                  file=='CONFIG'?config_create_server_json():null],
+                                                    ['APPS',                    file=='APPS'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
+                                                    ['IAM_BLOCKIP',             file=='IAM_BLOCKIP'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
+                                                    ['IAM_POLICY',              file=='IAM_POLICY'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
+                                                    ['IAM_USERAGENT',           file=='IAM_USERAGENT'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
+                                                    ['IAM_USER',                file=='IAM_USER'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
+                                                    ['MICROSERVICE_CONFIG',     file=='MICROSERVICE_CONFIG'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
+                                                    ['MICROSERVICE_SERVICES',   file=='MICROSERVICE_SERVICES'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null]
+                                                    ]};
                 const old_button = document.querySelector('#' + item).innerHTML;
                 document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
                 common.FFB ('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data, () => {
