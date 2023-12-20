@@ -129,30 +129,10 @@ const nvl = value => value==null?'':value;
  * @param {string} locale
  * @returns {Promise.<Types.app_create|Types.app_create_empty>}
  */
-const createApp = (app_id, username, locale) => {
+const createApp = async (app_id, username, locale) => {
+    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
     return new Promise((resolve, reject) => {
         const main = async (/**@type{number}*/app_id) => {
-            const files = [
-                ['APP', process.cwd() + '/apps/app2/src/index.html'],
-                ['<AppReportsFonts/>', process.cwd() + '/apps/app2/src/fonts.html'],
-                ['<AppToolbarTop/>', process.cwd() + '/apps/app2/src/toolbar_top.html'],
-                ['<AppPaper/>', process.cwd() + '/apps/app2/src/paper.html'],
-                ['<AppSettingsTabNavigation/>', process.cwd() + '/apps/app2/src/settings_tab_navigation.html'],
-                ['<AppSettingsTabNavigationTab1/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab1.html'],
-                ['<AppSettingsTabNavigationTab2/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab2.html'],
-                ['<AppSettingsTabNavigationTab3/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab3.html'],
-                ['<AppSettingsTabNavigationTab4/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab4.html'],
-                ['<AppSettingsTabNavigationTab5/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab5.html'],
-                ['<AppSettingsTabNavigationTab6/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab6.html'],
-                ['<AppSettingsTabNavigationTab7/>', process.cwd() + '/apps/app2/src/settings_tab_navigation_tab7.html'],
-                ['<AppDialogues/>', process.cwd() + '/apps/app2/src/dialogues.html'],
-                ['<AppToolbarBottom/>', process.cwd() + '/apps/app2/src/toolbar_bottom.html']
-            ];
-            //render after COMMON rendered
-            const fs = await import('node:fs');
-            //Profile tag in common body
-            const profile_info = await fs.promises.readFile(`${process.cwd()}/apps/app2/src/profile_info.html`, 'utf8');
-            const profile_top = await fs.promises.readFile(`${process.cwd()}/apps/app2/src/profile_top.html`, 'utf8');
             let USER_TIMEZONE ='';
             let USER_DIRECTION='';
             let USER_ARABIC_SCRIPT='';
@@ -169,17 +149,7 @@ const createApp = (app_id, username, locale) => {
             let APP_HIJRI_DATE_ADJUSTMENT='';
             let APP_IQAMAT='';
             let APP_FAST_START_END='';
-            render_app_html(app_id, files, {locale:locale, 
-                                            module_type:'APP', 
-                                            map: true, 
-                                            custom_tag_profile_search:'<AppProfileSearch/>',
-                                            custom_tag_user_account:'<AppUserAccount/>',
-                                            custom_tag_profile_top:'<AppProfileBtnTop/>',
-                                            app_themes:true, 
-                                            render_locales:true, 
-                                            render_settings:true, 
-                                            render_provider_buttons:true
-                                        }, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
+            render_app_html(app_id, 'APP', locale, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
                 if (err)
                     reject(err);
                 else{
@@ -258,8 +228,6 @@ const createApp = (app_id, username, locale) => {
                     }
                     //render profile_info after COMMON:
                     const render_variables = [];
-                    render_variables.push(['AppProfileInfo',profile_info]);
-                    render_variables.push(['AppProfileTop',profile_top]);
                     render_variables.push(['AppLocales',app.locales]);
                     //add extra option for second locale
                     render_variables.push(['AppLocalessecond',`<option id='' value='0' selected='selected'>None</option>${app.locales}`]);
@@ -288,9 +256,12 @@ const createApp = (app_id, username, locale) => {
                     //used several times:
                     render_variables.push(['AppIqamat',APP_IQAMAT]);
                     render_variables.push(['AppFaststartend',APP_FAST_START_END]);
+
+                    const app_config = ConfigGetApp(app_id, 'CONFIG');
+                    
                     resolve({app:render_app_with_data(app.app, render_variables),
                              map_styles: app.settings.map_styles,
-                             map:true});
+                             map:app_config.MAP});
                 }
             });
         };

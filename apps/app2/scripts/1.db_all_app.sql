@@ -205,7 +205,7 @@ INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_t
 --
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','APP_COPYRIGHT','{COPYRIGHT TEXT}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','APP_DEFAULT_STARTUP_PAGE','3','1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile');
-INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','APP_REPORT_TIMETABLE','timetable.html',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'0','APP_REPORT_TIMETABLE','TIMETABLE',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','INFO_EMAIL_DISCLAIMER','{EMAIL_DISCLAIMER}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','INFO_EMAIL_POLICY','{EMAIL_POLICY}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (2,'1','INFO_EMAIL_TERMS','{EMAIL_TERMS}',NULL);
