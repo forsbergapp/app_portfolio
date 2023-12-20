@@ -137,7 +137,7 @@ const file_get = async (file, lock=false) =>{
 /**
  * 
  * @param {Types.db_file_db_name} file
- * @returns {object|null}
+ * @returns {*}
  */
  const file_get_cached = file => fileDB(file).CACHE_CONTENT ?? null;
 /**
@@ -149,6 +149,13 @@ const file_get = async (file, lock=false) =>{
         if ('CACHE_CONTENT' in file_db_record){
             const fileBuffer = await fs.promises.readFile(process.cwd() + file_db_record.PATH, 'utf8');    
             file_db_record.CACHE_CONTENT = JSON.parse(fileBuffer.toString());
+        }
+    }
+    /**@ts-ignore */
+    for (const app of fileDB('APPS').CACHE_CONTENT.APPS){
+        for (const renderfile of app.RENDER_FILES){
+            //save file content (html) in new arrayindex so apps can read files faster
+            renderfile.push(await fs.promises.readFile(process.cwd() + renderfile[3], 'utf8').then(filebuffer=>filebuffer.toString()));
         }
     }
  };
@@ -220,4 +227,5 @@ const create_config_and_logs_dir = async () => {
         });
     }
 };
+
 export {file_get, file_get_cached, file_set_cache_all, file_update, file_create, create_config_and_logs_dir};

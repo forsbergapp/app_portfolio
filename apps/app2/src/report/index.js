@@ -12,31 +12,19 @@ const { timetable } = await import(`file://${process.cwd()}/apps/app2/src/report
  * @param {Types.report_create_parameters} report_parameters
  * @returns {Promise.<string>}
  */
-const createReport= (app_id, report_parameters) => {
-    return new Promise((resolve, reject) => {
-        const files = [
-            ['REPORT', process.cwd() + `/apps/app2/src/report/${report_parameters.reportname}`],
-            ['<AppCommonFonts/>', process.cwd() + '/apps/app2/src/fonts.html']
-        ];
-        render_report_html(app_id, files,(/**@type{Types.error}*/err, /**@type{string}*/report)=>{
-            if (err)
-                reject(err);
-            else{
-                timetable({ app_id:         report_parameters.app_id,
-                            reportid:       report_parameters.reportid,
-                            uid_view:       report_parameters.uid_view,
-                            ip:             report_parameters.ip,
-                            user_agent:     report_parameters.user_agent,
-                            accept_language:report_parameters.accept_language,
-                            latitude:       report_parameters.latitude,
-                            longitude:      report_parameters.longitude,
-                            url:            report_parameters.url,
-                            report:         report}).then((/**@type{string}*/report_rendered)=>{
-                    resolve(report_rendered);
-                });
-            }
+const createReport= async (app_id, report_parameters) => {
+    return await  
+        timetable({ app_id:         report_parameters.app_id,
+                    reportid:       report_parameters.reportid,
+                    uid_view:       report_parameters.uid_view,
+                    ip:             report_parameters.ip,
+                    user_agent:     report_parameters.user_agent,
+                    accept_language:report_parameters.accept_language,
+                    latitude:       report_parameters.latitude,
+                    longitude:      report_parameters.longitude,
+                    url:            report_parameters.url,
+                    report:         render_report_html(app_id, report_parameters.reportname)
         });
-    });
 };
 
 export{createReport};

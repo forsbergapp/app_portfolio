@@ -108,7 +108,9 @@ const app_portfolio_title = 'App Portfolio';
         case 'DATA_SECRET':
         case 'DATA_EXPIRE':
         case 'ACCESS_SECRET':
-        case 'ACCESS_EXPIRE':{
+        case 'ACCESS_EXPIRE':
+        case 'CONFIG':
+        case 'RENDER_FILES':{
             return Object.entries(file_get_cached('APPS'))[0][1].filter(
                 (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == config_group;})[0][parameter];
         }
