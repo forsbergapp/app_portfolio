@@ -2953,7 +2953,7 @@ const show_db_info = async () => {
                                 if (err)
                                     null;
                                 else{
-                                    const databaseInfoSpaceSum = JSON.parse(result);
+                                    const databaseInfoSpaceSum = JSON.parse(result)[0];
                                     document.querySelector('#menu_8_db_info_space_detail').innerHTML += 
                                         `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
                                             <div class='menu_8_db_info_space_detail_col'>
