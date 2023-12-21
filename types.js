@@ -546,7 +546,6 @@
  *              LEVEL_ERROR:string,
  *              LEVEL_INFO:string,
  *              FILE_INTERVAL:string,
- *              DATE_FORMAT:string,
  *              PATH_LOG:string}} config_server_service_log
  * @typedef  {{ ['SERVER']:[config_server_server], 
  *              ['SERVICE_IAM']:[config_server_service_iam],
