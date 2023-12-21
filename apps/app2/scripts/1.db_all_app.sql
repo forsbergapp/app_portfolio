@@ -63,14 +63,14 @@ INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_BASIC_MONTH','20021','Blue simple',NULL,NULL,NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_BASIC_MONTH','20022','Simple',NULL,NULL,NULL,NULL);
 
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_BASIC_YEAR','Simple','30001',NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_BASIC_YEAR','30001','Simple',NULL,NULL,NULL,NULL);
 
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_PREMIUM_MONTH','Pink with Cinzel Decorative','20030',NULL,NULL,NULL,NULL);
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_PREMIUM_MONTH','Blue gold with Caveat and Montserrat','20031',NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_PREMIUM_MONTH','20030','Pink with Cinzel Decorative',NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'REPORT_THEME_PREMIUM_MONTH','20031','Blue gold with Caveat and Montserrat',NULL,NULL,NULL,NULL);
 
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'PLACE','Kaaba, Masjid al-Haram, Makkah','40002','+21.4225','+39.8262','Asia/Riyadh','🕌');
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'PLACE','Al-Masjid an-Nabawi, Medina','40003','+24.469','+39.611','Asia/Riyadh','🕌');
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'PLACE','Al-Aqsa, Jerusalem','40004','+31.7765','+35.2356','Asia/Jerusalem','🕌');
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'PLACE','40002','Kaaba, Masjid al-Haram, Makkah','+21.4225','+39.8262','Asia/Riyadh','🕌');
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'PLACE','40003','Al-Masjid an-Nabawi, Medina','+24.469','+39.611','Asia/Riyadh','🕌');
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'PLACE','40004','Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Jerusalem','🕌');
 
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'COLUMN_TITLE','0','0',NULL,NULL,NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (2,'COLUMN_TITLE','1','1',NULL,NULL,NULL,NULL);
