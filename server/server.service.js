@@ -392,7 +392,7 @@ const COMMON = {
                     break;
                 }
                 case 'ADMIN_SERVER_/CONFIG/ADMIN_GET':{
-                    resolve(config.ConfigGet(query.get('config_group'), query.get('parameter')));
+                    resolve(config.ConfigGet(query));
                     break;
                 }
                 case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
