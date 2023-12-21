@@ -31,13 +31,7 @@ const APP_GLOBAL = {
     service_log_level_verbose:'',
     service_log_level_error:'',
     service_log_level_info:'',
-    service_log_file_interval:'',
-    service_log_file_path_server:'',
-    service_log_destination:'',
-    service_log_url_destination:'',
-    service_log_url_destination_username:'',
-    service_log_url_destination_password:'',
-    service_log_date_format:''
+    service_log_file_interval:''
 };
 Object.seal(APP_GLOBAL);
 const delete_globals = () => {
@@ -54,13 +48,7 @@ const delete_globals = () => {
     APP_GLOBAL.service_log_level_verbose = null;
     APP_GLOBAL.service_log_level_error = null;
     APP_GLOBAL.service_log_level_info = null;
-    APP_GLOBAL.service_log_destination = null;
-    APP_GLOBAL.service_log_url_destination = null;
-    APP_GLOBAL.service_log_url_destination_username = null;
-    APP_GLOBAL.service_log_url_destination_password = null;
     APP_GLOBAL.service_log_file_interval = null;
-    APP_GLOBAL.service_log_file_path_server = null;
-    APP_GLOBAL.service_log_date_format = null;
 };
 
 /*----------------------- */
@@ -3070,13 +3058,7 @@ const init = () => {
     APP_GLOBAL.service_log_level_verbose= '';
     APP_GLOBAL.service_log_level_error= '';
     APP_GLOBAL.service_log_level_info= '';                
-    APP_GLOBAL.service_log_destination= '';
-    APP_GLOBAL.service_log_url_destination= '';
-    APP_GLOBAL.service_log_url_destination_username= '';
-    APP_GLOBAL.service_log_url_destination_password= '';
     APP_GLOBAL.service_log_file_interval= '';
-    APP_GLOBAL.service_log_file_path_server= '';
-    APP_GLOBAL.service_log_date_format= '';
 
     if (common.COMMON_GLOBAL.system_admin==1){
         common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';

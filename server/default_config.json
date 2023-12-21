@@ -89,8 +89,7 @@
     {"LEVEL_VERBOSE": "VERBOSE", "COMMENT": ""},
     {"LEVEL_ERROR": "ERROR", "COMMENT": ""},
     {"LEVEL_INFO": "INFO", "COMMENT": ""},
-    {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"},
-    {"DATE_FORMAT": "", "COMMENT": "empty uses ISO8601 format 'yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z' "}
+    {"FILE_INTERVAL": "1D", "COMMENT": "1D or 1M"}
 ],
 "MAINTENANCE":0,
 "CONFIGURATION":"",

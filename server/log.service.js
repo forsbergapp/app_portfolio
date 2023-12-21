@@ -58,19 +58,9 @@ const {file_append} = await import(`file://${process.cwd()}/server/db/file.servi
 };
 /**
  * Log date format
- * @param {string} date_format 
  * @returns {string}
  */
-const logdate = (date_format) => {
-    const logdate = new Date();
-    if (date_format!='' && typeof date_format!='undefined'){
-        //ex ISO8601 format: "yyyy'-'MM'-'dd'T'HH':'mm':'ss'Z'"
-        /**@ts-ignore */
-        return logdate.format(date_format);
-    }
-    else
-        return logdate.toISOString();
-};
+const logdate = () => new Date().toISOString();
 /**
  * Log request error
  * @param {Types.req} req 
@@ -82,7 +72,7 @@ const logdate = (date_format) => {
  */
 const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
     return await new Promise((resolve) => {
-        const log_json_server = {   logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+        const log_json_server = {   logdate:            logdate(),
                                     host:               req.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
@@ -117,7 +107,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
         switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
             case '1':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
-                log_json_server = { logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                log_json_server = { logdate:            logdate(),
                                     host:               req.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
@@ -161,7 +151,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
                     if (rawheader.startsWith('Basic'))
                         logtext_req.rawHeaders[index] = 'Basic ...';
                 });
-                log_json_server = { logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                log_json_server = { logdate:            logdate(),
                                     host:               req.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
@@ -198,7 +188,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
 const LogServer = async (log_level, logtext) =>{
     return await new Promise((resolve) => {
         const log_json_server = {
-                                logdate: logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                                logdate: logdate(),
                                 logtext: logtext
                               };
         resolve(sendLog(ConfigGet('SERVICE_LOG', 'SCOPE_SERVER'), log_level, log_json_server));
@@ -241,7 +231,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
             case '1':{
                 level_info = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
                 log_json_db = {
-                                logdate:        logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                                logdate:        logdate(),
                                 app_id:         app_id,
                                 db:             db,
                                 sql:            sql,
@@ -253,7 +243,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
             case '2':{
                 level_info = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
                 log_json_db = {
-                                logdate:        logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                                logdate:        logdate(),
                                 app_id:         app_id,
                                 db:             db,
                                 sql:            sql,
@@ -282,7 +272,7 @@ const LogDBI = async (app_id, db, sql, parameters, result) => {
 const LogDBE = async (app_id, db, sql, parameters, result) => {
     return await new Promise((resolve) => {
         const log_json_db = {
-            logdate:        logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+            logdate:        logdate(),
             app_id:         app_id,
             db:             db,
             sql:            sql,
@@ -307,7 +297,7 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
         switch (ConfigGet('SERVICE_LOG', 'SERVICE_LEVEL')){
             case '1':{
                 level_info = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
-                log_json = {logdate:    logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                log_json = {logdate:    logdate(),
                             app_id:     app_id,
                             service:    service,
                             parameters: parameters,
@@ -317,7 +307,7 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
             }
             case '2':{
                 level_info = ConfigGet('SERVICE_LOG', 'LEVEL_VERBOSE');
-                log_json = {logdate:    logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                log_json = {logdate:    logdate(),
                             app_id:     app_id,
                             service:    service,
                             parameters: parameters,
@@ -344,7 +334,7 @@ const LogServiceI = async (app_id, service, parameters, logtext) => {
 const LogServiceE = async (app_id, service, parameters, logtext) => {
     return await new Promise((resolve) => {    
         const log_json = {
-                        logdate:    logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                        logdate:    logdate(),
                         app_id:     app_id,
                         service:    service,
                         parameters: parameters,
@@ -366,7 +356,7 @@ const LogServiceE = async (app_id, service, parameters, logtext) => {
 const LogApp = async (app_id, level_info, app_filename, app_function_name, app_line, logtext) => {
     return await new Promise((resolve) => {
     const log_json ={
-                    logdate:            logdate(ConfigGet('SERVICE_LOG', 'DATE_FORMAT')),
+                    logdate:            logdate(),
                     app_id:             app_id,
                     app_filename:       app_filename,
                     app_function_name:  app_function_name,
