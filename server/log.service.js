@@ -4,7 +4,8 @@
 import * as Types from './../types.js';
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-const fs = await import('node:fs');
+const {file_append} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+
 /**
  * Get log parameters
  */
@@ -33,37 +34,26 @@ const fs = await import('node:fs');
  * @returns {Promise.<null>}
  */
  const sendLog = async (logscope, loglevel, log) => {
-    return await new Promise((resolve) => {
-        try{        
-            let filename = '';
-            const logdate = new Date();
-            const log_json = JSON.stringify(log);
-            const month = logdate.toLocaleString('en-US', { month: '2-digit'});
-            const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
-            const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-            if (config_file_interval=='1D')
-                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-            else{
-                if (config_file_interval=='1M')
-                    filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-                else
-                    filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-            }
-            fs.appendFile(process.cwd() + ConfigGet('SERVICE_LOG','PATH_LOG') + filename, log_json + '\r\n', 'utf8', (err) => {
-                if (err) {
-                    console.log(err);
-                    console.log(log);
-                    resolve(null);
-                }
-                else
-                    resolve(null);
-            });
+    return await new Promise((resolve) => {    
+        let filename = '';
+        const logdate = new Date();
+        const month = logdate.toLocaleString('en-US', { month: '2-digit'});
+        const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
+        const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
+        if (config_file_interval=='1D')
+            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
+        else{
+            if (config_file_interval=='1M')
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
+            else
+                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
         }
-        catch(err){
-            console.log(err);
+        file_append(`LOG_${logscope}_${loglevel}` , ConfigGet('SERVICE_LOG','PATH_LOG') + filename, log)
+        .then(()=>resolve(null))
+        .catch((/**@type{Types.error}*/error)=>{
+            console.log(error);
             console.log(log);
-            resolve(null);
-        }
+            resolve(null);});
     });
 };
 /**

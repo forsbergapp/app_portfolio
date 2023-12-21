@@ -43,7 +43,7 @@ const fileDB = filename =>FILE_DB.filter(file_db=>file_db.NAME == filename)[0];
 /**
  * 
  * @param {Types.db_file_db_name} file 
- * @param {object} filecontent
+ * @param {object|string} filecontent
  * @returns {Promise.<number>}
  */
 const transaction_start = async (file, filecontent)=>{
@@ -209,6 +209,32 @@ const file_create = async (file, file_content) =>{
         throw error;
     });
 };
+/**
+ * 
+ * @param {Types.db_file_db_name} file 
+ * @param {string} filepath 
+ * @param {object} file_content 
+ */
+const file_append = async (file, filepath, file_content) =>{
+    const old_file = await fs.promises.readFile(process.cwd() + filepath, 'utf8')
+    .catch(()=>null);
+    const transaction_id = await transaction_start(file, old_file ?? '');
+    
+    await fs.promises.appendFile(process.cwd() + `${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+    .then(()=>{
+        if (transaction_commit(file, transaction_id))
+            return null;
+        else
+            throw ('⛔');
+    })
+    .catch((error)=>{
+        if (transaction_rollback(file, transaction_id))
+            throw(error);
+        else
+            throw('⛔ ' + error);
+    });
+};
+
 const create_config_and_logs_dir = async () => {
     const mkdir = async (/**@type{string} */dir) =>{
         await fs.promises.mkdir(process.cwd() + dir)
@@ -228,4 +254,4 @@ const create_config_and_logs_dir = async () => {
     }
 };
 
-export {file_get, file_get_cached, file_set_cache_all, file_update, file_create, create_config_and_logs_dir};
+export {file_get, file_get_cached, file_set_cache_all, file_update, file_create, file_append, create_config_and_logs_dir};
