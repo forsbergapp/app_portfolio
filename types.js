@@ -839,7 +839,7 @@
  * @typedef {{  NAME:db_file_db_name, 
  *              LOCK:number, 
  *              TRANSACTION_ID:number|null, 
- *              TRANSACTION_CONTENT: object|null, 
+ *              TRANSACTION_CONTENT: object|string|null, 
  *              PATH:string|null, 
  *              CACHE_CONTENT?:object|null }} db_file_db_record
  * 
