@@ -159,7 +159,7 @@ const render_common_html = async (app_id, module, locale) =>{
     /** @type {[string, string][]} */
     const render_variables = [];
 
-    if ((app_id== getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && await app_start())){
+    if ((app_id== getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && await app_start()==false)){
             //if admin app and system admin only
             app_config.RENDER_LOCALES = false;
             app_config.RENDER_SETTINGS = false;
