@@ -153,6 +153,7 @@
  * @property {function} type
  * @property {function} end
  * @property {function} send
+ * @property {function} sendFile
  * @property {function} redirect 
  * @property {function} getHeader
  * @property {function} setHeader
@@ -569,9 +570,7 @@
  *              'NAME'|
  *              'SUBDOMAIN'|
  *              'PATH'|
- *              'ENDPOINT'|
  *              'LOGO'|
- *              'MANIFEST'|
  *              'JS'|
  *              'JS_SECURE'|
  *              'JS_REPORT'|
@@ -589,7 +588,8 @@
  *              'ACCESS_EXPIRE'|
  *              'CONFIG'|
  *              'RENDER_FILES'} config_apps_keys
- * @typedef {{ MAP: boolean, 
+ * @typedef {{  MAP: boolean, 
+ *              MANIFEST:boolean,
  *              RENDER_PROFILE_APPS:boolean,
  *              CUSTOM_TAG_PROFILE_APPS:string|null,
  *              RENDER_PROFILE_SEARCH:boolean,
@@ -611,9 +611,7 @@
  * @property {string} NAME
  * @property {string} SUBDOMAIN
  * @property {string} PATH
- * @property {string} ENDPOINT
  * @property {string} LOGO
- * @property {string} MANIFEST
  * @property {string} JS
  * @property {string} JS_SECURE
  * @property {string} JS_REPORT
@@ -637,9 +635,7 @@
  * @property {string} NAME
  * @property {string} SUBDOMAIN
  * @property {string} PATH
- * @property {string} ENDPOINT
  * @property {string} LOGO
- * @property {string} MANIFEST
  * @property {string} JS
  * @property {string} JS_REPORT
  * @property {string} CSS
@@ -660,9 +656,7 @@
  * @property {string} NAME
  * @property {string} SUBDOMAIN
  * @property {string} PATH
- * @property {string} ENDPOINT
  * @property {string} LOGO
- * @property {string} MANIFEST
  * @property {string} JS
  * @property {string} JS_REPORT
  * @property {string} CSS

@@ -181,7 +181,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	width:300px;
 }
 #common_maintenance_logo {
-	background-image: url('/admin/images/logo.png');
+	background-image: url('/common/images/logo_maintenance.png');
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;
@@ -257,7 +257,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	background-color:var(--app_blue1);
 }
 #common_broadcast_info_logo {
-	background-image: url('/admin/images/logo.png');
+	background-image: url('/common/images/logo_broadcast.png');
 	background-size: contain;
 	background-position: center;
 	background-repeat: no-repeat;

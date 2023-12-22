@@ -2,16 +2,16 @@ const common = await import('common');
 const APP_GLOBAL = {
                     'docs':[{'id':1,
                             'doc_title':'Diagram',
-                            'doc_url':'/app1/images/app_portfolio.webp',
-                            'doc_url_small':'/app1/images/app_portfolio_small.webp'},
+                            'doc_url':'/common/documents/app_portfolio.webp',
+                            'doc_url_small':'/common/documents/app_portfolio_small.webp'},
                             {'id':2,
                             'doc_title':'Data Model',
-                            'doc_url':'/app1/images/data_model.webp',
-                            'doc_url_small':'/app1/images/data_model_small.webp'},
+                            'doc_url':'/common/documents/data_model.webp',
+                            'doc_url_small':'/common/documents/data_model_small.webp'},
                             {'id':3,
                             'doc_title':'Property Management',
-                            'doc_url':'/app3/images/datamodel_pm.webp',
-                            'doc_url_small':'/app3/images/datamodel_pm_small.webp'}
+                            'doc_url':'/common/documents/datamodel_pm.webp',
+                            'doc_url_small':'/common/documents/datamodel_pm_small.webp'}
                             ]
 };
 Object.seal(APP_GLOBAL);
