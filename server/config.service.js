@@ -46,9 +46,7 @@ const app_portfolio_title = 'App Portfolio';
                                                                 app.concat({APP_ID:current.APP_ID,
                                                                             NAME:current.NAME,
                                                                             PATH:current.PATH,
-                                                                            ENDPOINT:current.ENDPOINT,
                                                                             LOGO:current.LOGO,
-                                                                            MANIFEST:current.MANIFEST,
                                                                             JS:current.JS,
                                                                             JS_REPORT:current.JS_REPORT,
                                                                             CSS:current.CSS,
@@ -91,9 +89,7 @@ const app_portfolio_title = 'App Portfolio';
         //config_group = app id, return parameter value for given app id
         case 'NAME':
         case 'PATH':
-        case 'ENDPOINT':
         case 'LOGO':
-        case 'MANIFEST':
         case 'JS':
         case 'JS_SECURE':
         case 'JS_REPORT':

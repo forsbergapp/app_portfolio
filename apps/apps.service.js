@@ -345,8 +345,8 @@ const render_common_html = async (app_id, module, locale) =>{
             render_variables.push(['APP_CSS_REPORT',`<link rel='stylesheet' type='text/css' href='${ConfigGetApp(app_id, 'CSS_REPORT')}'/>`]);
         else
             render_variables.push(['APP_CSS_REPORT','']);
-        if (ConfigGetApp(app_id, 'MANIFEST') != '')
-            render_variables.push(['APP_MANIFEST',`<link rel='manifest' href='${ConfigGetApp(app_id, 'MANIFEST')}'/>`]);
+        if (app_config.MANIFEST == true)
+            render_variables.push(['APP_MANIFEST','<link rel=\'manifest\' href=\'/manifest.json\'/>']);
         else
             render_variables.push(['APP_MANIFEST','']);
         if (ConfigGetApp(app_id, 'FAVICON_32x32') != '')
@@ -1048,25 +1048,29 @@ const providers_buttons = async (app_id) =>{
 const getApps = async (app_id, id, lang_code) =>{
     const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
     const {ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
+    const fs = await import('node:fs');
 
     /**@type{Types.db_result_app_getApp[]}*/
     const apps_db =  await getApp(app_id, id, lang_code);
     const apps_registry = ConfigGetApps().filter((/**@type{Types.config_apps_record}*/app)=>app.APP_ID==id || id == 0);
     /**@type{Types.config_apps_with_db_columns[]}*/
-    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
+    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=>
                                         app.concat({APP_ID:current.APP_ID,
                                                     NAME:current.NAME,
-                                                    LOGO:current.LOGO,
+                                                    LOGO:current.PATH + current.LOGO,
                                                     SUBDOMAIN:current.SUBDOMAIN
-                                                    }) , []);    
+                                                    }) , []);
     
-    apps.map(app=>{
+    for (const app of apps){
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
         app.HOST = ConfigGet('SERVER', 'HOST');
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
         app.APP_CATEGORY = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_category;
         app.APP_DESCRIPTION = apps_db.filter(app_db=>app_db.id==app.APP_ID)[0].app_description;
-    });
+        const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
+        /**@ts-ignore */
+        app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+    }
 	return apps;
 };
 
