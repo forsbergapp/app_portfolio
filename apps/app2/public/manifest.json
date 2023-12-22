@@ -9,12 +9,12 @@
     "orientation": "portrait-primary",
     "icons": [
     {
-        "src": "/app2/images/pwa/icon-192x192.png",
+        "src": "/images/pwa/icon-192x192.png",
         "type": "image/png",
         "sizes": "192x192"
     },
     {
-        "src": "/app2/images/pwa/icon-512x512.png",
+        "src": "/images/pwa/icon-512x512.png",
         "type": "image/png",
         "sizes": "512x512"
     }
