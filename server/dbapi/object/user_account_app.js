@@ -22,7 +22,7 @@ const update = (app_id, query, data) => {
         };
         service.updateUserAccountApp(app_id, getNumberValue(query.get('PATCH_ID')), data_update)
         .then((/**@type{Types.db_result_user_account_app_updateUserAccountApp}*/result)=>{
-            resolve({items: result});
+            resolve(result);
         })
         .catch((/**@type{Types.error}*/error)=>reject(error));
     });

@@ -1927,8 +1927,8 @@ const profile_user_setting_stat = (id) => {
         if (err)
             null;
         else{
-            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result).items.count_user_post_likes;
-            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result).items.count_user_post_liked;
+            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
+            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].items.count_user_post_liked;
         }
     });
 };

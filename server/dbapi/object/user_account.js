@@ -625,12 +625,12 @@ const updateAdmin =(app_id, query, data, res) =>{
                         import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app.service.js`).then(({ deleteUserAccountApps }) => {
                             deleteUserAccountApps(app_id, getNumberValue(query.get('PUT_ID')), app_id)
                             .then(()=>{
-                                resolve({data: result_update});
+                                resolve(result_update);
                             });
                         });
                     }
                     else
-                        resolve({data: result_update});
+                        resolve(result_update);
                 })
                 .catch((/**@type{Types.error}*/error)=>{
                     checked_error(app_id, query.get('lang_code'), error, res).then((/**@type{string}*/message)=>reject(message));

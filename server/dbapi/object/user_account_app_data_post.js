@@ -38,7 +38,7 @@ const getProfileUserPost = (app_id, query, res) =>{
         service.getProfileUserPost(app_id, getNumberValue(query.get('id')))
         .then((/**@type{Types.db_result_user_account_app_data_post_getProfileUserPost[]}*/result)=>{
             if (result[0])
-                resolve({items: result[0]});
+                resolve(result);
             else
                 import(`file://${process.cwd()}/server/dbapi/common/common.service.js`).then(({record_not_found}) => {
                     record_not_found(app_id, query.get('lang_code'), res).then((/**@type{string}*/message)=>reject(message));
