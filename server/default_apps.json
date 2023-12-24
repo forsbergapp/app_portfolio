@@ -1,5 +1,5 @@
 { "APPS":[
-    {"APP_ID": 0, "NAME": "Admin",          "SUBDOMAIN": "admin",   "PATH": "/apps/admin/public",   "LOGO":"/images/logo.png",    "JS":"/js/admin.js",  "JS_SECURE":"/js/secure.js",  "JS_REPORT":"",                         "CSS": "/css/admin.css",  "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",  "FAVICON_192x192":"/images/favicon-192x192.png",  "SHOWINFO":0, "SHOWPARAM":0, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h",
+    {"APP_ID": 0, "NAME": "Admin",          "SUBDOMAIN": "admin",   "PATH": "/apps/admin/public",   "LOGO":"/images/logo.png",    "JS":"/js/admin.js",  "JS_SECURE":"/js/secure.js",  "JS_REPORT":"",                         "CSS": "/css/admin.css",  "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",  "FAVICON_192x192":"/images/favicon-192x192.png",  "SHOWINFO":0, "SHOWPARAM":0, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": true,
                 "MANIFEST":false,
                 "RENDER_PROFILE_APPS":false,
@@ -43,7 +43,7 @@
                     ["MAIL",                null,           "MailHeader",                   "/apps/common/src/mail_header_verification.html"],
                     ["MAIL",                null,           "MailBody",                     "/apps/common/src/mail_body_verification.html"]
     ]},
-    {"APP_ID": 1, "NAME": "App Portfolio",  "SUBDOMAIN": "www",     "PATH": "/apps/app1/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h",
+    {"APP_ID": 1, "NAME": "App Portfolio",  "SUBDOMAIN": "www",     "PATH": "/apps/app1/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": true,
                 "MANIFEST":false,
                 "RENDER_PROFILE_APPS":true,
@@ -66,7 +66,7 @@
                     ["APP_OPTIONAL",        null,           "AppProfileInfo",               "/apps/app1/src/profile_info.html"],
                     ["APP_OPTIONAL",        null,           "CommonBodyThemes",             "/apps/app1/src/app_themes.html"]
     ]},
-    {"APP_ID": 2, "NAME": "Timetables",     "SUBDOMAIN": "app2",    "PATH": "/apps/app2/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"/js/app_report.js",   "CSS": "/css/app.css",   "CSS_REPORT": "/css/app_report.css", "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h", 
+    {"APP_ID": 2, "NAME": "Timetables",     "SUBDOMAIN": "app2",    "PATH": "/apps/app2/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"/js/app_report.js",   "CSS": "/css/app.css",   "CSS_REPORT": "/css/app_report.css", "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h", 
     "CONFIG":{  "MAP": true,
                 "MANIFEST":true,
                 "RENDER_PROFILE_APPS":false,
@@ -101,7 +101,7 @@
                     ["REPORT",              "TIMETABLE",    null,                           "/apps/app2/src/report/timetable.html"],
                     ["REPORT",              "TIMETABLE",    "AppCommonFonts",               "/apps/app2/src/fonts.html"]
     ]},
-    {"APP_ID": 3, "NAME": "Presentation",   "SUBDOMAIN": "app3",    "PATH": "/apps/app3/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h",
+    {"APP_ID": 3, "NAME": "Presentation",   "SUBDOMAIN": "app3",    "PATH": "/apps/app3/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": false,
                 "MANIFEST":false,
                 "RENDER_PROFILE_APPS":false,
@@ -120,7 +120,7 @@
                     ["APP",                 null,           null,                           "/apps/app3/src/index.html"],
                     ["APP",                 null,           "AppDialogues",                 "/apps/app3/src/dialogues.html"]
     ]},
-    {"APP_ID": 4, "NAME": "Maps",           "SUBDOMAIN": "app4",    "PATH": "/apps/app4/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "DATA_SECRET":"", "DATA_EXPIRE":"2d", "ACCESS_SECRET":"", "ACCESS_EXPIRE":"1h",
+    {"APP_ID": 4, "NAME": "Maps",           "SUBDOMAIN": "app4",    "PATH": "/apps/app4/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": true,
                 "MANIFEST":false,
                 "RENDER_PROFILE_APPS":false,

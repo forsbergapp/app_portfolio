@@ -262,7 +262,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
         });
     });
 };
-const get_report_url = (id, sid, papersize, item, format) => {
+const get_report_url = (id, sid, papersize, item, format, profile_display=true) => {
     const app_parameters = `app_id=${common.COMMON_GLOBAL.app_id}`;
     const report_module = `&module=${APP_GLOBAL.app_report_timetable}`;
     let module_parameters = `&id=${id}&sid=${sid}`;
@@ -272,6 +272,11 @@ const get_report_url = (id, sid, papersize, item, format) => {
         module_parameters += '&type=1';
     if (item == 'profile_user_settings_year' || item.substr(0,9)=='user_year')
         module_parameters += '&type=2';
+    if (profile_display){
+        //send viewing user account id if logged in or set empty
+        const uid_view = common.COMMON_GLOBAL.user_account_id==''?'':parseInt(common.COMMON_GLOBAL.user_account_id);
+        module_parameters += `&uid_view=${uid_view}`;
+    }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
     const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
     const encodedurl = common.toBase64(app_parameters +
@@ -442,7 +447,7 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.FFB ('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'DATA', null, (err, result) => {
+        await common.FFB ('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'APP_DATA', null, (err, result) => {
             if (err)
                 null;
             else{
@@ -1247,7 +1252,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 /*----------------------- */
 const user_settings_get = async () => {
     const select = document.querySelector('#setting_select_user_setting');
-    await common.FFB ('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'DATA', null, (err, result) => {
+    await common.FFB ('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_DATA', null, (err, result) => {
         if (err)
             null;
         else{
@@ -1659,7 +1664,7 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             break;
         }
     }
-    await common.FFB ('DB_API', path, method, 'ACCESS', json_data, (err, result) => {
+    await common.FFB ('DB_API', path, method, 'APP_ACCESS', json_data, (err, result) => {
         if (err){
             if (function_name !='ADD_LOGIN')
                 spinner_item.innerHTML = old_button;
@@ -1708,7 +1713,7 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 const old_button = document.querySelector('#setting_btn_user_delete').innerHTML;
                 document.querySelector('#setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'ACCESS', null, (err) => {
+                common.FFB ('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null, (err) => {
                     if (err){
                         document.querySelector('#setting_btn_user_delete').innerHTML = old_button;
                     }
@@ -1918,7 +1923,7 @@ const set_settings_select = () => {
 };
 
 const profile_user_setting_stat = (id) => {
-    common.FFB ('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'DATA', null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'APP_DATA', null, (err, result) => {
         if (err)
             null;
         else{
@@ -1942,10 +1947,9 @@ const profile_user_setting_link = (item) => {
                                      sid, 
                                      paper_size,
                                      item.id,
-                                     'HTML');
-            //send viewing user account id if logged in or set empty
-            const uid_view = common.COMMON_GLOBAL.user_account_id==''?'':parseInt(common.COMMON_GLOBAL.user_account_id);
-            common.show_window_info(2, null, 'HTML', `${url}&uid_view=${uid_view}`);
+                                     'HTML',
+                                     false);
+            common.show_window_info(2, null, 'HTML', `${url}`);
             break;
         }
         case 'profile_user_settings_like':{
@@ -1966,7 +1970,7 @@ const profile_show_user_setting = () => {
     document.querySelector('#profile_user_settings_row').style.display = 'block';
 
     common.FFB ('DB_API', `/user_account_app_data_post/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
-                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'DATA', null, (err, result) => {
+                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null, (err, result) => {
         if (err)
             null;
         else{
@@ -1997,7 +2001,7 @@ const profile_show_user_setting = () => {
 const profile_user_setting_update_stat = () => {
     const profile_id = document.querySelector('#common_profile_id').innerHTML;
     common.FFB ('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
-                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'DATA', null, (err, result) => {
+                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null, (err, result) => {
         if (err)
             null;
         else{
@@ -2032,7 +2036,7 @@ const user_settings_like = (user_account_app_data_post_id) => {
         else {
             method = 'DELETE';
         }
-        common.FFB ('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'ACCESS', json_data, (err) => {
+        common.FFB ('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'APP_ACCESS', json_data, (err) => {
             if (err)
                 null;
             else{

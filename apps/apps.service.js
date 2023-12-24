@@ -3,10 +3,12 @@
 import * as Types from './../types.js';
 
 
-const {CheckFirstTime, ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {CheckFirstTime, ConfigGet, ConfigGetAppHost, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 const {file_get_cached} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const { LogAppI, LogAppE } = await import(`file://${process.cwd()}/server/log.service.js`);
+const fs = await import('node:fs');
 
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 
 /**
  * Checks if ok to start app
@@ -415,9 +417,9 @@ const countries = (app_id, locale) => {
  * 
  * @async
  * @param {Types.app_info} app_info - app info configuration
- * @param {Types.callBack} callBack - CallBack with error and app/report html
+ * @returns {Promise.<string>}
  */
-const get_module_with_init = async (app_info, callBack) => {
+const get_module_with_initBFF = async (app_info) => {
     /**@type {[string, string][]} */
     const render_variables = [];
     /**
@@ -426,10 +428,9 @@ const get_module_with_init = async (app_info, callBack) => {
      * @param {string|null} countries 
      * @param {Types.db_result_app_parameter_getAppStartParameters[]|null} app_parameters 
      * @param {number} first_time 
-     * @returns 
+     * @returns {string}
      */
     const return_with_parameters = (module, countries, app_parameters, first_time)=>{
-
         /**@type{Types.app_service_parameters} */
         const app_service_parameters = {   
             app_id: app_info.app_id,
@@ -458,28 +459,26 @@ const get_module_with_init = async (app_info, callBack) => {
     
     if (app_info.system_admin_only==1){
         render_variables.push(['APP_NAME','SYSTEM ADMIN']);
-        callBack(null, return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0));
+        return return_with_parameters(app_info.module, null, null, CheckFirstTime()==true?1:0);
     }
     else{
         const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
         
         //fetch parameters for common_app_id and current app_id
-        getAppStartParameters(app_info.app_id)
-        .then((/** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/app_parameters)=>{
-            render_variables.push(['APP_NAME',ConfigGetApp(app_info.app_id, 'NAME')]);
-            if (app_info.map == true)
-                //fetch countries and return map styles
-                countries(app_info.app_id, app_info.locale).then((countries)=>{
-                    callBack(null, return_with_parameters(app_info.module, countries, app_parameters, 0));    
-                });
-            else{
-                //no countries or map styles
-                callBack(null, return_with_parameters(app_info.module, null, app_parameters, 0));
-            }
-        })
+        /** @type {Types.db_result_app_parameter_getAppStartParameters[]}*/
+        const app_parameters = await getAppStartParameters(app_info.app_id)
         .catch((/**@type{Types.error}*/error)=>{
-            callBack(error, null);
+            throw error;
         });
+        render_variables.push(['APP_NAME',ConfigGetApp(app_info.app_id, 'NAME')]);
+        if (app_info.map == true){
+            //fetch countries and return map styles
+            return return_with_parameters(app_info.module, await countries(app_info.app_id, app_info.locale), app_parameters, 0);
+        }
+        else{
+            //no countries or map styles
+            return return_with_parameters(app_info.module, null, app_parameters, 0);
+        }
     }        
 };
 
@@ -715,48 +714,22 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
         callBack(null, null);
 };
 /**
- * Gets modules APP or REPORT that performs these tasks:
- * 1. Creates data token
- * 2. Gets geodata for given ip adress
- * 3. Creates admin app, app with translation objects or report
- * 4. gets parameters for module
- * 5. logs in app log table if database is available
- * @async
- * @param {number} app_id                           - Application id
- * @param {Types.module_config} module_config       - Object with module configuration parameters
- * @param {Types.callBack} callBack                 - CallBack with error and success info
+ * Get app
+ * @param {number} app_id 
+ * @param {{param:string|null,
+ *          ip:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          host:string}} app_parameters
+ * @returns {Promise.<string|null>}
  */
-const getModule = async (app_id, module_config, callBack) =>{
+const getAppBFF = async (app_id, app_parameters) =>{
     //Data token
     const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const { BFF } = await import(`file://${process.cwd()}/server/bff.service.js`);
-    const { LogAppI } = await import(`file://${process.cwd()}/server/log.service.js`);
     const { COMMON } = await import(`file://${process.cwd()}/server/server.service.js`);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '1 ' + new Date().toISOString());
-    const datatoken = AuthorizeToken(app_id, 'DATA');
-    //get GPS from IP
-    
-    const result_gps = await BFF(app_id, null, 'GEOLOCATION', new Buffer(`/ip?ip=${module_config.ip}`).toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.host, module_config.user_agent, module_config.accept_language, module_config.body)
-    .catch((/**@type{Types.error}*/error)=>
-        callBack(error, null)
-    );
-    const result_geodata = {};
-    if (result_gps){
-        result_geodata.latitude = JSON.parse(result_gps).geoplugin_latitude;
-        result_geodata.longitude = JSON.parse(result_gps).geoplugin_longitude;
-        result_geodata.place =  JSON.parse(result_gps).geoplugin_city + ', ' +
-                                JSON.parse(result_gps).geoplugin_regionName + ', ' +
-                                JSON.parse(result_gps).geoplugin_countryName;
-        result_geodata.timezone = JSON.parse(result_gps).geoplugin_timezone;
-    }
-    else{
-        
-        const result_city = await BFF(app_id, null, 'WORLDCITIES', new Buffer('/city/random?').toString('base64'), module_config.ip, module_config.method, `Bearer ${datatoken}`, module_config.host, module_config.user_agent, module_config.accept_language, module_config.body);
-        result_geodata.latitude = JSON.parse(result_city).lat;
-        result_geodata.longitude = JSON.parse(result_city).lng;
-        result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
-        result_geodata.timezone = null;
-    }
+    const datatoken = AuthorizeToken(app_id, 'APP_DATA');
+    const result_geodata = await getAppGeodata(app_id, app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language, datatoken);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '2 ' +new Date().toISOString());
     /** @type {number} */
     let system_admin_only;
@@ -771,10 +744,10 @@ const getModule = async (app_id, module_config, callBack) =>{
     /**@type {[string, string][]} */
     const render_variables = [];
 
-    if (app_id == 0 && module_config.module_type=='APP'){
+    if (app_id == 0){
         //get app admin
         const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
-        app = await createAdmin(app_id, client_locale(module_config.accept_language));
+        app = await createAdmin(app_id, client_locale(app_parameters.accept_language));
         if (await app_start()==true){
             system_admin_only = 0;
         }
@@ -803,197 +776,180 @@ const getModule = async (app_id, module_config, callBack) =>{
     }
     else{
         system_admin_only = 0;
-        if (module_config.module_type=='APP'){
-            await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '3 ' +new Date().toISOString());
-            const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
-            app = await createApp(app_id, module_config.params, client_locale(module_config.accept_language));
-            await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '4 ' +new Date().toISOString());
-            if (app.app == null)
-                return callBack(null, null);
-            app_module_type = 'APP';
-            config_map = app.map;
-            config_map_styles = app.map_styles;
-            config_ui = true;
-            //get translation data
-            const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
-            const result_objects = await getObjects(app_id, client_locale(module_config.accept_language), 'APP', null);
-            await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '5 ' +new Date().toISOString());
-            for (const row of result_objects){
-                render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
-            }
-            app.app = render_app_with_data(app.app, render_variables);
+        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '3 ' +new Date().toISOString());
+        const {createApp} = await import(`file://${process.cwd()}/apps/app${app_id}/src/app.js`);
+        app = await createApp(app_id, app_parameters.param, client_locale(app_parameters.accept_language));
+        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '4 ' +new Date().toISOString());
+        if (app.app == null)
+            return null;
+        app_module_type = 'APP';
+        config_map = app.map;
+        config_map_styles = app.map_styles;
+        config_ui = true;
+        //get translation data
+        const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
+        const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
+        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '5 ' +new Date().toISOString());
+        for (const row of result_objects){
+            render_variables.push([`COMMON_TRANSLATION_${row.object_item_name.toUpperCase()}`, row.text]);
         }
-        else{
-            const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
-            /**@type{Types.report_create_parameters} */
-            const data = {  app_id:         app_id,
-                            reportid:       module_config.reportid,
-                            uid_view:       module_config.uid_view,
-                            reportname:     module_config.reportname,
-                            ip:             module_config.ip,
-                            user_agent:     module_config.user_agent,
-                            accept_language:module_config.accept_language,
-                            latitude:       result_geodata.latitude,
-                            longitude:      result_geodata.longitude,
-                            url:            module_config.url,
-                            report:         null};
-            const report = await createReport(app_id, data);
-            app = {app:report, map:false, map_styles:null};
-            app_module_type = 'REPORT';
-            config_map = null;
-            config_map_styles = null;
-            config_ui = null;
-        }
+        app.app = render_app_with_data(app.app, render_variables);
     }
-    /**
-     * @param {string} module
-     */
-    const log = module => {
-        //if app admin then log, system does not log in database
-        if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
-            import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`).then(({createLog}) => {
-                createLog(app_id,
-                        { app_id : app_id,
-                            app_module : 'APPS',
-                            app_module_type : app_module_type,
-                            app_module_request : module_config.url,
-                            app_module_result : result_geodata.place,
-                            app_user_id : null,
-                            user_language : client_locale(module_config.accept_language),
-                            user_timezone : result_geodata.timezone,
-                            user_number_system : null,
-                            user_platform : null,
-                            server_remote_addr : module_config.ip,
-                            server_user_agent : module_config.user_agent,
-                            server_http_host : module_config.host,
-                            server_http_accept_language : module_config.accept_language,
-                            client_latitude : result_geodata.latitude,
-                            client_longitude : result_geodata.longitude
-                        }).then(()=> {
-                            return callBack(null, module);
-                });
+    await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '6 ' +new Date().toISOString());
+    const app_with_init = await get_module_with_initBFF({   app_id:             app_id, 
+                                                            locale:             client_locale(app_parameters.accept_language),
+                                                            system_admin_only:  system_admin_only,
+                                                            map:                config_map, 
+                                                            map_styles:         config_map_styles,
+                                                            ui:                 config_ui,
+                                                            datatoken:          datatoken,
+                                                            latitude:           result_geodata.latitude,
+                                                            longitude:          result_geodata.longitude,
+                                                            place:              result_geodata.place,
+                                                            timezone:           result_geodata.timezone,
+                                                            module:             app.app});
+    //if app admin then log, system does not log in database
+    if (ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`)){
+        const {createLog} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_log.service.js`);
+        await createLog(app_id,
+            { app_id : app_id,
+                app_module : 'APPS',
+                app_module_type : app_module_type,
+                app_module_request : app_parameters.param,
+                app_module_result : result_geodata.place,
+                app_user_id : null,
+                user_language : client_locale(app_parameters.accept_language),
+                user_timezone : result_geodata.timezone,
+                user_number_system : null,
+                user_platform : null,
+                server_remote_addr : app_parameters.ip,
+                server_user_agent : app_parameters.user_agent,
+                server_http_host : app_parameters.host,
+                server_http_accept_language : app_parameters.accept_language,
+                client_latitude : result_geodata.latitude,
+                client_longitude : result_geodata.longitude
             });
-        else
-            return callBack(null, module);
-    };
-    if (module_config.module_type=='APP'){
-        await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '6 ' +new Date().toISOString());
-        get_module_with_init({  app_id:             app_id, 
-                                locale:             client_locale(module_config.accept_language),
-                                system_admin_only:  system_admin_only,
-                                map:                config_map, 
-                                map_styles:         config_map_styles,
-                                ui:                 config_ui,
-                                datatoken:          datatoken,
-                                latitude:           result_geodata.latitude,
-                                longitude:          result_geodata.longitude,
-                                place:              result_geodata.place,
-                                timezone:           result_geodata.timezone,
-                                module:             app.app}, (err, app_with_init) =>{
-                                log(app_with_init);
-        });
     }
-    else
-        log(app.app);
-    
+    return app_with_init;
 };
 /**
- * Gets app if app is ok to start or return maintenance, if app is admin then get admin app
- * @param {Types.req_app_parameters} req    - Request
- * @param {number} app_id                   - application id
- * @param {string|null} params              - parameter in url
- * @param {Types.callBack} callBack         - CallBack with error and success info
+ * 
+ * @param {number} app_id 
+ * @param {string} ip
+ * @param {string} host
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {string} reportid
+ * @param {number} messagequeue
+ * @returns {Promise.<{type: string, report:string}>}
  */
-const getApp = async (req, app_id, params, callBack) => {
-    if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || await app_start(app_id) ==true){  
-        getModule(app_id, {	module_type:'APP', 
-                            params:params,
-                            reportid:null,
-                            uid_view:null,
-                            reportname:null,
-                            url:null,
-                            ip:req.ip,
-                            method:req.method,
-                            user_agent: req.headers_user_agent,
-                            accept_language: req.headers_accept_language,
-                            host: req.headers_host,
-                            body: req.body
-                            }, (err, app) =>{
-            if (err)
-                callBack(null, null);
-            else
-                callBack(null, app);
-        });
-    }
-    else
-        callBack(null, getMaintenance(app_id));
-};
-/**
- * Creates report that performs these tasks:
- * 1. Checks if ok to get report or return maintenance
- * 2. Fetches papersize and margin parameters from encoded parameter
- * 3. If PDF then PUBLISH to message queue else get report
- * @async
- * @param {Types.req_report_parameters} req - Request
- * @param {number} app_id                   - application id
- * @param {Types.callBack} callBack         - CallBack with error and success info
- */
-const getReport = async (req, app_id, callBack) => {
-    if (await app_start(app_id) ==true){
-        const decodedparameters = Buffer.from(req.reportid, 'base64').toString('utf-8');
-        //example string:
-        //'app_id=2&module=TIMETABLE&id=1&sid=1&type=0&lang_code=en-us&format=PDF&ps=A4&hf=0'
-        
-        let query_parameters = '{';
-        decodedparameters.split('&').forEach((parameter, index)=>{
-            query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
-            if (index < decodedparameters.split('&').length - 1)
-                query_parameters += ',';
-        });
-        query_parameters += '}';
-        /** @type {Types.report_query_parameters}*/
-        const query_parameters_obj = JSON.parse(query_parameters);
+const getReport = async (app_id, ip, host, user_agent, accept_language, reportid, messagequeue) => {
+    const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const datatoken = AuthorizeToken(app_id, 'APP_DATA');
+    const result_geodata = await getAppGeodata(app_id, ip, user_agent, accept_language, datatoken);
+
+    const decodedparameters = Buffer.from(reportid, 'base64').toString('utf-8');
     
-        const ps = query_parameters_obj.ps; //papersize     A4/Letter
-        const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
+    let query_parameters = '{';
+    decodedparameters.split('&').forEach((parameter, index)=>{
+        query_parameters += `"${parameter.split('=')[0]}": "${parameter.split('=')[1]}"`;
+        if (index < decodedparameters.split('&').length - 1)
+            query_parameters += ',';
+    });
+    query_parameters += '}';
+    /** @type {Types.report_query_parameters}*/
+    const query_parameters_obj = JSON.parse(query_parameters);
+
+    const ps = query_parameters_obj.ps; //papersize     A4/Letter
+    const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
     
-        if (query_parameters_obj.format.toUpperCase() == 'PDF' && typeof req.messagequeue == 'undefined' ){
-            //PDF
-            const url = `${req.protocol}://${req.headers_host}/reports?ps=${req.ps}&hf=${req.hf}&reportid=${req.reportid}&messagequeue=1`;
-            //call message queue
-            const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
-            MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
-                .then((/**@type{string}*/pdf)=>{
-                    callBack(null, pdf);
-                })
+    if (query_parameters_obj.format.toUpperCase() == 'PDF' && typeof messagequeue == 'undefined' ){
+        //PDF
+        const url = `${host}/reports?ps=${ps}&hf=${hf}&reportid=${reportid}&messagequeue=1`;
+        //call message queue
+        const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+        return {type:'PDF',
+                report:await MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
                 .catch((/**@type{string}*/error)=>{
-                    callBack(error, null);
-                });
-        }
-        else{
-            getModule(app_id, {	module_type:'REPORT', 
-                                reportname:query_parameters_obj.module,
-                                reportid:req.reportid,
-                                uid_view: req.uid_view,
-                                params:null,
-                                ip:req.ip,
-                                method:req.method,
-                                user_agent: req.headers_user_agent,
-                                accept_language: req.headers_accept_language,
-                                url: req.url,
-                                host:req.headers_host,
-                                body: req.body
-                                }, (err, report)=>{
-                if (err)
-                    callBack(null, null);
-                else
-                    callBack(null, report);
-            });
-        }
+                        throw error;
+                })};
     }
-    else
-        callBack(null, getMaintenance(app_id));
+    else{
+        const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
+        /**@type{Types.report_create_parameters} */
+        const data = {  app_id:         app_id,
+                        reportid:       reportid,
+                        reportname:     query_parameters_obj.module,
+                        ip:             ip,
+                        user_agent:     user_agent,
+                        accept_language:accept_language,
+                        latitude:       result_geodata.latitude,
+                        longitude:      result_geodata.longitude,
+                        report:         null};
+        return {    type:'HTML',
+                    report:await createReport(app_id, data)
+                };
+    }
 };
+/**
+ * 
+ * @param {number} app_id 
+ * @param {string} ip 
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {string} datatoken 
+ * @returns 
+ */
+const getAppGeodata = async (app_id, ip, user_agent, accept_language, datatoken) =>{
+    const { BFF } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    //get GPS from IP
+    const result_gps = await BFF({  app_id:app_id, 
+                                    endpoint: 'APP', 
+                                    service:'GEOLOCATION', 
+                                    ip:ip, 
+                                    method:'GET', 
+                                    authorization:`Bearer ${datatoken}`, 
+                                    host:null, 
+                                    user_agent:user_agent, 
+                                    accept_language:accept_language,
+                                    url:null,
+                                    parameters:new Buffer(`/ip?ip=${ip}`).toString('base64'), 
+                                    body:null,
+                                    user_account_logon_user_account_id:null,
+                                    res:null})
+    .catch((/**@type{Types.error}*/error)=>error);
+    const result_geodata = {};
+    if (result_gps){
+        result_geodata.latitude = JSON.parse(result_gps).geoplugin_latitude;
+        result_geodata.longitude = JSON.parse(result_gps).geoplugin_longitude;
+        result_geodata.place =  JSON.parse(result_gps).geoplugin_city + ', ' +
+                                JSON.parse(result_gps).geoplugin_regionName + ', ' +
+                                JSON.parse(result_gps).geoplugin_countryName;
+        result_geodata.timezone = JSON.parse(result_gps).geoplugin_timezone;
+    }
+    else{
+        const result_city = await BFF({ app_id:app_id, 
+                                        endpoint: 'APP', 
+                                        service:'WORLDCITIES', 
+                                        ip:ip, 
+                                        method:'GET', 
+                                        authorization:`Bearer ${datatoken}`, 
+                                        host:null, 
+                                        user_agent:user_agent, 
+                                        accept_language:accept_language,
+                                        url:null,
+                                        parameters:new Buffer('/city/random?').toString('base64'), 
+                                        body:null,
+                                        user_account_logon_user_account_id:null,
+                                        res:null});
+        result_geodata.latitude = JSON.parse(result_city).lat;
+        result_geodata.longitude = JSON.parse(result_city).lng;
+        result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
+        result_geodata.timezone = null;
+    }
+    return result_geodata;
+};
+
 /**
  * Gets module maintenance
  * 
@@ -1105,11 +1061,185 @@ const getApps = async (app_id, id, lang_code) =>{
     //return apps with ID, NAME, LOGO, SUBDOMAIN, PROTOCOL, HOST, PORT, ENABLED, APP_CATEGORY_ID and APP_CATEGORY_TEXT only
 	return apps;
 };
-
+/**
+ * 
+ * @param {number} app_id
+ * @param {string} url 
+ * @param {string} basepath 
+ * @param {Types.res} res 
+ */
+const getAssetFile = (app_id, url, basepath, res) =>{
+    return new Promise((resolve, reject)=>{
+        switch (url.toLowerCase().substring(url.lastIndexOf('.'))){
+            case '.css':{
+                res.type('text/css');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                break;
+            }
+            case '.js':{
+                res.type('text/javascript');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                break;
+            }
+            case '.html':{
+                res.type('text/html');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                break;
+            }
+            case '.ogg':{
+                res.type('audio/ogg');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
+                .then((/**@type{*}*/audio)=>Buffer.from(audio, 'binary')));
+                break;
+            }
+            case '.webp':{
+                res.type('image/webp');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
+                .then((/**@type{*}*/image)=>Buffer.from(image, 'binary')));
+                break;
+            }
+            case '.png':{
+                res.type('image/png');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
+                .then((/**@type{*}*/image)=>Buffer.from(image, 'binary')));
+                break;
+            }
+            case '.woff2':{
+                res.type('font/woff');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
+                .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
+                break;
+            }
+            case '.ttf':{
+                res.type('font/ttf');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
+                .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
+                break;
+            }
+            case '.json':{
+                res.type('application/json');
+                resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
+                break;
+            }
+            default:{
+                LogAppE(app_id, COMMON.app_filename(import.meta.url), 'app.get("/")', COMMON.app_line(), `Invalid file type ${url}`)
+                .then(()=>{
+                    res.statusCode = 403;
+                    res.statusMessage = null;
+                    reject(null);
+                });
+            }
+        }
+    });
+};
+/**
+ * Get app asset, common asset, app info page, app report or app
+ * @param {string} ip
+ * @param {string} host
+ * @param {string} user_agent
+ * @param {string} accept_language
+ * @param {string} url
+ * @param {string} reportid
+ * @param {number} messagequeue
+ * @param {string} info
+ * @param {string} lang_code
+ * @param {Types.res} res
+ */
+const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, lang_code, res) =>{
+    const app_id = ConfigGetAppHost(host, 'SUBDOMAIN');
+    if (app_id==null){
+        res.statusCode = 301;
+        return null;
+    }
+    else
+        if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || await app_start(app_id) ==true)
+            return new Promise((resolve, reject)=>{
+                if (url.toLowerCase().startsWith('/css')||
+                    url.toLowerCase().startsWith('/images')||
+                    url.toLowerCase().startsWith('/js')||
+                    url.toLowerCase().startsWith('/common')||
+                    url == '/manifest.json'||
+                    url == '/sw.js')
+                    if (url.toLowerCase().startsWith('/common'))
+                        resolve(getAssetFile(app_id, url.toLowerCase().substring('/common'.length), '/apps/common/public', res)
+                                .catch(()=>null));
+                    else
+                        resolve(getAssetFile(app_id, url.toLowerCase(), ConfigGetApp(app_id,'PATH'), res)
+                                .catch(()=>null));
+                else
+                    if (info)
+                        if (ConfigGetApp(app_id, 'SHOWINFO')==1)
+                            switch (info){
+                                case 'about':
+                                case 'disclaimer':
+                                case 'privacy_policy':
+                                case 'terms':{
+                                    if (typeof lang_code !='undefined'){
+                                        lang_code = 'en';
+                                    }
+                                    getInfo(app_id, info, lang_code, (/**@type{Types.error}*/err, /**@type{Types.info_page_data}}*/info_result)=>{
+                                        //show empty if any error
+                                        if (err){
+                                            res.statusCode = 500;
+                                            res.statusMessage = err;
+                                            reject(err);
+                                        }
+                                        else
+                                            resolve(info_result);
+                                    });
+                                    break;
+                                }
+                                default:{
+                                    resolve(null);
+                                    break;
+                                }
+                            }
+                        else
+                            resolve(null);
+                    else
+                        if (url.toLowerCase().startsWith('/report'))
+                            getReport(app_id, ip, host, user_agent, accept_language, reportid, messagequeue)
+                            .then((report_result)=>{
+                                if (report_result.type=='PDF')
+                                    res.type('application/pdf');
+                                resolve(report_result.report);
+                            });
+                        else
+                            if ((ConfigGetApp(app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '') ||
+                                url == '/')
+                                LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '1 ' + new Date().toISOString())
+                                .then(()=>{
+                                    getAppBFF(app_id, 
+                                                {   param:          url.substring(1)==''?null:url.substring(1),
+                                                    ip:             ip, 
+                                                    user_agent:     user_agent,
+                                                    accept_language:accept_language,
+                                                    host:           host}).then(app_result=>{
+                                        LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '2 ' + new Date().toISOString())
+                                        .then(()=>{
+                                            resolve(app_result);
+                                        })
+                                        .catch((/**@type{Types.error}*/err)=>{
+                                            res.statusCode = 500;
+                                            res.statusMessage = err;
+                                            reject(err);
+                                        });
+                                    });
+                                });
+                            else{
+                                res.statusCode = 301;
+                                resolve(null);
+                            }
+            });
+        else
+            return getMaintenance(app_id);
+    
+};
 export {/*APP functions */
         app_start, render_app_html,render_report_html ,render_app_with_data,
         /*APP EMAIL functions*/
         createMail,
         /*APP ROUTER functiontions */
-        getApp, getReport, getInfo,getMaintenance,
-        getApps, getAppsAdmin};
+        getReport, getInfo,getMaintenance,
+        getApps, getAppsAdmin,
+        getAppMain};

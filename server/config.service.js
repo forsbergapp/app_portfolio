@@ -58,36 +58,40 @@ const app_portfolio_title = 'App Portfolio';
                                                                             SUBDOMAIN:current.SUBDOMAIN}) , []);
     return apps;                                                            
  };
+ /**
+  * 
+  * @param {string} host 
+  * @returns 
+  */
+ const ConfigGetAppHost = (host) =>{
+    switch (host.toString().split('.')[0]){
+        case 'localhost':
+        case 'www':{
+            //localhost
+            return Object.entries(file_get_cached('APPS'))[0][1].filter(
+                (/**@type{Types.config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
+        }
+        default:{
+            try {
+                return Object.entries(file_get_cached('APPS'))[0][1].filter(
+                    (/**@type{Types.config_apps_record}*/app)=>{return host.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
+            } catch (error) {
+                //request can be called from unkown hosts
+                return null;
+            }
+        }
+    }
+ };
 /**
  * Config get app
- * @param {string|number} config_group
+ * @param {number} app_id
  * @param {Types.config_apps_keys} parameter
  * @returns {object|null}
  */
- const ConfigGetApp = (config_group, parameter) => {
+ const ConfigGetApp = (app_id, parameter) => {
     switch(parameter){
-        //config_group = subdomain requested, return app id for given subdomain
-        case 'SUBDOMAIN':{
-            switch (config_group.toString().split('.')[0]){
-                case 'localhost':
-                case 'www':{
-                    //localhost
-                    return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                        (/**@type{Types.config_apps_record}*/app)=>{return app.SUBDOMAIN == 'www';})[0].APP_ID;
-                }
-                default:{
-                    try {
-                        return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                            (/**@type{Types.config_apps_record}*/app)=>{return config_group.toString().split('.')[0] == app.SUBDOMAIN;})[0].APP_ID;    
-                    } catch (error) {
-                        //request can be called from unkown hosts
-                        return null;
-                    }
-                }
-            }
-        }
-        //config_group = app id, return parameter value for given app id
         case 'NAME':
+        case 'SUBDOMAIN':
         case 'PATH':
         case 'LOGO':
         case 'JS':
@@ -101,14 +105,14 @@ const app_portfolio_title = 'App Portfolio';
         case 'SHOWPARAM':
         case 'CLIENT_ID':
         case 'CLIENT_SECRET':
-        case 'DATA_SECRET':
-        case 'DATA_EXPIRE':
-        case 'ACCESS_SECRET':
-        case 'ACCESS_EXPIRE':
+        case 'APP_DATA_SECRET':
+        case 'APP_DATA_EXPIRE':
+        case 'APP_ACCESS_SECRET':
+        case 'APP_ACCESS_EXPIRE':
         case 'CONFIG':
         case 'RENDER_FILES':{
             return Object.entries(file_get_cached('APPS'))[0][1].filter(
-                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == config_group;})[0][parameter];
+                (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == app_id;})[0][parameter];
         }
         default:{
             return null;
@@ -347,4 +351,4 @@ const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
 export{ CreateRandomString,
         ConfigMaintenanceSet, ConfigMaintenanceGet, ConfigGetSaved, ConfigSave, CheckFirstTime,
         CreateSystemAdmin, 
-        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetApp, InitConfig};
+        ConfigGet, ConfigGetUser, ConfigGetApps, ConfigGetAppHost, ConfigGetApp, InitConfig};
