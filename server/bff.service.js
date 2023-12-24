@@ -15,7 +15,7 @@ const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/c
     const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
     return new Promise((resolve, reject) => {
         if ((bff_parameters.endpoint=='APP' && bff_parameters.service=='APP') ||
-            bff_parameters.app_id && bff_parameters.endpoint && bff_parameters.service && bff_parameters.parameters){
+            (bff_parameters.app_id !=null && bff_parameters.endpoint && bff_parameters.service && bff_parameters.parameters)){
             try {
                 let decodedparameters = null;
                 if (bff_parameters.parameters){
