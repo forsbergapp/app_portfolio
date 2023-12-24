@@ -1161,10 +1161,10 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                     url == '/manifest.json'||
                     url == '/sw.js')
                     if (url.toLowerCase().startsWith('/common'))
-                        resolve(getAssetFile(app_id, url.toLowerCase().substring('/common'.length), '/apps/common/public', res)
+                        resolve(getAssetFile(app_id, url.substring('/common'.length), '/apps/common/public', res)
                                 .catch(()=>null));
                     else
-                        resolve(getAssetFile(app_id, url.toLowerCase(), ConfigGetApp(app_id,'PATH'), res)
+                        resolve(getAssetFile(app_id, url, ConfigGetApp(app_id,'PATH'), res)
                                 .catch(()=>null));
                 else
                     if (info)
