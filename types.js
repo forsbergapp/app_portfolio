@@ -1,3 +1,33 @@
+/** BFF
+ * @typedef {{app_id: req_id_number,
+ *          endpoint: string|null,
+ *          service: string,
+ *          ip: string,
+ *          host:string, 
+ *          method: string,
+ *          authorization:string,
+ *          user_agent:string,
+ *          accept_language:string,
+ *          url:string,
+ *          parameters: string
+ *          body:object,
+ *          user_account_logon_user_account_id:number|null,
+ *          res: res}} bff_parameters
+ * Routes paramaters
+ * @typedef {{  app_id: req_id_number,
+*               endpoint: string,
+*               service: string,
+*               ip: string,
+*               host:string,
+*               url:string,
+*               method: string,
+*               authorization:string,
+*               user_agent:string,
+*               accept_language:string,
+*               parameters: string
+*               body:*,
+*               res: res}} routesparameters
+ */
 /**
  * Server/Apps - Request verbose
  * @typedef {*} req_verbose
@@ -16,6 +46,8 @@
  * @property {string} protocol
  * @property {string} httpVersion
  * @property {[string]} rawHeaders
+ * @property {object} client
+ * @property {number} client.localPort
  * params
  * @property {object} params
  * @property {number} params.user_account_id                        - Admin parameter
@@ -178,23 +210,6 @@
  * @property {object} body
  */
 /**
- * Apps - Request report params
- * @typedef {Object}        req_report_parameters
- * @property {string}       reportid
- * @property {string}       messagequeue
- * @property {string}       ps
- * @property {boolean}      hf
- * @property {number|null}  uid_view
- * @property {string}       protocol
- * @property {string}       ip
- * @property {string}       method
- * @property {string}       headers_user_agent
- * @property {string}       headers_accept_language
- * @property {string}       headers_host
- * @property {string}       url
- * @property {object}       body
- */
-/**
  * Server - Request log params
  * @typedef {Object} req_log_parameters
  * @property {string} host
@@ -306,7 +321,6 @@
  * @property {string} user_agent        - request user agent
  * @property {string} accept_language   - request accept language
  * @property {string} host              - request host
- * @property {object} body              - request body
  */
 /**
  * Apps - App render common info settings
@@ -381,6 +395,8 @@
  * @property {string} ps
  * @property {number} hf
  * @property {string} format
+ * @property {number} uid_view
+ * @property {string} url
  */
 
 /**
@@ -388,14 +404,12 @@
  * @typedef {object}        report_create_parameters
  * @property {number}       app_id
  * @property {string|null}  reportid
- * @property {number|null}  uid_view
  * @property {string|null}  reportname
  * @property {string}       ip
  * @property {string}       user_agent
  * @property {string}       accept_language
  * @property {string}       latitude
  * @property {string}       longitude
- * @property {string|null}  url
  * @property {string|null}  report
  */
 /**
@@ -582,10 +596,10 @@
  *              'SHOWPARAM'|
  *              'CLIENT_ID'|
  *              'CLIENT_SECRET'|
- *              'DATA_SECRET'|
- *              'DATA_EXPIRE'|
- *              'ACCESS_SECRET'|
- *              'ACCESS_EXPIRE'|
+ *              'APP_DATA_SECRET'|
+ *              'APP_DATA_EXPIRE'|
+ *              'APP_ACCESS_SECRET'|
+ *              'APP_ACCESS_EXPIRE'|
  *              'CONFIG'|
  *              'RENDER_FILES'} config_apps_keys
  * @typedef {{  MAP: boolean, 

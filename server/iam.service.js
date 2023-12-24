@@ -72,7 +72,7 @@ const AuthenticateSystemadmin =(app_id, authorization, res)=>{
  const AuthenticateDataToken = async (app_id, token, res, next) =>{
     if (token){
         token = token.slice(7);
-        verify(token, ConfigGetApp(app_id, 'DATA_SECRET'), (/**@type{Types.error}*/err) => {
+        verify(token, ConfigGetApp(app_id, 'APP_DATA_SECRET'), (/**@type{Types.error}*/err) => {
             if (err){
                 res.status(401).send('⛔');
             } else {
@@ -128,7 +128,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, res, next) =>{
  const AuthenticateAccessTokenCommon = (app_id, authorization, ip, user_account_logon_user_account_id, res, next) => {
     if (authorization){
         const token = authorization.slice(7);
-        verify(token, ConfigGetApp(app_id, 'ACCESS_SECRET'), (/**@type{Types.error}*/err) => {
+        verify(token, ConfigGetApp(app_id, 'APP_ACCESS_SECRET'), (/**@type{Types.error}*/err) => {
             if (err)
                 res.status(401).send('⛔');
             else {
@@ -242,7 +242,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  const AuthenticateDataTokenSocket = async (app_id, token) =>{
     if (token){
         token = token.slice(7);
-        verify(token, ConfigGetApp(app_id, 'DATA_SECRET'), (/**@type{Types.error}*/err) => {
+        verify(token, ConfigGetApp(app_id, 'APP_DATA_SECRET'), (/**@type{Types.error}*/err) => {
             if (err){
                 return false;
             } else {
@@ -443,21 +443,21 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  * Authorize token
  * 
  * @param {number} app_id
- * @param {'DATA'|'ACCESS'|'SYSTEMADMIN'} tokentype
+ * @param {'APP_DATA'|'APP_ACCESS'|'SYSTEMADMIN'} tokentype
  * @returns {string}
  */
  const AuthorizeToken = (app_id, tokentype)=>{
     let secret = '';
     let expiresin = '';
     switch (tokentype){
-        case 'DATA':{
-            secret = ConfigGetApp(app_id, 'DATA_SECRET');
-            expiresin = ConfigGetApp(app_id, 'DATA_EXPIRE');
+        case 'APP_DATA':{
+            secret = ConfigGetApp(app_id, 'APP_DATA_SECRET');
+            expiresin = ConfigGetApp(app_id, 'APP_DATA_EXPIRE');
             break;
         }
-        case 'ACCESS':{
-            secret = ConfigGetApp(app_id, 'ACCESS_SECRET');
-            expiresin = ConfigGetApp(app_id, 'ACCESS_EXPIRE');
+        case 'APP_ACCESS':{
+            secret = ConfigGetApp(app_id, 'APP_ACCESS_SECRET');
+            expiresin = ConfigGetApp(app_id, 'APP_ACCESS_EXPIRE');
             break;
         }
         case 'SYSTEMADMIN':{

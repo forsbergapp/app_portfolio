@@ -10,103 +10,225 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * Backend for frontend (BFF) common
  * 
- * res.status(200), res.status(401) or res.status(503). Does not return anything if EventSource url is used
- * @param {Types.req_id_number} app_id
- * @param {string|null} endpoint
- * @param {string} service_called
- * @param {string} parameters
- * @param {string} ip
- * @param {string} method
- * @param {string} authorization
- * @param {string} host
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {object} body
- * @param {number|null} user_account_logon_user_account_id
- * @param {Types.res} res
+ * @param {Types.bff_parameters} bff_parameters
  */
-const BFF = (app_id, endpoint, service_called, parameters, ip, method, authorization, host, user_agent, accept_language, body, user_account_logon_user_account_id, res) =>{
+const BFF = (bff_parameters) =>{
 
-    service.BFF(app_id, endpoint, service_called, parameters, ip, method, authorization, host, user_agent, accept_language, body, user_account_logon_user_account_id, res)
+    service.BFF(bff_parameters)
     .then((/**@type{*}*/result_service) => {
         import(`file://${process.cwd()}/server/log.service.js`).then(({LogServiceI})=>{
-            const log_result = service_called.toUpperCase()=='MAIL'?'✅':result_service;
-            LogServiceI(app_id, service_called, parameters, log_result).then(()=>{
-                if (endpoint=='SOCKET'){
+            const log_result = bff_parameters.service.toUpperCase()=='MAIL'?'✅':result_service;
+            LogServiceI(bff_parameters.app_id, bff_parameters.service, bff_parameters.parameters, log_result).then(()=>{
+                if (bff_parameters.endpoint=='SOCKET'){
                     //This endpoint only allowed for EventSource so no more update of response
                     null;
                 }
-                else
-                    res.status(200).send(log_result);
+                else{
+                    //result from APP can request to redirect to another subdomain or domain
+                    if (bff_parameters.res.statusCode==301)
+                        bff_parameters.res.redirect('/');
+                    else
+                        bff_parameters.res.status(200).send(log_result);
+                }
+                    
             });
         });
     })
     .catch((/**@type{Types.error}*/error) => {
         import(`file://${process.cwd()}/server/log.service.js`).then(({LogServiceE})=>{
             //log ERROR to module log and to files
-            LogServiceE(app_id ?? null, service_called ?? null, parameters ?? null, error).then(() => {
+            LogServiceE(bff_parameters.app_id ?? null, bff_parameters.service ?? null, bff_parameters.parameters ?? null, error).then(() => {
                 //return service unavailable and error message
                 //return any statuscode not being 200 specified by error or use 503 service unavailable
-                const statusCode = res.statusCode==200?503:res.statusCode ?? 503;
-                res.status(statusCode).send(error);
+                const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
+                bff_parameters.res.status(statusCode).send(error);
             });
         });
     });
 };
 /**
- * Backend for frontend (BFF) data
+ * Backend for frontend (BFF) APP including assets, report and info pages
  * 
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
- const BFF_data = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'DATA', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+ const BFF_app = (req, res) =>{
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'APP', 
+        service: 'APP', 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: '', 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
+
 /**
- * Backend for frontend (BFF) data signup
+ * Backend for frontend (BFF) APP_DATA
  * 
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
- const BFF_data_signup = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'DATA_SIGNUP', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+ const BFF_app_data = (req, res) =>{
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'APP_DATA', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) access
+ * Backend for frontend (BFF) APP_SIGNUP
  * 
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
- const BFF_access = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'ACCESS', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+ const BFF_app_signup = (req, res) =>{
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'APP_SIGNUP', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) admin
+ * Backend for frontend (BFF) APP_ACCESS
+ * 
+ * @param {Types.req} req - Request
+ * @param {Types.res} res
+ */
+ const BFF_app_access = (req, res) =>{
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'APP_ACCESS', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
+};
+/**
+ * Backend for frontend (BFF) ADMIN
  * 
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
  const BFF_admin = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'ADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'ADMIN', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
 /**
- * Backend for frontend (BFF) superadmin
+ * Backend for frontend (BFF) SUPERADMIN
  * 
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
  const BFF_superadmin = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'SUPERADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'SUPERADMIN', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
 
 /**
- * Backend for frontend (BFF) systemadmin
+ * Backend for frontend (BFF) SYSTEMADMIN
  * 
  * @param {Types.req} req - Request
  * @param {Types.res} res
  */
  const BFF_systemadmin = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'SYSTEMADMIN', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'SYSTEMADMIN', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
 
 /**
@@ -116,7 +238,24 @@ const BFF = (app_id, endpoint, service_called, parameters, ip, method, authoriza
  * @param {Types.res} res
  */
 const BFF_socket = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'SOCKET', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'SOCKET', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) IAM
@@ -125,6 +264,24 @@ const BFF_socket = (req, res) =>{
  * @param {Types.res} res
  */
 const BFF_iam = (req, res) =>{
-    BFF(getNumberValue(req.query.app_id), 'IAM', req.query.service, req.query.parameters, req.ip, req.method, req.headers.authorization, req.headers.host, req.headers['user-agent'], req.headers['accept-language'], req.body, getNumberValue(req.query.user_account_logon_user_account_id), res);
+    /**@type{Types.bff_parameters} */
+    const bff_parameters = {
+        app_id: getNumberValue(req.query.app_id), 
+        endpoint:'IAM', 
+        service: req.query.service, 
+        ip: req.ip, 
+        host: req.headers.host, 
+        method: req.method, 
+        authorization:  req.headers.authorization, 
+        user_agent: req.headers['user-agent'], 
+        accept_language: req.headers['accept-language'], 
+        url:req.originalUrl,
+        parameters: req.query.parameters, 
+        body: req.body, 
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        res: res
+    };
+    BFF(bff_parameters);
 };
-export{BFF_data, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};
+
+export{BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam};

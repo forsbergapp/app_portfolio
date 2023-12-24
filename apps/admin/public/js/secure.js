@@ -173,7 +173,7 @@ const show_start = async (yearvalues) =>{
             else{
                 service = 'DB_API';
                 url = `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`;
-                authorization_type = 'ACCESS';
+                authorization_type = 'APP_ACCESS';
             }
             //return result for both charts
             common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
@@ -387,7 +387,7 @@ const get_apps = async () => {
         else{
             service = 'APP';
             url = '/apps/admin?';
-            authorization_type = 'ACCESS';
+            authorization_type = 'APP_ACCESS';
         }
         common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
             if (err)
@@ -446,7 +446,7 @@ const sendBroadcast = () => {
     }
     else{
         path = '/socket/message/Admin?';
-        token_type = 'ACCESS';
+        token_type = 'APP_ACCESS';
     }
     common.FFB ('SOCKET', path, 'POST', token_type, json_data, (err, result) => {
         if (err)
@@ -563,7 +563,7 @@ const set_maintenance = () => {
 const count_users = async () => {
     const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
         if (admin_token_has_value()){
-            await common.FFB ('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'ACCESS', null, (err, result) => {
+            await common.FFB ('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                 if (err)
                     callBack(result, null);
                 else{
@@ -574,7 +574,7 @@ const count_users = async () => {
     };    
     if (admin_token_has_value()){
         document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
-        await common.FFB ('DB_API', '/user_account/admin/count?', 'GET', 'ACCESS', null, (err, result) => {
+        await common.FFB ('DB_API', '/user_account/admin/count?', 'GET', 'APP_ACCESS', null, (err, result) => {
             if (err)
                 document.querySelector('#menu_2_content').innerHTML = '';
             else{
@@ -682,7 +682,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
     //show all records if no search criteria
     if (document.querySelector('#list_user_account_search_input').value!='')
         search_user = encodeURI(document.querySelector('#list_user_account_search_input').value);
-    common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'ACCESS', null, (err, result) => {
+    common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account').innerHTML = '';
         else{
@@ -891,7 +891,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
 };
 const show_user_account_logon = async (user_account_id) => {
     document.querySelector('#list_user_account_logon').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 'ACCESS', null, (err, result) => {
+    common.FFB ('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 'APP_ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account_logon').innerHTML = '';
         else{
@@ -968,7 +968,7 @@ const show_user_account_logon = async (user_account_id) => {
 /*----------------------- */
 const show_apps = async () => {
     document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
-    await common.FFB ('APP', '/apps/admin?', 'GET', 'ACCESS', null, (err, result) => {
+    await common.FFB ('APP', '/apps/admin?', 'GET', 'APP_ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#menu_4_content').innerHTML = '';
         else{
@@ -1051,7 +1051,7 @@ const show_apps = async () => {
 };
 const show_app_parameter = (app_id) => {
     document.querySelector('#list_app_parameter').innerHTML = common.APP_SPINNER;
-    common.FFB ('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 'ACCESS', null, (err, result) => {
+    common.FFB ('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 'APP_ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_app_parameter').innerHTML = '';
         else{
@@ -1249,7 +1249,7 @@ const update_record = async (table,
                                 app_category_id:parameters.app_category_id
                             };
                 path = `/apps/admin?PUT_ID=${parameters.id}`;
-                token_type = 'ACCESS';
+                token_type = 'APP_ACCESS';
                 break;
             }
             case 'app_parameter':{
@@ -1259,7 +1259,7 @@ const update_record = async (table,
                                 parameter_value:    parameters.parameter_value,
                                 parameter_comment:  parameters.parameter_comment};
                 path = '/app_parameter/admin?';
-                token_type = 'ACCESS';
+                token_type = 'APP_ACCESS';
                 break;
             }
         }
@@ -1312,7 +1312,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.value}`, 'GET', 'ACCESS', null, (err, result) => {
+                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.value}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                         row_action(err, result, event.target, event, 6, '');
                     });
                 }
@@ -1321,7 +1321,7 @@ const list_events = (list_item, item_row, item_edit) => {
                 if (event.target.value=='')
                     event.target.value = event.target.defaultValue;
                 else{
-                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.value}`, 'GET', 'ACCESS', null, (err, result) => {
+                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.value}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                         row_action(err, result, event.target, event, 2);
                     });
                 }
@@ -1334,7 +1334,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     app_role_id_lookup=2;
                 else
                     app_role_id_lookup=event.target.value;
-                common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 'ACCESS', null, (err, result) => {
+                common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
                     if (old_value!='' && event.target.value=='')
@@ -1589,7 +1589,7 @@ const show_monitor = async (yearvalues) =>{
         }
         else{
             path  = '/config/admin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-            token_type = 'ACCESS';
+            token_type = 'APP_ACCESS';
         }      
         common.FFB ('SERVER', path, 'GET', token_type, null, (err, result_limit) => {
             if (err)
@@ -1741,7 +1741,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                 else{
                     path = `/socket/connection/Admin?${url_parameters}`;
                     service = 'SOCKET';
-                    token_type = 'ACCESS';
+                    token_type = 'APP_ACCESS';
                 }
                 document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
@@ -1749,7 +1749,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
             case 'list_app_log':{
                 path = `/app_log/admin?${url_parameters}`;
                 service = 'DB_API';
-                token_type = 'ACCESS';
+                token_type = 'APP_ACCESS';
                 document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
@@ -2446,7 +2446,7 @@ const list_item_click = (item) => {
             if (common.COMMON_GLOBAL.system_admin==1)
                 tokentype = 'SYSTEMADMIN';
             else
-                tokentype = 'ACCESS';
+                tokentype = 'APP_ACCESS';
             common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                 if (err)
                     null;
@@ -2480,7 +2480,7 @@ const list_item_click = (item) => {
             if (common.COMMON_GLOBAL.system_admin==1)
                 tokentype = 'SYSTEMADMIN';
             else
-                tokentype = 'ACCESS';
+                tokentype = 'APP_ACCESS';
             common.FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
                     if (err)
                         null;
@@ -2834,7 +2834,7 @@ const show_installation = () =>{
                         const json_data = {demo_password: document.querySelector('#install_demo_password').value};
                         const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                         document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'ACCESS', json_data, (err, result) => {
+                        common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'APP_ACCESS', json_data, (err, result) => {
                             document.querySelector('#install_demo_button_install').innerHTML = old_html;
                             if (err == null){
                                 const result_obj = JSON.parse(result);
@@ -2847,7 +2847,7 @@ const show_installation = () =>{
                 case 'install_demo_button_uninstall':{
                     const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
                     document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'ACCESS', null, (err, result) => {
+                    common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'APP_ACCESS', null, (err, result) => {
                         document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
                         if (err == null){
                             const result_obj = JSON.parse(result);

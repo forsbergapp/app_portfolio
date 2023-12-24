@@ -97,7 +97,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                                             new_code, 
                                                             result_login[0].email)
                                             .then(()=>{
-                                                data_body.access_token = AuthorizeToken(app_id, 'ACCESS');
+                                                data_body.access_token = AuthorizeToken(app_id, 'APP_ACCESS');
                                                 insertUserAccountLogon(app_id, data_body)
                                                 .then(()=>{
                                                     resolve({
@@ -113,7 +113,7 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                     });
                                 }
                                 else{
-                                    data_body.access_token = AuthorizeToken(app_id, 'ACCESS');
+                                    data_body.access_token = AuthorizeToken(app_id, 'APP_ACCESS');
                                     insertUserAccountLogon(app_id, data_body)
                                     .then(()=>{
                                         resolve({
@@ -218,7 +218,7 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                     data_login.user_account_id = result_signin[0].id;
                     createUserAccountApp(app_id, result_signin[0].id)
                     .then(()=>{
-                        data_login.access_token = AuthorizeToken(app_id, 'ACCESS');
+                        data_login.access_token = AuthorizeToken(app_id, 'APP_ACCESS');
                         insertUserAccountLogon(app_id, data_login)
                         .then(()=>{
                             resolve({
@@ -247,7 +247,7 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                         .then(()=>{
                             service.providerSignIn(app_id, getNumberValue(data.identity_provider_id), getNumberValue(query.get('PUT_ID')))
                             .then((/**@type{Types.db_result_user_account_providerSignIn[]}*/result_signin2)=>{
-                                data_login.access_token = AuthorizeToken(app_id, 'ACCESS');
+                                data_login.access_token = AuthorizeToken(app_id, 'APP_ACCESS');
                                 insertUserAccountLogon(app_id, data_login)
                                 .then(()=>{
                                     resolve({
@@ -317,7 +317,7 @@ const signup = (app_id, host, query, data, res) =>{
                                     data_body.email ?? '')
                     .then(()=>{
                         resolve({
-                            accessToken: AuthorizeToken(app_id, 'ACCESS'),
+                            accessToken: AuthorizeToken(app_id, 'APP_ACCESS'),
                             id: result_create.insertId,
                             data: result_create
                         });
@@ -328,7 +328,7 @@ const signup = (app_id, host, query, data, res) =>{
             }
             else
                 resolve({
-                    accessToken: AuthorizeToken(app_id, 'ACCESS'),
+                    accessToken: AuthorizeToken(app_id, 'APP_ACCESS'),
                     id: result_create.insertId,
                     data: result_create
                 });
@@ -400,7 +400,7 @@ const activate = (app_id, ip, user_agent, accept_language, host, query, data, re
                 resolve({
                     count: result_activate.affectedRows,
                     auth: auth_password_new,
-                    accessToken: AuthorizeToken(app_id, 'ACCESS'),
+                    accessToken: AuthorizeToken(app_id, 'APP_ACCESS'),
                     items: Array(result_activate)
                 });
             }

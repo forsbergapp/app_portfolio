@@ -1965,12 +1965,32 @@ const getQRCode = async (url) =>{
  * @returns {Promise.<string>}
  */
 const timetable = async (timetable_parameters) => {
+	const {ConfigGet, ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
 	/**@ts-ignore */
 	const decodedReportparameters = Buffer.from(timetable_parameters.reportid, 'base64').toString('utf-8');
 	const urlParams = new URLSearchParams(decodedReportparameters);
 	const user_account_id = Number(urlParams.get('id'));
 	const user_account_app_data_post_id = Number(urlParams.get('sid'));
 	const reporttype = Number(urlParams.get('type'));
+	const uid_view = urlParams.get('uid_view')?Number(urlParams.get('uid_view')):null;
+	/**
+	 * 
+	 * @param {string} decodedReportparameters 
+	 * @returns 
+	 */
+	const getQRUrl = (decodedReportparameters) =>{
+		const protocol = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE'))==1?'https':'http';
+		const port_http = getNumberValue(ConfigGet('SERVER', 'HTTP_PORT'));
+		const port_https = getNumberValue(ConfigGet('SERVER', 'HTTPS_PORT'));
+		const port = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE'))==1?(port_https==443?'':`:${port_https}`):(port_https==80?'':`:${port_http}`);
+		if (uid_view){
+			const param_modified = decodedReportparameters.replace(`&uid_view=${uid_view}`, '');
+			const report_id_no_uid_view = new Buffer(param_modified).toString('base64');
+			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/reports?reportid=${report_id_no_uid_view}`;
+		}
+		else
+			return `${protocol}://${ConfigGetApp(timetable_parameters.app_id, 'SUBDOMAIN')}.${ConfigGet('SERVER', 'HOST')}${port}/reports?reportid=${timetable_parameters.reportid}`;
+	};
     const { getAppStartParameters } = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
 	return await new Promise((resolve) => {
 		getAppStartParameters(timetable_parameters.app_id)
@@ -2009,7 +2029,7 @@ const timetable = async (timetable_parameters) => {
                                     client_user_agent:  			timetable_parameters.user_agent,
                                     client_longitude:  				timetable_parameters.longitude,
                                     client_latitude:    			timetable_parameters.latitude,
-                                    user_account_id:    			timetable_parameters.uid_view,
+                                    user_account_id:    			uid_view,
                                     user_account_app_data_post_id:  getNumberValue(user_account_app_data_post_id)};
 			insertUserPostView(timetable_parameters.app_id, data_ViewStat)
 			.then(()=>{
@@ -2045,7 +2065,7 @@ const timetable = async (timetable_parameters) => {
 													resolve('');
 												else{
 													render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters)]);
-													getQRCode(timetable_parameters.url).then((qrcode)=>{
+													getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 														render_variables.push(['REPORT_QRCODE',qrcode]);
 														resolve(render_app_with_data(timetable_parameters.report, render_variables));
 													});
@@ -2055,7 +2075,7 @@ const timetable = async (timetable_parameters) => {
 										else
 											if (reporttype==1){
 												render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_account_app_data_post)]);
-												getQRCode(timetable_parameters.url).then((qrcode)=>{
+												getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 													render_variables.push(['REPORT_QRCODE',qrcode]);
 													resolve(render_app_with_data(timetable_parameters.report, render_variables));
 												});
@@ -2063,7 +2083,7 @@ const timetable = async (timetable_parameters) => {
 											else 
 												if (reporttype==2){
 													render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_account_app_data_post)]);
-													getQRCode(timetable_parameters.url).then((qrcode)=>{
+													getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
 														render_variables.push(['REPORT_QRCODE',qrcode]);
 														resolve(render_app_with_data(timetable_parameters.report, render_variables));
 													});
@@ -2075,8 +2095,8 @@ const timetable = async (timetable_parameters) => {
 					}
 				});
 			})
-			.catch(()=>{
-				resolve('');
+			.catch((/**@type{Types.error}*/error)=>{
+				resolve(error);
 			});
 		});
 	});

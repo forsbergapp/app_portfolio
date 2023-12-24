@@ -16,13 +16,11 @@ const createReport= async (app_id, report_parameters) => {
     return await  
         timetable({ app_id:         report_parameters.app_id,
                     reportid:       report_parameters.reportid,
-                    uid_view:       report_parameters.uid_view,
                     ip:             report_parameters.ip,
                     user_agent:     report_parameters.user_agent,
                     accept_language:report_parameters.accept_language,
                     latitude:       report_parameters.latitude,
                     longitude:      report_parameters.longitude,
-                    url:            report_parameters.url,
                     report:         render_report_html(app_id, report_parameters.reportname)
         });
 };
