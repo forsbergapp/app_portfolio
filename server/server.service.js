@@ -50,21 +50,10 @@ const COMMON = {
 
 /**
  * server routes
- * @param {number} app_id
- * @param {string} service
- * @param {string} endpoint
- * @param {string} method
- * @param {string} ip
- * @param {string} user_agent
- * @param {string} accept_language
- * @param {string} authorization
- * @param {string} host
- * @param {string} parameters
- * @param {*} data
- * @param {Types.res} res
+ * @param {Types.routesparameters} routesparameters
  * @async
  */
- const serverRoutes = async (app_id, service, endpoint, method, ip, user_agent, accept_language, authorization, host, parameters, data, res) =>{
+ const serverRoutes = async (routesparameters) =>{
     
     //server iam object
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
@@ -113,190 +102,269 @@ const COMMON = {
     const db_user_account_app = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app.js`);
     //server db api object user account app data post
     const db_user_account_app_data_post = await import(`file://${process.cwd()}/server/dbapi/object/user_account_app_data_post.js`);
-        
     /**@type{*} */
-    const query = new URLSearchParams(parameters.substring(parameters.indexOf('?')));
-    const routeFunction = parameters.substring(0, parameters.indexOf('?')).toUpperCase();
+    let query;
+    if (routesparameters.endpoint =='APP' && routesparameters.service =='APP')
+        query = routesparameters.url?new URLSearchParams(routesparameters.url.substring(routesparameters.url.indexOf('?'))):null;
+    else
+        query = routesparameters.parameters?new URLSearchParams(routesparameters.parameters.substring(routesparameters.parameters.indexOf('?'))):null;
+    const routeFunction = routesparameters.parameters?routesparameters.parameters.substring(0, routesparameters.parameters.indexOf('?')).toUpperCase():'';
     return new Promise((resolve, reject)=>{
         try {
-            switch (endpoint + '_' + service + '_' + routeFunction + '_' + method){
-                case 'IAM_IAM_/SYSTEMADMIN_POST':{
-                    resolve(iam.AuthenticateSystemadmin(app_id, authorization, res));
+            switch (routesparameters.endpoint + '_' + routesparameters.service + '_' + routeFunction + '_' + routesparameters.method){
+                case 'APP_APP__GET':{
+                    resolve(app.getAppMain(routesparameters.ip, routesparameters.host, routesparameters.user_agent, routesparameters.accept_language, routesparameters.url, query, routesparameters.res));
                     break;
                 }
-                case 'IAM_IAM_/USER_POST':{
-                    resolve(db_user_account.login(app_id, ip, user_agent, host, query, data, res));
+                case 'APP_DATA_APP_/APPS_GET':{
+                    resolve(app.getApps(routesparameters.app_id, query));
                     break;
                 }
-                case 'IAM_IAM_/PROVIDER_POST':{
-                    resolve(db_user_account.login_provider(app_id, ip, user_agent, query, data, res));
+                case 'APP_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
+                    resolve(db_user_account.signup(routesparameters.app_id, routesparameters.host, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'DATA_APP_/APPS_GET':{
-                    resolve(app.getApps(app_id, query));
-                    break;
-                }
-                case 'DATA_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
-                    resolve(db_user_account.signup(app_id, host, query, data, res));
-                    break;
-                }
-                case 'DATA_SOCKET_/SOCKET/CONNECTION_PATCH':{
+                case 'APP_DATA_SOCKET_/SOCKET/CONNECTION_PATCH':{
                     resolve(socket.ConnectedUpdate(query));
                     break;
                 }
-                case 'DATA_SOCKET_/SOCKET/CONNECTION/CHECK_GET':{
+                case 'APP_DATA_SOCKET_/SOCKET/CONNECTION/CHECK_GET':{
                     resolve(socket.ConnectedCheck(query));
                     break;
                 }
-                case 'DATA_DB_API_/APPS_GET':{
-                    resolve(db_app.getApp(app_id, query));
+                case 'APP_DATA_DB_API_/APPS_GET':{
+                    resolve(db_app.getApp(routesparameters.app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/APP_OBJECT_GET':
-                case 'DATA_DB_API_/APP_OBJECT/ADMIN_GET':{
-                    resolve(db_app_object.getObjects(app_id, query));
+                case 'APP_DATA_DB_API_/APP_OBJECT_GET':
+                case 'APP_DATA_DB_API_/APP_OBJECT/ADMIN_GET':{
+                    resolve(db_app_object.getObjects(routesparameters.app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/COUNTRY_GET':{
-                    resolve(db_country.getCountries(app_id, query));
+                case 'APP_DATA_DB_API_/COUNTRY_GET':{
+                    resolve(db_country.getCountries(routesparameters.app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/LOCALE_GET':
-                case 'DATA_DB_API_/LOCALE/ADMIN_GET':{
-                    resolve(db_locale.getLocales(app_id, query));
+                case 'APP_DATA_DB_API_/LOCALE_GET':
+                case 'APP_DATA_DB_API_/LOCALE/ADMIN_GET':{
+                    resolve(db_locale.getLocales(routesparameters.app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/MESSAGE_GET':{
-                    resolve(db_app_message.getMessage(app_id, query));
+                case 'APP_DATA_DB_API_/MESSAGE_GET':{
+                    resolve(db_app_message.getMessage(routesparameters.app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{
-                    resolve(db_user_account.activate(app_id, ip, user_agent, accept_language, host, query, data, res));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT/ACTIVATE_PUT':{
+                    resolve(db_user_account.activate(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT/FORGOT_PUT':{
-                    resolve(db_user_account.forgot(app_id, ip, user_agent, accept_language, host, data));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT/FORGOT_PUT':{
+                    resolve(db_user_account.forgot(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, routesparameters.host, routesparameters.body));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/TOP_GET':{
-                    resolve(db_user_account.getProfileTop(app_id, query, res));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT/PROFILE/TOP_GET':{
+                    resolve(db_user_account.getProfileTop(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/ID_POST':
-                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME_POST':{
-                    resolve(db_user_account.getProfile(app_id, ip, user_agent, query, data, res));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT/PROFILE/ID_POST':
+                case 'APP_DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME_POST':{
+                    resolve(db_user_account.getProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHD_POST':{
-                    resolve(db_user_account.searchProfile(app_id, ip, user_agent, query, data));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHD_POST':{
+                    resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, query, routesparameters.body));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/ALL_GET':{
-                    resolve(db_user_account_app_data_post.getUserPostsByUserId(app_id, query));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/ALL_GET':{
+                    resolve(db_user_account_app_data_post.getUserPostsByUserId(routesparameters.app_id, query));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE_GET':{
-                    resolve(db_user_account_app_data_post.getProfileUserPost(app_id, query, res));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE_GET':{
+                    resolve(db_user_account_app_data_post.getProfileUserPost(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/ALL_GET':{
-                    resolve(db_user_account_app_data_post.getProfileUserPosts(app_id, query, res));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/ALL_GET':{
+                    resolve(db_user_account_app_data_post.getProfileUserPosts(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/TOP_GET':{
-                    resolve(db_user_account_app_data_post.getProfileTopPost(app_id, query, res));
+                case 'APP_DATA_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/TOP_GET':{
+                    resolve(db_user_account_app_data_post.getProfileTopPost(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT/PASSWORD_PUT':{
-                    resolve(db_user_account.updatePassword(app_id, query, data, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT/PASSWORD_PUT':{
+                    resolve(db_user_account.updatePassword(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_PUT':{
-                    resolve(db_user_account.updateUserLocal(app_id, ip, user_agent, host, accept_language, query, data, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_PUT':{
+                    resolve(db_user_account.updateUserLocal(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_GET':{
-                    resolve(db_user_account.getUserByUserId(app_id, query, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_GET':{
+                    resolve(db_user_account.getUserByUserId(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT/COMMON_PUT':{
-                    resolve(db_user_account.updateUserCommon(app_id, query, data, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT/COMMON_PUT':{
+                    resolve(db_user_account.updateUserCommon(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT/COMMON_DELETE':{
-                    resolve(db_user_account.deleteUser(app_id, query, data, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT/COMMON_DELETE':{
+                    resolve(db_user_account.deleteUser(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT/PROFILE/DETAIL_GET':{
-                    resolve(db_user_account.getProfileDetail(app_id, query, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT/PROFILE/DETAIL_GET':{
+                    resolve(db_user_account.getProfileDetail(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHA_POST':{
-                    resolve(db_user_account.searchProfile(app_id, ip, user_agent, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT/PROFILE/USERNAME/SEARCHA_POST':{
+                    resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_POST':{
-                    resolve(db_user_account.follow(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_POST':{
+                    resolve(db_user_account.follow(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_DELETE':{
-                    resolve(db_user_account.unfollow(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_DELETE':{
+                    resolve(db_user_account.unfollow(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_LIKE_POST':{
-                    resolve(db_user_account.like(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_LIKE_POST':{
+                    resolve(db_user_account.like(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_LIKE_DELETE':{
-                    resolve(db_user_account.unlike(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_LIKE_DELETE':{
+                    resolve(db_user_account.unlike(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_GET':{
-                    resolve(db_user_account_app.getUserAccountApp(app_id, query));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_GET':{
+                    resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, query));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP/APPS_GET':{
-                    resolve(db_user_account_app.getUserAccountApps(app_id, query));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP/APPS_GET':{
+                    resolve(db_user_account_app.getUserAccountApps(routesparameters.app_id, query));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_PATCH':{
-                    resolve(db_user_account_app.updateUserAccountApp(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_PATCH':{
+                    resolve(db_user_account_app.updateUserAccountApp(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DELETE':{
-                    resolve(db_user_account_app.deleteUserAccountApp(app_id, query));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DELETE':{
+                    resolve(db_user_account_app.deleteUserAccountApp(routesparameters.app_id, query));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/DETAIL_GET':{
-                    resolve(db_user_account_app_data_post.getProfileUserPostDetail(app_id, query, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST/PROFILE/DETAIL_GET':{
+                    resolve(db_user_account_app_data_post.getProfileUserPostDetail(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_POST':{
-                    resolve(db_user_account_app_data_post.createUserPost(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_POST':{
+                    resolve(db_user_account_app_data_post.createUserPost(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_PUT':{
-                    resolve(db_user_account_app_data_post.updateUserPost(app_id, query, data, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_PUT':{
+                    resolve(db_user_account_app_data_post.updateUserPost(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_DELETE':{
-                    resolve(db_user_account_app_data_post.deleteUserPost(app_id, query, res));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_DELETE':{
+                    resolve(db_user_account_app_data_post.deleteUserPost(routesparameters.app_id, query, routesparameters.res));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_LIKE_POST':{
-                    resolve(db_user_account_app_data_post.like(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_LIKE_POST':{
+                    resolve(db_user_account_app_data_post.like(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
-                case 'ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE':{
-                    resolve(db_user_account_app_data_post.unlike(app_id, query, data));
+                case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_DATA_POST_LIKE_DELETE':{
+                    resolve(db_user_account_app_data_post.unlike(routesparameters.app_id, query, routesparameters.body));
+                    break;
+                }
+                case 'ADMIN_SOCKET_/SOCKET/MESSAGE/ADMIN_POST':{
+                    resolve(socket.SocketSendAdmin(routesparameters.body));
+                    break;
+                }
+                case 'ADMIN_SOCKET_/SOCKET/CONNECTION/ADMIN_GET':{
+                    resolve(socket.ConnectedListAdmin(routesparameters.app_id, query, routesparameters.res));
+                    break;
+                }
+                case 'ADMIN_SOCKET_/SOCKET/CONNECTION/ADMIN/COUNT_GET':{
+                    resolve(socket.ConnectedCount(query));
+                    break;
+                }
+                case 'ADMIN_SERVER_/CONFIG/ADMIN_GET':{
+                    resolve(config.ConfigGet(query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
+                    resolve(db_database.DemoInstall(routesparameters.app_id, query, routesparameters.body));
+                    break;
+                }
+                case 'ADMIN_DB_API_/ADMIN/DEMO_DELETE':{
+                    resolve(db_database.DemoUninstall(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_APP_/APPS/ADMIN_GET':{
+                    resolve(app.getAppsAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APPS/ADMIN_PUT':{
+                    resolve(db_app.updateAdmin(routesparameters.app_id, query, routesparameters.body));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_CATEGORY/ADMIN_GET':{
+                    resolve(db_app_category.getAppCategoryAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_LOG/ADMIN_GET':{
+                    resolve(db_app_log.getLogsAdmin(routesparameters.app_id, query, routesparameters.res));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_LOG/ADMIN/STAT/UNIQUEVISITOR_GET':{
+                    resolve(db_app_log.getStatUniqueVisitorAdmin(routesparameters.app_id, query, routesparameters.res));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN/ALL_GET':{
+                    resolve(db_app_parameter.getParametersAllAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN_PUT':{
+                    resolve(db_app_parameter.setParameter_admin(routesparameters.app_id, routesparameters.body));
+                    break;
+                }
+                case 'ADMIN_DB_API_/APP_ROLE/ADMIN_GET':{
+                    resolve(db_app_role.getAppRoleAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/PARAMETER_TYPE/ADMIN_GET':{
+                    resolve(db_parameter_type.getParameterTypeAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN/COUNT_GET':{
+                    resolve(db_user_account.getStatCountAdmin(routesparameters.app_id));
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_GET':{
+                    resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_PATCH':{
+                    resolve(db_user_account_app.update(routesparameters.app_id, query, routesparameters.body));
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_GET':{
+                    resolve(db_user_account.getUsersAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_LOGON/ADMIN_GET':{
+                    resolve(db_user_account.getLogonAdmin(routesparameters.app_id, query));
+                    break;
+                }
+                case 'SUPERADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
+                    resolve(db_user_account.updateAdmin(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
                 case 'SYSTEMADMIN_SOCKET_/SOCKET/MESSAGE/SYSTEMADMIN_POST':{
-                    resolve(socket.SocketSendSystemAdmin(data));
+                    resolve(socket.SocketSendSystemAdmin(routesparameters.body));
                     break;
                 }
                 case 'SYSTEMADMIN_SOCKET_/SOCKET/CONNECTION/SYSTEMADMIN_GET':{
-                    resolve(socket.ConnectedListSystemadmin(app_id, query));
+                    resolve(socket.ConnectedListSystemadmin(routesparameters.app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_SOCKET_/SOCKET/CONNECTION/SYSTEMADMIN_PATCH':{
@@ -304,7 +372,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_PUT':{
-                    resolve(config.ConfigSave(data));
+                    resolve(config.ConfigSave(routesparameters.body));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN_GET':{
@@ -324,7 +392,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/CONFIG/SYSTEMADMIN/MAINTENANCE_PATCH':{
-                    resolve(config.ConfigMaintenanceSet(data));
+                    resolve(config.ConfigMaintenanceSet(routesparameters.body));
                     break;
                 }
                 case 'SYSTEMADMIN_SERVER_/INFO_GET':{
@@ -332,27 +400,27 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFO_GET':{
-                    resolve(db_database.Info(app_id));
+                    resolve(db_database.Info(routesparameters.app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACE_GET':{
-                    resolve(db_database.InfoSpace(app_id));
+                    resolve(db_database.InfoSpace(routesparameters.app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/DBINFOSPACESUM_GET':{
-                    resolve(db_database.InfoSpaceSum(app_id));
+                    resolve(db_database.InfoSpaceSum(routesparameters.app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_POST':{
-                    resolve(db_database.Install(app_id, query));
+                    resolve(db_database.Install(routesparameters.app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_GET':{
-                    resolve(db_database.InstalledCheck(app_id));
+                    resolve(db_database.InstalledCheck(routesparameters.app_id));
                     break;
                 }
                 case 'SYSTEMADMIN_DB_API_/SYSTEMADMIN/INSTALL_DELETE':{
-                    resolve(db_database.Uninstall(app_id, query));
+                    resolve(db_database.Uninstall(routesparameters.app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/PARAMETERS_GET':{
@@ -360,7 +428,7 @@ const COMMON = {
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/LOGS_GET':{
-                    resolve(log.getLogs(app_id, query));
+                    resolve(log.getLogs(routesparameters.app_id, query));
                     break;
                 }
                 case 'SYSTEMADMIN_LOG_/LOG/STATUSCODE_GET':{
@@ -375,97 +443,25 @@ const COMMON = {
                     resolve(log.getFiles());
                     break;
                 }
-                case 'SUPERADMIN_DB_API_/USER_ACCOUNT/ADMIN_PUT':{
-                    resolve(db_user_account.updateAdmin(app_id, query, data, res));
-                    break;
-                }
-                case 'ADMIN_SOCKET_/SOCKET/MESSAGE/ADMIN_POST':{
-                    resolve(socket.SocketSendAdmin(data));
-                    break;
-                }
-                case 'ADMIN_SOCKET_/SOCKET/CONNECTION/ADMIN_GET':{
-                    resolve(socket.ConnectedListAdmin(app_id, query, res));
-                    break;
-                }
-                case 'ADMIN_SOCKET_/SOCKET/CONNECTION/ADMIN/COUNT_GET':{
-                    resolve(socket.ConnectedCount(query));
-                    break;
-                }
-                case 'ADMIN_SERVER_/CONFIG/ADMIN_GET':{
-                    resolve(config.ConfigGet(query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/ADMIN/DEMO_POST':{
-                    resolve(db_database.DemoInstall(app_id, query, data));
-                    break;
-                }
-                case 'ADMIN_DB_API_/ADMIN/DEMO_DELETE':{
-                    resolve(db_database.DemoUninstall(app_id, query));
-                    break;
-                }
-                case 'ADMIN_APP_/APPS/ADMIN_GET':{
-                    resolve(app.getAppsAdmin(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APPS/ADMIN_PUT':{
-                    resolve(db_app.updateAdmin(app_id, query, data));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_CATEGORY/ADMIN_GET':{
-                    resolve(db_app_category.getAppCategoryAdmin(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_LOG/ADMIN_GET':{
-                    resolve(db_app_log.getLogsAdmin(app_id, query, res));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_LOG/ADMIN/STAT/UNIQUEVISITOR_GET':{
-                    resolve(db_app_log.getStatUniqueVisitorAdmin(app_id, query, res));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN/ALL_GET':{
-                    resolve(db_app_parameter.getParametersAllAdmin(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_PARAMETER/ADMIN_PUT':{
-                    resolve(db_app_parameter.setParameter_admin(app_id, data));
-                    break;
-                }
-                case 'ADMIN_DB_API_/APP_ROLE/ADMIN_GET':{
-                    resolve(db_app_role.getAppRoleAdmin(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/PARAMETER_TYPE/ADMIN_GET':{
-                    resolve(db_parameter_type.getParameterTypeAdmin(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN/COUNT_GET':{
-                    resolve(db_user_account.getStatCountAdmin(app_id));
-                    break;
-                }
-                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_GET':{
-                    resolve(db_user_account_app.getUserAccountApp(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_PATCH':{
-                    resolve(db_user_account_app.update(app_id, query, data));
-                    break;
-                }
-                case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN_GET':{
-                    resolve(db_user_account.getUsersAdmin(app_id, query));
-                    break;
-                }
-                case 'ADMIN_DB_API_/USER_ACCOUNT_LOGON/ADMIN_GET':{
-                    resolve(db_user_account.getLogonAdmin(app_id, query));
-                    break;
-                }
                 case 'SOCKET_SOCKET_/SOCKET/CONNECTION/CONNECT_GET':{
-                    resolve(socket.SocketConnect(app_id, ip, user_agent, query, res));
+                    resolve(socket.SocketConnect(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, query, routesparameters.res));
+                    break;
+                }
+                case 'IAM_IAM_/SYSTEMADMIN_POST':{
+                    resolve(iam.AuthenticateSystemadmin(routesparameters.app_id, routesparameters.authorization, routesparameters.res));
+                    break;
+                }
+                case 'IAM_IAM_/USER_POST':{
+                    resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, query, routesparameters.body, routesparameters.res));
+                    break;
+                }
+                case 'IAM_IAM_/PROVIDER_POST':{
+                    resolve(db_user_account.login_provider(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, query, routesparameters.body, routesparameters.res));
                     break;
                 }
                 default:{
-                    res.statusMessage = 'invalid route :' + endpoint + '_' + service + '_' + routeFunction + '_' + method;
-                    res.statusCode =400;
+                    routesparameters.res.statusMessage = 'invalid route :' + routesparameters.endpoint + '_' + routesparameters.service + '_' + routeFunction + '_' + routesparameters.method;
+                    routesparameters.res.statusCode =400;
                     reject('⛔');
                     break;
                 }
@@ -505,8 +501,6 @@ const serverStart = async () =>{
         //Get express app with all configurations
         /**@type{Types.express}*/
         const app = await serverExpress();
-        const {serverExpressApps} = await import(`file://${process.cwd()}/server/express/apps.js`);
-        await serverExpressApps(app);
         serverExpressLogError(app);
         SocketCheckMaintenance();
         //START HTTP SERVER

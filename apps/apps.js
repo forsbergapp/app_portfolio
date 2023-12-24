@@ -18,4 +18,24 @@ const getApps = async (app_id, query) => service.getApps(app_id, getNumberValue(
  */
 const getAppsAdmin = async (app_id, query) => service.getAppsAdmin(app_id, query.get('lang_code'));
 
-export{getApps, getAppsAdmin};
+/**
+ * 
+ * @param {string} url 
+ * @param {Types.res} res 
+ * @returns 
+ */
+const getAppCommon = (url, res) => service.getAppCommon(url,res);
+/**
+ * 
+ * @param {string} ip 
+ * @param {string} host
+ * @param {string} user_agent 
+ * @param {string} accept_language 
+ * @param {string} url
+ * @param {*} query 
+ * @param {Types.res} res 
+ * @returns 
+ */
+ const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(ip, host, user_agent, accept_language, url, query?query.get('reportid'):null, query?getNumberValue(query.get('messagequeue')):null, url.startsWith('/info/')?url.substring(6):null,query?query.get('lang_code'):null, res);
+
+export{getApps, getAppsAdmin, getAppCommon, getAppMain};

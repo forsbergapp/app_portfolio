@@ -67,35 +67,36 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
  */
  const serverExpressRoutes = async (app) => {
     //apps
-    const { BFF_data, BFF_data_signup, BFF_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
+    const { BFF_app, BFF_app_data, BFF_app_signup, BFF_app_access, BFF_admin, BFF_superadmin, BFF_systemadmin, BFF_socket, BFF_iam} = await import(`file://${process.cwd()}/server/bff.js`);
     
     //auth
     const iam = await import(`file://${process.cwd()}/server/iam.js`);
     
-    app.route('/server/bff/data').delete          (iam.AuthenticateDataToken, BFF_data);
-    app.route('/server/bff/data').get             (iam.AuthenticateDataToken, BFF_data);
-    app.route('/server/bff/data').patch           (iam.AuthenticateDataToken, BFF_data);
-    app.route('/server/bff/data').post            (iam.AuthenticateDataToken, BFF_data);
-    app.route('/server/bff/data').put             (iam.AuthenticateDataToken, BFF_data);
-    app.route('/server/bff/data_signup').post     (iam.AuthenticateDataTokenRegistration, BFF_data_signup);
-    app.route('/server/bff/access').delete        (iam.AuthenticateAccessToken, BFF_access);
-    app.route('/server/bff/access').get           (iam.AuthenticateAccessToken, BFF_access);
-    app.route('/server/bff/access').patch         (iam.AuthenticateAccessToken, BFF_access);
-    app.route('/server/bff/access').post          (iam.AuthenticateAccessToken, BFF_access);
-    app.route('/server/bff/access').put           (iam.AuthenticateAccessToken, BFF_access);
-    app.route('/server/bff/admin').delete         (iam.AuthenticateAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').get            (iam.AuthenticateAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').patch          (iam.AuthenticateAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').post           (iam.AuthenticateAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/admin').put            (iam.AuthenticateAccessTokenAdmin, BFF_admin);
-    app.route('/server/bff/superadmin').put       (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
-    app.route('/server/bff/systemadmin').delete   (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').get      (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').patch    (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').post     (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
-    app.route('/server/bff/systemadmin').put      (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);    
-    app.route('/server/bff/socket').get           (iam.AuthenticateSocket, BFF_socket);
-    app.route('/server/bff/iam').post             (iam.AuthenticateIAM, BFF_iam);
+    app.route('/bff/app_data').delete       (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_data').get          (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_data').patch        (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_data').post         (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_data').put          (iam.AuthenticateDataToken, BFF_app_data);
+    app.route('/bff/app_data_signup').post  (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
+    app.route('/bff/app_access').delete     (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/app_access').get        (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/app_access').patch      (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/app_access').post       (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/app_access').put        (iam.AuthenticateAccessToken, BFF_app_access);
+    app.route('/bff/admin').delete          (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/bff/admin').get             (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/bff/admin').patch           (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/bff/admin').post            (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/bff/admin').put             (iam.AuthenticateAccessTokenAdmin, BFF_admin);
+    app.route('/bff/superadmin').put        (iam.AuthenticateAccessTokenSuperAdmin, BFF_superadmin);
+    app.route('/bff/systemadmin').delete    (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/bff/systemadmin').get       (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/bff/systemadmin').patch     (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/bff/systemadmin').post      (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);
+    app.route('/bff/systemadmin').put       (iam.AuthenticateAccessTokenSystemAdmin, BFF_systemadmin);    
+    app.route('/bff/socket').get            (iam.AuthenticateSocket, BFF_socket);
+    app.route('/bff/iam').post              (iam.AuthenticateIAM, BFF_iam);
+    app.route('*').get                      (BFF_app);
 };
 /**
  * server Express
