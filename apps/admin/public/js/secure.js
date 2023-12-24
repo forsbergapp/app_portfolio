@@ -156,7 +156,9 @@ const show_start = async (yearvalues) =>{
             const app_id = document.querySelector('#select_app_menu1').value; 
             const year = document.querySelector('#select_year_menu1').value;
             const month = document.querySelector('#select_month_menu1').value;
-            const status_code = document.querySelector('#select_status_codes').value;
+            const select_admin_stat = document.querySelector('#select_system_admin_stat');
+            const statGroup = select_admin_stat.options[select_admin_stat.selectedIndex].parentNode.label;
+            const statValue = document.querySelector('#select_system_admin_stat').value;
             let result_obj;
             document.querySelector('#box1_chart').innerHTML = common.APP_SPINNER;
             document.querySelector('#box1_legend').innerHTML = common.APP_SPINNER;
@@ -167,7 +169,10 @@ const show_start = async (yearvalues) =>{
             let authorization_type;
             if (common.COMMON_GLOBAL.system_admin==1){
                 service = 'LOG';
-                url = `/log/logs_stat?select_app_id=${app_id}&code=${status_code}&year=${year}&month=${month}`;
+                if (statGroup=='REQUEST')
+                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${statValue}&statValue=&year=${year}&month=${month}`;
+                else
+                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${statValue}&year=${year}&month=${month}`;
                 authorization_type = 'SYSTEMADMIN';
             }
             else{
@@ -216,7 +221,10 @@ const show_start = async (yearvalues) =>{
                         //add to legend below chart
                         let legend_text_chart1;
                         if (common.COMMON_GLOBAL.system_admin==1)
-                            legend_text_chart1 = SearchAndGetText(document.querySelector('#select_status_codes'), stat.statusCode);
+                            if (statGroup=='REQUEST')
+                                legend_text_chart1 = stat.statValue;
+                            else
+                                legend_text_chart1 = SearchAndGetText(document.querySelector('#select_system_admin_stat'), stat.statValue);
                         else
                             legend_text_chart1 = SearchAndGetText(document.querySelector('#select_app_menu1'), stat.app_id);
                         html += `<div id='box1_legend_row' class='box_legend_row'>
@@ -263,7 +271,7 @@ const show_start = async (yearvalues) =>{
                     let legend_text_chart2;
                     if (common.COMMON_GLOBAL.system_admin==1){
                         //as system admin you can filter http codes and application
-                        legend_text_chart2 = document.querySelector('#select_status_codes').options[document.querySelector('#select_status_codes').selectedIndex].text;
+                        legend_text_chart2 = document.querySelector('#select_system_admin_stat').options[document.querySelector('#select_system_admin_stat').selectedIndex].text;
                         const legend_text_chart2_apps = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
                         document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
                                                                             <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
@@ -286,13 +294,21 @@ const show_start = async (yearvalues) =>{
         }
     };
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
-    const get_status_codes = async () =>{
+    const get_system_admin_stat = async () =>{
         return new Promise((resolve)=>{
             common.FFB ('LOG', '/log/statuscode?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
                 if (err)
                     resolve();
                 else{
-                    let html = `<option value="">${common.ICONS.infinite}</option>`;
+                    let html = `<optgroup label='REQUEST'>
+                                    <option value="ip">IP</option>
+                                    <option value="url">URL</option>
+                                    <option value="accept-language">ACCEPT-LANGUAGE</option>
+                                    <option value="user-agent">USER-AGENT</option>
+                                </optgroup>
+                                <optgroup label='RESPONSE HTTP Codes'>
+                                    <option value="">${common.ICONS.infinite}</option>
+                                </optgroup>`;
                     const result_obj = JSON.parse(result);
                     for (const status_code of Object.entries(result_obj.status_codes)){
                         html += `<option value='${status_code[0]}'>${status_code[0]} - ${status_code[1]}</option>`;
@@ -315,7 +331,7 @@ const show_start = async (yearvalues) =>{
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
-                    <select id='select_status_codes'>${common.COMMON_GLOBAL.system_admin==1?await get_status_codes():null}</select>
+                    <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin==1?await get_system_admin_stat():null}</select>
                     <select id='select_app_menu1'>${await get_apps()}</select>
                     <select id='select_year_menu1'>${yearvalues}</select>
                     <select id='select_month_menu1'>${list_generate(12)}</select>
@@ -349,11 +365,11 @@ const show_start = async (yearvalues) =>{
             
     if (common.COMMON_GLOBAL.system_admin==1){
         document.querySelector('#menu_1_maintenance').style.display = 'inline-block';
-        document.querySelector('#select_status_codes').style.display = 'inline-block';
+        document.querySelector('#select_system_admin_stat').style.display = 'inline-block';
     }
     else{
         document.querySelector('#menu_1_maintenance').style.display = 'none';
-        document.querySelector('#select_status_codes').style.display = 'none';
+        document.querySelector('#select_system_admin_stat').style.display = 'none';
     }
 
     document.querySelector('#menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
@@ -361,7 +377,7 @@ const show_start = async (yearvalues) =>{
         
     document.querySelector('#select_year_menu1').selectedIndex = 0;
     document.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
-    document.querySelector('#select_status_codes').addEventListener('change', () => { show_charts();}, false);
+    document.querySelector('#select_system_admin_stat').addEventListener('change', () => { show_charts();}, false);
     document.querySelector('#select_app_menu1').addEventListener('change', () => { show_charts();}, false);
     document.querySelector('#select_year_menu1').addEventListener('change', () => { show_charts();}, false);
     document.querySelector('#select_month_menu1').addEventListener('change', () => { show_charts();}, false);

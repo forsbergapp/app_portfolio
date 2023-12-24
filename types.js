@@ -1002,16 +1002,17 @@
 /**
  * Server - log parameters get log stats
  * @typedef {object} log_parameter_getLogStats
- * @property {number|null} app_id
- * @property {number|null} code
- * @property {number} year
- * @property {number} month
+ * @property {number|null}   app_id
+ * @property {string|null}   statGroup
+ * @property {number|null}   statValue
+ * @property {number}        year
+ * @property {number}        month
  */
 /**
  * Server - Log stats data
  * @typedef {object}        admin_log_stats_data
  * @property {number|null}  chart
- * @property {number|null}  statusCode
+ * @property {number|null}  statValue
  * @property {number}       year
  * @property {number}       month
  * @property {number|null}  day
