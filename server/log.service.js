@@ -552,7 +552,7 @@ const getLogsStats = async (data) => {
     let sample;
     let day = '';
     //declare ES6 Set to save unique status codes and days
-    const log_status_codes = new Set();
+    const log_stat_value = new Set();
     const log_days = new Set();
     for (const file of files){
         if (file.startsWith(`REQUEST_INFO_${data.year}${data.month}`)){
@@ -568,41 +568,61 @@ const getLogsStats = async (data) => {
             fileBuffer.toString().split('\r\n').forEach((record) => {
                 if (record != ''){
                     const  record_obj = JSON.parse(record);
-                    //add for given status code or all status codes if all should be returned
-                    //save this as chart 2 with days
-                    if (data.code == null || data.code == record_obj.statusCode){
+                    if (data.statGroup != null){
                         const domain_app_id = record_obj.host?ConfigGetAppHost(record_obj.host, 'SUBDOMAIN'):null;
                         if (data.app_id == null || data.app_id == domain_app_id){
-                            //add unique status codes to a set
-                            log_status_codes.add(record_obj.statusCode);
+                            //add unique ip to a set
+                            log_stat_value.add((data.statGroup=='url' && record_obj[data.statGroup].indexOf('?')>0)?record_obj[data.statGroup].substring(0,record_obj[data.statGroup].indexOf('?')):record_obj[data.statGroup]);
                             log_days.add(day);
                             /**@ts-ignore */
                             logfiles.push({ 
                                 chart:null,
-                                statusCode: record_obj.statusCode,
+                                statValue: (data.statGroup=='url' && record_obj[data.statGroup].indexOf('?')>0)?record_obj[data.statGroup].substring(0,record_obj[data.statGroup].indexOf('?')):record_obj[data.statGroup],
                                 year: data.year,
                                 month: data.month,
                                 day: Number(day),
                                 amount: null});
-                        }                        
+                        }
                     }
+                    else{
+                        //add for given status code or all status codes if all should be returned
+                        //save this as chart 2 with days
+                        if (data.statValue == null || data.statValue == record_obj.statusCode){
+                            const domain_app_id = record_obj.host?ConfigGetAppHost(record_obj.host, 'SUBDOMAIN'):null;
+                            if (data.app_id == null || data.app_id == domain_app_id){
+                                //add unique status codes to a set
+                                log_stat_value.add(record_obj.statusCode);
+                                log_days.add(day);
+                                /**@ts-ignore */
+                                logfiles.push({ 
+                                    chart:null,
+                                    statValue: record_obj.statusCode,
+                                    year: data.year,
+                                    month: data.month,
+                                    day: Number(day),
+                                    amount: null});
+                            }
+                        }
+                    }
+                    
                 }
             });
         }
     }
-    //loop unique status codes used in log
+
+    //loop unique stat value used in log
     //sort the set using ES6 spread operator
-    [...log_status_codes].sort().forEach(code=>{
+    [...log_stat_value].sort().forEach(value=>{
         //save chart 1 without days and sum amount per month
         /**@ts-ignore */
         logstat.push({
             chart: 1,
-            statusCode: code,
+            statValue: value,
             year: data.year,
             month: data.month,
             day: null,
             /**@ts-ignore */
-            amount: logfiles.filter(log=>log.statusCode==code).length
+            amount: logfiles.filter(log=>log.statValue==value).length
         });
     });
     [...log_days].sort().forEach(day=>{
@@ -610,7 +630,7 @@ const getLogsStats = async (data) => {
         /**@ts-ignore */
         logstat.push({
             chart: 2,
-            statusCode: null,
+            statValue: null,
             year: data.year,
             month: data.month,
             day: day,
