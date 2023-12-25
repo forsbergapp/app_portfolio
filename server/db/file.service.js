@@ -60,7 +60,7 @@ const transaction_start = async (file, filecontent)=>{
         else{
             const tries = 0;
             const timer = setInterval(() => {
-                if (tries > 100)
+                if (tries > 10000)
                     reject ('timeout');
                 else
                     if (fileDB(file).LOCK==0){
@@ -71,7 +71,7 @@ const transaction_start = async (file, filecontent)=>{
                         clearInterval(timer);
                         resolve(transaction_id);
                     }
-            }, 100);
+            }, 1);
         }
             
     });
