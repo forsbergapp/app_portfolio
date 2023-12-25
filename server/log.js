@@ -49,6 +49,7 @@ const getLogStats = (query) =>{
         /**@type{Types.log_parameter_getLogStats} */
         const data = {	app_id:			getNumberValue(query.get('select_app_id')),
                         statGroup:		query.get('statGroup')==''?null:query.get('statGroup'),
+                        unique:		    getNumberValue(query.get('unique')),
                         statValue:		getNumberValue(query.get('statValue')),
                         year: 			getNumberValue(query.get('year')) ?? new Date().getFullYear(),
                         month:			getNumberValue(query.get('month')) ?? new Date().getMonth() +1

@@ -158,7 +158,10 @@ const show_start = async (yearvalues) =>{
             const month = document.querySelector('#select_month_menu1').value;
             const select_admin_stat = document.querySelector('#select_system_admin_stat');
             const statGroup = select_admin_stat.options[select_admin_stat.selectedIndex].parentNode.label;
-            const statValue = document.querySelector('#select_system_admin_stat').value;
+            const statValues = { value: document.querySelector('#select_system_admin_stat').value,
+                                 unique:select_admin_stat.options[select_admin_stat.selectedIndex].getAttribute('unique'),
+                                 statGroup:select_admin_stat.options[select_admin_stat.selectedIndex].getAttribute('statGroup')
+                                };
             let result_obj;
             document.querySelector('#box1_chart').innerHTML = common.APP_SPINNER;
             document.querySelector('#box1_legend').innerHTML = common.APP_SPINNER;
@@ -169,10 +172,11 @@ const show_start = async (yearvalues) =>{
             let authorization_type;
             if (common.COMMON_GLOBAL.system_admin==1){
                 service = 'LOG';
-                if (statGroup=='REQUEST')
-                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${statValue}&statValue=&year=${year}&month=${month}`;
+                if (statGroup=='REQUEST'){
+                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${statValues.statGroup}&statValue=&unique=${statValues.unique}&year=${year}&month=${month}`;
+                }
                 else
-                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${statValue}&year=${year}&month=${month}`;
+                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${statValues.value}&unique=&year=${year}&month=${month}`;
                 authorization_type = 'SYSTEMADMIN';
             }
             else{
@@ -301,17 +305,21 @@ const show_start = async (yearvalues) =>{
                     resolve();
                 else{
                     let html = `<optgroup label='REQUEST'>
-                                    <option value="ip">IP</option>
-                                    <option value="url">URL</option>
-                                    <option value="accept-language">ACCEPT-LANGUAGE</option>
-                                    <option value="user-agent">USER-AGENT</option>
+                                    <option value="ip_total" unique=0 statGroup="ip">IP TOTAL</option>
+                                    <option value="ip_unique" unique=1 statGroup="ip">IP UNIQUE</option>
+                                    <option value="url_total" unique=0 statGroup="url">URL TOTAL</option>
+                                    <option value="url_unique" unique=1 statGroup="url">URL UNIQUE</option>
+                                    <option value="accept-language_total" unique=0 statGroup="accept-language">ACCEPT-LANGUAGE TOTAL</option>
+                                    <option value="accept-language_unique" unique=1 statGroup="accept-language">ACCEPT-LANGUAGE UNIQUE</option>
+                                    <option value="user-agent_total" unique=0 statGroup="user-agent">USER-AGENT TOTAL</option>
+                                    <option value="user-agent_unique" unique=1 statGroup="user-agent">USER-AGENT UNIQUE</option>
                                 </optgroup>
                                 <optgroup label='RESPONSE HTTP Codes'>
-                                    <option value="">${common.ICONS.infinite}</option>
+                                    <option value="" unique=0 statGroup="">${common.ICONS.infinite}</option>
                                 </optgroup>`;
                     const result_obj = JSON.parse(result);
                     for (const status_code of Object.entries(result_obj.status_codes)){
-                        html += `<option value='${status_code[0]}'>${status_code[0]} - ${status_code[1]}</option>`;
+                        html += `<option value='${status_code[0]}' statGroup="">${status_code[0]} - ${status_code[1]}</option>`;
                     }
                     resolve(html);
                 }

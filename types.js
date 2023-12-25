@@ -1001,22 +1001,23 @@
  */
 /**
  * Server - log parameters get log stats
- * @typedef {object} log_parameter_getLogStats
- * @property {number|null}   app_id
- * @property {string|null}   statGroup
- * @property {number|null}   statValue
- * @property {number}        year
- * @property {number}        month
+ * @typedef {object}                log_parameter_getLogStats
+ * @property {number|null}          app_id
+ * @property {string|null}          statGroup
+ * @property {number|null}          unique
+ * @property {string|number|null}   statValue
+ * @property {number}               year
+ * @property {number}               month
  */
 /**
  * Server - Log stats data
- * @typedef {object}        admin_log_stats_data
- * @property {number|null}  chart
- * @property {number|null}  statValue
- * @property {number}       year
- * @property {number}       month
- * @property {number|null}  day
- * @property {number|null}  amount
+ * @typedef {object}                admin_log_stats_data
+ * @property {number|null}          chart
+ * @property {string|number|null}   statValue
+ * @property {number}               year
+ * @property {number}               month
+ * @property {number|null}          day
+ * @property {number|null}          amount
  */
 /**
  * Server - Log files
