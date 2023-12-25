@@ -540,9 +540,9 @@ const getStatusCodes = async () =>{
  * @param {Types.log_parameter_getLogStats} data 
  */
 const getLogsStats = async (data) => {
-    /**@type{[Types.admin_log_stats_data]|[]} */
+    /**@type{Types.admin_log_stats_data[]|[]} */
     const logfiles = [];
-    /**@type{[Types.admin_log_stats_data]|[]} */
+    /**@type{Types.admin_log_stats_data[]|[]} */
     const logstat = [];
     
     const fs = await import('node:fs');
@@ -571,17 +571,20 @@ const getLogsStats = async (data) => {
                     if (data.statGroup != null){
                         const domain_app_id = record_obj.host?ConfigGetAppHost(record_obj.host, 'SUBDOMAIN'):null;
                         if (data.app_id == null || data.app_id == domain_app_id){
-                            //add unique ip to a set
-                            log_stat_value.add((data.statGroup=='url' && record_obj[data.statGroup].indexOf('?')>0)?record_obj[data.statGroup].substring(0,record_obj[data.statGroup].indexOf('?')):record_obj[data.statGroup]);
+                            const statGroupvalue = (data.statGroup=='url' && record_obj[data.statGroup].indexOf('?')>0)?record_obj[data.statGroup].substring(0,record_obj[data.statGroup].indexOf('?')):record_obj[data.statGroup];
+                            //add unique statGroup to a set
+                            log_stat_value.add(statGroupvalue);
                             log_days.add(day);
-                            /**@ts-ignore */
-                            logfiles.push({ 
-                                chart:null,
-                                statValue: (data.statGroup=='url' && record_obj[data.statGroup].indexOf('?')>0)?record_obj[data.statGroup].substring(0,record_obj[data.statGroup].indexOf('?')):record_obj[data.statGroup],
-                                year: data.year,
-                                month: data.month,
-                                day: Number(day),
-                                amount: null});
+                            if (data.unique==0 ||(data.unique==1 && logfiles.filter(row=>row.statValue==statGroupvalue).length==0)){
+                                /**@ts-ignore */
+                                logfiles.push({ 
+                                    chart:null,
+                                    statValue: statGroupvalue,
+                                    year: data.year,
+                                    month: data.month,
+                                    day: Number(day),
+                                    amount: null});
+                            }
                         }
                     }
                     else{
