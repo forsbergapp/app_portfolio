@@ -156,12 +156,15 @@ const show_start = async (yearvalues) =>{
             const app_id = document.querySelector('#select_app_menu1').value; 
             const year = document.querySelector('#select_year_menu1').value;
             const month = document.querySelector('#select_month_menu1').value;
-            const select_admin_stat = document.querySelector('#select_system_admin_stat');
-            const statGroup = select_admin_stat.options[select_admin_stat.selectedIndex].parentNode.label;
-            const statValues = { value: document.querySelector('#select_system_admin_stat').value,
-                                 unique:select_admin_stat.options[select_admin_stat.selectedIndex].getAttribute('unique'),
-                                 statGroup:select_admin_stat.options[select_admin_stat.selectedIndex].getAttribute('statGroup')
-                                };
+            const select_system_admin_stat = common.COMMON_GLOBAL.system_admin==1?
+                                                document.querySelector('#select_system_admin_stat'):null;
+            const system_admin_statGroup = common.COMMON_GLOBAL.system_admin==1?
+                                                select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
+            const system_admin_statValues = common.COMMON_GLOBAL.system_admin==1?
+                                                { value: document.querySelector('#select_system_admin_stat').value,
+                                                    unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
+                                                    statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
+                                                }:null;
             let result_obj;
             document.querySelector('#box1_chart').innerHTML = common.APP_SPINNER;
             document.querySelector('#box1_legend').innerHTML = common.APP_SPINNER;
@@ -172,11 +175,11 @@ const show_start = async (yearvalues) =>{
             let authorization_type;
             if (common.COMMON_GLOBAL.system_admin==1){
                 service = 'LOG';
-                if (statGroup=='REQUEST'){
-                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${statValues.statGroup}&statValue=&unique=${statValues.unique}&year=${year}&month=${month}`;
+                if (system_admin_statGroup=='REQUEST'){
+                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
                 }
                 else
-                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${statValues.value}&unique=&year=${year}&month=${month}`;
+                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${system_admin_statValues.value}&unique=&year=${year}&month=${month}`;
                 authorization_type = 'SYSTEMADMIN';
             }
             else{
@@ -225,7 +228,7 @@ const show_start = async (yearvalues) =>{
                         //add to legend below chart
                         let legend_text_chart1;
                         if (common.COMMON_GLOBAL.system_admin==1)
-                            if (statGroup=='REQUEST')
+                            if (system_admin_statGroup=='REQUEST')
                                 legend_text_chart1 = stat.statValue;
                             else
                                 legend_text_chart1 = SearchAndGetText(document.querySelector('#select_system_admin_stat'), stat.statValue);
