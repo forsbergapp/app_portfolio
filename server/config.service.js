@@ -45,17 +45,18 @@ const app_portfolio_title = 'App Portfolio';
                                                             /**@type {Types.config_apps_record}*/current)=> 
                                                                 app.concat({APP_ID:current.APP_ID,
                                                                             NAME:current.NAME,
+                                                                            SUBDOMAIN:current.SUBDOMAIN,
                                                                             PATH:current.PATH,
                                                                             LOGO:current.LOGO,
                                                                             JS:current.JS,
+                                                                            JS_SECURE:current.JS_SECURE,
                                                                             JS_REPORT:current.JS_REPORT,
                                                                             CSS:current.CSS,
                                                                             CSS_REPORT:current.CSS_REPORT,
                                                                             FAVICON_32x32:current.FAVICON_32x32,
                                                                             FAVICON_192x192:current.FAVICON_192x192,
                                                                             SHOWINFO:current.SHOWINFO,
-                                                                            SHOWPARAM:current.SHOWPARAM,
-                                                                            SUBDOMAIN:current.SUBDOMAIN}) , []);
+                                                                            SHOWPARAM:current.SHOWPARAM}) , []);
     return apps;                                                            
  };
  /**
