@@ -901,9 +901,9 @@ const getReport = async (app_id, ip, host, user_agent, accept_language, reportid
  * @returns 
  */
 const getAppGeodata = async (app_id, ip, user_agent, accept_language, datatoken) =>{
-    const { BFF } = await import(`file://${process.cwd()}/server/bff.service.js`);
+    const { BFF_call_service } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    const result_gps = await BFF({  app_id:app_id, 
+    const result_gps = await BFF_call_service({  app_id:app_id, 
                                     endpoint: 'APP', 
                                     service:'GEOLOCATION', 
                                     ip:ip, 
@@ -920,32 +920,32 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language, datatoken)
     .catch((/**@type{Types.error}*/error)=>error);
     const result_geodata = {};
     if (result_gps){
-        result_geodata.latitude = JSON.parse(result_gps).geoplugin_latitude;
-        result_geodata.longitude = JSON.parse(result_gps).geoplugin_longitude;
-        result_geodata.place =  JSON.parse(result_gps).geoplugin_city + ', ' +
-                                JSON.parse(result_gps).geoplugin_regionName + ', ' +
-                                JSON.parse(result_gps).geoplugin_countryName;
-        result_geodata.timezone = JSON.parse(result_gps).geoplugin_timezone;
+        result_geodata.latitude =   JSON.parse(result_gps).geoplugin_latitude;
+        result_geodata.longitude=   JSON.parse(result_gps).geoplugin_longitude;
+        result_geodata.place    =   JSON.parse(result_gps).geoplugin_city + ', ' +
+                                    JSON.parse(result_gps).geoplugin_regionName + ', ' +
+                                    JSON.parse(result_gps).geoplugin_countryName;
+        result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
-        const result_city = await BFF({ app_id:app_id, 
-                                        endpoint: 'APP', 
-                                        service:'WORLDCITIES', 
-                                        ip:ip, 
-                                        method:'GET', 
-                                        authorization:`Bearer ${datatoken}`, 
-                                        host:null, 
-                                        user_agent:user_agent, 
-                                        accept_language:accept_language,
-                                        url:null,
-                                        parameters:new Buffer('/city/random?').toString('base64'), 
-                                        body:null,
-                                        user_account_logon_user_account_id:null,
-                                        res:null});
-        result_geodata.latitude = JSON.parse(result_city).lat;
-        result_geodata.longitude = JSON.parse(result_city).lng;
-        result_geodata.place = JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
-        result_geodata.timezone = null;
+        const result_city = await BFF_call_service({app_id:app_id, 
+                                                    endpoint: 'APP', 
+                                                    service:'WORLDCITIES', 
+                                                    ip:ip, 
+                                                    method:'GET', 
+                                                    authorization:`Bearer ${datatoken}`, 
+                                                    host:null, 
+                                                    user_agent:user_agent, 
+                                                    accept_language:accept_language,
+                                                    url:null,
+                                                    parameters:new Buffer('/city/random?').toString('base64'), 
+                                                    body:null,
+                                                    user_account_logon_user_account_id:null,
+                                                    res:null});
+        result_geodata.latitude =   JSON.parse(result_city).lat;
+        result_geodata.longitude=   JSON.parse(result_city).lng;
+        result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
+        result_geodata.timezone =   null;
     }
     return result_geodata;
 };
