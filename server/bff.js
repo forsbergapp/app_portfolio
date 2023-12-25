@@ -14,37 +14,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const BFF = (bff_parameters) =>{
 
-    service.BFF(bff_parameters)
-    .then((/**@type{*}*/result_service) => {
-        import(`file://${process.cwd()}/server/log.service.js`).then(({LogServiceI})=>{
-            const log_result = bff_parameters.service.toUpperCase()=='MAIL'?'✅':result_service;
-            LogServiceI(bff_parameters.app_id, bff_parameters.service, bff_parameters.parameters, log_result).then(()=>{
-                if (bff_parameters.endpoint=='SOCKET'){
-                    //This endpoint only allowed for EventSource so no more update of response
-                    null;
-                }
-                else{
-                    //result from APP can request to redirect to another subdomain or domain
-                    if (bff_parameters.res.statusCode==301)
-                        bff_parameters.res.redirect('/');
-                    else
-                        bff_parameters.res.status(200).send(log_result);
-                }
-                    
-            });
-        });
-    })
-    .catch((/**@type{Types.error}*/error) => {
-        import(`file://${process.cwd()}/server/log.service.js`).then(({LogServiceE})=>{
-            //log ERROR to module log and to files
-            LogServiceE(bff_parameters.app_id ?? null, bff_parameters.service ?? null, bff_parameters.parameters ?? null, error).then(() => {
-                //return service unavailable and error message
-                //return any statuscode not being 200 specified by error or use 503 service unavailable
-                const statusCode = bff_parameters.res.statusCode==200?503:bff_parameters.res.statusCode ?? 503;
-                bff_parameters.res.status(statusCode).send(error);
-            });
-        });
-    });
+    service.BFF(bff_parameters);
 };
 /**
  * Backend for frontend (BFF) APP including assets, report and info pages
