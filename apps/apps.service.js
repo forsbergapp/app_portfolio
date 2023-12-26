@@ -955,7 +955,7 @@ const getMaintenance = (app_id) => {
     /** @type {[string, string][]} */
     const render_variables = [];
     render_variables.push(['ITEM_COMMON_PARAMETERS',JSON.stringify(parameters)]);
-    return render_app_with_data(render_files(app_id, 'MAINTENANCE'), render_variables);
+    return render_app_with_data(render_files(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'MAINTENANCE'), render_variables);
 };
 /**
  * Renders provider buttons
@@ -1142,87 +1142,91 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
         return null;
     }
     else
-        if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || app_start(app_id) ==true)
-            return new Promise((resolve, reject)=>{
-                if (url.toLowerCase().startsWith('/css')||
-                    url.toLowerCase().startsWith('/images')||
-                    url.toLowerCase().startsWith('/js')||
-                    url.toLowerCase().startsWith('/common')||
-                    url == '/manifest.json'||
-                    url == '/sw.js')
-                    if (url.toLowerCase().startsWith('/common'))
-                        resolve(getAssetFile(app_id, url.substring('/common'.length), '/apps/common/public', res)
-                                .catch(()=>null));
+        if (url.toLowerCase().startsWith('/maintenance'))
+            return getAssetFile(app_id, url.substring('/maintenance'.length), '/apps/common/public', res)
+                    .catch(()=>null);
+        else
+            if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || app_start(app_id) ==true)
+                return new Promise((resolve, reject)=>{
+                    if (url.toLowerCase().startsWith('/css')||
+                        url.toLowerCase().startsWith('/images')||
+                        url.toLowerCase().startsWith('/js')||
+                        url.toLowerCase().startsWith('/common')||
+                        url == '/manifest.json'||
+                        url == '/sw.js')
+                        if (url.toLowerCase().startsWith('/common'))
+                            resolve(getAssetFile(app_id, url.substring('/common'.length), '/apps/common/public', res)
+                                    .catch(()=>null));
+                        else
+                            resolve(getAssetFile(app_id, url, ConfigGetApp(app_id,'PATH'), res)
+                                    .catch(()=>null));
                     else
-                        resolve(getAssetFile(app_id, url, ConfigGetApp(app_id,'PATH'), res)
-                                .catch(()=>null));
-                else
-                    if (info)
-                        if (ConfigGetApp(app_id, 'SHOWINFO')==1)
-                            switch (info){
-                                case 'about':
-                                case 'disclaimer':
-                                case 'privacy_policy':
-                                case 'terms':{
-                                    if (typeof lang_code !='undefined'){
-                                        lang_code = 'en';
-                                    }
-                                    getInfo(app_id, info, lang_code, (/**@type{Types.error}*/err, /**@type{Types.info_page_data}}*/info_result)=>{
-                                        //show empty if any error
-                                        if (err){
-                                            res.statusCode = 500;
-                                            res.statusMessage = err;
-                                            reject(err);
+                        if (info)
+                            if (ConfigGetApp(app_id, 'SHOWINFO')==1)
+                                switch (info){
+                                    case 'about':
+                                    case 'disclaimer':
+                                    case 'privacy_policy':
+                                    case 'terms':{
+                                        if (typeof lang_code !='undefined'){
+                                            lang_code = 'en';
                                         }
-                                        else
-                                            resolve(info_result);
-                                    });
-                                    break;
+                                        getInfo(app_id, info, lang_code, (/**@type{Types.error}*/err, /**@type{Types.info_page_data}}*/info_result)=>{
+                                            //show empty if any error
+                                            if (err){
+                                                res.statusCode = 500;
+                                                res.statusMessage = err;
+                                                reject(err);
+                                            }
+                                            else
+                                                resolve(info_result);
+                                        });
+                                        break;
+                                    }
+                                    default:{
+                                        resolve(null);
+                                        break;
+                                    }
                                 }
-                                default:{
-                                    resolve(null);
-                                    break;
-                                }
-                            }
+                            else
+                                resolve(null);
                         else
-                            resolve(null);
-                    else
-                        if (url.toLowerCase().startsWith('/report'))
-                            getReport(app_id, ip, host, user_agent, accept_language, reportid, messagequeue)
-                            .then((report_result)=>{
-                                if (report_result.type=='PDF')
-                                    res.type('application/pdf');
-                                resolve(report_result.report);
-                            });
-                        else
-                            if ((ConfigGetApp(app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '') ||
-                                url == '/')
-                                LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '1 ' + new Date().toISOString())
-                                .then(()=>{
-                                    getAppBFF(app_id, 
-                                                {   param:          url.substring(1)==''?null:url.substring(1),
-                                                    ip:             ip, 
-                                                    user_agent:     user_agent,
-                                                    accept_language:accept_language,
-                                                    host:           host}).then(app_result=>{
-                                        LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '2 ' + new Date().toISOString())
-                                        .then(()=>{
-                                            resolve(app_result);
-                                        })
-                                        .catch((/**@type{Types.error}*/err)=>{
-                                            res.statusCode = 500;
-                                            res.statusMessage = err;
-                                            reject(err);
+                            if (url.toLowerCase().startsWith('/report'))
+                                getReport(app_id, ip, host, user_agent, accept_language, reportid, messagequeue)
+                                .then((report_result)=>{
+                                    if (report_result.type=='PDF')
+                                        res.type('application/pdf');
+                                    resolve(report_result.report);
+                                });
+                            else
+                                if ((ConfigGetApp(app_id, 'SHOWPARAM') == 1 && url.substring(1) !== '') ||
+                                    url == '/')
+                                    LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '1 ' + new Date().toISOString())
+                                    .then(()=>{
+                                        getAppBFF(app_id, 
+                                                    {   param:          url.substring(1)==''?null:url.substring(1),
+                                                        ip:             ip, 
+                                                        user_agent:     user_agent,
+                                                        accept_language:accept_language,
+                                                        host:           host}).then(app_result=>{
+                                            LogAppI(app_id, COMMON.app_filename(import.meta.url), url, COMMON.app_line(), '2 ' + new Date().toISOString())
+                                            .then(()=>{
+                                                resolve(app_result);
+                                            })
+                                            .catch((/**@type{Types.error}*/err)=>{
+                                                res.statusCode = 500;
+                                                res.statusMessage = err;
+                                                reject(err);
+                                            });
                                         });
                                     });
-                                });
-                            else{
-                                res.statusCode = 301;
-                                resolve(null);
-                            }
-            });
-        else
-            return getMaintenance(app_id);
+                                else{
+                                    res.statusCode = 301;
+                                    resolve(null);
+                                }
+                });
+            else
+                return getMaintenance(app_id);
     
 };
 export {/*APP functions */
