@@ -601,7 +601,8 @@
  *              'APP_ACCESS_SECRET'|
  *              'APP_ACCESS_EXPIRE'|
  *              'CONFIG'|
- *              'RENDER_FILES'} config_apps_keys
+ *              'RENDER_FILES'|
+ *              'STATUS'} config_apps_keys
  * @typedef {{  MAP: boolean, 
  *              MANIFEST:boolean,
  *              RENDER_PROFILE_APPS:boolean,
@@ -616,6 +617,7 @@
  *              RENDER_LOCALES:boolean, 
  *              RENDER_SETTINGS:boolean, 
  *              RENDER_PROVIDER_BUTTONS:boolean}} config_apps_config
+ * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
  * @typedef  {object} config_apps_record
  * @property {function} filter
@@ -643,6 +645,7 @@
  * @property {string} [ACCESS_EXPIRE]
  * @property {config_apps_config} [CONFIG]
  * @property {config_apps_render_files[]} [RENDER_FILES]
+ * @property {config_apps_status} STATUS
  * 
  * @typedef  {object} config_apps_with_db_columns
  * @property {number} APP_ID
@@ -659,6 +662,7 @@
  * @property {string} SHOWINFO
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
+ * @property {config_apps_status} STATUS
  * @property {string} APP_DESCRIPTION
  * @property {string} APP_CATEGORY
  * @property {string} PROTOCOL
@@ -680,7 +684,7 @@
  * @property {string} SHOWINFO
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
- * @property {number} ENABLED
+ * @property {config_apps_status} STATUS
  * @property {number} APP_CATEGORY_ID
  * @property {string} APP_CATEGORY_TEXT
  * @property {string} PROTOCOL
@@ -1076,13 +1080,11 @@
  * result:
  *  db_result_[TABLE]_[function name]
  * APP
- * @typedef {{  enabled:number, 
- *              app_category_id:number|null}} db_parameter_app_updateAppAdmin
+ * @typedef {{  app_category_id:number|null}} db_parameter_app_updateAppAdmin
  * @typedef {{  id:number, 
  *              app_description:string, 
  *              app_category:string}} db_result_app_getApp
  * @typedef {{  id:number, 
- *              enabled:number, 
  *              app_category_id:number, 
  *              app_category_text:string}} db_result_app_getAppsAdmin
  * @typedef {{  id:number}} db_result_app_getAppsAdminId

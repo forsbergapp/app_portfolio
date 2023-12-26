@@ -39,8 +39,7 @@ const getUserAccountApps = async (app_id, user_account_id) => {
 					   FROM ${db_schema()}.user_account_app uap,
 							${db_schema()}.app a
 					  WHERE a.id = uap.app_id
-						AND uap.user_account_id = :user_account_id
-						AND a.enabled = 1`;
+						AND uap.user_account_id = :user_account_id`;
 		const parameters = {
 						user_account_id: user_account_id
 						};

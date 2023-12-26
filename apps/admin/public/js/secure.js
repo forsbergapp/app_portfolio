@@ -1014,7 +1014,7 @@ const show_apps = async () => {
                                 <div>LOGO</div>
                             </div>
                             <div id='list_apps_col_title5' class='list_apps_col list_title'>
-                                <div>ENABLED</div>
+                                <div>STATUS</div>
                             </div>
                             <div id='list_apps_col_title6' class='list_apps_col list_title'>
                                 <div>CATEGORY ID</div>
@@ -1040,7 +1040,7 @@ const show_apps = async () => {
                         <input type=text class='list_edit' value='${app.LOGO}' readonly/>
                     </div>
                     <div class='list_apps_col'>
-                        <input type='checkbox' class='list_edit' ${app.ENABLED==1?'checked':''} />
+                        <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
                     </div>
                     <div class='list_apps_col'>
                         <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(app.APP_CATEGORY_ID)}' />
@@ -1068,8 +1068,6 @@ const show_apps = async () => {
             //add lov icon
             document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
             list_events('list_apps', 'list_apps_row', ' .list_edit');
-            //disable enabled checkbox for app 0 common
-            document.querySelector('#list_apps_row_0').children[4].children[0].disabled = true;
             //set focus first column in first row
             //this will trigger to show detail records
             document.querySelectorAll('#list_apps .list_edit')[0].focus();
@@ -1146,7 +1144,6 @@ const button_save = async (item) => {
                                     record,
                                     item,
                                     {id: record.children[0].children[0].innerHTML,
-                                     enabled: record.children[4].children[0].checked,
                                      app_category_id: record.children[5].children[0].value});
             }
         }
@@ -1264,15 +1261,7 @@ const update_record = async (table,
                 break;
             }
             case 'app':{
-                if (parameters.id==common.COMMON_GLOBAL.common_app_id){
-                    if (row_element.children[4].children[0].checked == false){
-                        //app common.COMMON_GLOBAL.common_app_id should always be enabled
-                        row_element.children[4].children[0].checked = true;
-                        parameters.enabled=true;
-                    }
-                }
                 json_data = {   
-                                enabled:        parameters.enabled==true?1:0,
                                 app_category_id:parameters.app_category_id
                             };
                 path = `/apps/admin?PUT_ID=${parameters.id}`;

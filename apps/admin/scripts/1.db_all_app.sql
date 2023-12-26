@@ -1,7 +1,7 @@
 --
 -- app
 --
-INSERT INTO app_portfolio.app (id, enabled, app_category_id) VALUES (0, 1, null);
+INSERT INTO app_portfolio.app (id, app_category_id) VALUES (0, null);
 --
 -- setting_type
 --

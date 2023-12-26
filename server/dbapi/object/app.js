@@ -30,8 +30,7 @@ const getAppsAdmin = (app_id, query) => service.getAppsAdmin(app_id, query.get('
  */
 const updateAdmin = (app_id, query, data) =>{
     /**@type{Types.db_parameter_app_updateAppAdmin} */
-    const body = {	enabled: 		getNumberValue(data.enabled) ?? 0,
-                    app_category_id:getNumberValue(data.app_category_id)};
+    const body = {	app_category_id:getNumberValue(data.app_category_id)};
     return service.updateAppAdmin(app_id, getNumberValue(query.get('PUT_ID')), body)
             .catch((/**@type{Types.error}*/error)=>{throw error;});
 };

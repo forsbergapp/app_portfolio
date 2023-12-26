@@ -56,7 +56,8 @@ const app_portfolio_title = 'App Portfolio';
                                                                             FAVICON_32x32:current.FAVICON_32x32,
                                                                             FAVICON_192x192:current.FAVICON_192x192,
                                                                             SHOWINFO:current.SHOWINFO,
-                                                                            SHOWPARAM:current.SHOWPARAM}) , []);
+                                                                            SHOWPARAM:current.SHOWPARAM,
+                                                                            STATUS:current.STATUS}) , []);
     return apps;                                                            
  };
  /**
@@ -111,7 +112,8 @@ const app_portfolio_title = 'App Portfolio';
         case 'APP_ACCESS_SECRET':
         case 'APP_ACCESS_EXPIRE':
         case 'CONFIG':
-        case 'RENDER_FILES':{
+        case 'RENDER_FILES':
+        case 'STATUS':{
             return Object.entries(file_get_cached('APPS'))[0][1].filter(
                 (/**@type{Types.config_apps_record}*/app)=>{return app.APP_ID == app_id;})[0][parameter];
         }
