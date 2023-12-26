@@ -1,0 +1,66 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="839D910D-CD7D-7F84-45D0-67FA5C50266F" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="message_level">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>5BAB3481-238B-402D-38C5-AE60955866C0</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="EE9A6AEF-F7DD-0B8F-E9E0-EE0FDE92BB9B">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>4A5C01D6-B036-8A33-B89E-BDD4DE852D17</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<defaultOntNull>true</defaultOntNull>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>30</autoIncrementCache>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
+<Column name="message_level" id="4577BA75-3D02-EDDF-CE5F-C8EEBB05E42B">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>B3002DB5-434D-6675-82FB-87B9F521D9C7</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="618CF583-B8A6-F81F-4BAC-AD4887B31D75" name="message_level_PK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>7DB83BBB-4C07-533B-2494-F621BA9EECAE</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="EE9A6AEF-F7DD-0B8F-E9E0-EE0FDE92BB9B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="50CB66A4-B6F4-EC0C-83F4-31598B09A9E0" name="message_level_message_level_UN">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>DAB1BDC0-BA03-D621-2615-78E2122772CF</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4577BA75-3D02-EDDF-CE5F-C8EEBB05E42B"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

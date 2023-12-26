@@ -1,0 +1,63 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="F0E03E84-93DF-ED23-A212-B8EE420E2CBC" name="app_device">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-19 21:59:13 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="app_id" id="E8BD6870-B3DB-EDA3-BECD-7F3E983368E7">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-19 22:04:20 UTC</createdTime>
+<generatorID>127E17CD-A5C9-E4A7-7D25-6F7ECE927D15</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A5D99573-E640-21A7-D685-6D434FAA1C53</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="device_id" id="E2EDC8C9-72E3-E0F9-34C4-53E2E033D5D4">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-19 22:10:06 UTC</createdTime>
+<generatorID>26B4AC38-C79E-B19E-6C25-B7B6553BA846</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6B3F18E0-F6E7-C4BE-AE33-DDAE99FB81ED</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="58444FC9-A938-44A4-8A45-16ECD8F89242" name="app_device PK">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-19 22:04:31 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>E8BD6870-B3DB-EDA3-BECD-7F3E983368E7</attributeRef>
+<attributeRef>E2EDC8C9-72E3-E0F9-34C4-53E2E033D5D4</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,78 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="04793015-3F70-F27C-77EA-5B7F125BE62C" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="locale">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 20:29:24 UTC</createdTime>
+<generatorID>5F0B0572-01FA-67C3-9250-47EA29C75CEE</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="language_id" id="6AEE4672-0FF0-5FA4-C1F7-C7882480F912">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 20:29:24 UTC</createdTime>
+<generatorID>5E7E610B-8C87-FFB4-F6CE-2063659090C3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="B4EBE312-8EFB-34A2-D724-2A9B1D6F2910" referredColumn="56940672-7C78-C6EE-33E8-AEFCAAA604F1"/>
+</associations>
+</Column>
+<Column name="country_id" id="DA0EFE0E-3C76-F145-F144-410BE7255570">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-20 00:26:50 UTC</createdTime>
+<generatorID>A4E86A73-485F-832D-9D97-B2B1FED58CC2</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="616309EF-A151-3977-6873-050BE4BCBAAE" referredColumn="93CB352B-5B37-4FA2-C1BF-B9A4319F1B47"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="A595E5CA-7097-278A-E349-679495A22E0E" name="locale_language_id_country_id_UN">
+<createdBy>admin</createdBy>
+<createdTime>2022-05-03 20:44:33 UTC</createdTime>
+<generatorID>76707549-9082-6397-6CF9-6640EA48C5A1</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6AEE4672-0FF0-5FA4-C1F7-C7882480F912"/>
+<colUsage columnID="DA0EFE0E-3C76-F145-F144-410BE7255570"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="213378CE-1931-D5D2-B993-93EA37517B31" name="locale_language_FK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 20:29:24 UTC</createdTime>
+<generatorID>01932237-B3D3-59B6-BB30-291AB84A0EE0</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="6AEE4672-0FF0-5FA4-C1F7-C7882480F912"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="6F660230-5B4E-6DE9-8015-A34C48A3975E" name="locale_country_FK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-13 02:51:53 UTC</createdTime>
+<generatorID>1680F63E-920C-F9F1-9A9A-7C4335282916</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="DA0EFE0E-3C76-F145-F144-410BE7255570"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

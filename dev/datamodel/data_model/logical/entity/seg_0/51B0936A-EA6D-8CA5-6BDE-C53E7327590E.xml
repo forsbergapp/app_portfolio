@@ -1,0 +1,133 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="51B0936A-EA6D-8CA5-6BDE-C53E7327590E" name="user_account_app">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-15 12:46:28 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="user_account_id" id="FB38BBDB-CCDF-8069-4526-413C4DEF28B2">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-15 12:47:28 UTC</createdTime>
+<generatorID>E9B08579-C238-FA19-37BC-F7646BC10B16</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A028F8AE-2874-B058-F3DA-38793B0FBE2F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_id" id="A450D2E8-0215-7B42-8897-CE28E24D8445">
+<createdBy>admin</createdBy>
+<createdTime>2022-06-20 08:51:40 UTC</createdTime>
+<generatorID>6AFBAEE0-96BC-0317-61CA-C43AA3DD27C5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A5D99573-E640-21A7-D685-6D434FAA1C53</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="preference_locale" id="62FC0FE5-40B5-6DD9-BD67-60CC16062AA2">
+<createdBy>admin</createdBy>
+<createdTime>2022-08-07 19:29:39 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_setting_preference_timezone_id" id="9E1E0ABD-C3CE-7147-E26B-4810AEAF0C20">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 02:17:03 UTC</createdTime>
+<generatorID>AE30193B-36D2-7C48-8BCE-D13207C8A358</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_setting_preference_direction_id" id="BCC22102-3491-6C68-3735-0D886E73BC1F">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 02:17:03 UTC</createdTime>
+<generatorID>3F787C20-749A-C3C0-4724-065859A4B696</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_setting_preference_arabic_script_id" id="BF49DA62-DFCD-182E-B5A3-FCBA966BE35F">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 02:17:03 UTC</createdTime>
+<generatorID>05C685FC-4958-FAC6-2F14-D550867E99D5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="date_created" id="3BBA7A42-FFDC-984E-D731-8D4B3914DE95">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-15 15:00:28 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT008</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="EA1C2EA7-D5AA-48CE-C49A-A923CF1867BA" name="user_account_app PK">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-15 12:49:29 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>FB38BBDB-CCDF-8069-4526-413C4DEF28B2</attributeRef>
+<attributeRef>A450D2E8-0215-7B42-8897-CE28E24D8445</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

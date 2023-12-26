@@ -1,0 +1,129 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="app_log" directorySegmentName="seg_0" id="4712657F-C660-872D-808A-3EEF6D219188">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="id" id="00BA1F54-F716-DF24-4261-22A507C9E92E">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="app_id" id="01DDBB54-1A97-0563-BCEE-908D62EF18DC">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="client_latitude" id="03D5601B-E332-0DD5-9C4D-A56B5E6A7048">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="user_timezone" id="1212FC4C-5C59-55A7-1B7E-EE2E26755E5A">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="server_remote_addr" id="2F38D6CF-AF0D-A72F-686A-70569CF62FB6">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_module" id="2FCA85E1-C002-6160-97EA-20ED167299D1">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="date_created" id="5D3C6D94-1456-54D1-D157-B5A26F834166">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_module_type" id="6C609C5B-63CD-050F-D196-1451FA815199">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_module_request" id="6D12A5D5-137F-4B73-0184-21C82B2C09C5">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_user_id" id="80539DC2-8F89-8927-3153-C8C21C889C00">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="user_platform" id="8057C298-9C0E-42E8-4EF2-4A3570322B96">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="user_language" id="80F8921E-49DE-D39B-9BCD-9C5BA4F5A248">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="user_number_system" id="93A98CB4-D7FD-AD03-A301-83ECF2DE8306">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="server_http_host" id="9DA28C7D-D074-188B-8179-99461BE41DC4">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="server_http_accept_language" id="BBCF3B5E-6DFD-27EE-BF6F-7B5541D9B46E">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="server_user_agent" id="CDBAC4EB-33BD-7E83-979E-4BCD1A50EE38">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_module_result" id="CF59B773-3136-E185-99E5-EC7474895C76">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="client_longitude" id="F9F615E3-8062-8909-8691-3BCA224D608A">
+<createdBy>admin</createdBy>
+<createdTime>2020-08-06 18:00:54 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<indexProxies>
+<IndexProxy class="oracle.dbtools.crest.model.design.storage.oracle.v10g.IndexProxyOraclev10g" name="app_log_date_created_index" id="458E56AE-627B-EFEE-585F-E50BB3A4CD11">
+<createdBy>admin</createdBy>
+<createdTime>2022-03-28 19:13:27 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<logging></logging>
+</IndexProxy>
+</indexProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_log_app_FK" id="56EAF746-2DEA-A207-3F0C-35D6E48413CD">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_log_PK" id="670EADC4-DCD0-57BD-BF19-96E12A098BF4">
+<createdBy>admin</createdBy>
+<createdTime>2021-03-15 04:10:30 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

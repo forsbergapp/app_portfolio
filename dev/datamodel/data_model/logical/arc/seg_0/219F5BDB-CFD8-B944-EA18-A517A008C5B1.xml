@@ -1,0 +1,21 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Arc class="oracle.dbtools.crest.model.design.logical.Arc" directorySegmentName="seg_0" id="219F5BDB-CFD8-B944-EA18-A517A008C5B1" name="Arc_3">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:39:16 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<entity>731E68A9-E836-8A47-8DEF-6B4CAFA0CF49</entity>
+<relations>
+<relationID>8EFA23AA-E19A-6F94-8CE4-75693EF65CA5</relationID>
+<relationID>CA0C4E5E-E315-21B9-351E-82D3EA765494</relationID>
+<relationID>82B79473-AF93-BB19-083E-883DC9FA510B</relationID>
+<relationID>02520193-D03A-F117-6E2E-99CCCD72176F</relationID>
+<relationID>7DC27455-0B7B-555C-4922-3F29987DA5DD</relationID>
+<relationID>04A5B336-138A-B146-CF43-812FC459CA1D</relationID>
+<relationID>E0ECB5E8-8094-800E-5A9B-0F0B941643D1</relationID>
+<relationID>1E92D2F3-824A-6852-5A41-FB2D97FB74FB</relationID>
+<relationID>C4309A60-4E9F-04BF-9818-057385BD970A</relationID>
+</relations>
+</Arc>

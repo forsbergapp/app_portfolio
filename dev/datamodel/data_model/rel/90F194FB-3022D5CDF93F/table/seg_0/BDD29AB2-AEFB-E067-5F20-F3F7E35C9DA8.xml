@@ -1,0 +1,65 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="BDD29AB2-AEFB-E067-5F20-F3F7E35C9DA8" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="app_object">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 02:52:27 UTC</createdTime>
+<generatorID>A6929A03-FCFC-D712-728C-DB513515DCBE</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="app_id" id="84E290B8-489C-028A-57F8-9ADB8AD5913D">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 02:52:27 UTC</createdTime>
+<generatorID>4B4BC33F-FD04-32A9-F318-A0B698964186</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="6D27F2A0-637A-4F0E-5B1E-6437920B05FE" referredColumn="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
+</associations>
+</Column>
+<Column name="object_name" id="084BF52D-9C7A-6C13-885D-3DC4D30EA3B2">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 02:52:27 UTC</createdTime>
+<generatorID>3C5EF603-4F1D-C96C-F318-B45200872626</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="9D823358-93B4-2420-EE0D-DD9A547CE4BF" name="app_object_PK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 02:52:27 UTC</createdTime>
+<generatorID>3FDFDF54-9193-103A-DED0-259B2806EACC</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="084BF52D-9C7A-6C13-885D-3DC4D30EA3B2"/>
+<colUsage columnID="84E290B8-489C-028A-57F8-9ADB8AD5913D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="E837B76E-1D98-D02F-E0A0-DFEDA5AB3849" name="app_object_app_FK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 02:52:27 UTC</createdTime>
+<generatorID>98A604D0-EBB2-9EAA-98FC-9BD5CB0922C5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="84E290B8-489C-028A-57F8-9ADB8AD5913D"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

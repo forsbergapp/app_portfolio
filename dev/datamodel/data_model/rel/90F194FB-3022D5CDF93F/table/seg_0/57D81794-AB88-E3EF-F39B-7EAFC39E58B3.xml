@@ -1,0 +1,64 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="57D81794-AB88-E3EF-F39B-7EAFC39E58B3" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="app">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>9D6E4257-BAEC-8684-B7EE-7FC03F13F69C</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>A5D99573-E640-21A7-D685-6D434FAA1C53</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+<Column name="app_category_id" id="BD1E2040-6C5A-C09E-91C2-50C809D8620F">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<generatorID>395B5474-CF95-AD19-29A1-C62F74C0ED23</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<previousColumn>false</previousColumn>
+<autoIncrementCycle>false</autoIncrementCycle>
+<associations>
+<colAssociation fkAssociation="71C09CE1-388B-6AAB-ABFE-F21B568074E8" referredColumn="5CC98DDB-CAF6-4AF6-CF7C-6955C92BC01A"/>
+</associations>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="57822158-D2FA-5009-AD7E-A8298DAB09BE" name="app_PK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>4EC86741-CA59-03DF-66F9-9A79A7291368</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="C3D234B4-7923-50F4-0E59-7947095877FC" name="app_app_category_FK">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<generatorID>ED4AA069-A5DE-651C-32DA-D4C90AF3A0B4</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Foreign Key</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="BD1E2040-6C5A-C09E-91C2-50C809D8620F"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>

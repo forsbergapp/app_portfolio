@@ -1,0 +1,59 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="B7041DE5-04C0-35B6-15F2-FAAF088A021A" name="country_group">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-11 03:22:27 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="C321819D-7CFB-A3C5-0474-C79FEFFD9207">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-11 03:23:28 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="group_name" id="E7B7F4E5-EA7F-ABF8-E2D4-C9C08E05C64E">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-11 03:24:44 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>100,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="89F49E00-E104-64B3-2DFC-00CCAF2F2A00" name="country_group PK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-11 03:23:33 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>C321819D-7CFB-A3C5-0474-C79FEFFD9207</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

@@ -1,0 +1,72 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="CCAA62B3-EA56-FCC1-A70B-97390ED14551" name="message_type">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-06 05:26:11 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="id" id="0E7B9E89-5197-DCA5-3743-0C1C6DB3C7A3">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-06 05:26:32 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="message_type" id="3DB1E04B-0964-C1EE-4834-D801B64B4CCB">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-06 05:26:38 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="6E071376-394A-703B-8E4A-520835E1FEB6" name="MESSAGE_TYPE PK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-06 05:26:52 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<pk>true</pk>
+<usedAttributes>
+<attributeRef>0E7B9E89-5197-DCA5-3743-0C1C6DB3C7A3</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="403C450B-713E-1EA6-D3F3-69C4DD2897D5" name="MESSAGE_TYPE_UN">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-06 05:41:14 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<shouldEngineer>false</shouldEngineer>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="false"/>
+</engineerTo>
+<newElementsIDs>3DB1E04B-0964-C1EE-4834-D801B64B4CCB</newElementsIDs>
+<usedAttributes>
+<attributeRef>3DB1E04B-0964-C1EE-4834-D801B64B4CCB</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>
