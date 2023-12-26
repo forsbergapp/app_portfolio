@@ -42,7 +42,8 @@
                     ["MAIL",                null,           "AppCommonBodyBroadcast",       "/apps/common/src/mail.html"],
                     ["MAIL",                null,           "MailHeader",                   "/apps/common/src/mail_header_verification.html"],
                     ["MAIL",                null,           "MailBody",                     "/apps/common/src/mail_body_verification.html"]
-    ]},
+    ],
+    "STATUS":"ONLINE"},
     {"APP_ID": 1, "NAME": "App Portfolio",  "SUBDOMAIN": "www",     "PATH": "/apps/app1/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": true,
                 "MANIFEST":false,
@@ -65,7 +66,8 @@
                     ["APP",                 null,           "AppDialogues",                 "/apps/app1/src/dialogues.html"],
                     ["APP_OPTIONAL",        null,           "AppProfileInfo",               "/apps/app1/src/profile_info.html"],
                     ["APP_OPTIONAL",        null,           "CommonBodyThemes",             "/apps/app1/src/app_themes.html"]
-    ]},
+    ],
+    "STATUS":"ONLINE"},
     {"APP_ID": 2, "NAME": "Timetables",     "SUBDOMAIN": "app2",    "PATH": "/apps/app2/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"/js/app_report.js",   "CSS": "/css/app.css",   "CSS_REPORT": "/css/app_report.css", "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":1, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h", 
     "CONFIG":{  "MAP": true,
                 "MANIFEST":true,
@@ -100,7 +102,8 @@
                     ["APP_OPTIONAL",        null,           "AppProfileTop",                "/apps/app2/src/profile_top.html"],
                     ["REPORT",              "TIMETABLE",    null,                           "/apps/app2/src/report/timetable.html"],
                     ["REPORT",              "TIMETABLE",    "AppCommonFonts",               "/apps/app2/src/fonts.html"]
-    ]},
+    ],
+    "STATUS":"ONLINE"},
     {"APP_ID": 3, "NAME": "Presentation",   "SUBDOMAIN": "app3",    "PATH": "/apps/app3/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": false,
                 "MANIFEST":false,
@@ -119,7 +122,8 @@
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app3/src/index.html"],
                     ["APP",                 null,           "AppDialogues",                 "/apps/app3/src/dialogues.html"]
-    ]},
+    ],
+    "STATUS":"ONLINE"},
     {"APP_ID": 4, "NAME": "Maps",           "SUBDOMAIN": "app4",    "PATH": "/apps/app4/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "CONFIG":{  "MAP": true,
                 "MANIFEST":false,
@@ -138,6 +142,7 @@
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/app4/src/index.html"],
                     ["APP",                 null,           "AppBody",                      "/apps/app4/src/body.html"]
-    ]}
+    ],
+    "STATUS":"ONLINE"}
 ]
 }

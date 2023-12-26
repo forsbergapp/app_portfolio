@@ -13,7 +13,6 @@ GRANT ALL PRIVILEGES ON DATABASE app_portfolio TO role_app_dba;
 
 CREATE TABLE app_portfolio.app (
     id        INTEGER NOT NULL,
-    enabled   INTEGER NOT NULL,
     app_category_id INTEGER,
 	CONSTRAINT app_pk PRIMARY KEY ( id )
 );
@@ -325,15 +324,21 @@ GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO role_ap
 
 GRANT SELECT ON app_portfolio.app_translation TO role_app_common;
 
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
+                                                                                         language_id );
+
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_category_un UNIQUE ( app_category_id,
                                                             app_id,
                                                             language_id );
 
+ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_parameter_type_un UNIQUE ( parameter_type_id,
+                                                                                                    language_id );
+
 ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_app_message_un UNIQUE ( app_message_code,
-                                                           app_message_app_id,
-                                                           language_id );
+    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
+                                                          app_object_app_id,
+                                                          language_id );
 
 ALTER TABLE app_portfolio.app_translation
     ADD CONSTRAINT app_translation_app_object_item_un UNIQUE ( app_object_item_object_item_name,
@@ -341,16 +346,8 @@ ALTER TABLE app_portfolio.app_translation
                                                                app_object_item_app_object_app_id,
                                                                language_id );
 
-ALTER TABLE app_portfolio.app_translation
-    ADD CONSTRAINT app_translation_app_object_un UNIQUE ( app_object_object_name,
-                                                          app_object_app_id,
-                                                          language_id );
-
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_setting_un UNIQUE ( app_setting_id,
                                                                                                  language_id );
-
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
-                                                                                         language_id );
 
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_country_un UNIQUE ( country_id,
                                                                                              language_id );
@@ -358,8 +355,10 @@ ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_country
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_language_translation_un UNIQUE ( language_id_translation,
                                                                                                           language_id );
 
-ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_parameter_type_un UNIQUE ( parameter_type_id,
-                                                                                                    language_id );
+ALTER TABLE app_portfolio.app_translation
+    ADD CONSTRAINT app_translation_app_message_un UNIQUE ( app_message_code,
+                                                           app_message_app_id,
+                                                           language_id );
     
 CREATE TABLE app_portfolio.country (
     id            SERIAL NOT NULL,

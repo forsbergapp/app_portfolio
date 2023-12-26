@@ -13,31 +13,21 @@ const {COMMON, getNumberValue} = await import(`file://${process.cwd()}/server/se
 /**
  * Checks if ok to start app
  * @param {number|null} app_id
- * @param {string|null} lang_code
- * @returns {Promise.<boolean>}
+ * @returns {boolean}
  */
- const app_start = async (app_id=null, lang_code=null)=>{
-    const {getApp} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app.service.js`);
-    return new Promise((resolve)=>{
-        if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==0 && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
-            ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
-            if (app_id == null)
-                resolve(true);
-            else{
-                //check also current app_id if enabled
-                getApp(app_id, app_id, lang_code)
-                .then((/** @type{Types.db_result_app_getApp[]}*/result_app)=> {
-                    //function already has condition enabled=1
-                    if (result_app.length==1)
-                        resolve(true);
-                    else
-                        resolve(false);
-                })
-                .catch(()=>resolve(false));
-            }
-        else
-            resolve(false);
-    });
+ const app_start = (app_id=null)=>{
+    if (getNumberValue(file_get_cached('CONFIG').MAINTENANCE)==0 && ConfigGet('SERVICE_DB', 'START')=='1' && ConfigGet('SERVER', 'APP_START')=='1' &&
+        ConfigGet('SERVICE_DB', `DB${ConfigGet('SERVICE_DB', 'USE')}_APP_ADMIN_USER`))
+        if (app_id == null)
+            return true;
+        else{
+            if (ConfigGetApp(app_id, 'STATUS')=='ONLINE')
+                return true;
+            else
+                return false;
+        }
+    else
+        return false;
 };
 /**
  * Get client locale from accept language from request
@@ -161,7 +151,7 @@ const render_common_html = async (app_id, module, locale) =>{
     /** @type {[string, string][]} */
     const render_variables = [];
 
-    if ((app_id== getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && await app_start()==false)){
+    if ((app_id== getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) && app_start()==false)){
             //if admin app and system admin only
             app_config.RENDER_LOCALES = false;
             app_config.RENDER_SETTINGS = false;
@@ -748,7 +738,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
         //get app admin
         const{createAdmin } = await import(`file://${process.cwd()}/apps/admin/src/app.js`);
         app = await createAdmin(app_id, client_locale(app_parameters.accept_language));
-        if (await app_start()==true){
+        if (app_start()==true){
             system_admin_only = 0;
         }
         else{
@@ -1013,8 +1003,9 @@ const getApps = async (app_id, id, lang_code) =>{
     const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=>
                                         app.concat({APP_ID:current.APP_ID,
                                                     NAME:current.NAME,
+                                                    SUBDOMAIN:current.SUBDOMAIN,
                                                     LOGO:current.PATH + current.LOGO,
-                                                    SUBDOMAIN:current.SUBDOMAIN
+                                                    STATUS:current.STATUS
                                                     }) , []);
     
     for (const app of apps){
@@ -1046,19 +1037,18 @@ const getApps = async (app_id, id, lang_code) =>{
     const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
                                         app.concat({ID:current.APP_ID,
                                                     NAME:current.NAME,
+                                                    SUBDOMAIN:current.SUBDOMAIN,
                                                     LOGO:current.LOGO,
-                                                    SUBDOMAIN:current.SUBDOMAIN
+                                                    STATUS:current.STATUS,
                                                     }) , []);    
     
     apps.map(app=>{
         app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
         app.HOST = ConfigGet('SERVER', 'HOST');
         app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-        app.ENABLED = apps_db.filter(app_db=>app_db.id==app.ID)[0].enabled;
         app.APP_CATEGORY_ID = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_id;
         app.APP_CATEGORY_TEXT = apps_db.filter(app_db=>app_db.id==app.ID)[0].app_category_text;
     });
-    //return apps with ID, NAME, LOGO, SUBDOMAIN, PROTOCOL, HOST, PORT, ENABLED, APP_CATEGORY_ID and APP_CATEGORY_TEXT only
 	return apps;
 };
 /**
@@ -1152,7 +1142,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
         return null;
     }
     else
-        if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || await app_start(app_id) ==true)
+        if (app_id == getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')) || app_start(app_id) ==true)
             return new Promise((resolve, reject)=>{
                 if (url.toLowerCase().startsWith('/css')||
                     url.toLowerCase().startsWith('/images')||
