@@ -1,0 +1,56 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="country" directorySegmentName="seg_0" id="91E636DF-4E01-9564-B911-C25A7F0796F7">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="country_group_id" id="5DD61984-2D3F-8AB7-67B5-CBD6E913A2D1">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-15 09:37:39 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id" id="93CB352B-5B37-4FA2-C1BF-B9A4319F1B47">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+<ColumnProxy name="flag_url" id="CAB01DA7-AC9D-BEA8-B133-B2894A6AB435">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="flag_emoji" id="CC8024DA-06FE-469B-B101-55E6973E357C">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="country_code" id="DC01DD7F-75E1-0CC2-ED75-33E79F13C789">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="country_country_group_FK" id="A34B3BD1-2DFD-845F-EB9F-9CF25EA10872">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-15 09:37:39 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="country_PK" id="096C6842-37B5-D58F-A431-614F3F7AA345">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

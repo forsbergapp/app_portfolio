@@ -1,0 +1,50 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="app_screenshot" directorySegmentName="seg_0" id="47E50FDA-2E97-1F43-0D1F-8B92A1B223A5">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="screenshot" id="122DE139-9A5E-96AD-ECEA-27907FC9C856">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_device_device_id" id="510A1D7E-FC24-21FD-7898-59A1E50CB27D">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_device_app_id" id="630E52C3-EF19-4302-B09F-701F4948ED83">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id" id="CA560031-B5A5-88FB-70D0-E9B79047DC0F">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<autoIncrementDDL>IDENTITY_CLAUSE</autoIncrementDDL>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_screenshot_app_device_FK" id="1AF031B4-3DA2-F0F3-4DF0-4395C567D1BA">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_screenshot_PK" id="BC23D660-40A7-0849-2287-0210747FAE55">
+<createdBy>admin</createdBy>
+<createdTime>2022-07-24 19:09:02 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+</TableProxyOraclev20c>

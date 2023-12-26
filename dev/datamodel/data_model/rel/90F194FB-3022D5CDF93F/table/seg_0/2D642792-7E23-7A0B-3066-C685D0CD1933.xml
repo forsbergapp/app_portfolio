@@ -1,0 +1,66 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="2D642792-7E23-7A0B-3066-C685D0CD1933" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="message_type">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>CCAA62B3-EA56-FCC1-A70B-97390ED14551</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<allowColumnReorder>false</allowColumnReorder>
+<existDependencyGenerateInDDl>true</existDependencyGenerateInDDl>
+<parsed>true</parsed>
+<columns itemClass="oracle.dbtools.crest.model.design.relational.Column">
+<Column name="id" id="4D990C01-4CA0-09A6-752C-FA222511E57C">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>0E7B9E89-5197-DCA5-3743-0C1C6DB3C7A3</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementColumn>true</autoIncrementColumn>
+<identityColumn>true</identityColumn>
+<defaultOntNull>true</defaultOntNull>
+<autoIncrementCycle>false</autoIncrementCycle>
+<autoIncrementDisableCache>false</autoIncrementDisableCache>
+<autoIncrementCache>30</autoIncrementCache>
+<autoIncrementGenerateTrigger>false</autoIncrementGenerateTrigger>
+</Column>
+<Column name="message_type" id="C6A0DC05-7532-CCBC-43AD-71106A8F9B5C">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>3DB1E04B-0964-C1EE-4834-D801B64B4CCB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>10</dataTypeSize>
+<ownDataTypeParameters>10,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
+</Column>
+</columns>
+<indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
+<ind_PK_UK id="91828F1B-443E-64AB-3D30-96DD87C363C5" name="message_type_PK">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>6E071376-394A-703B-8E4A-520835E1FEB6</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<pk>true</pk>
+<indexState>Primary Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="4D990C01-4CA0-09A6-752C-FA222511E57C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+<ind_PK_UK id="1B5C7A2C-912C-2893-D8FF-D735B80EEA63" name="message_type_message_type_UN">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 00:02:25 UTC</createdTime>
+<generatorID>403C450B-713E-1EA6-D3F3-69C4DD2897D5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<indexState>Unique Constraint</indexState>
+<isSurrogateKey>false</isSurrogateKey>
+<indexColumnUsage>
+<colUsage columnID="C6A0DC05-7532-CCBC-43AD-71106A8F9B5C"/>
+</indexColumnUsage>
+</ind_PK_UK>
+</indexes>
+</Table>
