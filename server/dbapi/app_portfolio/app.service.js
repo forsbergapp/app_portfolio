@@ -46,7 +46,6 @@ const getApp = async (app_id, id,lang_code) => {
 				WHERE ( ((id = :id) OR :id IS NULL)
 					OR 
 					:id = :common_app_id)
-				AND enabled = 1
 				ORDER BY 1`;
 		const parameters = {lang_code1: get_locale(lang_code, 1),
 							lang_code2: get_locale(lang_code, 2),
@@ -63,7 +62,6 @@ const getApp = async (app_id, id,lang_code) => {
  */
 const getAppsAdmin = async (app_id, lang_code) => {
 		const sql = `SELECT	a.id "id",
-						a.enabled "enabled",
 						a.app_category_id "app_category_id",
 						act.text "app_category_text"
 				FROM ${db_schema()}.app a
@@ -107,11 +105,9 @@ const getAppsAdminId = async (app_id) => {
  */
 const updateAppAdmin = async (app_id, id, data) => {
 		const sql = `UPDATE ${db_schema()}.app
-						SET enabled = :enabled,
-							app_category_id = :app_category_id
+						SET app_category_id = :app_category_id
 					WHERE id = :id`;
-		const parameters = {enabled: data.enabled,
-							app_category_id: data.app_category_id,
+		const parameters = {app_category_id: data.app_category_id,
 							id: id};
 		return await db_execute(app_id, sql, parameters, null);
 	};
