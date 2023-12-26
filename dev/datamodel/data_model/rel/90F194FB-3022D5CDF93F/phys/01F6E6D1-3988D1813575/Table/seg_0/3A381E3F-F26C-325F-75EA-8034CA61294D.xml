@@ -1,0 +1,51 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="app_role" directorySegmentName="seg_0" id="3A381E3F-F26C-325F-75EA-8034CA61294D">
+<createdBy>admin</createdBy>
+<createdTime>2022-11-30 18:35:52 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="icon" id="1D09AD88-9F88-558A-AEA0-96D06339516A">
+<createdBy>admin</createdBy>
+<createdTime>2022-11-30 18:35:52 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="role_name" id="1FD15A53-F8D3-3270-067A-FECAD6F6537A">
+<createdBy>admin</createdBy>
+<createdTime>2022-11-30 18:35:52 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="id" id="F9E04A6C-CB32-FE46-5A61-DC3A38BD0ADA">
+<createdBy>admin</createdBy>
+<createdTime>2022-11-30 18:42:14 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<primaryKeys>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_role_PK" id="6255DCA5-F6DA-ADC5-2D44-00421A3AE8A8">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 20:43:39 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+<PrimaryKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PKProxyOraclev10g" name="app_role_pk" id="64C777C3-FD26-371F-0D7E-8740EB754179">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 22:16:09 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</PrimaryKey>
+</primaryKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_role_PK" id="EFD2B37D-6E6B-CAE9-FDB0-7ACB068ADDE2">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 20:37:26 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>

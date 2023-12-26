@@ -1,0 +1,45 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="locale" directorySegmentName="seg_0" id="04793015-3F70-F27C-77EA-5B7F125BE62C">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 20:29:24 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="language_id" id="6AEE4672-0FF0-5FA4-C1F7-C7882480F912">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 20:29:24 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="country_id" id="DA0EFE0E-3C76-F145-F144-410BE7255570">
+<createdBy>admin</createdBy>
+<createdTime>2022-01-20 00:26:50 UTC</createdTime>
+<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="locale_language_FK" id="213378CE-1931-D5D2-B993-93EA37517B31">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-07 20:29:24 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="locale_country_FK" id="6F660230-5B4E-6DE9-8015-A34C48A3975E">
+<createdBy>admin</createdBy>
+<createdTime>2021-04-13 02:51:53 UTC</createdTime>
+<ownerDesignName>data_model_20220115</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="locale_language_id_country_id_UN" id="A595E5CA-7097-278A-E349-679495A22E0E">
+<createdBy>admin</createdBy>
+<createdTime>2022-05-03 20:44:33 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>

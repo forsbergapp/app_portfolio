@@ -1,0 +1,357 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<Entity class="oracle.dbtools.crest.model.design.logical.Entity" directorySegmentName="seg_0" id="731E68A9-E836-8A47-8DEF-6B4CAFA0CF49" name="app_translation">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:44:06 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<adequatelyNormalized>NO</adequatelyNormalized>
+<expectedVolumes>0</expectedVolumes>
+<fwdEngineeringStrategyName>Single Table</fwdEngineeringStrategyName>
+<growthPercent>0</growthPercent>
+<growthType>Year</growthType>
+<maxVolumes>9999999</maxVolumes>
+<minVolumes>0</minVolumes>
+<normalForm>Third</normalForm>
+<attributes itemClass="oracle.dbtools.crest.model.design.logical.Attribute">
+<Attribute name="language_id" id="B4BA96E1-8641-DF26-AA8E-102C9184D701">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:46:06 UTC</createdTime>
+<generatorID>C4309A60-4E9F-04BF-9818-057385BD970A</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>E65B4D53-778E-85B5-A81F-F281A4E13EFE</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_id" id="3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:56:49 UTC</createdTime>
+<generatorID>7DC27455-0B7B-555C-4922-3F29987DA5DD</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A5D99573-E640-21A7-D685-6D434FAA1C53</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_category_id" id="D9496165-7EEB-FD43-004F-96F9A7FD371D">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 04:00:41 UTC</createdTime>
+<generatorID>04A5B336-138A-B146-CF43-812FC459CA1D</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>40C89E95-404E-CE8E-2BBA-6FE0899EE2A2</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_setting_id" id="7E859F7B-E90E-55B6-655B-87EEC25C8068">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:55:48 UTC</createdTime>
+<generatorID>82B79473-AF93-BB19-083E-883DC9FA510B</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_object_name" id="30DD4113-E3F0-5917-191D-A858C9498888">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:58:43 UTC</createdTime>
+<generatorID>8EFA23AA-E19A-6F94-8CE4-75693EF65CA5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>3C5EF603-4F1D-C96C-F318-B45200872626</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_object_app_id" id="C3678969-C2F5-0901-B36C-C5C7024B81AF">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:58:43 UTC</createdTime>
+<generatorID>8EFA23AA-E19A-6F94-8CE4-75693EF65CA5</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>4B4BC33F-FD04-32A9-F318-A0B698964186</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_object_item_app_id" id="1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:59:34 UTC</createdTime>
+<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>58E9912B-0229-116F-A5F0-89EEFC01724C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_object_item_object_name" id="2A3EB58E-48D4-25A0-4BEF-679B61E1E70C">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:59:34 UTC</createdTime>
+<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>A4C8F86D-38DA-A5BF-DE0D-3D5B84350DB0</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_object_item_object_item_name" id="A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:59:34 UTC</createdTime>
+<generatorID>CA0C4E5E-E315-21B9-351E-82D3EA765494</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>650758CC-95C9-3BBC-BD76-33A2BE00FB2C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="parameter_type_id" id="1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 04:01:04 UTC</createdTime>
+<generatorID>02520193-D03A-F117-6E2E-99CCCD72176F</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>6788C8C7-56BC-BE1B-F925-91195B4D8EA5</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_message_code" id="5AFE5E03-4705-3FC4-D9D5-42BD3F688C70">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 04:01:39 UTC</createdTime>
+<generatorID>1E92D2F3-824A-6852-5A41-FB2D97FB74FB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>1C9C8055-3EFE-649D-50C6-087FE7AAA704</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>100</dataTypeSize>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="app_message_app_id" id="26975AA2-CDAF-6235-CC11-ACD1A690D329">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 04:01:39 UTC</createdTime>
+<generatorID>1E92D2F3-824A-6852-5A41-FB2D97FB74FB</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>567711DA-0946-774F-8303-1D3238A8B626</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="country_id" id="1C88CFB6-370B-FA6F-5267-A67EAAFA1910">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 04:13:18 UTC</createdTime>
+<generatorID>E0ECB5E8-8094-800E-5A9B-0F0B941643D1</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>635B42CB-CD92-9A15-4732-8D16E3A2D13C</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="language_id_translation" id="895C48D7-D4AB-3995-C1B7-071F60BC3E2E">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 04:20:11 UTC</createdTime>
+<generatorID>40A193B1-BA64-45F2-6C4C-1CE8409FF705</generatorID>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<referedAttribute>E65B4D53-778E-85B5-A81F-F281A4E13EFE</referedAttribute>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="TEXT" id="95AF5298-EC65-CF5F-BD1A-AB1D3E0B8101">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 03:44:44 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT024</logicalDatatype>
+<dataTypeSize>2000</dataTypeSize>
+<ownDataTypeParameters>2000,,</ownDataTypeParameters>
+</Attribute>
+</attributes>
+<identifiers itemClass="oracle.dbtools.crest.model.design.logical.CandidateKey">
+<identifier id="EE76ABEA-FAF7-A3C4-DD9C-7F08C8551CA0" name="app_translation_UN_app">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:05:39 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="3FE78642-2EB9-EABE-DCB6-D53DD4650CB6" name="app_translation_UN_app_category">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:09:53 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>D9496165-7EEB-FD43-004F-96F9A7FD371D,7DC27455-0B7B-555C-4922-3F29987DA5DD,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>D9496165-7EEB-FD43-004F-96F9A7FD371D</attributeRef>
+<attributeRef>3CF9F6B9-2CCD-7E2E-FF8A-952A12291B15</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="76C52146-A3B2-5FE9-3476-4AF10E9C80A1" name="app_translation_UN_parameter_type">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:11:14 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>1DEC4AFE-C626-143C-A82B-3CB18DD9EBA2</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="AC2C3C52-8958-A6CD-5D6F-DBA499F9F434" name="app_translation_UN_app_object">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:11:56 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>30DD4113-E3F0-5917-191D-A858C9498888,C3678969-C2F5-0901-B36C-C5C7024B81AF,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>30DD4113-E3F0-5917-191D-A858C9498888</attributeRef>
+<attributeRef>C3678969-C2F5-0901-B36C-C5C7024B81AF</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="2511F171-74E9-CF8F-755E-E94A7CEF8962" name="app_translation_UN_app_object_item">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:12:38 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>2A3EB58E-48D4-25A0-4BEF-679B61E1E70C,A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E,1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>2A3EB58E-48D4-25A0-4BEF-679B61E1E70C</attributeRef>
+<attributeRef>A7B8B6E3-FD01-2510-8BA1-25B27DBB8F9E</attributeRef>
+<attributeRef>1B2D26F1-7E8C-4238-6D03-7FA2DBA44AEE</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="4D9A2431-495A-ED16-0B89-D9F5ACC28A8E" name="app_translation_UN_app_setting">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:13:22 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>7E859F7B-E90E-55B6-655B-87EEC25C8068,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>7E859F7B-E90E-55B6-655B-87EEC25C8068</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="1629BE3B-774A-F37F-63BC-BD2319A3F65C" name="app_translation_UN_country">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:13:49 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>1C88CFB6-370B-FA6F-5267-A67EAAFA1910,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>1C88CFB6-370B-FA6F-5267-A67EAAFA1910</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="ED16EEF3-184D-8170-64DC-8C917BD578E0" name="app_translation_UN_language">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:14:10 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>B4BA96E1-8641-DF26-AA8E-102C9184D701,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>B4BA96E1-8641-DF26-AA8E-102C9184D701</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+<identifier id="A7AF3568-256B-A864-8497-4F3AC89D6E8F" name="app_translation_UN_app_message">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:14:49 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<newElementsIDs>5AFE5E03-4705-3FC4-D9D5-42BD3F688C70,26975AA2-CDAF-6235-CC11-ACD1A690D329,895C48D7-D4AB-3995-C1B7-071F60BC3E2E</newElementsIDs>
+<usedAttributes>
+<attributeRef>5AFE5E03-4705-3FC4-D9D5-42BD3F688C70</attributeRef>
+<attributeRef>26975AA2-CDAF-6235-CC11-ACD1A690D329</attributeRef>
+<attributeRef>895C48D7-D4AB-3995-C1B7-071F60BC3E2E</attributeRef>
+</usedAttributes>
+</identifier>
+</identifiers>
+</Entity>

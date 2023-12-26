@@ -1,0 +1,197 @@
+<?xml version = '1.0' encoding = 'UTF-8'?>
+<TableProxyOraclev20c class="oracle.dbtools.crest.model.design.storage.oracle.v20c.TableProxyOraclev20c" name="app_translation" directorySegmentName="seg_0" id="7EE7BEEE-6C24-3206-873B-7B42B4E5F674">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<partitionedRowMovement>DISABLE</partitionedRowMovement>
+<temporaryChanged>false</temporaryChanged>
+<user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
+<accessDriverType>oracle_loader</accessDriverType>
+<rejectLimit></rejectLimit>
+<storeAs>CLOB</storeAs>
+<columnProxies itemClass="oracle.dbtools.crest.model.design.storage.oracle.v12c.ColumnProxyOraclev12c">
+<ColumnProxy name="parameter_type_id" id="09514221-D6CB-CFDF-E8F9-CC1494DC8857">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_id" id="145515DA-45DC-6089-FDC7-67E257F1F543">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_message_code" id="45A50856-A945-1CF6-E70A-24FE2AC47B58">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_object_app_id" id="6096566C-43D6-F94A-CA2B-817ED77780EF">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_object_item_app_object_object_name" id="6F263B4F-6157-A254-7ACF-EEC20F31ABF8">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_setting_id" id="731248E8-998E-5F49-DB6A-58095E5C150B">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="TEXT" id="7C3D92E4-9ACA-697C-9A87-86B63DD23918">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="country_id" id="8570199D-E163-7A1A-9A2F-A9E9C7817E90">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_message_app_id" id="B30351DD-3DE1-C79E-97EC-602C6BF664AF">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="language_id_translation" id="B6265773-7C95-5239-C73D-DAAD7BBCC650">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_object_item_object_item_name" id="B767C61E-5F8A-AB9E-7964-75F53C94019B">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="language_id" id="C5AB26BC-7D0F-4C8B-7DB7-19EFE728ADA7">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_object_item_app_object_app_id" id="D7167EAB-F3D5-469D-11FF-257D60CF7189">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_category_id" id="D87D7DA9-6BFA-2F3C-A591-B73628E6C537">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="app_object_object_name" id="FA2871CC-0BAB-15A7-4043-B374B99DE5B6">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+</columnProxies>
+<foreignKeys>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_message_FK" id="0D1478FC-1322-6D72-FECA-076E45BB01AE">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_parameter_type_FK" id="1E20AC8B-960E-2BAA-C69B-FAB596D12F9A">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_setting_FK" id="2E4E0ACF-41EC-D3A9-99D7-C2CD0570E15E">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_object_item_FK" id="327A30A9-D754-5A14-2079-74926D8FBAC3">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_language_FK" id="45F8F28F-0D5D-2663-2E3F-1DE8210E3839">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_language_translation_FK" id="66724299-CB02-1624-07FC-087F1B02C6D0">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_FK" id="6BFC6A1C-124A-8EBC-A884-7B44AB392DA2">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_country_FK" id="7B6DF5D1-EC53-61EC-38CC-E95C5AF1541A">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_object_FK" id="ADF3F32A-B490-EE43-47C5-B39ACD3623D3">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_translation_app_category_FK" id="F902DC1D-0FA3-DE0D-BC87-B81066EBF05B">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ForeignKey>
+</foreignKeys>
+<uniqueKeys>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_id_language_id_translation_UN" id="0D920F6B-FDAD-B539-F590-A060F3BB1B53">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_item_object_name_app_object_item_object_item_name_app_object_item_app_id_language_id_translation_UN" id="474777BA-2BBA-E8D6-A17E-3500999F5868">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_setting_id_language_id_translation_UN" id="4BEEEFE9-A6ED-9512-2AD9-C254C758F525">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_category_id_app_id_language_id_translation_UN" id="5311043B-2029-9D8E-817B-082755B5DF9E">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_country_id_language_id_translation_UN" id="5B161C42-15F7-E8A9-AE41-DCBCB8D27D48">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_language_id_language_id_translation_UN" id="9C96029F-82F4-D3E8-5482-B89191835E11">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_message_code_app_message_app_id_language_id_translation_UN" id="B014AB78-E620-30C9-8BD0-1630A6EA74F0">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_app_object_name_app_object_app_id_language_id_translation_UN" id="C6A0FE01-2BC2-81B4-3F68-DC8AE801C67B">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+<UniqueKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.UniqueOraclev10g" name="app_translation_parameter_type_id_language_id_translation_UN" id="DCF10635-CE24-CDBA-2DE8-B65314F30674">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-12 21:43:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<indexSort>SORTED</indexSort>
+</UniqueKey>
+</uniqueKeys>
+</TableProxyOraclev20c>
