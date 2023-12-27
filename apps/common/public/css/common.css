@@ -268,7 +268,8 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 }
 #common_broadcast_info_title {
 	height: 35px;
-	color:var(--app_white);
+	mix-blend-mode: plus-lighter;
+	filter: invert(0.25) hue-rotate(0deg);
 	font-size:25px;
 	font-weight:bold;
 }
