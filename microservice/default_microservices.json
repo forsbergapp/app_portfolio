@@ -1,6 +1,6 @@
 {
     "SERVICES":[
-    {"NAME":"BATCH",       "HOST": "localhost", "PORT":3001, "HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4001, "STATUS":"ONLINE",     "PATH":"batch",
+    {"NAME":"BATCH",       "HOST": "localhost", "PORT":3001,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT": 4001,"STATUS":"ONLINE","PATH":"batch",
         "CONFIG":[
             {"jobid":1 , "name": "Pipeline every minute", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"* * * * *", "enabled":false},
             {"jobid":2 , "name": "Pipeline 08.00 every day", "command_type":"OS", "platform": "linux", "path": "$HOME/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 8 * * *", "enabled":false},
@@ -13,13 +13,16 @@
             {"jobid":9 , "name": "Pipeline 17.00 every day", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 17 * * *", "enabled":false},
             {"jobid":10 , "name": "Pipeline 16.00 every friday", "command_type":"OS", "platform": "win32", "path": "%HOMEPATH%/app_portfolio", "command": "git", "argument": "pull", "cron_expression":"0 16 * * 5", "enabled":false}
             ] },
-    {"NAME":"GEOLOCATION", "HOST": "localhost", "PORT":3002,"HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4002, "STATUS":"ONLINE",  "PATH":"geolocation",
+    {"NAME":"GEOLOCATION",  "HOST":"localhost","PORT":3002,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4002,"STATUS":"ONLINE","PATH":"geolocation",
+        "CONFIG":[
+                    {"URL_IP":"http://www.geoplugin.net/json.gp?ip=<IP/>",   "COMMENT":"" },
+                    {"URL_PLACE":"http://www.geoplugin.net/extras/location.gp?format=json&lat=<LATITUDE/>&long=<LONGTITUDE/>",   "COMMENT":"" }
+        ]},
+    {"NAME":"WORLDCITIES",  "HOST":"localhost","PORT":3003,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4003,"STATUS":"ONLINE","PATH":"worldcities",
         "CONFIG":"" },
-    {"NAME":"WORLDCITIES", "HOST": "localhost", "PORT":3003,"HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 4003, "STATUS":"ONLINE",  "PATH":"worldcities",
+    {"NAME":"MAIL",         "HOST":"localhost","PORT":3004,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4004,"STATUS":"ONLINE","PATH":"mail",
         "CONFIG":"" },
-    {"NAME":"MAIL",        "HOST": "",          "PORT":0,   "HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 0,    "STATUS":"OFFLINE", "PATH":"mail",
-        "CONFIG":"" },
-    {"NAME":"PDF",         "HOST": "",          "PORT":0,   "HTTPS_ENABLE": 0, "HTTPS_KEY": "privkey.pem", "HTTPS_CERT": "fullchain.pem","HTTPS_SSL_VERIFICATION": 0, "HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/","HTTPS_PORT": 0,    "STATUS":"OFFLINE", "PATH":"pdf",
+    {"NAME":"PDF",          "HOST":"localhost","PORT":3005,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4005,"STATUS":"ONLINE","PATH":"pdf",
         "CONFIG":[
             {"EXECUTABLE_PATH":"","COMMENT":"/ex /snap/bin/chromium or Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe"},
             {"USER_AGENT":"PDF","COMMENT":""},

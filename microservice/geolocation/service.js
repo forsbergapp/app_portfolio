@@ -191,5 +191,51 @@ const getGeodata = async (url, language) => {
         request.end();        
     });
 };
-
-export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, getGeodata};
+/**
+ * 
+ * @param {string} latitude
+ * @param {string} longitude
+ * @param {string} accept_language
+ */
+ const getPlace = async (latitude, longitude, accept_language) => {
+	let geodata;
+	geodata = await getCacheGeodata('PLACE', null, latitude, longitude);
+	if (geodata != null)
+        return geodata;
+	else{
+        const url = ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_PLACE')[0].URL_PLACE
+                    .replace('<LATITUDE/>', latitude)
+                    .replace('<LONGITUDE/>', longitude);
+		geodata = await getGeodata(url, accept_language);
+		if (geodata != '[[]]')
+			writeCacheGeodata('PLACE', geodata);
+		return geodata;
+	}
+};
+/**
+ * 
+ * @param {string} ip
+ * @param {string} accept_language
+ */
+const getIp = async (ip, accept_language) => {
+	let geodata;
+	let url;
+	geodata = await getCacheGeodata('IP', ip, '', '');
+	if (geodata != null)
+		return geodata;
+	else{
+		if (ip == '::1' || ip == '::ffff:127.0.0.1' || ip == '127.0.0.1'){
+			//create empty record with ip ::1 first time
+			writeCacheGeodata('IP', getGeodataEmpty('IP'));
+            url =   ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+                    .replace('<IP/>', '');
+		}
+		else
+            url =   ConfigServices('GEOLOCATION').CONFIG.filter((/**@type{*}*/row)=>Object.keys(row)[0]=='URL_IP')[0].URL_IP
+                    .replace('<IP/>', ip);
+		geodata = await getGeodata(url, accept_language);
+		writeCacheGeodata('IP', geodata);
+        return geodata;
+	}
+};
+export {getGeodataEmpty, getCacheGeodata, writeCacheGeodata, getGeodata, getIp, getPlace};
