@@ -26,7 +26,7 @@ const startserver = async () =>{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
-						.then((result)=>return_result(200, null, result, null, res))
+						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
 						.catch((error) =>return_result(500, error, null, res));
 					else
 						return_result(401, '⛔', null, res);
@@ -37,7 +37,7 @@ const startserver = async () =>{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getIp(req.query.data.ip, req.headers['accept-language'])
-						.then((result)=>return_result(200, null, result, null, res))
+						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
 						.catch((error) =>return_result(500, error, null, res));
 					else
 						return_result(401, '⛔', null, res);
