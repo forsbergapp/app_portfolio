@@ -4,7 +4,7 @@
 import * as Types from './../../types.js';
 
 const service = await import('./service.js');
-const { MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+const { return_result, MicroServiceServer } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
 
 /**
  * Starts the server
@@ -14,9 +14,7 @@ const startserver = async () =>{
 	const request = await MicroServiceServer('BATCH');
 		
 	request.server.createServer(request.options, (/**@type{Types.req_microservice}*/req, /**@type{Types.res_microservice}*/res) => {
-		res.statusCode = 401;
-		res.write('⛔', 'utf-8');
-		res.end();
+		return_result(401, '⛔', null, null, res);
 	}).listen(request.port, ()=>{
 		console.log(`MICROSERVICE BATCH PORT ${request.port} `);
 	});

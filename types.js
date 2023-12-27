@@ -1622,12 +1622,32 @@
  * 
  * @property {object}       query
  * @property {number|null}  query.app_id
- * @property {string}       query.latitude
- * @property {string}       query.longitude
- * @property {string|null}  query.ip
- * @property {number}       query.limit
- * @property {string}       query.search
- * @property {string}       query.country
+ * @property {*}    query.data
+ * 
+ * @typedef  {object}       microservice_data_geolocation
+ * @property {string}       latitude
+ * @property {string}       longitude
+ * @property {string|null}  ip
+ * 
+ * @typedef  {object}       microservice_data_worldcities
+ * @property {number}       limit
+ * @property {string}       search
+ * @property {string}       country
+ * 
+ * @typedef  {{
+ *              email_host:         string,
+ *              email_port:         number,
+ *              email_secure:       boolean,
+ *              email_auth_user:    string,
+ *              email_auth_pass:    string,
+ *              from:               string,
+ *              to:                 string,
+ *              subject:            string,
+ *              html:               string
+ *              }}       microservice_data_mail
+ * @typedef  {{ ps:string,
+ *              hf:boolean,
+ *              url:string}} microservice_data_pdf
  * 
  * MicroService Config
  * @typedef {{  PATH_LOGS                                   : string,
@@ -1665,6 +1685,7 @@
  * @property {number}   statusCode
  * @property {function} write
  * @property {function} end
+ * @property {function} send
  * 
  * @property {object}   headers
  * @property {string}   headers.location

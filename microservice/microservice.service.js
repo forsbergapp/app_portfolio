@@ -127,6 +127,33 @@ const microserviceRequest = async (admin, path,service, method,client_ip,authori
  const getNumberValue = param => (param==null||param===undefined||param==='')?null:Number(param);
 
 /**
+ * 
+ * @param {number} code 
+ * @param {string|null} error 
+ * @param {*} result 
+ * @param {*} pdf 
+ * @param {Types.res_microservice} res
+ */
+ const return_result = (code, error, result, pdf, res)=>{
+    res.statusCode = code;
+    if (error){
+        console.log(error);
+        res.write(error, 'utf8');
+    }
+    else{
+        if (pdf){
+            res.setHeader('Content-Type',  'application/pdf');
+            res.send(pdf);
+        }
+        else{
+            res.setHeader('Content-Type',  'application/json; charset=utf-8');
+            res.write(JSON.stringify(result), 'utf8');
+        }
+    }
+    res.end();
+};
+
+/**
  * Reads config services
  * @param {string} servicename
  * @returns {Types.microservice_config_service_record}
@@ -342,7 +369,7 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                         switch (service){
                             case 'MAIL':{
                                 message_consume.start = new Date().toISOString();
-                                import(`file://${process.cwd()}/microservice/mail/mail.service.js`).then(({sendEmail})=>{
+                                import(`file://${process.cwd()}/microservice/mail/service.js`).then(({sendEmail})=>{
                                     sendEmail(message_consume.message)
                                     .then((/**@type{object}*/result_sendEmail)=>{
                                         message_consume.finished = new Date().toISOString();
@@ -431,4 +458,4 @@ const MessageQueue = async (service, message_type, message, message_id) => {
         }
     });
 };
-export {getNumberValue, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};
+export {getNumberValue, return_result, MicroServiceServer, CONFIG, ConfigServices, microserviceRequest, MessageQueue};
