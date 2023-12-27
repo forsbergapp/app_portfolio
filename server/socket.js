@@ -14,7 +14,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
  */
 const ConnectedUpdate = (query) => service.ConnectedUpdate( getNumberValue(query.get('client_id')), 
                                                             getNumberValue(query.get('user_account_logon_user_account_id')), 
-                                                            getNumberValue(query.get('system_admin')), 
+                                                            query.get('system_admin'), 
                                                             getNumberValue(query.get('identity_provider_id')), 
                                                             query.get('latitude'), 
                                                             query.get('longitude'));
@@ -113,7 +113,7 @@ const ConnectedCount = (query) => service.ConnectedCount(   getNumberValue(query
 const SocketConnect = (app_id, ip, user_agent, query, res) => service.SocketConnect(app_id, 
                                                                                     getNumberValue(query.get('identity_provider_id')),
                                                                                     getNumberValue(query.get('user_account_logon_user_account_id')),
-                                                                                    getNumberValue(query.get('system_admin')),
+                                                                                    query.get('system_admin'),
                                                                                     query.get('latitude'),
                                                                                     query.get('longitude'),
                                                                                     query.get('authorization'),

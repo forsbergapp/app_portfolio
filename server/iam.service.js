@@ -4,28 +4,48 @@
 import * as Types from './../types.js';
 
 const {ConfigGet, ConfigGetApp, ConfigGetUser, CheckFirstTime, CreateSystemAdmin} = await import(`file://${process.cwd()}/server/config.service.js`);
+const {file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {default:{sign, verify}} = await import('jsonwebtoken');
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id
  * @param {string} authorization
+ * @param {string} ip
  * @param {Types.res} res 
  */
-const AuthenticateSystemadmin =(app_id, authorization, res)=>{
+const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
     return new Promise((resolve,reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
             const { default: {compare} } = await import('bcrypt');
             const config_username = ConfigGetUser('username');
             const config_password = ConfigGetUser('password');
-            if (username == config_username && await compare(password, config_password)) {
-                const jsontoken_at = AuthorizeToken(app_id, 'SYSTEMADMIN');
-                resolve({token_at: jsontoken_at});
-            }
-            else{
-                res.statusMessage = 'unauthorized system admin login attempt for username:' + username;
-                res.statusCode =401;
-                reject('⛔');
-            }            
+            let result = 0;
+            if (username == config_username && await compare(password, config_password) && app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID')))
+                result = 1;
+            else
+                result = 0;
+            const jsontoken_at = AuthorizeToken(app_id, null, 'SYSTEMADMIN');
+            /**@type{Types.iam_systemadmin_login_record} */
+            const file_content = {	app_id:             app_id,
+                                    username:		    username,
+                                    result:				1,
+                                    access_token:   	jsontoken_at,
+                                    client_ip:          ip,
+                                    client_user_agent:  null,
+                                    client_longitude:   null,
+                                    client_latitude:    null,
+                                    date_created:       new Date().toISOString()};
+            file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content)
+            .then(()=>{
+                if (result == 1)
+                    resolve({   username:username,
+                                token_at: jsontoken_at});
+                else{
+                    res.statusCode =401;
+                    reject('⛔');
+                }
+            });
         };
         if(authorization){       
             const userpass =  Buffer.from((authorization || '').split(' ')[1] || '', 'base64').toString();
@@ -46,55 +66,39 @@ const AuthenticateSystemadmin =(app_id, authorization, res)=>{
 };
 /**
  * Middleware authenticates system admin access token
+ * @param {number} app_id
+ * @param {string} ip
+ * @param {string} system_admin
  * @param {string} token
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateAccessTokenSystemAdmin = (token, res, next) => {
-    if (token){
-        token = token.slice(7);
-        verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{Types.error}*/err) => {
-            if (err)
-                res.status(401).send('⛔');
-            else
-                next();
-        });
-    }else
-        res.status(401).send('⛔');
+ const AuthenticateAccessTokenSystemAdmin = (app_id, token, ip, system_admin, res, next) => {
+    AuthenticateTokenCommon(app_id, 'SYSTEMADMIN', token, ip, system_admin, null, res, next);
 };
 /**
  * Middleware authenticates data token
  * @param {number} app_id
  * @param {string} token
+ * @param {string} ip
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateDataToken = async (app_id, token, res, next) =>{
-    if (token){
-        token = token.slice(7);
-        verify(token, ConfigGetApp(app_id, 'APP_DATA_SECRET'), (/**@type{Types.error}*/err) => {
-            if (err){
-                res.status(401).send('⛔');
-            } else {
-                next();
-            }
-        });    
-    }
-    else{
-        res.status(401).send('⛔');
-    } 
+ const AuthenticateDataToken = async (app_id, token, ip, res, next) =>{
+    AuthenticateTokenCommon(app_id, 'APP_DATA', token, ip, null, null, res, next);
 };
 
 /**
  * Middleware authenticates data token registration
  * @param {number} app_id 
  * @param {string} token 
+ * @param {string} ip 
  * @param {Types.res} res 
  * @param {function} next 
  */
-const AuthenticateDataTokenRegistration = (app_id, token, res, next) =>{
+const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_REGISTRATION')=='1')
-        AuthenticateDataToken(app_id, token, res, next);
+        AuthenticateTokenCommon(app_id, 'APP_DATA', token, ip, null, null, res, next);
     else{
         //return 403 Forbidden
         res.status(403).send('⛔');
@@ -104,12 +108,13 @@ const AuthenticateDataTokenRegistration = (app_id, token, res, next) =>{
  * Middleware authenticates data token login
  * @param {number} app_id 
  * @param {string} token 
+ * @param {string} ip
  * @param {Types.res} res 
  * @param {function} next 
  */
- const AuthenticateDataTokenLogin = (app_id, token, res, next) =>{
+ const AuthenticateDataTokenLogin = (app_id, token, ip, res, next) =>{
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1')
-        AuthenticateDataToken(app_id, token, res, next);
+        AuthenticateTokenCommon(app_id, 'APP_DATA', token, ip, null, null, res, next);
     else{
         //return 403 Forbidden
         res.status(403).send('⛔');
@@ -118,38 +123,97 @@ const AuthenticateDataTokenRegistration = (app_id, token, res, next) =>{
 
 /**
  * Middleware authenticates access token common
+ * 
+ * APP_ACCESS   : token is valid for giver user account id and ip
+ * APP_DATA     : token is valid for given app id and ip
+ * SYSTEM_ADMIN : token is valid for admin app, given system admin username and ip
+ * 
  * @param {number} app_id
+ * @param {'APP_ACCESS'|'APP_DATA'|'SYSTEMADMIN'} token_type
  * @param {string} authorization
  * @param {string} ip
- * @param {number} user_account_logon_user_account_id
+ * @param {string|null} system_admin
+ * @param {number|null} user_account_logon_user_account_id
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateAccessTokenCommon = (app_id, authorization, ip, user_account_logon_user_account_id, res, next) => {
+ const AuthenticateTokenCommon = (app_id, token_type, authorization, ip, system_admin, user_account_logon_user_account_id, res, next) => {
     if (authorization){
         const token = authorization.slice(7);
-        verify(token, ConfigGetApp(app_id, 'APP_ACCESS_SECRET'), (/**@type{Types.error}*/err) => {
-            if (err)
-                res.status(401).send('⛔');
-            else {
-                //check access token belongs to user_account.id, app_id and ip saved when logged in
-                //and if app_id=0 then check user is admin
-                import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`).then(({checkLogin}) => {
-                    checkLogin(app_id, user_account_logon_user_account_id, authorization.replace('Bearer ',''), ip)
-                    .then((/**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
-                        if (result.length==1)
-                            next();
-                        else
-                            res.status(401).send('⛔');
-                        })
-                    .catch((/**@type{Types.error}*/error)=>{
-                        res.status(500).send(
-                            error
-                        );
-                    });
+        switch (token_type){
+            case 'APP_ACCESS':{
+                verify(token, ConfigGetApp(app_id, 'APP_ACCESS_SECRET'), (/**@type{Types.error}*/err) => {
+                    if (err)
+                        res.status(401).send('⛔');
+                    else {
+                        //check access token belongs to user_account.id, app_id and ip saved when logged in
+                        //and if app_id=0 then check user is admin
+                        import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_logon.service.js`).then(({checkLogin}) => {
+                            checkLogin(app_id, user_account_logon_user_account_id, authorization.replace('Bearer ',''), ip)
+                            .then((/**@type{Types.db_result_user_account_logon_Checklogin[]}*/result)=>{
+                                if (result.length==1)
+                                    next();
+                                else
+                                    res.status(401).send('⛔');
+                                })
+                            .catch((/**@type{Types.error}*/error)=>{
+                                res.status(500).send(
+                                    error
+                                );
+                            });
+                        });
+                    }
                 });
+                break;
             }
-        });
+            case 'APP_DATA':{
+				verify(token, ConfigGetApp(app_id, 'APP_DATA_SECRET'), (/**@type{Types.error}*/err) => {
+                    if (err)
+                        res.status(401).send('⛔');
+                    else{
+                        file_get_log('IAM_APP_TOKEN')
+                        .then((/**@type{Types.iam_app_token_record[]}*/file)=>{
+                            if (file.filter((/**@type{Types.iam_app_token_record}*/row)=> 
+                                    row.app_id == app_id
+                                    &&
+                                    row.client_ip == ip
+                                    &&
+                                    row.access_token == token).length==1)
+                                next();
+                            else
+                                res.status(401).send('⛔');
+                        });
+                    }
+                });
+                break;
+            }
+            case 'SYSTEMADMIN':{
+                verify(token, ConfigGet('SERVICE_IAM', 'ADMIN_TOKEN_SECRET'), (/**@type{Types.error}*/err) => {
+                    if (err)
+                        res.status(401).send('⛔');
+                    else{
+                        file_get_log('IAM_SYSTEMADMIN_LOGIN')
+                        .then((/**@type{Types.iam_systemadmin_login_record[]}*/file)=>{
+                            if (file.filter((/**@type{Types.iam_systemadmin_login_record}*/row)=> 
+                                    row.app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))
+                                    &&
+                                    row.username == system_admin
+                                    &&
+                                    row.client_ip == ip
+                                    &&
+                                    row.access_token == token).length==1)
+                                next();
+                            else
+                                res.status(401).send('⛔');
+                        });
+                    }
+                });
+                break;
+            }
+            default:{
+                res.status(401).send('⛔');
+            }
+        }
     }
     else
         res.status(401).send('⛔');
@@ -169,7 +233,7 @@ const AuthenticateAccessTokenSuperAdmin = (app_id, authorization, ip, user_accou
             getUserAppRoleAdmin(app_id, user_account_logon_user_account_id)
             .then((/**@type{Types.db_result_user_account_getUserRoleAdmin[]}*/result)=>{
                 if (result[0].app_role_id == 0){
-                    AuthenticateAccessTokenCommon(app_id, authorization, ip, user_account_logon_user_account_id, res, next);
+                    AuthenticateTokenCommon(app_id, 'APP_ACCESS', authorization, ip, null, user_account_logon_user_account_id, res, next);
                 }
                 else
                     res.status(401).send('⛔');
@@ -194,7 +258,7 @@ const AuthenticateAccessTokenSuperAdmin = (app_id, authorization, ip, user_accou
  */
 const AuthenticateAccessTokenAdmin = (app_id, authorization, ip, user_account_logon_user_account_id, res, next) => {
     if (app_id==0){
-        AuthenticateAccessTokenCommon(app_id, authorization, ip, user_account_logon_user_account_id, res, next);
+        AuthenticateTokenCommon(app_id, 'APP_ACCESS', authorization, ip, null, user_account_logon_user_account_id, res, next);
     }
     else
         res.status(401).send('⛔');
@@ -212,7 +276,7 @@ const AuthenticateAccessToken = (app_id, authorization, ip, user_account_logon_u
     //if user login is disabled then check also current logged in user
     //so they can't modify anything anymore with current accesstoken
     if (ConfigGet('SERVICE_IAM', 'ENABLE_USER_LOGIN')=='1'){
-        AuthenticateAccessTokenCommon(app_id, authorization, ip, user_account_logon_user_account_id, res, next);
+        AuthenticateTokenCommon(app_id, 'APP_ACCESS', authorization, ip, null, user_account_logon_user_account_id, res, next);
     }
     else
         res.status(401).send('⛔');
@@ -438,23 +502,40 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
         return false;
 };
 
-
+/**
+ * Authorize token app
+ * 
+ * @param {number} app_id
+ * @param {string|null} ip
+ * @returns {Promise.<string>}
+ */
+ const AuthorizeTokenApp = async (app_id, ip)=>{
+    const secret = ConfigGetApp(app_id, 'APP_DATA_SECRET');
+    const expiresin = ConfigGetApp(app_id, 'APP_DATA_EXPIRE');
+    const jsontoken_at = sign ({tokentimstamp: Date.now()}, secret, {expiresIn: expiresin});
+    /**@type{Types.iam_app_token_record} */
+    const file_content = {	app_id:             app_id,
+                            result:				1,
+                            access_token:   	jsontoken_at,
+                            client_ip:          ip ?? '',
+                            client_user_agent:  null,
+                            client_longitude:   null,
+                            client_latitude:    null,
+                            date_created:       new Date().toISOString()};
+    return await file_append_log('IAM_APP_TOKEN', file_content).then(()=>jsontoken_at);
+ };
 /**
  * Authorize token
  * 
  * @param {number} app_id
- * @param {'APP_DATA'|'APP_ACCESS'|'SYSTEMADMIN'} tokentype
+ * @param {string|null} ip
+ * @param {'APP_ACCESS'|'SYSTEMADMIN'} tokentype
  * @returns {string}
  */
- const AuthorizeToken = (app_id, tokentype)=>{
+ const AuthorizeToken = (app_id, ip, tokentype)=>{
     let secret = '';
     let expiresin = '';
     switch (tokentype){
-        case 'APP_DATA':{
-            secret = ConfigGetApp(app_id, 'APP_DATA_SECRET');
-            expiresin = ConfigGetApp(app_id, 'APP_DATA_EXPIRE');
-            break;
-        }
         case 'APP_ACCESS':{
             secret = ConfigGetApp(app_id, 'APP_ACCESS_SECRET');
             expiresin = ConfigGetApp(app_id, 'APP_ACCESS_EXPIRE');
@@ -466,8 +547,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
             break;
         }
     }
-    const jsontoken_at = sign ({tokentimstamp: Date.now()}, secret, {expiresIn: expiresin});
-    return jsontoken_at;
+    return sign ({tokentimstamp: Date.now()}, secret, {expiresIn: expiresin});
 };
 
 export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin, 
@@ -478,4 +558,5 @@ export{ AuthenticateSystemadmin, AuthenticateAccessTokenSystemAdmin,
         AuthenticateIAM,
         AuthenticateRequest,
         AuthenticateApp,
+        AuthorizeTokenApp,
         AuthorizeToken}; 

@@ -37,6 +37,7 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: '', 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -64,6 +65,7 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -90,6 +92,7 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -116,6 +119,7 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -142,6 +146,7 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -168,6 +173,7 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -195,7 +201,8 @@ const BFF = (bff_parameters) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
-        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
+        user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id),
         res: res
     };
     BFF(bff_parameters);
@@ -222,6 +229,7 @@ const BFF_socket = (req, res) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };
@@ -248,6 +256,7 @@ const BFF_iam = (req, res) =>{
         url:req.originalUrl,
         parameters: req.query.parameters, 
         body: req.body, 
+        system_admin: (req.query.system_admin && req.query.system_admin !='')?req.query.system_admin:null,
         user_account_logon_user_account_id: getNumberValue(req.query.user_account_logon_user_account_id), 
         res: res
     };

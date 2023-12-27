@@ -11,6 +11,7 @@
  *          url:string,
  *          parameters: string
  *          body:object,
+ *          system_admin:string|null,
  *          user_account_logon_user_account_id:number|null,
  *          res: res}} bff_parameters
  * Routes paramaters
@@ -157,7 +158,7 @@
  * @property {string} query.detailchoice                            - app portfolio parameter
  * @property {number} query.initial                                 - app portfolio parameter
  * @property {string} query.parameter                               - Server parameter
- * @property {number|null} query.system_admin
+ * @property {string} query.system_admin                            - app portfolio parameter
  * @property {number} query.identity_provider_id
  * @property {0|1|2|3|4|5|6} query.config_type_no                   - Server parameter
  * @property {config_group} query.config_group                      - Server parameter
@@ -560,8 +561,7 @@
  *              LEVEL_VERBOSE:string,
  *              LEVEL_ERROR:string,
  *              LEVEL_INFO:string,
- *              FILE_INTERVAL:string,
- *              PATH_LOG:string}} config_server_service_log
+ *              FILE_INTERVAL:string}} config_server_service_log
  * @typedef  {{ ['SERVER']:[config_server_server], 
  *              ['SERVICE_IAM']:[config_server_service_iam],
  *              ['SERVICE_SOCKET']:[config_server_socket],
@@ -857,6 +857,24 @@
  * @typedef {{  file_content:   *, 
  *              lock:           boolean, 
  *              transaction_id: number|null}} db_file_result_file_get
+ * 
+ * @typedef {{	app_id:				number,
+ *		        result:				0|1,
+ *   	        access_token:   	string,
+ *		        client_ip:          string,
+ *		        client_user_agent:  string|null,
+ *		        client_longitude:   string|null,
+ *		        client_latitude:    string|null,
+ *		        date_created:       string}} iam_app_token_record
+ * @typedef {{	app_id:				number,
+ *              username:           string,
+ *              result:				0|1,
+ *   	        access_token:   	string,
+ *		        client_ip:          string,
+ *		        client_user_agent:  string|null,
+ *		        client_longitude:   string|null,
+ *		        client_latitude:    string|null,
+ *		        date_created:       string}} iam_systemadmin_login_record
  */
 
 /**
@@ -1002,16 +1020,52 @@
  * @property {string}       year
  * @property {string}       month
  * @property {string}       day
- */
-/**
+ *
+ * @typedef {   'logdate'|
+ *              'host'|
+ *              'ip'|
+ *              'requestid'|
+ *              'correlationid'|
+ *              'url'|
+ *              'http_info'|
+ *              'method'|
+ *              'statusCode'|
+ *              'statusMessage'|
+ *              'user-agent'|
+ *              'accept-language'|
+ *              'referer'|
+ *              'size_received'|
+ *              'size_sent'|
+ *              'responsetime'|
+ *              'logtext'} server_log_request_record_keys
+ * @typedef {{  logdate:string,
+ *              host:string,
+ *              ip:string,
+ *              requestid:string,
+ *              correlationid:string,
+ *              url:string,
+ *              http_info:string,
+ *              method:string,
+ *              statusCode:number,
+ *              statusMessage:string,
+ *              'user-agent':string,
+ *              'accept-language':string,
+ *              referer:string,
+ *              size_received:number,
+ *              size_sent:number,
+ *              responsetime:number,
+ *              logtext:string}} server_log_request_record
+ * 
  * Server - log parameters get log stats
  * @typedef {object}                log_parameter_getLogStats
  * @property {number|null}          app_id
- * @property {string|null}          statGroup
+ * @property {server_log_request_record_keys} statGroup
  * @property {number|null}          unique
  * @property {string|number|null}   statValue
  * @property {number}               year
  * @property {number}               month
+ * 
+ 
  */
 /**
  * Server - Log stats data

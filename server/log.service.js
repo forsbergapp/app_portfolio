@@ -2,9 +2,10 @@
 
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
+import { file_get_log } from './db/file.service.js';
 
 const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-const {file_append} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {file_get_log_dir, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 /**
  * Get log parameters
@@ -35,20 +36,7 @@ const {file_append} = await import(`file://${process.cwd()}/server/db/file.servi
  */
  const sendLog = async (logscope, loglevel, log) => {
     return await new Promise((resolve) => {    
-        let filename = '';
-        const logdate = new Date();
-        const month = logdate.toLocaleString('en-US', { month: '2-digit'});
-        const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
-        const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-        if (config_file_interval=='1D')
-            filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}${day}.log`;
-        else{
-            if (config_file_interval=='1M')
-                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-            else
-                filename = `${logscope}_${loglevel}_${logdate.getFullYear()}${month}.log`;
-        }
-        file_append(`LOG_${logscope}_${loglevel}` , ConfigGet('SERVICE_LOG','PATH_LOG') + filename, log)
+        file_append_log(`LOG_${logscope}_${loglevel}`, log)
         .then(()=>resolve(null))
         .catch((/**@type{Types.error}*/error)=>{
             console.log(error);
@@ -403,21 +391,21 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
  * @param {Types.admin_log_data_parameters} data
  */
 const getLogs = async (data) => {
-    const fs = await import('node:fs');
     return new Promise ((resolve)=>{
-        let filename;
+        /**@type {string} */
+        let filesuffix;
         if (Number(data.month) <10)
             data.month = '0' + data.month;
         if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
             if (Number(data.day) <10)
                 data.day = '0' + data.day;
-            filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}${data.day}.log`;
+            filesuffix = `${data.year}${data.month}${data.day}.log`;
         }
         else
             if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1M')
-                filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+                filesuffix = `${data.year}${data.month}.log`;
             else
-                filename = `${data.logscope}_${data.loglevel}_${data.year}${data.month}.log`;
+                filesuffix = `${data.year}${data.month}.log`;
         /**
          * 
          * @param {object} record 
@@ -436,8 +424,9 @@ const getLogs = async (data) => {
             }
             return false;
         };
-        //read log file
-        fs.promises.readFile(`${process.cwd()}${ConfigGet('SERVICE_LOG','PATH_LOG')}${filename}`, 'utf8')
+        const file = `LOG_${data.logscope}_${data.loglevel}`;
+        /**@ts-ignore*/
+        file_get_log(file, filesuffix)
         .then(fileBuffer=>{
             //read log records in the file
             /**@type{string[]} */
@@ -545,10 +534,9 @@ const getLogsStats = async (data) => {
     /**@type{Types.admin_log_stats_data[]|[]} */
     const logstat = [];
     
-    const fs = await import('node:fs');
     if (data.month <10)
         data.month = 0 + data.month;
-    const files = await fs.promises.readdir(`${process.cwd()}${ConfigGet('SERVICE_LOG','PATH_LOG')}`);
+    const files = await file_get_log_dir();
     let sample;
     let day = '';
     //declare ES6 Set to save unique status codes and days
@@ -564,14 +552,13 @@ const getLogsStats = async (data) => {
             else
                 sample = `${data.year}${data.month}`;
             const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const fileBuffer = await fs.promises.readFile(`${process.cwd() + ConfigGet('SERVICE_LOG','PATH_LOG') + `REQUEST_INFO_${sample}.log`}`, 'utf8');
-            fileBuffer.toString().split('\r\n').forEach((record) => {
+            const logs = await file_get_log('LOG_REQUEST_INFO', sample + '.log');
+            logs.forEach((/**@type{Types.server_log_request_record|''}*/record) => {
                 if (record != ''){
-                    const  record_obj = JSON.parse(record);
                     if (data.statGroup != null){
-                        const domain_app_id = record_obj.host?ConfigGetAppHost(record_obj.host, 'SUBDOMAIN'):null;
+                        const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
                         if (data.app_id == null || data.app_id == domain_app_id){
-                            const statGroupvalue = (data.statGroup=='url' && record_obj[data.statGroup].indexOf('?')>0)?record_obj[data.statGroup].substring(0,record_obj[data.statGroup].indexOf('?')):record_obj[data.statGroup];
+                            const statGroupvalue = (data.statGroup=='url' && record[data.statGroup].indexOf('?')>0)?record[data.statGroup].substring(0,record[data.statGroup].indexOf('?')):record[data.statGroup];
                             //add unique statGroup to a set
                             log_stat_value.add(statGroupvalue);
                             log_days.add(day);
@@ -590,16 +577,16 @@ const getLogsStats = async (data) => {
                     else{
                         //add for given status code or all status codes if all should be returned
                         //save this as chart 2 with days
-                        if (data.statValue == null || data.statValue == record_obj.statusCode){
-                            const domain_app_id = record_obj.host?ConfigGetAppHost(record_obj.host, 'SUBDOMAIN'):null;
+                        if (data.statValue == null || data.statValue == record.statusCode){
+                            const domain_app_id = record.host?ConfigGetAppHost(record.host, 'SUBDOMAIN'):null;
                             if (data.app_id == null || data.app_id == domain_app_id){
                                 //add unique status codes to a set
-                                log_stat_value.add(record_obj.statusCode);
+                                log_stat_value.add(record.statusCode);
                                 log_days.add(day);
                                 /**@ts-ignore */
                                 logfiles.push({ 
                                     chart:null,
-                                    statValue: record_obj.statusCode,
+                                    statValue: record.statusCode,
                                     year: data.year,
                                     month: data.month,
                                     day: Number(day),
@@ -649,21 +636,20 @@ const getLogsStats = async (data) => {
 const getFiles = async () => {
     /**@type{[Types.admin_log_files]|[]} */
     const logfiles =[];
-    const fs = await import('node:fs');
-    const files = await fs.promises.readdir(process.cwd() + ConfigGet('SERVICE_LOG','PATH_LOG'));
+    const files = await file_get_log_dir();
     let i =1;
-    files.forEach(file => {
-        if (file.indexOf('REQUEST_INFO_')==0||
-            file.indexOf('REQUEST_ERROR_')==0||
-            file.indexOf('REQUEST_VERBOSE_')==0||
-            file.indexOf('SERVER_INFO_')==0||
-            file.indexOf('SERVER_ERROR_')==0||
-            file.indexOf('APP_INFO_')==0||
-            file.indexOf('APP_ERROR_')==0||
-            file.indexOf('DB_INFO_')==0||
-            file.indexOf('DB_ERROR_')==0||
-            file.indexOf('SERVICE_ERROR_')==0||
-            file.indexOf('SERVICE_INFO_')==0)
+    files.forEach((/**@type{string}*/file) => {
+        if (file.startsWith('REQUEST_INFO_')||
+            file.startsWith('REQUEST_ERROR_')||
+            file.startsWith('REQUEST_VERBOSE_')||
+            file.startsWith('SERVER_INFO_')||
+            file.startsWith('SERVER_ERROR_')||
+            file.startsWith('APP_INFO_')||
+            file.startsWith('APP_ERROR_')||
+            file.startsWith('DB_INFO_')||
+            file.startsWith('DB_ERROR_')||
+            file.startsWith('SERVICE_ERROR_')||
+            file.startsWith('SERVICE_INFO_'))
         /**@ts-ignore */
         logfiles.push({id: i++, filename:file});
     });

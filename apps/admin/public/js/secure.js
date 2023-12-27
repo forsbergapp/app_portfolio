@@ -156,11 +156,11 @@ const show_start = async (yearvalues) =>{
             const app_id = document.querySelector('#select_app_menu1').value; 
             const year = document.querySelector('#select_year_menu1').value;
             const month = document.querySelector('#select_month_menu1').value;
-            const select_system_admin_stat = common.COMMON_GLOBAL.system_admin==1?
+            const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=''?
                                                 document.querySelector('#select_system_admin_stat'):null;
-            const system_admin_statGroup = common.COMMON_GLOBAL.system_admin==1?
+            const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=''?
                                                 select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
-            const system_admin_statValues = common.COMMON_GLOBAL.system_admin==1?
+            const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=''?
                                                 { value: document.querySelector('#select_system_admin_stat').value,
                                                     unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
                                                     statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
@@ -173,7 +173,7 @@ const show_start = async (yearvalues) =>{
             let service;
             let url;
             let authorization_type;
-            if (common.COMMON_GLOBAL.system_admin==1){
+            if (common.COMMON_GLOBAL.system_admin!=''){
                 service = 'LOG';
                 if (system_admin_statGroup=='REQUEST'){
                     url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
@@ -227,7 +227,7 @@ const show_start = async (yearvalues) =>{
                             chart_colors += chart_color;
                         //add to legend below chart
                         let legend_text_chart1;
-                        if (common.COMMON_GLOBAL.system_admin==1)
+                        if (common.COMMON_GLOBAL.system_admin!='')
                             if (system_admin_statGroup=='REQUEST')
                                 legend_text_chart1 = stat.statValue;
                             else
@@ -276,7 +276,7 @@ const show_start = async (yearvalues) =>{
                                                                     <div id='box2_bar_data'>${html}</div>`;
                     //legend below chart
                     let legend_text_chart2;
-                    if (common.COMMON_GLOBAL.system_admin==1){
+                    if (common.COMMON_GLOBAL.system_admin!=''){
                         //as system admin you can filter http codes and application
                         legend_text_chart2 = document.querySelector('#select_system_admin_stat').options[document.querySelector('#select_system_admin_stat').selectedIndex].text;
                         const legend_text_chart2_apps = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
@@ -330,7 +330,7 @@ const show_start = async (yearvalues) =>{
         });
     };
     let box_title1, box_title2;
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         box_title1 = `${common.ICONS.app_internet} ${common.ICONS.app_server} ${common.ICONS.app_chart}`;
         box_title2 = `${common.ICONS.app_internet} ${common.ICONS.app_server} ${common.ICONS.regional_numbersystem}`;
     }
@@ -342,7 +342,7 @@ const show_start = async (yearvalues) =>{
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
-                    <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin==1?await get_system_admin_stat():null}</select>
+                    <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=''?await get_system_admin_stat():null}</select>
                     <select id='select_app_menu1'>${await get_apps()}</select>
                     <select id='select_year_menu1'>${yearvalues}</select>
                     <select id='select_month_menu1'>${list_generate(12)}</select>
@@ -374,7 +374,7 @@ const show_start = async (yearvalues) =>{
                 </div>
             </div>`;
             
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         document.querySelector('#menu_1_maintenance').style.display = 'inline-block';
         document.querySelector('#select_system_admin_stat').style.display = 'inline-block';
     }
@@ -393,7 +393,7 @@ const show_start = async (yearvalues) =>{
     document.querySelector('#select_year_menu1').addEventListener('change', () => { show_charts();}, false);
     document.querySelector('#select_month_menu1').addEventListener('change', () => { show_charts();}, false);
 
-    if (common.COMMON_GLOBAL.system_admin==1)
+    if (common.COMMON_GLOBAL.system_admin!='')
         check_maintenance();
     show_charts();
 };
@@ -406,7 +406,7 @@ const get_apps = async () => {
         let url;
         let authorization_type;
         let service;
-        if (common.COMMON_GLOBAL.system_admin==1){
+        if (common.COMMON_GLOBAL.system_admin!=''){
             service = 'SERVER';
             url = '/config/systemadmin/apps?';
             authorization_type = 'SYSTEMADMIN';
@@ -421,7 +421,7 @@ const get_apps = async () => {
                 resolve();
             else{
                 const apps = JSON.parse(result);
-                if (common.COMMON_GLOBAL.system_admin==1)
+                if (common.COMMON_GLOBAL.system_admin!='')
                     for (const app of apps) {
                         html += `<option value='${app.APP_ID}'>${app.APP_ID} - ${' '}</option>`;
                     }
@@ -467,7 +467,7 @@ const sendBroadcast = () => {
                         broadcast_message:  broadcast_message};
     let path='';
     let token_type;
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         path = '/socket/message/SystemAdmin?';
         token_type = 'SYSTEMADMIN';
     }
@@ -1517,7 +1517,7 @@ const show_monitor = async (yearvalues) =>{
             <div id='mapid'></div>
         </div>`;
     
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         //hide APP LOG in MONITOR
         document.querySelector('#list_monitor_nav_2').style.display='none';
     }
@@ -1599,7 +1599,7 @@ const show_monitor = async (yearvalues) =>{
 
         };
         
-        if (common.COMMON_GLOBAL.system_admin==1){
+        if (common.COMMON_GLOBAL.system_admin!=''){
             path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
             token_type = 'SYSTEMADMIN';
         }
@@ -1616,7 +1616,7 @@ const show_monitor = async (yearvalues) =>{
                 document.querySelector('#select_year_menu5_list_connected').innerHTML = yearvalues;
                 document.querySelector('#select_year_menu5_list_connected').selectedIndex = 0;
                 document.querySelector('#select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
-                if (common.COMMON_GLOBAL.system_admin==1){
+                if (common.COMMON_GLOBAL.system_admin!=''){
                     //server log
                     document.querySelector('#select_year_menu5').innerHTML = yearvalues;
                     document.querySelector('#select_year_menu5').selectedIndex = 0;
@@ -1749,7 +1749,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
         //set spinner
         switch (list_div){
             case 'list_connected':{
-                if (common.COMMON_GLOBAL.system_admin==1){
+                if (common.COMMON_GLOBAL.system_admin!=''){
                     path = `/socket/connection/SystemAdmin?${url_parameters}`;
                     service = 'SOCKET';
                     token_type = 'SYSTEMADMIN';
@@ -2038,7 +2038,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                     list_connected_current_user_row ='';
                                 let app_role_class;
                                 let app_role_icon = log.app_role_icon;
-                                if (log.system_admin==1){
+                                if (log.system_admin!=''){
                                     app_role_class = 'app_role_system_admin';
                                     app_role_icon = common.ICONS.app_system_admin;
                                 }
@@ -2459,7 +2459,7 @@ const list_item_click = (item) => {
             if (item.children[0].innerHTML != '::1')
                 ip_filter = `ip=${item.children[0].innerHTML}`;
             path = `/ip?${ip_filter}`;
-            if (common.COMMON_GLOBAL.system_admin==1)
+            if (common.COMMON_GLOBAL.system_admin!='')
                 tokentype = 'SYSTEMADMIN';
             else
                 tokentype = 'APP_ACCESS';
@@ -2493,7 +2493,7 @@ const list_item_click = (item) => {
                 }       
             }
             path = `/place?latitude=${lat}&longitude=${long}`;
-            if (common.COMMON_GLOBAL.system_admin==1)
+            if (common.COMMON_GLOBAL.system_admin!='')
                 tokentype = 'SYSTEMADMIN';
             else
                 tokentype = 'APP_ACCESS';
@@ -2760,7 +2760,7 @@ const show_config = async (file) => {
 /*----------------------- */
 const show_installation = () =>{
     document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;    
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         common.FFB ('DB_API', '/systemadmin/install?', 'GET', 'SYSTEMADMIN', null, (err, result) => {
             if (err)
                 document.querySelector('#menu_7_content').innerHTML = '';
@@ -3076,7 +3076,7 @@ const init = () => {
     APP_GLOBAL.service_log_level_info= '';                
     APP_GLOBAL.service_log_file_interval= '';
 
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL.module_leaflet_jumpto		                ='0';
         common.COMMON_GLOBAL.module_leaflet_popup_offset		        ='-25';
@@ -3087,7 +3087,7 @@ const init = () => {
     for (let i=1;i<=10;i++){
         document.querySelector(`#menu_${i}`).style.display='none';
     }
-    if (common.COMMON_GLOBAL.system_admin==1){
+    if (common.COMMON_GLOBAL.system_admin!=''){
         //show DASHBOARD
         document.querySelector('#menu_1').style.display='block';
         document.querySelector('#select_broadcast_type').innerHTML = 

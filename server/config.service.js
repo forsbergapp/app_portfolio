@@ -3,14 +3,7 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../types.js';
 
-const {file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
-
-/**@type{string} */
-let SLASH;
-if (process.platform == 'win32')
-    SLASH = '\\';
-else
-    SLASH = '/';
+const {SLASH, file_get, file_update, file_get_cached, file_set_cache_all, file_create, create_config_and_logs_dir} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const app_portfolio_title = 'App Portfolio';
 
@@ -199,13 +192,6 @@ const DefaultConfig = async () => {
         for (const key of Object.keys(row))
             if (key== 'ADMIN_TOKEN_SECRET'){
                 row.ADMIN_TOKEN_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-            }
-    });
-    //set log path
-    config_obj[0][1].SERVICE_LOG.map((/**@type{Types.config_server_service_log}*/row)=>{
-        for (const key of Object.keys(row))
-            if (key== 'PATH_LOG'){
-                row.PATH_LOG = `${SLASH}logs${SLASH}`;
             }
     });
     //set server metadata

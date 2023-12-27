@@ -30,8 +30,10 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
                                 decodedparameters = bff_parameters.url;
                             else
                                 decodedparameters = Buffer.from(bff_parameters.parameters, 'base64').toString('utf-8').toString();
-                            //add user account id logged on if applicable to parameters
-                            decodedparameters += (bff_parameters.user_account_logon_user_account_id)?`&user_account_logon_user_account_id=${bff_parameters.user_account_logon_user_account_id}`:'';                                     
+                            //add user account id if logged on
+                            decodedparameters += bff_parameters.user_account_logon_user_account_id?`&user_account_logon_user_account_id=${bff_parameters.user_account_logon_user_account_id}`:'';
+                            //add system admin if logged on
+                            decodedparameters += bff_parameters.system_admin?`&system_admin=${bff_parameters.system_admin}`:'';
                         }
                         let path = '';
                         const call_microservice = (/**@type{string}*/path, /**@type{string}*/service) => {

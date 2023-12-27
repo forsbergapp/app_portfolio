@@ -1,5 +1,6 @@
 .well-known/
 config/
+data/
 logs/
 node_modules/
 microservice/geolocation/geodata_cache_ip.json

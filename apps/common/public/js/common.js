@@ -3053,7 +3053,7 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     path += `&lang_code=${COMMON_GLOBAL.user_locale}`;
     const encodedparameters = toBase64(path);
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id}&parameters=${encodedparameters}`;
-    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id}`;
+    url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id}&system_admin=${COMMON_GLOBAL.system_admin}`;
     if (service=='SOCKET' && authorization_type=='SOCKET'){
         callBack(null, new EventSource(url));
     }
@@ -3213,7 +3213,7 @@ const reconnect = () => {
 const updateOnlineStatus = () => {
     let token_type='';
     let path='';
-    if (COMMON_GLOBAL.system_admin==1){
+    if (COMMON_GLOBAL.system_admin!=''){
         path =   '/socket/connection/SystemAdmin'+ 
                 `?client_id=${COMMON_GLOBAL.service_socket_client_ID}`+
                 `&identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
@@ -3264,7 +3264,7 @@ const get_place_from_gps = async (longitude, latitude) => {
         let tokentype;
         const path = `/place?longitude=${longitude}&latitude=${latitude}`;
 
-        if (COMMON_GLOBAL.system_admin==1)
+        if (COMMON_GLOBAL.system_admin!='')
             tokentype = 'SYSTEMADMIN';
         else 
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id){
@@ -3296,7 +3296,7 @@ const get_gps_from_ip = async () => {
         let tokentype;
         const path = '/ip?';
         
-        if (COMMON_GLOBAL.system_admin==1 && COMMON_GLOBAL.rest_admin_at)
+        if (COMMON_GLOBAL.system_admin!='' && COMMON_GLOBAL.rest_admin_at)
             tokentype = 'SYSTEMADMIN';
         else
             if (COMMON_GLOBAL.app_id==COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.rest_at){
@@ -3466,7 +3466,7 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL.rest_dt = parameters.app_datatoken;
 
     //system admin
-    COMMON_GLOBAL.system_admin = 0;
+    COMMON_GLOBAL.system_admin = '';
     COMMON_GLOBAL.system_admin_only = parameters.system_admin_only;
 
     //user info
