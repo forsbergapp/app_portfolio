@@ -75,19 +75,16 @@ const initPDFService = async () => {
                                                     '--no-pings',
                                                     '--user-data-dir=' + process.cwd() + CONFIG.PATH_TEMP]
         }).catch(error=>{
-            console.log(error);
             throw error;
         });
     }
 };
 /**
  * 
- * @param {{ps:string,
- *          hf:boolean,
- *          url:string}} message 
+ * @param {Types.microservice_data_pdf} url_info
  * @returns 
  */
-const getPDF = async (message) => {
+const getPDF = async (url_info) => {
     await initPDFService()
     .catch(error=>{
         throw error;
@@ -120,17 +117,17 @@ const getPDF = async (message) => {
         };
         interceptedRequest.continue(data);
     });
-    await webPage.goto(message.url, {
+    await webPage.goto(url_info.url, {
         waitUntil: ['networkidle2'],
         timeout: pdf_timeout,
     });
     let width_viewport;
     let height_viewport;
-    if (message.ps=='A4'){
+    if (url_info.ps=='A4'){
         width_viewport = a4_width_viewport;
         height_viewport = a4_height_viewport;
         }
-    if (message.ps=='Letter'){
+    if (url_info.ps=='Letter'){
         width_viewport = letter_width_viewport;
         height_viewport = letter_height_viewport;
     }
@@ -139,8 +136,8 @@ const getPDF = async (message) => {
                                 deviceScaleFactor:  device_scalefactor,
                             });
     const pdf = await webPage.pdf({ printBackground:        true,
-                                    format:                 message.ps,
-                                    displayHeaderFooter:    message.hf,
+                                    format:                 url_info.ps,
+                                    displayHeaderFooter:    url_info.hf,
                                     margin: {   top:    margin_top,
                                                 bottom: margin_bottom,
                                                 left:   margin_left,
