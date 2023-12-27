@@ -38,9 +38,9 @@ const admin_logoff_app = () => {
         document.querySelector('#menu_open').style.visibility = 'hidden';
         document.querySelector('#admin_secure').style.visibility = 'hidden';
     };
-    if (common.COMMON_GLOBAL.system_admin == 1) {
+    if (common.COMMON_GLOBAL.system_admin != '') {
         clear_common();
-        common.COMMON_GLOBAL.system_admin = 0;
+        common.COMMON_GLOBAL.system_admin = '';
     }
     else
         common.user_logoff().then(() => {
@@ -89,8 +89,8 @@ const admin_login = async () => {
             if (err)
                 null;
             else{
+                common.COMMON_GLOBAL.system_admin = JSON.parse(result_login).username;
                 common.COMMON_GLOBAL.rest_admin_at = JSON.parse(result_login).token_at;
-                common.COMMON_GLOBAL.system_admin = 1;
                 common.updateOnlineStatus();
                 common.dialogue_close('dialogue_admin_login').then(() => {
                     document.querySelector('#common_user_menu_default_avatar').innerHTML = common.ICONS.app_system_admin;

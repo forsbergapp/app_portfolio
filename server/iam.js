@@ -10,10 +10,11 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 /**
  * Middleware authenticates system admin login
  * @param {number} app_id 
+ * @param {string} ip 
  * @param {string} authorization 
  * @param {Types.res} res 
  */
-const AuthenticateSystemadmin = (app_id, authorization, res) => service.AuthenticateSystemadmin(app_id, authorization, res);
+const AuthenticateSystemadmin = (app_id, ip, authorization, res) => service.AuthenticateSystemadmin(app_id, authorization, ip, res);
 
 /**
  * Middleware authenticates system admin token
@@ -21,7 +22,7 @@ const AuthenticateSystemadmin = (app_id, authorization, res) => service.Authenti
  * @param {Types.res} res
  * @param {function} next
  */
- const AuthenticateAccessTokenSystemAdmin = (req, res, next) => service.AuthenticateAccessTokenSystemAdmin(req.get('authorization'), res, next);
+ const AuthenticateAccessTokenSystemAdmin = (req, res, next) => service.AuthenticateAccessTokenSystemAdmin(getNumberValue(req.query.app_id), req.get('authorization'), req.ip, req.query.system_admin, res, next);
 
 /**
  * Middleware authenticates data token
@@ -29,7 +30,7 @@ const AuthenticateSystemadmin = (app_id, authorization, res) => service.Authenti
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateDataToken = (req, res, next) => service.AuthenticateDataToken(getNumberValue(req.query.app_id), req.get('authorization'), res, next);
+const AuthenticateDataToken = (req, res, next) => service.AuthenticateDataToken(getNumberValue(req.query.app_id), req.get('authorization'), req.ip, res, next);
 
 /**
  * Middleware authenticates data token registration
@@ -37,7 +38,7 @@ const AuthenticateDataToken = (req, res, next) => service.AuthenticateDataToken(
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateDataTokenRegistration = (req, res, next) => service.AuthenticateDataTokenRegistration(getNumberValue(req.query.app_id), req.get('authorization'), res, next);
+const AuthenticateDataTokenRegistration = (req, res, next) => service.AuthenticateDataTokenRegistration(getNumberValue(req.query.app_id), req.get('authorization'), req.ip, res, next);
 
 /**
  * Middleware authenticates data token login
@@ -45,7 +46,7 @@ const AuthenticateDataTokenRegistration = (req, res, next) => service.Authentica
  * @param {Types.res} res
  * @param {function} next
  */
-const AuthenticateDataTokenLogin = (req, res, next) => service.AuthenticateDataTokenLogin(getNumberValue(req.query.app_id), req.get('authorization'), res, next);
+const AuthenticateDataTokenLogin = (req, res, next) => service.AuthenticateDataTokenLogin(getNumberValue(req.query.app_id), req.get('authorization'), req.ip, res, next);
 
 /**
  * Middleware authenticates access token superadmin

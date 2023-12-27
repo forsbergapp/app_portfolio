@@ -19,16 +19,18 @@ const FILE_DB = [   {NAME:'APPS',                   LOCK:0, TRANSACTION_ID:0,   
                     {NAME:'IAM_POLICY',             LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_policy.json`, CACHE_CONTENT:null},
                     {NAME:'IAM_USER',               LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_user.json`, CACHE_CONTENT:null},
                     {NAME:'IAM_USERAGENT',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}config${SLASH}iam_useragent.json`, CACHE_CONTENT:null},
-                    {NAME:'LOG_APP_INFO',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_APP_ERROR',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_DB_INFO',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_DB_ERROR',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_REQUEST_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_REQUEST_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_SERVER_INFO',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_SERVER_ERROR',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_SERVICE_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
-                    {NAME:'LOG_SERVICE_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:null},
+                    {NAME:'IAM_APP_TOKEN',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam_app_token_`},
+                    {NAME:'IAM_SYSTEMADMIN_LOGIN',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}data${SLASH}iam_systemadmin_login_`},
+                    {NAME:'LOG_APP_INFO',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}APP_INFO_`},
+                    {NAME:'LOG_APP_ERROR',          LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}APP_ERROR_`},
+                    {NAME:'LOG_DB_INFO',            LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}DB_INFO_`},
+                    {NAME:'LOG_DB_ERROR',           LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}DB_ERROR_`},
+                    {NAME:'LOG_REQUEST_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}REQUEST_INFO_`},
+                    {NAME:'LOG_REQUEST_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}REQUEST_ERROR_`},
+                    {NAME:'LOG_SERVER_INFO',        LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVER_INFO_`},
+                    {NAME:'LOG_SERVER_ERROR',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVER_ERROR_`},
+                    {NAME:'LOG_SERVICE_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVICE_INFO_`},
+                    {NAME:'LOG_SERVICE_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVICE_ERROR_`},
                     {NAME:'MICROSERVICE_CONFIG',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
                     {NAME:'MICROSERVICE_SERVICES',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}services.json`, CACHE_CONTENT:null}];
 Object.seal(FILE_DB);
@@ -114,9 +116,23 @@ const transaction_rollback = (file, transaction_id)=>{
 };
 
 /**
+ * Get log file with default suffix or given suffix
+ * @param {Types.db_file_db_name} file 
+ * @param {string|null} filesuffix 
+ * @returns {Promise.<*>}
+ */
+ const file_get_log = async (file, filesuffix=null) =>{
+    const logdate = new Date();
+    const month = logdate.toLocaleString('en-US', { month: '2-digit'});
+    const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
+    const filepath = `${fileDB(file).PATH}` + (filesuffix?filesuffix:`${logdate.getFullYear()}${month}${day}.log`);
+    const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');
+    return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row));
+};
+/**
  * 
  * @param {Types.db_file_db_name} file 
- * @param {boolean} lock 
+ * @param {boolean} lock
  * @returns {Promise.<Types.db_file_result_file_get>}
  */
 const file_get = async (file, lock=false) =>{
@@ -136,6 +152,11 @@ const file_get = async (file, lock=false) =>{
 };
 /**
  * 
+ * @returns {Promise.<string[]>}
+ */
+const file_get_log_dir = async () => await fs.promises.readdir(`${process.cwd()}${SLASH}logs`);
+/**
+ * 
  * @param {Types.db_file_db_name} file
  * @returns {*}
  */
@@ -147,8 +168,8 @@ const file_get = async (file, lock=false) =>{
  const file_set_cache_all = async () => {
     for (const file_db_record of FILE_DB){
         if ('CACHE_CONTENT' in file_db_record){
-            const fileBuffer = await fs.promises.readFile(process.cwd() + file_db_record.PATH, 'utf8');    
-            file_db_record.CACHE_CONTENT = JSON.parse(fileBuffer.toString());
+            const fileBuffer = await fs.promises.readFile(process.cwd() + file_db_record.PATH, 'utf8').catch(()=>null);
+            file_db_record.CACHE_CONTENT = fileBuffer?JSON.parse(fileBuffer.toString()):null;
         }
     }
     /**@ts-ignore */
@@ -211,16 +232,34 @@ const file_create = async (file, file_content) =>{
 };
 /**
  * 
- * @param {Types.db_file_db_name} file 
- * @param {string} filepath 
+ * @param {Types.db_file_db_name} file
  * @param {object} file_content 
  */
-const file_append = async (file, filepath, file_content) =>{
-    const old_file = await fs.promises.readFile(process.cwd() + filepath, 'utf8')
+const file_append_log = async (file, file_content) =>{
+    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
+    let filesuffix = '';
+    const logdate = new Date();
+    const month = logdate.toLocaleString('en-US', { month: '2-digit'});
+    const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
+    if (file.startsWith('LOG_')){
+        const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
+        if (config_file_interval=='1D')
+            filesuffix = `${logdate.getFullYear()}${month}${day}.log`;
+        else{
+            if (config_file_interval=='1M')
+                filesuffix = `${logdate.getFullYear()}${month}.log`;
+            else
+                filesuffix = `${logdate.getFullYear()}${month}.log`;
+        }
+    }
+    else
+        filesuffix = `${logdate.getFullYear()}${month}${day}.log`;
+    const filepath = `${fileDB(file).PATH}${filesuffix}`;
+    const old_file = await fs.promises.readFile(`${process.cwd()}${filepath}`, 'utf8')
     .catch(()=>null);
     const transaction_id = await transaction_start(file, old_file ?? '');
     
-    await fs.promises.appendFile(process.cwd() + `${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+    await fs.promises.appendFile(`${process.cwd()}${fileDB(file).PATH}${filesuffix}`, JSON.stringify(file_content) + '\r\n', 'utf8')
     .then(()=>{
         if (transaction_commit(file, transaction_id))
             return null;
@@ -242,10 +281,11 @@ const create_config_and_logs_dir = async () => {
             throw error;
         });
     };
-    for (const dir of [ `${SLASH}config`, 
-                        `${SLASH}logs`, 
-                        `${SLASH}microservice${SLASH}config`, 
-                        `${SLASH}microservice${SLASH}logs`, 
+    for (const dir of [ `${SLASH}config`,
+                        `${SLASH}data`,
+                        `${SLASH}logs`,
+                        `${SLASH}microservice${SLASH}config`,
+                        `${SLASH}microservice${SLASH}logs`,
                         `${SLASH}microservice${SLASH}temp`]){
         await fs.promises.access(process.cwd() + dir)
         .catch(()=>{
@@ -254,4 +294,4 @@ const create_config_and_logs_dir = async () => {
     }
 };
 
-export {file_get, file_get_cached, file_set_cache_all, file_update, file_create, file_append, create_config_and_logs_dir};
+export {SLASH, file_get, file_get_log_dir, file_get_log, file_get_cached, file_set_cache_all, file_update, file_create, file_append_log, create_config_and_logs_dir};

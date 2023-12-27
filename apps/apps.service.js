@@ -715,10 +715,10 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
  */
 const getAppBFF = async (app_id, app_parameters) =>{
     //Data token
-    const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
     const { COMMON } = await import(`file://${process.cwd()}/server/server.service.js`);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '1 ' + new Date().toISOString());
-    const datatoken = AuthorizeToken(app_id, 'APP_DATA');
+    const datatoken = await AuthorizeTokenApp(app_id, app_parameters.ip);
     const result_geodata = await getAppGeodata(app_id, app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language, datatoken);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '2 ' +new Date().toISOString());
     /** @type {number} */
@@ -834,8 +834,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
  * @returns {Promise.<{type: string, report:string}>}
  */
 const getReport = async (app_id, ip, host, user_agent, accept_language, reportid, messagequeue) => {
-    const { AuthorizeToken } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const datatoken = AuthorizeToken(app_id, 'APP_DATA');
+    const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
+    const datatoken = await AuthorizeTokenApp(app_id, ip);
     const result_geodata = await getAppGeodata(app_id, ip, user_agent, accept_language, datatoken);
 
     const decodedparameters = Buffer.from(reportid, 'base64').toString('utf-8');
