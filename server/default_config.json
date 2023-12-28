@@ -8,6 +8,7 @@
     {"HTTPS_SSL_VERIFICATION": "1", "COMMENT": "1=YES, check if enable tempory path for Letsencrypt using certbot"},
     {"HTTPS_SSL_VERIFICATION_PATH": "/.well-known/acme-challenge/", "COMMENT": "the tempory path for Letsencrypt using certbot"},
     {"JSON_LIMIT": "10MB", "COMMENT": ""},
+    {"APP_PDF_METHOD": "1", "COMMENT": "1=Message queue and Microservice PDF function, 2=Microservice PDF server"},
     {"APP_LOG": "0", "COMMENT": "0=NO, 1=YES, enable to log all activity in server logs"},
     {"APP_START": "0", "COMMENT": "0=NO, 1=YES, when 0 then only admin is started"},
     {"APP_SOUND": "0", "COMMENT": "0=NO, 1=YES, when 1 then sound is played in apps when implemented"},

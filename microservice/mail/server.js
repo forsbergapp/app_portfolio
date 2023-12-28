@@ -35,7 +35,7 @@ const startserver = async () =>{
 					if (authenticate)
 						service.sendEmail(req.query.data)
 						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
 						return_result(401, '⛔', null, null, res);
 				});

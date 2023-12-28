@@ -131,7 +131,7 @@ const microserviceRequest = async (admin, path,service, method,client_ip,authori
  * @param {number} code 
  * @param {string|null} error 
  * @param {*} result 
- * @param {*} pdf 
+ * @param {*} pdf
  * @param {Types.res_microservice} res
  */
  const return_result = (code, error, result, pdf, res)=>{
@@ -143,7 +143,7 @@ const microserviceRequest = async (admin, path,service, method,client_ip,authori
     else{
         if (pdf){
             res.setHeader('Content-Type',  'application/pdf');
-            res.send(pdf);
+            res.write(pdf);
         }
         else{
             res.setHeader('Content-Type',  'application/json; charset=utf-8');

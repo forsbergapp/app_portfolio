@@ -420,11 +420,12 @@
  * Apps - Report query parameters
  * @typedef {object} report_query_parameters
  * @property {string} module
- * @property {string} ps
- * @property {number} hf
- * @property {string} format
  * @property {number} uid_view
  * @property {string} url
+ * @property {string} [ps]
+ * @property {number} [hf]
+ * @property {string} format
+ 
  */
 
 /**

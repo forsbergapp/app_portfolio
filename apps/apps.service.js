@@ -826,18 +826,18 @@ const getAppBFF = async (app_id, app_parameters) =>{
  * 
  * @param {number} app_id 
  * @param {string} ip
- * @param {string} host
  * @param {string} user_agent 
  * @param {string} accept_language 
  * @param {string} reportid
  * @param {number} messagequeue
  * @returns {Promise.<{type: string, report:string}>}
  */
-const getReport = async (app_id, ip, host, user_agent, accept_language, reportid, messagequeue) => {
+const getReport = async (app_id, ip, user_agent, accept_language, reportid, messagequeue) => {
+    const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
+    const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
     await AuthorizeTokenApp(app_id, ip);
     const result_geodata = await getAppGeodata(app_id, ip, user_agent, accept_language);
-
     const decodedparameters = Buffer.from(reportid, 'base64').toString('utf-8');
     
     let query_parameters = '{';
@@ -849,37 +849,71 @@ const getReport = async (app_id, ip, host, user_agent, accept_language, reportid
     query_parameters += '}';
     /** @type {Types.report_query_parameters}*/
     const query_parameters_obj = JSON.parse(query_parameters);
-
     const ps = query_parameters_obj.ps; //papersize     A4/Letter
     const hf = (query_parameters_obj.hf==1); //header/footer 1/0    1= true
     
-    if (query_parameters_obj.format.toUpperCase() == 'PDF' && typeof messagequeue == 'undefined' ){
+    const use_message_queue = (getNumberValue(ConfigGet('SERVER', 'APP_PDF_METHOD'))==1);
+    
+    const host =    (ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://') + 
+                    ConfigGetApp(app_id, 'SUBDOMAIN') + '.' +  
+                    ConfigGet('SERVER', 'HOST') + ':' + 
+                    (getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT')));
+
+    if (use_message_queue && query_parameters_obj.format.toUpperCase() == 'PDF' && messagequeue == null ){
         //PDF
         const url = `${host}/reports?ps=${ps}&hf=${hf}&reportid=${reportid}&messagequeue=1`;
         //call message queue
-        const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+        
         return {type:'PDF',
                 report:await MessageQueue('PDF', 'PUBLISH', {url:url, ps:ps, hf:hf}, null)
-                .catch((/**@type{string}*/error)=>{
+                .catch((/**@type{Types.error}*/error)=>{
                         throw error;
                 })};
     }
-    else{
-        const {createReport} = await import(`file://${process.cwd()}/apps/app${app_id}/src/report/index.js`);
-        /**@type{Types.report_create_parameters} */
-        const data = {  app_id:         app_id,
-                        reportid:       reportid,
-                        reportname:     query_parameters_obj.module,
-                        ip:             ip,
-                        user_agent:     user_agent,
-                        accept_language:accept_language,
-                        latitude:       result_geodata.latitude,
-                        longitude:      result_geodata.longitude,
-                        report:         null};
-        return {    type:'HTML',
-                    report:await createReport(app_id, data)
-                };
-    }
+    else
+        if (use_message_queue==false && query_parameters_obj.format.toUpperCase() == 'PDF'){
+            query_parameters_obj.format = 'HTML';
+            
+            const ps = query_parameters_obj.ps; //papersize     A4/Letter
+            const hf = getNumberValue(query_parameters_obj.hf); //header/footer 1/0    1= true
+            delete query_parameters_obj.ps;
+            delete query_parameters_obj.hf;
+            const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
+            const url = host + 
+                        '/reports?reportid=' +
+                        new Buffer(Object.entries(query_parameters_obj).reduce((/**@type{*}*/total, current)=>total += (total==''?'':'&') + current[0] + '=' + current[1],''),'utf-8').toString('base64');
+            /**@type{Types.bff_parameters_microservices}*/
+            const parameters = {app_id:app_id, 
+                                endpoint: 'APP', 
+                                service:'PDF', 
+                                ip:ip, 
+                                method:'GET', 
+                                user_agent:user_agent, 
+                                accept_language:accept_language,
+                                parameters: new Buffer(`?url=${new Buffer(url,'utf-8').toString('base64')}&ps=${ps}&hf=${hf}`,'utf-8').toString('base64'), 
+                                body:null};
+            const pdf = await BFF_microservices(parameters).catch((/**@type{Types.error}*/error)=>error);
+            return {    type:'PDF',
+                        report:pdf
+                    };
+        }
+        else{
+            
+            /**@type{Types.report_create_parameters} */
+            const data = {  app_id:         app_id,
+                            reportid:       reportid,
+                            reportname:     query_parameters_obj.module,
+                            ip:             ip,
+                            user_agent:     user_agent,
+                            accept_language:accept_language,
+                            latitude:       result_geodata.latitude,
+                            longitude:      result_geodata.longitude,
+                            report:         null};
+            const report_html = await createReport(app_id, data);
+            return {    type:'HTML',
+                        report:report_html
+                    };
+        }
 };
 /**
  * 
@@ -1185,7 +1219,7 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                 resolve(null);
                         else
                             if (url.toLowerCase().startsWith('/report'))
-                                getReport(app_id, ip, host, user_agent, accept_language, reportid, messagequeue)
+                                getReport(app_id, ip, user_agent, accept_language, reportid, messagequeue)
                                 .then((report_result)=>{
                                     if (report_result.type=='PDF')
                                         res.type('application/pdf');

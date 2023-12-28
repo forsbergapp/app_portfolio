@@ -27,9 +27,9 @@ const startserver = async () =>{
 					if (authenticate)
 						service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
 						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
-						return_result(401, '⛔', null, res);
+						return_result(401, '⛔', null, null, res);
 				});
 				break;
 			}
@@ -38,9 +38,9 @@ const startserver = async () =>{
 					if (authenticate)
 						service.getIp(req.query.data.ip, req.headers['accept-language'])
 						.then((result)=>return_result(200, null, JSON.parse(result), null, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
-						return_result(401, '⛔', null, res);
+						return_result(401, '⛔', null, null, res);
 				});
 				break;
 			}

@@ -263,8 +263,7 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
     });
 };
 const get_report_url = (id, sid, papersize, item, format, profile_display=true) => {
-    const app_parameters = `app_id=${common.COMMON_GLOBAL.app_id}`;
-    const report_module = `&module=${APP_GLOBAL.app_report_timetable}`;
+    const report_module = `module=${APP_GLOBAL.app_report_timetable}`;
     let module_parameters = `&id=${id}&sid=${sid}`;
     if (item =='profile_user_settings_day' || item.substr(0,8)=='user_day')
         module_parameters += '&type=0';
@@ -279,11 +278,10 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
     }
     const language_parameter = `&lang_code=${common.COMMON_GLOBAL.user_locale}`;
     const service_parameter = `&format=${format}&ps=${papersize}&hf=0`; //html/pdf, papersize, header/footer
-    const encodedurl = common.toBase64(app_parameters +
-                                     report_module +
-                                     module_parameters + 
-                                     language_parameter +
-                                     service_parameter);
+    const encodedurl = common.toBase64( report_module +
+                                        module_parameters + 
+                                        language_parameter +
+                                        service_parameter);
     //url query parameters are decoded in report module and in report service
     return common.getHostname() + `/reports?reportid=${encodedurl}`;
 };
