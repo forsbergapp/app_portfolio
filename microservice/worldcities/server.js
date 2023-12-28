@@ -26,9 +26,9 @@ const startserver = async () =>{
 					if (authenticate)
 						service.getCitySearch(decodeURI(req.query.data.search), req.query.data.limit)
 						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
-						return_result(401, '⛔', null, res);
+						return_result(401, '⛔', null, null, res);
 				});
 				break;
 			}
@@ -37,9 +37,9 @@ const startserver = async () =>{
 					if (authenticate)
 						service.getCityRandom()
 						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
-						return_result(401, '⛔', null, res);
+						return_result(401, '⛔', null, null, res);
 				});
 				break;
 			}
@@ -48,9 +48,9 @@ const startserver = async () =>{
 					if (authenticate)
 						service.getCities(req.query.data.country)
 						.then((result)=>return_result(200, null, result, null, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
-						return_result(401, '⛔', null, res);
+						return_result(401, '⛔', null, null, res);
 				});
 				break;
 			}
