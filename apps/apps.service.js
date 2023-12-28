@@ -719,7 +719,7 @@ const getAppBFF = async (app_id, app_parameters) =>{
     const { COMMON } = await import(`file://${process.cwd()}/server/server.service.js`);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '1 ' + new Date().toISOString());
     const datatoken = await AuthorizeTokenApp(app_id, app_parameters.ip);
-    const result_geodata = await getAppGeodata(app_id, app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language, datatoken);
+    const result_geodata = await getAppGeodata(app_id, app_parameters.ip, app_parameters.user_agent, app_parameters.accept_language);
     await LogAppI(app_id, COMMON.app_filename(import.meta.url), COMMON.app_function(Error().stack), COMMON.app_line(), '2 ' +new Date().toISOString());
     /** @type {number} */
     let system_admin_only;
@@ -835,8 +835,8 @@ const getAppBFF = async (app_id, app_parameters) =>{
  */
 const getReport = async (app_id, ip, host, user_agent, accept_language, reportid, messagequeue) => {
     const { AuthorizeTokenApp } = await import(`file://${process.cwd()}/server/iam.service.js`);
-    const datatoken = await AuthorizeTokenApp(app_id, ip);
-    const result_geodata = await getAppGeodata(app_id, ip, user_agent, accept_language, datatoken);
+    await AuthorizeTokenApp(app_id, ip);
+    const result_geodata = await getAppGeodata(app_id, ip, user_agent, accept_language);
 
     const decodedparameters = Buffer.from(reportid, 'base64').toString('utf-8');
     
@@ -886,27 +886,23 @@ const getReport = async (app_id, ip, host, user_agent, accept_language, reportid
  * @param {number} app_id 
  * @param {string} ip 
  * @param {string} user_agent 
- * @param {string} accept_language 
- * @param {string} datatoken 
+ * @param {string} accept_language
  * @returns 
  */
-const getAppGeodata = async (app_id, ip, user_agent, accept_language, datatoken) =>{
-    const { BFF_call_service } = await import(`file://${process.cwd()}/server/bff.service.js`);
+const getAppGeodata = async (app_id, ip, user_agent, accept_language) =>{
+    const { BFF_microservices } = await import(`file://${process.cwd()}/server/bff.service.js`);
     //get GPS from IP
-    const result_gps = await BFF_call_service({  app_id:app_id, 
-                                    endpoint: 'APP', 
-                                    service:'GEOLOCATION', 
-                                    ip:ip, 
-                                    method:'GET', 
-                                    authorization:`Bearer ${datatoken}`, 
-                                    host:null, 
-                                    user_agent:user_agent, 
-                                    accept_language:accept_language,
-                                    url:null,
-                                    parameters:new Buffer(`/ip?ip=${ip}`).toString('base64'), 
-                                    body:null,
-                                    user_account_logon_user_account_id:null,
-                                    res:null})
+    /**@type{Types.bff_parameters_microservices}*/
+    const parameters = {app_id:app_id, 
+                        endpoint: 'APP', 
+                        service:'GEOLOCATION', 
+                        ip:ip, 
+                        method:'GET', 
+                        user_agent:user_agent, 
+                        accept_language:accept_language,
+                        parameters:new Buffer(`/ip?ip=${ip}`).toString('base64'), 
+                        body:null};
+    const result_gps = await BFF_microservices(parameters)
     .catch((/**@type{Types.error}*/error)=>error);
     const result_geodata = {};
     if (result_gps){
@@ -918,20 +914,17 @@ const getAppGeodata = async (app_id, ip, user_agent, accept_language, datatoken)
         result_geodata.timezone =   JSON.parse(result_gps).geoplugin_timezone;
     }
     else{
-        const result_city = await BFF_call_service({app_id:app_id, 
-                                                    endpoint: 'APP', 
-                                                    service:'WORLDCITIES', 
-                                                    ip:ip, 
-                                                    method:'GET', 
-                                                    authorization:`Bearer ${datatoken}`, 
-                                                    host:null, 
-                                                    user_agent:user_agent, 
-                                                    accept_language:accept_language,
-                                                    url:null,
-                                                    parameters:new Buffer('/city/random?').toString('base64'), 
-                                                    body:null,
-                                                    user_account_logon_user_account_id:null,
-                                                    res:null});
+        /**@type{Types.bff_parameters_microservices}*/
+        const parameters = {app_id:app_id, 
+                            endpoint: 'APP', 
+                            service:'WORLDCITIES', 
+                            ip:ip, 
+                            method:'GET', 
+                            user_agent:user_agent, 
+                            accept_language:accept_language,
+                            parameters:new Buffer('/city/random?').toString('base64'), 
+                            body:null};
+        const result_city = await BFF_microservices(parameters);
         result_geodata.latitude =   JSON.parse(result_city).lat;
         result_geodata.longitude=   JSON.parse(result_city).lng;
         result_geodata.place    =   JSON.parse(result_city).city + ', ' + JSON.parse(result_city).admin_name + ', ' + JSON.parse(result_city).country;
