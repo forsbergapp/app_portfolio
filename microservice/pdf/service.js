@@ -95,8 +95,8 @@ const getPDF = async (url_info) => {
     const pdf_timeout = await ConfigServiceGet('PDF_TIMEOUT');
     const a4_width_viewport = await ConfigServiceGet('A4_WIDTH_VIEWPORT');
     const a4_height_viewport = await ConfigServiceGet('A4_HEIGHT_VIEWPORT');
-    const letter_width_viewport = ConfigServiceGet('LETTER_WIDTH_VIEWPORT');
-    const letter_height_viewport = ConfigServiceGet('LETTER_HEIGHT_VIEWPORT');
+    const letter_width_viewport = await ConfigServiceGet('LETTER_WIDTH_VIEWPORT');
+    const letter_height_viewport = await ConfigServiceGet('LETTER_HEIGHT_VIEWPORT');
     const device_scalefactor = await ConfigServiceGet('DEVICE_SCALEFACTOR');
     const margin_top = await ConfigServiceGet('MARGIN_TOP');
     const margin_bottom = await ConfigServiceGet('MARGIN_BOTTOM');
@@ -143,6 +143,7 @@ const getPDF = async (url_info) => {
                                                 left:   margin_left,
                                                 right:  margin_right
                                     }});
+    await webPage.close();
     return pdf;
 };
 export{getPDF};

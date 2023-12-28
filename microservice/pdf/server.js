@@ -17,8 +17,9 @@ const startserver = async () =>{
 		const query = new URLSearchParams(req.url.substring(req.url.indexOf('?')));
 		/**@type{Types.microservice_data_pdf} */
 		const data = {	ps:	query.get('ps') ?? '',
-						hf:	getNumberValue(query.get('hf')) ?? false,
-						url:query.get('url') ?? ''};
+						hf:	(getNumberValue(query.get('hf'))==1) ?? false,
+						/**@ts-ignore */
+						url: Buffer.from(query.get('url'), 'base64').toString('utf-8') ?? ''};
 		req.query = {	app_id:	getNumberValue(query.get('app_id')),
 						data:	data};
 		switch (req.url.substring(0, req.url.indexOf('?'))){
@@ -27,7 +28,7 @@ const startserver = async () =>{
 					if (authenticate)
 						service.getPDF(req.query.data)
 						.then((pdf)=>return_result(200, null, null, pdf, res))
-						.catch((error) =>return_result(500, error, null, res));
+						.catch((error) =>return_result(500, error, null, null, res));
 					else
 						return_result(401, '⛔', null, null, res);
 				});
