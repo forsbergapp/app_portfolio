@@ -1,6 +1,6 @@
 /** BFF
  * @typedef {{app_id: req_id_number,
- *          endpoint: string|null,
+ *          endpoint: string,
  *          service: string,
  *          ip: string,
  *          host:string, 
@@ -14,6 +14,33 @@
  *          system_admin:string|null,
  *          user_account_logon_user_account_id:number|null,
  *          res: res}} bff_parameters
+ * 
+ * @typedef {{  app_id: req_id_number,
+ *              endpoint: string,
+ *              service: string,
+ *              ip: string,
+ *              method: string,
+ *              user_agent:string,
+ *              accept_language:string,
+ *              parameters: string,
+ *              body:object|null}} bff_parameters_microservices
+ * 
+ * @typedef {{  app_id: req_id_number,
+ *              endpoint: string,
+ *              service: string,
+ *              ip: string,
+ *              host:string, 
+ *              method: string,
+ *              authorization:string,
+ *              user_agent:string,
+ *              accept_language:string,
+ *              url:string,
+ *              parameters: string
+ *              body:object|null,
+ *              system_admin:string|null,
+ *              user_account_logon_user_account_id:number|null,
+ *              res: res}} bff_parameters_server
+ * 
  * Routes paramaters
  * @typedef {{  app_id: req_id_number,
 *               endpoint: string,
