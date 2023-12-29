@@ -30,7 +30,7 @@ const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
             const file_content = {	app_id:             app_id,
                                     username:		    username,
                                     result:				1,
-                                    access_token:   	jsontoken_at,
+                                    systemadmin_token:  jsontoken_at,
                                     client_ip:          ip,
                                     client_user_agent:  null,
                                     client_longitude:   null,
@@ -178,7 +178,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                                     &&
                                     row.client_ip == ip
                                     &&
-                                    row.access_token == token).length==1)
+                                    row.app_token == token).length==1)
                                 next();
                             else
                                 res.status(401).send('⛔');
@@ -201,7 +201,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                                     &&
                                     row.client_ip == ip
                                     &&
-                                    row.access_token == token).length==1)
+                                    row.systemadmin_token == token).length==1)
                                 next();
                             else
                                 res.status(401).send('⛔');
@@ -516,7 +516,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
     /**@type{Types.iam_app_token_record} */
     const file_content = {	app_id:             app_id,
                             result:				1,
-                            access_token:   	jsontoken_at,
+                            app_token:   	    jsontoken_at,
                             client_ip:          ip ?? '',
                             client_user_agent:  null,
                             client_longitude:   null,

@@ -888,7 +888,7 @@
  * 
  * @typedef {{	app_id:				number,
  *		        result:				0|1,
- *   	        access_token:   	string,
+ *   	        app_token:   	    string,
  *		        client_ip:          string,
  *		        client_user_agent:  string|null,
  *		        client_longitude:   string|null,
@@ -897,7 +897,7 @@
  * @typedef {{	app_id:				number,
  *              username:           string,
  *              result:				0|1,
- *   	        access_token:   	string,
+ *   	        systemadmin_token:  string,
  *		        client_ip:          string,
  *		        client_user_agent:  string|null,
  *		        client_longitude:   string|null,
