@@ -26,29 +26,38 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
  * 
  * @param {number} app_id 
  * @param {string} emailtype 
- * @param {string} host 
+ * @param {string} ip
+ * @param {string} user_agent
+ * @param {string} accept_language
  * @param {number} userid 
  * @param {string|null} verification_code 
  * @param {string} email 
  */
- const sendUserEmail = async (app_id, emailtype, host, userid, verification_code, email) => {
+ const sendUserEmail = async (app_id, emailtype, ip, user_agent, accept_language, userid, verification_code, email) => {
     const { createMail} = await import(`file://${process.cwd()}/apps/apps.service.js`);
-    const { MessageQueue } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+    const {BFF_microservices} = await import(`file://${process.cwd()}/server/bff.service.js`);
     
-    createMail(app_id, 
-        {
-            'emailtype':        emailtype,
-            'host':             host,
-            'app_user_id':      userid,
-            'verificationCode': verification_code,
-            'to':               email,
-        }).then((/**@type{Types.email_return_data}*/email)=>{
-            MessageQueue('MAIL', 'PUBLISH', email, null)
-            .then(()=>{
-                return null;
-            });
-        })
-        .catch((/**@type{Types.error}*/error)=>{throw error;});
+    /**@type{Types.email_return_data}*/
+    const email_rendered = await createMail( app_id, 
+                                    {
+                                        'emailtype':        emailtype,
+                                        'host':             ConfigGet('SERVER', 'HOST'),
+                                        'app_user_id':      userid,
+                                        'verificationCode': verification_code,
+                                        'to':               email,
+                                    })
+                                    .catch((/**@type{Types.error}*/error)=>{throw error;});
+        
+        
+    const data = {  app_id:app_id, 
+                    service:'MAIL', 
+                    ip:ip,
+                    method:'POST', 
+                    user_agent:user_agent,
+                    accept_language:accept_language,
+                    parameters:new Buffer('/sendemail?').toString('base64'),
+                    body:email_rendered};
+    return await BFF_microservices(data);
 };
 
 /**
@@ -56,12 +65,12 @@ const { checked_error } = await import(`file://${process.cwd()}/server/dbapi/com
  * @param {number} app_id
  * @param {string} ip
  * @param {string} user_agent
- * @param {string} host
+ * @param {string} accept_language
  * @param {*} query
  * @param {*} data
  * @param {Types.res} res
  */
-const login = (app_id, ip, user_agent, host, query, data, res) =>{
+const login = (app_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_userLogin} */
         const data_login =    {   username: data.username};
@@ -92,7 +101,9 @@ const login = (app_id, ip, user_agent, host, query, data, res) =>{
                                             //send email UNVERIFIED
                                             sendUserEmail(  app_id, 
                                                             parameter[0].parameter_value, 
-                                                            host, 
+                                                            ip, 
+                                                            user_agent,
+                                                            accept_language,
                                                             result_login[0].id, 
                                                             new_code, 
                                                             result_login[0].email)
@@ -272,13 +283,15 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
 /**
  * 
  * @param {number} app_id 
- * @param {string} host 
+ * @param {string} ip 
+ * @param {string} user_agent
+ * @param {string} accept_language
  * @param {*} query 
  * @param {*} data 
  * @param {Types.res} res 
  * @returns 
  */
-const signup = (app_id, host, query, data, res) =>{
+const signup = (app_id, ip, user_agent, accept_language, query, data, res) =>{
     return new Promise((resolve, reject)=>{
         /**@type{Types.db_parameter_user_account_create} */
         const data_body = { bio:                    data.bio,
@@ -311,7 +324,9 @@ const signup = (app_id, host, query, data, res) =>{
                     //send email SIGNUP
                     sendUserEmail(  app_id, 
                                     parameter[0].parameter_value, 
-                                    host, 
+                                    ip, 
+                                    user_agent,
+                                    accept_language,
                                     result_create.insertId, 
                                     data_body.verification_code, 
                                     data_body.email ?? '')
@@ -460,7 +475,9 @@ const forgot = (app_id, ip, user_agent, accept_language, host, data) =>{
                                         //send email PASSWORD_RESET
                                         sendUserEmail(  app_id, 
                                                         parameter[0].parameter_value, 
-                                                        host, 
+                                                        ip, 
+                                                        user_agent,
+                                                        accept_language,
                                                         result_emailuser[0].id, 
                                                         new_code, 
                                                         email)
@@ -791,7 +808,9 @@ const getLogonAdmin =(app_id, query) => getUserAccountLogonAdmin(app_id, getNumb
                                         //send email SERVICE_MAIL_TYPE_CHANGE_EMAIL
                                         sendUserEmail(  app_id, 
                                                         parameter[0].parameter_value, 
-                                                        host, 
+                                                        ip, 
+                                                        user_agent,
+                                                        accept_language,
                                                         getNumberValue(query.get('PUT_ID')),
                                                         data.verification_code, 
                                                         data.new_email)

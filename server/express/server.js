@@ -77,7 +77,7 @@ const req_log = (req) => {  switch (ConfigGet('SERVICE_LOG', 'REQUEST_LEVEL')){
     app.route('/bff/app_data').patch        (iam.AuthenticateDataToken, BFF_app_data);
     app.route('/bff/app_data').post         (iam.AuthenticateDataToken, BFF_app_data);
     app.route('/bff/app_data').put          (iam.AuthenticateDataToken, BFF_app_data);
-    app.route('/bff/app_data_signup').post  (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
+    app.route('/bff/app_signup').post       (iam.AuthenticateDataTokenRegistration, BFF_app_signup);
     app.route('/bff/app_access').delete     (iam.AuthenticateAccessToken, BFF_app_access);
     app.route('/bff/app_access').get        (iam.AuthenticateAccessToken, BFF_app_access);
     app.route('/bff/app_access').patch      (iam.AuthenticateAccessToken, BFF_app_access);

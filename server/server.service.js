@@ -121,7 +121,7 @@ const COMMON = {
                     break;
                 }
                 case 'APP_SIGNUP_DB_API_/USER_ACCOUNT/SIGNUP_POST':{
-                    resolve(db_user_account.signup(routesparameters.app_id, routesparameters.host, query, routesparameters.body, routesparameters.res));
+                    resolve(db_user_account.signup(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, query, routesparameters.body, routesparameters.res));
                     break;
                 }
                 case 'APP_DATA_SOCKET_/SOCKET/CONNECTION_PATCH':{
@@ -452,7 +452,7 @@ const COMMON = {
                     break;
                 }
                 case 'IAM_IAM_/USER_POST':{
-                    resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, query, routesparameters.body, routesparameters.res));
+                    resolve(db_user_account.login(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.accept_language, query, routesparameters.body, routesparameters.res));
                     break;
                 }
                 case 'IAM_IAM_/PROVIDER_POST':{
