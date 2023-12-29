@@ -1,5 +1,5 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E3B7577B-E6DB-BCBF-9EC1-777C0877E854" name="user_account_app_data_post_view">
+<Table class="oracle.dbtools.crest.model.design.relational.Table" directorySegmentName="seg_0" id="E3B7577B-E6DB-BCBF-9EC1-777C0877E854" schemaObject="2C9478DD-6110-6AE4-BC0C-0218A99488A9" name="user_account_app_data_post_view">
 <createdBy>admin</createdBy>
 <createdTime>2023-04-24 10:31:51 UTC</createdTime>
 <generatorID>8A98F017-D8E4-2A38-C159-6EE446BE9A5E</generatorID>
