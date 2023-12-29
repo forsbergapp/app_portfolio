@@ -29,7 +29,7 @@ const startserver = async () =>{
 		req.query = {	app_id:	getNumberValue(query.get('app_id')),
 						data:	data};
 		switch (req.url.substring(0, req.url.indexOf('?'))){
-			case '/mail':{
+			case '/mail/sendemail':{
 				req.query.data = query.get('data') ?? '';
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)

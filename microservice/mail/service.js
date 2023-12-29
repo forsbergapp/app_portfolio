@@ -3,6 +3,8 @@
 // eslint-disable-next-line no-unused-vars
 import * as Types from './../../types.js';
 
+const { getNumberValue, ConfigServices } = await import(`file://${process.cwd()}/microservice/microservice.service.js`);
+
 const nodemailer = await import('nodemailer');
 /**
  * 
@@ -20,40 +22,45 @@ const nodemailer = await import('nodemailer');
  * @returns {Promise.<object>}
  */
 const sendEmail = async (data) => {
-    return new Promise((resolve, reject)=>{
-        const transporter = nodemailer.createTransport({
-            host: data.email_host,
-            port: data.email_port,
-            secure: data.email_secure,
-            auth: {
-                user: data.email_auth_user,
-                pass: data.email_auth_pass
-            },
-            debug: false,
-            logger: false
-        });
-        /**@type{{  from:string,
-         *          to:string,
-         *          subject:string,
-         *          html:string,
-         *          encoding:string,
-         *          textEncoding:*}} */
-        const message = {
-            from: `"${data.from}" <${data.email_auth_user}>`,
-            to: data.to,
-            subject: data.subject,
-            html: data.html,
-            encoding: 'utf-8',
-            textEncoding: 'quoted-printable'
-        };
+    /**@type{Types.microservice_config_service_record}*/
 
-        transporter.sendMail(message, (err, result) => {
-            if (err) {
-                reject(err);
-            } else {
-                resolve(result);
-            }
+    if (getNumberValue(ConfigServices('MAIL').CONFIG.filter((/**@type{*}*/row)=>'MAIL_TEST' in row)[0].MAIL_TEST) == 1)
+        return {test: 'ok'};
+    else
+        return new Promise((resolve, reject)=>{
+            const transporter = nodemailer.createTransport({
+                host: data.email_host,
+                port: data.email_port,
+                secure: data.email_secure,
+                auth: {
+                    user: data.email_auth_user,
+                    pass: data.email_auth_pass
+                },
+                debug: false,
+                logger: false
+            });
+            /**@type{{  from:string,
+             *          to:string,
+             *          subject:string,
+             *          html:string,
+             *          encoding:string,
+             *          textEncoding:*}} */
+            const message = {
+                from: `"${data.from}" <${data.email_auth_user}>`,
+                to: data.to,
+                subject: data.subject,
+                html: data.html,
+                encoding: 'utf-8',
+                textEncoding: 'quoted-printable'
+            };
+    
+            transporter.sendMail(message, (err, result) => {
+                if (err) {
+                    reject(err);
+                } else {
+                    resolve(result);
+                }
+            });
         });
-    });
 };
 export{sendEmail};
