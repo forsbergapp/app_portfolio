@@ -1,4 +1,4 @@
 --
 -- app_translation app_object
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (4,527,'வரைபடங்கள்');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,527,'வரைபடங்கள்');
