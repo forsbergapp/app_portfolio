@@ -21,7 +21,9 @@
     {"NAME":"WORLDCITIES",  "HOST":"localhost","PORT":3003,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4003,"STATUS":"ONLINE","PATH":"worldcities",
         "CONFIG":"" },
     {"NAME":"MAIL",         "HOST":"localhost","PORT":3004,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4004,"STATUS":"ONLINE","PATH":"mail",
-        "CONFIG":"" },
+        "CONFIG":[
+            {"MAIL_TEST": "1", "COMMENT": "0=using parameters from database, 1=returns test message"}
+            ] },
     {"NAME":"PDF",          "HOST":"localhost","PORT":3005,"HTTPS_ENABLE":0,"HTTPS_KEY":"privkey.pem","HTTPS_CERT":"fullchain.pem","HTTPS_SSL_VERIFICATION":0,"HTTPS_SSL_VERIFICATION_PATH":"/.well-known/acme-challenge/","HTTPS_PORT":4005,"STATUS":"ONLINE","PATH":"pdf",
         "CONFIG":[
             {"EXECUTABLE_PATH":"","COMMENT":"/ex /snap/bin/chromium or Windows: C:\\Users\\admin\\AppData\\Local\\Chromium\\Application\\chrome.exe"},
