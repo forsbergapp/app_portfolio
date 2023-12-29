@@ -684,7 +684,7 @@
 .app_theme1{
 	--app_theme_main_color1:var(--app_light);
 	--app_theme_main_color2:var(--app_white);
-	--app_theme_main_color3:var(--app_black);
+	--app_theme_main_color3:var(--app_blue1);
 	--app_theme_shadow_color1:var(--app_shadow1);
 	--app_theme_shadow_color1:var(--app_shadow2);
 	--app_theme_shadow_color1:var(--app_shadow3);
