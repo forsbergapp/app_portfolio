@@ -1,9 +1,9 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<RoleOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.RoleOraclev10g" name="ROLE_APP_DBA" directorySegmentName="seg_0" id="44DAE845-1538-BCF0-C61F-43064EE64DA0">
+<RoleOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.RoleOraclev10g" name="APP_PORTFOLIO_ROLE_APP_DBA" directorySegmentName="seg_0" id="44DAE845-1538-BCF0-C61F-43064EE64DA0">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-14 22:51:42 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<password>0591084FD10D24F15385CAA3C88D7BDB27</password>
+<password>05DBA82A23618B82D9380FAA1360DC6C98</password>
 <privileges>CONNECT, CREATE SESSION, RESOURCE</privileges>
 <permissions>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions279" id="F2671676-7B6C-FDBE-7202-9758D1467BD5">

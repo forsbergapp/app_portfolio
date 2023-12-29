@@ -33,16 +33,18 @@
         {"db": null, "script": "2.db_all_app_zh.sql"}
     ],
     "users":[
-        {"db": 1, "sql": "CREATE USER app3 IDENTIFIED BY <APP_PASSWORD/> ACCOUNT UNLOCK"},
-        {"db": 1, "sql": "GRANT role_app_common TO app3"},
-        {"db": 1, "sql": "SET DEFAULT ROLE role_app_common FOR app3"},
-        {"db": 2, "sql": "CREATE USER app3 IDENTIFIED BY <APP_PASSWORD/> ACCOUNT UNLOCK"},
-        {"db": 2, "sql": "GRANT role_app_common TO app3"},
-        {"db": 2, "sql": "SET DEFAULT ROLE ALL TO app3"},
-        {"db": 3, "sql": "CREATE USER app3 PASSWORD <APP_PASSWORD/>"},
-        {"db": 3, "sql": "GRANT role_app_common TO app3"},
-        {"db": 4, "sql": "CREATE USER app3 IDENTIFIED BY <APP_PASSWORD/>"},
-        {"db": 4, "sql": "GRANT role_app_common TO app3"},
-        {"db": 4, "sql": "GRANT UNLIMITED TABLESPACE TO app3"}
+        {"db": 1, "sql": "CREATE USER <APP_USERNAME/> IDENTIFIED BY <APP_PASSWORD/> ACCOUNT UNLOCK"},
+        {"db": 1, "sql": "GRANT app_portfolio_role_app_common TO <APP_USERNAME/>"},
+        {"db": 1, "sql": "SET DEFAULT ROLE app_portfolio_role_app_common FOR <APP_USERNAME/>"},
+        {"db": 2, "sql": "CREATE USER <APP_USERNAME/> IDENTIFIED BY <APP_PASSWORD/> ACCOUNT UNLOCK"},
+        {"db": 2, "sql": "GRANT app_portfolio_role_app_common TO <APP_USERNAME/>"},
+        {"db": 2, "sql": "SET DEFAULT ROLE ALL TO <APP_USERNAME/>"},
+        {"db": 3, "sql": "CREATE USER <APP_USERNAME/> PASSWORD <APP_PASSWORD/>"},
+        {"db": 3, "sql": "GRANT app_portfolio_role_app_common TO <APP_USERNAME/>"},
+        {"db": 4, "sql": "CREATE USER <APP_USERNAME/> IDENTIFIED BY <APP_PASSWORD/>"},
+        {"db": 4, "sql": "GRANT app_portfolio_role_app_common TO <APP_USERNAME/>"},
+        {"db": 4, "sql": "GRANT UNLIMITED TABLESPACE TO <APP_USERNAME/>"},
+        {"db": null, "sql": "INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (<APP_ID/>,'2','SERVICE_DB_APP_USER','<APP_USERNAME/>',NULL)"},
+        {"db": null, "sql": "INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (<APP_ID/>,'2','SERVICE_DB_APP_PASSWORD',<APP_PASSWORD/>,NULL)"}
     ]
 }

@@ -1,9 +1,9 @@
 <?xml version = '1.0' encoding = 'UTF-8'?>
-<RoleOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.RoleOraclev10g" name="ROLE_APP_ADMIN" directorySegmentName="seg_0" id="880230AD-13A2-B706-9DDA-7F14D08EDFCE">
+<RoleOraclev10g class="oracle.dbtools.crest.model.design.storage.oracle.v10g.RoleOraclev10g" name="APP_PORTFOLIO_ROLE_APP_ADMIN" directorySegmentName="seg_0" id="880230AD-13A2-B706-9DDA-7F14D08EDFCE">
 <createdBy>admin</createdBy>
 <createdTime>2022-02-14 21:19:42 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
-<password>05B62757BEB9398376FCC8161BE0016BA4</password>
+<password>05E0A6D46996F6A4E43EF5BE7B8F7DE074</password>
 <privileges>CONNECT, CREATE SESSION, RESOURCE</privileges>
 <permissions>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions112" id="22BB1D22-4D95-C052-D7F9-A664C4944E9B">
@@ -111,7 +111,6 @@
 <createdTime>2023-12-12 04:41:19 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <privileges>DELETE, INSERT, SELECT, UPDATE</privileges>
-<table>55432E64-6302-F40E-F31B-7298818DE63A</table>
 </Permission>
 <Permission class="oracle.dbtools.crest.model.design.storage.oracle.v10g.PermissionsOraclev10g" name="Permissions161" id="03FAC80F-5210-665F-F7C0-3C9CB7D9F184">
 <createdBy>admin</createdBy>

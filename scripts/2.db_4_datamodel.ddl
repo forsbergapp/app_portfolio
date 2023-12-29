@@ -1,24 +1,24 @@
-CREATE ROLE role_app_admin NOT IDENTIFIED;
+CREATE ROLE app_portfolio_role_app_admin NOT IDENTIFIED;
 
 GRANT connect,
-    CREATE SESSION, resource TO role_app_admin;
+    CREATE SESSION, resource TO app_portfolio_role_app_admin;
 
-CREATE ROLE role_app_common NOT IDENTIFIED;
-
-GRANT connect,
-    CREATE SESSION, resource TO role_app_common;
-
-CREATE ROLE role_app_dba NOT IDENTIFIED;
+CREATE ROLE app_portfolio_role_app_common NOT IDENTIFIED;
 
 GRANT connect,
-    CREATE SESSION, resource TO role_app_dba;
+    CREATE SESSION, resource TO app_portfolio_role_app_common;
+
+CREATE ROLE app_portfolio_role_app_dba NOT IDENTIFIED;
+
+GRANT connect,
+    CREATE SESSION, resource TO app_portfolio_role_app_dba;
 
 CREATE USER app_portfolio 
     IDENTIFIED BY <APP_PASSWORD/> 
     ACCOUNT
 unlock;
 
-GRANT role_app_dba TO app_portfolio;
+GRANT app_portfolio_role_app_dba TO app_portfolio;
 
 GRANT
     UNLIMITED TABLESPACE
@@ -29,9 +29,9 @@ CREATE TABLE app_portfolio.app (
     app_category_id INTEGER
 );
 
-GRANT SELECT ON app_portfolio.app TO role_app_common;
+GRANT SELECT ON app_portfolio.app TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app ADD CONSTRAINT app_pk PRIMARY KEY ( id );
 
@@ -42,9 +42,9 @@ CREATE TABLE app_portfolio.app_category (
     category_name VARCHAR2(100) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_category TO role_app_common;
+GRANT SELECT ON app_portfolio.app_category TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_category ADD CONSTRAINT app_category_pk PRIMARY KEY ( id );
 
@@ -53,9 +53,9 @@ CREATE TABLE app_portfolio.app_device (
     device_id INTEGER NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_device TO role_app_common;
+GRANT SELECT ON app_portfolio.app_device TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_device TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_device ADD CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
                                                                                 device_id );
@@ -88,9 +88,9 @@ CREATE INDEX app_portfolio.app_log_date_created_index ON
         date_created
     ASC );
 
-GRANT SELECT, INSERT ON app_portfolio.app_log TO role_app_common;
+GRANT SELECT, INSERT ON app_portfolio.app_log TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_log TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_log ADD CONSTRAINT app_log_pk PRIMARY KEY ( id );
 
@@ -101,9 +101,9 @@ CREATE TABLE app_portfolio.app_message (
     message_type_id  INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_message TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_message TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_message TO role_app_common;
+GRANT SELECT ON app_portfolio.app_message TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.app_message ADD CONSTRAINT app_message_pk PRIMARY KEY ( app_id,
                                                                                   code );
@@ -113,9 +113,9 @@ CREATE TABLE app_portfolio.app_object (
     object_name VARCHAR2(100) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_object TO role_app_common;
+GRANT SELECT ON app_portfolio.app_object TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_object ADD CONSTRAINT app_object_pk PRIMARY KEY ( object_name,
                                                                                 app_id );
@@ -128,9 +128,9 @@ CREATE TABLE app_portfolio.app_object_item (
     app_setting_type_app_id                INTEGER
 );
 
-GRANT SELECT ON app_portfolio.app_object_item TO role_app_common;
+GRANT SELECT ON app_portfolio.app_object_item TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_object_item TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_object_item
     ADD CONSTRAINT app_object_item_pk PRIMARY KEY ( object_item_name,
@@ -145,9 +145,9 @@ CREATE TABLE app_portfolio.app_parameter (
     parameter_comment VARCHAR2(100)
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_parameter TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_parameter TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_parameter TO role_app_common;
+GRANT SELECT ON app_portfolio.app_parameter TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.app_parameter ADD CONSTRAINT app_parameter_pk PRIMARY KEY ( app_id,
                                                                                       parameter_name );
@@ -158,9 +158,9 @@ CREATE TABLE app_portfolio.app_role (
     icon      VARCHAR2(10) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_role TO role_app_common;
+GRANT SELECT ON app_portfolio.app_role TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_role TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_role TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_role ADD CONSTRAINT app_role_pk PRIMARY KEY ( id );
 
@@ -173,9 +173,9 @@ CREATE TABLE app_portfolio.app_screenshot (
     screenshot           CLOB NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.app_screenshot TO role_app_common;
+GRANT SELECT ON app_portfolio.app_screenshot TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_screenshot ADD CONSTRAINT app_screenshot_pk PRIMARY KEY ( id );
 
@@ -193,9 +193,9 @@ CREATE TABLE app_portfolio.app_setting (
     data5                                  VARCHAR2(500)
 );
 
-GRANT SELECT ON app_portfolio.app_setting TO role_app_common;
+GRANT SELECT ON app_portfolio.app_setting TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_setting ADD CONSTRAINT app_setting_pk PRIMARY KEY ( id );
 
@@ -210,9 +210,9 @@ CREATE TABLE app_portfolio.app_setting_type (
     app_setting_type_name VARCHAR2(100) NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting_type TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_setting_type TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_setting_type TO role_app_common;
+GRANT SELECT ON app_portfolio.app_setting_type TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.app_setting_type ADD CONSTRAINT app_setting_type_pk PRIMARY KEY ( app_setting_type_name,
                                                                                             app_id );
@@ -354,9 +354,9 @@ ALTER TABLE app_portfolio.app_translation
                                       AND ( app_message_app_id IS NULL )
                                       AND ( app_message_code IS NULL ) ) );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_translation TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.app_translation TO role_app_common;
+GRANT SELECT ON app_portfolio.app_translation TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.app_translation ADD CONSTRAINT app_translation_app_un UNIQUE ( app_id,
                                                                                          language_id );
@@ -404,9 +404,9 @@ CREATE TABLE app_portfolio.country (
     country_group_id INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.country TO role_app_common;
+GRANT SELECT ON app_portfolio.country TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.country ADD CONSTRAINT country_pk PRIMARY KEY ( id );
 
@@ -417,9 +417,9 @@ CREATE TABLE app_portfolio.country_group (
     group_name VARCHAR2(100) NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_group TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_group TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.country_group TO role_app_common;
+GRANT SELECT ON app_portfolio.country_group TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.country_group ADD CONSTRAINT country_group_pk PRIMARY KEY ( id );
 
@@ -433,9 +433,9 @@ CREATE TABLE app_portfolio.device (
     device_type_id INTEGER NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.device TO role_app_common;
+GRANT SELECT ON app_portfolio.device TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.device ADD CONSTRAINT device_pk PRIMARY KEY ( id );
 
@@ -446,9 +446,9 @@ CREATE TABLE app_portfolio.device_type (
     device_type_name VARCHAR2(100) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.device_type TO role_app_common;
+GRANT SELECT ON app_portfolio.device_type TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device_type TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device_type TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.device_type ADD CONSTRAINT device_type_pk PRIMARY KEY ( id );
 
@@ -460,9 +460,9 @@ CREATE TABLE app_portfolio.event (
     event_type_id INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.event TO role_app_common;
+GRANT SELECT ON app_portfolio.event TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.event ADD CONSTRAINT event_pk PRIMARY KEY ( id );
 
@@ -473,9 +473,9 @@ CREATE TABLE app_portfolio.event_status (
     status_name VARCHAR2(100) NOT NULL
 );
 
-GRANT SELECT ON app_portfolio.event_status TO role_app_common;
+GRANT SELECT ON app_portfolio.event_status TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_status TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_status TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.event_status ADD CONSTRAINT event_status_pk PRIMARY KEY ( id );
 
@@ -486,9 +486,9 @@ CREATE TABLE app_portfolio.event_type (
     event_type_name VARCHAR2(100) NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_type TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.event_type TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.event_type TO role_app_common;
+GRANT SELECT ON app_portfolio.event_type TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.event_type ADD CONSTRAINT event_type_pk PRIMARY KEY ( id );
 
@@ -504,9 +504,9 @@ CREATE TABLE app_portfolio.identity_provider (
     enabled                 INTEGER
 );
 
-GRANT SELECT ON app_portfolio.identity_provider TO role_app_common;
+GRANT SELECT ON app_portfolio.identity_provider TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.identity_provider TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.identity_provider TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.identity_provider ADD CONSTRAINT identity_provider_pk PRIMARY KEY ( id );
 
@@ -525,9 +525,9 @@ CREATE INDEX app_portfolio.lang_code_index ON
         lang_code
     ASC );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.language TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.language TO role_app_common;
+GRANT SELECT ON app_portfolio.language TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.language ADD CONSTRAINT language_pk PRIMARY KEY ( id );
 
@@ -536,9 +536,9 @@ CREATE TABLE app_portfolio.locale (
     country_id  INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.locale TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.locale TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.locale TO role_app_common;
+GRANT SELECT ON app_portfolio.locale TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.locale ADD CONSTRAINT locale_language_id_country_id_un UNIQUE ( language_id,
                                                                                           country_id );
@@ -550,9 +550,9 @@ CREATE TABLE app_portfolio.message_level (
     message_level VARCHAR2(10) NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_level TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_level TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.message_level TO role_app_common;
+GRANT SELECT ON app_portfolio.message_level TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.message_level ADD CONSTRAINT message_level_pk PRIMARY KEY ( id );
 
@@ -565,9 +565,9 @@ CREATE TABLE app_portfolio.message_type (
     message_type VARCHAR2(10) NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_type TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.message_type TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.message_type TO role_app_common;
+GRANT SELECT ON app_portfolio.message_type TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.message_type ADD CONSTRAINT message_type_pk PRIMARY KEY ( id );
 
@@ -578,9 +578,9 @@ CREATE TABLE app_portfolio.parameter_type (
     parameter_type_name VARCHAR2(100) NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.parameter_type TO app_portfolio_role_app_admin;
 
-GRANT SELECT ON app_portfolio.parameter_type TO role_app_common;
+GRANT SELECT ON app_portfolio.parameter_type TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.parameter_type ADD CONSTRAINT parameter_type_pk PRIMARY KEY ( id );
 
@@ -594,9 +594,9 @@ CREATE TABLE app_portfolio.profile_search (
     date_created      DATE NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.profile_search TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT ON app_portfolio.profile_search TO role_app_common;
+GRANT SELECT, INSERT ON app_portfolio.profile_search TO app_portfolio_role_app_common;
 
 CREATE TABLE app_portfolio.user_account (
     id                   INTEGER
@@ -625,9 +625,9 @@ CREATE TABLE app_portfolio.user_account (
     app_role_id          INTEGER
 );
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.user_account ADD CONSTRAINT user_account_pk PRIMARY KEY ( id );
 
@@ -647,9 +647,9 @@ CREATE TABLE app_portfolio.user_account_app (
     date_created                            DATE NOT NULL
 );
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.user_account_app ADD CONSTRAINT user_account_app_pk PRIMARY KEY ( user_account_id,
                                                                                             app_id );
@@ -666,9 +666,9 @@ CREATE TABLE app_portfolio.user_account_app_data_post (
     user_account_app_app_id          INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.user_account_app_data_post ADD CONSTRAINT user_account_app_data_post_pk PRIMARY KEY ( id );
 
@@ -679,9 +679,9 @@ CREATE TABLE app_portfolio.user_account_app_data_post_like (
     user_account_app_app_id          INTEGER NOT NULL
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_like TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_like TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_like TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_like TO app_portfolio_role_app_common;
 
 ALTER TABLE app_portfolio.user_account_app_data_post_like
     ADD CONSTRAINT user_account_app_data_post_like_pk PRIMARY KEY ( user_account_app_data_post_id,
@@ -699,9 +699,9 @@ CREATE TABLE app_portfolio.user_account_app_data_post_view (
     user_account_app_app_id          INTEGER
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_view TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_app_data_post_view TO app_portfolio_role_app_admin;
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_view TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_app_data_post_view TO app_portfolio_role_app_common;
 
 CREATE TABLE app_portfolio.user_account_event (
     user_account_id             INTEGER NOT NULL,
@@ -721,9 +721,9 @@ CREATE TABLE app_portfolio.user_account_event (
     server_http_accept_language VARCHAR2(1000)
 );
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app_common;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_event TO app_portfolio_role_app_admin;
 
 CREATE TABLE app_portfolio.user_account_follow (
     user_account_id        INTEGER NOT NULL,
@@ -731,9 +731,9 @@ CREATE TABLE app_portfolio.user_account_follow (
     date_created           DATE
 );
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_follow TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_follow TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.user_account_follow ADD CONSTRAINT user_account_follow_pk PRIMARY KEY ( user_account_id,
                                                                                                   user_account_id_follow );
@@ -744,9 +744,9 @@ CREATE TABLE app_portfolio.user_account_like (
     date_created         DATE
 );
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_like TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_like TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.user_account_like ADD CONSTRAINT user_account_like_pk PRIMARY KEY ( user_account_id,
                                                                                               user_account_id_like );
@@ -763,9 +763,9 @@ CREATE TABLE app_portfolio.user_account_logon (
     date_created      DATE NOT NULL
 );
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_logon TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.user_account_logon ADD CONSTRAINT user_account_logon_access_token_un UNIQUE ( access_token );
 
@@ -779,9 +779,9 @@ CREATE TABLE app_portfolio.user_account_view (
     date_created         DATE NOT NULL
 );
 
-GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO role_app_common;
+GRANT SELECT, INSERT, DELETE, UPDATE ON app_portfolio.user_account_view TO app_portfolio_role_app_common;
 
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view TO role_app_admin;
+GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.user_account_view TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app
     ADD CONSTRAINT app_app_category_fk FOREIGN KEY ( app_category_id )
