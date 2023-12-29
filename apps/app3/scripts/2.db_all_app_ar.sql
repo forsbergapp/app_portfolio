@@ -1,4 +1,4 @@
 --
 -- app_translation app_object
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (3,25,'تقديم الوثائق');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,25,'تقديم الوثائق');

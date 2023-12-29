@@ -60,7 +60,6 @@ const install_db_get_files = async (json_type) =>{
     const {db_execute} = await import(`file://${process.cwd()}/server/dbapi/common/common.service.js`);
     const {CreateRandomString} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {pool_close, pool_start} = await import(`file://${process.cwd()}/server/db/db.service.js`);
-    const {setParameterValue_admin} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
     const {LogServerI} = await import(`file://${process.cwd()}/server/log.service.js`);
     const {SocketSendSystemAdmin} = await import(`file://${process.cwd()}/server/socket.service.js`);
     const {createHash} = await import('node:crypto');
@@ -73,7 +72,13 @@ const install_db_get_files = async (json_type) =>{
     let change_system_admin_pool=true;
     const db_use = getNumberValue(ConfigGet('SERVICE_DB', 'USE'));
     install_result.push({'start': new Date().toISOString()});
-    const sql_with_password = async (/**@type{string}*/username, /**@type{string}*/sql) =>{
+    /**
+     * 
+     * @param {string} username 
+     * @param {string} sql 
+     * @returns [string,string]
+     */
+    const sql_with_password = async (username, sql) =>{
        let password;
        //USER_ACCOUNT uses bcrypt, save as bcrypt but return sha256 password
        //Database users use SHA256
@@ -95,6 +100,7 @@ const install_db_get_files = async (json_type) =>{
              sql = sql.replace(password_tag, `'${await hash(password, await genSalt(10))}'`);
           else
              sql = sql.replace(password_tag, `'${password}'`);
+       sql = sql.replace('<APP_USERNAME/>', username);
        install_result.push({[`${username}`]: password});         
        return [sql, password];
     };
@@ -137,13 +143,15 @@ const install_db_get_files = async (json_type) =>{
                 };
                 if (check_sql(sql)){
                     if (file[0] == 0 && sql.includes(password_tag)){
-                            let sql_and_pw;
-                            if (sql.toUpperCase().includes('INSERT INTO'))
-                            sql_and_pw = await sql_with_password('admin', sql);
-                            else
+                        let sql_and_pw;
+                        if (sql.toUpperCase().includes('INSERT INTO'))
+                            sql_and_pw = await sql_with_password('superadmin', sql);
+                        else
                             sql_and_pw = await sql_with_password('app_portfolio', sql);
-                            sql = sql_and_pw[0];
+                        sql = sql_and_pw[0];
                     }
+                    sql = sql.replace('<APP_ID/>', file[2]?file[2].toString():'0');
+                        
                     //if ; must be in wrong place then set tag in import script and convert it
                     if (sql.includes('<SEMICOLON/>'))
                         sql = sql.replace('<SEMICOLON/>', ';');
@@ -218,34 +226,44 @@ const install_db_get_files = async (json_type) =>{
                 }
             }  
         }
-        if (install_obj.users)
+        if (install_obj.users){
+            let sql_and_pw = null;
+            let app_password=null;
             for (const users_row of install_obj.users.filter((/**@type{Types.install_database_app_user_script}*/row) => row.db == getNumberValue(ConfigGet('SERVICE_DB', 'USE')) || row.db == null)){
-            switch (file[0]){
-                case 1:{
+                switch (file[0]){
+                    case 1:{
+                        const app_admin_username = 'app_portfolio_app_admin';
                         if (users_row.sql.includes(password_tag)){
-                        const sql_and_pw = await sql_with_password('app_admin', users_row.sql);
-                        users_row.sql = sql_and_pw[0];
-                        }   
-                    break;
-                }
-                default:{
-                    if (users_row.sql.includes(password_tag)){
-                        const sql_and_pw = await sql_with_password('app' + file[2], users_row.sql);
-                        users_row.sql = sql_and_pw[0];
-                        const data = {	
-                                        app_id: file[2],
-                                        parameter_value: sql_and_pw[1],
-                                        parameter_name: 'SERVICE_DB_APP_PASSWORD'
-                                    };
-                        await setParameterValue_admin(app_id,data, DBA);
-                        count_statements += 1;
+                            sql_and_pw = await sql_with_password(app_admin_username, users_row.sql);
+                            users_row.sql = sql_and_pw[0];
+                        }
+                        users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_admin_username);
+                        break;
                     }
-                    break;
+                    default:{
+                        const app_username = 'app_portfolio_app' + file[2];
+                        if (users_row.sql.includes(password_tag)){
+                            //save password first time and use it so save parameter with password
+                            //CREATE USER statement should be before INSERT INTO [parameter table] statement
+                            if (app_password == null){
+                                sql_and_pw = await sql_with_password(app_username, users_row.sql);
+                                users_row.sql = sql_and_pw[0];
+                                app_password = sql_and_pw[1];
+                            }
+                            else{
+                                users_row.sql = users_row.sql.replace('<APP_PASSWORD/>', `'${app_password}'`);
+                                app_password = null;
+                            }
+                        }
+                        users_row.sql = users_row.sql.replace('<APP_ID/>', file[2]);
+                        users_row.sql = users_row.sql.replace('<APP_USERNAME/>', app_username);
+                        break;
+                    }
                 }
+                await db_execute(app_id, users_row.sql, {}, DBA);
+                count_statements += 1;
             }
-            await db_execute(app_id, users_row.sql, {}, DBA);
-            count_statements += 1;
-            }
+        }   
     }
     install_result.push({'SQL': count_statements});
     install_result.push({'SQL optional': count_statements_optional});
@@ -258,7 +276,6 @@ const install_db_get_files = async (json_type) =>{
   * @param {number} app_id
   */
  const InstalledCheck = async (app_id)=>{
-    
     return service.InstalledCheck(app_id, DBA)
     .catch(()=>{
         return [{installed: 0}];
@@ -314,17 +331,16 @@ const install_db_get_files = async (json_type) =>{
                 };
                 await pool_start(json_data);
             }
+            if (file[2]==null)
+                sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app_admin');
+            else
+                sql_row.sql = sql_row.sql.replace('<APP_USERNAME/>', 'app_portfolio_app' + file[2]);
+            sql_row.sql = sql_row.sql.replace('<APP_ID/>', file[2]?file[2]:'0');
             await db_execute(app_id, sql_row.sql, {}, DBA)
             .then(()=>{count_statements += 1;})
             .catch(()=>{count_statements_fail += 1;});
             
         }      
-        /*update parameters in config.json
-            DB[USE]_SYSTEM_ADMIN_USER = null
-            DB[USE]_SYSTEM_ADMIN_PASS = null
-            DB[USE]_APP_ADMIN_USER = null
-            DB[USE]_APP_ADMIN_PASS = null
-        */
     }
     LogServerI(`Database uninstall result db ${db_use}: count: ${count_statements}, count_fail: ${count_statements_fail}`);
     return {'info':[  { count    : count_statements},
@@ -353,19 +369,6 @@ const install_db_get_files = async (json_type) =>{
     const fs = await import('node:fs');
     const install_result = [];
     install_result.push({'start': new Date().toISOString()});
-    /*  Demo script format:
-        {"demo_users":[
-            [
-                { "username": "[username]" },
-                { "bio": "[bio text]]" },
-                { "avatar": [BASE64 string] },
-                [ 
-                    {"app_id": [app_id], "description": "[description]", [settings attributes] ...}
-                ]
-            ],   
-            ...
-        ]}
-    */
     const fileBuffer = await fs.promises.readFile(`${process.cwd()}/scripts/demo/demo.json`, 'utf8');
     /**@type{[Types.demo_user]}*/
     const demo_users = JSON.parse(fileBuffer.toString()).demo_users;

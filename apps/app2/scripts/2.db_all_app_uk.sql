@@ -1,44 +1,44 @@
 --
 -- app_translation app_object_item
 --
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR',564,'полудень');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ASR_IQAMAT',564,'Iqamat');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_GREGORIAN',564,'Григоріанський');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_CALTYPE_HIJRI',564,'Хіджра');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DAY',564,'День');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR',564,'полудень');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_DHUHR_IQAMAT',564,'Iqamat');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_FAJR',564,'Світанок');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_FAJR_IQAMAT',564,'Iqamat');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_IMSAK',564,'Imsak');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ISHA',564,'ніч');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_ISHA_IQAMAT',564,'Iqamat');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MAGHRIB',564,'Захід сонця');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MAGHRIB_IQAMAT',564,'Iqamat');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_MIDNIGHT',564,'опівночі');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_NOTES',564,'Примітки');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_SUNRISE',564,'Схід сонця');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_SUNSET',564,'Захід сонця');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_ASR',564,'Asr');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_ASR_IQAMAT',564,'Ікамат');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_DHUHR',564,'Dhuhr');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_DHUHR_IQAMAT',564,'Ікамат');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_FAJR',564,'Fajr');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_FAJR_IQAMAT',564,'Ікамат');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_IMSAK',564,'Imsak');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_ISHA',564,'Isha');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_ISHA_IQAMAT',564,'Ікамат');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_MAGHRIB',564,'Maghrib');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_MAGHRIB_IQAMAT',564,'Ікамат');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_MIDNIGHT',564,'Midnight');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',564,'Shorook');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',564,'Sunset');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','COLTITLE_WEEKDAY',564,'будній день');
-INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (2,'REPORT','TIMETABLE_TITLE',564,'розклад');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_ASR',564,'полудень');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_ASR_IQAMAT',564,'Iqamat');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_CALTYPE_GREGORIAN',564,'Григоріанський');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_CALTYPE_HIJRI',564,'Хіджра');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_DAY',564,'День');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_DHUHR',564,'полудень');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_DHUHR_IQAMAT',564,'Iqamat');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_FAJR',564,'Світанок');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_FAJR_IQAMAT',564,'Iqamat');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_IMSAK',564,'Imsak');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_ISHA',564,'ніч');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_ISHA_IQAMAT',564,'Iqamat');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_MAGHRIB',564,'Захід сонця');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_MAGHRIB_IQAMAT',564,'Iqamat');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_MIDNIGHT',564,'опівночі');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_NOTES',564,'Примітки');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_SUNRISE',564,'Схід сонця');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_SUNSET',564,'Захід сонця');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_ASR',564,'Asr');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_ASR_IQAMAT',564,'Ікамат');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_DHUHR',564,'Dhuhr');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_DHUHR_IQAMAT',564,'Ікамат');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_FAJR',564,'Fajr');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_FAJR_IQAMAT',564,'Ікамат');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_IMSAK',564,'Imsak');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_ISHA',564,'Isha');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_ISHA_IQAMAT',564,'Ікамат');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_MAGHRIB',564,'Maghrib');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_MAGHRIB_IQAMAT',564,'Ікамат');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_MIDNIGHT',564,'Midnight');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_SUNRISE',564,'Shorook');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_TRANSLITERATION_SUNSET',564,'Sunset');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_WEEKDAY',564,'будній день');
+INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','TIMETABLE_TITLE',564,'розклад');
 --
 -- app_translation app_object
 --
-INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (2,564,'Прогресивна веб-програма (PWA) односторінкова програма (SPA)');
+INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,564,'Прогресивна веб-програма (PWA) односторінкова програма (SPA)');
 --
 -- app_translation app_setting
 --
@@ -77,4 +77,4 @@ INSERT INTO app_portfolio.app_translation (app_setting_id, language_id, text) VA
 --
 -- app_translation app_message
 --
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (2,'20302',564,'Ви не можете видалити останні налаштування користувача');
+INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (<APP_ID/>,'20302',564,'Ви не можете видалити останні налаштування користувача');
