@@ -114,7 +114,7 @@ const printTable = () => {
 			<head>
 				<meta charset='UTF-8'>
 				<title></title>
-                <link rel='stylesheet' type='text/css' href='/app${common.COMMON_GLOBAL.app_id}/css/app_report.css' />
+                <link rel='stylesheet' type='text/css' href='/css/app_report.css' />
                 <link rel='stylesheet' type='text/css' href='/common/css/common.css' />
 			</head>
 			<body id="printbody">
