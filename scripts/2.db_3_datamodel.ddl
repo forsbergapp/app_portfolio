@@ -32,10 +32,11 @@ GRANT SELECT ON app_portfolio.app_category TO app_portfolio_role_app_common;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_category TO app_portfolio_role_app_admin;
 
 CREATE TABLE app_portfolio.app_device (
-    app_id    INTEGER NOT NULL,
-    device_id INTEGER NOT NULL,
+    app_id          INTEGER NOT NULL,
+    app_setting_id  INTEGER NOT NULL,
+    json_data       LONGBLOB,
     CONSTRAINT app_device_pk PRIMARY KEY ( app_id,
-                                           device_id )
+                                           app_setting_id )
 );
 
 GRANT SELECT ON app_portfolio.app_device TO app_portfolio_role_app_common;
@@ -137,18 +138,6 @@ GRANT SELECT ON app_portfolio.app_role TO app_portfolio_role_app_common;
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_role TO app_portfolio_role_app_admin;
 
 ALTER TABLE app_portfolio.app_role ADD CONSTRAINT app_role_pk PRIMARY KEY ( id );
-
-CREATE TABLE app_portfolio.app_screenshot (
-    id                   SERIAL NOT NULL,
-    app_device_app_id    INTEGER NOT NULL,
-    app_device_device_id INTEGER NOT NULL,
-    screenshot           TEXT NOT NULL,
-    CONSTRAINT app_screenshot_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON app_portfolio.app_screenshot TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.app_screenshot TO app_portfolio_role_app_admin;
 
 CREATE TABLE app_portfolio.app_setting (
     id                                      SERIAL NOT NULL,
@@ -380,29 +369,6 @@ CREATE TABLE app_portfolio.country_group (
 GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.country_group TO app_portfolio_role_app_admin;
 
 GRANT SELECT ON app_portfolio.country_group TO app_portfolio_role_app_common;
-
-CREATE TABLE app_portfolio.device (
-    id             SERIAL NOT NULL,
-    device_name    VARCHAR(100) NOT NULL,
-    screen_x       INTEGER,
-    screen_y       INTEGER,
-    device_type_id INTEGER NOT NULL,
-    CONSTRAINT device_pk PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON app_portfolio.device TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device TO app_portfolio_role_app_admin;
-
-CREATE TABLE app_portfolio.device_type (
-    id                          SERIAL NOT NULL,
-    device_type_name            VARCHAR(100) NOT NULL,
-    CONSTRAINT device_type_pk   PRIMARY KEY ( id )
-);
-
-GRANT SELECT ON app_portfolio.device_type TO app_portfolio_role_app_common;
-
-GRANT DELETE, INSERT, SELECT, UPDATE ON app_portfolio.device_type TO app_portfolio_role_app_admin;
 
 CREATE TABLE app_portfolio.event (
     id            SERIAL NOT NULL,
@@ -698,8 +664,8 @@ ALTER TABLE app_portfolio.app_device
             ON DELETE CASCADE;
 
 ALTER TABLE app_portfolio.app_device
-    ADD CONSTRAINT app_device_device_fk FOREIGN KEY ( device_id )
-        REFERENCES app_portfolio.device ( id );
+    ADD CONSTRAINT app_device_app_setting_fk FOREIGN KEY ( app_setting_id )
+        REFERENCES app_portfolio.app_setting ( id );
 
 ALTER TABLE app_portfolio.app_log
     ADD CONSTRAINT app_log_app_fk FOREIGN KEY ( app_id )
@@ -746,13 +712,6 @@ ALTER TABLE app_portfolio.app_parameter
 ALTER TABLE app_portfolio.app_parameter
     ADD CONSTRAINT app_parameter_parameter_type_fk FOREIGN KEY ( parameter_type_id )
         REFERENCES app_portfolio.parameter_type ( id );
-
-ALTER TABLE app_portfolio.app_screenshot
-    ADD CONSTRAINT app_screenshot_app_device_fk FOREIGN KEY ( app_device_app_id,
-                                                              app_device_device_id )
-        REFERENCES app_portfolio.app_device ( app_id,
-                                              device_id )
-            ON DELETE CASCADE;
         
 ALTER TABLE app_portfolio.app_setting
     ADD CONSTRAINT app_setting_app_setting_type_fk FOREIGN KEY ( app_setting_type_app_setting_type_name,
@@ -822,10 +781,6 @@ ALTER TABLE app_portfolio.app_translation
 ALTER TABLE app_portfolio.country
     ADD CONSTRAINT country_country_group_fk FOREIGN KEY ( country_group_id )
         REFERENCES app_portfolio.country_group ( id );
-
-ALTER TABLE app_portfolio.device
-    ADD CONSTRAINT device_device_type_fk FOREIGN KEY ( device_type_id )
-        REFERENCES app_portfolio.device_type ( id );
 
 ALTER TABLE app_portfolio.event
     ADD CONSTRAINT event_event_type_fk FOREIGN KEY ( event_type_id )
@@ -974,15 +929,12 @@ ALTER TABLE app_portfolio.app_object_subitem_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_object_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_parameter OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_role OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.app_screenshot OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_setting OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_setting_translation OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.app_setting_type OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.country OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.country_group OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.country_translation OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.device OWNER TO app_portfolio;
-ALTER TABLE app_portfolio.device_type OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.event OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.event_status OWNER TO app_portfolio;
 ALTER TABLE app_portfolio.event_type OWNER TO app_portfolio;

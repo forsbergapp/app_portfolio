@@ -1382,19 +1382,6 @@ INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (1,'Pr
 INSERT INTO app_portfolio.parameter_type (id, parameter_type_name) VALUES (2,'Private');
 
 --
--- device_type
---
-INSERT INTO app_portfolio.device_type (id, device_type_name) VALUES( 1, 'Phone');
-INSERT INTO app_portfolio.device_type (id, device_type_name) VALUES( 2, 'Tablet');
-INSERT INTO app_portfolio.device_type (id, device_type_name) VALUES( 3, 'PC');
-INSERT INTO app_portfolio.device_type (id, device_type_name) VALUES( 4, 'Laptop');
-INSERT INTO app_portfolio.device_type (id, device_type_name) VALUES( 5, 'TV');
---
--- device
---
-INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_type_id) VALUES( 1, 'Mobile', '1080', '2400', 1);
-INSERT INTO app_portfolio.device (id, device_name, screen_x, screen_y, device_type_id) VALUES( 2, 'Laptop', '1920', '1080', 4);
---
 -- identity_provider
 --
 INSERT INTO app_portfolio.identity_provider(id, provider_name, provider_url_logo, api_src, api_src2, api_version, api_id, identity_provider_order, enabled) VALUES( 0, 'Local', null, null, null, null, null, 1, 0);

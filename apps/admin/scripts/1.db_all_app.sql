@@ -14,6 +14,7 @@ INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUE
 INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_TYPE', 0);
 INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('CALENDAR_HIJRI_TYPE', 0);
 INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('MAP_STYLE', 0);
+INSERT INTO app_portfolio.app_setting_type (app_setting_type_name, app_id) VALUES ('DEVICE_TYPE', 0);
 --
 -- app setting with display data only
 --
@@ -521,6 +522,10 @@ INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type
 
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_TYPE','GREGORIAN',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'CALENDAR_TYPE','HIJRI',NULL,NULL,NULL,NULL,NULL);
+
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DEVICE_TYPE','PHONE_1','Phone 1080x2400',1080,2400,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DEVICE_TYPE','TABLET_1','Tablet 1800x1200',1800,1200,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (0,'DEVICE_TYPE','PC_1','PC 1920x1080',1920,1080,NULL,NULL);
 --
 -- app_object
 --
@@ -619,7 +624,3 @@ INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_t
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20310', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20400', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20401', 1, 1);
---
--- app_device
---
-INSERT INTO app_portfolio.app_device(app_id, device_id) VALUES(0, 1);
