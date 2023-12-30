@@ -29,18 +29,31 @@
 <logicalDatatype>LOGDT011</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
-<Attribute name="device_id" id="E2EDC8C9-72E3-E0F9-34C4-53E2E033D5D4">
+<Attribute name="app_setting_id" id="2941381C-0BDE-9928-D101-4F8E2BC4FE7F">
 <createdBy>admin</createdBy>
-<createdTime>2022-07-19 22:10:06 UTC</createdTime>
-<generatorID>26B4AC38-C79E-B19E-6C25-B7B6553BA846</generatorID>
+<createdTime>2023-12-30 14:45:37 UTC</createdTime>
+<generatorID>3A7FC0BC-AC17-0F97-611D-6F5B9EFC1555</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <engineerTo>
 <item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
 </engineerTo>
-<referedAttribute>6B3F18E0-F6E7-C4BE-AE33-DDAE99FB81ED</referedAttribute>
+<referedAttribute>D505A764-7AE2-8E29-A71E-FEC50BB2286F</referedAttribute>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
 <logicalDatatype>LOGDT011</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+</Attribute>
+<Attribute name="json_data" id="AC31C722-E122-E5CC-7973-C6C0C0CF0344">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-30 14:49:09 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<engineerTo>
+<item key="90F194FB-51A6-A2FE-41B3-3022D5CDF93F" value="true"/>
+</engineerTo>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
 <ownDataTypeParameters>,,</ownDataTypeParameters>
 </Attribute>
 </attributes>
@@ -56,7 +69,7 @@
 <pk>true</pk>
 <usedAttributes>
 <attributeRef>E8BD6870-B3DB-EDA3-BECD-7F3E983368E7</attributeRef>
-<attributeRef>E2EDC8C9-72E3-E0F9-34C4-53E2E033D5D4</attributeRef>
+<attributeRef>2941381C-0BDE-9928-D101-4F8E2BC4FE7F</attributeRef>
 </usedAttributes>
 </identifier>
 </identifiers>
