@@ -3,6 +3,7 @@
 <createdBy>admin</createdBy>
 <createdTime>2022-07-24 19:09:02 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<schemaObject>2C9478DD-6110-6AE4-BC0C-0218A99488A9</schemaObject>
 <partitionedRowMovement>DISABLE</partitionedRowMovement>
 <temporaryChanged>false</temporaryChanged>
 <user>818E5035-C4F6-1DA8-9ED6-692A74A0671B</user>
@@ -15,17 +16,22 @@
 <createdTime>2022-07-24 19:09:02 UTC</createdTime>
 <ownerDesignName>data_model_app_portfolio</ownerDesignName>
 </ColumnProxy>
-<ColumnProxy name="device_id" id="F342BA17-7EA4-AED4-8012-84D90395F792">
+<ColumnProxy name="app_setting_id" id="688D8DF2-7FC3-74B4-7B7C-A0F0B11FEC6E">
 <createdBy>admin</createdBy>
-<createdTime>2022-07-24 19:09:02 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<createdTime>2023-12-30 14:47:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+</ColumnProxy>
+<ColumnProxy name="json_data" id="EAF038B3-2CAC-2841-47A7-1C5747C1E051">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-30 14:48:58 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 </ColumnProxy>
 </columnProxies>
 <foreignKeys>
-<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_device_device_FK" id="54D3DD6A-BB03-4CB9-A0E4-7DA5668F7F6B">
+<ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_device_app_setting_FK" id="4AEAA122-33DF-E94F-C88C-19DBA75837A3">
 <createdBy>admin</createdBy>
-<createdTime>2022-07-24 19:09:02 UTC</createdTime>
-<ownerDesignName>data_model_app_portfolio</ownerDesignName>
+<createdTime>2023-12-30 14:47:37 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
 </ForeignKey>
 <ForeignKey class="oracle.dbtools.crest.model.design.storage.oracle.v10g.FKProxyOraclev10g" name="app_device_app_FK" id="C6AAAC37-2008-E8A5-5FFF-EDE072679057">
 <createdBy>admin</createdBy>

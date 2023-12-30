@@ -23,10 +23,9 @@
 <colAssociation fkAssociation="3E2E3793-ED69-3254-0889-E98296175D0F" referredColumn="F7F6B3F8-5214-ED25-BF0E-44685E0C79AF"/>
 </associations>
 </Column>
-<Column name="device_id" id="F342BA17-7EA4-AED4-8012-84D90395F792">
+<Column name="app_setting_id" id="688D8DF2-7FC3-74B4-7B7C-A0F0B11FEC6E">
 <createdBy>admin</createdBy>
-<createdTime>2022-07-24 19:09:02 UTC</createdTime>
-<generatorID>E2EDC8C9-72E3-E0F9-34C4-53E2E033D5D4</generatorID>
+<createdTime>2023-12-30 14:47:37 UTC</createdTime>
 <ownerDesignName>data_model</ownerDesignName>
 <useDomainConstraints>false</useDomainConstraints>
 <use>1</use>
@@ -35,8 +34,19 @@
 <previousColumn>false</previousColumn>
 <autoIncrementCycle>false</autoIncrementCycle>
 <associations>
-<colAssociation fkAssociation="62161BEC-91D4-7D11-00DB-CA6600CB9074" referredColumn="C9DE6811-DF20-4D1D-139E-FB6F3F057AB6"/>
+<colAssociation fkAssociation="54260F38-2F36-C0BC-CEE9-665B8E34B8F6" referredColumn="93C58542-9E64-4064-7D3B-63604934E015"/>
 </associations>
+</Column>
+<Column name="json_data" id="EAF038B3-2CAC-2841-47A7-1C5747C1E051">
+<createdBy>admin</createdBy>
+<createdTime>2023-12-30 14:48:58 UTC</createdTime>
+<ownerDesignName>data_model</ownerDesignName>
+<nullsAllowed>true</nullsAllowed>
+<useDomainConstraints>false</useDomainConstraints>
+<use>1</use>
+<logicalDatatype>LOGDT028</logicalDatatype>
+<ownDataTypeParameters>,,</ownDataTypeParameters>
+<autoIncrementCycle>false</autoIncrementCycle>
 </Column>
 </columns>
 <indexes itemClass="oracle.dbtools.crest.model.design.relational.Index">
@@ -50,7 +60,7 @@
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
 <colUsage columnID="626FFAF4-7F47-9BE5-DEAC-A8480A5BC777"/>
-<colUsage columnID="F342BA17-7EA4-AED4-8012-84D90395F792"/>
+<colUsage columnID="688D8DF2-7FC3-74B4-7B7C-A0F0B11FEC6E"/>
 </indexColumnUsage>
 </ind_PK_UK>
 <ind_PK_UK id="C6AAAC37-2008-E8A5-5FFF-EDE072679057" name="app_device_app_FK">
@@ -64,15 +74,15 @@
 <colUsage columnID="626FFAF4-7F47-9BE5-DEAC-A8480A5BC777"/>
 </indexColumnUsage>
 </ind_PK_UK>
-<ind_PK_UK id="54D3DD6A-BB03-4CB9-A0E4-7DA5668F7F6B" name="app_device_device_FK">
+<ind_PK_UK id="4AEAA122-33DF-E94F-C88C-19DBA75837A3" name="app_device_app_setting_FK">
 <createdBy>admin</createdBy>
-<createdTime>2022-07-24 19:09:02 UTC</createdTime>
-<generatorID>26B4AC38-C79E-B19E-6C25-B7B6553BA846</generatorID>
+<createdTime>2023-12-30 14:47:37 UTC</createdTime>
+<generatorID>F1324722-1415-BC4E-C065-1CAAC9916628</generatorID>
 <ownerDesignName>data_model</ownerDesignName>
 <indexState>Foreign Key</indexState>
 <isSurrogateKey>false</isSurrogateKey>
 <indexColumnUsage>
-<colUsage columnID="F342BA17-7EA4-AED4-8012-84D90395F792"/>
+<colUsage columnID="688D8DF2-7FC3-74B4-7B7C-A0F0B11FEC6E"/>
 </indexColumnUsage>
 </ind_PK_UK>
 </indexes>
