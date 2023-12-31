@@ -7,7 +7,7 @@ const http = await import('node:http');
 const https = await import('node:https');
 const fs = await import('node:fs');
 
-const {file_get} = await import(`file://${process.cwd()}/server/db/file.service.js`);
+const {file_get, file_get_log, file_append_log} = await import(`file://${process.cwd()}/server/db/file.service.js`);
 
 const CONFIG = await file_get('MICROSERVICE_CONFIG').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content);
 const CONFIG_SERVICES = await file_get('MICROSERVICE_SERVICES').then((/**@type{Types.db_file_result_file_get}*/file)=>file.file_content?file.file_content.SERVICES:null);
@@ -301,28 +301,24 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 let filename;
                 switch (file){
                     case 0:{
-                        filename = CONFIG?CONFIG.MESSAGE_QUEUE_ERROR:'';
-                        json_message = JSON.stringify({'message_id': new Date().toISOString(), 'message':   message, 'result':result});
+                        filename = 'MESSAGE_QUEUE_ERROR';
+                        json_message = {'message_id': new Date().toISOString(), 'message':   message, 'result':result};
                         break;
                     }
                     case 1:{
-                        filename = CONFIG?CONFIG.MESSAGE_QUEUE_PUBLISH:'';
-                        json_message = JSON.stringify(message);
+                        filename = 'MESSAGE_QUEUE_PUBLISH';
+                        json_message = message;
                         break;
                     }
                     case 2:{
-                        filename = CONFIG?CONFIG.MESSAGE_QUEUE_CONSUME:'';
-                        json_message = JSON.stringify(message);
+                        filename = 'MESSAGE_QUEUE_CONSUME';
+                        json_message = message;
                         break;
                     }
                 }
-                fs.appendFile(process.cwd() + filename, json_message + '\r\n', 'utf8', (err) => {
-                    if (err) {
-                        reject(err);
-                    }
-                    else
-                        resolve(null);
-                });
+                file_append_log(filename, json_message)
+                .then(()=>resolve(null))
+                .catch((/**@type{Types.error}*/error)=>reject(error));
             });
         };
         try {
@@ -344,8 +340,8 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                 case 'CONSUME': {
                     //message CONSUME
                     //direct microservice call
-                    fs.promises.readFile(`${process.cwd()}${CONFIG?CONFIG.MESSAGE_QUEUE_PUBLISH:''}`, 'utf8')
-                    .then((/**@type{string}*/message_queue)=>{
+                    file_get_log('MESSAGE_QUEUE_PUBLISH')
+                    .then((/**@type{Types.microservice_message_queue_publish[]}*/message_queue)=>{
                         /**@type{Types.microservice_message_queue_consume} */
                         let message_consume = { message_id: null,
                                                 service:    null,
@@ -353,13 +349,11 @@ const MessageQueue = async (service, message_type, message, message_id) => {
                                                 start:      null,
                                                 finished:   null,
                                                 result:     null};
-                        for (const row of message_queue.split('\r\n')){
-                            /**@type{Types.microservice_message_queue_publish} */
-                            const row_obj = JSON.parse(row);
-                            if (row_obj.message_id == message_id){
-                                message_consume = { message_id: row_obj.message_id,
-                                                    service:    row_obj.service,
-                                                    message:    row_obj.message,
+                        for (const row of message_queue){
+                            if (row.message_id == message_id){
+                                message_consume = { message_id: row.message_id,
+                                                    service:    row.service,
+                                                    message:    row.message,
                                                     start:      null,
                                                     finished:   null,
                                                     result:     null};
