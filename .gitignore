@@ -3,8 +3,6 @@ config/
 data/
 logs/
 node_modules/
-microservice/geolocation/geodata_cache_ip.json
-microservice/geolocation/geodata_cache_place.json
-microservice/logs/
-microservice/temp/
 microservice/config/
+microservice/data/
+microservice/temp/

@@ -14,7 +14,6 @@ const {CONFIG, ConfigServices} = await import(`file://${process.cwd()}/microserv
             scheduled_start: Date}[]} */
 const JOBS = [];
 
-const file_batchlog     = 'batch_log.json';
 /**
  * 
  * @param {string|number} month 
@@ -82,11 +81,12 @@ const validate_cron_expression = (expression) =>{
  * @returns {string}
  */
 const get_batchlog_filename = () => {
+    const configservice = ConfigServices('BATCH');
     //new log every day, format YYYY-MM-DD_[file_batchlog]
     const logdate = new Date();
     const month   = logdate.toLocaleString('en-US', { month: '2-digit'});
     const day     = logdate.toLocaleString('en-US', { day: '2-digit'});
-    return `${CONFIG.PATH_LOGS}${new Date().getFullYear()}${month}${day}_${file_batchlog}`; 
+    return `${CONFIG.PATH_DATA}${configservice.NAME}_${new Date().getFullYear()}${month}${day}.log`; 
 };
 /**
  * 

@@ -212,11 +212,8 @@ const DefaultConfig = async () => {
     //set paths in microservice config
     /**@type{Types.microservice_config} */
     const microservice_config = config_obj[6][1];
-    microservice_config?microservice_config.PATH_LOGS             = `${SLASH}microservice${SLASH}${microservice_config.PATH_LOGS}${SLASH}`:'';
+    microservice_config?microservice_config.PATH_DATA             = `${SLASH}microservice${SLASH}${microservice_config.PATH_DATA}${SLASH}`:'';
     microservice_config?microservice_config.PATH_TEMP             = `${SLASH}microservice${SLASH}${microservice_config.PATH_TEMP}${SLASH}`:'';
-    microservice_config?microservice_config.MESSAGE_QUEUE_ERROR   = `${microservice_config.PATH_LOGS}${microservice_config.MESSAGE_QUEUE_ERROR}`:'';
-    microservice_config?microservice_config.MESSAGE_QUEUE_PUBLISH = `${microservice_config.PATH_LOGS}${microservice_config.MESSAGE_QUEUE_PUBLISH}`:'';
-    microservice_config?microservice_config.MESSAGE_QUEUE_CONSUME = `${microservice_config.PATH_LOGS}${microservice_config.MESSAGE_QUEUE_CONSUME}`:'';
     //set paths in microservice services
     config_obj[7][1].SERVICES.map((/**@type{Types.microservice_config_service_record}*/row)=>{
         row.HTTPS_KEY             = `${SLASH}microservice${SLASH}config${SLASH}${row.HTTPS_KEY}`;

@@ -873,7 +873,10 @@
  *              'LOG_SERVICE_INFO'|
  *              'LOG_SERVICE_ERROR'|
  *              'MICROSERVICE_CONFIG'|
- *              'MICROSERVICE_SERVICES'} db_file_db_name
+ *              'MICROSERVICE_SERVICES'|
+ *              'MESSAGE_QUEUE_PUBLISH'|
+ *              'MESSAGE_QUEUE_CONSUME'|
+ *              'MESSAGE_QUEUE_ERROR'} db_file_db_name
  * 
  * @typedef {{  NAME:db_file_db_name, 
  *              LOCK:number, 
@@ -1678,7 +1681,7 @@
  *              url:string}} microservice_data_pdf
  * 
  * MicroService Config
- * @typedef {{  PATH_LOGS                                   : string,
+ * @typedef {{  PATH_DATA                                   : string,
  *              PATH_TEMP                                   : string,
  *              MESSAGE_QUEUE_ERROR                         : string,
  *              MESSAGE_QUEUE_PUBLISH                       : string,

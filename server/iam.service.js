@@ -36,7 +36,7 @@ const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
                                     client_longitude:   null,
                                     client_latitude:    null,
                                     date_created:       new Date().toISOString()};
-            file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content)
+            file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
             .then(()=>{
                 if (result == 1)
                     resolve({   username:username,
@@ -171,7 +171,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                     if (err)
                         res.status(401).send('⛔');
                     else{
-                        file_get_log('IAM_APP_TOKEN')
+                        file_get_log('IAM_APP_TOKEN', 'YYYYMMDD')
                         .then((/**@type{Types.iam_app_token_record[]}*/file)=>{
                             if (file.filter((/**@type{Types.iam_app_token_record}*/row)=> 
                                     row.app_id == app_id
@@ -192,7 +192,7 @@ const AuthenticateDataTokenRegistration = (app_id, token, ip, res, next) =>{
                     if (err)
                         res.status(401).send('⛔');
                     else{
-                        file_get_log('IAM_SYSTEMADMIN_LOGIN')
+                        file_get_log('IAM_SYSTEMADMIN_LOGIN', 'YYYYMMDD')
                         .then((/**@type{Types.iam_systemadmin_login_record[]}*/file)=>{
                             if (file.filter((/**@type{Types.iam_systemadmin_login_record}*/row)=> 
                                     row.app_id == getNumberValue(ConfigGet('SERVER','APP_COMMON_APP_ID'))
@@ -522,7 +522,7 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
                             client_longitude:   null,
                             client_latitude:    null,
                             date_created:       new Date().toISOString()};
-    return await file_append_log('IAM_APP_TOKEN', file_content).then(()=>jsontoken_at);
+    return await file_append_log('IAM_APP_TOKEN', file_content, 'YYYYMMDD').then(()=>jsontoken_at);
  };
 /**
  * Authorize token

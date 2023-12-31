@@ -1,9 +1,6 @@
 {
-    "PATH_LOGS"              : "logs",
+    "PATH_DATA"              : "data",
     "PATH_TEMP"              : "temp",
-    "MESSAGE_QUEUE_ERROR"    : "message_queue_error.json",
-    "MESSAGE_QUEUE_PUBLISH"  : "message_queue_publish.json",
-    "MESSAGE_QUEUE_CONSUME"  : "message_queue_consume.json",
     "CIRCUITBREAKER_FAILURETHRESHOLD_SECONDS":5,
     "CIRCUITBREAKER_COOLDOWNPERIOD_SECONDS":10,
     "CIRCUITBREAKER_REQUESTTIMEOUT_SECONDS":20,
