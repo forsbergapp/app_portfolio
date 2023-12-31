@@ -32,7 +32,10 @@ const FILE_DB = [   {NAME:'APPS',                   LOCK:0, TRANSACTION_ID:0,   
                     {NAME:'LOG_SERVICE_INFO',       LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVICE_INFO_`},
                     {NAME:'LOG_SERVICE_ERROR',      LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}logs${SLASH}SERVICE_ERROR_`},
                     {NAME:'MICROSERVICE_CONFIG',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}config.json`, CACHE_CONTENT:null},
-                    {NAME:'MICROSERVICE_SERVICES',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}services.json`, CACHE_CONTENT:null}];
+                    {NAME:'MICROSERVICE_SERVICES',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}config${SLASH}services.json`, CACHE_CONTENT:null},
+                    {NAME:'MESSAGE_QUEUE_PUBLISH',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}data${SLASH}message_queue_publish.log`},
+                    {NAME:'MESSAGE_QUEUE_CONSUME',  LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}data${SLASH}message_queue_consume.log`},
+                    {NAME:'MESSAGE_QUEUE_ERROR',    LOCK:0, TRANSACTION_ID:0,   TRANSACTION_CONTENT: null, PATH:`${SLASH}microservice${SLASH}data${SLASH}message_queue_error.log`}];
 Object.seal(FILE_DB);
 
 /**
@@ -114,18 +117,51 @@ const transaction_rollback = (file, transaction_id)=>{
         return false;
     }
 };
+/**
+ * 
+ * @param {string|null} filesuffix 
+ * @param {string|null} sample 
+ * @returns 
+ */
+ const getFilesuffix = (filesuffix=null, sample=null) =>{
+    const logdate = new Date();
+    let month = logdate.toLocaleString('en-US', { month: '2-digit'});
+    let day   = logdate.toLocaleString('en-US', { day: '2-digit'});
+    if (Number(month) <10)
+        month = '0' + month;
+    if (Number(day) <10)
+        day = '0' + day;
+    let file_filesuffix = '';
+    if (sample)
+        file_filesuffix = `${sample}.log`;
+    else
+        switch (filesuffix){
+            case 'YYYYMMDD':{
+                file_filesuffix = `${logdate.getFullYear()}${month}${day}.log`;    
+                break;
+            }
+            case 'YYYYMM':{
+                file_filesuffix = `${logdate.getFullYear()}${month}.log`;
+                break;
+            }
+            default:{
+                break;
+            }
+        }
+    return file_filesuffix;
+};
 
 /**
- * Get log file with default suffix or given suffix
+ * Get log file with given suffix or none or use sample to get specific suffix
+ * for statistics
  * @param {Types.db_file_db_name} file 
  * @param {string|null} filesuffix 
+ * @param {string|null} sample
  * @returns {Promise.<*>}
  */
- const file_get_log = async (file, filesuffix=null) =>{
-    const logdate = new Date();
-    const month = logdate.toLocaleString('en-US', { month: '2-digit'});
-    const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
-    const filepath = `${fileDB(file).PATH}` + (filesuffix?filesuffix:`${logdate.getFullYear()}${month}${day}.log`);
+ const file_get_log = async (file, filesuffix=null, sample=null) =>{
+    
+    const filepath = `${fileDB(file).PATH}${getFilesuffix(filesuffix, sample)}`;
     const fileBuffer = await fs.promises.readFile(process.cwd() + filepath, 'utf8');
     return fileBuffer.toString().split('\r\n').filter(row=>row !='').map(row=>row = JSON.parse(row));
 };
@@ -230,36 +266,20 @@ const file_create = async (file, file_content) =>{
         throw error;
     });
 };
+
 /**
  * 
  * @param {Types.db_file_db_name} file
  * @param {object} file_content 
+ * @param {string|null} filesuffix
  */
-const file_append_log = async (file, file_content) =>{
-    const {ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
-    let filesuffix = '';
-    const logdate = new Date();
-    const month = logdate.toLocaleString('en-US', { month: '2-digit'});
-    const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
-    if (file.startsWith('LOG_')){
-        const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
-        if (config_file_interval=='1D')
-            filesuffix = `${logdate.getFullYear()}${month}${day}.log`;
-        else{
-            if (config_file_interval=='1M')
-                filesuffix = `${logdate.getFullYear()}${month}.log`;
-            else
-                filesuffix = `${logdate.getFullYear()}${month}.log`;
-        }
-    }
-    else
-        filesuffix = `${logdate.getFullYear()}${month}${day}.log`;
-    const filepath = `${fileDB(file).PATH}${filesuffix}`;
+const file_append_log = async (file, file_content, filesuffix = null) =>{
+    const filepath = `${fileDB(file).PATH}${getFilesuffix(filesuffix, null)}`;
     const old_file = await fs.promises.readFile(`${process.cwd()}${filepath}`, 'utf8')
     .catch(()=>null);
     const transaction_id = await transaction_start(file, old_file ?? '');
     
-    await fs.promises.appendFile(`${process.cwd()}${fileDB(file).PATH}${filesuffix}`, JSON.stringify(file_content) + '\r\n', 'utf8')
+    await fs.promises.appendFile(`${process.cwd()}${filepath}`, JSON.stringify(file_content) + '\r\n', 'utf8')
     .then(()=>{
         if (transaction_commit(file, transaction_id))
             return null;
@@ -285,7 +305,7 @@ const create_config_and_logs_dir = async () => {
                         `${SLASH}data`,
                         `${SLASH}logs`,
                         `${SLASH}microservice${SLASH}config`,
-                        `${SLASH}microservice${SLASH}logs`,
+                        `${SLASH}microservice${SLASH}data`,
                         `${SLASH}microservice${SLASH}temp`]){
         await fs.promises.access(process.cwd() + dir)
         .catch(()=>{

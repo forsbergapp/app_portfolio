@@ -35,8 +35,9 @@ const {file_get_log_dir, file_append_log} = await import(`file://${process.cwd()
  * @returns {Promise.<null>}
  */
  const sendLog = async (logscope, loglevel, log) => {
-    return await new Promise((resolve) => {    
-        file_append_log(`LOG_${logscope}_${loglevel}`, log)
+    return await new Promise((resolve) => {
+        const config_file_interval = ConfigGet('SERVICE_LOG', 'FILE_INTERVAL');
+        file_append_log(`LOG_${logscope}_${loglevel}`, log, config_file_interval=='1D'?'YYYYMMDD':'YYYYMM')
         .then(()=>resolve(null))
         .catch((/**@type{Types.error}*/error)=>{
             console.log(error);
@@ -392,20 +393,11 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
  */
 const getLogs = async (data) => {
     return new Promise ((resolve)=>{
-        /**@type {string} */
         let filesuffix;
-        if (Number(data.month) <10)
-            data.month = '0' + data.month;
-        if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
-            if (Number(data.day) <10)
-                data.day = '0' + data.day;
-            filesuffix = `${data.year}${data.month}${data.day}.log`;
-        }
+        if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D')
+            filesuffix = 'YYYYMMDD';
         else
-            if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1M')
-                filesuffix = `${data.year}${data.month}.log`;
-            else
-                filesuffix = `${data.year}${data.month}.log`;
+            filesuffix = 'YYYYMM';
         /**
          * 
          * @param {object} record 
@@ -552,7 +544,7 @@ const getLogsStats = async (data) => {
             else
                 sample = `${data.year}${data.month}`;
             const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
-            const logs = await file_get_log('LOG_REQUEST_INFO', sample + '.log');
+            const logs = await file_get_log('LOG_REQUEST_INFO', null, sample);
             logs.forEach((/**@type{Types.server_log_request_record|''}*/record) => {
                 if (record != ''){
                     if (data.statGroup != null){
