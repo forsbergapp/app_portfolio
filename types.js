@@ -371,6 +371,11 @@
  * @typedef {object}        app_service_parameters
  * @property {number}       app_id
  * @property {string}       app_logo
+ * @property {number|null}  app_sound
+ * @property {string|null}  app_email
+ * @property {string|null}  app_copyright
+ * @property {string|null}  app_link_url
+ * @property {string|null}  app_link_title
  * @property {string}       app_datatoken
  * @property {string|null}  countries
  * @property {map_styles}   map_styles
@@ -381,7 +386,6 @@
  * @property {string|null}  client_longitude
  * @property {string|null}  client_place
  * @property {string|null}  client_timezone
- * @property {number|null}  app_sound
  * @property {number|null}  common_app_id
  * @property {string}       rest_resource_bff
  * @property {number}       first_time
@@ -441,19 +445,6 @@
  * @property {string}       longitude
  * @property {string|null}  report
  */
-/**
- * Apps - Info page data
- * @typedef {object} info_page_data
- * @property {string} app_name
- * @property {string} app_url
- * @property {string} info_email_policy
- * @property {string} info_email_disclaimer
- * @property {string} info_email_terms
- * @property {string} info_link_policy_url
- * @property {string} info_link_disclaimer_url
- * @property {string} info_link_terms_url
- * @property {string} info_link_about_url
- */ 
 /**
  * Server - authenticate request
  * @typedef {{statusCode:number,
@@ -620,7 +611,6 @@
  *              'CSS_REPORT'|
  *              'FAVICON_32x32'|
  *              'FAVICON_192x192'|
- *              'SHOWINFO'|
  *              'SHOWPARAM'|
  *              'CLIENT_ID'|
  *              'CLIENT_SECRET'|
@@ -628,6 +618,7 @@
  *              'APP_DATA_EXPIRE'|
  *              'APP_ACCESS_SECRET'|
  *              'APP_ACCESS_EXPIRE'|
+ *              'DATA'|
  *              'CONFIG'|
  *              'RENDER_FILES'|
  *              'STATUS'} config_apps_keys
@@ -645,6 +636,10 @@
  *              RENDER_LOCALES:boolean, 
  *              RENDER_SETTINGS:boolean, 
  *              RENDER_PROVIDER_BUTTONS:boolean}} config_apps_config
+ * @typedef {{  COPYRIGHT: string,
+ *		        EMAIL: string,
+ *		        LINK_TITLE: string,
+ *		        LINK_URL: string}} config_apps_data
  * @typedef {'ONLINE'|'OFFLINE'} config_apps_status
  * @typedef  {[string,string|null,string|null,string, string|null]} config_apps_render_files
  * @typedef  {object} config_apps_record
@@ -663,7 +658,6 @@
  * @property {string} CSS_REPORT 
  * @property {string} FAVICON_32x32
  * @property {string} FAVICON_192x192
- * @property {string} SHOWINFO
  * @property {string} SHOWPARAM
  * @property {string} [CLIENT_ID]
  * @property {string} [CLIENT_SECRET]
@@ -671,6 +665,7 @@
  * @property {string} [DATA_EXPIRE]
  * @property {string} [ACCESS_SECRET]
  * @property {string} [ACCESS_EXPIRE]
+ * @property {config_apps_data} [DATA]
  * @property {config_apps_config} [CONFIG]
  * @property {config_apps_render_files[]} [RENDER_FILES]
  * @property {config_apps_status} STATUS
@@ -687,7 +682,6 @@
  * @property {string} CSS_REPORT 
  * @property {string} FAVICON_32x32
  * @property {string} FAVICON_192x192
- * @property {string} SHOWINFO
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
  * @property {config_apps_status} STATUS
@@ -709,7 +703,6 @@
  * @property {string} CSS_REPORT 
  * @property {string} FAVICON_32x32
  * @property {string} FAVICON_192x192
- * @property {string} SHOWINFO
  * @property {string} SHOWPARAM
  * @property {string} CLIENT_ID
  * @property {config_apps_status} STATUS

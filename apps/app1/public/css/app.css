@@ -113,11 +113,11 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	font-size: 11px;
 	width: 300px;
 }
-#start_links #social_link_row, #info_link_row{
+#start_links #app_link_row, #info_link_row{
 	text-align: center;
 	width: 100%;
 }
-#social_link_row div, #info_link_row div{
+#app_link_row div, #info_link_row div{
 	display: inline-block;
 	cursor: pointer;
 	margin:10px;

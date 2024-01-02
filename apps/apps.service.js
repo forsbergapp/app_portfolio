@@ -425,6 +425,11 @@ const get_module_with_initBFF = async (app_info) => {
         const app_service_parameters = {   
             app_id: app_info.app_id,
             app_logo:ConfigGetApp(app_info.app_id, 'LOGO'),
+            app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
+            app_email: ConfigGetApp(app_info.app_id, 'DATA').EMAIL,
+            app_copyright: ConfigGetApp(app_info.app_id, 'DATA').COPYRIGHT,
+            app_link_url: ConfigGetApp(app_info.app_id, 'DATA').LINK_URL,
+            app_link_title: ConfigGetApp(app_info.app_id, 'DATA').LINK_TITLE,
             app_datatoken: app_info.datatoken,
             countries:countries,
             map_styles: app_info.map_styles,
@@ -435,7 +440,6 @@ const get_module_with_initBFF = async (app_info) => {
             client_longitude: app_info.longitude,
             client_place: app_info.place,
             client_timezone: app_info.timezone,
-            app_sound: getNumberValue(ConfigGet('SERVER', 'APP_SOUND')),
             common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
             rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF'),
             first_time: first_time
@@ -579,66 +583,10 @@ const createMail = async (app_id, data) =>{
 /**
  * Gets info page with rendered data
  * @async
- * @param {number} app_id       - Application id
- * @param {string} info         - 'privacy_policy', 'disclaimer', 'terms', 'about'
- * @param {string} lang_code    - Locale
- * @param {Types.callBack} callBack   - CallBack with error and success info or null in both info parameter is unknown
+ * @param {number} app_id
+ * @param {'privacy_policy'|'disclaimer'|'terms'|'about'} info
  */
-const getInfo = async (app_id, info, lang_code, callBack) => {
-    const {getParameters_server} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_parameter.service.js`);
-    /**
-     * @param {number} app_id
-     * @param {Types.callBack} callBack
-     */
-    const get_parameters = (app_id, callBack) => {
-        getApps(app_id, app_id, lang_code)
-        .then((/** @type{Types.config_apps_with_db_columns[]}*/result_app)=> {
-            getParameters_server(app_id, app_id)
-            .then((/** @type {Types.db_result_app_parameter_getParameters_server[]}*/ result_parameters)=>{
-                //app_parameter table
-                let db_info_email_policy;
-                let db_info_email_disclaimer;
-                let db_info_email_terms;
-                let db_info_link_policy_url;
-                let db_info_link_disclaimer_url;
-                let db_info_link_terms_url;
-                let db_info_link_about_url;
-                for (const parameter of result_parameters){
-                    if (parameter.parameter_name=='INFO_EMAIL_POLICY')
-                        db_info_email_policy = parameter.parameter_value;
-                    if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
-                        db_info_email_disclaimer = parameter.parameter_value;
-                    if (parameter.parameter_name=='INFO_EMAIL_TERMS')
-                        db_info_email_terms = parameter.parameter_value;
-                    if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
-                        db_info_link_policy_url = parameter.parameter_value;
-                    if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                        db_info_link_disclaimer_url = parameter.parameter_value;
-                    if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
-                        db_info_link_terms_url = parameter.parameter_value;
-                    if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
-                        db_info_link_about_url = parameter.parameter_value;
-                }
-                callBack(null, {app_name: result_app[0].NAME,
-                                app_url:    result_app[0].PROTOCOL +
-                                            result_app[0].SUBDOMAIN + '.' + result_app[0].HOST + ':' + result_app[0].PORT,
-                                info_email_policy: db_info_email_policy,
-                                info_email_disclaimer: db_info_email_disclaimer,
-                                info_email_terms: db_info_email_terms,
-                                info_link_policy_url: db_info_link_policy_url,
-                                info_link_disclaimer_url: db_info_link_disclaimer_url,
-                                info_link_terms_url: db_info_link_terms_url,
-                                info_link_about_url: db_info_link_about_url
-                                });
-            })
-            .catch((/**@type{Types.error}*/err)=> {
-                callBack(err, null);
-            });
-        })
-        .catch((/**@type{Types.error}*/error)=> {
-            callBack(error, null); 
-        });
-    };
+const getInfo = async (app_id, info) => {
     const info_html1 = `<!DOCTYPE html>
                       <html>
                         <head>
@@ -653,55 +601,23 @@ const getInfo = async (app_id, info, lang_code, callBack) => {
     const render_variables = [];
     const fs = await import('node:fs');
     if (info=='privacy_policy'||info=='disclaimer'||info=='terms'||info=='about' )
-        get_parameters(app_id, (/** @type {Types.error}*/ err, /** @type{Types.info_page_data}*/ result)=>{
-            switch (info){
-                case 'privacy_policy':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_policy_url}.html`, 'utf8', ( error, fileBuffer) => {
-                        const infopage = fileBuffer.toString();
-                        render_variables.push(['APPNAME1', result.app_name ]);
-                        render_variables.push(['APPNAME2', result.app_name ]);
-                        render_variables.push(['APPURL_HREF', result.app_url ]);
-                        render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
-                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_policy ]);
-                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_policy ]);
-                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
-                    });
-                    break;
-                }
-                case 'disclaimer':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_disclaimer_url}.html`, 'utf8', (error, fileBuffer) => {
-                        const infopage = fileBuffer.toString();
-                        render_variables.push(['APPNAME1', result.app_name ]);
-                        render_variables.push(['APPNAME2', result.app_name ]);
-                        render_variables.push(['APPNAME3', result.app_name ]);
-                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_disclaimer ]);
-                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_disclaimer ]);
-                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
-                    });
-                    break;
-                }
-                case 'terms':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_terms_url}.html`, 'utf8', (error, fileBuffer) => {
-                        const infopage = fileBuffer.toString();
-                        render_variables.push(['APPNAME', result.app_name ]);
-                        render_variables.push(['APPURL_HREF', result.app_url ]);
-                        render_variables.push(['APPURL_INNERTEXT', result.app_url ]);
-                        render_variables.push(['APPEMAIL_HREF', 'mailto:' + result.info_email_terms ]);
-                        render_variables.push(['APPEMAIL_INNERTEXT', result.info_email_terms ]);
-                        callBack(null, info_html1 + render_app_with_data(infopage, render_variables) + info_html2);
-                    });
-                    break;
-                }
-                case 'about':{
-                    fs.readFile(process.cwd() + `/apps/app${app_id}/src${result.info_link_about_url}.html`, 'utf8', (error, fileBuffer) => {
-                        callBack(null, info_html1 + fileBuffer.toString() + info_html2);
-                    });
-                    break;
-                }
-            }
-        });
+        if (info=='about'){
+            //returns about page or empty if the app has none
+            return await fs.promises.readFile(process.cwd() + `/apps/app${app_id}/src/info/about.html`, 'utf8')
+                        .then((fileBuffer)=>info_html1 + fileBuffer.toString() + info_html2)
+                        .catch(()=>'');
+        }
+        else{
+            //privacy_policy, disclaimer or terms
+            return await fs.promises.readFile(process.cwd() + `/apps/common/src/info/${info}.html`, 'utf8')
+                        .then((fileBuffer)=>{
+                            render_variables.push(['APPNAME', ConfigGetApp(app_id, 'NAME') ]);
+                            return  info_html1 + render_app_with_data(fileBuffer.toString(), render_variables) + info_html2;
+                        })
+                        .catch(()=>'');
+        }
     else
-        callBack(null, null);
+        return null;
 };
 /**
  * Get app
@@ -1159,10 +1075,9 @@ const getAssetFile = (app_id, url, basepath, res) =>{
  * @param {string} reportid
  * @param {number} messagequeue
  * @param {string} info
- * @param {string} lang_code
  * @param {Types.res} res
  */
-const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, lang_code, res) =>{
+const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, messagequeue, info, res) =>{
     const app_id = ConfigGetAppHost(host, 'SUBDOMAIN');
     if (app_id==null){
         res.statusCode = 301;
@@ -1189,34 +1104,27 @@ const getAppMain = async (ip, host, user_agent, accept_language, url, reportid, 
                                     .catch(()=>null));
                     else
                         if (info)
-                            if (ConfigGetApp(app_id, 'SHOWINFO')==1)
-                                switch (info){
-                                    case 'about':
-                                    case 'disclaimer':
-                                    case 'privacy_policy':
-                                    case 'terms':{
-                                        if (typeof lang_code !='undefined'){
-                                            lang_code = 'en';
-                                        }
-                                        getInfo(app_id, info, lang_code, (/**@type{Types.error}*/err, /**@type{Types.info_page_data}}*/info_result)=>{
-                                            //show empty if any error
-                                            if (err){
-                                                res.statusCode = 500;
-                                                res.statusMessage = err;
-                                                reject(err);
-                                            }
-                                            else
-                                                resolve(info_result);
-                                        });
-                                        break;
-                                    }
-                                    default:{
-                                        resolve(null);
-                                        break;
-                                    }
+                            switch (info){
+                                case 'about':
+                                case 'disclaimer':
+                                case 'privacy_policy':
+                                case 'terms':{
+                                    getInfo(app_id, info)
+                                    .then((info_result)=>{
+                                        resolve(info_result);
+                                    })
+                                    .catch((error)=>{
+                                        res.statusCode = 500;
+                                            res.statusMessage = error;
+                                            reject(error);
+                                    });
+                                    break;
                                 }
-                            else
-                                resolve(null);
+                                default:{
+                                    resolve(null);
+                                    break;
+                                }
+                            }
                         else
                             if (url.toLowerCase().startsWith('/report'))
                                 getReport(app_id, ip, user_agent, accept_language, reportid, messagequeue)

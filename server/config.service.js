@@ -48,7 +48,6 @@ const app_portfolio_title = 'App Portfolio';
                                                                             CSS_REPORT:current.CSS_REPORT,
                                                                             FAVICON_32x32:current.FAVICON_32x32,
                                                                             FAVICON_192x192:current.FAVICON_192x192,
-                                                                            SHOWINFO:current.SHOWINFO,
                                                                             SHOWPARAM:current.SHOWPARAM,
                                                                             STATUS:current.STATUS}) , []);
     return apps;                                                            
@@ -96,7 +95,6 @@ const app_portfolio_title = 'App Portfolio';
         case 'CSS_REPORT':
         case 'FAVICON_32x32':
         case 'FAVICON_192x192':
-        case 'SHOWINFO':
         case 'SHOWPARAM':
         case 'CLIENT_ID':
         case 'CLIENT_SECRET':
@@ -104,6 +102,7 @@ const app_portfolio_title = 'App Portfolio';
         case 'APP_DATA_EXPIRE':
         case 'APP_ACCESS_SECRET':
         case 'APP_ACCESS_EXPIRE':
+        case 'DATA':
         case 'CONFIG':
         case 'RENDER_FILES':
         case 'STATUS':{

@@ -13,28 +13,8 @@
 const common = await import('common');
 const app_report = await import('app_report');
 const APP_GLOBAL = {
-    app_copyright:'',
     app_default_startup_page:'',
     app_report_timetable:'',
-    info_social_link1_url:'',
-    info_social_link2_url:'',
-    info_social_link3_url:'',
-    info_social_link4_url:'',
-    info_social_link1_icon:'',
-    info_social_link2_icon:'',
-    info_social_link3_icon:'',
-    info_social_link4_icon:'',
-    info_link_policy_url:'',
-    info_link_disclaimer_url:'',
-    info_link_terms_url:'',
-    info_link_about_url:'',
-    info_link_policy_name:'',
-    info_link_disclaimer_name:'',
-    info_link_terms_name:'',
-    info_link_about_name:'',
-    info_email_policy:'',
-    info_email_disclaimer:'',
-    info_email_terms:'',
 
     regional_default_direction:'',
     regional_default_locale_second:'',
@@ -2267,10 +2247,10 @@ const setEvents = () => {
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_views')); }, false);
     //dialogue info
-    document.querySelector('#info_link1').addEventListener('click', () => { common.show_window_info(1, APP_GLOBAL.info_link_policy_url);}, false);
-    document.querySelector('#info_link2').addEventListener('click', () => { common.show_window_info(1, APP_GLOBAL.info_link_disclaimer_url);}, false);
-    document.querySelector('#info_link3').addEventListener('click', () => { common.show_window_info(1, APP_GLOBAL.info_link_terms_url);}, false);
-    document.querySelector('#info_link4').addEventListener('click', () => { common.show_window_info(1, APP_GLOBAL.info_link_about_url);}, false);
+    document.querySelector('#info_link1').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);}, false);
+    document.querySelector('#info_link2').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);}, false);
+    document.querySelector('#info_link3').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);}, false);
+    document.querySelector('#info_link4').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);}, false);
     document.querySelector('#info_close').addEventListener('click', () => { document.querySelector('#dialogue_info').style.visibility = 'hidden';}, false);
     
     //dialogue scan mobile
@@ -2741,19 +2721,13 @@ const init_app = () => {
         document.querySelector('#slider_next_year').innerHTML = common.ICONS.app_slider_right;
         
         //set about info
-        document.querySelector('#app_copyright').innerHTML = APP_GLOBAL.app_copyright;
-        if (APP_GLOBAL.info_social_link1_url!=null)
-            document.querySelector('#social_link1').innerHTML = `<a href=${APP_GLOBAL.info_social_link1_url} target='_blank'>${APP_GLOBAL.info_social_link1_icon}</a>`;
-        if (APP_GLOBAL.info_social_link2_url!=null)
-            document.querySelector('#social_link2').innerHTML = `<a href=${APP_GLOBAL.info_social_link2_url} target='_blank'>${APP_GLOBAL.info_social_link2_icon}</a>`;
-        if (APP_GLOBAL.info_social_link3_url!=null)
-            document.querySelector('#social_link3').innerHTML = `<a href=${APP_GLOBAL.info_social_link3_url} target='_blank'>${APP_GLOBAL.info_social_link3_icon}</a>`;
-        if (APP_GLOBAL.info_social_link4_url!=null)
-            document.querySelector('#social_link4').innerHTML = `<a href=${APP_GLOBAL.info_social_link4_url} target='_blank'>${APP_GLOBAL.info_social_link4_icon}</a>`;
-        document.querySelector('#info_link1').innerHTML = APP_GLOBAL.info_link_policy_name;
-        document.querySelector('#info_link2').innerHTML = APP_GLOBAL.info_link_disclaimer_name;
-        document.querySelector('#info_link3').innerHTML = APP_GLOBAL.info_link_terms_name;
-        document.querySelector('#info_link4').innerHTML = APP_GLOBAL.info_link_about_name;
+        document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
+        if (common.COMMON_GLOBAL.app_link_url!=null)
+            document.querySelector('#app_link').innerHTML = `<a href=${common.COMMON_GLOBAL.app_link_url} target='_blank'>${common.COMMON_GLOBAL.app_link_title}</a>`;
+        document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
+        document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
+        document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
+        document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
     
         //set default geolocation
         document.querySelector('#setting_select_popular_place').selectedIndex = 0;
@@ -2820,52 +2794,10 @@ const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         for (const parameter of parameters.app) {
-            if (parameter.parameter_name=='APP_COPYRIGHT'){
-                APP_GLOBAL.app_copyright = parameter.parameter_value;
-                app_report.REPORT_GLOBAL.app_copyright = parameter.parameter_value;
-            }
             if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
                 APP_GLOBAL.app_default_startup_page = parseInt(parameter.parameter_value);
             if (parameter.parameter_name=='APP_REPORT_TIMETABLE')
                 APP_GLOBAL.app_report_timetable = parameter.parameter_value; 
-            if (parameter.parameter_name=='INFO_EMAIL_POLICY')
-                APP_GLOBAL.info_email_policy = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_EMAIL_DISCLAIMER')
-                APP_GLOBAL.info_email_disclaimer = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_EMAIL_TERMS')
-                APP_GLOBAL.info_email_terms = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK1_URL')
-                APP_GLOBAL.info_social_link1_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK2_URL')
-                APP_GLOBAL.info_social_link2_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK3_URL')
-                APP_GLOBAL.info_social_link3_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK4_URL')
-                APP_GLOBAL.info_social_link4_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                APP_GLOBAL.info_social_link1_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                APP_GLOBAL.info_social_link2_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                APP_GLOBAL.info_social_link3_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                APP_GLOBAL.info_social_link4_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
-                APP_GLOBAL.info_link_policy_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                APP_GLOBAL.info_link_disclaimer_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
-                APP_GLOBAL.info_link_terms_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
-                APP_GLOBAL.info_link_about_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_POLICY_NAME')
-                APP_GLOBAL.info_link_policy_name = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                APP_GLOBAL.info_link_disclaimer_name = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_TERMS_NAME')
-                APP_GLOBAL.info_link_terms_name = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_ABOUT_NAME')
-                APP_GLOBAL.info_link_about_name = parameter.parameter_value;
             if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
                 app_report.REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
             if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
