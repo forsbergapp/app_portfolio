@@ -479,8 +479,8 @@ const sendBroadcast = () => {
         if (err)
             null;
         else{
-            if (Number(JSON.parse(result).sent) == 1)
-                common.show_message('INFO', null, null, `${common.ICONS.message_success}`, common.COMMON_GLOBAL.app_id);
+            if (Number(JSON.parse(result).sent) > 0)
+                common.show_message('INFO', null, null, `${common.ICONS.message_success} (${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
             else
                 common.show_message('INFO', null, null, `${common.ICONS.message_fail}`, common.COMMON_GLOBAL.app_id);
         }
@@ -538,7 +538,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
 };
 const set_broadcast_type = () => {
     switch (document.querySelector('#select_broadcast_type').value){
-        case 'INFO':{
+        case 'ALERT':{
             //show app selection
             document.querySelector('#select_app_broadcast').style.display='block';
             //hide client id
@@ -3091,8 +3091,8 @@ const init = () => {
         //show DASHBOARD
         document.querySelector('#menu_1').style.display='block';
         document.querySelector('#select_broadcast_type').innerHTML = 
-            `<option value='INFO' selected='selected'>${common.ICONS.app_alert}</option>
-                <option value='MAINTENANCE' selected='selected'>${common.ICONS.app_maintenance}</option>`;                 
+            `<option value='ALERT' selected='selected'>${common.ICONS.app_alert}</option>
+             <option value='MAINTENANCE' selected='selected'>${common.ICONS.app_maintenance}</option>`;                 
         
         //show MONITOR (only SERVER LOG)
         document.querySelector('#menu_5').style.display='block';
@@ -3113,7 +3113,7 @@ const init = () => {
         //show DASHBOARD
         document.querySelector('#menu_1').style.display='block';
         document.querySelector('#select_broadcast_type').innerHTML = 
-            `<option value='INFO' selected='selected'>${common.ICONS.app_alert}</option>`;
+            `<option value='ALERT' selected='selected'>${common.ICONS.app_alert}</option>`;
         //show USER STAT
         document.querySelector('#menu_2').style.display='block';
         //show USERS
