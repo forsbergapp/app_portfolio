@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,25,'تطبيق إداري لمشرفي التطبيق ومسؤولي النظام مع التكوين ومراقبة الاتصالات والسجلات الحية والإحصاءات ،
 وظائف البث ومعلومات قاعدة البيانات ومعلومات نظام التشغيل ومعلومات العملية وإدارة دور المستخدم');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',25,'اسم المستخدم');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',25,'كلمه السر');

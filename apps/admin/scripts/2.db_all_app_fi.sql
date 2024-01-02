@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,162,'Järjestelmänvalvojasovellus sovellusten järjestelmänvalvojille ja järjestelmänvalvojille määrityksellä, reaaliaikaisten yhteyksien ja lokien valvonnalla, tilastoilla,
 lähetystoiminnot, tietokantatiedot, käyttöjärjestelmätiedot, prosessitiedot ja käyttäjien roolien hallinta');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',162,'Käyttäjätunnus');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',162,'Salasana');

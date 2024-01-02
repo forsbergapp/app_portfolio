@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,267,'앱 관리자 및 시스템 관리자를 위한 관리 앱으로 구성, 실시간 연결 및 로그 모니터링, 통계,
 브로드캐스트 기능, 데이터베이스 정보, OS 정보, 프로세스 정보 및 사용자 역할 관리');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',267,'사용자 이름');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',267,'비밀번호');
