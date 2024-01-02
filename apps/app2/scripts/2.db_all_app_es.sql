@@ -1,5 +1,5 @@
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_ASR',506,'Media tarde');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_ASR_IQAMAT',506,'Iqamat');
@@ -36,7 +36,7 @@ INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, ap
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','COLTITLE_WEEKDAY',506,'Día de semana');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (<APP_ID/>,'REPORT','TIMETABLE_TITLE',506,'Horario');
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (<APP_ID/>,506,'Aplicación de una sola página (SPA) de aplicación web progresiva (PWA)');
 --

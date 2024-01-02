@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,506,'Aplicación de administración para administradores de aplicaciones y administradores de sistemas con configuración, monitoreo de conexiones y registros en vivo, estadísticas,
 funciones de transmisión, información de la base de datos, información del sistema operativo, información del proceso y gestión de roles de usuario');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',506,'Nombre de ususario');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',506,'Contraseña');

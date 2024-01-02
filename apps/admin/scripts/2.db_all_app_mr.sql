@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,338,'कॉन्फिगरेशनसह ऍप ऍडमिन आणि सिस्टम ऍडमिनसाठी ऍडमिन ऍप, लाइव्ह कनेक्शन आणि लॉगचे निरीक्षण, आकडेवारी,
 ब्रॉडकास्ट फंक्शन्स, डेटाबेस माहिती, OS माहिती, प्रक्रिया माहिती आणि वापरकर्ता भूमिका व्यवस्थापन');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',338,'वापरकर्तानाव');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',338,'पासवर्ड');

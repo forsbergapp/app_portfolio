@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,438,'ਸੰਰਚਨਾ ਦੇ ਨਾਲ ਐਪ ਪ੍ਰਸ਼ਾਸਕਾਂ ਅਤੇ ਸਿਸਟਮ ਪ੍ਰਸ਼ਾਸਕਾਂ ਲਈ ਐਡਮਿਨ ਐਪ, ਲਾਈਵ ਕਨੈਕਸ਼ਨਾਂ ਅਤੇ ਲੌਗਾਂ ਦੀ ਨਿਗਰਾਨੀ, ਅੰਕੜੇ,
 ਪ੍ਰਸਾਰਣ ਫੰਕਸ਼ਨ, ਡੇਟਾਬੇਸ ਜਾਣਕਾਰੀ, OS ਜਾਣਕਾਰੀ, ਪ੍ਰਕਿਰਿਆ ਜਾਣਕਾਰੀ ਅਤੇ ਉਪਭੋਗਤਾ ਭੂਮਿਕਾ ਪ੍ਰਬੰਧਨ');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',438,'ਯੂਜ਼ਰਨੇਮ');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',438,'ਪਾਸਵਰਡ');

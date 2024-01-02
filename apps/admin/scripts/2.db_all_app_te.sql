@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,531,'కాన్ఫిగరేషన్‌తో యాప్ అడ్మిన్‌లు మరియు సిస్టమ్ అడ్మిన్‌ల కోసం అడ్మిన్ యాప్, లైవ్ కనెక్షన్‌లు మరియు లాగ్‌ల పర్యవేక్షణ, గణాంకాలు,
 ప్రసార విధులు, డేటాబేస్ సమాచారం, OS సమాచారం, ప్రక్రియ సమాచారం మరియు వినియోగదారు పాత్ర నిర్వహణ');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',531,'వినియోగదారు పేరు');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',531,'పాస్వర్డ్');

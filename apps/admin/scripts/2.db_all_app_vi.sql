@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,575,'Ứng dụng quản trị dành cho quản trị viên ứng dụng và quản trị viên hệ thống với cấu hình, giám sát các kết nối và nhật ký trực tiếp, số liệu thống kê,
 chức năng phát sóng, thông tin cơ sở dữ liệu, thông tin hệ điều hành, thông tin quy trình và quản lý vai trò người dùng');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',575,'Tên tài khoản');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',575,'Mật khẩu');

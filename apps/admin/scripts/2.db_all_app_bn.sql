@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,63,'কনফিগারেশন, লাইভ সংযোগ এবং লগ পর্যবেক্ষণ, পরিসংখ্যান সহ অ্যাপ অ্যাডমিন এবং সিস্টেম অ্যাডমিনদের জন্য অ্যাডমিন অ্যাপ
 ব্রডকাস্ট ফাংশন, ডাটাবেস তথ্য, ওএস তথ্য, প্রক্রিয়া তথ্য এবং ব্যবহারকারীর ভূমিকা পরিচালনা');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',63,'ব্যবহারকারীর নাম');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',63,'পাসওয়ার্ড');
