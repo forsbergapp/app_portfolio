@@ -30,6 +30,18 @@ const COMMON_GLOBAL = {
     app_id:null,
     app_logo:'',
     app_sound:'',
+    app_email:'',
+    app_copyright:'',
+    app_link_url:'',
+    app_link_title:'',
+    info_link_policy_name:'',
+    info_link_disclaimer_name:'',
+    info_link_terms_name:'',
+    info_link_about_name:'',
+    info_link_policy_url:'',
+    info_link_disclaimer_url:'',
+    info_link_terms_url:'',
+    info_link_about_url:'',
     ui:'',
     exception_app_function:'',
     user_app_role_id:'',
@@ -3439,6 +3451,11 @@ const set_app_service_parameters = async (parameters) => {
     // app sound
     COMMON_GLOBAL.app_sound= parseInt(parameters.app_sound);
 
+    COMMON_GLOBAL.app_email= parameters.app_email;
+    COMMON_GLOBAL.app_copyright= parameters.app_copyright;
+    COMMON_GLOBAL.app_link_url= parameters.app_link_url;
+    COMMON_GLOBAL.app_link_title= parameters.app_link_title;
+
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
 
@@ -3762,6 +3779,14 @@ const set_app_parameters = (common_parameters) => {
     //set parameters for common_app_id, each app set its own parameters in the app
     for (const parameter of common_parameters.filter(parameter=>parameter.app_id == COMMON_GLOBAL.common_app_id)){
         switch (parameter.parameter_name){
+            case 'INFO_LINK_POLICY_NAME'                :{COMMON_GLOBAL.info_link_policy_name = parameter.parameter_value;break;}
+            case 'INFO_LINK_DISCLAIMER_NAME'            :{COMMON_GLOBAL.info_link_disclaimer_name = parameter.parameter_value;break;}
+            case 'INFO_LINK_TERMS_NAME'                 :{COMMON_GLOBAL.info_link_terms_name = parameter.parameter_value;break;}
+            case 'INFO_LINK_ABOUT_NAME'                 :{COMMON_GLOBAL.info_link_about_name = parameter.parameter_value;break;}
+            case 'INFO_LINK_POLICY_URL'                 :{COMMON_GLOBAL.info_link_policy_url = parameter.parameter_value;break;}
+            case 'INFO_LINK_DISCLAIMER_URL'             :{COMMON_GLOBAL.info_link_disclaimer_url = parameter.parameter_value;break;}
+            case 'INFO_LINK_TERMS_URL'                  :{COMMON_GLOBAL.info_link_terms_url = parameter.parameter_value;break;}
+            case 'INFO_LINK_ABOUT_URL'                  :{COMMON_GLOBAL.info_link_about_url = parameter.parameter_value;break;}
             case 'IMAGE_FILE_ALLOWED_TYPE1'             :{COMMON_GLOBAL.image_file_allowed_type1 = parameter.parameter_value;break;}
             case 'IMAGE_FILE_ALLOWED_TYPE2'             :{COMMON_GLOBAL.image_file_allowed_type2 = parameter.parameter_value;break;}
             case 'IMAGE_FILE_ALLOWED_TYPE3'             :{COMMON_GLOBAL.image_file_allowed_type3 = parameter.parameter_value;break;}
