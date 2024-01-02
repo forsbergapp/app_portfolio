@@ -94,13 +94,14 @@ const ClientAdd = (newClient) => {
  * @param {number} app_id
  * @param {number} client_id
  * @param {number} client_id_current
- * @param {string} broadcast_type
+ * @param {'ALERT'|'MAINTENANCE'|'CHAT'|'PROGRESS'} broadcast_type
  * @param {string} broadcast_message
  */
  const SocketSendSystemAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
-    if (broadcast_type=='INFO' || broadcast_type=='MAINTENANCE'){
+    if (broadcast_type=='ALERT' || broadcast_type=='MAINTENANCE'){
         //broadcast INFO or MAINTENANCE to all connected to given app_id 
         //except MAINTENANCE to admin and current user
+        let sent = 0;
         for (const client of CONNECTED_CLIENTS){
             if (client.id != client_id_current)
                 if (broadcast_type=='MAINTENANCE' && client.app_id ==0)
@@ -108,9 +109,10 @@ const ClientAdd = (newClient) => {
                 else
                     if (client.app_id == app_id || app_id == null){
                         ClientSend(client.response, broadcast_message, broadcast_type);
-                        return {sent:1};
+                        sent++;
                     }
         }
+        return {sent:sent};
     }
     else
         if (broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
@@ -230,19 +232,21 @@ const ClientAdd = (newClient) => {
  * @param {number} client_id
  * @param {number} client_id_current
  * @param {string} broadcast_type
- * @param {string} broadcast_message
+ * @param {'ALERT'|'CHAT'|'PROGRESS'} broadcast_message
  */
  const SocketSendAdmin = (app_id, client_id, client_id_current, broadcast_type, broadcast_message) => {
-    if (broadcast_type=='INFO' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
+    if (broadcast_type=='ALERT' || broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
         //admin can only broadcast INFO or CHAT
-        if (broadcast_type=='INFO'){
+        if (broadcast_type=='ALERT'){
+            let sent = 0;
             for (const client of CONNECTED_CLIENTS){
                 if (client.id != client_id_current)
                     if (client.app_id == app_id || app_id == null){
                         ClientSend(client.response, broadcast_message, broadcast_type);
-                        return {sent:1};
+                        sent++;
                     }
             }
+            return {sent:sent};
         }
         if (broadcast_type=='CHAT' || broadcast_type=='PROGRESS'){
             //broadcast CHAT to specific client

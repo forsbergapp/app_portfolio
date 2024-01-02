@@ -818,7 +818,7 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
 };
 /**
  * 
- * @param {'ERROR'|'INFO'|'EXCEPTION'|'CONFIRM'|'PROGRESS'} message_type 
+ * @param {'ERROR'|'INFO'|'EXCEPTION'|'CONFIRM'|'LOG'|'PROGRESS'} message_type 
  * @param {string} code 
  * @param {function} function_event 
  * @param {string|{part: number, total:number, text:string}} message 
@@ -840,8 +840,7 @@ const show_message = (message_type, code, function_event, message=null, data_app
     //this removes old eventlistener
     const button_close = old_close.cloneNode(true);
     
-    old_close.parentNode.replaceChild(button_close, old_close);
-    //INFO, ERROR, CONFIRM, EXCEPTION
+    old_close.parentNode.replaceChild(button_close, old_close);    
     switch (message_type){
         case 'ERROR':{
             FFB ('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'APP_DATA', null, (err, result) => {
@@ -3152,7 +3151,7 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
         case 'CHAT':
-        case 'INFO':{
+        case 'ALERT':{
             show_broadcast_info(message);
             break;
         }
