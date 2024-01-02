@@ -36,6 +36,6 @@ const getAppCommon = (url, res) => service.getAppCommon(url,res);
  * @param {Types.res} res 
  * @returns 
  */
- const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(ip, host, user_agent, accept_language, url, query?query.get('reportid'):null, query?getNumberValue(query.get('messagequeue')):null, url.startsWith('/info/')?url.substring(6):null,query?query.get('lang_code'):null, res);
+ const getAppMain = async (ip, host, user_agent, accept_language, url, query, res) => service.getAppMain(ip, host, user_agent, accept_language, url, query?query.get('reportid'):null, query?getNumberValue(query.get('messagequeue')):null, url.startsWith('/info/')?url.substring(6):null, res);
 
 export{getApps, getAppsAdmin, getAppCommon, getAppMain};

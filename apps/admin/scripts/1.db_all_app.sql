@@ -547,6 +547,15 @@ INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_
 -- app_parameter
 --
 --
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_POLICY_NAME','Privacy Policy',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_POLICY_URL','/info/privacy_policy',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_DISCLAIMER_NAME','Disclaimer',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_DISCLAIMER_URL','/info/disclaimer',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_TERMS_NAME','Terms',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_TERMS_URL','/info/terms',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_ABOUT_NAME','About',NULL);
+INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','INFO_LINK_ABOUT_URL','/info/about',NULL);
+
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_SIGNUP','1',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'1','SERVICE_MAIL_TYPE_SIGNUP_FROM_NAME','{EMAIL_FROM_NAME}',NULL);
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (0,'0','SERVICE_MAIL_TYPE_UNVERIFIED','2',NULL);

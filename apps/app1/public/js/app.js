@@ -1,28 +1,10 @@
 const common = await import('common');
 
 const APP_GLOBAL = {
-    'app_copyright':'',
-    'app_email':'',
     'img_diagram_img':'/common/documents/app_portfolio.webp',
     'img_diagram_img_small':'/common/documents/app_portfolio_small.webp',
     'img_datamodel_img':'/common/documents/data_model.webp',
-    'img_datamodel_img_small':'/common/documents/data_model_small.webp',
-    'info_social_link1_url':'',
-    'info_social_link2_url':'',
-    'info_social_link3_url':'',
-    'info_social_link4_url':'',
-    'info_social_link1_icon':'',
-    'info_social_link2_icon':'',
-    'info_social_link3_icon':'',
-    'info_social_link4_icon':'',
-    'info_link_policy_name':'',
-    'info_link_policy_url':'',
-    'info_link_disclaimer_name':'',
-    'info_link_disclaimer_url':'',
-    'info_link_terms_name':'',
-    'info_link_terms_url':'',
-    'info_link_about_name':'',
-    'info_link_about_url':''
+    'img_datamodel_img_small':'/common/documents/data_model_small.webp'
 };
 Object.seal(APP_GLOBAL);
 const show_hide_apps_dialogue = () => {
@@ -306,33 +288,33 @@ const init_app = async () => {
     document.querySelector('#title2').innerHTML = common.ICONS.app_database + common.ICONS.misc_model;
     document.querySelector('#info_message').innerHTML = common.ICONS.app_home;
     document.querySelector('#contact_text').innerHTML = common.ICONS.app_email;
-    document.querySelector('#app_copyright').innerHTML = APP_GLOBAL.app_copyright;
-    document.querySelector('#app_email').href='mailto:' + APP_GLOBAL.app_email;
-    document.querySelector('#app_email').innerHTML=APP_GLOBAL.app_email;
+    document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
+    document.querySelector('#app_email').href='mailto:' + common.COMMON_GLOBAL.app_email;
+    document.querySelector('#app_email').innerHTML=common.COMMON_GLOBAL.app_email;
 
     //links
     document.querySelector('#start_links').addEventListener('click', (event) => { 
-        //social links ends with an integer and is part of app global
-        if (event.target.id.startsWith('social_link')){
-            if (APP_GLOBAL[`info_${event.target.id}_url`])
-                window.open(APP_GLOBAL[`info_${event.target.id}_url`],'_blank','');
+        //app link ends with an integer and is part of app global
+        if (event.target.id.startsWith('app_link')){
+            if (common.COMMON_GLOBAL[`info_${event.target.id}_url`])
+                window.open(common.COMMON_GLOBAL[`info_${event.target.id}_url`],'_blank','');
         }
         else{
             //info_link ends with an integer
             switch (event.target.id){
                 case 'info_link1':{
-                    common.show_window_info(1, APP_GLOBAL.info_link_policy_url);
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);
                     break;
                 }
                 case 'info_link2':{
-                    common.show_window_info(1, APP_GLOBAL.info_link_disclaimer_url);
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);
                     break;
                 }
                 case 'info_link3':{
-                    common.show_window_info(1, APP_GLOBAL.info_link_terms_url);
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);
                     break;
                 }case 'info_link4':{
-                    common.show_window_info(1, APP_GLOBAL.info_link_about_url);
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
                     break;
                 }
             }
@@ -340,26 +322,14 @@ const init_app = async () => {
         
     }, false);
     
-    if (APP_GLOBAL.info_social_link1_url==null)
-        document.querySelector('#social_link1').style.display = 'none';
+    if (common.COMMON_GLOBAL.app_link_url==null)
+        document.querySelector('#app_link').style.display = 'none';
     else
-        document.querySelector('#social_link1').innerHTML = APP_GLOBAL.info_social_link1_icon;
-    if (APP_GLOBAL.info_social_link2_url==null)
-        document.querySelector('#social_link2').style.display = 'none';
-    else
-        document.querySelector('#social_link2').innerHTML = APP_GLOBAL.info_social_link2_icon;
-    if (APP_GLOBAL.info_social_link3_url==null)
-        document.querySelector('#social_link3').style.display = 'none';
-    else
-        document.querySelector('#social_link3').innerHTML = APP_GLOBAL.info_social_link3_icon;
-    if (APP_GLOBAL.info_social_link4_url==null)
-        document.querySelector('#social_link4').style.display = 'none';
-    else
-        document.querySelector('#social_link4').innerHTML = APP_GLOBAL.info_social_link4_icon;
-    document.querySelector('#info_link1').innerHTML = APP_GLOBAL.info_link_policy_name;
-    document.querySelector('#info_link2').innerHTML = APP_GLOBAL.info_link_disclaimer_name;
-    document.querySelector('#info_link3').innerHTML = APP_GLOBAL.info_link_terms_name;
-    document.querySelector('#info_link4').innerHTML = APP_GLOBAL.info_link_about_name;
+        document.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
+    document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
+    document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
+    document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
+    document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
     //profile info
     document.querySelector('#common_profile_main_btn_cloud').innerHTML = common.ICONS.sky_cloud;
@@ -373,42 +343,6 @@ const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         for (const parameter of parameters.app) {
-            if (parameter.parameter_name=='APP_COPYRIGHT')
-                APP_GLOBAL.app_copyright =parameter.parameter_value;
-            if (parameter.parameter_name=='APP_EMAIL')
-                APP_GLOBAL.app_email = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK1_URL')
-                APP_GLOBAL.info_social_link1_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK2_URL')
-                APP_GLOBAL.info_social_link2_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK3_URL')
-                APP_GLOBAL.info_social_link3_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK4_URL')
-                APP_GLOBAL.info_social_link4_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK1_ICON')
-                APP_GLOBAL.info_social_link1_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK2_ICON')
-                APP_GLOBAL.info_social_link2_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK3_ICON')
-                APP_GLOBAL.info_social_link3_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_SOCIAL_LINK4_ICON')
-                APP_GLOBAL.info_social_link4_icon = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_POLICY_URL')
-                APP_GLOBAL.info_link_policy_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_URL')
-                APP_GLOBAL.info_link_disclaimer_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_TERMS_URL')
-                APP_GLOBAL.info_link_terms_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_ABOUT_URL')
-                APP_GLOBAL.info_link_about_url = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_POLICY_NAME')
-                APP_GLOBAL.info_link_policy_name = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_DISCLAIMER_NAME')
-                APP_GLOBAL.info_link_disclaimer_name = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_TERMS_NAME')
-                APP_GLOBAL.info_link_terms_name = parameter.parameter_value;
-            if (parameter.parameter_name=='INFO_LINK_ABOUT_NAME')
-                APP_GLOBAL.info_link_about_name = parameter.parameter_value;
             if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
                 common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
             if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
