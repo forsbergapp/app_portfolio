@@ -3139,12 +3139,12 @@ const show_broadcast = (broadcast_message) => {
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (COMMON_GLOBAL.user_account_id !='' && COMMON_GLOBAL.user_account_id !=null)
-                exception(COMMON_GLOBAL.exception_app_function, null);
-            document.querySelector('#common_maintenance_message').innerHTML = ICONS.app_maintenance;
-            show_maintenance(message);
+            if (document.querySelector('#app'))
+                location.href = '/';
+            else
+                if (message)
+                    show_maintenance(message);
             break;
-        
         }
         case 'CONNECTINFO':{
             COMMON_GLOBAL.service_socket_client_ID = JSON.parse(message).client_id;
@@ -3179,26 +3179,7 @@ const show_maintenance = (message, init) => {
         maintenance_countdown(countdown_timer);
     }
     else
-        if (document.querySelector('#common_maintenance_countdown').innerHTML=='') {
-            //hide all divs except broadcast and maintenance
-            const divs = document.body.querySelectorAll('div');
-            for (let i = 0; i < divs.length; i += 1) {
-                if (divs[i].id.indexOf('common_broadcast') !=0 &&
-                    divs[i].id.indexOf('common_dialogue_maintenance') !=0 &&
-                    divs[i].id.indexOf('common_maintenance') !=0)
-                    divs[i].style.visibility ='hidden';
-            }
-            const maintenance_divs = document.querySelector('#common_dialogue_maintenance').querySelectorAll('div');
-            for (let i = 0; i < maintenance_divs.length; i += 1) {
-                maintenance_divs[i].style.visibility ='visible';
-            }
-            document.querySelector('#common_dialogue_maintenance').style.visibility='visible';
-            maintenance_countdown(countdown_timer);
-            document.querySelector('#common_maintenance_footer').innerHTML = message;
-        }
-        else
-            if (message!='')
-                document.querySelector('#common_maintenance_footer').innerHTML = message;
+        document.querySelector('#common_maintenance_footer').innerHTML = message;
 };
 const reconnect = () => {
     setTimeout(()=>{
