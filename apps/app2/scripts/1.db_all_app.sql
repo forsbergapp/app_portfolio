@@ -72,11 +72,6 @@ INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PLACE','40003','Al-Masjid an-Nabawi, Medina','+24.469','+39.611','Asia/Riyadh','🕌');
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'PLACE','40004','Al-Aqsa, Jerusalem','+31.7765','+35.2356','Asia/Jerusalem','🕌');
 
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','0','0',NULL,NULL,NULL,NULL);
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','1','1',NULL,NULL,NULL,NULL);
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','2','2',NULL,NULL,NULL,NULL);
-INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','3','3',NULL,NULL,NULL,NULL);
-
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','ALGERIAN','Algerian Ministry of Religious Affairs and Wakfs','18','17',NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','DIYANET','Diyanet İşleri Başkanlığı','18','17',NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'METHOD','EGYPT','Egyptian General Authority of Survey','19.5','17.5',NULL,NULL);
@@ -104,6 +99,11 @@ INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type
 --
 -- app setting with translation
 --
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','0',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','1',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','2',NULL,NULL,NULL,NULL,NULL);
+INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'COLUMN_TITLE','3',NULL,NULL,NULL,NULL,NULL);
+
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'HIGHLIGHT_ROW','0',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'HIGHLIGHT_ROW','1',NULL,NULL,NULL,NULL,NULL);
 INSERT INTO app_portfolio.app_setting (app_setting_type_app_id, app_setting_type_app_setting_type_name, value, display_data, data2, data3, data4, data5) VALUES (<APP_ID/>,'HIGHLIGHT_ROW','2',NULL,NULL,NULL,NULL,NULL);
