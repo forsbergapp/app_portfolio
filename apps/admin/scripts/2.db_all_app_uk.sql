@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,564,'Адміністраторська програма для адміністраторів програм і системних адміністраторів із конфігурацією, моніторингом живих з’єднань і журналів, статистикою,
 функції трансляції, інформація про базу даних, інформація про ОС, інформація про процеси та керування ролями користувачів');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',564,'Ім''я користувача');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',564,'Пароль');

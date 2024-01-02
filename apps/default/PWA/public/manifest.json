@@ -1,0 +1,23 @@
+{
+    "short_name": "[APP NAME]",
+    "name": "[APP NAME]",
+    "description": "[DESCRIPTION]",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#FFFFFF",
+    "theme_color": "#51abff",
+    "orientation": "portrait-primary",
+    "icons": [
+    {
+        "src": "/images/pwa/icon-192x192.png",
+        "type": "image/png",
+        "sizes": "192x192"
+    },
+    {
+        "src": "/images/pwa/icon-512x512.png",
+        "type": "image/png",
+        "sizes": "512x512"
+    }
+    ],
+    "scope": "/"
+}

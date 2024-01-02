@@ -10,5 +10,5 @@
                         "module":"es2022",
                         "target":"es2022"},
     "include": ["server", "apps", "microservice", "test"],
-    "exclude":["apps/admin/public", "apps/app*/public", "apps/common/public"]
+    "exclude":["apps/admin/public", "apps/app*/public", "apps/common/public", "apps/default"]
 }

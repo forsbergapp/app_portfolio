@@ -1,10 +1,10 @@
 --
--- app_translation app_object
+-- app_translation app
 --
 INSERT INTO app_portfolio.app_translation (app_id, language_id, text) VALUES (0,31,'Ադմինիստրատորի հավելված հավելվածների ադմինների և համակարգի ադմինների համար՝ կոնֆիգուրացիայով, կենդանի կապերի և տեղեկամատյանների մոնիտորինգով, վիճակագրությամբ,
 հեռարձակման գործառույթներ, տվյալների բազայի տեղեկատվություն, ՕՀ-ի մասին տեղեկատվություն, գործընթացի մասին տեղեկատվություն և օգտվողի դերի կառավարում');
 --
--- app_translation app_object_item
+--  app_translation app_object_item
 --
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','USERNAME',31,'Օգտագործողի անունը');
 INSERT INTO app_portfolio.app_translation (app_object_item_app_object_app_id, app_object_item_app_object_object_name, app_object_item_object_item_name, language_id, text) VALUES (0,'APP','PASSWORD',31,'Գաղտնաբառ');

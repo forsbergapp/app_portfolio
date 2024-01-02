@@ -143,6 +143,44 @@
                     ["APP",                 null,           null,                           "/apps/app4/src/index.html"],
                     ["APP",                 null,           "AppBody",                      "/apps/app4/src/body.html"]
     ],
+    "STATUS":"ONLINE"},
+    {"APP_ID": 5, "NAME": "Bank",           "SUBDOMAIN": "app5",    "PATH": "/apps/app4/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
+    "CONFIG":{  "MAP": false,
+                "MANIFEST":false,
+                "RENDER_PROFILE_APPS":false,
+                "CUSTOM_TAG_PROFILE_APPS":null,
+                "RENDER_PROFILE_SEARCH":false,
+                "CUSTOM_TAG_PROFILE_SEARCH":null,
+                "RENDER_USER_ACCOUNT":false,
+                "CUSTOM_TAG_USER_ACCOUNT":null,
+                "RENDER_PROFILE_TOP":false,
+                "CUSTOM_TAG_PROFILE_TOP":null,
+                "RENDER_APP_THEMES":false, 
+                "RENDER_LOCALES":false, 
+                "RENDER_SETTINGS":true, 
+                "RENDER_PROVIDER_BUTTONS":false},
+    "RENDER_FILES":[
+                    ["APP",                 null,           null,                           "/apps/app5/src/index.html"]
+    ],
+    "STATUS":"ONLINE"},
+    {"APP_ID": 6, "NAME": "Shop",           "SUBDOMAIN": "app6",    "PATH": "/apps/app6/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",   "SHOWINFO":0, "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
+    "CONFIG":{  "MAP": false,
+                "MANIFEST":false,
+                "RENDER_PROFILE_APPS":false,
+                "CUSTOM_TAG_PROFILE_APPS":null,
+                "RENDER_PROFILE_SEARCH":false,
+                "CUSTOM_TAG_PROFILE_SEARCH":null,
+                "RENDER_USER_ACCOUNT":false,
+                "CUSTOM_TAG_USER_ACCOUNT":null,
+                "RENDER_PROFILE_TOP":false,
+                "CUSTOM_TAG_PROFILE_TOP":null,
+                "RENDER_APP_THEMES":false, 
+                "RENDER_LOCALES":false, 
+                "RENDER_SETTINGS":true, 
+                "RENDER_PROVIDER_BUTTONS":false},
+    "RENDER_FILES":[
+                    ["APP",                 null,           null,                           "/apps/app5/src/index.html"]
+    ],
     "STATUS":"ONLINE"}
 ]
 }
