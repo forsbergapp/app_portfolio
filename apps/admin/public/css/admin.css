@@ -54,6 +54,7 @@ ul#admin_login_nav li{
 .admin_login_icon{
 	display: inline-block;
 	font-size: 1.5em;
+	width: 1.5em;
 }
 .admin_login_input{
 	border-radius: 16px;

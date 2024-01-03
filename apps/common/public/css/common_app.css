@@ -113,6 +113,7 @@ a:active {
 	padding:0px;
 	text-transform: uppercase;
 	cursor:pointer;
+	display: inline-block;
 }
 .common_toolbar_button {
 	background: none;
@@ -1072,6 +1073,12 @@ a:active {
 	height: 60px;
 	max-width: calc(100% - 20px);
     margin: 10px;
+}
+#common_window_info_toolbar .common_toolbar_button{
+	padding-top: 9px;
+}
+#common_window_info_toolbar #common_window_info_toolbar_btn_fullscreen{
+	padding-top: 14px;
 }
 #common_window_info_btn_close{	
 	width: 100%;
