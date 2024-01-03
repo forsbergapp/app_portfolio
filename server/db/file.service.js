@@ -125,12 +125,8 @@ const transaction_rollback = (file, transaction_id)=>{
  */
  const getFilesuffix = (filesuffix=null, sample=null) =>{
     const logdate = new Date();
-    let month = logdate.toLocaleString('en-US', { month: '2-digit'});
-    let day   = logdate.toLocaleString('en-US', { day: '2-digit'});
-    if (Number(month) <10)
-        month = '0' + month;
-    if (Number(day) <10)
-        day = '0' + day;
+    const month = logdate.toLocaleString('en-US', { month: '2-digit'});
+    const day   = logdate.toLocaleString('en-US', { day: '2-digit'});
     let file_filesuffix = '';
     if (sample)
         file_filesuffix = `${sample}.log`;
