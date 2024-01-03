@@ -295,10 +295,8 @@ const init_app = async () => {
     //links
     document.querySelector('#start_links').addEventListener('click', (event) => { 
         //app link ends with an integer and is part of app global
-        if (event.target.id.startsWith('app_link')){
-            if (common.COMMON_GLOBAL[`info_${event.target.id}_url`])
-                window.open(common.COMMON_GLOBAL[`info_${event.target.id}_url`],'_blank','');
-        }
+        if (event.target.id == 'app_link' && common.COMMON_GLOBAL.app_link_url)
+            window.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
         else{
             //info_link ends with an integer
             switch (event.target.id){
