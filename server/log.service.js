@@ -526,8 +526,6 @@ const getLogsStats = async (data) => {
     /**@type{Types.admin_log_stats_data[]|[]} */
     const logstat = [];
     
-    if (data.month <10)
-        data.month = 0 + data.month;
     const files = await file_get_log_dir();
     let sample;
     let day = '';
@@ -535,14 +533,14 @@ const getLogsStats = async (data) => {
     const log_stat_value = new Set();
     const log_days = new Set();
     for (const file of files){
-        if (file.startsWith(`REQUEST_INFO_${data.year}${data.month}`)){
+        if (file.startsWith(`REQUEST_INFO_${data.year}${data.month.toString().padStart(2,'0')}`)){
             //filename format: REQUEST_INFO_YYYMMDD.log
             if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D'){
                 day = file.substring(19,21);
-                sample = `${data.year}${data.month}${day}`;
+                sample = `${data.year}${data.month.toString().padStart(2,'0')}${day}`;
             }
             else
-                sample = `${data.year}${data.month}`;
+                sample = `${data.year}${data.month.toString().padStart(2,'0')}`;
             const {ConfigGetAppHost} = await import(`file://${process.cwd()}/server/config.service.js`);
             const logs = await file_get_log('LOG_REQUEST_INFO', null, sample);
             logs.forEach((/**@type{Types.server_log_request_record|''}*/record) => {
