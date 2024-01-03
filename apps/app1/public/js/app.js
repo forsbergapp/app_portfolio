@@ -27,8 +27,8 @@ const setEvents = () => {
     //start page
     document.querySelector('#start_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
-        document.querySelector('#dialogue_info_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-1';
-        document.querySelector('#dialogue_start_content' ).className = 'dialogue_content dialogue_flip dialogue_flip-side-2';
+        document.querySelector('#dialogue_info_content' ).style.visibility ='visible';
+        document.querySelector('#dialogue_start_content' ).style.visibility ='hidden';
     }, false );
     //second page
     document.querySelector('#info_diagram').addEventListener('click', () => {common.show_window_info(0, APP_GLOBAL.img_diagram_img);}, false);
@@ -36,9 +36,24 @@ const setEvents = () => {
     
     document.querySelector('#info_message' ).addEventListener( 'click', ( event ) => {
         event.preventDefault();
-        document.querySelector('#dialogue_info_content' ).className = 'dialogue_content dialogue_flip';
-        document.querySelector('#dialogue_start_content' ).className = 'dialogue_content dialogue_flip';
+        document.querySelector('#dialogue_info_content' ).style.visibility ='hidden';
+        document.querySelector('#dialogue_start_content' ).style.visibility ='visible';
     }, false );
+    document.querySelector('#app_menu').addEventListener('click',( event ) => {
+        if (event.target.id == 'app_menu_apps' || 
+            event.target.parentNode.id == 'app_menu_apps' || 
+            event.target.parentNode.parentNode.id== 'app_menu_apps'||
+            event.target.parentNode.parentNode.parentNode.id== 'app_menu_apps'){
+            document.querySelector('#app_menu_content_apps' ).style.display ='block';
+            document.querySelector('#app_menu_content_info' ).style.display ='none';
+        }
+        if (event.target.id == 'app_menu_info' || event.target.parentNode.id == 'app_menu_info'){
+            document.querySelector('#app_menu_content_apps' ).style.display ='none';
+            document.querySelector('#app_menu_content_info' ).style.display ='block';
+        }   
+
+    });
+
     //common
     document.querySelector('#common_profile_btn_top').addEventListener('click', () => {common.profile_top(1);}, false);
     //user menu
@@ -138,14 +153,32 @@ const app_theme_switch = () => {
 
 const get_apps = () => {
     const old_button = document.querySelector('#apps').innerHTML;
+    const old_button_menu_list = document.querySelector('#app_menu_content_apps_list').innerHTML;
+    
     common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
+        if (err){
             document.querySelector('#apps').innerHTML = old_button;
+            document.querySelector('#app_menu_content_apps_list').innerHTML = old_button_menu_list;
+        }
         else{
             const apps = JSON.parse(result);
-            let html ='';
+            let html_apps ='';
+            let html_menu_apps_list ='';
+            let apps_count=0;
             for (const app of apps) {
-                html +=`<div class='app_link_row'>
+                apps_count++;
+                html_apps +=`<div class='app_link_row'>
+                            <div class='app_link_col'>
+                                <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
+                            </div>
+                            <div class='app_link_col'>
+                                <img class='app_logo' src='${app.LOGO}' />
+                            </div>
+                            <div class='app_link_col'>
+                                <div class='app_name'>${app.NAME}</div>
+                            </div>
+                        </div>`;
+                html_menu_apps_list +=`<div class='app_link_row'>
                             <div class='app_link_col'>
                                 <div class='app_id'>${app.APP_ID}</div>
                             </div>
@@ -162,12 +195,15 @@ const get_apps = () => {
                             </div>
                         </div>`;
             }
-            const clickappevent = (event) => { 
-                window.open(event.target.parentNode.parentNode.children[1].children[0].innerHTML);};
-
-            document.querySelectorAll('.app_logo').forEach(e => e.removeEventListener('click', clickappevent));
-            document.querySelector('#apps').innerHTML = html;
-            document.querySelectorAll('.app_logo').forEach(e => e.addEventListener('click', clickappevent));
+            //if odd add extra empty column
+            if (apps_count & 1)
+                html_apps +=`<div class='app_link_row'>
+                                <div class='app_link_col'></div>
+                                <div class='app_link_col'></div>
+                                <div class='app_link_col'></div>
+                            </div>`;
+            document.querySelector('#apps').innerHTML = html_apps;
+            document.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
         }
     });
 };
@@ -291,6 +327,17 @@ const init_app = async () => {
     document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
     document.querySelector('#app_email').href='mailto:' + common.COMMON_GLOBAL.app_email;
     document.querySelector('#app_email').innerHTML=common.COMMON_GLOBAL.app_email;
+
+    document.querySelector('#app_menu_apps').innerHTML=common.ICONS.app_apps;
+    document.querySelector('#app_menu_info').innerHTML=common.ICONS.app_info;
+    
+
+    const clickappevent = (event) => { 
+        if (event.target.className == 'app_logo')
+            window.open(event.target.parentNode.parentNode.querySelector('.app_url').innerHTML);
+    };
+
+    document.querySelector('#apps').addEventListener('click', clickappevent);
 
     //links
     document.querySelector('#start_links').addEventListener('click', (event) => { 

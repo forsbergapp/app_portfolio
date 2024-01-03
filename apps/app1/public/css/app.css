@@ -23,21 +23,33 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 #dialogue_start_content{
 	visibility:visible;
 	overflow: hidden;
-	height: 400px;
-	width: auto;
+	width: 350px;
 	transform:             rotateY( 0deg );
 }
-#apps{
+#apps, #app_menu_content_apps_list{
 	margin-top:10px;
 	height: 300px;
-	width:300px;
     overflow-y: auto;
     overflow-x: hidden;
 	text-align: center;
     box-sizing: content-box;
 	padding: 0px;
 }
-			  
+#apps{
+	font-size: 0.7em;
+}
+
+#apps .app_link_row{
+	width: 45%;
+    display: inline-block;
+	vertical-align: top;
+}
+#apps .app_link_col{
+	width: 100%;
+    display: block;
+	margin-left: unset;
+    margin-top: unset;
+}
 .app_link_row{
 	padding-top: 4px;
     padding-bottom: 4px;
@@ -81,18 +93,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	display:none;
 }
 /*DIALOGUE INFO*/
-#dialogue_info_content{
-	visibility:visible;
-	height: 400px;
-	width: auto;
-	transform:             rotateY( 180deg );
-}
-#datamodel{
-	margin-bottom:30px;
-}
-#contact_text, #app_email{
-	display: inline-block;
-}
 .dialogue_flip {
     backface-visibility:             hidden;
     transition: all 0s;
@@ -105,29 +105,57 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
     transform:             rotateY( 180deg ) !important;
 }
 
-#title1, #title2{
+#dialogue_info_content{
+	visibility:hidden;
+	width: 350px;
+}
+
+#app_page{
+	display: flex;
+	flex-direction: row;
+	
+}
+#app_menu{
+	width: 75px;
+	flex-direction: row;
+	border-inline-end:0.5px solid;
+}
+#app_menu_space{
+	height: 200px;
+}
+#app_menu_content_info{
+	display: none;
+}
+#app_menu_content_info #datamodel{
+	margin-bottom:30px;
+}
+#app_menu_content_info #contact_text, #app_email{
+	display: inline-block;
+}
+
+#app_menu_content_info #title1, #title2{
     height: 30px;
     margin: 0 auto;
 }
-#start_links, #contact, #app_copyright{
+#app_menu_content_info #start_links, #contact, #app_copyright{
 	font-size: 11px;
 	width: 300px;
 }
-#start_links #app_link_row, #info_link_row{
+#app_menu_content_info #start_links #app_link_row, #info_link_row{
 	text-align: center;
 	width: 100%;
 }
-#app_link_row div, #info_link_row div{
+#app_menu_content_info #app_link_row div, #info_link_row div{
 	display: inline-block;
 	cursor: pointer;
-	margin:10px;
+	margin:5px;
 }
 
-#info_diagram_img, #info_datamodel_img{
+#app_menu_content_info #info_diagram_img, #info_datamodel_img{
 	width: 113.77px;
 	height: 64px;
 }
-#info_diagram, #info_datamodel{
+#app_menu_content_info #info_diagram, #info_datamodel{
 	cursor:pointer;
 }
 
@@ -560,12 +588,8 @@ div.ray8 {
 /*RESPONSIVE SETTINGS*/
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
-	#apps{
-		width: 390px;
-	}
 	#start_links, #contact, #app_copyright{
 		font-size: 14px;
-		width: 390px;
 	}
 	@keyframes animateCloud {
 		0% {
@@ -810,7 +834,7 @@ a {
 a:hover, a:active {
 	color:var(--app_theme_hover_color) !important;
 }
-#apps{
+#apps, #app_menu_content_apps_list{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
 .dialogue_content:hover, 
