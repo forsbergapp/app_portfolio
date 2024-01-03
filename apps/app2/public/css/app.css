@@ -166,14 +166,14 @@
 #tab_navigation .tab_nav{
 	display:inline-block;
 }
-#tab_navigation button {
+#tab_navigation li{
 	font-size: 30px;
 	padding:3px;
 	border:0px;
 	width:50px;
 }
-#tab_navigation button:hover,
-#tab_navigation button:active{
+#tab_navigation li:hover,
+#tab_navigation li:active{
 	cursor: pointer;
 }
 #tab_navigation ul{
@@ -182,6 +182,10 @@
 #tab_navigation li{
 	display: inline-block;
 	list-style: none;
+	width: 1.5em;
+    padding: 3px;
+    font-size: 1.5em;
+	cursor: pointer;
 }
 #user_setting_avatar_img{
 	border-radius: 50px;
@@ -423,21 +427,23 @@
 	justify-content:space-between;
 	border: 1px solid;
 }
-#setting_paper_preview_header_image > div,
-#setting_paper_preview_footer_image > div{
-	min-height: 69px;
+#setting_paper_preview_header_image, #setting_paper_preview_footer_image{
+	height:63px;
+}
+.setting_paper_preview_space{
+	height: 240px;
 }
 .setting_paper_preview_header,
-.setting_paper_preview_footer{
+.setting_paper_preview_footer,
+#setting_paper_preview_header_buttons,
+#setting_paper_preview_footer_buttons{
 	text-align: center;
 }
 #setting_btn_reportheader_img,
 #setting_btn_reportfooter_img{
 	width: 100px !important;
 }
-#setting_reportfooter_img{
-	margin-top: 4px;
-}
+
 #setting_input_reportheader_img,
 #setting_input_reportfooter_img{
 	display:none;
@@ -453,21 +459,23 @@
 }
 #settings #tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(2){
 	width:90%;
-}
-#settings #tab5 #setting_icon_text_theme_row{
-	display: block;
 	text-align: center;
+	display: block;
 }
-#settings #tab5 #setting_icon_text_theme_row > div{
+#settings #tab5 #setting_icon_text_theme_col{
 	display: inline-block;
-	width: calc(84mm * 1/3);
+	width: 60px;
+	vertical-align: top;
+}
+#settings #tab5 #setting_icon_text_theme_col > div{
     height: 2em;
 }
-#settings #tab5 #setting_icon_text_theme_row .common_icon{
+#settings #tab5 #setting_icon_text_theme_col .common_icon{
 	cursor: pointer;
 }
 #settings #tab5 #setting_paper_preview_text{
 	transform: scale(0.95) translate(0%, -7%);
+	display: inline-block;
 }
 #settings #tab5 #setting_paper_preview_text.font_arabic_sans .display_font{
 	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_sans) !important;
@@ -498,9 +506,6 @@
 #settings #tab5 #setting_input_reportheader3{
 	margin-bottom: 4px;
 }
-#settings #tab5 #setting_paper_preview_footer_text{
-	margin-bottom:4px;
-}
 #settings #tab5 #setting_input_reportfooter1{
 	margin-top: 4px;
 }
@@ -509,6 +514,8 @@
 #settings .setting_button {
 	border: none;
 	width: 26px;
+	display: inline-block;
+	cursor: pointer;
 }
 /*SETTINGS PRAYER*/
 #setting_method_params div{
@@ -643,7 +650,7 @@
 	#settings {
 		margin: 0 auto;
 	}
-	#tab_navigation button {
+	#tab_navigation li {
 		border:0px;
 		width:75px;
 	}
@@ -672,11 +679,8 @@
 	.profile_user_settings_row div:nth-child(1){
 		width:200px;
 	}
-	#settings #tab4 #setting_paper_preview_footer_image{
-		margin-bottom: 2px;
-	}	
 	#settings #tab5 #setting_paper_preview_footer_text{
-		margin-bottom: 14px;
+		font-size: 0.8em;
 	}
 }
 
@@ -814,7 +818,7 @@
 body,
 .dialogue_content,
 #settings select,
-#tab_navigation .tab_nav_selected button
+#tab_navigation .tab_nav_selected
 {
 	background-color:var(--app_theme_main_color1) !important;
 }
@@ -827,7 +831,7 @@ body,
 #toolbar_top,
 #settings,
 #tab_navigation,
-#tab_navigation li button,
+#tab_navigation li,
 .tab_navigation_content,
 #toolbar_bottom
 {
@@ -836,7 +840,7 @@ body,
 }
 #settings,
 #settings select,
-#tab_navigation button,
+#tab_navigation,
 .common_dialogue_button,
 .common_toolbar_button,
 .dialogue_content
@@ -864,8 +868,8 @@ a:active,
 .common_dialogue_button:active,
 .common_toolbar_button:hover,
 .common_toolbar_button:active,
-#tab_navigation button:hover,
-#tab_navigation button:active {
+#tab_navigation :hover,
+#tab_navigation :active {
 	color:var(--app_theme_hover) !important;
 }
 .dialogue{

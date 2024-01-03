@@ -636,7 +636,7 @@ const openTab = async (tab_selected) => {
         update_all_theme_thumbnails();
     }
     if (tab_selected==5){
-        document.querySelector('#setting_icon_text_theme_row').dispatchEvent(new Event('click'));
+        document.querySelector('#setting_icon_text_theme_col').dispatchEvent(new Event('click'));
     }
 };
 
@@ -2144,12 +2144,12 @@ const setEvents = () => {
     document.querySelector('#setting_icon_image_footer_clear').addEventListener('click', () => { update_ui(14); }, false);
     document.querySelector('#setting_input_reportfooter_img').addEventListener('change', (event) => { update_ui(13, event.target.id); }, false);
     //settings text
-    document.querySelector('#setting_icon_text_theme_row').addEventListener('click', (event) => {  
+    document.querySelector('#setting_icon_text_theme_col').addEventListener('click', (event) => {  
                                                                                                 document.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
                                                                                                 document.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
                                                                                                 document.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
                                                                                                 let theme_type;
-                                                                                                if (event.target.id == 'setting_icon_text_theme_row'){
+                                                                                                if (event.target.id == 'setting_icon_text_theme_col'){
                                                                                                     //default when clicking on tab
                                                                                                     theme_type = 'day';
                                                                                                 }
