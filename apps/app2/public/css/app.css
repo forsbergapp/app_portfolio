@@ -166,22 +166,21 @@
 #tab_navigation .tab_nav{
 	display:inline-block;
 }
-#tab_navigation li{
+#tab_navigation tab_nav{
 	font-size: 30px;
 	padding:3px;
 	border:0px;
 	width:50px;
 }
-#tab_navigation li:hover,
-#tab_navigation li:active{
+#tab_navigation tab_nav:hover,
+#tab_navigation tab_nav:active{
 	cursor: pointer;
 }
-#tab_navigation ul{
+#tab_navigation{
 	display: block;
 }
-#tab_navigation li{
+#tab_navigation .tab_nav{
 	display: inline-block;
-	list-style: none;
 	width: 1.5em;
     padding: 3px;
     font-size: 1.5em;
@@ -650,7 +649,7 @@
 	#settings {
 		margin: 0 auto;
 	}
-	#tab_navigation li {
+	#tab_navigation tab_nav {
 		border:0px;
 		width:75px;
 	}
@@ -668,9 +667,6 @@
 	#settings input {
 		max-width:90%;
 		width:inherit;
-	}
-	#settings ul {
-		padding-left: 0px;
 	}
 	#mapid {
 		height: 300px;
@@ -831,7 +827,7 @@ body,
 #toolbar_top,
 #settings,
 #tab_navigation,
-#tab_navigation li,
+#tab_navigation tab_nav,
 .tab_navigation_content,
 #toolbar_bottom
 {

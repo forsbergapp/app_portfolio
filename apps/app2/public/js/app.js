@@ -616,7 +616,7 @@ const openTab = async (tab_selected) => {
         //hide all tab content
         document.querySelector('#tab' + i).style.display = 'none';
         //remove mark for all tabs
-        document.querySelector('#tab_nav_' + i).className = '';
+        document.querySelector('#tab_nav_' + i).classList.remove('tab_nav_selected');
     }
     //show active tab content
     document.querySelector('#tab' + tab_selected).style.display = 'block';
