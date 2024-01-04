@@ -922,6 +922,9 @@ a:active,
 	background-color:var(--report_theme_footer_background_color);
 }
 /* THEME COMMON */
+#common_user_edit_btn_avatar_img{
+	background-color: var(--app_theme_dialogue_background_color);
+}
 .common_dialogue{
 	background-color: var(--app_shadow3);
 }
