@@ -27,11 +27,12 @@
 	height:auto;
 	width: 350px;
 }
-ul#admin_login_nav{
-	list-style: none;
+#admin_login_nav{
 	padding: 0px;
+	margin-block-start: 1em;
+    margin-block-end: 1em;
 }
-ul#admin_login_nav li{
+#admin_login_nav .admin_login_list{
 	display: inline-block;
 	width: 25%;
 }
@@ -744,9 +745,8 @@ ul#admin_login_nav li{
 	margin: 0px;
 	padding: 0px;
 }
-.list_nav li{
+.list_nav .list_nav_list{
 	display: inline-block;
-	list-style: none;
 }
 
 .list_current_user_row{
@@ -1348,11 +1348,11 @@ a:hover, a:active {
 .list_button svg:hover, .menuitem svg:hover{
 	fill: var(--app_theme_hover_color);
 }
-.list_nav button{
+.list_nav .list_button{
 	color: var(--app_theme_nav_selected_color);
 	fill: var(--app_theme_nav_selected_color);
 }
-.list_nav .list_nav_selected_tab button{
+.list_nav .list_nav_selected_tab .list_button{
 	background-color:var(--app_theme_nav_selected_background_color);
 }
 .widget:hover, .widget:active{
