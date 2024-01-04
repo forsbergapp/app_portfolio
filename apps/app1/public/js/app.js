@@ -96,7 +96,7 @@ const setEvents = () => {
     });
     //common
     document.querySelector('#app').addEventListener('click', event => {
-        switch (event.id){
+        switch (common.element_id(event.target)){
             case 'common_profile_btn_top':{
                 common.profile_top(1);
                 break;
