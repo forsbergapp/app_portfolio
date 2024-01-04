@@ -1452,11 +1452,11 @@ const list_events = (list_item, item_row, item_edit) => {
 const show_monitor = async (yearvalues) =>{
     document.querySelector('#menu_5_content').innerHTML = 
         `<div id='menu_5_content_widget1' class='widget'>
-            <ul id='list_monitor_nav' class='list_nav'>
-                <li id='list_monitor_nav_1'><button id='list_connected_title' class='list_button' >${common.ICONS.app_user_connections + ' ' + common.ICONS.app_log}</button></li>
-                <li id='list_monitor_nav_2'><button id='list_app_log_title' class='list_button' >${common.ICONS.app_apps + ' ' + common.ICONS.app_log}</button></li>
-                <li id='list_monitor_nav_3'><button id='list_server_log_title' class='list_button' >${common.ICONS.app_server + ' ' + common.ICONS.app_log}</button></li>
-            </ul>
+            <div id='list_monitor_nav' class='list_nav'>
+                <div id='list_monitor_nav_1' class='list_nav_list'><div id='list_connected_title' class='list_button' >${common.ICONS.app_user_connections + ' ' + common.ICONS.app_log}</div></div>
+                <div id='list_monitor_nav_2' class='list_nav_list'><div id='list_app_log_title' class='list_button' >${common.ICONS.app_apps + ' ' + common.ICONS.app_log}</div></div>
+                <div id='list_monitor_nav_3' class='list_nav_list'><div id='list_server_log_title' class='list_button' >${common.ICONS.app_server + ' ' + common.ICONS.app_log}</div></div>
+            </div>
             <div id='list_connected_form'>
                 <div class='list_row_sample'>
                     <select id='select_app_menu5_list_connected'></select>
@@ -1670,15 +1670,15 @@ const fix_pagination_buttons = () => {
 };
 const nav_click = (item_id) => {
     const reset_monitor = () => {
-        document.querySelector('#list_monitor_nav_1').classList='';
-        document.querySelector('#list_monitor_nav_2').classList='';
-        document.querySelector('#list_monitor_nav_3').classList='';
+        document.querySelector('#list_monitor_nav_1').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_monitor_nav_2').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_monitor_nav_3').classList.remove('list_nav_selected_tab');
     };
     const reset_config = () => {
-        document.querySelector('#list_config_nav_config').classList='';
-        document.querySelector('#list_config_nav_iam_blockip').classList='';
-        document.querySelector('#list_config_nav_iam_useragent').classList='';
-        document.querySelector('#list_config_nav_iam_policy').classList='';
+        document.querySelector('#list_config_nav_config').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_config_nav_iam_blockip').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_config_nav_iam_useragent').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_config_nav_iam_policy').classList.remove('list_nav_selected_tab');
     };
     
     switch (item_id){
@@ -1688,7 +1688,7 @@ const nav_click = (item_id) => {
             document.querySelector('#list_connected_form').style.display='flex';
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='none';
-            document.querySelector('#list_monitor_nav_1').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_monitor_nav_1').classList.add('list_nav_selected_tab');
             show_connected();
             break;
         }
@@ -1697,7 +1697,7 @@ const nav_click = (item_id) => {
             document.querySelector('#list_connected_form').style.display='none';
             document.querySelector('#list_app_log_form').style.display='flex';
             document.querySelector('#list_server_log_form').style.display='none';
-            document.querySelector('#list_monitor_nav_2').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_monitor_nav_2').classList.add('list_nav_selected_tab');
             APP_GLOBAL.page = 0;
             show_app_log();
             break;
@@ -1707,32 +1707,32 @@ const nav_click = (item_id) => {
             document.querySelector('#list_connected_form').style.display='none';
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='block';
-            document.querySelector('#list_monitor_nav_3').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_monitor_nav_3').classList.add('list_nav_selected_tab');
             show_server_logs('logdate', 'DESC', document.querySelector('#list_server_log_search_input').value);
             break;
         }
         //SERVER CONFIG
         case 'list_config_server_title':{
             reset_config();
-            document.querySelector('#list_config_nav_config').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_config_nav_config').classList.add('list_nav_selected_tab');
             show_config('CONFIG');
             break;
         }
         case 'list_config_blockip_title':{
             reset_config();
-            document.querySelector('#list_config_nav_iam_blockip').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
             show_config('IAM_BLOCKIP');
             break;
         }
         case 'list_config_useragent_title':{
             reset_config();
-            document.querySelector('#list_config_nav_iam_useragent').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
             show_config('IAM_USERAGENT');
             break;
         }
         case 'list_config_policy_title':{
             reset_config();
-            document.querySelector('#list_config_nav_iam_policy').classList= 'list_nav_selected_tab';
+            document.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
             show_config('IAM_POLICY');
             break;
         }
@@ -2665,16 +2665,16 @@ const show_existing_logfiles = () => {
 const show_server_config = () =>{
     document.querySelector('#menu_6_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
-            <ul id='list_config_nav' class='list_nav'>
-                <li id='list_config_nav_config'><button id='list_config_server_title' class='list_button' >${common.ICONS.app_server}</button></li>
-                <li id='list_config_nav_iam_blockip'><button id='list_config_blockip_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.regional_numbersystem}</button></li>
-                <li id='list_config_nav_iam_useragent'><button id='list_config_useragent_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.app_browser}</button></li>
-                <li id='list_config_nav_iam_policy'><button id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</button></li>
-            </ul>
+            <div id='list_config_nav' class='list_nav'>
+                <div id='list_config_nav_config'        class='list_nav_list'><div id='list_config_server_title' class='list_button' >${common.ICONS.app_server}</div></div>
+                <div id='list_config_nav_iam_blockip'   class='list_nav_list'><div id='list_config_blockip_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.regional_numbersystem}</div></div>
+                <div id='list_config_nav_iam_useragent' class='list_nav_list'><div id='list_config_useragent_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.app_browser}</div></div>
+                <div id='list_config_nav_iam_policy'    class='list_nav_list'><div id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</div></div>
+            </div>
             <div id='list_config' class='common_list_scrollbar'></div>
             <pre id='list_config_edit'></pre>
             <div id='config_buttons' class="save_buttons">
-                <button id='config_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</button>
+                <div id='config_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
             </div>
         </div>`;
     document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save');}, false); 
