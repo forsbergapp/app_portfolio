@@ -317,8 +317,6 @@ const ProviderSignIn_app = async (provider_button) => {
 const init_app = async () => {
     //start
     document.querySelector('#start_message').innerHTML = common.ICONS.app_info;
-    //theme switcher
-    document.querySelector('#app_theme_checkbox').checked = true;
     //info
     document.querySelector('#info_diagram_img').src=APP_GLOBAL.img_diagram_img_small;
     document.querySelector('#info_datamodel_img').src=APP_GLOBAL.img_datamodel_img_small;

@@ -1037,45 +1037,6 @@ ul#admin_login_nav li{
 #common_user_menu_dropdown_log_out{
 	display:none;
 }
-/*COMMON SECURE*/
-.common_switch_input {
-	display: none;
-}
-.common_switch_label {
-	display: inline-block !important;
-	position:relative;
-	width: 48px;
-	height: 24px;
-	text-indent: -150%;
-	clip: rect(0 0 0 0);
-	user-select: none;
-	vertical-align: middle;
-}
-.common_switch_label::before,
-.common_switch_label::after {
-	content: "";
-	display: block;
-	position: absolute;
-	cursor: pointer;
-}
-.common_switch_label::before {
-	width: 48px;
-	height: 24px;
-	border-radius: 9999em;
-	transition: background-color 0.25s ease;
-}
-.common_switch_label::after {
-	top: 0px;
-	left: 0px;
-	width: 24px;
-	height: 24px;
-	border-radius: 50%;
-	transition: left 0.25s ease;
-}
-.common_switch_input:checked + .common_switch_label::after {
-	left: 24px;
-}
-
 /*RESPONSIVE SECURE*/
 @media only screen and (min-width: 768px) {
 	body{
@@ -1526,17 +1487,17 @@ a:hover, a:active {
     color: var(--app_red) !important;
 }
 /*SECURE*/
-.common_switch_label {
+.common_switch {
 	color: transparent;
 }
-.common_switch_label::before {
+.common_switch::before {
 	background-color: var(--app_theme_switch_unchecked_background_color);
 }
-.common_switch_label::after {
+.common_switch::after {
 	background-color: var(--app_theme_switch_button_color);
 	box-shadow: 0 0 2px var(--app_theme_switch_boxshadow_color);
 }  
-.common_switch_input:checked + .common_switch_label::before {
+.common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_background_color);
 }
 #common_lov_search_input{

@@ -67,10 +67,7 @@ a:active {
 	overflow: auto;
 }
 /*checkbox with switch ui*/
-.common_switch_input {
-	display: none;
-  }
-.common_switch_label {
+.common_switch {
 	display: inline-block !important;
 	position:relative;
 	width: 48px;
@@ -80,20 +77,20 @@ a:active {
 	user-select: none;
 	vertical-align: middle;
 }
-.common_switch_label::before,
-.common_switch_label::after {
+.common_switch::before,
+.common_switch::after {
 	content: "";
 	display: block;
 	position: absolute;
 	cursor: pointer;
 }
-.common_switch_label::before {
+.common_switch::before {
 	width: 48px;
 	height: 24px;
 	border-radius: 9999em;
 	transition: background-color 0.25s ease;
 }
-.common_switch_label::after {
+.common_switch::after {
 	top: 0px;
 	left: 0px;
 	width: 24px;
@@ -101,7 +98,7 @@ a:active {
 	border-radius: 50%;
 	transition: left 0.25s ease;
 }
-.common_switch_input:checked + .common_switch_label::after {
+.common_switch.checked::after {
 	left: 24px;
 }
 .common_dialogue_button {

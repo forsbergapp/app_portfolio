@@ -911,14 +911,14 @@ border-left: 12px solid var(--app_theme_sun_color);
 .common_load-spinner div:after {
 	background-color: var(--app_theme_spinner_background_color);
 }
-.common_switch_label::before {
+.common_switch::before {
 	background-color: var(--app_theme_switch_unchecked_background_color);
 }
-.common_switch_label::after {
+.common_switch::after {
 	background-color: var(--app_theme_switch_button_color);
 	box-shadow: 0 0 2px var(--app_theme_switch_boxshadow_color);
 }  
-.common_switch_input.checked.common_switch_label::before {
+.common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_background_color);
 }
 #common_user_menu:hover,

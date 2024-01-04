@@ -1040,14 +1040,14 @@ a:active,
 .common_forgot_button:active{
 	background-color:var(--app_theme_hover) !important;
 }
-.common_switch_label::before {
+.common_switch::before {
 	background-color: var(--app_theme_switch_before_background_color);
 }
-.common_switch_label::after {
+.common_switch::after {
 	background-color: var(--app_theme_switch_after_background_color);
 	box-shadow: 0 0 2px var(--app_theme_switch_after_shadow_color);
 }  
-.common_switch_input:checked + .common_switch_label::before {
+.common_switch.checked::before {
 	background-color: var(--app_theme_switch_checked_before_background_color);
 }
 .common_load-spinner div:after {
