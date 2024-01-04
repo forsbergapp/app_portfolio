@@ -997,7 +997,7 @@ const dialogue_user_edit_clear = () => {
     document.querySelector('#common_user_edit_avatar').style.display = 'none';
                 
     //common
-    document.querySelector('#common_user_edit_checkbox_profile_private').checked = false;
+    document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
     document.querySelector('#common_user_edit_input_username').value = '';
     document.querySelector('#common_user_edit_input_bio').value = '';
     //local
@@ -1993,7 +1993,11 @@ const user_edit = async () => {
                 document.querySelector('#common_user_edit_provider').style.display = 'none';
                 document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
-                document.querySelector('#common_user_edit_checkbox_profile_private').checked = Number(user.private);
+                if (Number(user.private))
+                    document.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
+                else
+                    document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
+
                 document.querySelector('#common_user_edit_input_username').value = user.username;
                 document.querySelector('#common_user_edit_input_bio').value = get_null_or_value(user.bio);
 
@@ -2093,7 +2097,7 @@ const user_update = async () => {
         }
         json_data = {   username:           username,
                         bio:                bio,
-                        private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').checked),
+                        private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
                         password:           password,
                         password_new:       password_new,
                         password_reminder:  password_reminder,
@@ -2107,7 +2111,7 @@ const user_update = async () => {
         json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
                         username:       username,
                         bio:            bio,
-                        private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').checked)
+                        private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                     };
         path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
     }
@@ -3626,6 +3630,15 @@ const set_event_user_menu = () =>{
 };
 
 const set_events = () => {
+    //set event delegation on #app for all common_switch elements
+	document.querySelector('#app').addEventListener('click', event => {
+                                                                    if (event.target.classList.contains('common_switch'))
+                                                                        if (event.target.classList.contains('checked'))
+                                                                            event.target.classList.remove('checked');
+                                                                        else
+                                                                            event.target.classList.add('checked');
+                                                                    }, false);
+
     //login/signup/forgot
     document.querySelector('#common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
     document.querySelector('#common_login_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);

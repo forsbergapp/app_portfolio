@@ -364,8 +364,7 @@ const show_start = async (yearvalues) =>{
                 <div id='menu_1_maintenance'>
                     <div id='menu_1_maintenance_title'>${common.ICONS.app_maintenance}</div>
                     <div id='menu_1_maintenance_checkbox'>
-                        <input id='menu_1_checkbox_maintenance' type='checkbox' class='common_switch_input' />
-                        <label for='menu_1_checkbox_maintenance' class='common_switch_label'></label>
+                        <div id='menu_1_checkbox_maintenance' class='common_switch'></div>
                     </div>
                 </div>
                 <div id='menu_1_broadcast'>
@@ -565,9 +564,9 @@ const check_maintenance = async () => {
                 null;
             else{
                 if (JSON.parse(result).value==1)
-                    document.querySelector('#menu_1_checkbox_maintenance').checked =true;
+                    document.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
                 else
-                    document.querySelector('#menu_1_checkbox_maintenance').checked =false;
+                    document.querySelector('#menu_1_checkbox_maintenance').classList.remove('checked');
             }
         });
 }
@@ -575,10 +574,10 @@ const check_maintenance = async () => {
 const set_maintenance = () => {
     if (admin_token_has_value()){
         let check_value;
-        if (document.querySelector('#menu_1_checkbox_maintenance').checked ==true)
-            check_value = 1;
-        else
+        if (document.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
             check_value = 0;
+        else
+            check_value = 1;
         const json_data = {value: check_value};
         common.FFB ('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 'SYSTEMADMIN', json_data, () => {});
     }
@@ -2775,8 +2774,7 @@ const show_installation = () =>{
                             </div>
                             <div id='install_db_input'>
                                 <div id="install_db_country_language_translations_icon" >${common.ICONS.gps_country + common.ICONS.regional_locale}</div>
-                                <input id='install_db_country_language_translations' type='checkbox' class='common_switch_input' />
-                                <label for='install_db_country_language_translations' class='common_switch_label'></label>
+                                <div id='install_db_country_language_translations' class='common_switch'></div>
                             </div>
                         </div>
                     </div>`;
@@ -2785,7 +2783,7 @@ const show_installation = () =>{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         const old_html = document.querySelector('#install_db_button_install').innerHTML;
                         document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
-                        const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').checked)}`;
+                        const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
                         common.FFB ('DB_API', path, 'POST', 'SYSTEMADMIN', null, (err, result) => {
                             document.querySelector('#install_db_button_install').innerHTML = old_html;
                             if (err == null){

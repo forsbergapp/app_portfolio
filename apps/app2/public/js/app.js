@@ -136,11 +136,11 @@ const getReportSettings = () => {
                 theme_year          	: 'theme_year_' + get_theme_id('year'),
                 coltitle            	: document.querySelector('#setting_select_report_coltitle').value,
                 highlight           	: document.querySelector('#setting_select_report_highlight_row').value,
-                show_weekday        	: Number(document.querySelector('#setting_checkbox_report_show_weekday').checked),
-                show_calendartype   	: Number(document.querySelector('#setting_checkbox_report_show_calendartype').checked),
-                show_notes          	: Number(document.querySelector('#setting_checkbox_report_show_notes').checked),
-                show_gps   	       		: Number(document.querySelector('#setting_checkbox_report_show_gps').checked),
-                show_timezone       	: Number(document.querySelector('#setting_checkbox_report_show_timezone').checked),
+                show_weekday        	: Number(document.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')),
+                show_calendartype   	: Number(document.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')),
+                show_notes          	: Number(document.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')),
+                show_gps   	       		: Number(document.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')),
+                show_timezone       	: Number(document.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')),
                 
                 header_img_src      	: document.querySelector('#setting_reportheader_img').src == ''?null:document.querySelector('#setting_reportheader_img').src,
 				footer_img_src      	: document.querySelector('#setting_reportfooter_img').src == ''?null:document.querySelector('#setting_reportfooter_img').src,
@@ -170,9 +170,9 @@ const getReportSettings = () => {
                 iqamat_asr          	: document.querySelector('#setting_select_report_iqamat_title_asr').value,
                 iqamat_maghrib      	: document.querySelector('#setting_select_report_iqamat_title_maghrib').value,
                 iqamat_isha         	: document.querySelector('#setting_select_report_iqamat_title_isha').value,
-                show_imsak          	: Number(document.querySelector('#setting_checkbox_report_show_imsak').checked),
-                show_sunset         	: Number(document.querySelector('#setting_checkbox_report_show_sunset').checked),
-                show_midnight       	: Number(document.querySelector('#setting_checkbox_report_show_midnight').checked),
+                show_imsak          	: Number(document.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')),
+                show_sunset         	: Number(document.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')),
+                show_midnight       	: Number(document.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')),
                 show_fast_start_end 	: Number(document.querySelector('#setting_select_report_show_fast_start_end').value),
                 
                 timetable_class			: 'timetable_class',
@@ -1410,17 +1410,28 @@ const user_settings_load = async () => {
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_row_highlight'),
         document.querySelector('#setting_select_report_highlight_row'),1);
 
-    document.querySelector('#setting_checkbox_report_show_weekday').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_weekday_checked'));
-    document.querySelector('#setting_checkbox_report_show_calendartype').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_calendartype_checked'));
-    document.querySelector('#setting_checkbox_report_show_notes').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_notes_checked'));
-    document.querySelector('#setting_checkbox_report_show_gps').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_gps_checked'));
-    document.querySelector('#setting_checkbox_report_show_timezone').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_timezone_checked'));
-
+    
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_weekday_checked')))
+        document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_calendartype_checked')))
+        document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_notes_checked')))
+        document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+        
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_gps_checked')))
+        document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_timezone_checked')))
+        document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
     //Image
     //dont set null value, it will corrupt IMG tag
     document.querySelector('#setting_input_reportheader_img').value = '';
@@ -1501,12 +1512,18 @@ const user_settings_load = async () => {
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_isha_iqamat'),
         document.querySelector('#setting_select_report_iqamat_title_isha'),1);
 
-    document.querySelector('#setting_checkbox_report_show_imsak').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_imsak_checked'));
-    document.querySelector('#setting_checkbox_report_show_sunset').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_sunset_checked'));
-    document.querySelector('#setting_checkbox_report_show_midnight').checked =
-        Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_midnight_checked'));
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_imsak_checked')))
+        document.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_sunset_checked')))
+        document.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
+    if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_midnight_checked')))
+        document.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end'),
         document.querySelector('#setting_select_report_show_fast_start_end'),1);
@@ -1574,11 +1591,11 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             design_theme_year_id: get_theme_id('year'),
             design_paper_size: document.querySelector('#setting_select_report_papersize').value,
             design_row_highlight: document.querySelector('#setting_select_report_highlight_row').value,
-            design_column_weekday_checked: Number(document.querySelector('#setting_checkbox_report_show_weekday').checked),
-            design_column_calendartype_checked: Number(document.querySelector('#setting_checkbox_report_show_calendartype').checked),
-            design_column_notes_checked: Number(document.querySelector('#setting_checkbox_report_show_notes').checked),
-            design_column_gps_checked: Number(document.querySelector('#setting_checkbox_report_show_gps').checked),
-            design_column_timezone_checked: Number(document.querySelector('#setting_checkbox_report_show_timezone').checked),
+            design_column_weekday_checked: Number(document.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')),
+            design_column_calendartype_checked: Number(document.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')),
+            design_column_notes_checked: Number(document.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')),
+            design_column_gps_checked: Number(document.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')),
+            design_column_timezone_checked: Number(document.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')),
 
             image_header_image_img: document.querySelector('#setting_reportheader_img').src,
             image_footer_image_img: document.querySelector('#setting_reportfooter_img').src,
@@ -1602,9 +1619,9 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             prayer_asr_iqamat: document.querySelector('#setting_select_report_iqamat_title_asr').value,
             prayer_maghrib_iqamat: document.querySelector('#setting_select_report_iqamat_title_maghrib').value,
             prayer_isha_iqamat: document.querySelector('#setting_select_report_iqamat_title_isha').value,
-            prayer_column_imsak_checked: Number(document.querySelector('#setting_checkbox_report_show_imsak').checked),
-            prayer_column_sunset_checked: Number(document.querySelector('#setting_checkbox_report_show_sunset').checked),
-            prayer_column_midnight_checked: Number(document.querySelector('#setting_checkbox_report_show_midnight').checked),
+            prayer_column_imsak_checked: Number(document.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')),
+            prayer_column_sunset_checked: Number(document.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')),
+            prayer_column_midnight_checked: Number(document.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')),
             prayer_column_fast_start_end: document.querySelector('#setting_select_report_show_fast_start_end').value
          };
     const json_data = { description:        description,
@@ -1767,11 +1784,26 @@ const set_default_settings = async () => {
     document.querySelector('#paper').className=document.querySelector('#setting_select_report_papersize').value;
     common.SearchAndSetSelectedIndex(APP_GLOBAL.design_default_highlight_row, document.querySelector('#setting_select_report_highlight_row'),1);
     
-    document.querySelector('#setting_checkbox_report_show_weekday').checked = APP_GLOBAL.design_default_show_weekday;
-    document.querySelector('#setting_checkbox_report_show_calendartype').checked = APP_GLOBAL.design_default_show_calendartype;
-    document.querySelector('#setting_checkbox_report_show_notes').checked = APP_GLOBAL.design_default_show_notes;
-    document.querySelector('#setting_checkbox_report_show_gps').checked = APP_GLOBAL.design_default_show_gps;
-    document.querySelector('#setting_checkbox_report_show_timezone').checked = APP_GLOBAL.design_default_show_timezone;
+    if (APP_GLOBAL.design_default_show_weekday)
+        document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+    if (APP_GLOBAL.design_default_show_calendartype)
+        document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+    if (APP_GLOBAL.design_default_show_notes)
+        document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+    if (APP_GLOBAL.design_default_show_gps)
+        document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+    if (APP_GLOBAL.design_default_show_timezone)
+        document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
     //Image
     document.querySelector('#setting_input_reportheader_img').value = '';
@@ -1820,9 +1852,19 @@ const set_default_settings = async () => {
     common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_maghrib, document.querySelector('#setting_select_report_iqamat_title_maghrib'),1);
     common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_isha, document.querySelector('#setting_select_report_iqamat_title_isha'),1);
 
-    document.querySelector('#setting_checkbox_report_show_imsak').checked = APP_GLOBAL.prayer_default_show_imsak;
-    document.querySelector('#setting_checkbox_report_show_sunset').checked = APP_GLOBAL.prayer_default_show_sunset;
-    document.querySelector('#setting_checkbox_report_show_midnight').checked = APP_GLOBAL.prayer_default_show_midnight;
+    if (APP_GLOBAL.prayer_default_show_imsak)
+        document.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
+    if (APP_GLOBAL.prayer_default_show_sunset)
+        document.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
+    if (APP_GLOBAL.prayer_default_show_midnight)
+        document.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
+    else
+        document.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
+        
     common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_show_fast_start_end, document.querySelector('#setting_select_report_show_fast_start_end'),1);
     //update select
     set_settings_select();
@@ -1865,11 +1907,11 @@ const set_settings_select = () => {
     option.setAttribute('design_theme_year_id', get_theme_id('year'));
     option.setAttribute('design_paper_size', document.querySelector('#setting_select_report_papersize').value);
     option.setAttribute('design_row_highlight', document.querySelector('#setting_select_report_highlight_row').value);
-    option.setAttribute('design_column_weekday_checked', Number(document.querySelector('#setting_checkbox_report_show_weekday').checked));
-    option.setAttribute('design_column_calendartype_checked', Number(document.querySelector('#setting_checkbox_report_show_calendartype').checked));
-    option.setAttribute('design_column_notes_checked', Number(document.querySelector('#setting_checkbox_report_show_notes').checked));
-    option.setAttribute('design_column_gps_checked', Number(document.querySelector('#setting_checkbox_report_show_gps').checked));
-    option.setAttribute('design_column_timezone_checked', Number(document.querySelector('#setting_checkbox_report_show_timezone').checked));
+    option.setAttribute('design_column_weekday_checked', Number(document.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')));
+    option.setAttribute('design_column_calendartype_checked', Number(document.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')));
+    option.setAttribute('design_column_notes_checked', Number(document.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')));
+    option.setAttribute('design_column_gps_checked', Number(document.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')));
+    option.setAttribute('design_column_timezone_checked', Number(document.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')));
 
     option.setAttribute('image_header_image_img', document.querySelector('#setting_reportheader_img').src);
     option.setAttribute('image_footer_image_img', document.querySelector('#setting_reportfooter_img').src);
@@ -1894,9 +1936,9 @@ const set_settings_select = () => {
     option.setAttribute('prayer_asr_iqamat', document.querySelector('#setting_select_report_iqamat_title_asr').value);
     option.setAttribute('prayer_maghrib_iqamat', document.querySelector('#setting_select_report_iqamat_title_maghrib').value);
     option.setAttribute('prayer_isha_iqamat', document.querySelector('#setting_select_report_iqamat_title_isha').value);
-    option.setAttribute('prayer_column_imsak_checked', Number(document.querySelector('#setting_checkbox_report_show_imsak').checked));
-    option.setAttribute('prayer_column_sunset_checked', Number(document.querySelector('#setting_checkbox_report_show_sunset').checked));
-    option.setAttribute('prayer_column_midnight_checked', Number(document.querySelector('#setting_checkbox_report_show_midnight').checked));
+    option.setAttribute('prayer_column_imsak_checked', Number(document.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')));
+    option.setAttribute('prayer_column_sunset_checked', Number(document.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')));
+    option.setAttribute('prayer_column_midnight_checked', Number(document.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')));
     option.setAttribute('prayer_column_fast_start_end', document.querySelector('#setting_select_report_show_fast_start_end').value);
 };
 
