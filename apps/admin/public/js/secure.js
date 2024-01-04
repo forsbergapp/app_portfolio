@@ -2672,7 +2672,7 @@ const show_server_config = () =>{
                 <div id='list_config_nav_iam_policy'    class='list_nav_list'><div id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</div></div>
             </div>
             <div id='list_config' class='common_list_scrollbar'></div>
-            <pre id='list_config_edit'></pre>
+            <div id='list_config_edit'></div>
             <div id='config_buttons' class="save_buttons">
                 <div id='config_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
             </div>

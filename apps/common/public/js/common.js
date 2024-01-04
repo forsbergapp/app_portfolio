@@ -909,11 +909,8 @@ const show_message = (message_type, code, function_event, message=null, data_app
                         //message from Oracle, errorNum, offset
                         if (typeof JSON.parse(message).errorNum !== 'undefined')
                             message_title.innerHTML= 'DB Error: ' + message;
-                        else{
-                            message = message.replace('<pre>','');
-                            message = message.replace('</pre>','');
+                        else
                             message_title.innerHTML= message;
-                        }
                     }    
                 }
             } catch (e) {

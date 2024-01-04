@@ -1,7 +1,7 @@
 <div class='info_content'>
-    <pre>
-	App portfolio
-
+    
+	<div class='text_h1'>App portfolio</div>
+	<div class='text_p'>
 	A platform to build your web app portfolio in any language and regional settings.
 	With most necessary technology configured to get started and with less
 	third party libraries and module dependencies for performance and better maintainability
@@ -11,7 +11,8 @@
 	Continuous deployment implemented using batch server with scheduled git pull requests and automatic restart 
 	of Node.js using pm2 managed processes.
 	Runs in Node.js using Express framework.
-
+	</div>
+	<div class='text_p'>
 	Apps are component structured and server-side rendered with database data population and single page apps.
 	Secure REST API with authentication middleware, common ANSI SQL with minium differences for all databases, 
 	centralized common SQL parameter syntax and consolidated data validation in Javascript for all databases.
@@ -19,144 +20,159 @@
 	AJAX method and JSON, ECMAScript modules only in both client and server.
 	Apps third party modules included are Easy QRCode, Fontawesome icons, Leaflet map, sunposition calculations 
 	and regional functions. 
-
+	</div>
+	<div class='text_p'>
 	Oracle SQL Developer Data model designed data model.
 	Databases supported are MariaDB, MySQL, Oracle and PostgreSQL.
 	Centralized data model error handling of database errors, constraints errors and 
 	application errors and showed in users language.
-
+	</div>
+	<div class='text_p'>
 	A global support implemented in client with ALL Unicode characters supported by Noto Sans font
 	included different arabic scripts and different font heights (Nastaliq).
 	Any regional setting supported including direction right to left. More than 500 locales with language and
 	country translations. The mayor 30 languages are translated in the apps. Icons are frequently used 
 	to minmize text usage and to provide simplier and better explanation to a global audience.
-
+	</div>
+	<div class='text_p'>
 	Developed in Visual Studio Code in Windows with integration with Github and Jira following 
 	Scrum agile project management framework and deployed on Oracle Cloud and Ubuntu server.
+	</div>
 
-
-	Project description
+	<div class='text_h2'>Project description</div>
 	
-	Why 
+	
+	<div class='text_h3'>Why</div> 
+	<div class='text_p'>
 	As a certified professional developer, develop a new platform using latest technology and paradigm used today
 	and to show a well structured enterprise level platform implemented with pure technology without unnecessary
 	obscure frameworks to be used as reference project and a manual and guidance for future projects.
+	</div>
 	
-	What
+	<div class='text_h3'>What</div>
+	<div class='text_p'>
 	Create a web app platform with latest technology supporting any language and regional setting with the most optimized,
 	structured and most pragmatic and academic implementation in mind using years of empirical knowledge of full stack
 	development using Javascript, HTML, CSS as the most popular technology used for front end web development and using 
 	most popular open source or free SQL databases for back end development. The web app platform should be deployed on
 	the popular Node.js that supports Javascript in the server.
-
-	How
+	</div>
+	
+	<div class='text_h3'>How</div>
+	<div class='text_p'>
 	Aquiring latest certifications, studying latest technologies trying out pros and cons.
 	Finding common factors in MariaDB, Mysql, PostgreSQL and Oracle databases to implement easier maintainable REST API 
 	and datamodel.
 	Consolidate ideas from Angular, Vue, React, jQuery, Oracle Forms, Oracle Reports and Oracle APEX, existing log and 
 	monitor solutions, Javascript frameworks to optimal structure and implementation.
+	</div>
+
+
+	<div class='text_h2'>Requirements</div>
+
+	<div class='text_p'>
+	<div class='text_list'>all apps should be web apps with open source written in Javascript, HTML and CSS both for front end and back end 
+	  and using JSON and REST API between front end and back end</div>
+	<div class='text_list'>all apps should work on mobile, tablet and desktop computers</div>
+	<div class='text_list'>all apps should be single page application (SPA)</div>
+	<div class='text_list'>one app should be Progressive Web App (PWA)</div>
+	<div class='text_list'>any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
+	  realtime timetable calculations with all known needed settings configurable with different themes using CSS</div>
+	<div class='text_list'>social network</div>
+	<div class='text_list'>Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules
+	  should be converted from CommonJS to ECMScript modules if necessary.</div>
+	<div class='text_list'>report PDF with QR codes pixel perfect design using CSS pt font size measurement and full unicode support</div>
+	<div class='text_list'>apps created using server side rendering</div>
+	<div class='text_list'>database and file logging</div>
+	<div class='text_list'>microservice arquitecture</div>
+	<div class='text_list'>MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
+	  and sql logging stratified per app</div>
+	<div class='text_list'>MariaDB, MySQL and PostgreSQL installed as local installations and Docker as alternative</div>
+	<div class='text_list'>database should support transactions with rollback and commit and be able to save images in the database</div>
+	<div class='text_list'>database ER model and server datamodel using a database data model designer tool that can generate SQL from
+	  the server data model</div>
+	<div class='text_list'>dynamic app installation</div>
+	<div class='text_list'>admin app with monitoring of live connections and logs, statistics, broadcast maintenance, messaging to clients,
+	  database info, OS info, process info and user role management.</div>
+	<div class='text_list'>admin app with access for admin database user supporting superadmin role to monitor apps</div>
+	<div class='text_list'>admin app with access for system admin to manage installation, configuration and server</div>
+	<div class='text_list'>vendor specific coding as for example -webkit-, -moz-, -o-, -ms- and filter: progid:DXImageTransform.Microsoft
+	  in CSS removed. </div>
+	<div class='text_list'>third party modules should be canvas free solutions or configured to not use canvas.</div>
+	<div class='text_list'>own solution for statistics displayed in graphs</div>
+	<div class='text_list'>no exposure of server code in client like for example React framework is doing by default</div>
+	<div class='text_list'>using Scrum agile project management framework to manage project with integrated version control that supports
+	  code releases of all source code and documentation</div>
+	</div>
+
+	<div class='text_h2'>Security requirements</div>
+
+	<div class='text_p'>
+	<div class='text_list'>Content Security Policy against XSS</div>
+	<div class='text_list'>SHA256 for REST API and Bcrypt for user security</div>
+	<div class='text_list'>JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.</div>
+	<div class='text_list'>admin app logs in with fetched code from server after accesstoken fetched and code deleted after logout
+	  with no traces in navigator history</div>
+	<div class='text_list'>stateless app meaning cookies or localstorage should not be used in the browser</div>
+	<div class='text_list'>access control IP blocking</div>
+	<div class='text_list'>access control user agent</div>
+	<div class='text_list'>access control hostname</div>
+	<div class='text_list'>access control accept language</div>
+	<div class='text_list'>access control request url</div>
+	<div class='text_list'>access control app input text</div>
+	<div class='text_list'>access control robots search engine</div>
+	<div class='text_list'>access control internet</div>
+	<div class='text_list'>access control geolocation</div>
+	</div>
+
+	<div class='text_h2'>Not included in the project scope</div>
 	
+	<div class='text_p'>
+		<div class='text_list'>Load balancer with for example popular NGINX for performance</div>
+		<div class='text_list'>Reverse Proxy server with for example popular NGINX for multiple application servers on the same host</div>
+		<div class='text_list'>Kubernetes</div>
+		<div class='text_list'>Automatic IP control integration with for example iptables</div>
+		<div class='text_list'>Social media monitoring</div>
+	</div>
 
+	<div class='text_h2'>Providers</div>
 
-	Requirements
-
-	- all apps should be web apps with open source written in Javascript, HTML and CSS both for front end and back end 
-	  and using JSON and REST API between front end and back end
-	- all apps should work on mobile, tablet and desktop computers
-	- all apps should be single page application (SPA)
-	- one app should be Progressive Web App (PWA)
-	- any language, all unicode characters in client and in server, any regional setting, double bilanguage calendar
-	  realtime timetable calculations with all known needed settings configurable with different themes using CSS,
-	- social network
-	- Javascript ECMAScript modules and ES6+ Javascript using Express in Node.js. Thirdparty javascript modules 
-	  should be converted from CommonJS to ECMScript modules if necessary.
-	- report PDF with QR codes pixel perfect design using CSS pt font size measurement and full unicode support
-	- apps created using server side rendering
-	- database and file logging
-	- microservice arquitecture
-	- MariaDB, MySQL, PostgreSQL and Oracle databases supported deployed on Oracle Cloud with dynamic pool arquitecture
-	  and sql logging stratified per app
-	- MariaDB, MySQL and PostgreSQL installed as local installations and Docker as alternative
-	- database should support transactions with rollback and commit and be able to save images in the database
-	- database ER model and server datamodel using a database data model designer tool that can generate SQL from 
-	  the server data model
-	- dynamic app installation
-	- admin app with monitoring of live connections and logs, statistics, broadcast maintenance, messaging to clients,
-	  database info, OS info, process info and user role management.
-	- admin app with access for admin database user supporting superadmin role to monitor apps
-	- admin app with access for system admin to manage installation, configuration and server
-	- vendor specific coding as for example -webkit-, -moz-, -o-, -ms- and filter: progid:DXImageTransform.Microsoft 
-	  in CSS removed. 
-	- third party modules should be canvas free solutions or configured to not use canvas.
-	- own solution for statistics displayed in graphs
-	- no exposure of server code in client like for example React framework is doing by default
-	- using Scrum agile project management framework to manage project with integrated version control that supports 
-	  code releases of all source code and documentation
-
-	Security requirements
-
-	- Content Security Policy against XSS
-	- SHA256 for REST API and Bcrypt for user security
-	- JSON web tokens with extra validation that checks at least token is authorized to correct userid, appid and ip.
-	- admin app logs in with fetched code from server after accesstoken fetched and code deleted after logout
-	  with no traces in navigator history
-	- stateless app meaning cookies or localstorage should not be used in the browser
-	- access control IP blocking,
-	- access control user agent
-	- access control hostname
-	- access control accept language
-	- access control request url
-	- access control app input text
-	- access control robots search engine
-	- access control internet
-	- access control geolocation
-	
-	Not included in the scope
-	
-	- Production features like
-	  - Load balancer with for example popular NGINX for performance
-	  - Reverse Proxy server with for example popular NGINX for multiple application servers on the same host
-	  - Kubernetes
-	  - Automatic IP control integration with for example iptables
-	- Social media monitoring
-
-	Providers
-
-	Oracle Cloud
-	www.oracle.com/cloud
-	MariaDB
-	www.mariadb.org
-	MySQL
-	www.mysql.com
-	PostgreSQL
-	www.postgresql.org
-	Oracle Instant Client
-	www.oracle.com/database/technologies/instant-client.html
-	Node.js
-	www.nodejs.org
-	Express
-	www.expressjs.com
-	Vue
-	www.vuejs.org
-	React
-	www.react.dev
-	Font Awesome
-	www.fontawesome.com
-	Google Fonts
-	fonts.google.com
-	Leaflet
-	www.leafletjs.com
-	Geoplugin Geolocation
-	www.geoplugin.com
-	EasyQRCodeJS client version
-	www.github.com/ushelp/EasyQRCodeJS
-	Country Translations
-	www.github.com/umpirsky/country-list
-	Language Translations
-	www.github.com/umpirsky/language-list
-	JSDoc
-	www.jsdoc.app
-	Typescript
-	www.typescriptlang.org
-    </pre>
+	<div class='text_p'>
+	<div class='text_list'>Oracle Cloud<br/>
+	www.oracle.com/cloud</div>
+	<div class='text_list'>Oracle Database<br/>
+	www.oracle.com/database</div>
+	<div class='text_list'>MariaDB<br/>
+	www.mariadb.org</div>
+	<div class='text_list'>MySQL<br/>
+	www.mysql.com</div>
+	<div class='text_list'>PostgreSQL<br/>
+	www.postgresql.org</div>
+	<div class='text_list'>Node.js<br/>
+	www.nodejs.org</div>
+	<div class='text_list'>Express<br/>
+	www.expressjs.com</div>
+	<div class='text_list'>Vue<br/>
+	www.vuejs.org</div>
+	<div class='text_list'>React<br/>
+	www.react.dev</div>
+	<div class='text_list'>Font Awesome<br/>
+	www.fontawesome.com</div>
+	<div class='text_list'>Google Fonts<br/>
+	fonts.google.com</div>
+	<div class='text_list'>Leaflet<br/>
+	www.leafletjs.com</div>
+	<div class='text_list'>Geoplugin Geolocation<br/>
+	www.geoplugin.com</div>
+	<div class='text_list'>EasyQRCodeJS client version<br/>
+	www.github.com/ushelp/EasyQRCodeJS</div>
+	<div class='text_list'>Country Translations<br/>
+	www.github.com/umpirsky/country-list</div>
+	<div class='text_list'>Language Translations<br/>
+	www.github.com/umpirsky/language-list</div>
+	<div class='text_list'>JSDoc<br/>
+	www.jsdoc.app</div>
+	<div class='text_list'>Typescript<br/>
+	www.typescriptlang.org</div>
+	</div>
 </div>

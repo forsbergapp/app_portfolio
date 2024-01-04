@@ -1,14 +1,55 @@
+:root {
+	--info_black: #404040;
+	--info_white: #fefefe;
+}
+html, body{
+    height: 100%;
+}
 body {
     font-family: 'Noto Sans';
     font-size: 14px;
+    background-color: var(--info_white);
+    padding:10px;
+}
+.info_content{
+    width: 97%;
+    font-size: 0.8em;
+    margin:10px;
+    margin-bottom:30px;
+    border-radius: 4px;
+    padding: 10px;
+    color:var(--info_black);
+    background-color: var(--info_white);
+    min-height: 90%;
+    display: inline-block;
+}
+.text_h1 {
+    font-size: 2em;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+.text_h2 {
+    font-size: 1.5em;
+    margin-top: 20px;
+    margin-bottom: 5px;
+}
+.text_h3 {
+    font-size: 1em;
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
-#common_policy_app_name1, 
-#common_policy_app_name2, 
-#common_disclaimer_app_name1,
-#common_disclaimer_app_name2,
-#common_disclaimer_app_name3,
-#common_terms_app_name {
-	padding: 0 !important;
-	display: inline-block;
+.text_p {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+.text_list {
+    padding-block-start: 5px;
+    padding-inline-start: 5px;
+    text-indent: -5px;
+}
+.text_list::before{
+    content:'- ';
 }
