@@ -451,6 +451,7 @@
 #setting_reportheader_img, #setting_reportfooter_img{
 	width: 100%;
 	min-width: 100%;
+	height: 63px;
 }
 /*SETTINGS Text*/
 #settings #tab5 .setting_horizontal_row .setting_horizontal_col:nth-child(1),
