@@ -9,18 +9,6 @@ select,input {
 	font-family: inherit;
 	font-size:inherit;
 }
-a:link{
-	text-decoration: none;
-}
-a:visited {
-	text-decoration: none;
-}
-a:hover {
-	text-decoration: none;
-}
-a:active {
-	text-decoration: none;
-}
 .common_icon {
 	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
 	font-weight: 900;
@@ -781,8 +769,9 @@ a:active {
 #common_profile_top_row1{
 	text-align: center;
 }
-#common_profile_top_row1 a{
+#common_profile_top_row1 .common_link{
 	margin-inline-end:10px;
+	display: inline-block;
 }
 #common_profile_top_list{
 	width:100%;
@@ -1089,9 +1078,6 @@ a:active {
 #common_window_info_toolbar_btn_fullscreen{
 	line-height: 1;
 }
-.common_dialogue_content a:hover, a:active {
-	cursor: pointer;
-}
 #common_profile_detail_header_liked div,
 #common_profile_detail_header_app div{
 	display: inline-block;
@@ -1157,7 +1143,7 @@ a:active {
 	max-height: calc(5 * 3em);
 	display:inline-block;
 }
-#common_module_leaflet_search_list a {
+#common_module_leaflet_search_list .common_link {
 	width: unset;
 	text-align: unset;
 	background-color:unset;

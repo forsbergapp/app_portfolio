@@ -292,7 +292,7 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
   get_uservariables
   
   ----------------------- */
-
+const element_id = element => element.id==''?element_id(element.parentNode):element.id;
 const getTimezoneOffset = (local_timezone) =>{
     const utc = new Date(	new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'}),
                             new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'})-1,
@@ -1411,7 +1411,7 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
                     </div>
                     <div class='common_profile_top_list_col'>
                         <div class='common_profile_top_list_username common_wide_list_column'>
-                            <a href='#'>${profile_top.username}</a>
+                            <div class='common_link'>${profile_top.username}</div>
                         </div>
                     </div>
                     <div class='common_profile_top_list_col'>
@@ -1568,7 +1568,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                 </div>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_username common_wide_list_column'>
-                                        <a href='#'>${list_item.username}</a>
+                                        <div class='common_link'>${list_item.username}</div>
                                     </div>
                                 </div>
                             </div>`;
@@ -1657,7 +1657,7 @@ const search_profile = (click_function) => {
                         </div>
                         <div class='common_profile_search_list_col'>
                             <div class='common_profile_search_list_username common_wide_list_column'>
-                                <a href='#'>${search_profile.username}</a>
+                                <div class='common_link'>${search_profile.username}</div>
                             </div>
                         </div>
                     </div>`;
@@ -2806,8 +2806,8 @@ const map_show_search_on_map = (city)=>{
     
     const latitude =    city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
     const longitude =   city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
-    const place =       city.querySelector('.common_module_leaflet_search_list_city a').innerHTML + ', ' +
-                        city.querySelector('.common_module_leaflet_search_list_country a').innerHTML;
+    const place =       city.querySelector('.common_module_leaflet_search_list_city .common_link').innerHTML + ', ' +
+                        city.querySelector('.common_module_leaflet_search_list_country .common_link').innerHTML;
     map_update( longitude,
                 latitude,
                 COMMON_GLOBAL.module_leaflet_zoom_city,
@@ -3396,10 +3396,10 @@ const worldcities_search = async (event_function) =>{
                             <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_city'><a class='common_module_leaflet_click_city' href='#'>${city.city}</a></div>
+                            <div class='common_module_leaflet_search_list_city'><div class='common_link common_module_leaflet_click_city' >${city.city}</div></div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_country'><a class='common_module_leaflet_click_city' href='#'>${city.admin_name + ',' + city.country}</a></div>
+                            <div class='common_module_leaflet_search_list_country'><div class='common_link common_module_leaflet_click_city' >${city.admin_name + ',' + city.country}</div></div>
                         </div>
                         <div class='common_module_leaflet_search_list_col'>
                             <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
@@ -3860,7 +3860,7 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
+       element_id, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
