@@ -2617,7 +2617,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                     //add custom HTML inside div with class .leaflet-control
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
                     //add search button with expand content country select, city select and search input
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' href='#' title='Search' role='button'>${ICONS.app_search}
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='Search' role='button'>${ICONS.app_search}
                                                     <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_country'>
                                                             ${COMMON_GLOBAL.module_leaflet_countries}
@@ -2634,11 +2634,11 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                                     </div>
                                                  </div>`;
                     //add fullscreen button
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' href='#' title='Fullscreen' role='button'>${ICONS.app_fullscreen}
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' title='Fullscreen' role='button'>${ICONS.app_fullscreen}
                                                  </div>`;
                     if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
                         //add my location button
-                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button' href='#' title='My location' role='button'>${ICONS.map_my_location}
+                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button' title='My location' role='button'>${ICONS.map_my_location}
                                                     </div>`;
                     }
                     //add layers button with pop out div
@@ -2646,7 +2646,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                     for (const map_style_option of COMMON_GLOBAL.module_leaflet_map_styles){
                         map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
                     }
-                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' href='#' title='Layer' role='button'>${ICONS.map_layer}
+                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>${ICONS.map_layer}
                                                     <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_mapstyle' >
                                                             ${map_styles_options}
