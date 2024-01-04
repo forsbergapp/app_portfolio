@@ -441,7 +441,7 @@ const sendBroadcast = () => {
     let broadcast_type ='';
     let client_id;
     let app_id;
-    const broadcast_message = document.querySelector('#send_broadcast_message').value;
+    const broadcast_message = document.querySelector('#send_broadcast_message').innerHTML;
 
     if (broadcast_message==''){
         common.show_message('INFO', null, null, `${common.ICONS.message_text}!`, common.COMMON_GLOBAL.app_id);
@@ -491,7 +491,7 @@ const closeBroadcast = () => {
     document.querySelector('#client_id').style.display='inline-block';
     document.querySelector('#select_app_broadcast').style.display='inline-block';
     document.querySelector('#client_id').innerHTML='';
-    document.querySelector('#send_broadcast_message').value='';
+    document.querySelector('#send_broadcast_message').innerHTML='';
 };
 const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
     document.querySelector('#select_app_broadcast').innerHTML = await get_apps();
