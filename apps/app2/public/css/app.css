@@ -71,8 +71,9 @@
 	text-align: center;
 	width:100%;
 }
-#profile_top_row2 a{
+#profile_top_row2 > div{
 	margin-right:10px;
+	display: inline-block;
 }
 /*DIALOUGE SETTINGS*/	
 .dialogue{
@@ -1054,10 +1055,6 @@ a:active,
 }
 .common_list_scrollbar{
 	scrollbar-color: var(--app_theme_scrollbar_color1) var(--app_theme_scrollbar_color2);
-}
-.common_dialogue_content a:hover, 
-.common_dialogue_content a:active {
-	color:var(--app_theme_hover);
 }
 #common_profile_avatar_online_status.online{
 	color:var(--app_theme_online_status_online_color);
