@@ -147,7 +147,6 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 }
 #app_menu_content_info #app_link_row div, #info_link_row div{
 	display: inline-block;
-	cursor: pointer;
 	margin:5px;
 }
 
@@ -822,12 +821,6 @@ div.ray8 {
 body{
 	color: var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
-}
-a {
-	color:var(--app_theme_a_color);
-}
-a:hover, a:active {
-	color:var(--app_theme_hover_color) !important;
 }
 #apps, #app_menu_content_apps_list{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);

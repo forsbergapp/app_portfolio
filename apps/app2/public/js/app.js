@@ -2070,23 +2070,36 @@ const user_settings_like = (user_account_app_data_post_id) => {
 /*----------------------- */
 const setEvents = () => {
     //app
-    //toolbar top
-    document.querySelector('#toolbar_top').addEventListener('click', (event) => {
-        let event_target_id;
-        if  (event.target.classList.contains('common_toolbar_button')){
-            //button
-            event_target_id = event.target.id;
-        }
-        else
-            if  (event.target.parentNode.classList.contains('common_toolbar_button')){
-                //svg or icon
-                event_target_id = event.target.parentNode.id;
-            }
-            else{
-                //path in svg
-                event_target_id = event.target.parentNode.parentNode.id;
-            }
+    document.querySelector('#app').addEventListener('click', (event) => {
+        const event_target_id = common.element_id(event.target);
         switch (event_target_id){
+            //info dialogue
+            case 'app_link':{
+                if (common.COMMON_GLOBAL.app_link_url)
+                    window.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
+                break;
+            }
+            case 'info_link1':{
+                common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);
+                break;
+            }
+            case 'info_link2':{
+                common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);
+                break;
+            }
+            case 'info_link3':{
+                common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);
+                break;
+            }
+            case 'info_link4':{
+                common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
+                break;
+            }
+            case 'info_close':{
+                document.querySelector('#dialogue_info').style.visibility = 'hidden';
+                break;
+            }
+            //toolbar top
             case 'toolbar_btn_zoomout':{
                 zoom_paper(-1);
                 break;
@@ -2116,25 +2129,32 @@ const setEvents = () => {
                 }
                 break;
             }
-        }
-    }, false);
-    //tab navigation
-    document.querySelector('#tab_navigation').addEventListener('click', (event) => {
-        let event_target_id;
-        if  (event.target.id.startsWith('tab_nav_btn')){
-            //button
-            event_target_id = event.target.id;
-        }
-        else
-            if  (event.target.parentNode.id.startsWith('tab_nav_btn')){
-                //svg or icon
-                event_target_id = event.target.parentNode.id;
+            //toolbar bottom
+            case 'toolbar_btn_about':{
+                document.querySelector('#dialogue_info').style.visibility = 'visible';
+                break;
             }
-            else{
-                //path in svg
-                event_target_id = event.target.parentNode.parentNode.id;
+            case 'toolbar_btn_print':{
+                toolbar_button(1);
+                break;
             }
-        switch (event_target_id){
+            case 'toolbar_btn_day':{
+                toolbar_button(2);
+                break;
+            }
+            case 'toolbar_btn_month':{
+                toolbar_button(3);
+                break;
+            }
+            case 'toolbar_btn_year':{
+                toolbar_button(4);
+                break;
+            }
+            case 'toolbar_btn_settings':{
+                toolbar_button(5);
+                break;
+            }
+            //tab navigation
             case 'tab_nav_btn_1':{
                 openTab('1');
                 break;
@@ -2163,8 +2183,12 @@ const setEvents = () => {
                 openTab('7');
                 break;
             }
+            case 'scan_open_mobile_close':{
+                document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
+                break;
+            }
         }
-    }, false);
+    });
     //settings regional    
     document.querySelector('#setting_select_locale').addEventListener('change', () => { settings_translate(true); }, false);
     document.querySelector('#setting_select_report_timezone').addEventListener('change', () => { update_ui(2); }, false);
@@ -2181,6 +2205,7 @@ const setEvents = () => {
     //settings image
     document.querySelector('#setting_icon_image_header_img').addEventListener('click', () => { document.querySelector('#setting_input_reportheader_img').click(); }, false);
     document.querySelector('#setting_icon_image_header_clear').addEventListener('click', () => { update_ui(12); }, false);
+
     document.querySelector('#setting_input_reportheader_img').addEventListener('change', (event) => { update_ui(11, event.target.id); }, false);
     document.querySelector('#setting_icon_image_footer_img').addEventListener('click', () => { document.querySelector('#setting_input_reportfooter_img').click(); }, false);
     document.querySelector('#setting_icon_image_footer_clear').addEventListener('click', () => { update_ui(14); }, false);
@@ -2288,60 +2313,9 @@ const setEvents = () => {
         (event) => { profile_show_user_setting_detail(event.target.options[event.target.selectedIndex].getAttribute('liked'), 
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
                                                       event.target.options[event.target.selectedIndex].getAttribute('count_views')); }, false);
-    //dialogue info
-    document.querySelector('#info_link1').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);}, false);
-    document.querySelector('#info_link2').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);}, false);
-    document.querySelector('#info_link3').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);}, false);
-    document.querySelector('#info_link4').addEventListener('click', () => { common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);}, false);
-    document.querySelector('#info_close').addEventListener('click', () => { document.querySelector('#dialogue_info').style.visibility = 'hidden';}, false);
     
-    //dialogue scan mobile
-    document.querySelector('#scan_open_mobile_close').addEventListener('click', () => { document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden'; }, false);
-    //toolbar bottom
-    document.querySelector('#toolbar_bottom').addEventListener('click', (event) => {
-        let event_target_id;
-        if  (event.target.classList.contains('common_toolbar_button')){
-            //button
-            event_target_id = event.target.id;
-        }
-        else
-            if  (event.target.parentNode.classList.contains('common_toolbar_button')){
-                //svg or icon
-                event_target_id = event.target.parentNode.id;
-            }
-            else{
-                //path in svg
-                event_target_id = event.target.parentNode.parentNode.id;
-            }
-        switch (event_target_id){
-            case 'toolbar_btn_about':{
-                document.querySelector('#dialogue_info').style.visibility = 'visible';
-                break;
-            }
-            case 'toolbar_btn_print':{
-                toolbar_button(1);
-                break;
-            }
-            case 'toolbar_btn_day':{
-                toolbar_button(2);
-                break;
-            }
-            case 'toolbar_btn_month':{
-                toolbar_button(3);
-                break;
-            }
-            case 'toolbar_btn_year':{
-                toolbar_button(4);
-                break;
-            }
-            case 'toolbar_btn_settings':{
-                toolbar_button(5);
-                break;
-            }
-        }
-    }, false);
+    
     //common
-
     //user menu dropdown
     document.querySelector('#common_user_menu_dropdown_log_out').addEventListener('click', () => { user_logoff_app(); }, false);
     document.querySelector('#common_user_menu_username').addEventListener('click', () => { toolbar_button(6); }, false);
@@ -2564,8 +2538,8 @@ const map_show_search_on_map_app = async (city) =>{
     common.map_show_search_on_map(city);
     map_show_qibbla();
     common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
-    document.querySelector('#setting_input_place').value =  city.querySelector('.common_module_leaflet_search_list_city a').innerHTML + ', ' +
-                                                            city.querySelector('.common_module_leaflet_search_list_country a').innerHTML;
+    document.querySelector('#setting_input_place').value =  city.querySelector('.common_module_leaflet_search_list_city .common_link').innerHTML + ', ' +
+                                                            city.querySelector('.common_module_leaflet_search_list_country .common_link').innerHTML;
     document.querySelector('#setting_input_long').value = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
     document.querySelector('#setting_input_lat').value = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
     const {getTimezone} = await import('regional');
@@ -2764,8 +2738,10 @@ const init_app = () => {
         
         //set about info
         document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
-        if (common.COMMON_GLOBAL.app_link_url!=null)
-            document.querySelector('#app_link').innerHTML = `<a href=${common.COMMON_GLOBAL.app_link_url} target='_blank'>${common.COMMON_GLOBAL.app_link_title}</a>`;
+        if (common.COMMON_GLOBAL.app_link_url==null)
+            document.querySelector('#app_link').style.display = 'none';
+        else
+            document.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
         document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
         document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
         document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
