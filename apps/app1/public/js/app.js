@@ -142,11 +142,13 @@ const setEvents = () => {
     }, false);
 };
 const app_theme_switch = () => {
-    if(document.querySelector('#app_theme_checkbox').checked){
-        document.body.className = 'app_theme_' + 'sun ' + document.querySelector('#common_user_arabic_script_select').value;
+    if(document.querySelector('#app_theme_checkbox').classList.contains('checked')){
+        document.querySelector('#app_theme_checkbox').classList.remove('checked');
+        document.body.className = 'app_theme_' + 'moon ' + document.querySelector('#common_user_arabic_script_select').value;
     }
     else{
-        document.body.className = 'app_theme_' + 'moon ' + document.querySelector('#common_user_arabic_script_select').value;
+        document.body.className = 'app_theme_' + 'sun ' + document.querySelector('#common_user_arabic_script_select').value;
+        document.querySelector('#app_theme_checkbox').classList.add('checked');
     }
     return null;
 };
