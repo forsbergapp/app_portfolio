@@ -118,7 +118,7 @@ const {LogServiceI, LogServiceE} = await import(`file://${process.cwd()}/server/
                     case 'ADMIN_SERVER':
                     case 'ADMIN_DB_API':
                     case 'ADMIN_APP':
-                    case 'SUPER_ADMIN_DB_API':
+                    case 'SUPERADMIN_DB_API':
                     case 'SYSTEMADMIN_SOCKET':
                     case 'SYSTEMADMIN_SERVER':
                     case 'SYSTEMADMIN_DB_API':

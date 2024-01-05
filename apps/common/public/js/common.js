@@ -1077,7 +1077,7 @@ const lov_close = () => {
     );
     document.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
     document.querySelector('#common_lov_title').innerHTML='';
-    document.querySelector('#common_lov_search_input').value='';
+    document.querySelector('#common_lov_search_input').innerHTML='';
     document.querySelector('#common_lov_list').innerHTML='';
     
 };
@@ -1222,8 +1222,8 @@ const lov_keys = (event) => {
         }
         default:{
             //if db call will be implemented, add delay
-            //typewatch(lov_filter, document.querySelector('#common_lov_search_input').value); 
-            lov_filter(document.querySelector('#common_lov_search_input').value); 
+            //typewatch(lov_filter, document.querySelector('#common_lov_search_input').innerHTML); 
+            lov_filter(document.querySelector('#common_lov_search_input').innerHTML); 
             break;
         }    
     }
@@ -1609,10 +1609,10 @@ const search_profile = (click_function) => {
     profile_search_list.innerHTML = '';
     document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
     profile_search_list.style.display = 'none';
-    if (document.querySelector('#common_profile_search_input').value=='')
+    if (document.querySelector('#common_profile_search_input').innerHTML=='')
         document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     else{
-        const searched_username = document.querySelector('#common_profile_search_input').value;
+        const searched_username = document.querySelector('#common_profile_search_input').innerHTML;
         let path;
         let token;
         let json_data;
@@ -2194,20 +2194,20 @@ const user_verify_check_input = async (item, nextField, callBack) => {
     let json_data;
     const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
     //only accept 0-9
-    if (['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(document.querySelector('#' + item.id).value) > -1)
-        if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').value != '' &
-                document.querySelector('#common_user_verify_verification_char2').value != '' &
-                document.querySelector('#common_user_verify_verification_char3').value != '' &
-                document.querySelector('#common_user_verify_verification_char4').value != '' &
-                document.querySelector('#common_user_verify_verification_char5').value != '' &
-                document.querySelector('#common_user_verify_verification_char6').value != '')) {
+    if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
+        if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').innerHTML != '' &
+                document.querySelector('#common_user_verify_verification_char2').innerHTML != '' &
+                document.querySelector('#common_user_verify_verification_char3').innerHTML != '' &
+                document.querySelector('#common_user_verify_verification_char4').innerHTML != '' &
+                document.querySelector('#common_user_verify_verification_char5').innerHTML != '' &
+                document.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
             //last field, validate entered code
-            const verification_code = parseInt(document.querySelector('#common_user_verify_verification_char1').value +
-                document.querySelector('#common_user_verify_verification_char2').value +
-                document.querySelector('#common_user_verify_verification_char3').value +
-                document.querySelector('#common_user_verify_verification_char4').value +
-                document.querySelector('#common_user_verify_verification_char5').value +
-                document.querySelector('#common_user_verify_verification_char6').value);
+            const verification_code = parseInt(document.querySelector('#common_user_verify_verification_char1').innerHTML +
+                document.querySelector('#common_user_verify_verification_char2').innerHTML +
+                document.querySelector('#common_user_verify_verification_char3').innerHTML +
+                document.querySelector('#common_user_verify_verification_char4').innerHTML +
+                document.querySelector('#common_user_verify_verification_char5').innerHTML +
+                document.querySelector('#common_user_verify_verification_char6').innerHTML);
             const old_button = document.querySelector('#common_user_verify_email').innerHTML;
             document.querySelector('#common_user_verify_email').innerHTML = APP_SPINNER;
             document.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
@@ -2286,7 +2286,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
         }
     else{
         //remove anything else than 0-9
-        document.querySelector('#' + item.id).value = '';
+        document.querySelector('#' + item.id).innerHTML = '';
         return callBack(null, null);
     }
 };
@@ -2626,7 +2626,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                                             <option value='' id='' label='…' selected='selected'>…</option>
                                                         </select>
                                                         <div id='common_module_leaflet_search_input_row'>
-                                                            <input id='common_module_leaflet_search_input' type='text' />
+                                                            <div id='common_module_leaflet_search_input' contenteditable=true class='common_input'/></div>
                                                             <div id='common_module_leaflet_search_icon'>${ICONS.app_search}</div>
                                                         </div>
                                                         <div id='common_module_leaflet_search_list_wrap'>
@@ -2795,7 +2795,7 @@ const map_toolbar_reset = ()=>{
     const select_country = document.querySelector('#common_module_leaflet_select_country');
     select_country.selectedIndex = 0;
     map_city_empty();
-    document.querySelector('#common_module_leaflet_search_input').value ='';
+    document.querySelector('#common_module_leaflet_search_input').innerHTML ='';
     document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML ='';
     if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
         map_control_toggle_expand('search');
@@ -3373,7 +3373,7 @@ const get_cities = async (countrycode, callBack) => {
     });
 };
 const worldcities_search = async (event_function) =>{
-    const search = document.querySelector('#common_module_leaflet_search_input').value;
+    const search = document.querySelector('#common_module_leaflet_search_input').innerHTML;
     const get_cities = async (search) =>{
         return new Promise ((resolve)=>{
             FFB ('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null, (err, result) => {
@@ -3636,6 +3636,10 @@ const set_events = () => {
                                                                             event.target.classList.add('checked');
                                                                     }, false);
 
+    document.querySelector('#app').addEventListener('keydown', event => { 
+        if(event.target.classList.contains('common_input') && event.code=='Enter')
+            event.preventDefault();
+    });
     //login/signup/forgot
     document.querySelector('#common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
     document.querySelector('#common_login_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
@@ -3664,7 +3668,7 @@ const set_events = () => {
     document.querySelector('#common_user_password_new_ok').addEventListener('click', () => { updatePassword(); }, false);
     //dialogue lov
     document.querySelector('#common_lov_search_input').addEventListener('keyup', (event) => {lov_keys(event);});
-    document.querySelector('#common_lov_search_icon').addEventListener('click', () => {lov_filter(document.querySelector('#common_lov_search_input').value);});
+    document.querySelector('#common_lov_search_icon').addEventListener('click', () => {lov_filter(document.querySelector('#common_lov_search_input').innerHTML);});
     document.querySelector('#common_lov_close').addEventListener('click', () => { lov_close();}, false); 
     //profile search
     if (document.querySelector('#common_profile_input_row'))

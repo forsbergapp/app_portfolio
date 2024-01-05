@@ -205,10 +205,6 @@
 /*checkbox use switch ui*/
 
 /*other common settings*/
-#settings input[type=checkbox]{
-	width: 25px;
-	height: 25px;
-	}
 #settings label {
 	margin: 0 0 3px 0;
 	padding: 0px;
@@ -230,7 +226,7 @@
 	min-width: 52%;
 	outline: none;
 }
-#settings input {
+#settings .common_input {
 	box-sizing: border-box;
 	border: 0px;
 	padding: 3px;
@@ -261,7 +257,7 @@
 	width:5%;
 }
 #settings .setting_horizontal_col:nth-child(3) select,
-#settings .setting_horizontal_col:nth-child(3) input{
+#settings .setting_horizontal_col:nth-child(3) .common_input{
 	min-width: 100%;
 }
 /* SETTINGS GPS*/
@@ -494,8 +490,8 @@
 	font-family: var(--report_theme_display_font_family), var(--global_font_arabic_nastaliq) !important;
 	line-height: initial;
 }
-#settings #tab5 #setting_paper_preview_header_text input,
-#settings #tab5 #setting_paper_preview_footer_text input{
+#settings #tab5 #setting_paper_preview_header_text .common_input,
+#settings #tab5 #setting_paper_preview_footer_text .common_input{
 	font-size: 0.4em;
 }
 #settings #tab5 .setting_report_title{
@@ -636,7 +632,7 @@
 	margin: 0 auto;
 }
 #common_module_leaflet_control_search select,
-#common_module_leaflet_control_search input{
+#common_module_leaflet_control_search .common_input{
 	max-width: unset !important;
 	min-width: unset !important;
 }
@@ -666,7 +662,7 @@
 		max-width: 60%;
 		min-width: 60%;
 	}
-	#settings input {
+	#settings .common_input {
 		max-width:90%;
 		width:inherit;
 	}
@@ -820,8 +816,8 @@ body,
 {
 	background-color:var(--app_theme_main_color1) !important;
 }
-#settings input,
-#dialogues input{
+#settings .common_input,
+#dialogues .common_input{
 	color: var(--app_theme_main_color3) !important;
 	background-color: var(--app_theme_input_background_color);
 	border: 1px solid var(--app_theme_input_border_color);
@@ -911,11 +907,11 @@ a:active,
 #settings #tab5 #setting_input_footer{
 	background-color: var(--report_theme_footer_background_color);
 }
-#settings #tab5 #setting_paper_preview_header_text input{
+#settings #tab5 #setting_paper_preview_header_text .common_input{
 	color : var(--report_theme_header_color) !important;
 	background-color:var(--report_theme_header_background_color);
 }	
-#settings #tab5 #setting_paper_preview_footer_text input{
+#settings #tab5 #setting_paper_preview_footer_text .common_input{
 	color : var(--report_theme_footer_color) !important;
 	background-color:var(--report_theme_footer_background_color);
 }
@@ -946,7 +942,7 @@ a:active,
 	background: var(--app_theme_main_color2);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
 }
-#common_dialogues input,
+#common_dialogues .common_input,
 .common_dialogue_content,
 #common_window_info,
 #common_window_info_content,
@@ -956,7 +952,7 @@ a:active,
 {
 	background-color:var(--app_theme_main_color1) !important;
 }
-#common_dialogues input,
+#common_dialogues .common_input,
 #common_window_info,
 #common_window_info_toolbar,
 #common_user_menu_dropdown,
