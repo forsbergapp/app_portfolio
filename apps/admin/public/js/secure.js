@@ -677,7 +677,7 @@ const show_users = () =>{
             `<div id='menu_3_content_widget1' class='widget'>
                 <div id='list_user_account_title'>${common.ICONS.app_users}</div>
                 <div class='list_search'>
-                    <input class='list_search_input' id='list_user_account_search_input' type='text' />
+                    <div id='list_user_account_search_input' contentEditable=true class='common_input list_search_input' /></div>
                     <div class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
@@ -686,7 +686,7 @@ const show_users = () =>{
                 <div id='list_user_account_logon_title'>${common.ICONS.app_login}</div>
                 <div id='list_user_account_logon' class='common_list_scrollbar'></div>
                 <div id='users_buttons' class="save_buttons">
-                    <button id='users_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</button>
+                    <div id='users_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
                 </div>
             </div>`;
     document.querySelector('#list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
@@ -699,15 +699,15 @@ const show_users = () =>{
 };
 const search_users = (sort=8, order_by='ASC', focus=true) => {
 
-    if (common.check_input(document.querySelector('#list_user_account_search_input').value, 100, false) == false)
+    if (common.check_input(document.querySelector('#list_user_account_search_input').innerHTML, 100, false) == false)
         return null;
 
     document.querySelector('#list_user_account').innerHTML = common.APP_SPINNER;
     
     let search_user='*';
     //show all records if no search criteria
-    if (document.querySelector('#list_user_account_search_input').value!='')
-        search_user = encodeURI(document.querySelector('#list_user_account_search_input').value);
+    if (document.querySelector('#list_user_account_search_input').innerHTML!='')
+        search_user = encodeURI(document.querySelector('#list_user_account_search_input').innerHTML);
     common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account').innerHTML = '';
@@ -787,16 +787,17 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
                                 <div>${common.ICONS.user_account_modified}</div>
                             </div>
                         </div>`;
-            let input_readonly = '';
+            let input_contentEditable = '';
             let lov_div = '';
             let lov_class = '';
             //superadmin can edit
             if (common.COMMON_GLOBAL.user_app_role_id==0){
                 lov_div = '<div class=\'common_lov_button common_list_lov_click\'></div>';
                 lov_class = 'common_input_lov';
+                input_contentEditable = 'contentEditable=true';
             }
             else
-                input_readonly = 'readonly=\'true\'';
+                input_contentEditable = 'contentEditable=false';
             let i = 0;
             for (const user of users) {
                 i++;
@@ -816,41 +817,41 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
                         <div class='list_readonly'>${user.id}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit ${lov_class}' value='${common.get_null_or_value(user.app_role_id)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit ${lov_class}' defaultValue='${common.get_null_or_value(user.app_role_id)}'/>${common.get_null_or_value(user.app_role_id)}</div>
                         ${lov_div}
                     </div>
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>${user.app_role_icon}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(user.active)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.active)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type=text class='list_edit' value='${common.get_null_or_value(user.user_level)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.level)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.private)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.private)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.username)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.username)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.bio)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.bio)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.email)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.email)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.email_unverified)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.email_unverified)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' placeholder='******'/>
+                        <div ${input_contentEditable} class='common_input list_edit common_input_password' placeholder='******'/></div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.password_reminder)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.password_reminder)}</div>
                     </div>
                     <div class='list_user_account_col'>
-                        <input ${input_readonly} type='text' class='list_edit' value='${common.get_null_or_value(user.verification_code)}'/>
+                        <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.verification_code)}</div>
                     </div>
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>${common.get_null_or_value(user.identity_provider)}</div>
@@ -1030,19 +1031,19 @@ const show_apps = async () => {
                         <div class='list_readonly'>${app.ID}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${app.NAME}' readonly/>
+                        <div contentEditable=false class='common_input list_readonly'/>${app.NAME}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}' readonly/>
+                        <div contentEditable=false class='common_input list_readonly'/>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type=text class='list_edit' value='${app.LOGO}' readonly/>
+                        <div contentEditable=false class='common_input list_readonly'/>${app.LOGO}</div>
                     </div>
                     <div class='list_apps_col'>
                         <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <input type='text' class='list_edit common_input_lov' value='${common.get_null_or_value(app.APP_CATEGORY_ID)}' />
+                        <div contentEditable=true class='common_input list_edit common_input_lov' defaultValue='${common.get_null_or_value(app.APP_CATEGORY_ID)}'/>${common.get_null_or_value(app.APP_CATEGORY_ID)}</div>
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
@@ -1060,7 +1061,7 @@ const show_apps = async () => {
                         <div id='list_app_parameter_title'>${common.ICONS.app_apps + common.ICONS.app_settings}</div>
                         <div id='list_app_parameter' class='common_list_scrollbar'></div>
                         <div id='apps_buttons' class="save_buttons">
-                            <button id='apps_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</button>
+                            <div id='apps_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
                         </div>
                     </div>`;
             document.querySelector('#apps_save').addEventListener('click', () => { button_save('apps_save');}, false); 
@@ -1108,7 +1109,7 @@ const show_app_parameter = (app_id) => {
                         <div class='list_readonly'>${app_parameter.app_id}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit common_input_lov' value='${app_parameter.parameter_type_id}'/>
+                        <div contentEditable=true class='common_input list_edit common_input_lov' defaultValue='${app_parameter.parameter_type_id}'/>${app_parameter.parameter_type_id}</div>
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
@@ -1118,10 +1119,10 @@ const show_app_parameter = (app_id) => {
                         <div class='list_readonly'>${app_parameter.parameter_name}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${common.get_null_or_value(app_parameter.parameter_value)}'/>
+                        <div contentEditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_value)}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <input type=text class='list_edit' value='${common.get_null_or_value(app_parameter.parameter_comment)}'/>
+                        <div contentEditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_comment)}</div>
                     </div>
                 </div>`;
                 i++;
@@ -1143,7 +1144,7 @@ const button_save = async (item) => {
                                     record,
                                     item,
                                     {id: record.children[0].children[0].innerHTML,
-                                     app_category_id: record.children[5].children[0].value});
+                                     app_category_id: record.children[5].children[0].innerHTML});
             }
         }
         //save changes in list_app_parameter
@@ -1154,10 +1155,10 @@ const button_save = async (item) => {
                                     record,
                                     item,
                                     {app_id: record.children[0].children[0].innerHTML,
-                                     parameter_type_id: record.children[1].children[0].value,
+                                     parameter_type_id: record.children[1].children[0].innerHTML,
                                      parameter_name:  record.children[3].children[0].innerHTML,
-                                     parameter_value: record.children[4].children[0].value,
-                                     parameter_comment: record.children[5].children[0].value
+                                     parameter_value: record.children[4].children[0].innerHTML,
+                                     parameter_comment: record.children[5].children[0].innerHTML
                                     });
             }
         }
@@ -1172,17 +1173,17 @@ const button_save = async (item) => {
                                         record,
                                         item,
                                         {id: record.children[1].children[0].innerHTML,
-                                         app_role_id: record.children[2].children[0].value,
-                                         active: record.children[4].children[0].value,
-                                         user_level: record.children[5].children[0].value,
-                                         private: record.children[6].children[0].value,
-                                         username: record.children[7].children[0].value,
-                                         bio: record.children[8].children[0].value,
-                                         email: record.children[9].children[0].value,
-                                         email_unverified: record.children[10].children[0].value,
-                                         password: record.children[11].children[0].value,
-                                         password_reminder: record.children[12].children[0].value,
-                                         verification_code: record.children[13].children[0].value
+                                         app_role_id: record.children[2].children[0].innerHTML,
+                                         active: record.children[4].children[0].innerHTML,
+                                         user_level: record.children[5].children[0].innerHTML,
+                                         private: record.children[6].children[0].innerHTML,
+                                         username: record.children[7].children[0].innerHTML,
+                                         bio: record.children[8].children[0].innerHTML,
+                                         email: record.children[9].children[0].innerHTML,
+                                         email_unverified: record.children[10].children[0].innerHTML,
+                                         password: record.children[11].children[0].innerHTML,
+                                         password_reminder: record.children[12].children[0].innerHTML,
+                                         verification_code: record.children[13].children[0].innerHTML
                                         });
                 }
             }
@@ -1196,7 +1197,7 @@ const button_save = async (item) => {
                             let config_group='';
                             document.querySelectorAll(`#${e_group.id} .list_config_row`).forEach(e_row => 
                                     {
-                                        config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].value)}, 
+                                        config_group += `{"${e_row.children[0].children[0].innerHTML}": ${JSON.stringify(e_row.children[1].children[0].innerHTML)}, 
                                                           "COMMENT": ${JSON.stringify(e_row.children[2].children[0].innerHTML)}}`;
                                         if (e_group.lastChild != e_row)
                                             config_group += ',';
@@ -1214,7 +1215,7 @@ const button_save = async (item) => {
                             };
                 };
                 //the filename is fetched from end of item name list_config_nav_X that is a li element
-                const file = document.querySelectorAll('#menu_6_content .list_nav li.list_nav_selected_tab')[0].id.substring(16).toUpperCase();
+                const file = document.querySelectorAll('#menu_6_content .list_nav .list_nav_selected_tab')[0].id.substring(16).toUpperCase();
                 const json_data = { config_json:    [
                                                     ['CONFIG',                  file=='CONFIG'?config_create_server_json():null],
                                                     ['APPS',                    file=='APPS'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
@@ -1294,7 +1295,7 @@ const list_events = (list_item, item_row, item_edit) => {
     //mark record as changed if any editable field is changed
     
     //change event
-    document.querySelector('#' + list_item).addEventListener('change', (event) => {
+    document.querySelector('#' + list_item).addEventListener('input', (event) => {
         if (event.target.classList.contains('list_edit')){
             event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
             const row_action = (err, result, item, event, nextindex) => {
@@ -1302,7 +1303,7 @@ const list_events = (list_item, item_row, item_edit) => {
                     event.stopPropagation();
                     event.preventDefault();
                     //set old value
-                    item.value = event.target.defaultValue;
+                    item.innerHTML = event.target.getAttribute('defaultValue');
                     item.focus();
                     item.nextElementSibling.dispatchEvent(new Event('click'));
                 }
@@ -1311,12 +1312,14 @@ const list_events = (list_item, item_row, item_edit) => {
                     if (list_result.length == 1){
                         //set new value from 3 column JSON result
                         document.querySelector('#' + event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(list_result[0])[2];
+                        //set new value in defaultValue used to save old value when editing next time
+                        event.target.setAttribute('defaultValue', Object.values(list_result[0])[0]);
                     }
                     else{
                         event.stopPropagation();
                         event.preventDefault();
                         //set old value
-                        item.value = event.target.defaultValue;
+                        item.innerHTML = event.target.getAttribute('defaultValue');
                         item.focus();    
                         item.nextElementSibling.children[0].dispatchEvent(new Event('click', {'bubbles': true}));
                     }
@@ -1324,36 +1327,36 @@ const list_events = (list_item, item_row, item_edit) => {
             };
             //app category LOV
             if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
-                if (event.target.value=='')
+                if (event.target.innerHTML=='')
                     event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
                 else{
-                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.value}`, 'GET', 'APP_ACCESS', null, (err, result) => {
+                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                         row_action(err, result, event.target, event, 6, '');
                     });
                 }
             //parameter type LOV
             if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
-                if (event.target.value=='')
-                    event.target.value = event.target.defaultValue;
+                if (event.target.innerHTML=='')
+                    event.target.innerHTML = event.target.getAttribute('defaultValue');
                 else{
-                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.value}`, 'GET', 'APP_ACCESS', null, (err, result) => {
+                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                         row_action(err, result, event.target, event, 2);
                     });
                 }
             //app role LOV
             if (item_row == 'list_user_account_row' && event.target.parentNode.parentNode.children[2].children[0] == event.target){
                 let app_role_id_lookup='';
-                const old_value =event.target.value;
+                const old_value =event.target.innerHTML;
                 //if empty then lookup default
-                if (event.target.value=='')
+                if (event.target.innerHTML=='')
                     app_role_id_lookup=2;
                 else
-                    app_role_id_lookup=event.target.value;
+                    app_role_id_lookup=event.target.innerHTML;
                 common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null, (err, result) => {
                     row_action(err, result, event.target, event, 3);
                     //if wrong value then field is empty again, fetch default value for empty app_role
-                    if (old_value!='' && event.target.value=='')
-                        event.target.dispatchEvent(new Event('change'));
+                    if (old_value!='' && event.target.innerHTML=='')
+                        event.target.dispatchEvent(new Event('input'));
                 });
             }
         }
@@ -1409,7 +1412,7 @@ const list_events = (list_item, item_row, item_edit) => {
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 const function_event = (event_lov) => {
                     //setting values from LOV
-                    event.target.parentNode.parentNode.parentNode.children[5].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
+                    event.target.parentNode.parentNode.parentNode.children[5].children[0].innerHTML = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[6].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
                     document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
@@ -1423,7 +1426,7 @@ const list_events = (list_item, item_row, item_edit) => {
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 const function_event = (event_lov) => {
                     //setting values from LOV
-                    event.target.parentNode.parentNode.parentNode.children[1].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
+                    event.target.parentNode.parentNode.parentNode.children[1].children[0].innerHTML = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
                     document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
@@ -1437,7 +1440,7 @@ const list_events = (list_item, item_row, item_edit) => {
             if (event.target.parentNode.classList.contains('common_list_lov_click')){
                 const function_event = (event_lov) => {
                     //setting values from LOV
-                    event.target.parentNode.parentNode.parentNode.children[2].children[0].value = event_lov.currentTarget.children[0].children[0].innerHTML;
+                    event.target.parentNode.parentNode.parentNode.children[2].children[0].innerHTML = event_lov.currentTarget.children[0].children[0].innerHTML;
                     event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
                     event.target.parentNode.parentNode.parentNode.children[3].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
                     document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
@@ -1506,7 +1509,7 @@ const show_monitor = async (yearvalues) =>{
                     </div>
                 </div>
                 <div class='list_search'>
-                    <input class='list_search_input' id='list_server_log_search_input' type='text' />
+                    <div id='list_server_log_search_input' contentEditable=true class='common_input list_search_input'/></div>
                     <div class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_server_log' class='common_list_scrollbar'></div>
@@ -1532,7 +1535,7 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#select_app_menu5_list_connected').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
 
     //set events
-    document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').value); }, false);
+    document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML); }, false);
     document.querySelector('#menu_5_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_server_log_search_input').focus();document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     
     document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
@@ -1708,7 +1711,7 @@ const nav_click = (item_id) => {
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='block';
             document.querySelector('#list_monitor_nav_3').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'DESC', document.querySelector('#list_server_log_search_input').value);
+            show_server_logs('logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML);
             break;
         }
         //SERVER CONFIG
@@ -2401,7 +2404,7 @@ const list_sort_click = (item) => {
             break;
         }
         case 'list_server_log':{
-            show_server_logs(item.id.substr('list_server_log_col_title_'.length), get_order(item), document.querySelector('#list_server_log_search_input').value);
+            show_server_logs(item.id.substr('list_server_log_col_title_'.length), get_order(item), document.querySelector('#list_server_log_search_input').innerHTML);
             break;
         }
         case 'list_user_account':{
@@ -2585,7 +2588,7 @@ const get_server_log_parameters = async () => {
 };
 const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
-        if (common.check_input(document.querySelector('#list_server_log_search_input').value, 100, false) == false)
+        if (common.check_input(document.querySelector('#list_server_log_search_input').innerHTML, 100, false) == false)
             return null;
     }
     const logscope = document.querySelector('#select_logscope5')[document.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
@@ -2723,7 +2726,7 @@ const show_config = async (file) => {
                                         <div class='list_readonly'>${Object.keys(config[Object.keys(config)[i_group]][j])[0]}</div>
                                     </div>
                                     <div class='list_config_col'>
-                                        <input type=text class='list_edit' value='${Object.values(config[Object.keys(config)[i_group]][j])[0]}'/>
+                                        <div contentEditable=true class='common_input list_edit'/>${Object.values(config[Object.keys(config)[i_group]][j])[0]}</div>
                                     </div>
                                     <div class='list_config_col'>
                                         <div class='list_readonly'>${Object.values(config[Object.keys(config)[i_group]][j])[1]}</div>
@@ -2841,11 +2844,11 @@ const show_installation = () =>{
         document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
             switch(event.target.parentNode.id){
                 case 'install_demo_button_install':{
-                    if (document.querySelector('#install_demo_password').value == '') {
+                    if (document.querySelector('#install_demo_password').innerHTML == '') {
                         common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
                     }
                     else{
-                        const json_data = {demo_password: document.querySelector('#install_demo_password').value};
+                        const json_data = {demo_password: document.querySelector('#install_demo_password').innerHTML};
                         const old_html = document.querySelector('#install_demo_button_install').innerHTML;
                         document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
                         common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'APP_ACCESS', json_data, (err, result) => {

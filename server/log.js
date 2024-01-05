@@ -71,12 +71,14 @@ const getStatusCodes =() => service.getStatusCodes();
  * 
  */
 const getFiles = () =>{
-    service.getFiles().then((/**@type{Types.admin_log_files[]}*/result) =>{
-        if (result.length>0)
-            return result;
-        else{
-            throw 'Record not found';
-        }
+    return new Promise((resolve, reject)=>{
+        service.getFiles().then((/**@type{Types.admin_log_files[]}*/result) =>{
+            if (result.length>0)
+                resolve(result);
+            else{
+                reject('Record not found');
+            }
+        });
     });
 };
 export {getLogParameters, getLogs, getStatusCodes, getLogStats, getFiles};
