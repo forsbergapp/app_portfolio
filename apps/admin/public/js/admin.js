@@ -17,9 +17,9 @@ const admin_login_nav = (target) => {
     }
 };
 const clear_login = () => {
-    document.querySelector('#admin_login_username_input').value = '';
+    document.querySelector('#admin_login_username_input').innerHTML = '';
     document.querySelector('#admin_login_password_input').value = '';
-    document.querySelector('#system_admin_login_username_input').value = '';
+    document.querySelector('#system_admin_login_username_input').innerHTML = '';
     document.querySelector('#system_admin_login_password_input').value = '';
     document.querySelector('#admin_first_time').style.display = 'none';
     document.querySelector('#system_admin_login_password_confirm_input').value = '';
@@ -50,7 +50,7 @@ const admin_logoff_app = () => {
 const admin_login = async () => {
     const old_button = document.querySelector('#admin_login_button').innerHTML;
     if (document.querySelector('#system_admin_login').style.display == 'block') {
-        if (document.querySelector('#system_admin_login_username_input').value == '') {
+        if (document.querySelector('#system_admin_login_username_input').innerHTML == '') {
             common.show_message('INFO', null, null, common.ICONS.app_system_admin + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
             return;
         }
@@ -58,11 +58,11 @@ const admin_login = async () => {
             common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
             return;
         }
-        if (common.check_input(document.querySelector('#system_admin_login_username_input').value, 100, true) == false ||
+        if (common.check_input(document.querySelector('#system_admin_login_username_input').innerHTML, 100, true) == false ||
             common.check_input(document.querySelector('#system_admin_login_password_input').value, 100, true) == false)
             return;
         //no : in username
-        if (document.querySelector('#system_admin_login_username_input').value.indexOf(':') > -1) {
+        if (document.querySelector('#system_admin_login_username_input').innerHTML.indexOf(':') > -1) {
             common.show_message('INFO', null, null, common.ICONS.app_system_admin + ' ":" ' + common.ICONS.message_error, common.COMMON_GLOBAL.common_app_id);
             return;
         }
@@ -83,7 +83,7 @@ const admin_login = async () => {
                 return;
             }
         }
-        common.FFB ('IAM', '/systemadmin?', 'POST', 'IAM', {username: encodeURI(document.querySelector('#system_admin_login_username_input').value),
+        common.FFB ('IAM', '/systemadmin?', 'POST', 'IAM', {username: encodeURI(document.querySelector('#system_admin_login_username_input').innerHTML),
                                                             password: encodeURI(document.querySelector('#system_admin_login_password_input').value)}, (err, result_login) => {
             document.querySelector('#admin_login_button').innerHTML = old_button;
             if (err)
@@ -109,7 +109,7 @@ const admin_login = async () => {
         });
     }
     else {
-        await common.user_login(encodeURI(document.querySelector('#admin_login_username_input').value),
+        await common.user_login(encodeURI(document.querySelector('#admin_login_username_input').innerHTML),
                                 encodeURI(document.querySelector('#admin_login_password_input').value), (err, result) => {
                 document.querySelector('#admin_login_button').innerHTML = old_button;
                 if (err == null) {

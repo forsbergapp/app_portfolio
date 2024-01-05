@@ -302,6 +302,7 @@
 	overflow-x: hidden;
 	font-size: 0.7em !important;
 	vertical-align: middle;
+	overflow: hidden;
 }
 .timetable_month_class #timetable_month_data .timetable_month_data_col {
 	display: table-cell;
@@ -322,7 +323,7 @@
 	margin: 0px;
 	padding: 0px;
 }
-.timetable_month_class #timetable_month_data .timetable_month_data_notes input {
+.timetable_month_class #timetable_month_data .timetable_month_data_notes .common_input {
 	width: 85%;
 	margin: 0px;
 	padding: 0px;

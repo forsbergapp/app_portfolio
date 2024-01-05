@@ -514,7 +514,7 @@
 .list_apps_col:nth-child(5){
 	width: 70px;
 }
-.list_apps_col:nth-child(5) input{   
+.list_apps_col:nth-child(5) .common_input{   
 	vertical-align: middle;
 }
 .list_apps_col:nth-child(6){
@@ -601,7 +601,7 @@
 	padding-inline-start: 5px;
 	text-align: start;
 }   
-.list_config_group{
+.list_config_group_title{
 	text-transform: uppercase;
 	font-weight: bold;
 }
@@ -1406,10 +1406,10 @@ a:hover, a:active {
 .list_config_row{
 	font-size: 9px;
 }
-.list_user_account_row input,
-.list_user_account_logon_row input,
-.list_apps_row input,
-.list_app_parameter_row input{
+.list_user_account_row .common_input,
+.list_user_account_logon_row .common_input,
+.list_apps_row .common_input,
+.list_app_parameter_row .common_input{
 	font-size: 9px;
 }
 .list_search,
@@ -1451,6 +1451,9 @@ a:hover, a:active {
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
 /*APP THEME COMMON*/
+.common_input{
+	background-color: var(--app_theme_dialogue_background_color);
+}
 .common_dialogue_button:hover, 
 .common_dialogue_button:active,
 .common_toolbar_button:hover, 

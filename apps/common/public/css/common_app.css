@@ -9,6 +9,13 @@ select,input {
 	font-family: inherit;
 	font-size:inherit;
 }
+.common_input{
+	display: inline-block;
+	text-align: start;
+	line-height: normal;
+	overflow: hidden;
+	vertical-align: middle;
+}
 .common_icon {
 	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
 	font-weight: 900;
@@ -34,9 +41,10 @@ select,input {
 	width:100%;
 }
 #common_lov_search_input{
-	width: 90%;
+	width: 85%;
 	display: inline-block;
 	border-radius: 4px;
+	padding:2px;
 }
 #common_lov_search_icon{
 	width: 15px;
@@ -464,7 +472,7 @@ select,input {
 /*Dialogue lov*/
 #common_dialogue_lov_content{
 	height:auto;
-	width: 250px;
+	width: 350px;
 }
 #common_lov_list{
 	height: 230px;

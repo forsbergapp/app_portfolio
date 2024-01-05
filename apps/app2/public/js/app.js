@@ -127,9 +127,9 @@ const getReportSettings = () => {
                 calendartype        	: document.querySelector('#setting_select_calendartype').value,
                 calendar_hijri_type 	: document.querySelector('#setting_select_calendar_hijri_type').value,
 
-                place               	: document.querySelector('#setting_input_place').value,
-                gps_lat             	: parseFloat(document.querySelector('#setting_input_lat').value),
-                gps_long            	: parseFloat(document.querySelector('#setting_input_long').value),
+                place               	: document.querySelector('#setting_input_place').innerHTML,
+                gps_lat             	: parseFloat(document.querySelector('#setting_input_lat').innerHTML),
+                gps_long            	: parseFloat(document.querySelector('#setting_input_long').innerHTML),
 
                 theme_day           	: 'theme_day_' + get_theme_id('day'),
                 theme_month         	: 'theme_month_' + get_theme_id('month'),
@@ -145,16 +145,16 @@ const getReportSettings = () => {
                 header_img_src      	: document.querySelector('#setting_reportheader_img').src == ''?null:document.querySelector('#setting_reportheader_img').src,
 				footer_img_src      	: document.querySelector('#setting_reportfooter_img').src == ''?null:document.querySelector('#setting_reportfooter_img').src,
 
-                header_txt1         	: document.querySelector('#setting_input_reportheader1').value,
-                header_txt2         	: document.querySelector('#setting_input_reportheader2').value,
-                header_txt3         	: document.querySelector('#setting_input_reportheader3').value,
+                header_txt1         	: document.querySelector('#setting_input_reportheader1').innerHTML,
+                header_txt2         	: document.querySelector('#setting_input_reportheader2').innerHTML,
+                header_txt3         	: document.querySelector('#setting_input_reportheader3').innerHTML,
                 //button is active set left, center or right true/false
                 header_align            : get_align(document.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'), 
                                                     document.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'), 
                                                     document.querySelector('#setting_icon_text_header_aright').classList.contains('setting_button_active')),
-                footer_txt1         	: document.querySelector('#setting_input_reportfooter1').value,
-                footer_txt2         	: document.querySelector('#setting_input_reportfooter2').value,
-                footer_txt3    	   		: document.querySelector('#setting_input_reportfooter3').value,
+                footer_txt1         	: document.querySelector('#setting_input_reportfooter1').innerHTML,
+                footer_txt2         	: document.querySelector('#setting_input_reportfooter2').innerHTML,
+                footer_txt3    	   		: document.querySelector('#setting_input_reportfooter3').innerHTML,
                 //button is active set left, center or right true/false
                 footer_align            : get_align(document.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
                                                     document.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
@@ -762,7 +762,7 @@ const update_ui = async (option, item_id=null) => {
                 map_update_app( settings.gps_long_input.value,
                                 settings.gps_lat_input.value,
                                 common.COMMON_GLOBAL.module_leaflet_zoom,
-                                document.querySelector('#setting_input_place').value,
+                                document.querySelector('#setting_input_place').innerHTML,
                                 null,
                                 common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                 common.COMMON_GLOBAL.module_leaflet_jumpto);
@@ -797,7 +797,7 @@ const update_ui = async (option, item_id=null) => {
                 settings.gps_lat_input.value = latitude_selected;
 
                 //Use city + country from list
-                document.querySelector('#setting_input_place').value =
+                document.querySelector('#setting_input_place').innerHTML =
                     settings.city.options[settings.city.selectedIndex].text + ', ' +
                     settings.country.options[settings.country.selectedIndex].text;
                 //display empty popular place select
@@ -807,7 +807,7 @@ const update_ui = async (option, item_id=null) => {
                     map_update_app(settings.gps_long_input.value,
                                     settings.gps_lat_input.value,
                                     common.COMMON_GLOBAL.module_leaflet_zoom_city,
-                                    document.querySelector('#setting_input_place').value,
+                                    document.querySelector('#setting_input_place').innerHTML,
                                     null,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_city,
                                     common.COMMON_GLOBAL.module_leaflet_flyto).then((timezone_selected) => {
@@ -855,13 +855,13 @@ const update_ui = async (option, item_id=null) => {
                 
                 settings.timezone_report.value = timezone_selected;
                 const title = settings.select_place.options[settings.select_place.selectedIndex].text;
-                document.querySelector('#setting_input_place').value = title;
+                document.querySelector('#setting_input_place').innerHTML = title;
                 break;
             }
         //GPS, updating place
         case 8:
             {
-                common.map_update_popup(document.querySelector('#setting_input_place').value);
+                common.map_update_popup(document.querySelector('#setting_input_place').innerHTML);
                 break;
             }
         //GPS, position
@@ -870,7 +870,7 @@ const update_ui = async (option, item_id=null) => {
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
                 common.get_place_from_gps(settings.gps_long_input.value, settings.gps_lat_input.value).then((gps_place) => {
                     //Update map
-                    document.querySelector('#setting_input_place').value = gps_place;
+                    document.querySelector('#setting_input_place').innerHTML = gps_place;
                     if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                         map_update_app( settings.gps_long_input.value,
                                         settings.gps_lat_input.value,
@@ -1391,11 +1391,11 @@ const user_settings_load = async () => {
         //set GPS for chosen popular place
         update_ui(7);
     }
-    document.querySelector('#setting_input_place').value =
+    document.querySelector('#setting_input_place').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('description');
-    document.querySelector('#setting_input_lat').value =
+    document.querySelector('#setting_input_lat').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_lat_text');
-    document.querySelector('#setting_input_long').value =
+    document.querySelector('#setting_input_long').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_long_text');    
     //Design
     set_theme_id('day', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_day_id'));
@@ -1453,11 +1453,11 @@ const user_settings_load = async () => {
             select_user_setting[select_user_setting.selectedIndex].getAttribute('image_footer_image_img');
     }
     //Text
-    document.querySelector('#setting_input_reportheader1').value =
+    document.querySelector('#setting_input_reportheader1').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_1_text');
-    document.querySelector('#setting_input_reportheader2').value =
+    document.querySelector('#setting_input_reportheader2').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_2_text');
-    document.querySelector('#setting_input_reportheader3').value =
+    document.querySelector('#setting_input_reportheader3').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_3_text');
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align') == '') {
         document.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
@@ -1470,11 +1470,11 @@ const user_settings_load = async () => {
         update_ui(15, 'setting_icon_text_header_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align'));
     }
-    document.querySelector('#setting_input_reportfooter1').value =
+    document.querySelector('#setting_input_reportfooter1').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_1_text');
-    document.querySelector('#setting_input_reportfooter2').value =
+    document.querySelector('#setting_input_reportfooter2').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_2_text');
-    document.querySelector('#setting_input_reportfooter3').value =
+    document.querySelector('#setting_input_reportfooter3').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_3_text');
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align') == '') {
         document.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
@@ -1532,19 +1532,19 @@ const user_settings_load = async () => {
 };
 
 const user_settings_function = async (function_name, initial_user_setting, callBack) => {
-    const description = document.querySelector('#setting_input_place').value;
+    const description = document.querySelector('#setting_input_place').innerHTML;
     
     const select_setting_popular_place = document.querySelector('#setting_select_popular_place');
     if (common.check_input(description) == false ||
-        common.check_input(document.querySelector('#setting_input_lat').value) == false ||
-        common.check_input(document.querySelector('#setting_input_long').value) == false ||
-        common.check_input(document.querySelector('#setting_input_reportheader1').value) == false ||
-        common.check_input(document.querySelector('#setting_input_reportheader2').value) == false ||
-        common.check_input(document.querySelector('#setting_input_reportheader3').value) == false ||
-        common.check_input(document.querySelector('#setting_input_reportfooter1').value) == false ||
-        common.check_input(document.querySelector('#setting_input_reportfooter2').value) == false ||
-        common.check_input(document.querySelector('#setting_input_reportfooter3').value) == false ||
-        common.check_input(document.querySelector('#setting_input_long').value) == false)
+        common.check_input(document.querySelector('#setting_input_lat').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_long').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_reportheader1').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_reportheader2').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_reportheader3').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_reportfooter1').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_reportfooter2').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_reportfooter3').innerHTML) == false ||
+        common.check_input(document.querySelector('#setting_input_long').innerHTML) == false)
         return;
     let country_id, city_id;
     if (document.querySelector('#common_module_leaflet_select_country')){
@@ -1583,8 +1583,8 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             gps_country_id: country_id,
             gps_city_id: city_id,
             gps_popular_place_id: select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')||null,
-            gps_lat_text: document.querySelector('#setting_input_lat').value,
-            gps_long_text: document.querySelector('#setting_input_long').value,
+            gps_lat_text: document.querySelector('#setting_input_lat').innerHTML,
+            gps_long_text: document.querySelector('#setting_input_long').innerHTML,
 
             design_theme_day_id: get_theme_id('day'),
             design_theme_month_id: get_theme_id('month'),
@@ -1600,13 +1600,13 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             image_header_image_img: document.querySelector('#setting_reportheader_img').src,
             image_footer_image_img: document.querySelector('#setting_reportfooter_img').src,
 
-            text_header_1_text: document.querySelector('#setting_input_reportheader1').value,
-            text_header_2_text: document.querySelector('#setting_input_reportheader2').value,
-            text_header_3_text: document.querySelector('#setting_input_reportheader3').value,
+            text_header_1_text: document.querySelector('#setting_input_reportheader1').innerHTML,
+            text_header_2_text: document.querySelector('#setting_input_reportheader2').innerHTML,
+            text_header_3_text: document.querySelector('#setting_input_reportheader3').innerHTML,
             text_header_align: align_button_value('header'),
-            text_footer_1_text: document.querySelector('#setting_input_reportfooter1').value,
-            text_footer_2_text: document.querySelector('#setting_input_reportfooter2').value,
-            text_footer_3_text: document.querySelector('#setting_input_reportfooter3').value,
+            text_footer_1_text: document.querySelector('#setting_input_reportfooter1').innerHTML,
+            text_footer_2_text: document.querySelector('#setting_input_reportfooter2').innerHTML,
+            text_footer_3_text: document.querySelector('#setting_input_reportfooter3').innerHTML,
             text_footer_align: align_button_value('footer'),
 
             prayer_method: document.querySelector('#setting_select_method').value,
@@ -1759,9 +1759,9 @@ const set_default_settings = async () => {
     
     //set according to users GPS/IP settings
     if (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude) {
-        document.querySelector('#setting_input_lat').value = common.COMMON_GLOBAL.client_latitude;
-        document.querySelector('#setting_input_long').value = common.COMMON_GLOBAL.client_longitude;
-        document.querySelector('#setting_input_place').value = common.COMMON_GLOBAL.client_place;
+        document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+        document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+        document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
         const {getTimezone} = await import('regional');
         document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
     } else {
@@ -1823,15 +1823,15 @@ const set_default_settings = async () => {
                                                                                                 APP_GLOBAL.image_header_footer_height);
     }
     //Text
-    document.querySelector('#setting_input_reportheader1').value = APP_GLOBAL.text_default_reporttitle1;
-    document.querySelector('#setting_input_reportheader2').value = APP_GLOBAL.text_default_reporttitle2;
-    document.querySelector('#setting_input_reportheader3').value = APP_GLOBAL.text_default_reporttitle3;
+    document.querySelector('#setting_input_reportheader1').innerHTML = APP_GLOBAL.text_default_reporttitle1;
+    document.querySelector('#setting_input_reportheader2').innerHTML = APP_GLOBAL.text_default_reporttitle2;
+    document.querySelector('#setting_input_reportheader3').innerHTML = APP_GLOBAL.text_default_reporttitle3;
     document.querySelector('#setting_icon_text_header_aleft').classList = 'setting_button'; //Align left not active
     document.querySelector('#setting_icon_text_header_acenter').classList = 'setting_button'; //Align center not active
     document.querySelector('#setting_icon_text_header_aright').classList = 'setting_button'; //Align right not active
-    document.querySelector('#setting_input_reportfooter1').value = APP_GLOBAL.text_default_reportfooter1;
-    document.querySelector('#setting_input_reportfooter2').value = APP_GLOBAL.text_default_reportfooter2;
-    document.querySelector('#setting_input_reportfooter3').value = APP_GLOBAL.text_default_reportfooter3;
+    document.querySelector('#setting_input_reportfooter1').innerHTML = APP_GLOBAL.text_default_reportfooter1;
+    document.querySelector('#setting_input_reportfooter2').innerHTML = APP_GLOBAL.text_default_reportfooter2;
+    document.querySelector('#setting_input_reportfooter3').innerHTML = APP_GLOBAL.text_default_reportfooter3;
     document.querySelector('#setting_icon_text_footer_aleft').classList = 'setting_button'; //Align left not active
     document.querySelector('#setting_icon_text_footer_acenter').classList = 'setting_button'; //Align center not active
     document.querySelector('#setting_icon_text_footer_aright').classList = 'setting_button'; //Align right not active
@@ -1876,9 +1876,9 @@ const set_default_settings = async () => {
 
 const set_settings_select = () => {
     const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
-    option.text = document.querySelector('#setting_input_place').value;
+    option.text = document.querySelector('#setting_input_place').innerHTML;
     
-    option.setAttribute('description', document.querySelector('#setting_input_place').value);
+    option.setAttribute('description', document.querySelector('#setting_input_place').innerHTML);
     option.setAttribute('regional_language_locale', document.querySelector('#setting_select_locale').value);
     option.setAttribute('regional_timezone', document.querySelector('#setting_select_report_timezone').value);
     option.setAttribute('regional_number_system', document.querySelector('#setting_select_report_numbersystem').value);
@@ -1899,8 +1899,8 @@ const set_settings_select = () => {
         option.setAttribute('gps_city_id','');
 
     option.setAttribute('gps_popular_place_id', document.querySelector('#setting_select_popular_place')[document.querySelector('#setting_select_popular_place').selectedIndex].getAttribute('id'));
-    option.setAttribute('gps_lat_text', document.querySelector('#setting_input_lat').value);
-    option.setAttribute('gps_long_text', document.querySelector('#setting_input_long').value);
+    option.setAttribute('gps_lat_text', document.querySelector('#setting_input_lat').innerHTML);
+    option.setAttribute('gps_long_text', document.querySelector('#setting_input_long').innerHTML);
 
     option.setAttribute('design_theme_day_id', get_theme_id('day'));
     option.setAttribute('design_theme_month_id', get_theme_id('month'));
@@ -1917,13 +1917,13 @@ const set_settings_select = () => {
     option.setAttribute('image_footer_image_img', document.querySelector('#setting_reportfooter_img').src);
 
     //fix null value that returns the word "null" without quotes
-    option.setAttribute('text_header_1_text', document.querySelector('#setting_input_reportheader1').value);
-    option.setAttribute('text_header_2_text', document.querySelector('#setting_input_reportheader2').value);
-    option.setAttribute('text_header_3_text', document.querySelector('#setting_input_reportheader3').value);
+    option.setAttribute('text_header_1_text', document.querySelector('#setting_input_reportheader1').innerHTML);
+    option.setAttribute('text_header_2_text', document.querySelector('#setting_input_reportheader2').innerHTML);
+    option.setAttribute('text_header_3_text', document.querySelector('#setting_input_reportheader3').innerHTML);
     option.setAttribute('text_header_align', align_button_value('header'));
-    option.setAttribute('text_footer_1_text', document.querySelector('#setting_input_reportfooter1').value);
-    option.setAttribute('text_footer_2_text', document.querySelector('#setting_input_reportfooter2').value);
-    option.setAttribute('text_footer_3_text', document.querySelector('#setting_input_reportfooter3').value);
+    option.setAttribute('text_footer_1_text', document.querySelector('#setting_input_reportfooter1').innerHTML);
+    option.setAttribute('text_footer_2_text', document.querySelector('#setting_input_reportfooter2').innerHTML);
+    option.setAttribute('text_footer_3_text', document.querySelector('#setting_input_reportfooter3').innerHTML);
     option.setAttribute('text_footer_align', align_button_value('footer'));
 
     option.setAttribute('prayer_method', document.querySelector('#setting_select_method').value);
@@ -2422,8 +2422,8 @@ const init_map = async () => {
     return await new Promise((resolve) => {
         common.map_init(APP_GLOBAL.gps_module_leaflet_container,
                         common.COMMON_GLOBAL.module_leaflet_style, 
-                        document.querySelector('#setting_input_long').value, 
-                        document.querySelector('#setting_input_lat').value, 
+                        document.querySelector('#setting_input_long').innerHTML, 
+                        document.querySelector('#setting_input_lat').innerHTML, 
                         true,
                         false,
                         map_show_search_on_map_app).then(() => {
@@ -2456,8 +2456,8 @@ const init_map = async () => {
                 //popular place not on map is read when saving
                 update_ui(6);
                 import('regional').then(({getTimezone})=>{
-                    const timezone = getTimezone(   document.querySelector('#setting_input_lat').value,
-                                                    document.querySelector('#setting_input_long').value);
+                    const timezone = getTimezone(   document.querySelector('#setting_input_lat').innerHTML,
+                                                    document.querySelector('#setting_input_long').innerHTML);
                     app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                 });
             }, false);
@@ -2468,9 +2468,9 @@ const init_map = async () => {
                 const event_target_id = event.target.id==''?event.target.parentNode.id:event.target.id;
                 if ( event_target_id == 'common_module_leaflet_control_my_location_id'){
                     document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-                    document.querySelector('#setting_input_place').value = common.COMMON_GLOBAL.client_place;
-                    document.querySelector('#setting_input_long').value = common.COMMON_GLOBAL.client_longitude;
-                    document.querySelector('#setting_input_lat').value = common.COMMON_GLOBAL.client_latitude;
+                    document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
+                    document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+                    document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
                     //remove country and city in settings
                     const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
                     option.setAttribute('gps_country_id', '');
@@ -2486,8 +2486,8 @@ const init_map = async () => {
             }, false);
             common.map_setevent('dblclick', (e) => {
                 if (e.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
-                    document.querySelector('#setting_input_lat').value = e.latlng.lat;
-                    document.querySelector('#setting_input_long').value = e.latlng.lng;
+                    document.querySelector('#setting_input_lat').innerHTML = e.latlng.lat;
+                    document.querySelector('#setting_input_long').innerHTML = e.latlng.lng;
                     //Update GPS position
                     update_ui(9);
                     import('regional').then(({getTimezone})=>{
@@ -2508,8 +2508,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_lat,
-                    document.querySelector('#setting_input_long').value,
-                    document.querySelector('#setting_input_lat').value,
+                    document.querySelector('#setting_input_long').innerHTML,
+                    document.querySelector('#setting_input_lat').innerHTML,
                     APP_GLOBAL.gps_module_leaflet_qibbla_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_opacity);
@@ -2518,8 +2518,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_lat,
-                    document.querySelector('#setting_input_long').value,
-                    document.querySelector('#setting_input_lat').value,
+                    document.querySelector('#setting_input_long').innerHTML,
+                    document.querySelector('#setting_input_lat').innerHTML,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);
@@ -2538,13 +2538,13 @@ const map_show_search_on_map_app = async (city) =>{
     common.map_show_search_on_map(city);
     map_show_qibbla();
     common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
-    document.querySelector('#setting_input_place').value =  city.querySelector('.common_module_leaflet_search_list_city .common_link').innerHTML + ', ' +
+    document.querySelector('#setting_input_place').innerHTML =  city.querySelector('.common_module_leaflet_search_list_city .common_link').innerHTML + ', ' +
                                                             city.querySelector('.common_module_leaflet_search_list_country .common_link').innerHTML;
-    document.querySelector('#setting_input_long').value = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
-    document.querySelector('#setting_input_lat').value = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
+    document.querySelector('#setting_input_long').innerHTML = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
+    document.querySelector('#setting_input_lat').innerHTML = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
     const {getTimezone} = await import('regional');
-    document.querySelector('#setting_select_report_timezone').value = getTimezone(  document.querySelector('#setting_input_lat').value, 
-                                                                                    document.querySelector('#setting_input_long').value);
+    document.querySelector('#setting_select_report_timezone').value = getTimezone(  document.querySelector('#setting_input_lat').innerHTML, 
+                                                                                    document.querySelector('#setting_input_long').innerHTML);
     app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
 };
 /*----------------------- */
@@ -2749,8 +2749,8 @@ const init_app = () => {
     
         //set default geolocation
         document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-        document.querySelector('#setting_input_lat').value = common.COMMON_GLOBAL.client_latitude;
-        document.querySelector('#setting_input_long').value = common.COMMON_GLOBAL.client_longitude;
+        document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+        document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
         //load themes in Design tab
         load_themes();
         //set papersize

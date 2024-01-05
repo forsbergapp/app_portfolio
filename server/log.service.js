@@ -419,17 +419,9 @@ const getLogs = async (data) => {
         const file = `LOG_${data.logscope}_${data.loglevel}`;
         /**@ts-ignore*/
         file_get_log(file, filesuffix)
-        .then(fileBuffer=>{
-            //read log records in the file
-            /**@type{string[]} */
-            const log_rows_array = fileBuffer.toString().split('\r\n');
-            //remove empty row and parse records to object
-            /**@type{object[]} */
-            let log_rows_array_obj = log_rows_array.filter(record=>record.length>0).map(record=>{if (record.length>0)
-                                                return JSON.parse(record);
-                                              });
+        .then(log_rows_array_obj=>{
             //filter records
-            log_rows_array_obj = log_rows_array_obj.filter(record => {
+            log_rows_array_obj = log_rows_array_obj.filter((/**@type{[object]}*/record) => {
                     return (
                             (
                                 (
@@ -447,7 +439,7 @@ const getLogs = async (data) => {
                 order_by_num = 1;
             else   
                 order_by_num = -1;
-            log_rows_array_obj = log_rows_array_obj.sort((first, second)=>{
+            log_rows_array_obj = log_rows_array_obj.sort((/**@type{[object]}*/first, /**@type{[object]}*/second)=>{
                 let first_sort, second_sort;
                 //sort default is connection_date if sort missing as argument
                 /**@ts-ignore */

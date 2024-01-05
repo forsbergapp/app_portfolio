@@ -112,7 +112,7 @@ const setEvents = () => {
             }
             //user preferences
             case 'app_theme_checkbox':{
-                app_theme_switch();
+                app_theme_update(true);
                 break;
             }
             //common with app specific settings
@@ -187,7 +187,7 @@ const setEvents = () => {
 
     //user preferences
     document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, ()=>{get_apps();});}, false);
-    document.querySelector('#common_user_arabic_script_select').addEventListener('change', () => { app_theme_switch();}, false);
+    document.querySelector('#common_user_arabic_script_select').addEventListener('change', () => { app_theme_update();}, false);
     
     document.querySelector('#common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, 'profile', null);}, false);
 
@@ -242,15 +242,24 @@ const setEvents = () => {
         }
     }, false);
 };
-const app_theme_switch = () => {
+const app_theme_update = toggle_theme => {
+    let theme = '';
     if(document.querySelector('#app_theme_checkbox').classList.contains('checked')){
-        document.querySelector('#app_theme_checkbox').classList.remove('checked');
-        document.body.className = 'app_theme_' + 'moon ' + document.querySelector('#common_user_arabic_script_select').value;
+        theme = 'app_theme_sun';
+        if (toggle_theme){
+            document.querySelector('#app_theme_checkbox').classList.remove('checked');
+            theme = 'app_theme_moon';
+        }
     }
     else{
-        document.body.className = 'app_theme_' + 'sun ' + document.querySelector('#common_user_arabic_script_select').value;
-        document.querySelector('#app_theme_checkbox').classList.add('checked');
+        theme = 'app_theme_moon';
+        if (toggle_theme){
+            document.querySelector('#app_theme_checkbox').classList.add('checked');
+            theme = 'app_theme_sun';
+        }
     }
+    document.body.className = document.querySelector('#common_user_arabic_script_select').value;
+    document.body.classList.add(theme);
     return null;
 };
 
@@ -491,6 +500,6 @@ const init = (parameters) => {
         });
     });
 };
-export{show_hide_apps_dialogue, setEvents, app_theme_switch, get_apps, user_menu_item_click, user_login_app,
+export{show_hide_apps_dialogue, setEvents, app_theme_update, get_apps, user_menu_item_click, user_login_app,
        user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
        init_app, init};
