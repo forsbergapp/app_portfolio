@@ -293,6 +293,10 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
   
   ----------------------- */
 const element_id = element => element.id==''?element_id(element.parentNode):element.id;
+
+const LengthWithoutDiacrites = (str) =>{
+    return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
+};
 const getTimezoneOffset = (local_timezone) =>{
     const utc = new Date(	new Date().toLocaleString('en', {timeZone: 'UTC', year:'numeric'}),
                             new Date().toLocaleString('en', {timeZone: 'UTC', month:'numeric'})-1,
@@ -390,48 +394,48 @@ const common_translate_ui = async (lang_code, callBack) => {
                         //translate common items
                         switch  (app_object.object_item_name){
                             case 'USERNAME':{
-                                document.querySelector('#common_login_username').placeholder = app_object.text;
-                                document.querySelector('#common_signup_username').placeholder = app_object.text;
-                                document.querySelector('#common_user_edit_input_username').placeholder = app_object.text;
+                                document.querySelector('#common_login_username').setAttribute('placeholder', app_object.text);
+                                document.querySelector('#common_signup_username').setAttribute('placeholder', app_object.text);
+                                document.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'EMAIL':{
-                                document.querySelector('#common_signup_email').placeholder = app_object.text;
-                                document.querySelector('#common_forgot_email').placeholder = app_object.text;
+                                document.querySelector('#common_signup_email').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_forgot_email').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'NEW_EMAIL':{
-                                document.querySelector('#common_user_edit_input_new_email').placeholder = app_object.text;
+                                document.querySelector('#common_user_edit_input_new_email').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'BIO':{
-                                document.querySelector('#common_user_edit_input_bio').placeholder = app_object.text;
+                                document.querySelector('#common_user_edit_input_bio').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'PASSWORD':{
-                                document.querySelector('#common_login_password').placeholder = app_object.text;
-                                document.querySelector('#common_signup_password').placeholder = app_object.text;
-                                document.querySelector('#common_user_edit_input_password').placeholder = app_object.text;
+                                document.querySelector('#common_login_password').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_signup_password').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'PASSWORD_CONFIRM':{
-                                document.querySelector('#common_signup_password_confirm').placeholder = app_object.text;
-                                document.querySelector('#common_user_edit_input_password_confirm').placeholder = app_object.text;
+                                document.querySelector('#common_signup_password_confirm').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'PASSWORD_REMINDER':{
-                                document.querySelector('#common_signup_password_reminder').placeholder = app_object.text;
-                                document.querySelector('#common_user_edit_input_password_reminder').placeholder = app_object.text;
+                                document.querySelector('#common_signup_password_reminder').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'NEW_PASSWORD_CONFIRM':{
-                                document.querySelector('#common_user_edit_input_password_new_confirm').placeholder = app_object.text;
-                                document.querySelector('#common_user_password_new_confirm').placeholder = app_object.text;    
+                                document.querySelector('#common_user_edit_input_password_new_confirm').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_user_password_new_confirm').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'NEW_PASSWORD':{
-                                document.querySelector('#common_user_edit_input_password_new').placeholder = app_object.text;
-                                document.querySelector('#common_user_password_new').placeholder = app_object.text;    
+                                document.querySelector('#common_user_edit_input_password_new').setAttribute('placeholder',app_object.text);
+                                document.querySelector('#common_user_password_new').setAttribute('placeholder',app_object.text);
                                 break;
                             }
                             case 'CONFIRM_QUESTION':{
@@ -764,8 +768,8 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
         case 'PASSWORD_NEW':
             {    
                 document.querySelector('#common_user_password_new_auth').innerHTML=title;
-                document.querySelector('#common_user_password_new').value='';
-                document.querySelector('#common_user_password_new_confirm').value='';
+                document.querySelector('#common_user_password_new').innerHTML='';
+                document.querySelector('#common_user_password_new_confirm').innerHTML='';
                 document.querySelector('#common_dialogue_user_password_new').style.visibility = 'visible';
                 break;
             }
@@ -974,18 +978,18 @@ const dialogue_verify_clear = () => {
     document.querySelector('#common_user_verification_type').innerHTML='';
     document.querySelector('#common_user_verify_email').innerHTML='';
     document.querySelector('#common_user_verify_cancel').innerHTML='';
-    document.querySelector('#common_user_verify_verification_char1').value = '';
-    document.querySelector('#common_user_verify_verification_char2').value = '';
-    document.querySelector('#common_user_verify_verification_char3').value = '';
-    document.querySelector('#common_user_verify_verification_char4').value = '';
-    document.querySelector('#common_user_verify_verification_char5').value = '';
-    document.querySelector('#common_user_verify_verification_char6').value = '';
+    document.querySelector('#common_user_verify_verification_char1').innerHTML = '';
+    document.querySelector('#common_user_verify_verification_char2').innerHTML = '';
+    document.querySelector('#common_user_verify_verification_char3').innerHTML = '';
+    document.querySelector('#common_user_verify_verification_char4').innerHTML = '';
+    document.querySelector('#common_user_verify_verification_char5').innerHTML = '';
+    document.querySelector('#common_user_verify_verification_char6').innerHTML = '';
 };
 const dialogue_password_new_clear = () => {
     document.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
     document.querySelector('#common_user_password_new_auth').innerHTML='';
-    document.querySelector('#common_user_password_new').value='';
-    document.querySelector('#common_user_password_new_confirm').value='';
+    document.querySelector('#common_user_password_new').innerHTML='';
+    document.querySelector('#common_user_password_new_confirm').innerHTML='';
     COMMON_GLOBAL.user_account_id = '';
     COMMON_GLOBAL.rest_at = '';
 };
@@ -995,16 +999,20 @@ const dialogue_user_edit_clear = () => {
                 
     //common
     document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
-    document.querySelector('#common_user_edit_input_username').value = '';
-    document.querySelector('#common_user_edit_input_bio').value = '';
+    document.querySelector('#common_user_edit_input_username').innerHTML = '';
+    document.querySelector('#common_user_edit_input_bio').innerHTML = '';
     //local
     document.querySelector('#common_user_edit_input_email').innerHTML = '';
-    document.querySelector('#common_user_edit_input_new_email').value = '';
-    document.querySelector('#common_user_edit_input_password').value = '';
-    document.querySelector('#common_user_edit_input_password_confirm').value = '';
-    document.querySelector('#common_user_edit_input_password_new').value = '';
-    document.querySelector('#common_user_edit_input_password_new_confirm').value = '';
-    document.querySelector('#common_user_edit_input_password_reminder').value = '';
+    document.querySelector('#common_user_edit_input_new_email').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_mask').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_confirm_mask').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_new_mask').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_new_confirm_mask').innerHTML = '';
+    document.querySelector('#common_user_edit_input_password_reminder').innerHTML = '';
     //provider
     document.querySelector('#common_user_edit_provider_id').innerHTML = '';
     document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = '';
@@ -1018,19 +1026,22 @@ const dialogue_user_edit_clear = () => {
 };
 const dialogue_login_clear = () => {
     document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-    document.querySelector('#common_login_username').value = '';
-    document.querySelector('#common_login_password').value = '';
+    document.querySelector('#common_login_username').innerHTML = '';
+    document.querySelector('#common_login_password').innerHTML = '';
+    document.querySelector('#common_login_password_mask').innerHTML = '';
 };
 const dialogue_signup_clear = () => {
     document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
-    document.querySelector('#common_signup_username').value = '';
-    document.querySelector('#common_signup_email').value = '';
-    document.querySelector('#common_signup_password').value = '';
-    document.querySelector('#common_signup_password_confirm').value = '';
-    document.querySelector('#common_signup_password_reminder').value = '';
+    document.querySelector('#common_signup_username').innerHTML = '';
+    document.querySelector('#common_signup_email').innerHTML = '';
+    document.querySelector('#common_signup_password').innerHTML = '';
+    document.querySelector('#common_signup_password_mask').innerHTML = '';
+    document.querySelector('#common_signup_password_confirm').innerHTML = '';
+    document.querySelector('#common_signup_password_confirm_mask').innerHTML = '';
+    document.querySelector('#common_signup_password_reminder').innerHTML = '';
 };
 const dialogue_forgot_clear = () => {
-    document.querySelector('#common_forgot_email').value = '';
+    document.querySelector('#common_forgot_email').innerHTML = '';
 };
 const dialogue_profile_clear = () => {
     document.querySelector('#common_profile_info').style.display = 'none';
@@ -1995,8 +2006,8 @@ const user_edit = async () => {
                 else
                     document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
 
-                document.querySelector('#common_user_edit_input_username').value = user.username;
-                document.querySelector('#common_user_edit_input_bio').value = get_null_or_value(user.bio);
+                document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
+                document.querySelector('#common_user_edit_input_bio').innerHTML = get_null_or_value(user.bio);
 
                 if (user.provider_id == null) {
                     document.querySelector('#common_user_edit_local').style.display = 'block';
@@ -2006,13 +2017,13 @@ const user_edit = async () => {
                     document.querySelector('#common_user_edit_avatar').style.display = 'block';
                     set_avatar(user.avatar, document.querySelector('#common_user_edit_avatar_img')); 
                     document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
-                    document.querySelector('#common_user_edit_input_new_email').value = user.email_unverified;
-                    document.querySelector('#common_user_edit_input_password').value = '',
-                        document.querySelector('#common_user_edit_input_password_confirm').value = '',
-                        document.querySelector('#common_user_edit_input_password_new').value = '';
-                    document.querySelector('#common_user_edit_input_password_new_confirm').value = '';
+                    document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
+                    document.querySelector('#common_user_edit_input_password').innerHTML = '',
+                        document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
+                        document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
+                    document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
 
-                    document.querySelector('#common_user_edit_input_password_reminder').value = user.password_reminder;
+                    document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
                 } else{
                         document.querySelector('#common_user_edit_local').style.display = 'none';
                         document.querySelector('#common_user_edit_provider').style.display = 'block';
@@ -2036,10 +2047,10 @@ const user_edit = async () => {
     });
 };
 const user_update = async () => {
-    const username = document.querySelector('#common_user_edit_input_username').value;
-    const bio = document.querySelector('#common_user_edit_input_bio').value;
+    const username = document.querySelector('#common_user_edit_input_username').innerHTML;
+    const bio = document.querySelector('#common_user_edit_input_bio').innerHTML;
     const avatar = document.querySelector('#common_user_edit_avatar_img').src;
-    const new_email = document.querySelector('#common_user_edit_input_new_email').value;
+    const new_email = document.querySelector('#common_user_edit_input_new_email').innerHTML;
 
     let path;
     let json_data;
@@ -2049,11 +2060,11 @@ const user_update = async () => {
         
     if (document.querySelector('#common_user_edit_local').style.display == 'block') {
         const email = document.querySelector('#common_user_edit_input_email').innerHTML;    
-        const password = document.querySelector('#common_user_edit_input_password').value;
-        const password_confirm = document.querySelector('#common_user_edit_input_password_confirm').value;
-        const password_new = document.querySelector('#common_user_edit_input_password_new').value;
-        const password_new_confirm = document.querySelector('#common_user_edit_input_password_new_confirm').value;
-        const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').value;
+        const password = document.querySelector('#common_user_edit_input_password').innerHTML;
+        const password_confirm = document.querySelector('#common_user_edit_input_password_confirm').innerHTML;
+        const password_new = document.querySelector('#common_user_edit_input_password_new').innerHTML;
+        const password_new_confirm = document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML;
+        const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').innerHTML;
         if (check_input(username) == false ||
             check_input(new_email) == false ||
             check_input(password) == false ||
@@ -2135,11 +2146,11 @@ const user_update = async () => {
     });
 };
 const user_signup = () => {
-    const username = document.querySelector('#common_signup_username').value;
-    const email = document.querySelector('#common_signup_email').value;
-    const password = document.querySelector('#common_signup_password').value;
-    const password_confirm = document.querySelector('#common_signup_password_confirm').value;
-    const password_reminder = document.querySelector('#common_signup_password_reminder').value;
+    const username = document.querySelector('#common_signup_username').innerHTML;
+    const email = document.querySelector('#common_signup_email').innerHTML;
+    const password = document.querySelector('#common_signup_password').innerHTML;
+    const password_confirm = document.querySelector('#common_signup_password_confirm').innerHTML;
+    const password_reminder = document.querySelector('#common_signup_password_reminder').innerHTML;
 
     if (check_input(username) == false || 
         check_input(email)== false ||
@@ -2238,10 +2249,10 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             case 2:{
                                 //SIGNUP
                                 //login with username and password from signup fields
-                                document.querySelector('#common_login_username').value =
-                                    document.querySelector('#common_signup_username').value;
-                                document.querySelector('#common_login_password').value =
-                                    document.querySelector('#common_signup_password').value;
+                                document.querySelector('#common_login_username').innerHTML =
+                                    document.querySelector('#common_signup_username').innerHTML;
+                                document.querySelector('#common_login_password').innerHTML =
+                                    document.querySelector('#common_signup_password').innerHTML;
                                 break;
                             }
                             case 3:{
@@ -2291,7 +2302,7 @@ const user_verify_check_input = async (item, nextField, callBack) => {
     }
 };
 const user_delete = async (choice=null, user_local, function_delete_event, callBack ) => {
-    const password = document.querySelector('#common_user_edit_input_password').value;
+    const password = document.querySelector('#common_user_edit_input_password').innerHTML;
     switch (choice){
         case null:{
             if (user_local==true && password == '') {
@@ -2384,7 +2395,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
     }
 };
 const user_forgot = async () => {
-    const email = document.querySelector('#common_forgot_email').value;
+    const email = document.querySelector('#common_forgot_email').innerHTML;
     const json_data = { email: email,
                         ...get_uservariables()
                     };
@@ -2409,8 +2420,8 @@ const user_forgot = async () => {
     }
 };
 const updatePassword = () => {
-    const password_new = document.querySelector('#common_user_password_new').value;
-    const password_new_confirm = document.querySelector('#common_user_password_new_confirm').value;
+    const password_new = document.querySelector('#common_user_password_new').innerHTML;
+    const password_new_confirm = document.querySelector('#common_user_password_new_confirm').innerHTML;
     const user_password_new_auth = document.querySelector('#common_user_password_new_auth').innerHTML;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
@@ -3635,9 +3646,36 @@ const set_events = () => {
                                                                         else
                                                                             event.target.classList.add('checked');
                                                                     }, false);
+    const password_mask = event => {
+        if (event.target.classList.contains('common_password')){
+            if (event.target.innerText.indexOf('\n')>-1)
+                event.target.innerText = event.target.innerText.replace('\n','');
+            document.querySelector(`#${event.target.id}_mask`).innerText = event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
+        }
+    };
+    const control_copy_paste_cut = event => {
+        if(event.target.nodeName !='SELECT'){
+            event.preventDefault();
+            event.target.focus();
+        }
+    };
+    document.querySelector('#app').addEventListener('keyup', password_mask, false);
+    document.querySelector('#app').addEventListener('copy', control_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('paste', control_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('cut', control_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('mousedown', control_copy_paste_cut, false);
 
     document.querySelector('#app').addEventListener('keydown', event => { 
-        if(event.target.classList.contains('common_input') && event.code=='Enter')
+        if(event.target.classList.contains('common_input') && 
+            (event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+             (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                        event.code=='ArrowRight' || 
+                                        event.code=='ArrowUp' || 
+                                        event.code=='ArrowDown'|| 
+                                        event.code=='Home'|| 
+                                        event.code=='End'|| 
+                                        event.code=='PageUp'|| 
+                                        event.code=='PageDown') ) ))
             event.preventDefault();
     });
     //login/signup/forgot

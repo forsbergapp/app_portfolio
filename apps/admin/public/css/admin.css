@@ -1290,12 +1290,7 @@ body{
 	color: var(--app_theme_text_color);
 	fill:var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
-}
-a {
-	color:var(--app_theme_a_color);
-}
-a:hover, a:active {
-	color:var(--app_theme_hover_color) !important;
+	caret-color: var(--app_theme_text_color);
 }
 .login_nav_button_selected{
 	background-color:var(--app_theme_login_nav_selected_background_color);
@@ -1449,6 +1444,11 @@ a:hover, a:active {
 .dialogue_content{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
+}
+.common_password_container{
+	display: inline-block !important;
+    width: 85%;
+    vertical-align: super;
 }
 /*APP THEME COMMON*/
 .common_input{

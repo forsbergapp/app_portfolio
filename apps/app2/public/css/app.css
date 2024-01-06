@@ -809,6 +809,9 @@
 }
 
 /*theme app colors*/
+body{
+	caret-color: var(--app_theme_main_color3);
+}
 body,
 .dialogue_content,
 #settings select,
@@ -853,11 +856,6 @@ body,
 #settings #tab5 .setting_report_title{
     border: 0.5px solid var(--app_gold);
 }
-a{
-	color:var(--app_gold);
-}
-a:hover,
-a:active,
 .common_dialogue_button:hover,
 .common_dialogue_button:active,
 .common_toolbar_button:hover,
@@ -950,7 +948,7 @@ a:active,
 #common_user_menu,
 #common_user_menu_dropdown
 {
-	background-color:var(--app_theme_main_color1) !important;
+	background-color:var(--app_theme_main_color1);
 }
 #common_dialogues .common_input,
 #common_window_info,
@@ -959,7 +957,7 @@ a:active,
 .common_dialogue_content,
 #common_profile_search_icon
 {
-	color: var(--app_theme_main_color3) !important;
+	color: var(--app_theme_main_color3);
 }
 #common_user_menu_username:hover,
 #common_user_menu_username:active,

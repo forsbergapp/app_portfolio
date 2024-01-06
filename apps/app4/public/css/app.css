@@ -90,9 +90,7 @@ body{
 	color: var(--app_theme_text_color);
 	fill:var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
-}
-a:hover, a:active{
-	color: var(--app_theme_hover) !important;
+	caret-color: var(--app_theme_text_color);
 }
 #toolbar_top{
 	color: var(--app_theme_main_branding_color1);

@@ -5,9 +5,13 @@ body{
 	padding: 0px;
 	width: auto;
 }
-select,input {
+select {
 	font-family: inherit;
 	font-size:inherit;
+}
+[contentEditable=true]:empty::before{
+	content:attr(placeholder);
+	opacity:0.7;
 }
 .common_input{
 	display: inline-block;
@@ -15,6 +19,23 @@ select,input {
 	line-height: normal;
 	overflow: hidden;
 	vertical-align: middle;
+}
+.common_password_container{
+	font-family: 'Noto Sans Mono';
+	position: relative;
+	display: inherit;
+}
+.common_password:empty{
+	color:inherit !important;
+}
+.common_password{
+	position:absolute;
+	z-index: 0;
+	color:transparent !important;
+	background-color: transparent !important;
+}
+.common_input:hover{
+	cursor: text;
 }
 .common_icon {
 	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";

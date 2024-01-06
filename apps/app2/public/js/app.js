@@ -759,8 +759,8 @@ const update_ui = async (option, item_id=null) => {
         //GPS, update map
         case 4:
             {
-                map_update_app( settings.gps_long_input.value,
-                                settings.gps_lat_input.value,
+                map_update_app( settings.gps_long_input.innerHTML,
+                                settings.gps_lat_input.innerHTML,
                                 common.COMMON_GLOBAL.module_leaflet_zoom,
                                 document.querySelector('#setting_input_place').innerHTML,
                                 null,
@@ -793,8 +793,8 @@ const update_ui = async (option, item_id=null) => {
                 const longitude_selected = settings.city[settings.city.selectedIndex].getAttribute('longitude');
                 const latitude_selected = settings.city[settings.city.selectedIndex].getAttribute('latitude');
                 
-                settings.gps_long_input.value = longitude_selected;
-                settings.gps_lat_input.value = latitude_selected;
+                settings.gps_long_input.innerHTML = longitude_selected;
+                settings.gps_lat_input.innerHTML = latitude_selected;
 
                 //Use city + country from list
                 document.querySelector('#setting_input_place').innerHTML =
@@ -804,8 +804,8 @@ const update_ui = async (option, item_id=null) => {
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
-                    map_update_app(settings.gps_long_input.value,
-                                    settings.gps_lat_input.value,
+                    map_update_app(settings.gps_long_input.innerHTML,
+                                    settings.gps_lat_input.innerHTML,
                                     common.COMMON_GLOBAL.module_leaflet_zoom_city,
                                     document.querySelector('#setting_input_place').innerHTML,
                                     null,
@@ -828,12 +828,12 @@ const update_ui = async (option, item_id=null) => {
                 const longitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('longitude');
                 const latitude_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('latitude');
                 const timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
-                settings.gps_long_input.value = longitude_selected;
-                settings.gps_lat_input.value = latitude_selected;
+                settings.gps_long_input.innerHTML = longitude_selected;
+                settings.gps_lat_input.innerHTML = latitude_selected;
                 if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
-                    map_update_app( settings.gps_long_input.value,
-                                    settings.gps_lat_input.value,
+                    map_update_app( settings.gps_long_input.innerHTML,
+                                    settings.gps_lat_input.innerHTML,
                                     common.COMMON_GLOBAL.module_leaflet_zoom_pp, //zoom for popular places
                                     settings.select_place.options[settings.select_place.selectedIndex].text,
                                     timezone_selected,
@@ -868,12 +868,12 @@ const update_ui = async (option, item_id=null) => {
         case 9:
             {
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                common.get_place_from_gps(settings.gps_long_input.value, settings.gps_lat_input.value).then((gps_place) => {
+                common.get_place_from_gps(settings.gps_long_input.innerHTML, settings.gps_lat_input.innerHTML).then((gps_place) => {
                     //Update map
                     document.querySelector('#setting_input_place').innerHTML = gps_place;
                     if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
-                        map_update_app( settings.gps_long_input.value,
-                                        settings.gps_lat_input.value,
+                        map_update_app( settings.gps_long_input.innerHTML,
+                                        settings.gps_lat_input.innerHTML,
                                         '', //do not change zoom 
                                         gps_place,
                                         null,
@@ -1014,7 +1014,7 @@ const user_login_app = async () => {
     const password = document.querySelector('#common_login_password');
     const old_button = document.querySelector('#common_login_button').innerHTML;
     document.querySelector('#common_login_button').innerHTML = common.APP_SPINNER;
-    await common.user_login(username.value, password.value, (err, result)=>{
+    await common.user_login(username.innerHTML, password.innerHTML, (err, result)=>{
         document.querySelector('#common_login_button').innerHTML = old_button;
         if (err==null){
             //create intitial user setting if not exist, send initial=true
@@ -2179,7 +2179,8 @@ const setEvents = () => {
                 openTab('6');
                 break;
             }
-            case 'tab_nav_btn_7':{
+            case 'tab_nav_btn_7':
+            case 'user_setting_avatar_img':{
                 openTab('7');
                 break;
             }

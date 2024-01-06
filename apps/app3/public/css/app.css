@@ -48,6 +48,7 @@
 body {
 	color: var(--app_black);
 	background: var(--app_blue1);
+	caret-color: var(--app_black);
 }
 .dialogue_content{
 	box-shadow: 0 4px 8px 0 var(--app_shadow1), 0 6px 20px 0 var(--app_shadow2);
