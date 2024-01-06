@@ -3653,21 +3653,28 @@ const set_events = () => {
             document.querySelector(`#${event.target.id}_mask`).innerText = event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
         }
     };
-    const control_copy_paste_cut = event => {
+    const disable_copy_paste_cut = event => {
         if(event.target.nodeName !='SELECT'){
             event.preventDefault();
             event.target.focus();
         }
     };
+    const disable_common_input = event => {
+        if (event.target.classList.contains('common_input')){
+            event.preventDefault();
+            event.target.focus();
+        }
+    };
     document.querySelector('#app').addEventListener('keyup', password_mask, false);
-    document.querySelector('#app').addEventListener('copy', control_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('paste', control_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('cut', control_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('mousedown', control_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('mousedown', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
 
     document.querySelector('#app').addEventListener('keydown', event => { 
         if(event.target.classList.contains('common_input') && 
-            (event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+            (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
              (event.shiftKey ==true && (event.code=='ArrowLeft' || 
                                         event.code=='ArrowRight' || 
                                         event.code=='ArrowUp' || 
