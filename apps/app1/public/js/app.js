@@ -342,7 +342,7 @@ const user_login_app = async () => {
     const old_button = document.querySelector('#common_login_button').innerHTML;
     document.querySelector('#common_login_button').innerHTML = common.APP_SPINNER;
             
-    await common.user_login(username.value, password.value, (err, result)=>{
+    await common.user_login(username.innerHTML, password.innerHTML, (err, result)=>{
         document.querySelector('#common_login_button').innerHTML = old_button;
         if (err==null){            
             //set avatar or empty

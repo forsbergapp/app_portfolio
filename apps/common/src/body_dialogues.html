@@ -19,8 +19,14 @@
         <div id='common_dialogue_user_password_new_content' class='common_dialogue_content'>
             <div id='common_user_password_new_icon'></div>
             <div id='common_user_password_new_auth'></div>
-            <input id='common_user_password_new' type='password' class='common_password_new_input' placeholder='<COMMON_TRANSLATION_PASSWORD_NEW/>'/>
-            <input id='common_user_password_new_confirm' type='password' class='common_password_new_input' placeholder='<COMMON_TRANSLATION_PASSWORD_NEW_CONFIRM/>'/>
+            <div class='common_password_container common_input'>
+                <div id='common_user_password_new' contenteditable=true class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_NEW/>'/></div>
+                <div id='common_user_password_new_mask' class='common_login_input common_input common_password_mask'/></div>
+            </div>
+            <div class='common_password_container common_input'>
+                <div id='common_user_password_new_confirm' contenteditable=true class='common_password_new_input common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_NEW_CONFIRM/>'/></div>
+                <div id='common_user_password_new_confirm_mask' class='common_login_input common_input common_password_mask'/></div>
+            </div>
             <div id='common_user_password_new_cancel' class='common_dialogue_button'></div>
             <div id='common_user_password_new_ok' class='common_dialogue_button'></div>
         </div>
@@ -32,8 +38,11 @@
                 <div id='common_login_tab1'></div>
                 <div id='common_login_tab2' class='common_login_tab_button' ></div>
                 <div id='common_login_tab3' class='common_login_tab_button' ></div>
-                <input id='common_login_username' type='text' class='common_login_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'/>
-                <input id='common_login_password' type='password' class='common_login_input' placeholder='<COMMON_TRANSLATION_PASSWORD/>'/>
+                <div id='common_login_username' contenteditable=true class='common_login_input common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'/></div>
+                <div class='common_password_container common_input'>
+                    <div id='common_login_password' contenteditable=true class='common_login_input common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'/></div>
+                    <div id='common_login_password_mask' class='common_login_input common_input common_password_mask'/></div>
+                </div>
                 <div id='common_login_button' class='common_login_button' ></div>
                 <COMMON_PROVIDER_BUTTONS/>
                 <div id='common_login_close' class='common_dialogue_button' ></div>
@@ -47,11 +56,17 @@
                 <div id='common_signup_tab1' class='common_signup_tab_button' ></div>
                 <div id='common_signup_tab2'></div>
                 <div id='common_signup_tab3' class='common_signup_tab_button' ></div>
-                <input id='common_signup_username' type='text' class='common_signup_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'/>
-                <input id='common_signup_email' type='text' class='common_signup_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'/>
-                <input id='common_signup_password' type='password' class='common_signup_input' placeholder='<COMMON_TRANSLATION_PASSWORD/>'/>
-                <input id='common_signup_password_confirm' type='password' class='common_signup_input' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'/>
-                <input id='common_signup_password_reminder' type='text' class='common_signup_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'/>
+                <div id='common_signup_username' contenteditable=true  class='common_signup_input common_input' placeholder='<COMMON_TRANSLATION_USERNAME/>'/></div>
+                <div id='common_signup_email' contenteditable=true  class='common_signup_input common_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'/></div>
+                <div class='common_password_container common_input'>
+                    <div id='common_signup_password' contenteditable=true  class='common_signup_input common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD/>'/></div>
+                    <div id='common_signup_password_mask' class='common_login_input common_input common_password_mask'/></div>
+                </div>
+                <div class='common_password_container common_input'>
+                    <div id='common_signup_password_confirm' contenteditable=true  class='common_signup_input common_input common_password' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'/></div>
+                    <div id='common_signup_password_confirm_mask' class='common_login_input common_input common_password_mask'/></div>
+                </div>
+                <div id='common_signup_password_reminder' contenteditable=true  class='common_signup_input common_input' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'/></div>
                 <div id='common_signup_button' class='common_signup_button' ></div>
                 <div id='common_signup_close' class='common_dialogue_button' ></div>
             </div>
@@ -64,7 +79,7 @@
                 <div id='common_forgot_tab1' class='common_forgot_tab_button' ></div>
                 <div id='common_forgot_tab2' class='common_forgot_tab_button' ></div>
                 <div id='common_forgot_tab3'></div>
-                <input id='common_forgot_email' type='text' class='common_forgot_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'/>
+                <div id='common_forgot_email' contenteditable=true class='common_input common_forgot_input' placeholder='<COMMON_TRANSLATION_EMAIL/>'/></div>
                 <div id='common_forgot_button' class='common_forgot_button' ></div>
                 <div id='common_forgot_close' class='common_dialogue_button' ></div>
             </div>
@@ -94,7 +109,7 @@
                         <div id='common_user_edit_input_username_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_username' placeholder='<COMMON_TRANSLATION_USERNAME/>'/>
+                        <div id='common_user_edit_input_username' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_USERNAME/>'/></div>
                     </div>
                 </div>
                 <div class='common_setting_horizontal_row'>
@@ -102,7 +117,7 @@
                         <div id='common_user_edit_input_bio_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_bio' placeholder='<COMMON_TRANSLATION_BIO/>'/>
+                        <div id='common_user_edit_input_bio' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_BIO/>'/></div>
                     </div>
                 </div>
             </div>
@@ -120,7 +135,7 @@
                         <div id='common_user_edit_input_new_email_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_new_email' placeholder='<COMMON_TRANSLATION_NEW_EMAIL/>'/>
+                        <div id='common_user_edit_input_new_email' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_NEW_EMAIL/>'/></div>
                     </div>
                 </div>
                 <div class='common_setting_horizontal_row'>
@@ -128,7 +143,10 @@
                         <div id='common_user_edit_input_password_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_password' type='password' value='' placeholder='<COMMON_TRANSLATION_PASSWORD/>'/>
+                        <div class='common_password_container common_input'>
+                            <div id='common_user_edit_input_password' class='common_input common_password' contenteditable=true  placeholder='<COMMON_TRANSLATION_PASSWORD/>'/></div>
+                            <div id='common_user_edit_input_password_mask' class='common_login_input common_input common_password_mask'/></div>
+                        </div>
                     </div>
                 </div>
                 <div class='common_setting_horizontal_row'>
@@ -136,7 +154,10 @@
                         <div id='common_user_edit_input_password_confirm_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_password_confirm' type='password' value='' placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'/>
+                        <div class='common_password_container common_input'>
+                            <div id='common_user_edit_input_password_confirm' class='common_input common_password' contenteditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_CONFIRM/>'/></div>
+                            <div id='common_user_edit_input_password_confirm_mask' class='common_login_input common_input common_password_mask'/></div>
+                        </div>
                     </div>
                 </div>
                 <div class='common_setting_horizontal_row'>
@@ -144,7 +165,10 @@
                         <div id='common_user_edit_input_password_new_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_password_new' type='password' value='' placeholder='<COMMON_TRANSLATION_PASSWORD_NEW/>'/>
+                        <div class='common_password_container common_input'>
+                            <div id='common_user_edit_input_password_new' class='common_input common_password' contenteditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_NEW/>'/></div>
+                            <div id='common_user_edit_input_password_new_mask' class='common_login_input common_input common_password_mask'/></div>
+                        </div>
                     </div>
                 </div>
                 <div class='common_setting_horizontal_row'>
@@ -152,7 +176,10 @@
                         <div id='common_user_edit_input_password_new_confirm_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_password_new_confirm' type='password' value='' placeholder='<COMMON_TRANSLATION_PASSWORD_NEW_CONFIRM/>'/>
+                        <div class='common_password_container common_input'>
+                            <div id='common_user_edit_input_password_new_confirm' class='common_input common_password' contenteditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_NEW_CONFIRM/>'/></div>
+                            <div id='common_user_edit_input_password_new_confirm_mask' class='common_login_input common_input common_password_mask'/></div>
+                        </div>
                     </div>
                 </div>
                 <div class='common_setting_horizontal_row'>
@@ -160,7 +187,7 @@
                         <div id='common_user_edit_input_password_reminder_icon'></div>
                     </div>
                     <div class='common_setting_horizontal_col'>
-                        <input id='common_user_edit_input_password_reminder' placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'/>
+                        <div id='common_user_edit_input_password_reminder' class='common_input' contenteditable=true placeholder='<COMMON_TRANSLATION_PASSWORD_REMINDER/>'/></div>
                     </div>
                 </div>
             </div>

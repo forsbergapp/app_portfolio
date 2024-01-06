@@ -677,7 +677,7 @@ const show_users = () =>{
             `<div id='menu_3_content_widget1' class='widget'>
                 <div id='list_user_account_title'>${common.ICONS.app_users}</div>
                 <div class='list_search'>
-                    <div id='list_user_account_search_input' contentEditable=true class='common_input list_search_input' /></div>
+                    <div id='list_user_account_search_input' contenteditable=true class='common_input list_search_input' /></div>
                     <div class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
@@ -794,7 +794,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
             if (common.COMMON_GLOBAL.user_app_role_id==0){
                 lov_div = '<div class=\'common_lov_button common_list_lov_click\'></div>';
                 lov_class = 'common_input_lov';
-                input_contentEditable = 'contentEditable=true';
+                input_contentEditable = 'contenteditable=true';
             }
             else
                 input_contentEditable = 'contentEditable=false';
@@ -1043,7 +1043,7 @@ const show_apps = async () => {
                         <div class='list_readonly' class='list_readonly'>${app.STATUS}</div>
                     </div>
                     <div class='list_apps_col'>
-                        <div contentEditable=true class='common_input list_edit common_input_lov' defaultValue='${common.get_null_or_value(app.APP_CATEGORY_ID)}'/>${common.get_null_or_value(app.APP_CATEGORY_ID)}</div>
+                        <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${common.get_null_or_value(app.APP_CATEGORY_ID)}'/>${common.get_null_or_value(app.APP_CATEGORY_ID)}</div>
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
@@ -1109,7 +1109,7 @@ const show_app_parameter = (app_id) => {
                         <div class='list_readonly'>${app_parameter.app_id}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div contentEditable=true class='common_input list_edit common_input_lov' defaultValue='${app_parameter.parameter_type_id}'/>${app_parameter.parameter_type_id}</div>
+                        <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${app_parameter.parameter_type_id}'/>${app_parameter.parameter_type_id}</div>
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
@@ -1119,10 +1119,10 @@ const show_app_parameter = (app_id) => {
                         <div class='list_readonly'>${app_parameter.parameter_name}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div contentEditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_value)}</div>
+                        <div contenteditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_value)}</div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div contentEditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_comment)}</div>
+                        <div contenteditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_comment)}</div>
                     </div>
                 </div>`;
                 i++;
@@ -1509,7 +1509,7 @@ const show_monitor = async (yearvalues) =>{
                     </div>
                 </div>
                 <div class='list_search'>
-                    <div id='list_server_log_search_input' contentEditable=true class='common_input list_search_input'/></div>
+                    <div id='list_server_log_search_input' contenteditable=true class='common_input list_search_input'/></div>
                     <div class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_server_log' class='common_list_scrollbar'></div>
@@ -2726,7 +2726,7 @@ const show_config = async (file) => {
                                         <div class='list_readonly'>${Object.keys(config[Object.keys(config)[i_group]][j])[0]}</div>
                                     </div>
                                     <div class='list_config_col'>
-                                        <div contentEditable=true class='common_input list_edit'/>${Object.values(config[Object.keys(config)[i_group]][j])[0]}</div>
+                                        <div contenteditable=true class='common_input list_edit'/>${Object.values(config[Object.keys(config)[i_group]][j])[0]}</div>
                                     </div>
                                     <div class='list_config_col'>
                                         <div class='list_readonly'>${Object.values(config[Object.keys(config)[i_group]][j])[1]}</div>
@@ -2837,7 +2837,7 @@ const show_installation = () =>{
                 </div>
                 <div id='install_demo_input'>
                     <div id="install_demo_password_icon" >${common.ICONS.user_password}</div>
-                    <input id='install_demo_password' type='password' />
+                    <div id='install_demo_password' contenteditable=true class='common_input common_password' /></div>
                 </div>
             </div>
         </div>`;
