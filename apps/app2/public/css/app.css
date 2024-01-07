@@ -355,9 +355,10 @@
 	}
 	#setting_themes_month_slider #timetable_month {
 		zoom: 0.125;
+		position: absolute;
 	}
 	#setting_themes_month_slider #timetable_footer{
-		position:absolute;
+		position:initial;
 	}
 	#setting_themes_year_slider #timetable_year {
 		zoom: 0.125;
