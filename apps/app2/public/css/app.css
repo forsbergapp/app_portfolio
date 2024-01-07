@@ -916,14 +916,14 @@ body,
 }
 /* THEME COMMON */
 #common_user_edit_btn_avatar_img{
-	background-color: var(--app_theme_dialogue_background_color);
+	background-color: var(--app_theme_main_color2);
 }
 .common_dialogue{
 	background-color: var(--app_shadow3);
 }
 .common_dialogue_content{
-	background-color:var(--app_light) !important;
-	color: var(--app_black) !important;
+	background-color:var(--app_theme_main_color1) !important;
+	color: var(--app_theme_main_color3) !important;
 	box-shadow: 0 4px 8px 0 var(--app_shadow1),0 6px 20px 0 var(--app_shadow2);
 }
 

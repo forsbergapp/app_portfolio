@@ -19,6 +19,7 @@ select {
 	line-height: normal;
 	overflow: hidden;
 	vertical-align: middle;
+	width: 100%;
 }
 .common_password_container{
 	font-family: 'Noto Sans Mono';
