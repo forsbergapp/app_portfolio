@@ -1447,7 +1447,7 @@ body{
 }
 .common_password_container{
 	display: inline-block !important;
-    width: 85%;
+    width: 85% !important;
     vertical-align: super;
 }
 /*APP THEME COMMON*/
