@@ -24,6 +24,7 @@ select {
 	font-family: 'Noto Sans Mono';
 	position: relative;
 	display: inherit;
+	width: 100%;
 }
 .common_password:empty{
 	color:inherit !important;
