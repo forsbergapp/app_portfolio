@@ -1913,7 +1913,7 @@ const profile_user_setting_stat = (id) => {
             null;
         else{
             document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
-            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].items.count_user_post_liked;
+            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
         }
     });
 };
@@ -2256,7 +2256,8 @@ const setEvents = () => {
                 profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
                 break;
             }
-            case 'profile_main_btn_user_setting_likes':{
+            case 'profile_main_btn_user_setting_likes':
+            case 'profile_main_btn_user_setting_likes_user_setting':{
                 profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
                                         `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
                                         <div > ${common.ICONS.regional_day +
@@ -2265,7 +2266,8 @@ const setEvents = () => {
                                                 common.ICONS.user_follows}</div>`, show_profile_function);
                 break;
             }
-            case 'profile_main_btn_user_setting_liked':{
+            case 'profile_main_btn_user_setting_liked':
+            case 'profile_main_btn_user_setting_liked_user_setting':{
                 profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
                                         `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
                                         <div > ${common.ICONS.regional_day +
@@ -2328,7 +2330,8 @@ const setEvents = () => {
                 profile_detail_app(3, null, true, null, show_profile_function);
                 break;
             }
-            case 'common_profile_main_btn_liked':{
+            case 'common_profile_main_btn_liked':
+            case 'common_profile_main_btn_liked_users':{
                 profile_detail_app(4, null, true, null, show_profile_function);
                 break;
             }
