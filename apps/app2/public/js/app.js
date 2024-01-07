@@ -2036,6 +2036,7 @@ const user_settings_like = (user_account_app_data_post_id) => {
 const setEvents = () => {
     //app
     document.querySelector('#app').addEventListener('click', event => {
+        common.common_event('click',event);
         const event_target_id = common.element_id(event.target);
         switch (event_target_id){
             //info dialogue
@@ -2288,125 +2289,7 @@ const setEvents = () => {
                 profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target);
                 break;
             }
-        }
-    }, true);
-    document.querySelector('#app').addEventListener('change', event => {
-        switch (event.target.id){
-            //settings regional
-            case 'setting_select_locale':{
-                settings_translate(true);
-                break;
-            }
-            case 'setting_select_report_timezone':{
-                update_ui(2);
-                break;
-            }
-            case 'setting_select_report_locale_second':{
-                settings_translate(false);
-                break;
-            }
-            //settings gps
-            case 'setting_select_popular_place':{
-                update_ui(7);
-                break;
-            }
-            //settings design
-            case 'setting_select_report_papersize':{
-                update_ui(10);
-                break;
-            }
-            //settings image
-            case 'setting_input_reportheader_img':{
-                update_ui(11, event.target.id);
-                break;
-            }
-            case 'setting_input_reportfooter_img':{
-                update_ui(13, event.target.id);
-                break;
-            }
-            //settings prayer
-            case 'setting_select_method':{
-                update_ui(17);
-                break;
-            }
-            //settings user
-            case 'setting_select_user_setting':{
-                user_settings_load().then(() => settings_translate(true).then(() => settings_translate(false)));
-                break;
-            }
-            //profile
-            case 'profile_select_user_settings':{
-                profile_show_user_setting_detail(   event.target.options[event.target.selectedIndex].getAttribute('liked'), 
-                                                    event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
-                                                    event.target.options[event.target.selectedIndex].getAttribute('count_views'));
-                break;
-            }
-        }
-    });
-    document.querySelector('#app').addEventListener('keyup', event => {
-        switch(event.target.id){
-            //settings gps
-            case 'setting_input_place':{
-                common.typewatch(update_ui, 8);
-                break;
-            }
-            case 'setting_input_long':
-            case 'setting_input_lat':{
-                common.typewatch(update_ui, 9);
-                break;
-            }
-        }
-    });
-    //common
-    document.querySelector('#app').addEventListener('keyup', event => {
-        const target_id = common.element_id(event.target);
-        switch(target_id){
-            case 'common_profile_search_input':{
-                common.search_input(event, 'profile', show_profile_function);
-                break;
-            }
-            case 'common_login_username':
-            case 'common_login_password':{
-                if (event.code === 'Enter') {
-                    event.preventDefault();
-                    user_login_app().then(() => {
-                        //unfocus
-                        event.target.blur();
-                    });
-                }
-                break;
-            }
-            //dialogue verify
-            case 'common_user_verify_verification_char1':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
-                break;
-            }
-            case 'common_user_verify_verification_char2':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
-                break;
-            }
-            case 'common_user_verify_verification_char3':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
-                break;
-            }
-            case 'common_user_verify_verification_char4':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
-                break;
-            }
-            case 'common_user_verify_verification_char5':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
-                break;
-            }
-            case 'common_user_verify_verification_char6':{
-                user_verify_check_input_app(event.target, '');
-                break;
-            }
-        }
-    });
-
-    document.querySelector('#app').addEventListener('click', event => {
-        const target_id = common.element_id(event.target);
-        switch(target_id){
+            //common
             case 'common_user_menu_dropdown_log_out':{
                 user_logoff_app();
                 break;
@@ -2495,12 +2378,62 @@ const setEvents = () => {
                     app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
                 });
                 break;
-            }            
+            }       
         }
-    }, false);
+    }, true);
     document.querySelector('#app').addEventListener('change', event => {
-        const target_id = common.element_id(event.target);
-        switch(target_id){
+        common.common_event('change',event);
+        switch (event.target.id){
+            //settings regional
+            case 'setting_select_locale':{
+                settings_translate(true);
+                break;
+            }
+            case 'setting_select_report_timezone':{
+                update_ui(2);
+                break;
+            }
+            case 'setting_select_report_locale_second':{
+                settings_translate(false);
+                break;
+            }
+            //settings gps
+            case 'setting_select_popular_place':{
+                update_ui(7);
+                break;
+            }
+            //settings design
+            case 'setting_select_report_papersize':{
+                update_ui(10);
+                break;
+            }
+            //settings image
+            case 'setting_input_reportheader_img':{
+                update_ui(11, event.target.id);
+                break;
+            }
+            case 'setting_input_reportfooter_img':{
+                update_ui(13, event.target.id);
+                break;
+            }
+            //settings prayer
+            case 'setting_select_method':{
+                update_ui(17);
+                break;
+            }
+            //settings user
+            case 'setting_select_user_setting':{
+                user_settings_load().then(() => settings_translate(true).then(() => settings_translate(false)));
+                break;
+            }
+            //profile
+            case 'profile_select_user_settings':{
+                profile_show_user_setting_detail(   event.target.options[event.target.selectedIndex].getAttribute('liked'), 
+                                                    event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
+                                                    event.target.options[event.target.selectedIndex].getAttribute('count_views'));
+                break;
+            }
+            //common
             case 'common_app_select_theme':{
                 document.body.className = 'app_theme' + 
                                             document.querySelector('#common_app_select_theme').value + ' ' + 
@@ -2546,6 +2479,66 @@ const setEvents = () => {
             }
         }
     }, true);
+    document.querySelector('#app').addEventListener('keyup', event => {
+        common.common_event('keyup',event);
+        const target_id = common.element_id(event.target);
+        switch(target_id){
+            //settings gps
+            case 'setting_input_place':{
+                common.typewatch(update_ui, 8);
+                break;
+            }
+            case 'setting_input_long':
+            case 'setting_input_lat':{
+                common.typewatch(update_ui, 9);
+                break;
+            }
+            //common
+            case 'common_profile_search_input':{
+                common.search_input(event, 'profile', show_profile_function);
+                break;
+            }
+            case 'common_login_username':
+            case 'common_login_password':{
+                if (event.code === 'Enter') {
+                    event.preventDefault();
+                    user_login_app().then(() => {
+                        //unfocus
+                        event.target.blur();
+                    });
+                }
+                break;
+            }
+            //dialogue verify
+            case 'common_user_verify_verification_char1':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
+                break;
+            }
+            case 'common_user_verify_verification_char2':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
+                break;
+            }
+            case 'common_user_verify_verification_char3':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
+                break;
+            }
+            case 'common_user_verify_verification_char4':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
+                break;
+            }
+            case 'common_user_verify_verification_char5':{
+                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
+                break;
+            }
+            case 'common_user_verify_verification_char6':{
+                user_verify_check_input_app(event.target, '');
+                break;
+            }
+        }
+    });  
+    document.querySelector('#app').addEventListener('keydown', event => {
+        common.common_event('keydown',event);
+    });  
     
     
 };
@@ -2568,8 +2561,7 @@ const init_map = async () => {
         common.map_init(APP_GLOBAL.gps_module_leaflet_container,
                         common.COMMON_GLOBAL.module_leaflet_style, 
                         document.querySelector('#setting_input_long').innerHTML, 
-                        document.querySelector('#setting_input_lat').innerHTML, 
-                        true,
+                        document.querySelector('#setting_input_lat').innerHTML,
                         false,
                         map_show_search_on_map_app).then(() => {
             //GPS

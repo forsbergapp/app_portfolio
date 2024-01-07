@@ -32,6 +32,7 @@ const getdocs = (docid = null) => {
 };
 const init_app = async () => {
     document.querySelector('#app').addEventListener('click',(event) => {
+        common.common_event('click',event);
         const target_id = common.element_id(event.target);
         switch (target_id){
             case 'common_window_info_btn_close':{
@@ -45,6 +46,9 @@ const init_app = async () => {
                 break;
             }
         }
+    });
+    document.querySelector('#app').addEventListener('keydown',(event) => {
+        common.common_event('keydown',event);
     });
     getdocs();
 

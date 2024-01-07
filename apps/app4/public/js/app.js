@@ -6,12 +6,73 @@ Object.seal(APP_GLOBAL);
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
-const map_click_event = (event) =>{
-    common.map_click_event(event,   APP_GLOBAL.module_leaflet_map_container);
+
+const app_event_click = event =>{
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('click',(event) => {
+            common.common_event('click',event);
+            const event_target_id = common.element_id(event.target);
+            switch (event_target_id){
+                case 'toolbar_btn_js':{
+                    init_map('1');
+                    break;
+                }
+                case 'toolbar_btn_vue':{
+                    init_map('2');
+                    break;
+                }
+                case 'toolbar_btn_react':{
+                    init_map('3');
+                    break;
+                }
+            }
+        });
+    }
+    else{
+        //other framework
+        common.common_event('click', event);
+        const event_target_id = common.element_id(event.target);
+        switch (event_target_id){
+            case 'toolbar_btn_js':{
+                init_map('1');
+                break;
+            }
+            case 'toolbar_btn_vue':{
+                init_map('2');
+                break;
+            }
+            case 'toolbar_btn_react':{
+                init_map('3');
+                break;
+            }
+        }
+    }
+        
+};
+const app_event_change = event =>{
+    if (event==null){
+        document.querySelector('#app').addEventListener('change',(event) => {
+            common.common_event('change', event);    
+        });
+    }
+    else
+        common.common_event('change', event);
+};
+const app_event_keydown = event =>{
+    if (event==null){
+        document.querySelector('#app').addEventListener('keydown',(event) => {
+            common.common_event('keydown', event);    
+        });
+    }
+    else
+        common.common_event('keydown', event);
 };
 const init_map = async (framework)=>{
-    let map_click_event_js;
-    document.querySelector('#app_map').outerHTML = '<div id="app_map"></div>';
+    //remove listeners
+    document.querySelector('#app_root').replaceWith(document.querySelector('#app_root').cloneNode(true));
+    document.querySelector('#app_root').removeAttribute('data-v-app');
+    document.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
     
     switch (framework){
         case '2':{
@@ -19,18 +80,26 @@ const init_map = async (framework)=>{
             document.querySelector('#toolbar_btn_js').classList = '';
             document.querySelector('#toolbar_btn_vue').classList = 'toolbar_selected';
             document.querySelector('#toolbar_btn_react').classList = '';
-            map_click_event_js = false;
             const Vue = await import('Vue');
             Vue.createApp({
                 data() {
                         return {};
                         },
-                        template: '<div id=\'mapid\' @click=\'myMethod($event)\'></div>', 
+                        template: `<div id='app' @click='AppEventClick($event)' @change='AppEventChange($event)' @change='AppEventKeyDown($event)'>
+                                        ${document.querySelector('#app').innerHTML}
+                                    </div>`, 
                         methods:{
-                            myMethod: (event) => {
-                                map_click_event(event);
-                        }}
-                    }).mount('#app_map');
+                            AppEventClick: (event) => {
+                                app_event_click(event);
+                            },
+                            AppEventChange: (event) => {
+                                app_event_change(event);
+                            },
+                            AppEventKeyDown: (event) => {
+                                app_event_keydown(event);
+                            }
+                        }
+                    }).mount('#app_root');
             break;
         }
         case '3':{
@@ -38,7 +107,6 @@ const init_map = async (framework)=>{
             document.querySelector('#toolbar_btn_js').classList = '';
             document.querySelector('#toolbar_btn_vue').classList = '';
             document.querySelector('#toolbar_btn_react').classList = 'toolbar_selected';
-            map_click_event_js = false;
             const {React} = await import('React');
             const {ReactDOM} = await import('ReactDOM');
             const App = () => {
@@ -48,15 +116,19 @@ const init_map = async (framework)=>{
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
-                return React.createElement('div', {id: 'mapid', onClick:()=> {map_click_event(event);}});
+                return React.createElement('div', {id: 'app', onClick:()=> {app_event_click(event);}, 
+                                                                onChange:()=> {app_event_change(event);},
+                                                                onKeyDown:()=> {app_event_keydown(event);}});
             };
-            const application = ReactDOM.createRoot(document.querySelector('#app_map'));
+            const app_old = document.querySelector('#app').innerHTML;
+            const application = ReactDOM.createRoot(document.querySelector('#app_root'));
             //JSX syntax
             //application.render( <App/>);
             //Using pure Javascript
             application.render( App());
-            //set delay so some browsers render ok on mobiles.
+            //set delay so some browsers render ok.
             await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
+            document.querySelector('#app').innerHTML = app_old;
             break;
         }
         case '1':
@@ -65,8 +137,9 @@ const init_map = async (framework)=>{
             document.querySelector('#toolbar_btn_js').classList = 'toolbar_selected';
             document.querySelector('#toolbar_btn_vue').classList = '';
             document.querySelector('#toolbar_btn_react').classList = '';
-            map_click_event_js = true;
-            document.querySelector('#app_map').innerHTML = '<div id=\'mapid\'></div>';
+            app_event_click();
+            app_event_change();
+            app_event_keydown();
             break;
         }
     }
@@ -75,7 +148,6 @@ const init_map = async (framework)=>{
                         common.COMMON_GLOBAL.module_leaflet_style, 
                         common.COMMON_GLOBAL.client_longitude,
                         common.COMMON_GLOBAL.client_latitude,
-                        map_click_event_js, 
                         true,
                         null).then(()=>{
             
@@ -97,22 +169,6 @@ const init_app = async () =>{
     document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS.app_vue;
     document.querySelector('#toolbar_btn_react').innerHTML = common.ICONS.app_react;
     
-    document.querySelector('#toolbar_top').addEventListener('click', (event) => {
-        switch (event.target.id || event.target.parentNode.id){
-            case 'toolbar_btn_js':{
-                init_map('1');
-                break;
-            }
-            case 'toolbar_btn_vue':{
-                init_map('2');
-                break;
-            }
-            case 'toolbar_btn_react':{
-                init_map('3');
-                break;
-            }
-        }
-    });
     init_map(window.location.pathname.substring(1));
 };
 const init = (parameters) => {
@@ -124,4 +180,4 @@ const init = (parameters) => {
         });
     });
 };
-export{APP_GLOBAL, map_click_event, init};
+export{APP_GLOBAL, init};
