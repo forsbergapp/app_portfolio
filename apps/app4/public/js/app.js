@@ -116,9 +116,9 @@ const init_map = async (framework)=>{
                 //JSX syntax
                 //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
                 //Using pure Javascript
-                return React.createElement('div', {id: 'app', onClick:()=> {app_event_click(event);}, 
-                                                                onChange:()=> {app_event_change(event);},
-                                                                onKeyDown:()=> {app_event_keydown(event);}});
+                return React.createElement('div', { id: 'app',   
+                                                    onClick:   ()=> {app_event_click(event);}
+                                                    });
             };
             const app_old = document.querySelector('#app').innerHTML;
             const application = ReactDOM.createRoot(document.querySelector('#app_root'));
@@ -129,6 +129,8 @@ const init_map = async (framework)=>{
             //set delay so some browsers render ok.
             await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
             document.querySelector('#app').innerHTML = app_old;
+            app_event_change();
+            app_event_keydown();
             break;
         }
         case '1':
