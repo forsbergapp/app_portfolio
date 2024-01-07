@@ -248,7 +248,7 @@ const render_common_html = async (app_id, module, locale) =>{
                 common_files.push(['CommonBodyProfileSearch', common_file]);
         }
         else
-            common_files.push(['CommonBodyUserAccount', '']);
+            common_files.push(['CommonBodyProfileSearch', '']);
         if (app_config.RENDER_USER_ACCOUNT==true){
             const common_file = ConfigGetApp(getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')), 'RENDER_FILES').filter((/**@type{Types.config_apps_render_files}*/filetype)=>filetype[0]=='APP_COMMON_OPTIONAL' && filetype[2]=='CommonBodyUserAccount')[0][4];
             if (app_config.CUSTOM_TAG_USER_ACCOUNT){
