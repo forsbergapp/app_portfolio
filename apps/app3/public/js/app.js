@@ -23,25 +23,31 @@ const getdocs = (docid = null) => {
     let html ='';
     for (const doc of APP_GLOBAL.docs) {
         if (docid== doc.id || docid==null)
-            html += `<div id='doc_list_item'>
-                        <div id='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image_div'>
-                            <img class='doc_list_item_image' src='${doc.doc_url_small}'>
-                        </div>
+            html += `<div class='doc_list_item common_row'>
+                        <div docid='doc_${doc.id}' full_size='${doc.doc_url}' class='doc_list_item_image' style='background-image:url("${doc.doc_url_small}")'></div>
                         <div class='doc_list_item_title'>${doc.doc_title}</div>
                     </div>`;
     }
     document.querySelector('#doc_list').innerHTML = html;
-    document.querySelector('#doc_list').addEventListener('click',(event) => {
-        if (event.target.parentNode.getAttribute('full_size'))
-            common.show_window_info(0, event.target.parentNode.getAttribute('full_size'));
-    });
 };
 const init_app = async () => {
-    getdocs();
-    //event show start documents when closing document
-    document.querySelector('#common_window_info_btn_close').addEventListener('click',() => {
-        document.querySelector('#dialogue_documents').style.visibility = 'visible';
+    document.querySelector('#app').addEventListener('click',(event) => {
+        const target_id = common.element_id(event.target);
+        switch (target_id){
+            case 'common_window_info_btn_close':{
+                document.querySelector('#dialogue_documents').style.visibility = 'visible';
+                break;
+            }
+            case 'doc_list':{
+                const target_row = common.element_row(event.target);
+                if (target_row.querySelector('.doc_list_item_image').getAttribute('full_size'))
+                    common.show_window_info(0, target_row.querySelector('.doc_list_item_image').getAttribute('full_size'));
+                break;
+            }
+        }
     });
+    getdocs();
+
     const docid = window.location.pathname.substring(1);
     if (docid!=''){
         document.querySelector('#dialogue_documents').style.visibility = 'hidden';
@@ -54,7 +60,7 @@ const init_app = async () => {
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
-        init_app().then(() => {});
+        init_app();
     });
 };
 export{init};

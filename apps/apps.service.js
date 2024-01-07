@@ -913,13 +913,13 @@ const providers_buttons = async (app_id) =>{
         .then((/**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
             let html = '';
             for (const provider of result){
-                html += `<button class='common_login_button common_login_provider_button' >
+                html += `<div class='common_login_button common_login_provider_button common_row' >
                             <div class='common_login_provider_id'>${provider.id}</div>
                             <div class='common_login_provider_name'>${provider.provider_name}</div>
-                        </button>`;
+                        </div>`;
             }
             if (html)
-                resolve(`<div id='identity_provider_login'>${html}</div>`);
+                resolve(`<div id='common_identity_provider_login'>${html}</div>`);
             else
                 resolve('');
         })

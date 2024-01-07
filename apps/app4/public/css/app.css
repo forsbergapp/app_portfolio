@@ -107,6 +107,9 @@ body{
 }
 
 /*APP THEME COMMON*/
+.common_input{
+	background-color:var(--app_theme_background_color) !important;
+}
 .common_dialogue_content{
 	color: var(--app_theme_text_color) !important;
 	background-color:var(--app_theme_background_color) !important;

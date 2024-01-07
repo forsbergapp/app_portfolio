@@ -18,9 +18,16 @@
 	visibility:hidden;
 }
 .doc_list_item_image{
+	background-size: contain;
+    background-repeat: no-repeat;
+	background-position: center;
 	width:128px;
 	height:72px;
 	cursor: pointer;
+	display: inline-block;
+}
+doc_list_item_title{
+	width: 100%;
 }
 /*COMMON*/
 #common_profile_input_row,

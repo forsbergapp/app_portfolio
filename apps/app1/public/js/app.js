@@ -21,7 +21,6 @@ const show_hide_apps_dialogue = () => {
     }
 };
 const setEvents = () => {
-
     //app
     document.querySelector('#app').addEventListener('click', event => {
         if (event.target.className == 'app_logo')
@@ -172,7 +171,7 @@ const setEvents = () => {
                 common.user_signup();
                 break;
             }
-            case 'identity_provider_login':{
+            case 'common_identity_provider_login':{
                 if (!event.target.id)
                     ProviderSignIn_app(
                         event.target.parentElement.classList.contains('common_login_button')==true?event.target.parentElement:event.target);
@@ -184,37 +183,36 @@ const setEvents = () => {
             }
         }
     });
-
-    //user preferences
-    document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, ()=>{get_apps();});}, false);
-    document.querySelector('#common_user_arabic_script_select').addEventListener('change', () => { app_theme_update();}, false);
-    
-    document.querySelector('#common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, 'profile', null);}, false);
-
-    //dialogue login/signup/forgot
-    const input_username_login = document.querySelector('#common_login_username');
-    input_username_login.addEventListener('keyup', (event) => {
-        if (event.code === 'Enter') {
-            event.preventDefault();
-            user_login_app().then(() => {
-                //unfocus
-                document.querySelector('#common_login_username').blur();
-            });
-        }
-    });
-    const input_password_login = document.querySelector('#common_login_password');
-    input_password_login.addEventListener('keyup', (event) => {
-        if (event.code === 'Enter') {
-            event.preventDefault();
-            user_login_app().then(() => {
-                //unfocus
-                document.querySelector('#common_login_password').blur();
-            });
-        }
-    });
-    //dialogue verify
-    document.querySelector('#common_user_verify_verification_container').addEventListener('keyup', (event) => {
+    document.querySelector('#app').addEventListener('change', event => {
         switch (event.target.id){
+            case 'common_user_locale_select':{
+                document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, ()=>{get_apps();});
+                break;
+            }
+            case 'common_user_arabic_script_select':{
+                app_theme_update();
+                break;
+            }
+        }
+    });
+    document.querySelector('#app').addEventListener('keyup', event => {
+        switch (event.target.id){
+            case 'common_profile_search_input':{
+                common.search_input(event, 'profile', null);
+                break;
+            }
+            case 'common_login_username':
+            case 'common_login_password':{
+                if (event.code === 'Enter') {
+                    event.preventDefault();
+                    user_login_app().then(() => {
+                        //unfocus
+                        event.target.blur();
+                    });
+                }        
+                break;
+            }
+            //dialouge verify
             case 'common_user_verify_verification_char1':{
                 user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
                 break;
@@ -240,7 +238,7 @@ const setEvents = () => {
                 break;
             }
         }
-    }, false);
+    });
 };
 const app_theme_update = toggle_theme => {
     let theme = '';
@@ -424,7 +422,19 @@ const ProviderSignIn_app = async (provider_button) => {
         }
     });
 };
-const init_app = async () => {
+const init_app = async (parameters) => {
+    for (const parameter of parameters.app) {
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+            common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+            common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+            common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+            common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+            common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
+    }
     //start
     document.querySelector('#start_message').innerHTML = common.ICONS.app_info;
     //info
@@ -439,7 +449,6 @@ const init_app = async () => {
 
     document.querySelector('#app_menu_apps').innerHTML=common.ICONS.app_apps;
     document.querySelector('#app_menu_info').innerHTML=common.ICONS.app_info;
-    
     
     if (common.COMMON_GLOBAL.app_link_url==null)
         document.querySelector('#app_link').style.display = 'none';
@@ -456,48 +465,36 @@ const init_app = async () => {
     setEvents();
     common.zoom_info('');
     common.move_info(null,null);
+
+    document.querySelector('#apps').innerHTML = common.APP_SPINNER;
+    if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+        common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{
+                get_apps();
+        });
+    else
+        get_apps();
+    const show_start = async () => {
+        const user = window.location.pathname.substring(1);
+        if (user !='') {
+            //show profile for user entered in url
+            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+            common.profile_show(null, user,()=>{});
+        }
+    };
+    show_start().then(()=>{
+        //use transition from now and not when starting app
+        document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
+            dialogue.style.transition = 'all 1s';
+        });
+        //show app themes from now to avoid startup css render issues
+        document.querySelector('#app_themes').style.display = 'block';
+    });
 };
 
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
-        for (const parameter of parameters.app) {
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
-                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
-                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-                common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
-        }
-        init_app().then(()=>{
-            document.querySelector('#apps').innerHTML = common.APP_SPINNER;
-            if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-                common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{
-                        get_apps();
-                });
-            else
-                get_apps();
-            const show_start = async () => {
-                const user = window.location.pathname.substring(1);
-                if (user !='') {
-                    //show profile for user entered in url
-                    document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                    common.profile_show(null, user,()=>{});
-                }
-            };
-            show_start().then(()=>{
-                //use transition from now and not when starting app
-                document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
-                    dialogue.style.transition = 'all 1s';
-                });
-                //show app themes from now to avoid startup css render issues
-                document.querySelector('#app_themes').style.display = 'block';
-            });
-        });
+        init_app(parameters);
     });
 };
 export{show_hide_apps_dialogue, setEvents, app_theme_update, get_apps, user_menu_item_click, user_login_app,
