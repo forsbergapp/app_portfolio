@@ -3309,56 +3309,60 @@ const get_cities = async (countrycode, callBack) => {
 };
 const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').innerHTML;
-    const get_cities = async (search) =>{
-        return new Promise ((resolve)=>{
-            FFB ('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null, (err, result) => {
-                if (err)
-                    resolve(null);
-                else
-                    resolve(JSON.parse(result));
+    if (search =='')
+        document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML = '';
+    else{
+        const get_cities = async (search) =>{
+            return new Promise ((resolve)=>{
+                FFB ('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null, (err, result) => {
+                    if (err)
+                        resolve(null);
+                    else
+                        resolve(JSON.parse(result));
+                });
             });
-        });
-    };
-    const cities = await get_cities(search);
-    const search_list = document.querySelector('#common_module_leaflet_search_list_wrap');
-    //remove innerHTML with eventlistener
-    document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML = '';
-    let html = '';
-    if (cities.length > 0){
-        for (const city of cities){
-            html += `<div class='common_module_leaflet_search_list_row' tabindex=-1>
-                        <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
-                        </div>
-                        <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_city'><div class='common_link common_module_leaflet_click_city' >${city.city}</div></div>
-                        </div>
-                        <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_country'><div class='common_link common_module_leaflet_click_city' >${city.admin_name + ',' + city.country}</div></div>
-                        </div>
-                        <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
-                        </div>
-                        <div class='common_module_leaflet_search_list_col'>
-                            <div class='common_module_leaflet_search_list_longitude'>${city.lng}</div>
-                        </div>
-                    </div>`;
+        };
+        const cities = await get_cities(search);
+        const search_list = document.querySelector('#common_module_leaflet_search_list_wrap');
+        //remove innerHTML with eventlistener
+        document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML = '';
+        let html = '';
+        if (cities.length > 0){
+            for (const city of cities){
+                html += `<div class='common_module_leaflet_search_list_row' tabindex=-1>
+                            <div class='common_module_leaflet_search_list_col'>
+                                <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
+                            </div>
+                            <div class='common_module_leaflet_search_list_col'>
+                                <div class='common_module_leaflet_search_list_city'><div class='common_link common_module_leaflet_click_city' >${city.city}</div></div>
+                            </div>
+                            <div class='common_module_leaflet_search_list_col'>
+                                <div class='common_module_leaflet_search_list_country'><div class='common_link common_module_leaflet_click_city' >${city.admin_name + ',' + city.country}</div></div>
+                            </div>
+                            <div class='common_module_leaflet_search_list_col'>
+                                <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
+                            </div>
+                            <div class='common_module_leaflet_search_list_col'>
+                                <div class='common_module_leaflet_search_list_longitude'>${city.lng}</div>
+                            </div>
+                        </div>`;
+            }
+            search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:inline-block'>${html}</div>`;
         }
-        search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:inline-block'>${html}</div>`;
+        else
+            search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:none'>${''}</div>`;
+        document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
+            //execute function from inparameter or use default when not specified
+            if (event.target.classList.contains('common_module_leaflet_click_city'))
+                if (event_function ==null){
+                    map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{map_toolbar_reset('search');});
+                }
+                else{
+                    event_function(event.target.parentNode.parentNode.parentNode);
+                    map_toolbar_reset();
+                }
+        });
     }
-    else
-        search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:none'>${''}</div>`;
-    document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
-        //execute function from inparameter or use default when not specified
-        if (event.target.classList.contains('common_module_leaflet_click_city'))
-            if (event_function ==null){
-                map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{map_toolbar_reset('search');});
-            }
-            else{
-                event_function(event.target.parentNode.parentNode.parentNode);
-                map_toolbar_reset();
-            }
-    });
 };
 /*-----------------------
   EXCEPTION              
