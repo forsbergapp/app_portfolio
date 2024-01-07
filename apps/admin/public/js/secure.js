@@ -1587,7 +1587,6 @@ const show_monitor = async (yearvalues) =>{
                                 common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
                                 true,
-                                true,
                                 null).then(() => {
                     common.map_update(  common.COMMON_GLOBAL.client_longitude,
                                         common.COMMON_GLOBAL.client_latitude,
