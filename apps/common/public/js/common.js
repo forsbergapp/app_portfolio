@@ -292,7 +292,18 @@ const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
   get_uservariables
   
   ----------------------- */
+/**
+ * Finds recursive parent id. Use when current element can be an image or svg attached to an event element
+ * @param {*} element 
+ * @returns {*} 
+ */
 const element_id = element => element.id==''?element_id(element.parentNode):element.id;
+/**
+ * Finds recursive parent row with class common_row. Use when clicking in a list of records
+ * @param {*} element 
+ * @returns {*} 
+ */
+const element_row = element => element.classList.contains('common_row')?element:element_row(element.parentNode);
 
 const LengthWithoutDiacrites = (str) =>{
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
@@ -2580,14 +2591,14 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
         });
     });
 };
-const ProviderSignIn = async (provider_button, callBack) => {
+const ProviderSignIn = async (provider_id, callBack) => {
     //add REST API to get user provider data
-    return callBack(null, { identity_provider_id: provider_button.children[0].innerHTML,
-                            profile_id: provider_button.children[0].innerHTML,
-                            profile_first_name: `PROVIDER_USERNAME${provider_button.children[0].innerHTML}`,
-                            profile_last_name: `PROVIDER LAST_NAME${provider_button.children[0].innerHTML}`,
-                            profile_image_url: '',
-                            profile_email: `PROVIDER_EMAIL${provider_button.children[0].innerHTML}@${location.hostname}`});
+    return callBack(null, { identity_provider_id:   provider_id,
+                            profile_id:             provider_id,
+                            profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
+                            profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
+                            profile_image_url:      '',
+                            profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`});
     
 };
 /*----------------------- */
@@ -2664,42 +2675,12 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, click_e
                                                         </select>
                                                     </div>
                                                 </div>`;
-                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.querySelector('#common_module_leaflet_select_mapstyle'),1);
-
-                    //add event on map countries
-                    const select_country = document.querySelector('#common_module_leaflet_select_country');
-                    select_country.addEventListener('change', () => { 
-                        if (select_country[select_country.selectedIndex].getAttribute('country_code'))
-                            map_city(select_country[select_country.selectedIndex].getAttribute('country_code').toUpperCase());
-                        else{
-                            map_toolbar_reset();
-                        }
-                            
-                    }, false);
-                    //add event on map cities
-                    document.querySelector('#common_module_leaflet_select_city').addEventListener('change', () => {
-                        const select_city = document.querySelector('#common_module_leaflet_select_city');
-                        const longitude_selected = select_city[select_city.selectedIndex].getAttribute('longitude');
-                        const latitude_selected = select_city[select_city.selectedIndex].getAttribute('latitude');
-                        map_update( longitude_selected, 
-                                    latitude_selected, 
-                                    COMMON_GLOBAL.module_leaflet_zoom_city,
-                                    select_city.options[select_city.selectedIndex].text, 
-                                    null, 
-                                    COMMON_GLOBAL.module_leaflet_marker_div_city,
-                                    COMMON_GLOBAL.module_leaflet_flyto).then(()=> {
-                            map_toolbar_reset();
-                        });
-                    }, false);
-                    //add event on map layer select
-                    document.querySelector('#common_module_leaflet_select_mapstyle').addEventListener('change', () => { map_setstyle(document.querySelector('#common_module_leaflet_select_mapstyle').value).then(()=>{null;}); }, false);
-                    //add event on search
-                    document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', (event) => { typewatch(search_input, event, 'module_leaflet', search_event_function); }, false);
-                    document.querySelector('#common_module_leaflet_search_icon').addEventListener('click', () => { 
-                        document.querySelector('#common_module_leaflet_search_input').focus();
-                        document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
-                    }, false);
+                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.querySelector('#common_module_leaflet_select_mapstyle'),1);                
                     
+                    //add event on search
+                    document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', event => { 
+                        typewatch(search_input, event, 'module_leaflet', search_event_function); 
+                    }, false);
 
                     if (click_event){
                         //add event delegation on map
@@ -3186,12 +3167,7 @@ const show_broadcast = (broadcast_message) => {
     }
 };
 const show_broadcast_info = (message) => {
-    const hide_function = () => { document.querySelector('#common_broadcast_info').style.visibility='hidden';
-                                document.querySelector('#common_broadcast_close').removeEventListener('click', hide_function);
-                                document.querySelector('#common_broadcast_info_message_item').innerHTML='';
-                                document.querySelector('#common_broadcast_info_message').style.animationName='unset';};
     document.querySelector('#common_broadcast_info_message').style.animationName='common_ticker';
-    document.querySelector('#common_broadcast_close').addEventListener('click', hide_function);
     document.querySelector('#common_broadcast_info_message_item').innerHTML = message;
     document.querySelector('#common_broadcast_info').style.visibility='visible';
 };
@@ -3614,64 +3590,289 @@ const assign_icons = () => {
     }
 
 };
-const set_event_user_menu = () =>{
-    //user menu also for system admin
-    document.querySelector('#common_user_menu').addEventListener('click', () => { const menu = document.querySelector('#common_user_menu_dropdown');
-    if (menu.style.visibility == 'visible') 
-        menu.style.visibility = 'hidden'; 
-    else 
-        menu.style.visibility = 'visible'; }, false);
-    document.addEventListener('keydown', (event) =>{ 
-    if (event.key === 'Escape') {
-        event.preventDefault();
-        //hide use menu dropdown
-        if (document.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
-            document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-        //hide search
-        const x = document.querySelector('#common_profile_input_row'); 
-        if (x.style.visibility == 'visible') {
-            x.style.visibility = 'hidden';
-            document.querySelector('#common_profile_search_list_wrap').style.visibility = 'hidden';
-        } 
-    }
-    }, false);
-};
 
 const set_events = () => {
-    //set event delegation on #app for all common_switch elements
+    //set event delegation on #app
 	document.querySelector('#app').addEventListener('click', event => {
-                                                                    if (event.target.classList.contains('common_switch'))
-                                                                        if (event.target.classList.contains('checked'))
-                                                                            event.target.classList.remove('checked');
-                                                                        else
-                                                                            event.target.classList.add('checked');
-                                                                    }, false);
-    const password_mask = event => {
+        if (event.target.classList.contains('common_switch'))
+            if (event.target.classList.contains('checked'))
+                event.target.classList.remove('checked');
+            else
+                event.target.classList.add('checked');
+        else{
+            const target_id = element_id(event.target);
+            switch(target_id){
+                case 'common_login_tab2':{
+                    show_common_dialogue('SIGNUP');
+                    break;
+                }
+                case 'common_login_tab3':{
+                    show_common_dialogue('FORGOT');
+                    break;
+                }
+                case 'common_login_close':{
+                    document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_signup_tab1':{
+                    show_common_dialogue('LOGIN');
+                    break;
+                }
+                case 'common_signup_tab3':{
+                    show_common_dialogue('FORGOT');
+                    break;
+                }
+                case 'common_signup_close':{
+                    document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_forgot_tab1':{
+                    show_common_dialogue('LOGIN');
+                    break;
+                }
+                case 'common_forgot_tab2':{
+                    show_common_dialogue('SIGNUP');
+                    break;
+                }
+                case 'common_forgot_button':{
+                    user_forgot();
+                    break;
+                }
+                case 'common_forgot_close':{
+                    document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_message_cancel':{
+                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_user_password_new_cancel':{
+                    dialogue_password_new_clear();
+                    break;
+                }
+                case 'common_user_password_new_ok':{
+                    updatePassword();
+                    break;
+                }
+                case 'common_lov_search_icon':{
+                    lov_filter(document.querySelector('#common_lov_search_input').innerHTML);
+                    break;
+                }
+                case 'common_lov_close':{
+                    lov_close();
+                    break;
+                }
+                case 'common_profile_search_icon':{
+                    document.querySelector('#common_profile_search_input').focus();
+                    document.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    break;
+                }
+                //window info
+                case 'common_window_info_btn_close':{
+                    document.querySelector('#common_window_info').style.visibility = 'hidden'; 
+                    document.querySelector('#common_window_info_info').innerHTML='';
+                    document.querySelector('#common_window_info_content').src='';
+                    document.querySelector('#common_window_info_content').classList='';
+                    document.querySelector('#common_window_info_toolbar').classList='';
+                    break;
+                }
+                case 'common_window_info_info':{
+                    show_hide_window_info_toolbar();
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_zoomout':{
+                    zoom_info(-1);
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_zoomin':{
+                    zoom_info(1);
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_left':{
+                    move_info(-1,0);
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_right':{
+                    move_info(1,0);
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_up':{
+                    move_info(0,-1);
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_down':{
+                    move_info(0,1);
+                    break;
+                }
+                case 'common_window_info_toolbar_btn_fullscreen':{
+                    if (document.fullscreenElement)
+                        document.exitFullscreen();
+                    else
+                        document.body.requestFullscreen();
+                    break;
+                }
+                //user menu
+                case 'common_user_menu':
+                case 'common_user_menu_logged_in':
+                case 'common_user_menu_avatar':
+                case 'common_user_menu_logged_out':
+                case 'common_user_menu_default_avatar':{
+                    const menu = document.querySelector('#common_user_menu_dropdown');
+                    if (menu.style.visibility == 'visible') 
+                        menu.style.visibility = 'hidden'; 
+                    else 
+                        menu.style.visibility = 'visible'; 
+                    break;
+                }
+                case 'common_user_menu_dropdown_log_in':{
+                    show_common_dialogue('LOGIN'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_user_menu_dropdown_edit':{
+                    user_edit();document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_user_menu_dropdown_signup':{
+                    show_common_dialogue('SIGNUP'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                    break;
+                }
+                //dialogue user edit
+                case 'common_user_edit_close':{
+                    dialogue_user_edit_clear();
+                    break;
+                }
+                case 'common_user_edit_btn_avatar_img':{
+                    document.querySelector('#common_user_edit_input_avatar_img').click();
+                    break;
+                }
+                case 'common_user_edit_input_avatar_img':{
+                    show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                    break;
+                }
+                case 'common_user_edit_btn_user_update':{
+                    user_update();
+                    break;
+                }
+                //broadcast
+                case 'common_broadcast_close':{
+                    document.querySelector('#common_broadcast_info').style.visibility='hidden';
+                    document.querySelector('#common_broadcast_info_message_item').innerHTML='';
+                    document.querySelector('#common_broadcast_info_message').style.animationName='unset';
+                    break;
+                }
+                //module leaflet
+                case 'common_module_leaflet_search_icon':{
+                    document.querySelector('#common_module_leaflet_search_input').focus();
+                    document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    break;
+                }
+                default:
+                    break;
+            }
+        }    
+    }, false);
+    document.querySelector('#app').addEventListener('change', event => {
+        switch (event.target.id){
+            //define globals and save settings here, in apps define what should happen when changing
+            case 'common_user_locale_select':{
+                COMMON_GLOBAL.user_locale = event.target.value;
+                //change navigator.language, however when logging out default navigator.language will be set
+                //commented at the moment
+                //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                user_preference_save();
+                break;
+            }
+            case 'common_user_timezone_select':{
+                COMMON_GLOBAL.user_timezone = event.target.value;
+                    user_preference_save().then(()=>{
+                        if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
+                            dialogue_user_edit_clear();
+                            user_edit();
+                        }
+                    });
+                break;
+            }
+            case 'common_user_direction_select':{
+                document.body.style.direction = event.target.value;
+                COMMON_GLOBAL.user_direction = event.target.value;  
+                user_preference_save();
+                break;
+            }
+            case 'common_user_arabic_script_select':{
+                COMMON_GLOBAL.user_arabic_script = event.target.value;
+                user_preference_save();
+                break;
+            }
+            //module leaflet events
+            case 'common_module_leaflet_select_country':{
+                if (event.target[event.target.selectedIndex].getAttribute('country_code'))
+                    map_city(event.target[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
+                else{
+                    map_toolbar_reset();
+                }            
+                break;
+            }
+            case 'common_module_leaflet_select_city':{
+                const longitude_selected = event.target[event.target.selectedIndex].getAttribute('longitude');
+                const latitude_selected = event.target[event.target.selectedIndex].getAttribute('latitude');
+                map_update( longitude_selected, 
+                            latitude_selected, 
+                            COMMON_GLOBAL.module_leaflet_zoom_city,
+                            event.target.options[event.target.selectedIndex].text, 
+                            null, 
+                            COMMON_GLOBAL.module_leaflet_marker_div_city,
+                            COMMON_GLOBAL.module_leaflet_flyto).then(()=> {
+                    map_toolbar_reset();
+                });
+                break;
+            }
+            case 'common_module_leaflet_select_mapstyle':{
+                map_setstyle(event.target.value).then(()=>{null;});
+                break;
+            }
+        }
+    }, false);
+    
+    document.querySelector('#app').addEventListener('keyup', event => {
         if (event.target.classList.contains('common_password')){
             if (event.target.innerText.indexOf('\n')>-1)
                 event.target.innerText = event.target.innerText.replace('\n','');
             document.querySelector(`#${event.target.id}_mask`).innerText = event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
         }
-    };
-    const disable_copy_paste_cut = event => {
-        if(event.target.nodeName !='SELECT'){
-            event.preventDefault();
-            event.target.focus();
-        }
-    };
-    const disable_common_input = event => {
-        if (event.target.classList.contains('common_input')){
-            event.preventDefault();
-            event.target.focus();
-        }
-    };
-    document.querySelector('#app').addEventListener('keyup', password_mask, false);
-    document.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('mousedown', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
+        else
+            switch (event.target.id){
+                case 'common_forgot_email':{
+                    if (event.code === 'Enter') {
+                        event.preventDefault();
+                        user_forgot().then(()=>{
+                            //unfocus
+                            document.querySelector('#common_forgot_email').blur();
+                        });
+                    }
+                    break;
+                }
+                case 'common_lov_search_input':{
+                    lov_keys(event);
+                    break;
+                }
+            }
+    }, false);
 
+    //only works on document level:
+    document.addEventListener('keydown', (event) =>{ 
+        if (event.key === 'Escape') {
+            event.preventDefault();
+            //hide use menu dropdown
+            if (document.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
+                document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+            //hide search
+            const x = document.querySelector('#common_profile_input_row'); 
+            if (x.style.visibility == 'visible') {
+                x.style.visibility = 'hidden';
+                document.querySelector('#common_profile_search_list_wrap').style.visibility = 'hidden';
+            } 
+        }
+    }, false);
     document.querySelector('#app').addEventListener('keydown', event => { 
         if(event.target.classList.contains('common_input') && 
             (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
@@ -3684,154 +3885,33 @@ const set_events = () => {
                                         event.code=='PageUp'|| 
                                         event.code=='PageDown') ) ))
             event.preventDefault();
-    });
-    //login/signup/forgot
-    document.querySelector('#common_login_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
-    document.querySelector('#common_login_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
-    document.querySelector('#common_login_close').addEventListener('click', () => { document.querySelector('#common_dialogue_login').style.visibility = 'hidden'; }, false);
-    document.querySelector('#common_signup_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN'); }, false);
-    document.querySelector('#common_signup_tab3').addEventListener('click', () => { show_common_dialogue('FORGOT'); }, false);
-    document.querySelector('#common_signup_close').addEventListener('click', () => { document.querySelector('#common_dialogue_signup').style.visibility = 'hidden'; }, false);
-    document.querySelector('#common_forgot_tab1').addEventListener('click', () => { show_common_dialogue('LOGIN'); }, false);
-    document.querySelector('#common_forgot_tab2').addEventListener('click', () => { show_common_dialogue('SIGNUP'); }, false);
-    document.querySelector('#common_forgot_email').addEventListener('keyup', (event) =>{
-        if (event.code === 'Enter') {
-            event.preventDefault();
-            user_forgot().then(()=>{
-                //unfocus
-                document.querySelector('#common_forgot_email').blur();
-            });
-        }
-    });
-    document.querySelector('#common_forgot_button').addEventListener('click', () => { user_forgot();}, false);
-    document.querySelector('#common_forgot_close').addEventListener('click', () => { document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden'; }, false);
-
-    //dialogue message
-    document.querySelector('#common_message_cancel').addEventListener('click', () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden'; }, false);
-    //dialogue new password
-    document.querySelector('#common_user_password_new_cancel').addEventListener('click', () => { dialogue_password_new_clear(); }, false);
-    document.querySelector('#common_user_password_new_ok').addEventListener('click', () => { updatePassword(); }, false);
-    //dialogue lov
-    document.querySelector('#common_lov_search_input').addEventListener('keyup', (event) => {lov_keys(event);});
-    document.querySelector('#common_lov_search_icon').addEventListener('click', () => {lov_filter(document.querySelector('#common_lov_search_input').innerHTML);});
-    document.querySelector('#common_lov_close').addEventListener('click', () => { lov_close();}, false); 
-    //profile search
-    if (document.querySelector('#common_profile_input_row'))
-        document.querySelector('#common_profile_search_icon').addEventListener('click', () => { 
-            document.querySelector('#common_profile_search_input').focus();
-            document.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
-        }, false);
-    //window info
-    document.querySelector('#common_window_info_btn_close').addEventListener('click', () =>{
-            document.querySelector('#common_window_info').style.visibility = 'hidden'; 
-            document.querySelector('#common_window_info_info').innerHTML='';
-            document.querySelector('#common_window_info_content').src='';
-            document.querySelector('#common_window_info_content').classList='';
-            document.querySelector('#common_window_info_toolbar').classList='';
-    });
-    document.querySelector('#common_window_info_info').addEventListener('click', () => { show_hide_window_info_toolbar();  }, false);
-    document.querySelector('#common_window_info_toolbar').addEventListener('click', (event)=>{
-        let event_target_id;
-        if  (event.target.parentNode.id == 'common_window_info_toolbar'){
-            //button
-            event_target_id = event.target.id;
-        }
-        else
-            if  (event.target.parentNode.parentNode.id == 'common_window_info_toolbar'){
-                //svg or icon
-                event_target_id = event.target.parentNode.id;
-            }
-            else{
-                //path in svg
-                event_target_id = event.target.parentNode.parentNode.id;
-            }
-                
-        switch (event_target_id){
-            case 'common_window_info_toolbar_btn_zoomout':{
-                zoom_info(-1);
-                break;
-            }
-            case 'common_window_info_toolbar_btn_zoomin':{
-                zoom_info(1);
-                break;
-            }
-            case 'common_window_info_toolbar_btn_left':{
-                move_info(-1,0);
-                break;
-            }
-            case 'common_window_info_toolbar_btn_right':{
-                move_info(1,0);
-                break;
-            }
-            case 'common_window_info_toolbar_btn_up':{
-                move_info(0,-1);
-                break;
-            }
-            case 'common_window_info_toolbar_btn_down':{
-                move_info(0,1);
-                break;
-            }
-            case 'common_window_info_toolbar_btn_fullscreen':{
-                if (document.fullscreenElement)
-                    document.exitFullscreen();
-                else
-                    document.body.requestFullscreen();
-                break;
-            }
-        }
     }, false);
-    //usermenu
-    if (document.querySelector('#common_user_menu')){
-        set_event_user_menu();
-        document.querySelector('#common_user_menu_dropdown_log_in').addEventListener('click', () => { show_common_dialogue('LOGIN'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';}, false);
-        document.querySelector('#common_user_menu_dropdown_edit').addEventListener('click', () => { user_edit();document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
-        document.querySelector('#common_user_menu_dropdown_signup').addEventListener('click', () => { show_common_dialogue('SIGNUP'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden'; }, false);
-        //user preferences
-        //define globals and save settings here, in apps define what should happen when changing
-        if (document.querySelector('#common_user_locale_select'))
-            document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { 
-                                                                                        COMMON_GLOBAL.user_locale = event.target.value;
-                                                                                        //change navigator.language, however when logging out default navigator.language will be set
-                                                                                        //commented at the moment
-                                                                                        //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                                                                                        user_preference_save();
-                                                                                    }, false);
-        if (document.querySelector('#common_user_timezone_select'))
-            document.querySelector('#common_user_timezone_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_timezone = event.target.value;
-                                                                                                    user_preference_save().then(()=>{
-                                                                                                        if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
-                                                                                                            dialogue_user_edit_clear();
-                                                                                                            user_edit();
-                                                                                                        }
-                                                                                                    });
-                                                                                                    }, false);
-        //define also in app if needed to adjust ui
-        if (document.querySelector('#common_user_direction_select'))
-            document.querySelector('#common_user_direction_select').addEventListener('change', (event) => { document.body.style.direction = event.target.value;
-                                                                                                    COMMON_GLOBAL.user_direction = event.target.value;  
-                                                                                                    user_preference_save();
-                                                                                                    }, false);
-        if (document.querySelector('#common_user_arabic_script_select'))
-            document.querySelector('#common_user_arabic_script_select').addEventListener('change', (event) => { COMMON_GLOBAL.user_arabic_script = event.target.value;
-                                                                                                        user_preference_save();
-                                                                                                        }, false);
-        
-        
-        set_user_account_app_settings();
-        
-        //dialogue user edit
-        document.querySelector('#common_user_edit_close').addEventListener('click', () => { dialogue_user_edit_clear(); }, false);
-        document.querySelector('#common_user_edit_btn_avatar_img').addEventListener('click', () => { document.querySelector('#common_user_edit_input_avatar_img').click(); }, false);
-        document.querySelector('#common_user_edit_input_avatar_img').addEventListener('change', (event) => { show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height); }, false);
-        document.querySelector('#common_user_edit_btn_user_update').addEventListener('click', () => { user_update(); }, false);
-    }  
+    
+    const disable_copy_paste_cut = event => {
+        if(event.target.nodeName !='SELECT'){
+            event.preventDefault();
+            event.target.focus();
+        }
+    };
+    const disable_common_input = event => {
+        if (event.target.classList.contains('common_input')){
+            event.preventDefault();
+            event.target.focus();
+        }
+    };
+    document.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('mousedown', disable_copy_paste_cut, false);
+    document.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
+
 };
 const set_user_account_app_settings = () =>{
     if (document.querySelector('#common_user_menu')){
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.querySelector('#common_user_locale_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.querySelector('#common_user_timezone_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.querySelector('#common_user_direction_select'), 1);
-    SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.querySelector('#common_user_arabic_script_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.querySelector('#common_user_locale_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.querySelector('#common_user_timezone_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.querySelector('#common_user_direction_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.querySelector('#common_user_arabic_script_select'), 1);
     }
 };
 const set_app_parameters = (common_parameters) => {
@@ -3909,7 +3989,7 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       element_id, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
+       element_id, element_row, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
@@ -3942,4 +4022,4 @@ export{/* GLOBALS*/
        /* SERVICE WORLDCITIES */
        get_cities,
        /* INIT */
-       set_event_user_menu, init_common};
+       init_common};

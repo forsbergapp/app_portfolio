@@ -140,59 +140,203 @@ const admin_login = async () => {
 };
 const setEvents = () => {
 
-    document.querySelector('#admin_login_form').addEventListener('keyup', (event) => {
-        if (event.target.id == 'admin_login_username_input' ||
-            event.target.id == 'admin_login_password_input' ||
-            event.target.id == 'system_admin_login_username_input' ||
-            event.target.id == 'system_admin_login_password_input' ||
-            event.target.id == 'system_admin_login_password_confirm_input')
-            if (event.code === 'Enter') {
-                event.preventDefault();
-                admin_login();
-                //unfocus
-                document.querySelector('#' + event.target.id).blur();
+    document.querySelector('#app').addEventListener('keyup', event => {
+        switch (event.target.id){
+            case 'admin_login_username_input':
+            case 'admin_login_password_input':
+            case 'system_admin_login_username_input':
+            case 'system_admin_login_password_input':
+            case 'system_admin_login_password_confirm_input':{
+                if (event.code === 'Enter') {
+                    event.preventDefault();
+                    admin_login();
+                    //unfocus
+                    document.querySelector('#' + event.target.id).blur();
+                }    
+                break;
             }
+            default:
+                break;
+        }
     });
-    document.querySelector('#admin_login_button').addEventListener('click', () => { admin_login(); }, false);
-    document.querySelector('#admin_login_nav').addEventListener('click', (event) => { admin_login_nav(event.target); }, true);
-
-
-    if (common.COMMON_GLOBAL.system_admin_only == 1)
-        common.set_event_user_menu();
-    else {
-        //common
-        //profile
-        document.querySelector('#common_profile_home').addEventListener('click', () => { common.profile_top(1); }, false);
-        document.querySelector('#common_profile_close').addEventListener('click', () => { common.profile_close(); }, false);
-        document.querySelector('#common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1); }, false);
-        document.querySelector('#common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2); }, false);
-        document.querySelector('#common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3); }, false);
-        document.querySelector('#common_profile_follow').addEventListener('click', () => { common.profile_follow_like('FOLLOW'); }, false);
-        document.querySelector('#common_profile_like').addEventListener('click', () => { common.profile_follow_like('LIKE'); }, false);
-        document.querySelector('#common_profile_main_btn_following').addEventListener('click', () => { common.profile_detail(1, null, true, null); }, false);
-        document.querySelector('#common_profile_main_btn_followed').addEventListener('click', () => { common.profile_detail(2, null, true, null); }, false);
-        document.querySelector('#common_profile_main_btn_likes').addEventListener('click', () => { common.profile_detail(3, null, true, null); }, false);
-        document.querySelector('#common_profile_main_btn_liked').addEventListener('click', () => { common.profile_detail(4, null, true, null); }, false);
-        //user preferences
-        document.querySelector('#common_user_menu_username').addEventListener('click', () => {
-            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null,null,()=>{});
-            document.querySelector('#common_user_menu_dropdown').style = 'none';
-        }, false);
-
-        document.querySelector('#common_user_locale_select').addEventListener('change', (event) => {
-            common.common_translate_ui(event.target.value, ()=>{});
-        }, false);
-        document.querySelector('#common_user_arabic_script_select').addEventListener('change', () => { document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change')); }, false);
-    }
-    document.querySelector('#common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + document.querySelector('#common_app_select_theme').value + ' ' + document.querySelector('#common_user_arabic_script_select').value; }, false);
-
+    document.querySelector('#app').addEventListener('click', event => {
+        const target_id = common.element_id(event.target);
+        switch (target_id){
+            case 'admin_login_button':{
+                admin_login();
+                break;
+            }
+            case 'admin_login_title':
+            case 'system_admin_login_title':{
+                admin_login_nav(event.target);
+                break;
+            }
+            case 'send_broadcast_send':{
+                app_secure.sendBroadcast();
+                break;
+            }
+            case 'send_broadcast_close':{
+                app_secure.closeBroadcast();
+                break;
+            }
+            case 'menu_open':{
+                document.querySelector('#menu').style.display = 'block';
+                break;
+            }
+            case 'menu_close': {
+                document.querySelector('#menu').style.display = 'none';
+                break;
+            }
+            case 'menu_1':
+            case 'menu_2':
+            case 'menu_3':
+            case 'menu_4':
+            case 'menu_5':
+            case 'menu_6':
+            case 'menu_7':
+            case 'menu_8':
+            case 'menu_9':
+            case 'menu_10':{
+                app_secure.show_menu(parseInt(target_id.substring(5)));
+                break;
+            }
+            case 'menu_11': {
+                admin_logoff_app();
+                break;
+            }
+        }
+    });
+    
+    document.querySelector('#app').addEventListener('change', event => {
+        switch (event.target.id){
+            case 'select_broadcast_type':{
+                app_secure.set_broadcast_type();
+                break;
+            }
+        }
+    });
+    //common
+    document.querySelector('#app').addEventListener('change', event => {
+        switch (event.target.id){
+            case 'common_user_direction_select':{
+                app_secure.fix_pagination_buttons(event.target.value);
+                break;
+            }
+            case 'common_user_locale_select':{
+                common.common_translate_ui(event.target.value, ()=>{});
+                break;
+            }
+            case 'common_user_arabic_script_select':{
+                document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                break;
+            }
+            case 'common_app_select_theme':{
+                document.body.className = 'app_theme' + 
+                                            document.querySelector('#common_app_select_theme').value + ' ' + 
+                                            document.querySelector('#common_user_arabic_script_select').value;
+                break;
+            }
+        }
+    });
+    document.querySelector('#app').addEventListener('click', event => {
+        switch (event.target.id){
+            case 'common_message_cancel':{
+                document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                break;
+            }
+            case 'common_profile_home':{
+                common.profile_top(1);
+                break;
+            }
+            case 'common_profile_close':{
+                common.profile_close();
+                break;
+            }
+            case 'common_profile_top_row1_1':{
+                common.profile_top(1);
+                break;
+            }
+            case 'common_profile_top_row1_2':{
+                common.profile_top(2);
+                break;
+            }
+            case 'common_profile_top_row1_3':{
+                common.profile_top(3);
+                break;
+            }
+            case 'common_profile_follow':{
+                common.profile_follow_like('FOLLOW');
+                break;
+            }
+            case 'common_profile_like':{
+                common.profile_follow_like('LIKE');
+                break;
+            }
+            case 'common_profile_main_btn_following':{
+                common.profile_detail(1, null, true, null);
+                break;
+            }
+            case 'common_profile_main_btn_followed':{
+                common.profile_detail(2, null, true, null);
+                break;
+            }
+            case 'common_profile_main_btn_likes':{
+                common.profile_detail(3, null, true, null);
+                break;
+            }
+            case 'common_profile_main_btn_liked':{
+                common.profile_detail(4, null, true, null);
+                break;
+            }
+            case 'common_user_menu_username':{
+                document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                common.profile_show(null,null,()=>{});
+                document.querySelector('#common_user_menu_dropdown').style = 'none';
+                break;
+            }
+        }
+    });
 };
 
 const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
-const init_app = (system_admin_only) => {
+const init_app = (parameters) => {
+    admin_login_nav(document.querySelector('#admin_login_title'));
+    document.querySelector('#admin_login_title').innerHTML = common.ICONS.user;
+    document.querySelector('#system_admin_login_title').innerHTML = common.ICONS.app_system_admin;
+    document.querySelector('#system_admin_login_username_icon').innerHTML = common.ICONS.app_system_admin;
+    document.querySelector('#system_admin_login_password_icon').innerHTML = common.ICONS.user_password;
+    
+    document.querySelector('#common_message_close').innerHTML = common.ICONS.app_close;
+    document.querySelector('#admin_login_username_icon').innerHTML = common.ICONS.user;
+    document.querySelector('#admin_login_password_icon').innerHTML = common.ICONS.user_password;
+    if (parameters.app_service.first_time == 1) {
+        document.querySelector('#admin_first_time').innerHTML = common.ICONS.app_init;
+        document.querySelector('#admin_first_time').style.display = 'block';
+        document.querySelector('#system_admin_login_password_confirm').style.display = 'block';
+        document.querySelector('#system_admin_login_password_icon_confirm').innerHTML = common.ICONS.user_password;
+    }
+
+    if (parameters.app_service.system_admin_only == 1) {
+        document.querySelector('#admin_login_nav').style.display = 'none';
+        document.querySelector('#admin_login').style.display = 'none';
+        document.querySelector('#system_admin_login').style.display = 'block';
+    }
+    else {
+        for (let i = 0; i < parameters.app.length; i++) {
+            if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_WIDTH')
+                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameters.app[i].parameter_value);
+            if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_HEIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameters.app[i].parameter_value);
+            if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_DARK')
+                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_LIGHT')
+                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
+            if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+                common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
+        }
+    }
     //SET ICONS
     document.querySelector('#admin_login_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
 
@@ -207,14 +351,6 @@ const init_app = (system_admin_only) => {
 
     document.querySelector('#send_broadcast_title').innerHTML = common.ICONS.app_broadcast;
     document.querySelector('#client_id_label').innerHTML = common.ICONS.user;
-
-    //SET EVENTLISTENERS
-    document.querySelector('#common_message_cancel').addEventListener('click', () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden'; }, false);
-    document.querySelector('#menu_open').addEventListener('click', () => { document.querySelector('#menu').style.display = 'block'; }, false);
-
-    document.querySelector('#select_broadcast_type').addEventListener('change', () => { app_secure.set_broadcast_type(); }, false);
-    document.querySelector('#send_broadcast_send').addEventListener('click', () => { app_secure.sendBroadcast(); }, false);
-    document.querySelector('#send_broadcast_close').addEventListener('click', () => { app_secure.closeBroadcast(); }, false);
 
     //MENU ITEMS
     document.querySelector('#menu_close').innerHTML = common.ICONS.app_menu_close;
@@ -240,40 +376,10 @@ const init_app = (system_admin_only) => {
     document.querySelector('#menu_10').innerHTML = common.ICONS.app_server;
     //LOGOUT
     document.querySelector('#menu_11').innerHTML = common.ICONS.app_logoff;
-
-    document.querySelector('#menu_secure').addEventListener('click', (event) => {
-        let target_id;
-        if (event.target.id.startsWith('menu_')) {
-            //menuitem
-            target_id = event.target.id;
-        }
-        else
-            if (event.target.parentNode.id.startsWith('menu_')) {
-                //svg or icon in menuitem
-                target_id = event.target.parentNode.id;
-            }
-            else
-                if (event.target.parentNode.parentNode.id.startsWith('menu_')) {
-                    //path in svg in menuitem
-                    target_id = event.target.parentNode.parentNode.id;
-                }
-        switch (target_id) {
-            case 'menu_close': {
-                document.querySelector('#menu').style.display = 'none';
-                break;
-            }
-            case 'menu_11': {
-                admin_logoff_app();
-                break;
-            }
-            default: {
-                app_secure.show_menu(parseInt(target_id.substring(5)));
-            }
-        }
-    }, false);
-    document.querySelector('#common_user_direction_select').addEventListener('change', (event) => { app_secure.fix_pagination_buttons(event.target.value); }, false);
+    
+    
     setEvents();
-    if (system_admin_only == 0)
+    if (parameters.app_service.system_admin_only == 0)
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{});
 };
@@ -281,45 +387,8 @@ const init = (parameters) => {
     //show admin login as default
     document.querySelector('#admin_login_button').innerHTML = common.APP_SPINNER;
     common.COMMON_GLOBAL.exception_app_function = admin_exception;
-    
-
     common.init_common(parameters).then(()=>{
-        admin_login_nav(document.querySelector('#admin_login_title'));
-        document.querySelector('#admin_login_title').innerHTML = common.ICONS.user;
-        document.querySelector('#system_admin_login_title').innerHTML = common.ICONS.app_system_admin;
-        document.querySelector('#system_admin_login_username_icon').innerHTML = common.ICONS.app_system_admin;
-        document.querySelector('#system_admin_login_password_icon').innerHTML = common.ICONS.user_password;
-        
-        document.querySelector('#common_message_close').innerHTML = common.ICONS.app_close;
-        document.querySelector('#admin_login_username_icon').innerHTML = common.ICONS.user;
-        document.querySelector('#admin_login_password_icon').innerHTML = common.ICONS.user_password;
-        if (parameters.app_service.first_time == 1) {
-            document.querySelector('#admin_first_time').innerHTML = common.ICONS.app_init;
-            document.querySelector('#admin_first_time').style.display = 'block';
-            document.querySelector('#system_admin_login_password_confirm').style.display = 'block';
-            document.querySelector('#system_admin_login_password_icon_confirm').innerHTML = common.ICONS.user_password;
-        }
-
-        if (parameters.app_service.system_admin_only == 1) {
-            document.querySelector('#admin_login_nav').style.display = 'none';
-            document.querySelector('#admin_login').style.display = 'none';
-            document.querySelector('#system_admin_login').style.display = 'block';
-        }
-        else {
-            for (let i = 0; i < parameters.app.length; i++) {
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_WIDTH')
-                    common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameters.app[i].parameter_value);
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_HEIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameters.app[i].parameter_value);
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_DARK')
-                    common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameters.app[i].parameter_value;
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_COLOR_LIGHT')
-                    common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameters.app[i].parameter_value;
-                if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-                    common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
-            }
-        }
-        init_app(parameters.app_service.system_admin_only);
+        init_app(parameters);
         document.querySelector('#admin_login_button').innerHTML = common.ICONS.app_login;
     });
 };

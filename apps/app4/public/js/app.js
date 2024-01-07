@@ -115,16 +115,12 @@ const init_app = async () =>{
     });
     init_map(window.location.pathname.substring(1));
 };
-const init = async (parameters) => {
-    const {APP_SPINNER} = await import('common');
-    document.querySelector('#loading').innerHTML = APP_SPINNER;
-    return new Promise((resolve)=>{
-        common.COMMON_GLOBAL.exception_app_function = app_exception;
-        common.init_common(parameters).then(()=>{
-            init_app().then(()=>{
-                document.querySelector('#loading').innerHTML = '';
-                resolve();
-            });
+const init = (parameters) => {
+    document.querySelector('#loading').innerHTML = common.APP_SPINNER;
+    common.COMMON_GLOBAL.exception_app_function = app_exception;
+    common.init_common(parameters).then(()=>{
+        init_app().then(()=>{
+            document.querySelector('#loading').innerHTML = '';
         });
     });
 };
