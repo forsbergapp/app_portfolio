@@ -270,36 +270,25 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
 /*----------------------- */
 const update_all_theme_thumbnails = async () => {
     await update_timetable_report(0, null, getReportSettings()).then(() => {
-        document.querySelectorAll('#slides_day .slide').forEach(e => {
-            update_theme_thumbnail(e, 'day', 1);
-        });
+        update_theme_thumbnail('day');
     });
-    
     await update_timetable_report(1, null, getReportSettings()).then(() => {
-        document.querySelectorAll('#slides_month .slide').forEach(e => {
-            update_theme_thumbnail(e, 'month', 2);
-        });
+        update_theme_thumbnail('month');
     });
     await update_timetable_report(2, null, getReportSettings()).then(() => {
-        document.querySelectorAll('#slides_year .slide').forEach(e => {
-            update_theme_thumbnail(e, 'year', 1);
-        });
+        update_theme_thumbnail('year');
     });
 };
-const update_theme_thumbnail = (e, theme_type, classlist_pos) => {
-    //copy paper div with current papersize class
-    e.children[0].innerHTML = document.querySelector('#paper').outerHTML;
-    //remove id from paper
-    e.children[0].children[0].removeAttribute('id');
-    //remove styles
-    e.children[0].children[0].removeAttribute('style');
-    //insert class paper first
-    e.children[0].children[0].className = 'paper ' + e.children[0].children[0].className;
-    const new_theme_id = e.children[0].getAttribute('data-theme_id');
-    //theme class in classList according to given position
-    const old_theme = e.children[0].children[0].children[0].classList[classlist_pos];
-    e.children[0].children[0].children[0].classList.remove(old_theme);
-    e.children[0].children[0].children[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
+const update_theme_thumbnail = (theme_type) => {
+    const thumbnail = document.querySelectorAll(`#slides_${theme_type} .slide .slider_active_${theme_type}`)[0];
+    //copy paper div with current papersize class to a new div with paper class
+    thumbnail.innerHTML =  `<div class='paper ${document.querySelector('#paper').className}'>
+                    ${document.querySelector('#paper').innerHTML}
+                    </div>` ;
+    const new_theme_id = thumbnail.getAttribute('data-theme_id');
+    const old_theme = thumbnail.querySelectorAll('.timetable_class')[0].className.split(' ').filter(themeclass=>themeclass.startsWith(`theme_${theme_type}`))[0];
+    thumbnail.querySelectorAll('.timetable_class')[0].classList.remove(old_theme);
+    thumbnail.querySelectorAll('.timetable_class')[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
 };
 
 const get_theme_id = (type) => {
@@ -310,14 +299,14 @@ const get_theme_id = (type) => {
         return select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_' + type + '_id');
 };
 const set_theme_id = (type, theme_id) => {
-    const slides = document.querySelector('#setting_themes_' + type + '_slider').children[0].children[0];
+    const slides = document.querySelectorAll(`#setting_themes_${type}_slider .slide div`);
     let i=0;
-    for (const slide of slides.children) {
-        if (slide.children[0].getAttribute('data-theme_id') == theme_id) {
+    for (const slide of slides) {
+        if (slide.getAttribute('data-theme_id') == theme_id) {
             //remove active class from current theme
             document.querySelectorAll('.slider_active_' + type)[0].classList.remove('slider_active_' + type);
             //set active class on found theme
-            document.querySelector('#' + slide.children[0].id).classList.add('slider_active_' + type);
+            slide.classList.add('slider_active_' + type);
             //update preview image to correct theme
             document.querySelector('#slides_' + type).style.left = (-96 * (i)).toString() + 'px';
             set_theme_title(type);
@@ -333,65 +322,41 @@ const set_theme_title = (type) => {
     return null;
 };
 const load_themes = () => {
-    slide(document.querySelector('#slides_day'),
-        document.querySelector('#slider_prev_day'),
-        document.querySelector('#slider_next_day'),
-        'day');
-    slide(document.querySelector('#slides_month'),
-        document.querySelector('#slider_prev_month'),
-        document.querySelector('#slider_next_month'),
-        'month');
-    slide(document.querySelector('#slides_year'),
-        document.querySelector('#slider_prev_year'),
-        document.querySelector('#slider_next_year'),
-        'year');
-    return null;
+    document.querySelector('#slides_day .slide div').classList.add('slider_active_day');
+    set_theme_title('day');
+    document.querySelector('#slides_month .slide div').classList.add('slider_active_month');
+    set_theme_title('month');
+    document.querySelector('#slides_year .slide div').classList.add('slider_active_year');
+    set_theme_title('year');
 };
-const slide = (items, prev, next, type) => {
-    document.querySelector('#' + items.children[0].children[0].id).classList.add(`slider_active_${type}`);
-    set_theme_title(type);
-
-    // Click events
-    prev.addEventListener('click', () => { theme_nav(-1); });
-    next.addEventListener('click', () => { theme_nav(1); });
-
-    const theme_nav = async (dir) => {
-        let theme_index;
-        //get current index
-        document.querySelectorAll(`#slides_${type} .slide_${type}`).forEach((e, index) => {
-            if (e.children[0].classList.contains(`slider_active_${type}`))
-                theme_index = index;
-        });
-        //set next index
-        if (dir == 1)
-            if ((theme_index + 1) == items.querySelectorAll(`.slide_${type}`).length)
-                theme_index = 0;
+const theme_nav = async (dir, type) => {
+    let theme_index;
+    //get current index
+    document.querySelectorAll(`#slides_${type} .slide_${type} > div`).forEach((e, index) => {
+        if (e.classList.contains(`slider_active_${type}`))
+            theme_index = index;
+    });
+    //set next index
+    if (dir == 1)
+        if ((theme_index + 1) == document.querySelectorAll(`#slides_${type} .slide_${type}`).length)
+            theme_index = 0;
+        else
+            theme_index++;
+    else 
+        if (dir == -1)
+            if (theme_index == 0)
+                theme_index = document.querySelectorAll(`#slides_${type} .slide_${type}`).length -1;
             else
-                theme_index++;
-        else 
-            if (dir == -1)
-                if (theme_index == 0)
-                    theme_index = items.querySelectorAll(`.slide_${type}`).length -1;
-                else
-                    theme_index--;
-        //remove old active theme class
-        document.querySelectorAll(`.slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
-        //add new active theme class
-        document.querySelector('#' + items.children[theme_index].children[0].id).classList.add(`slider_active_${type}`);
-        //set theme title
-        set_theme_title(type);
-
-        if (type=='month'){
-            //if changing month update year
-            await update_timetable_report(2, null, getReportSettings()).then(() => {
-                document.querySelectorAll('#slides_year .slide').forEach(e => {
-                    update_theme_thumbnail(e, 'year', 1);
-                });
-            });
-        }
-
-    };
+                theme_index--;
+    //remove old active theme class
+    document.querySelectorAll(`.slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
+    //add new active theme class
+    document.querySelectorAll(`#slides_${type} .slide`)[theme_index].children[0].classList.add(`slider_active_${type}`);
+    //set theme title
+    set_theme_title(type);
+    update_all_theme_thumbnails();
 };
+
 /*----------------------- */
 /* UI                     */
 /*----------------------- */
@@ -636,7 +601,7 @@ const openTab = async (tab_selected) => {
         update_all_theme_thumbnails();
     }
     if (tab_selected==5){
-        document.querySelector('#setting_icon_text_theme_col').dispatchEvent(new Event('click'));
+        document.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
     }
 };
 
@@ -1158,8 +1123,8 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
         }
     });
 };
-const ProviderSignIn_app = async (provider_button) => {
-    await common.ProviderSignIn(provider_button, (err, result)=>{
+const ProviderSignIn_app = async (provider_id) => {
+    await common.ProviderSignIn(provider_id, (err, result)=>{
         if (err==null){
             ProviderUser_update_app(result.identity_provider_id, 
                                     result.profile_id, 
@@ -2070,7 +2035,7 @@ const user_settings_like = (user_account_app_data_post_id) => {
 /*----------------------- */
 const setEvents = () => {
     //app
-    document.querySelector('#app').addEventListener('click', (event) => {
+    document.querySelector('#app').addEventListener('click', event => {
         const event_target_id = common.element_id(event.target);
         switch (event_target_id){
             //info dialogue
@@ -2188,196 +2153,230 @@ const setEvents = () => {
                 document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
                 break;
             }
-        }
-    });
-    //settings regional    
-    document.querySelector('#setting_select_locale').addEventListener('change', () => { settings_translate(true); }, false);
-    document.querySelector('#setting_select_report_timezone').addEventListener('change', () => { update_ui(2); }, false);
-    document.querySelector('#setting_select_report_locale_second').addEventListener('change', () => { settings_translate(false); }, false);                                                        
-
-    //settings gps    
-    
-    document.querySelector('#setting_select_popular_place').addEventListener('change', () => { update_ui(7);}, false);
-    document.querySelector('#setting_input_place').addEventListener('keyup', () => { common.typewatch(update_ui, 8); }, false);
-    document.querySelector('#setting_input_lat').addEventListener('keyup', () => { common.typewatch(update_ui, 9); }, false);
-    document.querySelector('#setting_input_long').addEventListener('keyup', () => { common.typewatch(update_ui, 9); }, false);    
-    //settings design
-    document.querySelector('#setting_select_report_papersize').addEventListener('change', () => { update_ui(10); }, false);
-    //settings image
-    document.querySelector('#setting_icon_image_header_img').addEventListener('click', () => { document.querySelector('#setting_input_reportheader_img').click(); }, false);
-    document.querySelector('#setting_icon_image_header_clear').addEventListener('click', () => { update_ui(12); }, false);
-
-    document.querySelector('#setting_input_reportheader_img').addEventListener('change', (event) => { update_ui(11, event.target.id); }, false);
-    document.querySelector('#setting_icon_image_footer_img').addEventListener('click', () => { document.querySelector('#setting_input_reportfooter_img').click(); }, false);
-    document.querySelector('#setting_icon_image_footer_clear').addEventListener('click', () => { update_ui(14); }, false);
-    document.querySelector('#setting_input_reportfooter_img').addEventListener('change', (event) => { update_ui(13, event.target.id); }, false);
-    //settings text
-    document.querySelector('#setting_icon_text_theme_col').addEventListener('click', (event) => {  
-                                                                                                document.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
-                                                                                                document.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
-                                                                                                document.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
-                                                                                                let theme_type;
-                                                                                                if (event.target.id == 'setting_icon_text_theme_col'){
-                                                                                                    //default when clicking on tab
-                                                                                                    theme_type = 'day';
-                                                                                                }
-                                                                                                else
-                                                                                                    if (event.target.id.substring(24) == 'day' ||
-                                                                                                        event.target.id.substring(24) == 'month'||
-                                                                                                        event.target.id.substring(24) == 'year')
-                                                                                                        theme_type = event.target.id.substring(24);
-                                                                                                    else
-                                                                                                        theme_type = event.target.parentElement.id.substring(24);
-                                                                                                    
-                                                                                                //mark active icon
-                                                                                                document.querySelector('#setting_icon_text_theme_' + theme_type).classList.add('common_dialogue_button');
-                                                                                                if (theme_type=='day' || theme_type=='month' || theme_type=='year'){
-                                                                                                    document.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
-                                                                                                                                                                        `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
-                                                                                                                                                                        document.querySelector('#setting_select_report_arabic_script').value;
-                                                                                                }}, false);
-    document.querySelector('#setting_icon_text_header_aleft').addEventListener('click', (event) => { update_ui(15, event.target.id ==''?event.target.parentElement.id:event.target.id); }, false);
-    document.querySelector('#setting_icon_text_header_acenter').addEventListener('click', (event) => { update_ui(15, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
-    document.querySelector('#setting_icon_text_header_aright').addEventListener('click', (event) => { update_ui(15, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
-    document.querySelector('#setting_icon_text_footer_aleft').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
-    document.querySelector('#setting_icon_text_footer_acenter').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
-    document.querySelector('#setting_icon_text_footer_aright').addEventListener('click', (event) => { update_ui(16, event.target.id==''?event.target.parentElement.id:event.target.id); }, false);
-    //settings prayer                 
-    document.querySelector('#setting_select_method').addEventListener('change', () => { update_ui(17);}, false);
-    //settings user
-    document.querySelector('#setting_select_user_setting').addEventListener('change', () => {user_settings_load().then(() => {settings_translate(true).then(() => {settings_translate(false);});}); }, false);
-
-    document.querySelector('#user_settings').addEventListener('click', (event) => { 
-        let event_target_id;
-        if  (event.target.classList.contains('common_dialogue_button')){
-            //button
-            event_target_id = event.target.id;
-        }
-        else
-            if  (event.target.parentNode.classList.contains('common_dialogue_button')){
-                //svg or icon
-                event_target_id = event.target.parentNode.id;
+            //setting design
+            case 'slider_prev_day':{
+                theme_nav(-1, 'day');
+                break;
             }
-            else{
-                if (event.target.parentNode.parentNode.classList.contains('common_dialogue_button')){
-                    //path in svg
-                    event_target_id = event.target.parentNode.parentNode.id;
-                }
+            case 'slider_prev_month':{
+                theme_nav(-1, 'month');
+                break;
             }
-        if (event_target_id)
-            switch (event_target_id){
-                case 'setting_btn_user_save':{
-                    user_settings_function('SAVE', false, ()=>{});
-                    break;
-                }
-                case 'setting_btn_user_add':{
-                    user_settings_function('ADD', false, ()=>{});
-                    break;
-                }
-                case 'setting_btn_user_delete':{
-                    user_settings_delete();
-                    break;
-                }
-                default:{
-                    //'user_day_html', 'user_day_html_copy', 'user_day_pdf', 'user_day_pdf_copy'
-                    //'user_month_html', 'user_month_html_copy', 'user_month_pdf', 'user_month_pdf_copy'
-                    //'user_year_html', 'user_year_html_copy', 'user_year_pdf', 'user_year_pdf_copy'
-                    user_setting_link(document.querySelector('#' + event_target_id));
-                    break;
-                }
+            case 'slider_prev_year':{
+                theme_nav(-1, 'year');
+                break;
             }
-        
-    }, false);
-    
-    //profile
-    document.querySelector('#profile_main_btn_user_settings').addEventListener('click', () => { profile_detail_app(0, '/user_account_app_data_post/profile/detail', false); }, false);
-    document.querySelector('#profile_main_btn_user_setting_likes').addEventListener('click', () => { profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
-        `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
-         <div > ${common.ICONS.regional_day +
-                  common.ICONS.regional_month +
-                  common.ICONS.regional_year +
-                  common.ICONS.user_follows}</div>`, show_profile_function); }, false);
-    document.querySelector('#profile_main_btn_user_setting_liked').addEventListener('click', () => { profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
-        `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
-         <div > ${common.ICONS.regional_day +
-                  common.ICONS.regional_month +
-                  common.ICONS.regional_year +
-                  common.ICONS.user_followed}</div>`, show_profile_function); }, false);
-    document.querySelector('#profile_top_row2_1').addEventListener('click', () => { common.profile_top(4, '/user_account_app_data_post/profile/top', show_profile_function); }, false);
-    document.querySelector('#profile_top_row2_2').addEventListener('click', () => { common.profile_top(5, '/user_account_app_data_post/profile/top', show_profile_function); }, false);
-    document.querySelector('#profile_user_settings_day').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
-    document.querySelector('#profile_user_settings_month').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
-    document.querySelector('#profile_user_settings_year').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
-    document.querySelector('#profile_user_settings_like').addEventListener('click', (event) => { profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target); }, false);
-    document.querySelector('#common_profile_search_input').addEventListener('keyup', (event) => { common.search_input(event, 'profile', show_profile_function);}, false);
-    document.querySelector('#profile_select_user_settings').addEventListener('change', 
-        (event) => { profile_show_user_setting_detail(event.target.options[event.target.selectedIndex].getAttribute('liked'), 
-                                                      event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
-                                                      event.target.options[event.target.selectedIndex].getAttribute('count_views')); }, false);
-    
-    
-    //common
-    //user menu dropdown
-    document.querySelector('#common_user_menu_dropdown_log_out').addEventListener('click', () => { user_logoff_app(); }, false);
-    document.querySelector('#common_user_menu_username').addEventListener('click', () => { toolbar_button(6); }, false);
-    
-    //user preferences    
-    document.querySelector('#common_app_select_theme').addEventListener('change', () => { document.body.className = 'app_theme' + 
-                                                                                                                         document.querySelector('#common_app_select_theme').value + ' ' + 
-                                                                                                                         document.querySelector('#common_user_arabic_script_select').value;}, false);
-    document.querySelector('#common_user_locale_select').addEventListener('change', (event) => { common_translate_ui_app(event.target.value, ()=>{});}, false);    
-    document.querySelector('#common_user_timezone_select').addEventListener('change', (event) => { document.querySelector('#setting_timezone_current').innerHTML = event.target.value;}, false);
-    document.querySelector('#common_user_arabic_script_select').addEventListener('change', () => { document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));}, false);
-    
-    //profile button top
-    document.querySelector('#common_profile_btn_top').addEventListener('click', () => { toolbar_button(7); }, false);
-
-    //dialogue login/signup/forgot
-    const input_username_login = document.querySelector('#common_login_username');
-    input_username_login.addEventListener('keyup', (event) => {
-        if (event.code === 'Enter') {
-            event.preventDefault();
-            user_login_app().then(() => {
-                //unfocus
-                document.querySelector('#common_login_username').blur();
-            });
+            case 'slider_next_day':{
+                theme_nav(1, 'day');
+                break;
+            }            
+            case 'slider_next_month':{
+                theme_nav(1, 'month');
+                break;
+            }            
+            case 'slider_next_year':{
+                theme_nav(1, 'year');
+                break;
+            }            
+            //settings image
+            case 'setting_icon_image_header_img':{
+                document.querySelector('#setting_input_reportheader_img').click();
+                break;
+            }
+            case 'setting_icon_image_header_clear':{
+                update_ui(12);
+                break;
+            }
+            case 'setting_icon_image_footer_img':{
+                document.querySelector('#setting_input_reportfooter_img').click();
+                break;
+            }
+            case 'setting_icon_image_footer_clear':{
+                update_ui(14);
+                break;
+            }
+            //settings text
+            case 'setting_icon_text_theme_day':
+            case 'setting_icon_text_theme_month':
+            case 'setting_icon_text_theme_year':{
+                document.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
+                document.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
+                document.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+                const  theme_type = event_target_id.substring(24);
+                //mark active icon
+                document.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
+                document.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                                                                                    `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
+                                                                                    document.querySelector('#setting_select_report_arabic_script').value;
+                break;
+            }
+            case 'setting_icon_text_header_aleft':
+            case 'setting_icon_text_header_acenter':
+            case 'setting_icon_text_header_aright':{
+                update_ui(15, event_target_id);
+                break;
+            }
+            case 'setting_icon_text_footer_aleft':
+            case 'setting_icon_text_footer_acenter':
+            case 'setting_icon_text_footer_aright':{
+                update_ui(16, event_target_id);
+                break;
+            }
+            //settings user
+            case 'setting_btn_user_save':{
+                user_settings_function('SAVE', false, ()=>{});
+                break;
+            }
+            case 'setting_btn_user_add':{
+                user_settings_function('ADD', false, ()=>{});
+                break;
+            }
+            case 'setting_btn_user_delete':{
+                user_settings_delete();
+                break;
+            }
+            case 'user_day_html':
+            case 'user_day_html_copy':
+            case 'user_day_pdf':
+            case 'user_day_pdf_copy':
+            case 'user_month_html':
+            case 'user_month_html_copy':
+            case 'user_month_pdf':
+            case 'user_month_pdf_copy':
+            case 'user_year_html':
+            case 'user_year_html_copy':
+            case 'user_year_pdf':
+            case 'user_year_pdf_copy':{
+                user_setting_link(document.querySelector('#' + event_target_id));
+                break;
+            }
+            //profile
+            case 'profile_main_btn_user_settings':{
+                profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
+                break;
+            }
+            case 'profile_main_btn_user_setting_likes':{
+                profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
+                                        `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
+                                        <div > ${common.ICONS.regional_day +
+                                                common.ICONS.regional_month +
+                                                common.ICONS.regional_year +
+                                                common.ICONS.user_follows}</div>`, show_profile_function);
+                break;
+            }
+            case 'profile_main_btn_user_setting_liked':{
+                profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
+                                        `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
+                                        <div > ${common.ICONS.regional_day +
+                                                common.ICONS.regional_month +
+                                                common.ICONS.regional_year +
+                                                common.ICONS.user_followed}</div>`, show_profile_function);
+                break;
+            }
+            case 'profile_top_row2_1':{
+                common.profile_top(4, '/user_account_app_data_post/profile/top', show_profile_function);
+                break;
+            }
+            case 'profile_top_row2_2':{
+                common.profile_top(5, '/user_account_app_data_post/profile/top', show_profile_function);
+                break;
+            }
+            case 'profile_user_settings_day':
+            case 'profile_user_settings_month':
+            case 'profile_user_settings_year':
+            case 'profile_user_settings_like':{
+                profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target);
+                break;
+            }
         }
-    });
-    const input_password_login = document.querySelector('#common_login_password');
-    input_password_login.addEventListener('keyup', (event) => {
-        if (event.code === 'Enter') {
-            event.preventDefault();
-            user_login_app().then(() => {
-                //unfocus
-                document.querySelector('#common_login_password').blur();
-            });
-        }
-    });
-    document.querySelector('#common_login_button').addEventListener('click', () => { user_login_app(); }, false);
-    document.querySelector('#common_signup_button').addEventListener('click', () => { common.user_signup(); }, false);
-    
-    if (document.querySelector('#identity_provider_login'))
-        document.querySelector('#identity_provider_login').addEventListener('click', (event) => {
-            if (!event.target.id)
-                ProviderSignIn_app(
-                    event.target.parentElement.classList.contains('common_login_button')==true?event.target.parentElement:event.target);
-                });
-    
-    //dialogue profile
-    document.querySelector('#common_profile_main_btn_following').addEventListener('click', () => { profile_detail_app(1, null, true, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_main_btn_followed').addEventListener('click', () => { profile_detail_app(2, null, true, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_main_btn_likes').addEventListener('click', () => { profile_detail_app(3, null, true, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_main_btn_liked').addEventListener('click', () => { profile_detail_app(4, null, true, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_follow').addEventListener('click', () => { user_function_app('FOLLOW'); }, false);
-    document.querySelector('#common_profile_like').addEventListener('click', () => { user_function_app('LIKE'); }, false);
-    document.querySelector('#common_profile_top_row1_1').addEventListener('click', () => { common.profile_top(1, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_top_row1_2').addEventListener('click', () => { common.profile_top(2, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_top_row1_3').addEventListener('click', () => { common.profile_top(3, null, show_profile_function); }, false);
-    document.querySelector('#common_profile_home').addEventListener('click', () => {toolbar_button(7);}, false);
-    document.querySelector('#common_profile_close').addEventListener('click', () => {profile_close_app();}, false);
-    //dialogue verify
-    document.querySelector('#common_user_verify_verification_container').addEventListener('keyup', (event) => {
+    }, true);
+    document.querySelector('#app').addEventListener('change', event => {
         switch (event.target.id){
+            //settings regional
+            case 'setting_select_locale':{
+                settings_translate(true);
+                break;
+            }
+            case 'setting_select_report_timezone':{
+                update_ui(2);
+                break;
+            }
+            case 'setting_select_report_locale_second':{
+                settings_translate(false);
+                break;
+            }
+            //settings gps
+            case 'setting_select_popular_place':{
+                update_ui(7);
+                break;
+            }
+            //settings design
+            case 'setting_select_report_papersize':{
+                update_ui(10);
+                break;
+            }
+            //settings image
+            case 'setting_input_reportheader_img':{
+                update_ui(11, event.target.id);
+                break;
+            }
+            case 'setting_input_reportfooter_img':{
+                update_ui(13, event.target.id);
+                break;
+            }
+            //settings prayer
+            case 'setting_select_method':{
+                update_ui(17);
+                break;
+            }
+            //settings user
+            case 'setting_select_user_setting':{
+                user_settings_load().then(() => settings_translate(true).then(() => settings_translate(false)));
+                break;
+            }
+            //profile
+            case 'profile_select_user_settings':{
+                profile_show_user_setting_detail(   event.target.options[event.target.selectedIndex].getAttribute('liked'), 
+                                                    event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
+                                                    event.target.options[event.target.selectedIndex].getAttribute('count_views'));
+                break;
+            }
+        }
+    });
+    document.querySelector('#app').addEventListener('keyup', event => {
+        switch(event.target.id){
+            //settings gps
+            case 'setting_input_place':{
+                common.typewatch(update_ui, 8);
+                break;
+            }
+            case 'setting_input_long':
+            case 'setting_input_lat':{
+                common.typewatch(update_ui, 9);
+                break;
+            }
+        }
+    });
+    //common
+    document.querySelector('#app').addEventListener('keyup', event => {
+        const target_id = common.element_id(event.target);
+        switch(target_id){
+            case 'common_profile_search_input':{
+                common.search_input(event, 'profile', show_profile_function);
+                break;
+            }
+            case 'common_login_username':
+            case 'common_login_password':{
+                if (event.code === 'Enter') {
+                    event.preventDefault();
+                    user_login_app().then(() => {
+                        //unfocus
+                        event.target.blur();
+                    });
+                }
+                break;
+            }
+            //dialogue verify
             case 'common_user_verify_verification_char1':{
                 user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
                 break;
@@ -2403,7 +2402,152 @@ const setEvents = () => {
                 break;
             }
         }
+    });
+
+    document.querySelector('#app').addEventListener('click', event => {
+        const target_id = common.element_id(event.target);
+        switch(target_id){
+            case 'common_user_menu_dropdown_log_out':{
+                user_logoff_app();
+                break;
+            }
+            case 'common_user_menu_username':{
+                toolbar_button(6);
+                break;
+            }
+            case 'common_profile_btn_top':{
+                toolbar_button(7);
+                break;
+            }
+            case 'common_login_button':{
+                user_login_app();
+                break;
+            }
+            case 'common_signup_button':{
+                common.user_signup();
+                break;
+            }
+            case 'common_identity_provider_login':{
+                const target_row = common.element_row(event.target);
+                ProviderSignIn_app(target_row.querySelector('.common_login_provider_id').innerHTML);
+                break;
+            }
+            //dialogue profile
+            case 'common_profile_main_btn_following':{
+                profile_detail_app(1, null, true, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_main_btn_followed':{
+                profile_detail_app(2, null, true, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_main_btn_likes':{
+                profile_detail_app(3, null, true, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_main_btn_liked':{
+                profile_detail_app(4, null, true, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_follow':{
+                user_function_app('FOLLOW');
+                break;
+            }
+            case 'common_profile_like':{
+                user_function_app('LIKE');
+                break;
+            }
+            case 'common_profile_top_row1_1':{
+                common.profile_top(1, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_top_row1_2':{
+                common.profile_top(2, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_top_row1_3':{
+                common.profile_top(3, null, show_profile_function);
+                break;
+            }
+            case 'common_profile_home':{
+                toolbar_button(7);
+                break;
+            }
+            case 'common_profile_close':{
+                profile_close_app();
+                break;
+            }    
+            //module leaflet
+            case 'common_module_leaflet_control_my_location_id':{
+                document.querySelector('#setting_select_popular_place').selectedIndex = 0;
+                document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
+                document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+                document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+                //remove country and city in settings
+                const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
+                option.setAttribute('gps_country_id', '');
+                option.setAttribute('gps_city_id', '');
+                import('regional').then(({getTimezone})=>{
+                    //update timezone
+                    document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+                    //set qibbla
+                    map_show_qibbla();
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
+                });
+                break;
+            }            
+        }
     }, false);
+    document.querySelector('#app').addEventListener('change', event => {
+        const target_id = common.element_id(event.target);
+        switch(target_id){
+            case 'common_app_select_theme':{
+                document.body.className = 'app_theme' + 
+                                            document.querySelector('#common_app_select_theme').value + ' ' + 
+                                            document.querySelector('#common_user_arabic_script_select').value;
+                break;
+            }
+            case 'common_user_locale_select':{
+                common_translate_ui_app(event.target.value, ()=>{});
+                break;
+            }
+            case 'common_user_timezone_select':{
+                document.querySelector('#setting_timezone_current').innerHTML = event.target.value;
+                break;
+            }
+            case 'common_user_arabic_script_select':{
+                document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                break;
+            }
+            //module leaflet
+            case 'common_module_leaflet_select_country':{
+                update_ui(5); 
+                break;
+            }
+            case 'common_module_leaflet_select_city':{
+                const select_country = document.querySelector('#common_module_leaflet_select_country');
+                const select_city = document.querySelector('#common_module_leaflet_select_city');
+                const select_setting = document.querySelector('#setting_select_user_setting');
+                const option = select_setting.options[select_setting.selectedIndex];
+                option.setAttribute('gps_country_id', select_country[select_country.selectedIndex].getAttribute('id'));
+                option.setAttribute('gps_city_id', select_city[select_city.selectedIndex].getAttribute('id'));
+                //popular place not on map is read when saving
+                update_ui(6);
+                import('regional').then(({getTimezone})=>{
+                    const timezone = getTimezone(   document.querySelector('#setting_input_lat').innerHTML,
+                                                    document.querySelector('#setting_input_long').innerHTML);
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                });
+                break;
+            }
+            case 'common_module_leaflet_select_mapstyle':{
+                update_ui(4);
+                break;
+            }
+        }
+    }, true);
+    
+    
 };
 /*----------------------- */
 /* SERVICE WORKER         */
@@ -2443,48 +2587,6 @@ const init_map = async () => {
                     }
                 });
             }        
-            //add extra event on comment items on map
-            document.querySelector('#common_module_leaflet_select_country').addEventListener('change', () => { 
-                update_ui(5); 
-            }, false);
-            document.querySelector('#common_module_leaflet_select_city').addEventListener('change', () => { 
-                const select_country = document.querySelector('#common_module_leaflet_select_country');
-                const select_city = document.querySelector('#common_module_leaflet_select_city');
-                const select_setting = document.querySelector('#setting_select_user_setting');
-                const option = select_setting.options[select_setting.selectedIndex];
-                option.setAttribute('gps_country_id', select_country[select_country.selectedIndex].getAttribute('id'));
-                option.setAttribute('gps_city_id', select_city[select_city.selectedIndex].getAttribute('id'));
-                //popular place not on map is read when saving
-                update_ui(6);
-                import('regional').then(({getTimezone})=>{
-                    const timezone = getTimezone(   document.querySelector('#setting_input_lat').innerHTML,
-                                                    document.querySelector('#setting_input_long').innerHTML);
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                });
-            }, false);
-            document.querySelector('#common_module_leaflet_select_mapstyle').addEventListener('change', () => { update_ui(4); }, false);
-
-            //add extra app events on map
-            document.querySelector('#' + APP_GLOBAL.gps_module_leaflet_container).addEventListener('click', (event) => {
-                const event_target_id = event.target.id==''?event.target.parentNode.id:event.target.id;
-                if ( event_target_id == 'common_module_leaflet_control_my_location_id'){
-                    document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-                    document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
-                    document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-                    document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-                    //remove country and city in settings
-                    const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
-                    option.setAttribute('gps_country_id', '');
-                    option.setAttribute('gps_city_id', '');
-                    import('regional').then(({getTimezone})=>{
-                        //update timezone
-                        document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
-                        //set qibbla
-                        map_show_qibbla();
-                        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
-                    });
-                }
-            }, false);
             common.map_setevent('dblclick', (e) => {
                 if (e.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
                     document.querySelector('#setting_input_lat').innerHTML = e.latlng.lat;
@@ -2557,7 +2659,151 @@ const app_exception = (error) => {
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
-const init_app = () => {
+const init_app = (parameters) => {
+    for (const parameter of parameters.app) {
+        if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
+            APP_GLOBAL.app_default_startup_page = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='APP_REPORT_TIMETABLE')
+            APP_GLOBAL.app_report_timetable = parameter.parameter_value; 
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
+            app_report.REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
+            app_report.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
+            app_report.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
+            app_report.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
+            app_report.REPORT_GLOBAL.regional_def_calendar_type_greg = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
+            app_report.REPORT_GLOBAL.regional_def_calendar_number_system = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_DIRECTION')
+            APP_GLOBAL.regional_default_direction = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
+            APP_GLOBAL.regional_default_locale_second = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_COLTITLE')
+            APP_GLOBAL.regional_default_coltitle = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
+            APP_GLOBAL.regional_default_arabic_script = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
+            APP_GLOBAL.regional_default_calendartype = parameter.parameter_value;
+        if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
+            APP_GLOBAL.regional_default_calendar_hijri_type = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_DEFAULT_PLACE_ID')
+            APP_GLOBAL.gps_default_place_id = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
+            APP_GLOBAL.gps_module_leaflet_container = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
+            APP_GLOBAL.gps_module_leaflet_qibbla_title = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TEXT_SIZE')
+            APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LAT')
+            APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LONG')
+            APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_COLOR')
+            APP_GLOBAL.gps_module_leaflet_qibbla_color = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_WIDTH')
+            APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OPACITY')
+            APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TITLE')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TEXT_SIZE')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LAT')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LONG')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_COLOR')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameter.parameter_value;
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_WIDTH')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_OPACITY')
+            APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameter.parameter_value);
+        if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_DAY')
+            APP_GLOBAL.design_default_theme_day = parameter.parameter_value;
+        if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
+            APP_GLOBAL.design_default_theme_month = parameter.parameter_value;
+        if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
+            APP_GLOBAL.design_default_theme_year = parameter.parameter_value;
+        if (parameter.parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
+            APP_GLOBAL.design_default_papersize = parameter.parameter_value;
+        if (parameter.parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
+            APP_GLOBAL.design_default_highlight_row = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
+            APP_GLOBAL.design_default_show_weekday = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
+            APP_GLOBAL.design_default_show_calendartype = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
+            APP_GLOBAL.design_default_show_notes = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
+            APP_GLOBAL.design_default_show_gps = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
+            APP_GLOBAL.design_default_show_timezone = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE1')
+            APP_GLOBAL.text_default_reporttitle1 = parameter.parameter_value;
+        if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE2')
+            APP_GLOBAL.text_default_reporttitle2 = parameter.parameter_value;
+        if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE3')
+            APP_GLOBAL.text_default_reporttitle3 = parameter.parameter_value;
+        if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER1')
+            APP_GLOBAL.text_default_reportfooter1 = parameter.parameter_value;
+        if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER2')
+            APP_GLOBAL.text_default_reportfooter2 = parameter.parameter_value;
+        if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER3')
+            APP_GLOBAL.text_default_reportfooter3 = parameter.parameter_value;
+        if (parameter.parameter_name=='IMAGE_HEADER_FOOTER_WIDTH')
+            APP_GLOBAL.image_header_footer_width = parameter.parameter_value;
+        if (parameter.parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
+            APP_GLOBAL.image_header_footer_height = parameter.parameter_value;
+        if (parameter.parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
+            if (parameter.parameter_value!='')
+                APP_GLOBAL.image_default_report_header_src = parameter.parameter_value;
+        }                    
+        if (parameter.parameter_name=='IMAGE_DEFAULT_REPORT_FOOTER_SRC'){
+            if (parameter.parameter_value!='')
+                APP_GLOBAL.image_default_report_footer_src = parameter.parameter_value;
+        }                             
+        if (parameter.parameter_name=='PRAYER_DEFAULT_METHOD')
+            APP_GLOBAL.prayer_default_method = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_ASR')
+            APP_GLOBAL.prayer_default_asr = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
+            APP_GLOBAL.prayer_default_highlatitude = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
+            APP_GLOBAL.prayer_default_timeformat = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
+            APP_GLOBAL.prayer_default_hijri_adjustment = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
+            APP_GLOBAL.prayer_default_iqamat_title_fajr = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
+            APP_GLOBAL.prayer_default_iqamat_title_dhuhr = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
+            APP_GLOBAL.prayer_default_iqamat_title_asr = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
+            APP_GLOBAL.prayer_default_iqamat_title_maghrib = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
+            APP_GLOBAL.prayer_default_iqamat_title_isha = parameter.parameter_value;
+        if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
+            APP_GLOBAL.prayer_default_show_imsak = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
+            APP_GLOBAL.prayer_default_show_sunset = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
+            APP_GLOBAL.prayer_default_show_midnight = (parameter.parameter_value=== 'true');
+        if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
+            APP_GLOBAL.prayer_default_show_fast_start_end = parameter.parameter_value;
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
+            common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
+            common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
+            common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
+            common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
+        if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
+            common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
+    }
     return new Promise((resolve) => {
         dialogue_loading(1);
         //set app globals
@@ -2812,151 +3058,7 @@ const init_app = () => {
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
-        for (const parameter of parameters.app) {
-            if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
-                APP_GLOBAL.app_default_startup_page = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='APP_REPORT_TIMETABLE')
-                APP_GLOBAL.app_report_timetable = parameter.parameter_value; 
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_LANG')
-                app_report.REPORT_GLOBAL.regional_def_calendar_lang = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_PREFIX')
-                app_report.REPORT_GLOBAL.regional_def_locale_ext_prefix = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_NUMBER_SYSTEM')
-                app_report.REPORT_GLOBAL.regional_def_locale_ext_number_system = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_EXT_CALENDAR')
-                app_report.REPORT_GLOBAL.regional_def_locale_ext_calendar = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_TYPE_GREG')
-                app_report.REPORT_GLOBAL.regional_def_calendar_type_greg = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_NUMBER_SYSTEM')
-                app_report.REPORT_GLOBAL.regional_def_calendar_number_system = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_DIRECTION')
-                APP_GLOBAL.regional_default_direction = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_LOCALE_SECOND')
-                APP_GLOBAL.regional_default_locale_second = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_COLTITLE')
-                APP_GLOBAL.regional_default_coltitle = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_ARABIC_SCRIPT')
-                APP_GLOBAL.regional_default_arabic_script = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDARTYPE')
-                APP_GLOBAL.regional_default_calendartype = parameter.parameter_value;
-            if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
-                APP_GLOBAL.regional_default_calendar_hijri_type = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_DEFAULT_PLACE_ID')
-                APP_GLOBAL.gps_default_place_id = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
-                APP_GLOBAL.gps_module_leaflet_container = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
-                APP_GLOBAL.gps_module_leaflet_qibbla_title = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TEXT_SIZE')
-                APP_GLOBAL.gps_module_leaflet_qibbla_text_size = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LAT')
-                APP_GLOBAL.gps_module_leaflet_qibbla_lat = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_LONG')
-                APP_GLOBAL.gps_module_leaflet_qibbla_long = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_COLOR')
-                APP_GLOBAL.gps_module_leaflet_qibbla_color = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_WIDTH')
-                APP_GLOBAL.gps_module_leaflet_qibbla_width = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OPACITY')
-                APP_GLOBAL.gps_module_leaflet_qibbla_opacity = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TITLE')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_title = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_TEXT_SIZE')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LAT')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_lat = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_LONG')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_long = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_COLOR')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_color = parameter.parameter_value;
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_WIDTH')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_width = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_OLD_OPACITY')
-                APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity = parseFloat(parameter.parameter_value);
-            if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_DAY')
-                APP_GLOBAL.design_default_theme_day = parameter.parameter_value;
-            if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_MONTH')
-                APP_GLOBAL.design_default_theme_month = parameter.parameter_value;
-            if (parameter.parameter_name=='DESIGN_DEFAULT_THEME_YEAR')
-                APP_GLOBAL.design_default_theme_year = parameter.parameter_value;
-            if (parameter.parameter_name=='DESIGN_DEFAULT_PAPERSIZE')
-                APP_GLOBAL.design_default_papersize = parameter.parameter_value;
-            if (parameter.parameter_name=='DESIGN_DEFAULT_HIGHLIGHT_ROW')
-                APP_GLOBAL.design_default_highlight_row = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_WEEKDAY')
-                APP_GLOBAL.design_default_show_weekday = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_CALENDARTYPE')
-                APP_GLOBAL.design_default_show_calendartype = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_NOTES')
-                APP_GLOBAL.design_default_show_notes = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_GPS')
-                APP_GLOBAL.design_default_show_gps = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='DESIGN_DEFAULT_SHOW_TIMEZONE')
-                APP_GLOBAL.design_default_show_timezone = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE1')
-                APP_GLOBAL.text_default_reporttitle1 = parameter.parameter_value;
-            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE2')
-                APP_GLOBAL.text_default_reporttitle2 = parameter.parameter_value;
-            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTTITLE3')
-                APP_GLOBAL.text_default_reporttitle3 = parameter.parameter_value;
-            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER1')
-                APP_GLOBAL.text_default_reportfooter1 = parameter.parameter_value;
-            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER2')
-                APP_GLOBAL.text_default_reportfooter2 = parameter.parameter_value;
-            if (parameter.parameter_name=='TEXT_DEFAULT_REPORTFOOTER3')
-                APP_GLOBAL.text_default_reportfooter3 = parameter.parameter_value;
-            if (parameter.parameter_name=='IMAGE_HEADER_FOOTER_WIDTH')
-                APP_GLOBAL.image_header_footer_width = parameter.parameter_value;
-            if (parameter.parameter_name=='IMAGE_HEADER_FOOTER_HEIGHT')
-                APP_GLOBAL.image_header_footer_height = parameter.parameter_value;
-            if (parameter.parameter_name=='IMAGE_DEFAULT_REPORT_HEADER_SRC'){
-                if (parameter.parameter_value!='')
-                    APP_GLOBAL.image_default_report_header_src = parameter.parameter_value;
-            }                    
-            if (parameter.parameter_name=='IMAGE_DEFAULT_REPORT_FOOTER_SRC'){
-                if (parameter.parameter_value!='')
-                    APP_GLOBAL.image_default_report_footer_src = parameter.parameter_value;
-            }                             
-            if (parameter.parameter_name=='PRAYER_DEFAULT_METHOD')
-                APP_GLOBAL.prayer_default_method = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_ASR')
-                APP_GLOBAL.prayer_default_asr = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_HIGHLATITUDE')
-                APP_GLOBAL.prayer_default_highlatitude = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_TIMEFORMAT')
-                APP_GLOBAL.prayer_default_timeformat = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_HIJRI_ADJUSTMENT')
-                APP_GLOBAL.prayer_default_hijri_adjustment = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_FAJR')
-                APP_GLOBAL.prayer_default_iqamat_title_fajr = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_DHUHR')
-                APP_GLOBAL.prayer_default_iqamat_title_dhuhr = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ASR')
-                APP_GLOBAL.prayer_default_iqamat_title_asr = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_MAGHRIB')
-                APP_GLOBAL.prayer_default_iqamat_title_maghrib = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_IQAMAT_TITLE_ISHA')
-                APP_GLOBAL.prayer_default_iqamat_title_isha = parameter.parameter_value;
-            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_IMSAK')
-                APP_GLOBAL.prayer_default_show_imsak = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_SUNSET')
-                APP_GLOBAL.prayer_default_show_sunset = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_MIDNIGHT')
-                APP_GLOBAL.prayer_default_show_midnight = (parameter.parameter_value=== 'true');
-            if (parameter.parameter_name=='PRAYER_DEFAULT_SHOW_FAST_START_END')
-                APP_GLOBAL.prayer_default_show_fast_start_end = parameter.parameter_value;
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
-                common.COMMON_GLOBAL['module_easy.qrcode_width'] = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_HEIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_height'] = parseInt(parameter.parameter_value);
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_DARK')
-                common.COMMON_GLOBAL['module_easy.qrcode_color_dark'] = parameter.parameter_value;
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_COLOR_LIGHT')
-                common.COMMON_GLOBAL['module_easy.qrcode_color_light'] = parameter.parameter_value;
-            if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
-                common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
-        }
-        init_app();   
+        init_app(parameters);   
     });
 };
 export{ /**GLOBAL */
@@ -2967,7 +3069,7 @@ export{ /**GLOBAL */
         init_map, map_show_qibbla, map_update_app,
         /*THEME*/
         update_all_theme_thumbnails,update_theme_thumbnail, get_theme_id, set_theme_id, set_theme_title,
-        load_themes, slide,
+        load_themes,
         /*UI*/
         common_translate_ui_app, settings_translate, get_align, showcurrenttime, showreporttime,
         toolbar_button, openTab, align_button_value, dialogue_loading, zoom_paper, select_get_selectindex,
