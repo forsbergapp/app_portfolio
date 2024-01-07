@@ -23,10 +23,12 @@ const show_hide_apps_dialogue = () => {
 const setEvents = () => {
     //app
     document.querySelector('#app').addEventListener('click', event => {
+        common.common_event('click',event);
         if (event.target.className == 'app_logo')
             window.open(event.target.parentNode.parentNode.querySelector('.app_url').innerHTML);
-        else
-            switch (common.element_id(event.target)){
+        else{
+            const event_target_id = common.element_id(event.target);
+            switch (event_target_id){
                 case 'app_menu_apps':{
                     document.querySelector('#app_menu_content_apps' ).style.display ='block';
                     document.querySelector('#app_menu_content_info' ).style.display ='none';
@@ -89,101 +91,96 @@ const setEvents = () => {
                     common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
                     break;
                 }
-                default:
-                    null;
-            }
-    });
-    //common
-    document.querySelector('#app').addEventListener('click', event => {
-        switch (common.element_id(event.target)){
-            case 'common_profile_btn_top':{
-                common.profile_top(1);
-                break;
-            }
-            //user menu
-            case 'common_user_menu_username':{
-                user_menu_item_click(event.target);
-                break;
-            }
-            case 'common_user_menu_dropdown_log_out':{
-                user_menu_item_click(event.target);
-                break;
-            }
-            //user preferences
-            case 'app_theme_checkbox':{
-                app_theme_update(true);
-                break;
-            }
-            //common with app specific settings
-            case 'common_profile_home':{
-                common.profile_top(1);
-                break;
-            }
-            case 'common_profile_close':{
-                common.profile_close();
-                break;
-            }
-            case 'common_profile_top_row1_1':{
-                common.profile_top(1);
-                break;
-            }
-            case 'common_profile_top_row1_2':{
-                common.profile_top(2);
-                break;
-            }
-            case 'common_profile_top_row1_3':{
-                common.profile_top(3);
-                break;
-            }
-            case 'common_profile_follow':{
-                common.profile_follow_like('FOLLOW');
-                break;
-            }
-            case 'common_profile_like':{
-                common.profile_follow_like('LIKE');
-                break;
-            }
-            case 'common_profile_main_btn_following':{
-                common.profile_detail(1, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_followed':{
-                common.profile_detail(2, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_likes':{
-                common.profile_detail(3, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_liked':{
-                common.profile_detail(4, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_cloud':{
-                common.profile_detail(5, '/user_account_app/apps', true, common.ICONS.sky_cloud, null);
-                break;
-            }
-            case 'common_login_button':{
-                user_login_app();
-                break;
-            }
-            case 'common_signup_button':{
-                common.user_signup();
-                break;
-            }
-            case 'common_identity_provider_login':{
-                if (!event.target.id)
-                    ProviderSignIn_app(
-                        event.target.parentElement.classList.contains('common_login_button')==true?event.target.parentElement:event.target);
-                break;
-            }
-            case 'common_user_edit_btn_user_delete_account':{
-                user_delete_app();
-                break;
+                //common
+                case 'common_profile_btn_top':{
+                    common.profile_top(1);
+                    break;
+                }
+                //user menu
+                case 'common_user_menu_username':{
+                    user_menu_item_click(event.target);
+                    break;
+                }
+                case 'common_user_menu_dropdown_log_out':{
+                    user_menu_item_click(event.target);
+                    break;
+                }
+                //user preferences
+                case 'app_theme_checkbox':{
+                    app_theme_update(true);
+                    break;
+                }
+                //common with app specific settings
+                case 'common_profile_home':{
+                    common.profile_top(1);
+                    break;
+                }
+                case 'common_profile_close':{
+                    common.profile_close();
+                    break;
+                }
+                case 'common_profile_top_row1_1':{
+                    common.profile_top(1);
+                    break;
+                }
+                case 'common_profile_top_row1_2':{
+                    common.profile_top(2);
+                    break;
+                }
+                case 'common_profile_top_row1_3':{
+                    common.profile_top(3);
+                    break;
+                }
+                case 'common_profile_follow':{
+                    common.profile_follow_like('FOLLOW');
+                    break;
+                }
+                case 'common_profile_like':{
+                    common.profile_follow_like('LIKE');
+                    break;
+                }
+                case 'common_profile_main_btn_following':{
+                    common.profile_detail(1, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_followed':{
+                    common.profile_detail(2, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_likes':{
+                    common.profile_detail(3, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_liked':{
+                    common.profile_detail(4, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_cloud':{
+                    common.profile_detail(5, '/user_account_app/apps', true, common.ICONS.sky_cloud, null);
+                    break;
+                }
+                case 'common_login_button':{
+                    user_login_app();
+                    break;
+                }
+                case 'common_signup_button':{
+                    common.user_signup();
+                    break;
+                }
+                case 'common_identity_provider_login':{
+                    const target_row = common.element_row(event.target);
+                    ProviderSignIn_app(target_row.querySelector('.common_login_provider_id').innerHTML);
+                    break;
+                }
+                case 'common_user_edit_btn_user_delete_account':{
+                    user_delete_app();
+                    break;
+                }
             }
         }
     });
     document.querySelector('#app').addEventListener('change', event => {
+        common.common_event('change',event);
         switch (event.target.id){
             case 'common_user_locale_select':{
                 document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, ()=>{get_apps();});
@@ -196,6 +193,7 @@ const setEvents = () => {
         }
     });
     document.querySelector('#app').addEventListener('keyup', event => {
+        common.common_event('keyup',event);
         switch (event.target.id){
             case 'common_profile_search_input':{
                 common.search_input(event, 'profile', null);
@@ -238,6 +236,9 @@ const setEvents = () => {
                 break;
             }
         }
+    });
+    document.querySelector('#app').addEventListener('keydown', event => {
+        common.common_event('keydown',event);
     });
 };
 const app_theme_update = toggle_theme => {

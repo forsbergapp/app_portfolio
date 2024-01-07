@@ -140,26 +140,8 @@ const admin_login = async () => {
 };
 const setEvents = () => {
 
-    document.querySelector('#app').addEventListener('keyup', event => {
-        switch (event.target.id){
-            case 'admin_login_username_input':
-            case 'admin_login_password_input':
-            case 'system_admin_login_username_input':
-            case 'system_admin_login_password_input':
-            case 'system_admin_login_password_confirm_input':{
-                if (event.code === 'Enter') {
-                    event.preventDefault();
-                    admin_login();
-                    //unfocus
-                    document.querySelector('#' + event.target.id).blur();
-                }    
-                break;
-            }
-            default:
-                break;
-        }
-    });
     document.querySelector('#app').addEventListener('click', event => {
+        common.common_event('click',event);
         const target_id = common.element_id(event.target);
         switch (target_id){
             case 'admin_login_button':{
@@ -204,42 +186,7 @@ const setEvents = () => {
                 admin_logoff_app();
                 break;
             }
-        }
-    });
-    
-    document.querySelector('#app').addEventListener('change', event => {
-        switch (event.target.id){
-            case 'select_broadcast_type':{
-                app_secure.set_broadcast_type();
-                break;
-            }
-        }
-    });
-    //common
-    document.querySelector('#app').addEventListener('change', event => {
-        switch (event.target.id){
-            case 'common_user_direction_select':{
-                app_secure.fix_pagination_buttons(event.target.value);
-                break;
-            }
-            case 'common_user_locale_select':{
-                common.common_translate_ui(event.target.value, ()=>{});
-                break;
-            }
-            case 'common_user_arabic_script_select':{
-                document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
-                break;
-            }
-            case 'common_app_select_theme':{
-                document.body.className = 'app_theme' + 
-                                            document.querySelector('#common_app_select_theme').value + ' ' + 
-                                            document.querySelector('#common_user_arabic_script_select').value;
-                break;
-            }
-        }
-    });
-    document.querySelector('#app').addEventListener('click', event => {
-        switch (event.target.id){
+            //common
             case 'common_message_cancel':{
                 document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                 break;
@@ -295,6 +242,58 @@ const setEvents = () => {
                 break;
             }
         }
+    });
+    
+    document.querySelector('#app').addEventListener('change', event => {
+        common.common_event('change',event);
+        switch (event.target.id){
+            case 'select_broadcast_type':{
+                app_secure.set_broadcast_type();
+                break;
+            }
+            //common
+            case 'common_user_direction_select':{
+                app_secure.fix_pagination_buttons(event.target.value);
+                break;
+            }
+            case 'common_user_locale_select':{
+                common.common_translate_ui(event.target.value, ()=>{});
+                break;
+            }
+            case 'common_user_arabic_script_select':{
+                document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                break;
+            }
+            case 'common_app_select_theme':{
+                document.body.className = 'app_theme' + 
+                                            document.querySelector('#common_app_select_theme').value + ' ' + 
+                                            document.querySelector('#common_user_arabic_script_select').value;
+                break;
+            }
+        }
+    });
+    document.querySelector('#app').addEventListener('keyup', event => {
+        common.common_event('keyup',event);
+        switch (event.target.id){
+            case 'admin_login_username_input':
+            case 'admin_login_password_input':
+            case 'system_admin_login_username_input':
+            case 'system_admin_login_password_input':
+            case 'system_admin_login_password_confirm_input':{
+                if (event.code === 'Enter') {
+                    event.preventDefault();
+                    admin_login();
+                    //unfocus
+                    document.querySelector('#' + event.target.id).blur();
+                }    
+                break;
+            }
+            default:
+                break;
+        }
+    });
+    document.querySelector('#app').addEventListener('keydown', event => {
+        common.common_event('keydown',event);
     });
 };
 
