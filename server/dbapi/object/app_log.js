@@ -16,7 +16,7 @@ const {getNumberValue} = await import(`file://${process.cwd()}/server/server.ser
 const getLogsAdmin = (app_id, query, res) =>{
     return new Promise((resolve, reject)=>{
         service.getLogsAdmin(   app_id, getNumberValue(query.get('select_app_id')), getNumberValue(query.get('year')), getNumberValue(query.get('month')), 
-                                getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+                                query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
         .then((/**@type{Types.db_result_app_log_getLogsAdmin[]}*/result) =>{
             if (result.length>0)
                 resolve(result);

@@ -689,7 +689,7 @@ const show_users = () =>{
     search_users();
 
 };
-const search_users = (sort=8, order_by='ASC', focus=true) => {
+const search_users = (sort='username', order_by='ASC', focus=true) => {
 
     if (common.check_input(document.querySelector('#list_user_account_search_input').innerHTML, 100, false) == false)
         return null;
@@ -706,77 +706,77 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
         else{
             const users = JSON.parse(result);
             let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
-                            <div id='list_user_account_col_title1' class='list_user_account_col list_title'>
-                                <div>${common.ICONS.user_avatar}</div>
+                            <div id='list_user_account_col_title_avatar' class='list_user_account_col list_title'>
+                                ${common.ICONS.user_avatar}
                             </div>
-                            <div id='list_user_account_col_title2' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id}</div>
+                            <div id='list_user_account_col_title_id' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id}
                             </div>
-                            <div id='list_user_account_col_title3' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_role}</div>
+                            <div id='list_user_account_col_title_app_role_id' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_role}
                             </div>
-                            <div id='list_user_account_col_title4' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_role} ${common.ICONS.misc_image}</div>
+                            <div id='list_user_account_col_title_app_role_icon' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_role} ${common.ICONS.misc_image}
                             </div>
-                            <div id='list_user_account_col_title5' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_inactive} ${common.ICONS.app_active}</div>
+                            <div id='list_user_account_col_title_active' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_inactive} ${common.ICONS.app_active}
                             </div>
-                            <div id='list_user_account_col_title6' class='list_user_account_col list_sort_click list_title'>
+                            <div id='list_user_account_col_title_user_level' class='list_user_account_col list_sort_click list_title'>
                                 <div>LEVEL</div>
                             </div>
-                            <div id='list_user_account_col_title7' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_private}</div>
+                            <div id='list_user_account_col_title_private' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_private}
                             </div>
-                            <div id='list_user_account_col_title8' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.user} ${common.ICONS.username}</div>
+                            <div id='list_user_account_col_title_username' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.user} ${common.ICONS.username}
                             </div>
-                            <div id='list_user_account_col_title9' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.user_bio}</div>
+                            <div id='list_user_account_col_title_bio' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.user_bio}
                             </div>
-                            <div id='list_user_account_col_title10' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_email}</div>
+                            <div id='list_user_account_col_title_email' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_email}
                             </div>
-                            <div id='list_user_account_col_title11' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_email} ${common.ICONS.app_forgot}</div>
+                            <div id='list_user_account_col_title_email_unverified' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_email} ${common.ICONS.app_forgot}
                             </div>
-                            <div id='list_user_account_col_title12' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.user_password}</div>
+                            <div id='list_user_account_col_title_password' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.user_password}
                             </div>
-                            <div id='list_user_account_col_title13' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.user_password} ${common.ICONS.app_info}</div>
+                            <div id='list_user_account_col_title_password_reminder' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.user_password} ${common.ICONS.app_info}
                             </div>
-                            <div id='list_user_account_col_title14' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.app_verification_code}</div>
+                            <div id='list_user_account_col_title_verification_code' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.app_verification_code}
                             </div>
-                            <div id='list_user_account_col_title15' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id}</div>
+                            <div id='list_user_account_col_title_identity_provider_id' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id}
                             </div>
-                            <div id='list_user_account_col_title16' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider}</div>
+                            <div id='list_user_account_col_title_provider_name' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider}
                             </div>
-                            <div id='list_user_account_col_title17' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ID</div>
+                            <div id='list_user_account_col_title_provider_id' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id} ${common.ICONS.user} ID
                             </div>
-                            <div id='list_user_account_col_title18' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 1</div>
+                            <div id='list_user_account_col_title_provider_first_name' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 1
                             </div>
-                            <div id='list_user_account_col_title19' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 2</div>
+                            <div id='list_user_account_col_title_provider_last_name' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 2
                             </div>
-                            <div id='list_user_account_col_title20' class='list_user_account_col list_title'>
-                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar}</div>
+                            <div id='list_user_account_col_title_provider_image' class='list_user_account_col list_title'>
+                                ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar}
                             </div>
-                            <div id='list_user_account_col_title21' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar} URL</div>
+                            <div id='list_user_account_col_title_provider_image_url' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar} URL
                             </div>
-                            <div id='list_user_account_col_title22' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.app_email}</div>
+                            <div id='list_user_account_col_title_provider_email' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.app_email}
                             </div>
-                            <div id='list_user_account_col_title23' class='list_user_account_col list_sort_click list_title'>
-                                <div>${common.ICONS.user_account_created}</div>
+                            <div id='list_user_account_col_title_date_created' class='list_user_account_col list_sort_click list_title'>
+                                ${common.ICONS.user_account_created}
                             </div>
-                            <div id='list_user_account_col_title24' class='list_apps_col list_sort_click list_title'>
-                                <div>${common.ICONS.user_account_modified}</div>
+                            <div id='list_user_account_col_title_date_modified' class='list_apps_col list_sort_click list_title'>
+                                ${common.ICONS.user_account_modified}
                             </div>
                         </div>`;
             let input_contentEditable = '';
@@ -880,7 +880,7 @@ const search_users = (sort=8, order_by='ASC', focus=true) => {
                 </div>`;
             }
             document.querySelector('#list_user_account').innerHTML = html;
-            document.querySelector('#list_user_account_col_title' + sort).classList.add(order_by);
+            document.querySelector('#list_user_account_col_title_' + sort).classList.add(order_by);
         
             if (common.COMMON_GLOBAL.user_app_role_id==0){
                 //add lov icon for super admin
@@ -1796,58 +1796,58 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     case 'list_app_log':{
                         APP_GLOBAL.page_last = Math.floor(logs[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
                         html = `<div id='list_app_log_row_title' class='list_app_log_row'>
-                                    <div id='list_app_log_col_title1' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_id' class='list_app_log_col list_sort_click list_title'>
                                         <div>ID</div>
                                     </div>
-                                    <div id='list_app_log_col_title2' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_date_created' class='list_app_log_col list_sort_click list_title'>
                                         <div>DATE</div>
                                     </div>
-                                    <div id='list_app_log_col_title3' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_server_http_host' class='list_app_log_col list_sort_click list_title'>
                                         <div>HOST</div>
                                     </div>
-                                    <div id='list_app_log_col_title3' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_app_id' class='list_app_log_col list_sort_click list_title'>
                                         <div>APP ID</div>
                                     </div>
-                                    <div id='list_app_log_col_title4' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_app_module' class='list_app_log_col list_sort_click list_title'>
                                         <div>MODULE</div>
                                     </div>
-                                    <div id='list_app_log_col_title5' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_app_module_type' class='list_app_log_col list_sort_click list_title'>
                                         <div>MODULE TYPE</div>
                                     </div>
-                                    <div id='list_app_log_col_title6' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_app_module_request' class='list_app_log_col list_sort_click list_title'>
                                         <div>MODULE REQUEST</div>
                                     </div>
-                                    <div id='list_app_log_col_title7' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_app_module_result' class='list_app_log_col list_sort_click list_title'>
                                         <div>MODULE RESULT</div>
                                     </div>
-                                    <div id='list_app_log_col_title8' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_app_user_id' class='list_app_log_col list_sort_click list_title'>
                                         <div>USER ID</div>
                                     </div>
-                                    <div id='list_app_log_col_title9' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_server_remot_addr' class='list_app_log_col list_sort_click list_title'>
                                         <div>IP</div>
                                     </div>
-                                    <div id='list_app_log_col_title10' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_client_latitude' class='list_app_log_col list_sort_click list_title'>
                                         <div>GPS LAT</div>
                                     </div>
-                                    <div id='list_app_log_col_title11' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_client_longitude' class='list_app_log_col list_sort_click list_title'>
                                         <div>GPS LONG</div>
                                     </div>
-                                    <div id='list_app_log_col_title12' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_user_language' class='list_app_log_col list_sort_click list_title'>
                                         <div>USER LANGUAGE</div>
                                     </div>
-                                    <div id='list_app_log_col_title13' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_user_timezone' class='list_app_log_col list_sort_click list_title'>
                                         <div>USER TIMEZONE</div>
                                     </div>
-                                    <div id='list_app_log_col_title14' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_user_number_system' class='list_app_log_col list_sort_click list_title'>
                                         <div>USER NUMBER_SYSTEM</div>
                                     </div>
-                                    <div id='list_app_log_col_title15' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_user_platform' class='list_app_log_col list_sort_click list_title'>
                                         <div>USER PLATFORM</div>
                                     </div>
-                                    <div id='list_app_log_col_title16' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_server_user_agent' class='list_app_log_col list_sort_click list_title'>
                                         <div>USER AGENT</div>
                                     </div>
-                                    <div id='list_app_log_col_title17' class='list_app_log_col list_sort_click list_title'>
+                                    <div id='list_app_log_col_title_server_http_accept_language' class='list_app_log_col list_sort_click list_title'>
                                         <div>ACCEPT LANGUAGE</div>
                                     </div>
                                 </div>`;
@@ -2265,23 +2265,8 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             }
                         }
                     }
-                    switch (list_div){
-                        case 'list_connected':{
-                            document.querySelector('#' + list_div).innerHTML = html;
-                            document.querySelector('#' + list_div_col_title + '_' + sort).classList.add(order_by);
-                            break;
-                        }
-                        case 'list_app_log':{
-                            document.querySelector('#' + list_div).innerHTML = html;
-                            document.querySelector('#' + list_div_col_title + sort).classList.add(order_by);
-                            break;
-                        }
-                        case 'list_server_log':{
-                            document.querySelector('#' + list_div).innerHTML = html;
-                            document.querySelector('#' + list_div_col_title + '_' + sort).classList.add(order_by);
-                            break;
-                        }
-                    }
+                    document.querySelector('#' + list_div).innerHTML = html;
+                    document.querySelector('#' + list_div_col_title + '_' + sort).classList.add(order_by);
                 }   
             }
         });        
@@ -2298,7 +2283,7 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
               order_by);
 };    
 
-const show_app_log = async (sort=1, order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
+const show_app_log = async (sort='id', order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
     const app_id = document.querySelector('#select_app_menu5_app_log').options[document.querySelector('#select_app_menu5_app_log').selectedIndex].value;
     const year = document.querySelector('#select_year_menu5_app_log').value;
     const month = document.querySelector('#select_month_menu5_app_log').value;
@@ -2331,18 +2316,18 @@ const set_list_eventlisteners = (list_type, list_function) => {
         element.addEventListener('click', click_function_rowcolumn);
 };
 const get_sort = (order_by=0) => {
-    let sort = '';
-    for (let i=1;i <=8;i++){
-        if (document.querySelector('#list_app_log_col_title' + i).classList.contains('asc'))
+    const sort = '';
+    for (const col_title of document.querySelectorAll('#list_app_log_row_title > div')){
+        if (col_title.classList.contains('asc'))
             if (order_by==0)
-                sort = i;
+                return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
             else
-                sort = 'asc';
-        if (document.querySelector('#list_app_log_col_title' + i).classList.contains('desc'))
+                return 'asc';
+        if (col_title.classList.contains('desc'))
             if (order_by==0)
-                sort = i;
+                return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
             else
-                sort = 'desc';
+                return 'desc';
     }
     return sort;
 };
@@ -2357,21 +2342,23 @@ const get_order = (item) => {
     return order_by;
 };
 const list_sort_click = (item) => {
-    switch (item.id.substring(0, item.id.indexOf('_col_title'))){
+    const list = item.id.substring(0, item.id.indexOf('_col_title'));
+    const sort = item.id.substr(`${list}_col_title_`.length);
+    switch (list){
         case 'list_app_log':{
-            show_app_log(item.id.substr(item.id.length - 1), get_order(item));    
+            show_app_log(sort, get_order(item));    
             break;
         }
         case 'list_connected':{
-            show_connected(item.id.substr('list_connected_col_title_'.length), get_order(item));
+            show_connected(sort, get_order(item));
             break;
         }
         case 'list_server_log':{
-            show_server_logs(item.id.substr('list_server_log_col_title_'.length), get_order(item), document.querySelector('#list_server_log_search_input').innerHTML);
+            show_server_logs(sort, get_order(item), document.querySelector('#list_server_log_search_input').innerHTML);
             break;
         }
         case 'list_user_account':{
-            show_users(item.id.substr(item.id.length - 1), get_order(item));
+            search_users(sort, get_order(item));
             break;
         }
     }
@@ -2381,7 +2368,7 @@ const page_navigation = (item) => {
     let sort = get_sort();
     const order_by = get_sort(1);
     if (sort =='')
-        sort = 8;
+        sort = 'id';
     switch (item){
         case 'list_app_log_first':{
             APP_GLOBAL.page = 0;
@@ -3132,7 +3119,7 @@ const app_events = (event_type, event)=> {
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.typewatch(search_users, 8, 'ASC', false);
+                        common.typewatch(search_users, 'username', 'ASC', false);
                     break;
                 }
                 case 'list_server_log_search_input':{
