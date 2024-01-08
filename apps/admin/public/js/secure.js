@@ -149,157 +149,158 @@ const show_menu = (menu) => {
     }            
 };
 
-const show_start = async (yearvalues) =>{
-    const show_charts = async () => {
-        if (admin_token_has_value()){
-            //chart 1 shows for all apps, app id used for chart 2
-            const app_id = document.querySelector('#select_app_menu1').value; 
-            const year = document.querySelector('#select_year_menu1').value;
-            const month = document.querySelector('#select_month_menu1').value;
-            const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=''?
-                                                document.querySelector('#select_system_admin_stat'):null;
-            const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=''?
-                                                select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
-            const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=''?
-                                                { value: document.querySelector('#select_system_admin_stat').value,
-                                                    unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
-                                                    statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
-                                                }:null;
-            let result_obj;
-            document.querySelector('#box1_chart').innerHTML = common.APP_SPINNER;
-            document.querySelector('#box1_legend').innerHTML = common.APP_SPINNER;
-            document.querySelector('#box2_chart').innerHTML = common.APP_SPINNER;
-            document.querySelector('#box2_legend').innerHTML = common.APP_SPINNER;
-            let service;
-            let url;
-            let authorization_type;
-            if (common.COMMON_GLOBAL.system_admin!=''){
-                service = 'LOG';
-                if (system_admin_statGroup=='REQUEST'){
-                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
-                }
-                else
-                    url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${system_admin_statValues.value}&unique=&year=${year}&month=${month}`;
-                authorization_type = 'SYSTEMADMIN';
+const show_charts = async () => {
+    if (admin_token_has_value()){
+        //chart 1 shows for all apps, app id used for chart 2
+        const app_id = document.querySelector('#select_app_menu1').value; 
+        const year = document.querySelector('#select_year_menu1').value;
+        const month = document.querySelector('#select_month_menu1').value;
+        const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=''?
+                                            document.querySelector('#select_system_admin_stat'):null;
+        const system_admin_statGroup = common.COMMON_GLOBAL.system_admin!=''?
+                                            select_system_admin_stat.options[select_system_admin_stat.selectedIndex].parentNode.label:null;
+        const system_admin_statValues = common.COMMON_GLOBAL.system_admin!=''?
+                                            { value: document.querySelector('#select_system_admin_stat').value,
+                                                unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
+                                                statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
+                                            }:null;
+        let result_obj;
+        document.querySelector('#box1_chart').innerHTML = common.APP_SPINNER;
+        document.querySelector('#box1_legend').innerHTML = common.APP_SPINNER;
+        document.querySelector('#box2_chart').innerHTML = common.APP_SPINNER;
+        document.querySelector('#box2_legend').innerHTML = common.APP_SPINNER;
+        let service;
+        let url;
+        let authorization_type;
+        if (common.COMMON_GLOBAL.system_admin!=''){
+            service = 'LOG';
+            if (system_admin_statGroup=='REQUEST'){
+                url = `/log/logs_stat?select_app_id=${app_id}&statGroup=${system_admin_statValues.statGroup}&statValue=&unique=${system_admin_statValues.unique}&year=${year}&month=${month}`;
+            }
+            else
+                url = `/log/logs_stat?select_app_id=${app_id}&statGroup=&statValue=${system_admin_statValues.value}&unique=&year=${year}&month=${month}`;
+            authorization_type = 'SYSTEMADMIN';
+        }
+        else{
+            service = 'DB_API';
+            url = `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`;
+            authorization_type = 'APP_ACCESS';
+        }
+        //return result for both charts
+        common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
+            if (err){
+                document.querySelector('#box1_chart').innerHTML = '';
+                document.querySelector('#box1_legend').innerHTML = '';
+                document.querySelector('#box2_chart').innerHTML = '';
+                document.querySelector('#box2_legend').innerHTML = '';
             }
             else{
-                service = 'DB_API';
-                url = `/app_log/admin/stat/uniquevisitor?select_app_id=${app_id}&year=${year}&month=${month}`;
-                authorization_type = 'APP_ACCESS';
-            }
-            //return result for both charts
-            common.FFB (service, url, 'GET', authorization_type, null, (err, result) => {
-                if (err){
-                    document.querySelector('#box1_chart').innerHTML = '';
-                    document.querySelector('#box1_legend').innerHTML = '';
-                    document.querySelector('#box2_chart').innerHTML = '';
-                    document.querySelector('#box2_legend').innerHTML = '';
+                let html = '';
+                result_obj = JSON.parse(result);
+                //chart 1=Piechart, 2= Barchart
+                //CHART 1
+                const SearchAndGetText = (item, search) => {
+                    for (let i=1;i<item.options.length;i++){
+                        if (item.options[i].value == search)
+                            return item.options[i].text;
+                    }
+                    return null;
+                };
+                let sum_amount =0;
+                const chart_1 = result_obj.filter((row)=> row.chart==1);
+                for (const stat of chart_1) {
+                    sum_amount += +stat.amount;
                 }
-                else{
-                    let html = '';
-                    result_obj = JSON.parse(result);
-                    //chart 1=Piechart, 2= Barchart
-                    //CHART 1
-                    const SearchAndGetText = (item, search) => {
-                        for (let i=1;i<item.options.length;i++){
-                            if (item.options[i].value == search)
-                                return item.options[i].text;
-                        }
-                        return null;
-                    };
-                    let sum_amount =0;
-                    const chart_1 = result_obj.filter((row)=> row.chart==1);
-                    for (const stat of chart_1) {
-                        sum_amount += +stat.amount;
-                    }
-                    let chart_colors = '';
-                    let degree_start = 0;
-                    let degree_stop = 0;
+                let chart_colors = '';
+                let degree_start = 0;
+                let degree_stop = 0;
 
-                    let chart_color;
-                    chart_1.forEach((stat, i)=>{
-                        //calculate colors and degree
-                        degree_stop = degree_start + +stat.amount/sum_amount*360;
-                        chart_color = `rgb(${i/chart_1.length*200},${i/chart_1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
-                        if (i < chart_1.length - 1)
-                            chart_colors += chart_color + ',';
-                        else
-                            chart_colors += chart_color;
-                        //add to legend below chart
-                        let legend_text_chart1;
-                        if (common.COMMON_GLOBAL.system_admin!='')
-                            if (system_admin_statGroup=='REQUEST')
-                                legend_text_chart1 = stat.statValue;
-                            else
-                                legend_text_chart1 = SearchAndGetText(document.querySelector('#select_system_admin_stat'), stat.statValue);
-                        else
-                            legend_text_chart1 = SearchAndGetText(document.querySelector('#select_app_menu1'), stat.app_id);
-                        html += `<div id='box1_legend_row' class='box_legend_row'>
-                                    <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
-                                    <div id='box1_legend_col2' class='box_legend_col'>${legend_text_chart1}</div>
-                                </div>`;
-                        degree_start = degree_start + stat.amount/sum_amount*360;
-                    });
-                    //display pie chart
-                    document.querySelector('#box1_chart').innerHTML = '<div id=\'box1_pie\'></div>';
-                    document.querySelector('#box1_pie').style.backgroundImage = `conic-gradient(${chart_colors})`;
-                    //show legend below chart
-                    document.querySelector('#box1_legend').innerHTML = html;
-
-                    //CHART 2
-                    html = '';
-                    let max_amount =0;
-                    const chart_2 = result_obj.filter((row)=> row.chart==2);
-                    for (const stat of chart_2) {
-                        if (+stat.amount>max_amount)
-                            max_amount = +stat.amount;
-                    }
-                    //set bar data
-                    let bar_color;
-                    if (app_id == '')
-                        bar_color = 'rgb(81, 171, 255)';
+                let chart_color;
+                chart_1.forEach((stat, i)=>{
+                    //calculate colors and degree
+                    degree_stop = degree_start + +stat.amount/sum_amount*360;
+                    chart_color = `rgb(${i/chart_1.length*200},${i/chart_1.length*200},255) ${degree_start}deg ${degree_stop}deg`;
+                    if (i < chart_1.length - 1)
+                        chart_colors += chart_color + ',';
                     else
-                        bar_color = 'rgb(197 227 255)';
+                        chart_colors += chart_color;
+                    //add to legend below chart
+                    let legend_text_chart1;
+                    if (common.COMMON_GLOBAL.system_admin!='')
+                        if (system_admin_statGroup=='REQUEST')
+                            legend_text_chart1 = stat.statValue;
+                        else
+                            legend_text_chart1 = SearchAndGetText(document.querySelector('#select_system_admin_stat'), stat.statValue);
+                    else
+                        legend_text_chart1 = SearchAndGetText(document.querySelector('#select_app_menu1'), stat.app_id);
+                    html += `<div id='box1_legend_row' class='box_legend_row'>
+                                <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
+                                <div id='box1_legend_col2' class='box_legend_col'>${legend_text_chart1}</div>
+                            </div>`;
+                    degree_start = degree_start + stat.amount/sum_amount*360;
+                });
+                //display pie chart
+                document.querySelector('#box1_chart').innerHTML = '<div id=\'box1_pie\'></div>';
+                document.querySelector('#box1_pie').style.backgroundImage = `conic-gradient(${chart_colors})`;
+                //show legend below chart
+                document.querySelector('#box1_legend').innerHTML = html;
 
-                    for (const stat of chart_2) {
-                        html += `<div class='box2_barcol box2_barcol_display' style='width:${100/chart_2.length}%'>
-                                    <div class='box2_barcol_color' style='background-color:${bar_color};height:${+stat.amount/max_amount*100}%'></div>
-                                    <div class='box2_barcol_legendX'>${stat.day}</div>
-                                </div>`;
-                    }
-                    //create bar chart
-                    document.querySelector('#box2_chart').innerHTML = `<div id='box2_bar_legendY'>
-                                                                            <div id='box2_bar_legend_max'>${max_amount}</div>
-                                                                            <div id='box2_bar_legend_medium'>${max_amount/2}</div>
-                                                                            <div id='box2_bar_legend_min'>0</div>
-                                                                    </div>
-                                                                    <div id='box2_bar_data'>${html}</div>`;
-                    //legend below chart
-                    let legend_text_chart2;
-                    if (common.COMMON_GLOBAL.system_admin!=''){
-                        //as system admin you can filter http codes and application
-                        legend_text_chart2 = document.querySelector('#select_system_admin_stat').options[document.querySelector('#select_system_admin_stat').selectedIndex].text;
-                        const legend_text_chart2_apps = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
-                        document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
-                                                                            <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                            <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
-                                                                            <div id='box2_legend_col3' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                            <div id='box2_legend_col4' class='box_legend_col'>${legend_text_chart2_apps}</div>
-                                                                        </div>` ;
-                    }
-                        
-                    else{
-                        // as admin you can filter application
-                        legend_text_chart2 = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
-                        document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
-                                                                            <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                            <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
-                                                                        </div>` ;
-                    }
+                //CHART 2
+                html = '';
+                let max_amount =0;
+                const chart_2 = result_obj.filter((row)=> row.chart==2);
+                for (const stat of chart_2) {
+                    if (+stat.amount>max_amount)
+                        max_amount = +stat.amount;
                 }
-            });
-        }
-    };
+                //set bar data
+                let bar_color;
+                if (app_id == '')
+                    bar_color = 'rgb(81, 171, 255)';
+                else
+                    bar_color = 'rgb(197 227 255)';
+
+                for (const stat of chart_2) {
+                    html += `<div class='box2_barcol box2_barcol_display' style='width:${100/chart_2.length}%'>
+                                <div class='box2_barcol_color' style='background-color:${bar_color};height:${+stat.amount/max_amount*100}%'></div>
+                                <div class='box2_barcol_legendX'>${stat.day}</div>
+                            </div>`;
+                }
+                //create bar chart
+                document.querySelector('#box2_chart').innerHTML = `<div id='box2_bar_legendY'>
+                                                                        <div id='box2_bar_legend_max'>${max_amount}</div>
+                                                                        <div id='box2_bar_legend_medium'>${max_amount/2}</div>
+                                                                        <div id='box2_bar_legend_min'>0</div>
+                                                                </div>
+                                                                <div id='box2_bar_data'>${html}</div>`;
+                //legend below chart
+                let legend_text_chart2;
+                if (common.COMMON_GLOBAL.system_admin!=''){
+                    //as system admin you can filter http codes and application
+                    legend_text_chart2 = document.querySelector('#select_system_admin_stat').options[document.querySelector('#select_system_admin_stat').selectedIndex].text;
+                    const legend_text_chart2_apps = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
+                    document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
+                                                                        <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                        <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
+                                                                        <div id='box2_legend_col3' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                        <div id='box2_legend_col4' class='box_legend_col'>${legend_text_chart2_apps}</div>
+                                                                    </div>` ;
+                }
+                    
+                else{
+                    // as admin you can filter application
+                    legend_text_chart2 = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
+                    document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
+                                                                        <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                                                        <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
+                                                                    </div>` ;
+                }
+            }
+        });
+    }
+};
+const show_start = async (yearvalues) =>{
+    
     document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
     const get_system_admin_stat = async () =>{
         return new Promise((resolve)=>{
@@ -381,16 +382,10 @@ const show_start = async (yearvalues) =>{
         document.querySelector('#menu_1_maintenance').style.display = 'none';
         document.querySelector('#select_system_admin_stat').style.display = 'none';
     }
-
-    document.querySelector('#menu_1_broadcast_button').addEventListener('click', () => { show_broadcast_dialogue('ALL'); }, false);
-    document.querySelector('#menu_1_checkbox_maintenance').addEventListener('click', () => { set_maintenance(); }, false);
+    
         
     document.querySelector('#select_year_menu1').selectedIndex = 0;
     document.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
-    document.querySelector('#select_system_admin_stat').addEventListener('change', () => { show_charts();}, false);
-    document.querySelector('#select_app_menu1').addEventListener('change', () => { show_charts();}, false);
-    document.querySelector('#select_year_menu1').addEventListener('change', () => { show_charts();}, false);
-    document.querySelector('#select_month_menu1').addEventListener('change', () => { show_charts();}, false);
 
     if (common.COMMON_GLOBAL.system_admin!='')
         check_maintenance();
@@ -678,7 +673,7 @@ const show_users = () =>{
                 <div id='list_user_account_title'>${common.ICONS.app_users}</div>
                 <div class='list_search'>
                     <div id='list_user_account_search_input' contenteditable=true class='common_input list_search_input' /></div>
-                    <div class='list_search_icon'>${common.ICONS.app_search}</div>
+                    <div id='list_user_search_icon' 'class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
             </div>
@@ -689,9 +684,6 @@ const show_users = () =>{
                     <div id='users_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
                 </div>
             </div>`;
-    document.querySelector('#list_user_account_search_input').addEventListener('keyup', () => { common.typewatch(search_users, 8, 'ASC', false); }, false);
-    document.querySelector('#menu_3_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_user_account_search_input').focus();document.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
-    document.querySelector('#users_save').addEventListener('click', () => { button_save('users_save');}, false); 
     //event
     set_list_eventlisteners('user_account', 'sort');
     search_users();
@@ -1064,7 +1056,7 @@ const show_apps = async () => {
                             <div id='apps_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
                         </div>
                     </div>`;
-            document.querySelector('#apps_save').addEventListener('click', () => { button_save('apps_save');}, false); 
+            
             //add lov icon
             document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
             list_events('list_apps', 'list_apps_row', ' .list_edit');
@@ -1489,7 +1481,7 @@ const show_monitor = async (yearvalues) =>{
                     <select id='select_year_menu5'></select>
                     <select id='select_month_menu5'>${list_generate(12)}</select>
                     <select id='select_day_menu5'>${list_generate(31)}</select>
-                    <button id='filesearch_menu5' class='common_dialogue_button' >${common.ICONS.app_search}</button>
+                    <div id='filesearch_menu5' class='common_dialogue_button' >${common.ICONS.app_search}</div>
                 </div>
                 <div id='menu5_row_parameters'>
                     <div class='menu5_row_parameters_col'>
@@ -1510,7 +1502,7 @@ const show_monitor = async (yearvalues) =>{
                 </div>
                 <div class='list_search'>
                     <div id='list_server_log_search_input' contenteditable=true class='common_input list_search_input'/></div>
-                    <div class='list_search_icon'>${common.ICONS.app_search}</div>
+                    <div id='list_server_log_search_icon' class='list_search_icon'>${common.ICONS.app_search}</div>
                 </div>
                 <div id='list_server_log' class='common_list_scrollbar'></div>
             </div>
@@ -1533,15 +1525,7 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#select_app_menu5_app_log').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
     //connected
     document.querySelector('#select_app_menu5_list_connected').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
-
-    //set events
-    document.querySelector('#list_server_log_search_input').addEventListener('keyup', () => { common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML); }, false);
-    document.querySelector('#menu_5_content_widget1 .list_search_icon').addEventListener('click', () => { document.querySelector('#list_server_log_search_input').focus();document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup')); }, false);
     
-    document.querySelector('#list_monitor_nav').addEventListener('click', (event) => {
-        const n = id => id==''?null:id;
-        nav_click(n(event.target.id)?? n(event.target.parentNode.id) ?? n(event.target.parentNode.parentNode.id) ?? event.target.parentNode.parentNode.parentNode.id);    
-      }, false);
 
     //add sort events on title
     set_list_eventlisteners('connected', 'sort');
@@ -1553,26 +1537,6 @@ const show_monitor = async (yearvalues) =>{
     set_list_eventlisteners('app_log', 'gps');
     set_list_eventlisteners('server_log', 'gps');
 
-    document.querySelector('#select_app_menu5_app_log').addEventListener('change', () => { nav_click(document.querySelector('#list_app_log_title').id);}, false);
-    document.querySelector('#select_year_menu5_app_log').addEventListener('change', () => { nav_click(document.querySelector('#list_app_log_title').id);}, false);
-    document.querySelector('#select_month_menu5_app_log').addEventListener('change', () => { nav_click(document.querySelector('#list_app_log_title').id);}, false);
-
-    document.querySelector('#list_app_log_first').addEventListener('click', (event) => { page_navigation(event.target);}, false);
-    document.querySelector('#list_app_log_previous').addEventListener('click', (event) => { page_navigation(event.target);}, false);
-    document.querySelector('#list_app_log_next').addEventListener('click', (event) => { page_navigation(event.target);}, false);
-    document.querySelector('#list_app_log_last').addEventListener('click', (event) => { page_navigation(event.target);}, false);
-
-    document.querySelector('#select_app_menu5_list_connected').addEventListener('change', () => { nav_click(document.querySelector('#list_connected_title').id);}, false);
-    document.querySelector('#select_year_menu5_list_connected').addEventListener('change', () => { nav_click(document.querySelector('#list_connected_title').id);}, false);
-    document.querySelector('#select_month_menu5_list_connected').addEventListener('change', () => { nav_click(document.querySelector('#list_connected_title').id);}, false);
-
-    document.querySelector('#select_logscope5').addEventListener('change', () => { nav_click(document.querySelector('#list_server_log_title').id);}, false);    
-    document.querySelector('#select_app_menu5').addEventListener('change', () => { nav_click(document.querySelector('#list_server_log_title').id);}, false);
-    document.querySelector('#select_year_menu5').addEventListener('change', () => { nav_click(document.querySelector('#list_server_log_title').id);}, false);
-    document.querySelector('#select_month_menu5').addEventListener('change', () => { nav_click(document.querySelector('#list_server_log_title').id);}, false);
-    document.querySelector('#select_day_menu5').addEventListener('change', () => { nav_click(document.querySelector('#list_server_log_title').id);}, false);
-
-    document.querySelector('#filesearch_menu5').addEventListener('click', () => { show_existing_logfiles();}, false);
 
     const init_monitor = () =>{
 
@@ -2418,7 +2382,7 @@ const page_navigation = (item) => {
     const order_by = get_sort(1);
     if (sort =='')
         sort = 8;
-    switch (item.id==''?item.parentNode.id:item.id){
+    switch (item){
         case 'list_app_log_first':{
             APP_GLOBAL.page = 0;
             show_app_log(sort, order_by, 0,APP_GLOBAL.limit);
@@ -2679,10 +2643,7 @@ const show_server_config = () =>{
                 <div id='config_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
             </div>
         </div>`;
-    document.querySelector('#config_save').addEventListener('click', () => { button_save('config_save');}, false); 
-    document.querySelector('#list_config_nav').addEventListener('click', (event) => {
-        nav_click(event.target.id==''?event.target.parentNode.id:event.target.id);
-     }, true);
+    
 
     nav_click(document.querySelector('#list_config_server_title').id);
 };
@@ -2759,6 +2720,63 @@ const show_config = async (file) => {
 /*----------------------- */
 /* INSTALLATION           */
 /*----------------------- */
+const db_install = () =>{
+    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+    const old_html = document.querySelector('#install_db_button_install').innerHTML;
+    document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
+    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
+    common.FFB ('DB_API', path, 'POST', 'SYSTEMADMIN', null, (err, result) => {
+        document.querySelector('#install_db_button_install').innerHTML = old_html;
+        if (err == null){
+            document.querySelector('#install_db_icon').classList.add('installed');
+            const result_obj = JSON.parse(result);
+            common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+        }
+    });
+};
+const db_uninstall = () =>{
+    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+    const old_html = document.querySelector('#install_db_button_uninstall').innerHTML;
+    document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
+    common.FFB ('DB_API', `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'SYSTEMADMIN', null, (err, result) => {
+        document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
+        if (err == null){
+            document.querySelector('#install_db_icon').classList.remove('installed');
+            const result_obj = JSON.parse(result);
+            common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+        }
+    });
+};
+const demo_install = () =>{
+    if (document.querySelector('#install_demo_password').innerHTML == '') {
+        common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
+    }
+    else{
+        const json_data = {demo_password: document.querySelector('#install_demo_password').innerHTML};
+        const old_html = document.querySelector('#install_demo_button_install').innerHTML;
+        document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
+        common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'APP_ACCESS', json_data, (err, result) => {
+            document.querySelector('#install_demo_button_install').innerHTML = old_html;
+            if (err == null){
+                const result_obj = JSON.parse(result);
+                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+            }
+        });
+    }
+
+};
+const demo_uninstall = () =>{
+    const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
+    document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
+    common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'APP_ACCESS', null, (err, result) => {
+        document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
+        if (err == null){
+            const result_obj = JSON.parse(result);
+            common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
+        }
+    });
+
+};
 const show_installation = () =>{
     document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;    
     if (common.COMMON_GLOBAL.system_admin!=''){
@@ -2780,45 +2798,6 @@ const show_installation = () =>{
                             </div>
                         </div>
                     </div>`;
-                document.querySelector('#install_db_button_row').addEventListener('click', (event) => {
-                    const install_function = () =>{
-                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                        const old_html = document.querySelector('#install_db_button_install').innerHTML;
-                        document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
-                        const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
-                        common.FFB ('DB_API', path, 'POST', 'SYSTEMADMIN', null, (err, result) => {
-                            document.querySelector('#install_db_button_install').innerHTML = old_html;
-                            if (err == null){
-                                document.querySelector('#install_db_icon').classList.add('installed');
-                                const result_obj = JSON.parse(result);
-                                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
-                            }
-                        });
-                    };
-                    const uninstall_function = () =>{
-                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                        const old_html = document.querySelector('#install_db_button_uninstall').innerHTML;
-                        document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'SYSTEMADMIN', null, (err, result) => {
-                            document.querySelector('#install_db_button_uninstall').innerHTML = old_html;
-                            if (err == null){
-                                document.querySelector('#install_db_icon').classList.remove('installed');
-                                const result_obj = JSON.parse(result);
-                                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
-                            }
-                        });
-                    };
-                    switch(event.target.parentNode.id){
-                        case 'install_db_button_install':{
-                            common.show_message('CONFIRM',null,install_function, null, common.COMMON_GLOBAL.app_id);  
-                            break;
-                        }
-                        case 'install_db_button_uninstall':{
-                            common.show_message('CONFIRM',null,uninstall_function, null, common.COMMON_GLOBAL.app_id);  
-                            break;
-                        }
-                    }
-                }, false);
                 document.querySelector('#install_db_icon').classList.remove('installed');
                 if (JSON.parse(result)[0].installed == 1)
                     document.querySelector('#install_db_icon').classList.add('installed');
@@ -2836,44 +2815,14 @@ const show_installation = () =>{
                 </div>
                 <div id='install_demo_input'>
                     <div id="install_demo_password_icon" >${common.ICONS.user_password}</div>
-                    <div id='install_demo_password' contenteditable=true class='common_input common_password' /></div>
+                    <div class='common_password_container common_input'>
+                            <div id='install_demo_password' contenteditable=true class='common_input common_password'></div>
+                            <div id='install_demo_password_mask' class='common_input common_password_mask'/></div>
+                    </div>
                 </div>
             </div>
         </div>`;
-        document.querySelector('#install_demo_button_row').addEventListener('click', (event) => { 
-            switch(event.target.parentNode.id){
-                case 'install_demo_button_install':{
-                    if (document.querySelector('#install_demo_password').innerHTML == '') {
-                        common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
-                    }
-                    else{
-                        const json_data = {demo_password: document.querySelector('#install_demo_password').innerHTML};
-                        const old_html = document.querySelector('#install_demo_button_install').innerHTML;
-                        document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-                        common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'APP_ACCESS', json_data, (err, result) => {
-                            document.querySelector('#install_demo_button_install').innerHTML = old_html;
-                            if (err == null){
-                                const result_obj = JSON.parse(result);
-                                common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
-                            }
-                        });
-                    }
-                    break;
-                }
-                case 'install_demo_button_uninstall':{
-                    const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
-                    document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-                    common.FFB ('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'APP_ACCESS', null, (err, result) => {
-                        document.querySelector('#install_demo_button_uninstall').innerHTML = old_html;
-                        if (err == null){
-                            const result_obj = JSON.parse(result);
-                            common.show_message('LOG', null, null, common.show_message_info_list(result_obj.info), common.COMMON_GLOBAL.common_app_id);
-                        }
-                    });
-                    break;
-                }
-            }
-        }, false);
+        
     }
 };
 /*----------------------- */
@@ -3057,6 +3006,152 @@ const admin_token_has_value = () => {
         return true;
 };
 
+const app_events = (event_type, event)=> {
+    const event_target_id = common.element_id(event.target);
+    switch (event_type){
+        case 'click':{
+            switch (event_target_id){
+                case 'menu_1_broadcast_button':{
+                    show_broadcast_dialogue('ALL');
+                    break;
+                }
+                case 'menu_1_checkbox_maintenance':{
+                    set_maintenance();
+                    break;
+                }
+                case 'list_user_search_icon':{
+                    document.querySelector('#list_user_account_search_input').focus();
+                    document.querySelector('#list_user_account_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    break;
+                }
+                case 'users_save':{
+                    button_save('users_save');
+                    break;
+                }
+                case 'apps_save':{
+                    button_save('apps_save');
+                    break;
+                }
+                case 'list_server_log_search_icon':{
+                    document.querySelector('#list_server_log_search_input').focus();
+                    document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                    break;
+                }
+                case 'list_connected_title':
+                case 'list_app_log_title':
+                case 'list_server_log_title':{
+                    nav_click(event_target_id);    
+                    break;
+                }
+                case 'list_app_log_first':
+                case 'list_app_log_previous':
+                case 'list_app_log_next':
+                case 'list_app_log_last':{
+                    page_navigation(event_target_id);
+                    break;
+                }
+                case 'filesearch_menu5':{
+                    show_existing_logfiles();
+                    break;
+                }
+                case 'config_save':{
+                    button_save('config_save');
+                    break;
+                }
+                case 'list_config_server_title' :
+                case 'list_config_blockip_title':
+                case 'list_config_useragent_title':
+                case 'list_config_policy_title':{
+                    nav_click(event_target_id);
+                    break;
+                }
+                case 'install_db_button_install':{
+                    common.show_message('CONFIRM',null,db_install, null, common.COMMON_GLOBAL.app_id);
+                    break;
+                }
+                case 'install_db_button_uninstall':{
+                    common.show_message('CONFIRM',null,db_uninstall, null, common.COMMON_GLOBAL.app_id);
+                    break;
+                }
+                case 'install_demo_button_install':{
+                    demo_install();
+                    break;
+                }
+                case 'install_demo_button_uninstall':{
+                    demo_uninstall();
+                    break;
+                }
+            }
+            
+            break;
+        }
+        case 'change':{
+            switch (event_target_id){
+                case 'select_system_admin_stat':
+                case 'select_app_menu1':
+                case 'select_year_menu1':
+                case 'select_month_menu1':{
+                    show_charts();
+                    break;
+                }
+
+                case 'select_app_menu5_app_log':
+                case 'select_year_menu5_app_log':
+                case 'select_month_menu5_app_log':{
+                    nav_click(document.querySelector('#list_app_log_title').id);
+                    break;
+                }
+                case 'select_app_menu5_list_connected':
+                case 'select_year_menu5_list_connected':
+                case 'select_month_menu5_list_connected':{
+                    nav_click(document.querySelector('#list_connected_title').id);
+                    break;
+                }
+                case 'select_logscope5':
+                case 'select_app_menu5':
+                case 'select_year_menu5':
+                case 'select_month_menu5':
+                case 'select_day_menu5':{
+                    nav_click(document.querySelector('#list_server_log_title').id);
+                    break;
+                }
+            }            
+            break;
+        }
+        case 'focus':{
+            break;
+        }
+        case 'input':{
+            break;
+        }
+        case 'keyup':{
+            switch (event_target_id){
+                case 'list_user_account_search_input':{
+                    if (!event.code.startsWith('Arrow') && 
+                        !event.code == 'Home' && 
+                        !event.code == 'End' &&
+                        !event.code == 'PageUp' &&
+                        !event.code == 'PageDown')
+                        common.typewatch(search_users, 8, 'ASC', false);
+                    break;
+                }
+                case 'list_server_log_search_input':{
+                    if (!event.code.startsWith('Arrow') && 
+                        !event.code == 'Home' && 
+                        !event.code == 'End' &&
+                        !event.code == 'PageUp' &&
+                        !event.code == 'PageDown')
+                        common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML);
+                    break;
+                }
+            }
+            break;
+        }
+        case 'keydown':{
+            break;
+        }
+    }
+};
 const init = () => {
 
     //SET GLOBALS
@@ -3129,4 +3224,4 @@ const init = () => {
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{});
     }
 };
-export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, init};
+export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, app_events, init};

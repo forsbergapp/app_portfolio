@@ -242,6 +242,7 @@ const setEvents = () => {
                 break;
             }
         }
+        app_secure.app_events('click', event);
     });
     
     document.querySelector('#app').addEventListener('change', event => {
@@ -271,6 +272,7 @@ const setEvents = () => {
                 break;
             }
         }
+        app_secure.app_events('change', event);
     });
     document.querySelector('#app').addEventListener('keyup', event => {
         common.common_event('keyup',event);
@@ -291,9 +293,17 @@ const setEvents = () => {
             default:
                 break;
         }
+        app_secure.app_events('keyup', event);
     });
     document.querySelector('#app').addEventListener('keydown', event => {
         common.common_event('keydown',event);
+        app_secure.app_events('keydown', event);
+    });
+    document.querySelector('#app').addEventListener('input', event => {
+        app_secure.app_events('input', event);
+    });
+    document.querySelector('#app').addEventListener('focus', event => {
+        app_secure.app_events('focus', event);
     });
 };
 
