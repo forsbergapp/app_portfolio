@@ -1283,19 +1283,6 @@ const user_setting_link = (item) => {
             common.show_window_info(2, null, 'HTML', url);
             break;
         }
-        case 'user_day_html_copy':
-        case 'user_month_html_copy':
-        case 'user_year_html_copy':{
-            const text_copy = get_report_url(user_account_id, 
-                                           sid, 
-                                           paper_size_select.options[paper_size_select.selectedIndex].value,
-                                           item.id,
-                                           'HTML');
-            navigator.clipboard.writeText(text_copy) .then(() => {
-                common.show_message('INFO', null, null, common.ICONS.app_link, common.COMMON_GLOBAL.common_app_id);
-            });
-            break;
-        }
         case 'user_day_pdf':
         case 'user_month_pdf':
         case 'user_year_pdf':{
@@ -1305,19 +1292,6 @@ const user_setting_link = (item) => {
                                      item.id,
                                      'PDF');
             common.show_window_info(2, null, 'PDF', url);
-            break;
-        }
-        case 'user_day_pdf_copy':
-        case 'user_month_pdf_copy':
-        case 'user_year_pdf_copy':{
-            const text_copy = get_report_url(user_account_id, 
-                                           sid, 
-                                           paper_size_select.options[paper_size_select.selectedIndex].value,
-                                           item.id,
-                                           'PDF');
-            navigator.clipboard.writeText(text_copy) .then(() => {
-                common.show_message('INFO', null, null, common.ICONS.app_link, common.COMMON_GLOBAL.common_app_id);
-            });
             break;
         }
     }
@@ -2236,18 +2210,12 @@ const setEvents = () => {
                 user_settings_delete();
                 break;
             }
-            case 'user_day_html':
-            case 'user_day_html_copy':
+            case 'user_day_html':        
             case 'user_day_pdf':
-            case 'user_day_pdf_copy':
             case 'user_month_html':
-            case 'user_month_html_copy':
             case 'user_month_pdf':
-            case 'user_month_pdf_copy':
             case 'user_year_html':
-            case 'user_year_html_copy':
-            case 'user_year_pdf':
-            case 'user_year_pdf_copy':{
+            case 'user_year_pdf':{
                 user_setting_link(document.querySelector('#' + event_target_id));
                 break;
             }
@@ -2934,17 +2902,11 @@ const init_app = (parameters) => {
         document.querySelector('#setting_icon_user_url_year').innerHTML = common.ICONS.regional_year;
     
         document.querySelector('#user_day_html').innerHTML = common.ICONS.app_html;
-        document.querySelector('#user_day_html_copy').innerHTML = common.ICONS.app_copy;
         document.querySelector('#user_day_pdf').innerHTML = common.ICONS.app_pdf;
-        document.querySelector('#user_day_pdf_copy').innerHTML = common.ICONS.app_copy;
         document.querySelector('#user_month_html').innerHTML = common.ICONS.app_html;
-        document.querySelector('#user_month_html_copy').innerHTML = common.ICONS.app_copy;
         document.querySelector('#user_month_pdf').innerHTML = common.ICONS.app_pdf;
-        document.querySelector('#user_month_pdf_copy').innerHTML = common.ICONS.app_copy;
         document.querySelector('#user_year_html').innerHTML = common.ICONS.app_html;
-        document.querySelector('#user_year_html_copy').innerHTML = common.ICONS.app_copy;
         document.querySelector('#user_year_pdf').innerHTML = common.ICONS.app_pdf;
-        document.querySelector('#user_year_pdf_copy').innerHTML = common.ICONS.app_copy;
     
         document.querySelector('#setting_btn_user_save').innerHTML = common.ICONS.app_save;
         document.querySelector('#setting_btn_user_add').innerHTML = common.ICONS.app_add;
