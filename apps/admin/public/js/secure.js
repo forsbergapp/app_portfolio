@@ -3128,19 +3128,19 @@ const app_events = (event_type, event)=> {
             switch (event_target_id){
                 case 'list_user_account_search_input':{
                     if (!event.code.startsWith('Arrow') && 
-                        !event.code == 'Home' && 
-                        !event.code == 'End' &&
-                        !event.code == 'PageUp' &&
-                        !event.code == 'PageDown')
+                        event.code != 'Home' && 
+                        event.code != 'End' &&
+                        event.code != 'PageUp' &&
+                        event.code != 'PageDown')
                         common.typewatch(search_users, 8, 'ASC', false);
                     break;
                 }
                 case 'list_server_log_search_input':{
                     if (!event.code.startsWith('Arrow') && 
-                        !event.code == 'Home' && 
-                        !event.code == 'End' &&
-                        !event.code == 'PageUp' &&
-                        !event.code == 'PageDown')
+                        event.code != 'Home' && 
+                        event.code != 'End' &&
+                        event.code != 'PageUp' &&
+                        event.code != 'PageDown')
                         common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML);
                     break;
                 }
