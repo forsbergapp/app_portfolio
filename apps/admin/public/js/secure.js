@@ -684,12 +684,10 @@ const show_users = () =>{
                     <div id='users_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
                 </div>
             </div>`;
-    //event
-    set_list_eventlisteners('user_account', 'sort');
     search_users();
 
 };
-const search_users = (sort='username', order_by='ASC', focus=true) => {
+const search_users = (sort='username', order_by='asc', focus=true) => {
 
     if (common.check_input(document.querySelector('#list_user_account_search_input').innerHTML, 100, false) == false)
         return null;
@@ -705,77 +703,77 @@ const search_users = (sort='username', order_by='ASC', focus=true) => {
             document.querySelector('#list_user_account').innerHTML = '';
         else{
             const users = JSON.parse(result);
-            let html = `<div id='list_user_account_row_title' class='list_user_account_row'>
-                            <div id='list_user_account_col_title_avatar' class='list_user_account_col list_title'>
+            let html = `<div class='list_user_account_row'>
+                            <div data-column='avatar' class='list_user_account_col list_title'>
                                 ${common.ICONS.user_avatar}
                             </div>
-                            <div id='list_user_account_col_title_id' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='id' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id}
                             </div>
-                            <div id='list_user_account_col_title_app_role_id' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='app_role_id' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_role}
                             </div>
-                            <div id='list_user_account_col_title_app_role_icon' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='app_role_icon' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_role} ${common.ICONS.misc_image}
                             </div>
-                            <div id='list_user_account_col_title_active' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='active' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_inactive} ${common.ICONS.app_active}
                             </div>
-                            <div id='list_user_account_col_title_user_level' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='user_level' class='list_user_account_col list_sort_click list_title'>
                                 <div>LEVEL</div>
                             </div>
-                            <div id='list_user_account_col_title_private' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='private' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_private}
                             </div>
-                            <div id='list_user_account_col_title_username' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='username' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.user} ${common.ICONS.username}
                             </div>
-                            <div id='list_user_account_col_title_bio' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='bio' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.user_bio}
                             </div>
-                            <div id='list_user_account_col_title_email' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='email' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_email}
                             </div>
-                            <div id='list_user_account_col_title_email_unverified' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='emal_unverified' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_email} ${common.ICONS.app_forgot}
                             </div>
-                            <div id='list_user_account_col_title_password' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='password' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.user_password}
                             </div>
-                            <div id='list_user_account_col_title_password_reminder' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='password_reminder' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.user_password} ${common.ICONS.app_info}
                             </div>
-                            <div id='list_user_account_col_title_verification_code' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='verification_code' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.app_verification_code}
                             </div>
-                            <div id='list_user_account_col_title_identity_provider_id' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='identity_provider_id' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id}
                             </div>
-                            <div id='list_user_account_col_title_provider_name' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='provider_name' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider}
                             </div>
-                            <div id='list_user_account_col_title_provider_id' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='provider_id' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id} ${common.ICONS.user} ID
                             </div>
-                            <div id='list_user_account_col_title_provider_first_name' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='provider_first_name' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 1
                             </div>
-                            <div id='list_user_account_col_title_provider_last_name' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='provider_last_name' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 2
                             </div>
-                            <div id='list_user_account_col_title_provider_image' class='list_user_account_col list_title'>
+                            <div data-column='provider_image' class='list_user_account_col list_title'>
                                 ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar}
                             </div>
-                            <div id='list_user_account_col_title_provider_image_url' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='provider_image_url' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar} URL
                             </div>
-                            <div id='list_user_account_col_title_provider_email' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='provider_email' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.app_email}
                             </div>
-                            <div id='list_user_account_col_title_date_created' class='list_user_account_col list_sort_click list_title'>
+                            <div data-column='date_created' class='list_user_account_col list_sort_click list_title'>
                                 ${common.ICONS.user_account_created}
                             </div>
-                            <div id='list_user_account_col_title_date_modified' class='list_apps_col list_sort_click list_title'>
+                            <div data-column='date_modified' class='list_apps_col list_sort_click list_title'>
                                 ${common.ICONS.user_account_modified}
                             </div>
                         </div>`;
@@ -880,7 +878,7 @@ const search_users = (sort='username', order_by='ASC', focus=true) => {
                 </div>`;
             }
             document.querySelector('#list_user_account').innerHTML = html;
-            document.querySelector('#list_user_account_col_title_' + sort).classList.add(order_by);
+            document.querySelector(`#list_user_account .list_title[data-column='${sort}']`).classList.add(order_by);
         
             if (common.COMMON_GLOBAL.user_app_role_id==0){
                 //add lov icon for super admin
@@ -1525,18 +1523,6 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#select_app_menu5_app_log').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
     //connected
     document.querySelector('#select_app_menu5_list_connected').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
-    
-
-    //add sort events on title
-    set_list_eventlisteners('connected', 'sort');
-    set_list_eventlisteners('app_log', 'sort');
-    set_list_eventlisteners('server_log', 'sort');
-    //add events on some columns searching in all rows
-    set_list_eventlisteners('connected', 'gps');
-    set_list_eventlisteners('connected', 'chat');
-    set_list_eventlisteners('app_log', 'gps');
-    set_list_eventlisteners('server_log', 'gps');
-
 
     const init_monitor = () =>{
 
@@ -1674,7 +1660,7 @@ const nav_click = (item_id) => {
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='block';
             document.querySelector('#list_monitor_nav_3').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML);
+            show_server_logs('logdate', 'desc', document.querySelector('#list_server_log_search_input').innerHTML);
             break;
         }
         //SERVER CONFIG
@@ -1704,7 +1690,7 @@ const nav_click = (item_id) => {
         }
     }
 };
-const show_list = async (list_div, list_div_col_title, url_parameters, sort, order_by) => {
+const show_list = async (list_div, url_parameters, sort, order_by) => {
     if (admin_token_has_value()){
         let logscope;
         let logs;
@@ -1756,99 +1742,99 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     [log colums][server columns][user columns][detail columms][app columns(broadcast, edit etc)]
                     */
                     case 'list_connected':{
-                        html = `<div id='list_connected_row_title' class='list_connected_row'>
-                                    <div id='list_connected_col_title_id' class='list_connected_col list_sort_click list_title'>
-                                        <div>ID</div>
+                        html = `<div class='list_connected_row'>
+                                    <div data-column='id' class='list_connected_col list_sort_click list_title'>
+                                        ID
                                     </div>
-                                    <div id='list_connected_col_title_connection_date' class='list_connected_col list_sort_click list_title'>
-                                        <div>CONNECTION DATE</div>
+                                    <div data-column='connection_date' class='list_connected_col list_sort_click list_title'>
+                                        CONNECTION DATE
                                     </div>
-                                    <div id='list_connected_col_title_app_id' class='list_connected_col list_sort_click list_title'>
-                                        <div>APP ID</div>
+                                    <div data-column='app_id' class='list_connected_col list_sort_click list_title'>
+                                        APP ID
                                     </div>
-                                    <div id='list_connected_col_title_app_role_icon' class='list_connected_col list_sort_click list_title'>
-                                        <div>ROLE</div>
+                                    <div data-column='app_role_icon' class='list_connected_col list_sort_click list_title'>
+                                        ROLE
                                     </div>
-                                    <div id='list_connected_col_title_user_account_id' class='list_connected_col list_sort_click list_title'>
-                                        <div>USER ID</div>
+                                    <div data-column='user_account_id' class='list_connected_col list_sort_click list_title'>
+                                        USER ID
                                     </div>
-                                    <div id='list_connected_col_title_system_admin' class='list_connected_col list_sort_click list_title'>
-                                        <div>SYSTEM ADMIN</div>
+                                    <div data-column='system_admin' class='list_connected_col list_sort_click list_title'>
+                                        SYSTEM ADMIN
                                     </div>
-                                    <div id='list_connected_col_title_ip' class='list_connected_col list_sort_click list_title'>
-                                        <div>IP</div>
+                                    <div data-column='ip' class='list_connected_col list_sort_click list_title'>
+                                        IP
                                     </div>
-                                    <div id='list_connected_col_title_gps_latitude' class='list_connected_col list_sort_click list_title'>
-                                        <div>GPS LAT</div>
+                                    <div data-column='gps_latitude' class='list_connected_col list_sort_click list_title'>
+                                        GPS LAT
                                     </div>
-                                    <div id='list_connected_col_title_gps_longitude' class='list_connected_col list_sort_click list_title'>
-                                        <div>GPS LONG</div>
+                                    <div data-column='gps_longitude' class='list_connected_col list_sort_click list_title'>
+                                        GPS LONG
                                     </div>
-                                    <div id='list_connected_col_title_user_agent' class='list_connected_col list_sort_click list_title'>
-                                        <div>USER AGENT</div>
+                                    <div data-column='user_agent' class='list_connected_col list_sort_click list_title'>
+                                        USER AGENT
                                     </div>
-                                    <div id='list_connected_col_title_broadcast' class='list_connected_col list_title'>
-                                        <div>BROADCAST</div>
+                                    <div data-column='broadcast' class='list_connected_col list_title'>
+                                        BROADCAST
                                     </div>
                                 </div>`;
                         break;
                     }
                     case 'list_app_log':{
                         APP_GLOBAL.page_last = Math.floor(logs[0].total_rows/APP_GLOBAL.limit) * APP_GLOBAL.limit;
-                        html = `<div id='list_app_log_row_title' class='list_app_log_row'>
-                                    <div id='list_app_log_col_title_id' class='list_app_log_col list_sort_click list_title'>
-                                        <div>ID</div>
+                        html = `<div class='list_app_log_row'>
+                                    <div data-column='id' class='list_app_log_col list_sort_click list_title'>
+                                        ID
                                     </div>
-                                    <div id='list_app_log_col_title_date_created' class='list_app_log_col list_sort_click list_title'>
-                                        <div>DATE</div>
+                                    <div data-column='date_created' class='list_app_log_col list_sort_click list_title'>
+                                        DATE
                                     </div>
-                                    <div id='list_app_log_col_title_server_http_host' class='list_app_log_col list_sort_click list_title'>
-                                        <div>HOST</div>
+                                    <div data-column='server_http_host' class='list_app_log_col list_sort_click list_title'>
+                                        HOST
                                     </div>
-                                    <div id='list_app_log_col_title_app_id' class='list_app_log_col list_sort_click list_title'>
-                                        <div>APP ID</div>
+                                    <div  data-column='app_id' class='list_app_log_col list_sort_click list_title'>
+                                        APP ID
                                     </div>
-                                    <div id='list_app_log_col_title_app_module' class='list_app_log_col list_sort_click list_title'>
-                                        <div>MODULE</div>
+                                    <div data-column='app_module' class='list_app_log_col list_sort_click list_title'>
+                                        MODULE
                                     </div>
-                                    <div id='list_app_log_col_title_app_module_type' class='list_app_log_col list_sort_click list_title'>
-                                        <div>MODULE TYPE</div>
+                                    <div data-column='app_module_type' class='list_app_log_col list_sort_click list_title'>
+                                        MODULE TYPE
                                     </div>
-                                    <div id='list_app_log_col_title_app_module_request' class='list_app_log_col list_sort_click list_title'>
-                                        <div>MODULE REQUEST</div>
+                                    <div data-column='app_module_request' class='list_app_log_col list_sort_click list_title'>
+                                        MODULE REQUEST
                                     </div>
-                                    <div id='list_app_log_col_title_app_module_result' class='list_app_log_col list_sort_click list_title'>
-                                        <div>MODULE RESULT</div>
+                                    <div data-column='app_module_request' class='list_app_log_col list_sort_click list_title'>
+                                        MODULE RESULT
                                     </div>
-                                    <div id='list_app_log_col_title_app_user_id' class='list_app_log_col list_sort_click list_title'>
-                                        <div>USER ID</div>
+                                    <div data-column='app_user_id' class='list_app_log_col list_sort_click list_title'>
+                                        USER ID
                                     </div>
-                                    <div id='list_app_log_col_title_server_remot_addr' class='list_app_log_col list_sort_click list_title'>
-                                        <div>IP</div>
+                                    <div data-column='server_remote_addr' class='list_app_log_col list_sort_click list_title'>
+                                        IP
                                     </div>
-                                    <div id='list_app_log_col_title_client_latitude' class='list_app_log_col list_sort_click list_title'>
-                                        <div>GPS LAT</div>
+                                    <div data-column='client_latitude' class='list_app_log_col list_sort_click list_title'>
+                                        GPS LAT
                                     </div>
-                                    <div id='list_app_log_col_title_client_longitude' class='list_app_log_col list_sort_click list_title'>
-                                        <div>GPS LONG</div>
+                                    <div data-column='client_longitude' class='list_app_log_col list_sort_click list_title'>
+                                        GPS LONG
                                     </div>
-                                    <div id='list_app_log_col_title_user_language' class='list_app_log_col list_sort_click list_title'>
-                                        <div>USER LANGUAGE</div>
+                                    <div data-column='user_language' class='list_app_log_col list_sort_click list_title'>
+                                        USER LANGUAGE
                                     </div>
-                                    <div id='list_app_log_col_title_user_timezone' class='list_app_log_col list_sort_click list_title'>
-                                        <div>USER TIMEZONE</div>
+                                    <div data-column='user_timezone' class='list_app_log_col list_sort_click list_title'>
+                                        USER TIMEZONE
                                     </div>
-                                    <div id='list_app_log_col_title_user_number_system' class='list_app_log_col list_sort_click list_title'>
-                                        <div>USER NUMBER_SYSTEM</div>
+                                    <div data-column='user_number_system' class='list_app_log_col list_sort_click list_title'>
+                                        USER NUMBER_SYSTEM
                                     </div>
-                                    <div id='list_app_log_col_title_user_platform' class='list_app_log_col list_sort_click list_title'>
-                                        <div>USER PLATFORM</div>
+                                    <div data-column='user_platform' class='list_app_log_col list_sort_click list_title'>
+                                        USER PLATFORM
                                     </div>
-                                    <div id='list_app_log_col_title_server_user_agent' class='list_app_log_col list_sort_click list_title'>
-                                        <div>USER AGENT</div>
+                                    <div data-column='server_user_agent' class='list_app_log_col list_sort_click list_title'>
+                                        USER AGENT
                                     </div>
-                                    <div id='list_app_log_col_title_server_http_accept_language' class='list_app_log_col list_sort_click list_title'>
-                                        <div>ACCEPT LANGUAGE</div>
+                                    <div data-column='http_accept_language' class='list_app_log_col list_sort_click list_title'>
+                                        ACCEPT LANGUAGE
                                     </div>
                                 </div>`;
                         break;
@@ -1856,134 +1842,134 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                     case 'list_server_log':{
                         switch (logscope){
                             case 'REQUEST':{
-                                html =`<div id='list_server_log_row_title' class='list_server_log_row'>
-                                    <div id='list_server_log_col_title_logdate' class='list_request_log_col list_sort_click list_title'>
-                                        <div>LOGDATE</div>
+                                html =`<div class='list_server_log_row'>
+                                    <div data-column='logdate' class='list_request_log_col list_sort_click list_title'>
+                                        LOGDATE
                                     </div>
-                                    <div id='list_server_log_col_title_host' class='list_request_log_col list_sort_click list_title'>
-                                        <div>HOST</div>
+                                    <div data-column='host' class='list_request_log_col list_sort_click list_title'>
+                                        HOST
                                     </div>
-                                    <div id='list_server_log_col_title_ip' class='list_request_log_col list_sort_click list_title'>
-                                        <div>IP</div>
+                                    <div data-column='ip' class='list_request_log_col list_sort_click list_title'>
+                                        IP
                                     </div>
-                                    <div id='list_server_log_col_title_requestid' class='list_request_log_col list_sort_click list_title'>
-                                        <div>REQUEST_ID</div>
+                                    <div data-column='requestid' class='list_request_log_col list_sort_click list_title'>
+                                        REQUEST_ID
                                     </div>
-                                    <div id='list_server_log_col_title_correlationid' class='list_request_log_col list_sort_click list_title'>
-                                        <div>CORRELATION_ID</div>
+                                    <div data-column='correlationid' class='list_request_log_col list_sort_click list_title'>
+                                        CORRELATION_ID
                                     </div>
-                                    <div id='list_server_log_col_title_url' class='list_request_log_col list_sort_click list_title'>
-                                        <div>URL</div>
+                                    <div data-column='url' class='list_request_log_col list_sort_click list_title'>
+                                        URL
                                     </div>
-                                    <div id='list_server_log_col_title_http_info' class='list_request_log_col list_sort_click list_title'>
-                                        <div>HTTP INFO</div>
+                                    <div data-column='http_info' class='list_request_log_col list_sort_click list_title'>
+                                        HTTP INFO
                                     </div>
-                                    <div id='list_server_log_col_title_method' class='list_request_log_col list_sort_click list_title'>
-                                        <div>METHOD</div>
+                                    <div data-column='method' class='list_request_log_col list_sort_click list_title'>
+                                        METHOD
                                     </div>
-                                    <div id='list_server_log_col_title_statuscode' class='list_request_log_col list_sort_click list_title'>
-                                        <div>STATUSCODE</div>
+                                    <div data-column='statuscode' class='list_request_log_col list_sort_click list_title'>
+                                        STATUSCODE
                                     </div>
-                                    <div id='list_server_log_col_title_statusmessage' class='list_request_log_col list_sort_click list_title'>
-                                        <div>STATUSMESSAGE</div>
+                                    <div data-column='statusmessage' class='list_request_log_col list_sort_click list_title'>
+                                        STATUSMESSAGE
                                     </div>
-                                    <div id='list_server_log_col_title_user-agent' class='list_request_log_col list_sort_click list_title'>
-                                        <div>USER AGENT</div>
+                                    <div data-column='user-agent' class='list_request_log_col list_sort_click list_title'>
+                                        USER AGENT
                                     </div>
-                                    <div id='list_server_log_col_title_accept-language' class='list_request_log_col list_sort_click list_title'>
-                                        <div>ACCEPT LANGUAGE</div>
+                                    <div data-column='accept-language' class='list_request_log_col list_sort_click list_title'>
+                                        ACCEPT LANGUAGE
                                     </div>
-                                    <div id='list_server_log_col_title_referer' class='list_request_log_col list_sort_click list_title'>
-                                        <div>REFERER</div>
+                                    <div data-column='referer' class='list_request_log_col list_sort_click list_title'>
+                                        REFERER
                                     </div>
-                                    <div id='list_server_log_col_title_size_received' class='list_request_log_col list_sort_click list_title'>
-                                        <div>SIZE_RECEIVED</div>
+                                    <div data-column='size_received' class='list_request_log_col list_sort_click list_title'>
+                                        SIZE_RECEIVED
                                     </div>
-                                    <div id='list_server_log_col_title_size_sent' class='list_request_log_col list_sort_click list_title'>
-                                        <div>SIZE_SENT</div>
+                                    <div data-column='size_sent' class='list_request_log_col list_sort_click list_title'>
+                                        SIZE_SENT
                                     </div>
-                                    <div id='list_server_log_col_title_responsetime' class='list_request_log_col list_sort_click list_title'>
-                                        <div>RESPONSE_TIME</div>
+                                    <div data-column='responsetime' class='list_request_log_col list_sort_click list_title'>
+                                        RESPONSE_TIME
                                     </div>
-                                    <div id='list_server_log_col_title_logtext' class='list_request_log_col list_sort_click list_title'>
-                                        <div>LOG TEXT</div>
+                                    <div data-column='logtext' class='list_request_log_col list_sort_click list_title'>
+                                        LOG TEXT
                                     </div>
                                 </div>`;
                                 break;
                             }
                             case 'SERVER':{
-                                html = `<div id='list_server_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title_logdate' class='list_server_log_col list_sort_click list_title'>
-                                                <div>LOGDATE</div>
+                                html = `<div class='list_server_log_row'>
+                                            <div data-column='logdate' class='list_server_log_col list_sort_click list_title'>
+                                                LOGDATE
                                             </div>
-                                            <div id='list_server_log_col_title_logtext' class='list_server_log_col list_sort_click list_title'>
-                                                <div>LOGTEXT</div>
+                                            <div data-column='logtext' class='list_server_log_col list_sort_click list_title'>
+                                                LOGTEXT
                                             </div>
                                         </div>`;
                                 break;
                             }
                             case 'APP':{
-                                html = `<div id='list_server_app_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title_logdate' class='list_server_app_log_col list_sort_click list_title'>
-                                                <div>LOGDATE</div>
+                                html = `<div class='list_server_log_row'>
+                                            <div data-column='logdate' class='list_server_app_log_col list_sort_click list_title'>
+                                                LOGDATE
                                             </div>
-                                            <div id='list_server_log_col_title_app_id' class='list_server_app_log_col list_sort_click list_title'>
-                                                <div>APP ID</div>
+                                            <div data-column='app_id' class='list_server_app_log_col list_sort_click list_title'>
+                                                APP ID
                                             </div>
-                                            <div id='list_server_log_col_title_filename' class='list_server_app_log_col list_sort_click list_title'>
-                                                <div>FILENAME</div>
+                                            <div data-column='filename' class='list_server_app_log_col list_sort_click list_title'>
+                                                FILENAME
                                             </div>
-                                            <div id='list_server_log_col_title_function' class='list_server_app_log_col list_sort_click list_title'>
-                                                <div>FUNCTION</div>
+                                            <div data-column='function' class='list_server_app_log_col list_sort_click list_title'>
+                                                FUNCTION
                                             </div>
-                                            <div id='list_server_log_col_title_line' class='list_server_app_log_col list_sort_click list_title'>
-                                                <div>LINE</div>
+                                            <div data-column='line' class='list_server_app_log_col list_sort_click list_title'>
+                                                LINE
                                             </div>
-                                            <div id='list_server_log_col_title_logtext' class='list_server_app_log_col list_sort_click list_title'>
-                                                <div>LOG TEXT</div>
+                                            <div data-column='logtext' class='list_server_app_log_col list_sort_click list_title'>
+                                                LOG TEXT
                                             </div>
                                         </div>`;
                                 break;
                             }
                             case 'SERVICE':{
-                                html = `<div id='list_service_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title_logdate' class='list_service_log_col list_sort_click list_title'>
-                                                <div>LOGDATE</div>
+                                html = `<div class='list_server_log_row'>
+                                            <div data-column='logdate' class='list_service_log_col list_sort_click list_title'>
+                                                LOGDATE
                                             </div>
-                                            <div id='list_server_log_col_title_app_id' class='list_service_log_col list_sort_click list_title'>
-                                                <div>APP ID</div>
+                                            <div data-column='app_id' class='list_service_log_col list_sort_click list_title'>
+                                                APP ID
                                             </div>
-                                            <div id='list_server_log_col_title_service' class='list_service_log_col list_sort_click list_title'>
-                                                <div>SERVICE</div>
+                                            <div data-column='service' class='list_service_log_col list_sort_click list_title'>
+                                                SERVICE
                                             </div>
-                                            <div id='list_server_log_col_title_parameters' class='list_service_log_col list_sort_click list_title'>
-                                                <div>PARAMETERS</div>
+                                            <div data-column='parameters' class='list_service_log_col list_sort_click list_title'>
+                                                PARAMETERS
                                             </div>
-                                            <div id='list_server_log_col_title_logtext' class='list_service_log_col list_sort_click list_title'>
-                                                <div>LOG TEXT</div>
+                                            <div data-column='logtext' class='list_service_log_col list_sort_click list_title'>
+                                                LOG TEXT
                                             </div>
                                         </div>`;
                                 break;
                             }
                             case 'DB':{
-                                html = `<div id='list_service_log_row_title' class='list_server_log_row'>
-                                            <div id='list_server_log_col_title_logdate' class='list_db_log_col list_sort_click list_title'>
-                                                <div>LOGDATE</div>
+                                html = `<div class='list_server_log_row'>
+                                            <div data-column='logdate' class='list_db_log_col list_sort_click list_title'>
+                                                LOGDATE
                                             </div>
-                                            <div id='list_server_log_col_title_app_id' class='list_db_log_col list_sort_click list_title'>
-                                                <div>APP ID</div>
+                                            <div data-column='app_id' class='list_db_log_col list_sort_click list_title'>
+                                                APP ID
                                             </div>
-                                            <div id='list_server_log_col_title_db' class='list_db_log_col list_sort_click list_title'>
-                                                <div>DB</div>
+                                            <div data-column='db' class='list_db_log_col list_sort_click list_title'>
+                                                DB
                                             </div>
-                                            <div id='list_server_log_col_title_sql' class='list_db_log_col list_sort_click list_title'>
-                                                <div>SQL</div>
+                                            <div data-column='sql' class='list_db_log_col list_sort_click list_title'>
+                                                SQL
                                             </div>
-                                            <div id='list_server_log_col_title_parameters' class='list_db_log_col list_sort_click list_title'>
-                                                <div>PARAMETERS</div>
+                                            <div data-column='parameters' class='list_db_log_col list_sort_click list_title'>
+                                                PARAMETERS
                                             </div>
-                                            <div id='list_server_log_col_title_logtext' class='list_db_log_col list_sort_click list_title'>
-                                                <div>LOG TEXT</div>
+                                            <div data-column='logtext' class='list_db_log_col list_sort_click list_title'>
+                                                LOG TEXT
                                             </div>
                                         </div>`;
                                 break;
@@ -2023,37 +2009,41 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                     }
                                 html += `<div class='list_connected_row ${list_connected_current_user_row}'>
                                             <div class='list_connected_col'>
-                                                <div>${log.id}</div>
+                                                ${log.id}
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${log.connection_date}</div>
+                                                ${log.connection_date}
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${log.app_id}</div>
+                                                ${log.app_id}
                                             </div>
                                             <div class='list_connected_col ${app_role_class}'>
-                                                <div>${app_role_icon}</div>
+                                                ${app_role_icon}
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${common.get_null_or_value(log.user_account_id)}</div>
+                                                ${common.get_null_or_value(log.user_account_id)}
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${log.system_admin}</div>
+                                                ${log.system_admin}
                                             </div>
                                             <div class='list_connected_col'>
-                                                <div>${log.ip.replace('::ffff:','')}</div>
+                                                ${log.ip.replace('::ffff:','')}
                                             </div>
-                                            <div class='list_connected_col gps_click'>
-                                                <div>${common.get_null_or_value(log.gps_latitude)}</div>
+                                            <div class='list_connected_col gps_click' 
+                                                data-latitude='${common.get_null_or_value(log.gps_latitude)}'
+                                                data-longitude='${common.get_null_or_value(log.gps_longitude)}'>
+                                                ${common.get_null_or_value(log.gps_latitude)}
                                             </div>
-                                            <div class='list_connected_col gps_click'>
-                                                <div>${common.get_null_or_value(log.gps_longitude)}</div>
+                                            <div class='list_connected_col gps_click'
+                                                data-latitude='${common.get_null_or_value(log.gps_latitude)}'
+                                                data-longitude='${common.get_null_or_value(log.gps_longitude)}'>
+                                                ${common.get_null_or_value(log.gps_longitude)}
                                             </div>
                                             <div class='list_connected_col common_wide_list_column'>
-                                                <div>${common.get_null_or_value(show_user_agent(log.user_agent))}</div>
+                                                ${common.get_null_or_value(show_user_agent(log.user_agent))}
                                             </div>
-                                            <div class='list_connected_col chat_click'>
-                                                <div>${common.ICONS.app_chat}</div>
+                                            <div class='list_connected_col chat_click' data-id='${log.id}'>
+                                                ${common.ICONS.app_chat}
                                             </div>
                                         </div>`;
                                 break;
@@ -2061,58 +2051,62 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                             case 'list_app_log':{
                                 html += `<div class='list_app_log_row'>
                                             <div class='list_app_log_col'>
-                                                <div>${log.id}</div>
+                                                ${log.id}
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${log.date_created}</div>
+                                                ${log.date_created}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.server_http_host}</div>
+                                                ${log.server_http_host}
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${log.app_id}</div>
+                                                ${log.app_id}
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${log.app_module}</div>
+                                                ${log.app_module}
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${log.app_module_type}</div>
+                                                ${log.app_module_type}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.app_module_request}</div>
+                                                ${log.app_module_request}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.app_module_result}</div>
+                                                ${log.app_module_result}
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${log.app_user_id}</div>
+                                                ${log.app_user_id}
                                             </div>
                                             <div class='list_app_log_col'>
-                                                <div>${log.server_remote_addr.replace('::ffff:','')}</div>
+                                                ${log.server_remote_addr.replace('::ffff:','')}
                                             </div>
-                                            <div class='list_app_log_col gps_click'>
-                                                <div>${common.get_null_or_value(log.client_latitude)}</div>
+                                            <div class='list_app_log_col gps_click'
+                                                data-latitude='${common.get_null_or_value(log.client_latitude)}'
+                                                data-longitude='${common.get_null_or_value(log.client_longitude)}'>
+                                                ${common.get_null_or_value(log.client_latitude)}
                                             </div>
-                                            <div class='list_app_log_col gps_click'>
-                                                <div>${common.get_null_or_value(log.client_longitude)}</div>
-                                            </div>
-                                            <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.user_language}</div>
-                                            </div>
-                                            <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.user_timezone}</div>
+                                            <div class='list_app_log_col gps_click'
+                                                data-latitude='${common.get_null_or_value(log.client_latitude)}'
+                                                data-longitude='${common.get_null_or_value(log.client_longitude)}'>>
+                                                ${common.get_null_or_value(log.client_longitude)}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.user_number_system}</div>
+                                                ${log.user_language}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.user_platform}</div>
+                                                ${log.user_timezone}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.server_user_agent}</div>
+                                                ${log.user_number_system}
                                             </div>
                                             <div class='list_app_log_col common_wide_list_column'>
-                                                <div>${log.server_http_accept_language}</div>
+                                                ${log.user_platform}
+                                            </div>
+                                            <div class='list_app_log_col common_wide_list_column'>
+                                                ${log.server_user_agent}
+                                            </div>
+                                            <div class='list_app_log_col common_wide_list_column'>
+                                                ${log.server_http_accept_language}
                                             </div>
                                         </div>`;
                                 break;
@@ -2126,55 +2120,55 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.logdate}</div>
+                                                        ${log.logdate}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log.host}</div>
+                                                        ${log.host}
                                                     </div>
-                                                    <div class='list_request_log_col gps_click'>
-                                                        <div>${log.ip==''?'':log.ip.replace('::ffff:','')}</div>
-                                                    </div>
-                                                    <div class='list_request_log_col'>
-                                                        <div>${log.requestid}</div>
+                                                    <div class='list_request_log_col gps_click' data-ip='${log.ip==''?'':log.ip.replace('::ffff:','')}'>
+                                                        ${log.ip==''?'':log.ip.replace('::ffff:','')}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.correlationid}</div>
+                                                        ${log.requestid}
+                                                    </div>
+                                                    <div class='list_request_log_col'>
+                                                        ${log.correlationid}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log.url}</div>
+                                                        ${log.url}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.http_info}</div>
+                                                        ${log.http_info}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.method}</div>
+                                                        ${log.method}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.statusCode}</div>
+                                                        ${log.statusCode}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log.statusMessage}</div>
+                                                        ${log.statusMessage}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log['user-agent']}</div>
+                                                        ${log['user-agent']}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log['accept-language']}</div>
+                                                        ${log['accept-language']}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log.referer}</div>
+                                                        ${log.referer}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.size_received}</div>
+                                                        ${log.size_received}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${log.size_sent}</div>
+                                                        ${log.size_sent}
                                                     </div>
                                                     <div class='list_request_log_col'>
-                                                        <div>${roundOff(log.responsetime)}</div>
+                                                        ${roundOff(log.responsetime)}
                                                     </div>
                                                     <div class='list_request_log_col common_wide_list_column'>
-                                                        <div>${log.logtext}</div>
+                                                        ${log.logtext}
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2183,10 +2177,10 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_server_log_col'>
-                                                        <div>${log.logdate}</div>
+                                                        ${log.logdate}
                                                     </div>
                                                     <div class='list_server_log_col'>
-                                                        <div>${log.logtext}</div>
+                                                        ${log.logtext}
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2195,22 +2189,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_server_app_log_col'>
-                                                        <div>${log.logdate}</div>
+                                                        ${log.logdate}
                                                     </div>
                                                     <div class='list_server_app_log_col'>
-                                                        <div>${log.app_id}</div>
+                                                        ${log.app_id}
                                                     </div>
                                                     <div class='list_server_app_log_col common_wide_list_column'>
-                                                        <div>${log.app_filename}</div>
+                                                        ${log.app_filename}
                                                     </div>
                                                     <div class='list_server_app_log_col common_wide_list_column'>
-                                                        <div>${log.app_function_name}</div>
+                                                        ${log.app_function_name}
                                                     </div>
                                                     <div class='list_server_app_log_col'>
-                                                        <div>${log.app_app_line}</div>
+                                                        ${log.app_app_line}
                                                     </div>
                                                     <div class='list_server_app_log_col common_wide_list_column'>
-                                                        <div>${log.logtext}</div>
+                                                        ${log.logtext}
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2219,19 +2213,19 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_service_log_col'>
-                                                        <div>${log.logdate}</div>
+                                                        ${log.logdate}
                                                     </div>
                                                     <div class='list_service_log_col'>
-                                                        <div>${log.app_id}</div>
+                                                        ${log.app_id}
                                                     </div>
                                                     <div class='list_service_log_col'>
-                                                        <div>${log.service}</div>
+                                                        ${log.service}
                                                     </div>
                                                     <div class='list_service_log_col common_wide_list_column'>
-                                                        <div>${log.parameters}</div>
+                                                        ${log.parameters}
                                                     </div>
                                                     <div class='list_service_log_col common_wide_list_column'>
-                                                        <div>${log.logtext}</div>
+                                                        ${log.logtext}
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2240,22 +2234,22 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                                         html += 
                                                 `<div class='list_server_log_row'>
                                                     <div class='list_db_log_col'>
-                                                        <div>${log.logdate}</div>
+                                                        ${log.logdate}
                                                     </div>
                                                     <div class='list_db_log_col'>
-                                                        <div>${log.app_id}</div>
+                                                        ${log.app_id}
                                                     </div>
                                                     <div class='list_db_log_col'>
-                                                        <div>${log.db}</div>
+                                                        ${log.db}
                                                     </div>
                                                     <div class='list_db_log_col common_wide_list_column'>
-                                                        <div>${log.sql}</div>
+                                                        ${log.sql}
                                                     </div>
                                                     <div class='list_db_log_col common_wide_list_column'>
-                                                        <div>${log.parameters}</div>
+                                                        ${log.parameters}
                                                     </div>
                                                     <div class='list_db_log_col common_wide_list_column'>
-                                                        <div>${log.logtext}</div>
+                                                        ${log.logtext}
                                                     </div>
                                                 </div>`;
                                         break;
@@ -2266,7 +2260,7 @@ const show_list = async (list_div, list_div_col_title, url_parameters, sort, ord
                         }
                     }
                     document.querySelector('#' + list_div).innerHTML = html;
-                    document.querySelector('#' + list_div_col_title + '_' + sort).classList.add(order_by);
+                    document.querySelector(`#${list_div} .list_title[data-column='${sort}']`).classList.add(order_by);
                 }   
             }
         });        
@@ -2277,7 +2271,6 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
     const year = document.querySelector('#select_year_menu5_list_connected').value;
     const month = document.querySelector('#select_month_menu5_list_connected').value;
     show_list('list_connected', 
-              'list_connected_col_title', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL.limit}`, 
               sort,
               order_by);
@@ -2288,33 +2281,10 @@ const show_app_log = async (sort='id', order_by='desc', offset=0, limit=APP_GLOB
     const year = document.querySelector('#select_year_menu5_app_log').value;
     const month = document.querySelector('#select_month_menu5_app_log').value;
     show_list('list_app_log', 
-              'list_app_log_col_title', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
               sort,
               order_by);
 }; 
-const set_list_eventlisteners = (list_type, list_function) => {
-    /* 
-    list function: sort, chat gps
-    */
-    const click_function_title = (event) => { 
-                                    if (event.target.parentNode.classList.contains(`list_${list_function}_click`))
-                                        list_sort_click(event.target.parentNode);
-                                };
-    const click_function_rowcolumn = (event) => { 
-                                        if (event.target.parentNode.parentNode.classList.contains(`${list_function}_click`))
-                                            list_item_click(event.target.parentNode.parentNode);
-                                        else
-                                            if (event.target.parentNode.classList.contains(`${list_function}_click`))
-                                                list_item_click(event.target.parentNode);
-                                    };
-    
-    const element = document.querySelector(`#list_${list_type}`);
-    if (list_function=='sort')
-        element.addEventListener('click', click_function_title);
-    else
-        element.addEventListener('click', click_function_rowcolumn);
-};
 const get_sort = (order_by=0) => {
     const sort = '';
     for (const col_title of document.querySelectorAll('#list_app_log_row_title > div')){
@@ -2331,34 +2301,23 @@ const get_sort = (order_by=0) => {
     }
     return sort;
 };
-const get_order = (item) => {
-    let order_by = '';
-    if (document.querySelector('#' + item.id).classList.contains('asc'))
-        order_by = 'desc';
-    if (document.querySelector('#' + item.id).classList.contains('desc'))
-        order_by = 'asc';
-    if (order_by=='')
-        order_by = 'desc';
-    return order_by;
-};
-const list_sort_click = (item) => {
-    const list = item.id.substring(0, item.id.indexOf('_col_title'));
-    const sort = item.id.substr(`${list}_col_title_`.length);
+  
+const list_sort_click = (list, sortcolumn, order_by) => {
     switch (list){
         case 'list_app_log':{
-            show_app_log(sort, get_order(item));    
+            show_app_log(sortcolumn, order_by);    
             break;
         }
         case 'list_connected':{
-            show_connected(sort, get_order(item));
+            show_connected(sortcolumn, order_by);
             break;
         }
         case 'list_server_log':{
-            show_server_logs(sort, get_order(item), document.querySelector('#list_server_log_search_input').innerHTML);
+            show_server_logs(sortcolumn, order_by, document.querySelector('#list_server_log_search_input').innerText);
             break;
         }
         case 'list_user_account':{
-            search_users(sort, get_order(item));
+            search_users(sortcolumn, order_by);
             break;
         }
     }
@@ -2399,17 +2358,17 @@ const page_navigation = (item) => {
         }
     }
 };
-const list_item_click = (item) => {
+const list_item_click = (item_type, data) => {
     let path;
     let tokentype;
     //check if gps_click and if not system admin only when map is not loaded
-    if (item.classList.contains('gps_click') & common.COMMON_GLOBAL.system_admin_only != 1){
-        if (item.parentNode.parentNode.id =='list_server_log'){
+    if (item_type=='GPS' && common.COMMON_GLOBAL.system_admin_only != 1){
+        if (data['ip']){
             //clicking on IP, get GPS, show on map
             let ip_filter='';
             //if localhost show default position
-            if (item.children[0].innerHTML != '::1')
-                ip_filter = `ip=${item.children[0].innerHTML}`;
+            if (data['ip'] != '::1')
+                ip_filter = `ip=${data['ip']}`;
             path = `/ip?${ip_filter}`;
             if (common.COMMON_GLOBAL.system_admin!='')
                 tokentype = 'SYSTEMADMIN';
@@ -2434,17 +2393,7 @@ const list_item_click = (item) => {
         }
         else{
             //clicking on GPS, show on map
-            let lat;
-            let long;
-            //make sure column lat and long are beside eachother and lat is before long
-            for (let i=0;i<item.parentNode.children.length;i++){
-                if (item.parentNode.children[i].classList.contains('gps_click')){
-                    lat = item.parentNode.children[i].children[0].innerHTML;
-                    long = item.parentNode.children[i+1].children[0].innerHTML;
-                    break;
-                }       
-            }
-            path = `/place?latitude=${lat}&longitude=${long}`;
+            path = `/place?latitude=${data['latitude']}&longitude=${data['longitude']}`;
             if (common.COMMON_GLOBAL.system_admin!='')
                 tokentype = 'SYSTEMADMIN';
             else
@@ -2454,8 +2403,8 @@ const list_item_click = (item) => {
                         null;
                     else{
                         const json = JSON.parse(result);
-                        common.map_update(  long,
-                                            lat,
+                        common.map_update(  data['longitude'],
+                                            data['iatitude'],
                                             common.COMMON_GLOBAL.module_leaflet_zoom,
                                             json.geoplugin_place + ', ' + 
                                             json.geoplugin_region + ', ' + 
@@ -2468,8 +2417,8 @@ const list_item_click = (item) => {
         }
     }
     else
-        if (item.classList.contains('chat_click')){
-            show_broadcast_dialogue('CHAT', item.parentNode.children[0].children[0].innerHTML);
+        if (item_type=='CHAT'){
+            show_broadcast_dialogue('CHAT', data['id']);
         }
     
 };
@@ -2564,7 +2513,6 @@ const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     else
         url_parameters = `${app_id_filter}logscope=${logscope}&loglevel=${loglevel}&year=${year}&month=${month}&day=${day}&search=${search}`;
     show_list('list_server_log', 
-              'list_server_log_col_title', 
               `${url_parameters}&sort=${sort}&order_by=${order_by}`,
               sort,
               order_by);
@@ -2993,6 +2941,54 @@ const admin_token_has_value = () => {
         return true;
 };
 
+const log_title = (list_id) =>{
+    null;
+	/*		
+    REQUEST
+			list_server_log_col_title_logdate
+			list_server_log_col_title_host
+			list_server_log_col_title_ip
+			list_server_log_col_title_requestid
+			list_server_log_col_title_correlationid
+			list_server_log_col_title_url
+			list_server_log_col_title_http_info
+			list_server_log_col_title_method
+			list_server_log_col_title_statuscode
+			list_server_log_col_title_statusmessage
+			list_server_log_col_title_user-agent
+			list_server_log_col_title_accept-language
+			list_server_log_col_title_referer
+			list_server_log_col_title_size_received
+			list_server_log_col_title_size_sent
+			list_server_log_col_title_responsetime
+			list_server_log_col_title_logtext
+			SERVER
+			list_server_log_col_title_logdate
+			list_server_log_col_title_logtext
+			APP
+			list_server_log_col_title_logdate
+			list_server_log_col_title_app_id
+			list_server_log_col_title_filename
+			list_server_log_col_title_function
+			list_server_log_col_title_line
+			list_server_log_col_title_logtext
+			SERVICE				
+			list_server_log_col_title_logdate
+			list_server_log_col_title_app_id
+			list_server_log_col_title_service
+			list_server_log_col_title_parameters
+			list_server_log_col_title_logtext
+			DB (cant show DB log files)
+			list_server_log_col_title_logdate
+			list_server_log_col_title_app_id
+			list_server_log_col_title_db
+			list_server_log_col_title_sql
+			list_server_log_col_title_parameters
+			list_server_log_col_title_logtext
+            */
+           
+};
+
 const app_events = (event_type, event)=> {
     const event_target_id = common.element_id(event.target);
     switch (event_type){
@@ -3068,8 +3064,42 @@ const app_events = (event_type, event)=> {
                     demo_uninstall();
                     break;
                 }
+                //users with icons
+                case event.target.parentNode.classList.contains('list_title')?event_target_id:'':{
+                    if (event.target.parentNode.classList.contains('list_sort_click'))
+                        list_sort_click(common.element_id(event.target.parentNode.parentNode), 
+                                        event.target.parentNode.getAttribute('data-column'),
+                                        event.target.parentNode.classList.contains('desc')?'asc':'desc'
+                                        );
+                    break;
+                }
+                //monitor logs no icons
+                case event.target.classList.contains('list_title')?event_target_id:'':{
+                    if (event.target.classList.contains('list_sort_click'))
+                        list_sort_click(common.element_id(event.target.parentNode), 
+                                        event.target.getAttribute('data-column'),
+                                        event.target.classList.contains('desc')?'asc':'desc'
+                                        );
+                    break;
+                }
+                case event.target.classList.contains('gps_click')?event_target_id:'':{
+                    list_item_click('GPS',
+                                    {
+                                        latitude:   event.target.getAttribute('data-latitude'),
+                                        longitude:  event.target.getAttribute('data-longitude'),
+                                        ip:         event.target.getAttribute('data-ip')
+                                    });
+                    break;
+                }
+                case event.target.classList.contains('chat_click')?event_target_id:'':{
+                    list_item_click('CHAT', {client_id: event.target.getAttribute('data-id')});
+                    break;
+                }
+                case event.target.parentNode.classList.contains('chat_click')?event_target_id:'':{
+                    list_item_click('CHAT', {client_id: event.target.parentNode.getAttribute('data-id')});
+                    break;
+                }
             }
-            
             break;
         }
         case 'change':{
@@ -3119,7 +3149,7 @@ const app_events = (event_type, event)=> {
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.typewatch(search_users, 'username', 'ASC', false);
+                        common.typewatch(search_users, 'username', 'asc', false);
                     break;
                 }
                 case 'list_server_log_search_input':{
@@ -3128,7 +3158,7 @@ const app_events = (event_type, event)=> {
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.typewatch(show_server_logs, 'logdate', 'DESC', document.querySelector('#list_server_log_search_input').innerHTML);
+                        common.typewatch(show_server_logs, 'logdate', 'desc', document.querySelector('#list_server_log_search_input').innerHTML);
                     break;
                 }
             }
