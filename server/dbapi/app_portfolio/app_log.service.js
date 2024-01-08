@@ -81,42 +81,14 @@ const createLog = async (app_id, data) => {
  * @param {number} data_app_id 
  * @param {number} year 
  * @param {number} month 
- * @param {number} sort 
+ * @param {string} sort 
  * @param {string} order_by 
  * @param {number} offset 
  * @param {number} limit 
  * @returns {Promise.<Types.db_result_app_log_getLogsAdmin[]>}
  */
 const getLogsAdmin = async (app_id, data_app_id, year, month, sort, order_by, offset, limit) => {
-		/* 	sort in UI:
-			1=ID
-			2=APP ID
-			3=MODULE
-			4=MODULE TYPE
-			5=IP
-			6=GPS LAT
-			7=GPS LONG
-			8=DATE
-		*/
 		let sql;
-		switch (sort){
-			case 5:{
-				sort=14;
-				break;
-			}
-			case 6:{
-				sort=12;
-				break;
-			}
-			case 7:{
-				sort=13;
-				break;
-			}
-			case 8:{
-				sort=18;
-				break;
-			}
-		}
 		sql = `SELECT id "id",
 					  app_id "app_id",
 					  app_module "app_module",

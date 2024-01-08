@@ -667,7 +667,7 @@ const updateAdmin =(app_id, query, data, res) =>{
  * @param {number} app_id 
  * @param {*} query 
  */
-const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), getNumberValue(query.get('sort')), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
+const getUsersAdmin = (app_id, query) => service.getUsersAdmin(app_id, query.get('search'), query.get('sort'), query.get('order_by'), getNumberValue(query.get('offset')), getNumberValue(query.get('limit')))
                                             .catch((/**@type{Types.error}*/error)=>{throw error;});
 
 /**
