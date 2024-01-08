@@ -3542,7 +3542,9 @@ const assign_icons = () => {
     }
 
 };
-
+const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
+                                COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
+                                COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
 const common_event = (event_type,event) =>{
     switch (event_type){
         case 'click':{
@@ -3852,20 +3854,20 @@ const common_event = (event_type,event) =>{
             break;
         }
         case 'keydown':{
-            if(event.target.classList.contains('common_input') && 
-            (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-             (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                        event.code=='ArrowRight' || 
-                                        event.code=='ArrowUp' || 
-                                        event.code=='ArrowDown'|| 
-                                        event.code=='Home'|| 
-                                        event.code=='End'|| 
-                                        event.code=='PageUp'|| 
-                                        event.code=='PageDown') ) ))
-            event.preventDefault();
+            if (disable_textediting())
+                if(event.target.classList.contains('common_input') && 
+                (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+                (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                            event.code=='ArrowRight' || 
+                                            event.code=='ArrowUp' || 
+                                            event.code=='ArrowDown'|| 
+                                            event.code=='Home'|| 
+                                            event.code=='End'|| 
+                                            event.code=='PageUp'|| 
+                                            event.code=='PageDown') ) ))
+                event.preventDefault();
             break;
-        }
-        
+        }        
     }
 };
 /**
@@ -3889,16 +3891,18 @@ const set_events = () => {
     }, false);
 
     const disable_copy_paste_cut = event => {
-        if(event.target.nodeName !='SELECT'){
-            event.preventDefault();
-            event.target.focus();
-        }
+        if (disable_textediting())
+            if(event.target.nodeName !='SELECT'){
+                event.preventDefault();
+                event.target.focus();
+            }
     };
     const disable_common_input = event => {
-        if (event.target.classList.contains('common_input')){
-            event.preventDefault();
-            event.target.focus();
-        }
+        if (disable_textediting())
+            if (event.target.classList.contains('common_input')){
+                event.preventDefault();
+                event.target.focus();
+            }
     };
     document.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
     document.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
