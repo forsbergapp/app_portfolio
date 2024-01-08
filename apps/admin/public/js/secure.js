@@ -2941,54 +2941,6 @@ const admin_token_has_value = () => {
         return true;
 };
 
-const log_title = (list_id) =>{
-    null;
-	/*		
-    REQUEST
-			list_server_log_col_title_logdate
-			list_server_log_col_title_host
-			list_server_log_col_title_ip
-			list_server_log_col_title_requestid
-			list_server_log_col_title_correlationid
-			list_server_log_col_title_url
-			list_server_log_col_title_http_info
-			list_server_log_col_title_method
-			list_server_log_col_title_statuscode
-			list_server_log_col_title_statusmessage
-			list_server_log_col_title_user-agent
-			list_server_log_col_title_accept-language
-			list_server_log_col_title_referer
-			list_server_log_col_title_size_received
-			list_server_log_col_title_size_sent
-			list_server_log_col_title_responsetime
-			list_server_log_col_title_logtext
-			SERVER
-			list_server_log_col_title_logdate
-			list_server_log_col_title_logtext
-			APP
-			list_server_log_col_title_logdate
-			list_server_log_col_title_app_id
-			list_server_log_col_title_filename
-			list_server_log_col_title_function
-			list_server_log_col_title_line
-			list_server_log_col_title_logtext
-			SERVICE				
-			list_server_log_col_title_logdate
-			list_server_log_col_title_app_id
-			list_server_log_col_title_service
-			list_server_log_col_title_parameters
-			list_server_log_col_title_logtext
-			DB (cant show DB log files)
-			list_server_log_col_title_logdate
-			list_server_log_col_title_app_id
-			list_server_log_col_title_db
-			list_server_log_col_title_sql
-			list_server_log_col_title_parameters
-			list_server_log_col_title_logtext
-            */
-           
-};
-
 const app_events = (event_type, event)=> {
     const event_target_id = common.element_id(event.target);
     switch (event_type){
