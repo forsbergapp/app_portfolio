@@ -60,10 +60,13 @@
 .admin_login_input{
 	border-radius: 16px;
 	height:40px;
-	width:85%;
+	max-width:85%;
 	margin-top:10px;
 	padding: 8px 16px;
 	box-sizing: border-box;
+}
+#admin_login_password_input, #system_admin_login_password_input{
+	max-width: 100%;
 }
 #admin_secure{
 	width:100%;
@@ -375,6 +378,13 @@
 	flex-direction: column;
 }
 
+#list_user_account_search_input{
+	max-width: 85%;
+}
+#list_user_search_icon{
+	display:inline-block;
+	cursor:pointer;
+}
 #list_user_account_title, #list_user_account_logon_title{
 	text-transform: uppercase;
 	display:inline-block;
@@ -647,6 +657,13 @@
 #install_demo_password_icon{
 	display: inline-block;
 	font-size: 1.5em;
+}
+#install_demo_input .common_password_container{
+	border:1px solid;
+	width: 200px !important;
+}
+#install_demo_password{
+	height: 100%;
 }
 /* MENU DATABASE*/
 #menu_8_content_widget1{
