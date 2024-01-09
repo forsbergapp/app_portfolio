@@ -805,7 +805,7 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
                         break;
                     }
                 }
-                document.querySelector('#common_user_verify_cancel').addEventListener('click', click_cancel_event);
+                document.querySelector('#common_user_verify_cancel')['data-function'] = click_cancel_event;
 
                 document.querySelector('#common_user_verify_email').innerHTML = title;
                 document.querySelector('#common_user_verify_cancel').innerHTML = icon;
@@ -857,17 +857,14 @@ const show_message = (message_type, code, function_event, message=null, data_app
     const progressbar_wrap = document.querySelector('#common_message_progressbar_wrap');
     const message_title = document.querySelector('#common_message_title');
     const dialogue = document.querySelector('#common_dialogue_message');
-    const old_close = document.querySelector('#common_message_close');
+    const button_close = document.querySelector('#common_message_close');
     const button_cancel = document.querySelector('#common_message_cancel');
     const function_close = () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden';};
     const fontsize_normal = '1em';
     const fontsize_log = '0.5em';
     const show = 'inline-block';
     const hide = 'none';
-    //this removes old eventlistener
-    const button_close = old_close.cloneNode(true);
     
-    old_close.parentNode.replaceChild(button_close, old_close);    
     switch (message_type){
         case 'ERROR':{
             FFB ('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'APP_DATA', null, (err, result) => {
@@ -882,7 +879,7 @@ const show_message = (message_type, code, function_event, message=null, data_app
                     message_title.innerHTML = err;
                 else
                     message_title.innerHTML = JSON.parse(result)[0].text;
-                button_close.addEventListener('click', function_close, false);
+                button_close['data-function'] = function_close;
                 dialogue.style.visibility = 'visible';
                 button_close.focus();
             });
@@ -897,7 +894,7 @@ const show_message = (message_type, code, function_event, message=null, data_app
             progressbar_wrap.style.display = hide;
             button_cancel.style.display = hide;
             button_close.style.display = show;
-            button_close.addEventListener('click', function_close, false);
+            button_close['data-function'] = function_close;
             dialogue.style.visibility = 'visible';
             button_close.focus();
             break;
@@ -932,7 +929,7 @@ const show_message = (message_type, code, function_event, message=null, data_app
                 //other error and json not returned, return the whole text
                 message_title.innerHTML = message;
             }
-            button_close.addEventListener('click', function_close, false);
+            button_close['data-function'] = function_close;
             dialogue.style.visibility = 'visible';
             button_close.focus();
             break;
@@ -946,7 +943,7 @@ const show_message = (message_type, code, function_event, message=null, data_app
             progressbar_wrap.style.display = hide;
             button_cancel.style.display = show;
             button_close.style.display = show;
-            button_close.addEventListener('click', function_event, false);
+            button_close['data-function'] = function_event;
             dialogue.style.visibility = 'visible';
             button_close.focus();
             break;
@@ -960,7 +957,7 @@ const show_message = (message_type, code, function_event, message=null, data_app
             progressbar_wrap.style.display = hide;
             button_cancel.style.display = hide;
             button_close.style.display = show;
-            button_close.addEventListener('click', function_close, false);
+            button_close['data-function'] = function_close;
             dialogue.style.visibility = 'visible';
             button_close.focus();
             break;
@@ -982,19 +979,15 @@ const show_message = (message_type, code, function_event, message=null, data_app
 };
 const dialogue_verify_clear = () => {
     document.querySelector('#common_dialogue_user_verify').style.visibility = 'hidden';
-    //this removes old eventlistener
-    const old_cancel = document.querySelector('#common_user_verify_cancel');
-    const button_cancel = old_cancel.cloneNode(true);
-    old_cancel.parentNode.replaceChild(button_cancel, old_cancel);
     document.querySelector('#common_user_verification_type').innerHTML='';
     document.querySelector('#common_user_verify_email').innerHTML='';
-    document.querySelector('#common_user_verify_cancel').innerHTML='';
     document.querySelector('#common_user_verify_verification_char1').innerHTML = '';
     document.querySelector('#common_user_verify_verification_char2').innerHTML = '';
     document.querySelector('#common_user_verify_verification_char3').innerHTML = '';
     document.querySelector('#common_user_verify_verification_char4').innerHTML = '';
     document.querySelector('#common_user_verify_verification_char5').innerHTML = '';
     document.querySelector('#common_user_verify_verification_char6').innerHTML = '';
+    document.querySelector('#common_user_verify_cancel')['data-function'] = null;
 };
 const dialogue_password_new_clear = () => {
     document.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
@@ -1945,10 +1938,7 @@ const user_login = async (username, password, callBack) => {
             updateOnlineStatus();
             user_preference_get(() =>{
                 if (user.active==0){
-                    const function_cancel_event = () => { dialogue_verify_clear();
-                                                          exception(COMMON_GLOBAL.exception_app_function, null);
-                                                        };
-                    show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, function_cancel_event);
+                    show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
                     return callBack('ERROR', null);
                 }
                 else{
@@ -2141,8 +2131,7 @@ const user_update = async () => {
             set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
             document.querySelector('#common_user_menu_username').innerHTML = username;
             if (user_update.sent_change_email == 1){
-                const function_cancel_event = () => { document.querySelector('#common_dialogue_user_verify').style.visibility='hidden';};
-                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, function_cancel_event);
+                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, null);
             }
             else
                 dialogue_user_edit_clear();
@@ -2198,10 +2187,7 @@ const user_signup = () => {
             const json = JSON.parse(result);
             COMMON_GLOBAL.rest_at = json.accessToken;
             COMMON_GLOBAL.user_account_id = json.id;
-            const function_cancel_event = () => { dialogue_verify_clear();
-                                                  exception(COMMON_GLOBAL.exception_app_function, null);
-                                                };
-            show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, function_cancel_event);
+            show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, null);
         }
     });
 };
@@ -2417,8 +2403,7 @@ const user_forgot = async () => {
                 const json = JSON.parse(result);
                 if (json.sent == 1){
                     COMMON_GLOBAL.user_account_id = json.id;
-                    const function_cancel_event = () => { document.querySelector('#common_dialogue_user_verify').style.visibility='hidden';};
-                    show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, function_cancel_event);
+                    show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
                 }
             }
         });
@@ -2671,10 +2656,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                                                 </div>`;
                     SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.querySelector('#common_module_leaflet_select_mapstyle'),1);                
                     
-                    //add event on search
-                    document.querySelector('#common_module_leaflet_search_input').addEventListener('keyup', event => { 
-                        typewatch(search_input, event, 'module_leaflet', search_event_function); 
-                    }, false);
+                    //add search function in data-function that event delegation will use
+                    document.querySelector('#common_module_leaflet_search_input')['data-function'] = search_event_function;
                     
                     if (doubleclick_event){
                         map_setevent('dblclick', (e) => {
@@ -3550,6 +3533,7 @@ const common_event = (event_type,event) =>{
             else{
                 const target_id = element_id(event.target);
                 switch(target_id){
+                    // dialogue login/signup/forgot
                     case 'common_login_tab2':{
                         show_common_dialogue('SIGNUP');
                         break;
@@ -3590,10 +3574,20 @@ const common_event = (event_type,event) =>{
                         document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
                         break;
                     }
+                    //dialogue message
+                    case 'common_message_close':{
+                        if (document.querySelector('#common_message_close')['data-function'])
+                            document.querySelector('#common_message_close')['data-function']();
+                        document.querySelector('#common_message_close')['data-function'] = null;
+                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                        document.querySelector('#common_message_title').innerHTML ='';
+                        break;
+                    }
                     case 'common_message_cancel':{
                         document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                         break;
                     }
+                    //dialouge password
                     case 'common_user_password_new_cancel':{
                         dialogue_password_new_clear();
                         break;
@@ -3602,6 +3596,7 @@ const common_event = (event_type,event) =>{
                         updatePassword();
                         break;
                     }
+                    //dialogue lov
                     case 'common_lov_search_icon':{
                         lov_filter(document.querySelector('#common_lov_search_input').innerHTML);
                         break;
@@ -3700,6 +3695,13 @@ const common_event = (event_type,event) =>{
                     }
                     case 'common_user_edit_btn_user_update':{
                         user_update();
+                        break;
+                    }
+                    //dialogue verify
+                    case 'common_user_verify_cancel':{
+                        if (document.querySelector('#common_user_verify_cancel')['data-function'])
+                            document.querySelector('#common_user_verify_cancel')['data-function']();
+                        dialogue_verify_clear();
                         break;
                     }
                     //broadcast
@@ -3842,6 +3844,11 @@ const common_event = (event_type,event) =>{
                     }
                     case 'common_lov_search_input':{
                         lov_keys(event);
+                        break;
+                    }
+                    //module leaflet
+                    case 'common_module_leaflet_search_input':{
+                        typewatch(search_input, event, 'module_leaflet', event.target['data-function']); 
                         break;
                     }
                 }

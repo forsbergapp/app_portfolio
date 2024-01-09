@@ -383,7 +383,6 @@ const user_delete_app = async () => {
     else
         user_local = false;
     const function_delete_user_account = () => { 
-                                            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                                             common.user_delete(1, user_local, null, (err)=>{
                                                 if (err==null){
                                                     common.user_logoff();
