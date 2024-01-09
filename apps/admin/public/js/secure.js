@@ -788,16 +788,14 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
             }
             else
                 input_contentEditable = 'contentEditable=false';
-            let i = 0;
             for (const user of users) {
-                i++;
                 let list_user_account_current_user_row='';
                 if (user.id==common.COMMON_GLOBAL.user_account_id)
                     list_user_account_current_user_row = 'list_current_user_row';
                 else
                     list_user_account_current_user_row ='';
                 html += 
-                `<div id='list_user_account_row_${i}' data-changed-record='0' class='list_user_account_row ${list_user_account_current_user_row}' >
+                `<div data-changed-record='0' data-user_account_id='${user.id}' class='list_user_account_row ${list_user_account_current_user_row} common_row' >
                     <div class='list_user_account_col'>
                         <div class='list_readonly'>
                             <img class='list_user_account_avatar' ${common.list_image_format_src(user.avatar)}/>
@@ -811,7 +809,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                         ${lov_div}
                     </div>
                     <div class='list_user_account_col'>
-                        <div class='list_readonly'>${user.app_role_icon}</div>
+                        <div class='list_readonly common_lov_value'>${user.app_role_icon}</div>
                     </div>
                     <div class='list_user_account_col'>
                         <div ${input_contentEditable} class='common_input list_edit'/>${common.get_null_or_value(user.active)}</div>
@@ -884,7 +882,6 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                 //add lov icon for super admin
                 document.querySelectorAll('#list_user_account .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
             }
-            list_events('list_user_account', 'list_user_account_row', ' .list_edit');
             if (focus==true){
                 //set focus at start
                 //set focus first column in first row
@@ -1013,10 +1010,9 @@ const show_apps = async () => {
                                 <div>CATEGORY NAME</div>
                             </div>
                         </div>`;
-            let i=0;
             for (const app of apps) {
                 html += 
-                `<div id='list_apps_row_${i}' data-changed-record='0' class='list_apps_row' >
+                `<div data-changed-record='0' data-app_id = '${app.ID}' class='list_apps_row common_row' >
                     <div class='list_apps_col'>
                         <div class='list_readonly'>${app.ID}</div>
                     </div>
@@ -1037,10 +1033,9 @@ const show_apps = async () => {
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_apps_col'>
-                        <div class='list_readonly'>${common.get_null_or_value(app.APP_CATEGORY_TEXT)} </div>
+                        <div class='list_readonly common_lov_value'>${common.get_null_or_value(app.APP_CATEGORY_TEXT)} </div>
                     </div>
                 </div>`;
-                i++;
             }
             document.querySelector('#menu_4_content').innerHTML = 
                    `<div id='menu_4_content_widget1' class='widget'>
@@ -1057,7 +1052,6 @@ const show_apps = async () => {
             
             //add lov icon
             document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
-            list_events('list_apps', 'list_apps_row', ' .list_edit');
             //set focus first column in first row
             //this will trigger to show detail records
             document.querySelectorAll('#list_apps .list_edit')[0].focus();
@@ -1091,10 +1085,9 @@ const show_app_parameter = (app_id) => {
                                 <div>COMMENT</div>
                             </div>
                         </div>`;
-            let i=0;
             for (const app_parameter of app_parameters) {
                 html += 
-                `<div id='list_app_parameter_row_${i}' data-changed-record='0' class='list_app_parameter_row'>
+                `<div data-changed-record='0' class='list_app_parameter_row common_row'>
                     <div class='list_app_parameter_col'>
                         <div class='list_readonly'>${app_parameter.app_id}</div>
                     </div>
@@ -1103,7 +1096,7 @@ const show_app_parameter = (app_id) => {
                         <div class='common_lov_button common_list_lov_click'></div>
                     </div>
                     <div class='list_app_parameter_col'>
-                        <div class='list_readonly'>${app_parameter.parameter_type_text}</div>
+                        <div class='list_readonly common_lov_value'>${app_parameter.parameter_type_text}</div>
                     </div>
                     <div class='list_app_parameter_col'>
                         <div class='list_readonly'>${app_parameter.parameter_name}</div>
@@ -1115,12 +1108,10 @@ const show_app_parameter = (app_id) => {
                         <div contenteditable=true class='common_input list_edit'/>${common.get_null_or_value(app_parameter.parameter_comment)}</div>
                     </div>
                 </div>`;
-                i++;
             }
             document.querySelector('#list_app_parameter').innerHTML = html;
             //add lov icon
             document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
-            list_events('list_app_parameter', 'list_app_parameter_row', '.list_edit');
         }
     });
 };
@@ -1279,166 +1270,7 @@ const update_record = async (table,
         });
     }
 };
-const list_events = (list_item, item_row, item_edit) => {
 
-    //on change on all editable fields
-    //mark record as changed if any editable field is changed
-    
-    //change event
-    document.querySelector('#' + list_item).addEventListener('input', (event) => {
-        if (event.target.classList.contains('list_edit')){
-            event.target.parentNode.parentNode.setAttribute('data-changed-record','1');
-            const row_action = (err, result, item, event, nextindex) => {
-                if (err){
-                    event.stopPropagation();
-                    event.preventDefault();
-                    //set old value
-                    item.innerHTML = event.target.getAttribute('defaultValue');
-                    item.focus();
-                    item.nextElementSibling.dispatchEvent(new Event('click'));
-                }
-                else{
-                    const list_result = JSON.parse(result);
-                    if (list_result.length == 1){
-                        //set new value from 3 column JSON result
-                        document.querySelector('#' + event.target.parentNode.parentNode.id).children[nextindex].children[0].innerHTML = Object.values(list_result[0])[2];
-                        //set new value in defaultValue used to save old value when editing next time
-                        event.target.setAttribute('defaultValue', Object.values(list_result[0])[0]);
-                    }
-                    else{
-                        event.stopPropagation();
-                        event.preventDefault();
-                        //set old value
-                        item.innerHTML = event.target.getAttribute('defaultValue');
-                        item.focus();    
-                        item.nextElementSibling.children[0].dispatchEvent(new Event('click', {'bubbles': true}));
-                    }
-                }
-            };
-            //app category LOV
-            if (item_row == 'list_apps_row' && event.target.parentNode.parentNode.children[5].children[0] == event.target)
-                if (event.target.innerHTML=='')
-                    event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
-                else{
-                    common.FFB ('DB_API', `/app_category/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null, (err, result) => {
-                        row_action(err, result, event.target, event, 6, '');
-                    });
-                }
-            //parameter type LOV
-            if (item_row == 'list_app_parameter_row' && event.target.parentNode.parentNode.children[1].children[0] == event.target)
-                if (event.target.innerHTML=='')
-                    event.target.innerHTML = event.target.getAttribute('defaultValue');
-                else{
-                    common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null, (err, result) => {
-                        row_action(err, result, event.target, event, 2);
-                    });
-                }
-            //app role LOV
-            if (item_row == 'list_user_account_row' && event.target.parentNode.parentNode.children[2].children[0] == event.target){
-                let app_role_id_lookup='';
-                const old_value =event.target.innerHTML;
-                //if empty then lookup default
-                if (event.target.innerHTML=='')
-                    app_role_id_lookup=2;
-                else
-                    app_role_id_lookup=event.target.innerHTML;
-                common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null, (err, result) => {
-                    row_action(err, result, event.target, event, 3);
-                    //if wrong value then field is empty again, fetch default value for empty app_role
-                    if (old_value!='' && event.target.innerHTML=='')
-                        event.target.dispatchEvent(new Event('input'));
-                });
-            }
-        }
-    });
-    //keydown event
-    document.querySelector('#' + list_item).addEventListener('keydown', (event) => {
-        if (event.target.classList.contains('list_edit')){
-            if (event.code=='ArrowUp') {
-                APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
-                event.preventDefault();
-                const index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1));
-                //focus on first list_edit item in the row
-                if (index>0)
-                    document.querySelectorAll(`#${item_row}_${index - 1} ${item_edit}`)[0].focus();
-            }
-            if (event.code=='ArrowDown') {
-                APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
-                event.preventDefault();
-                const index = parseInt(event.target.parentNode.parentNode.id.substr(item_row.length+1)) +1;
-                //focus on first list_edit item in the row
-                if (document.querySelector(`#${item_row}_${index}`)!= null)
-                    document.querySelectorAll(`#${item_row}_${index} ${item_edit}`)[0].focus();
-                    
-            }
-        }
-    });
-    //focus event
-    if (item_row=='list_apps_row'){
-        //event on master to automatically show detail records
-        document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
-            e.addEventListener('focus', (event) => {
-                if (APP_GLOBAL.previous_row != event.target.parentNode.parentNode){
-                    APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
-                    show_app_parameter(e.parentNode.parentNode.children[0].children[0].innerHTML);
-                }
-            }
-        ));
-    }
-    if (item_row=='list_user_account_row'){
-        //event on master to automatically show detail records
-        document.querySelectorAll(`#${list_item} ${item_edit}`).forEach(e => 
-            e.addEventListener('focus', (event) => {
-                if (APP_GLOBAL.previous_row != event.target.parentNode.parentNode){
-                    APP_GLOBAL.previous_row = event.target.parentNode.parentNode;
-                    show_user_account_logon(e.parentNode.parentNode.children[1].children[0].innerHTML);
-                }
-            }
-        ));
-    }
-    //click event
-    if (list_item == 'list_apps')
-        document.querySelector('#' + list_item).addEventListener('click', (event) => {   
-            if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                const function_event = (event_lov) => {
-                    //setting values from LOV
-                    event.target.parentNode.parentNode.parentNode.children[5].children[0].innerHTML = event_lov.currentTarget.children[0].children[0].innerHTML;
-                    event.target.parentNode.parentNode.parentNode.children[5].children[0].focus();
-                    event.target.parentNode.parentNode.parentNode.children[6].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
-                    document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
-                };
-                common.lov_show('APP_CATEGORY', function_event);
-            }
-                
-        });
-    if (list_item == 'list_app_parameter')
-        document.querySelector('#' + list_item).addEventListener('click', (event) => {   
-            if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                const function_event = (event_lov) => {
-                    //setting values from LOV
-                    event.target.parentNode.parentNode.parentNode.children[1].children[0].innerHTML = event_lov.currentTarget.children[0].children[0].innerHTML;
-                    event.target.parentNode.parentNode.parentNode.children[1].children[0].focus();
-                    event.target.parentNode.parentNode.parentNode.children[2].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
-                    document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
-                };
-                common.lov_show('PARAMETER_TYPE', function_event);
-            }
-        });
-    
-    if (list_item == 'list_user_account')
-        document.querySelector('#' + list_item).addEventListener('click', (event) => {   
-            if (event.target.parentNode.classList.contains('common_list_lov_click')){
-                const function_event = (event_lov) => {
-                    //setting values from LOV
-                    event.target.parentNode.parentNode.parentNode.children[2].children[0].innerHTML = event_lov.currentTarget.children[0].children[0].innerHTML;
-                    event.target.parentNode.parentNode.parentNode.children[2].children[0].focus();
-                    event.target.parentNode.parentNode.parentNode.children[3].children[0].innerHTML = event_lov.currentTarget.children[1].children[0].innerHTML;
-                    document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
-                };
-                common.lov_show('APP_ROLE', function_event);
-            }
-        });    
-};
 /*----------------------- */
 /* MONITOR                */
 /*----------------------- */
@@ -2523,10 +2355,7 @@ const show_existing_logfiles = () => {
                                 //format: 'LOGSCOPE_LOGLEVEL_20220101.log'
                                 //logscope and loglevel
                                 let filename;
-                                if (event.target.classList.contains('common_list_lov_row'))
-                                    filename = event.target.children[1].children[0].innerHTML;
-                                else
-                                    filename = event.target.parentNode.parentNode.children[1].children[0].innerHTML;
+                                filename = common.element_row(event.target).getAttribute('data-value');
                                 const logscope = filename.substring(0,filename.indexOf('_'));
                                 filename = filename.substring(filename.indexOf('_')+1);
                                 const loglevel = filename.substring(0,filename.indexOf('_'));
@@ -2554,7 +2383,7 @@ const show_existing_logfiles = () => {
                                 if (APP_GLOBAL.service_log_file_interval=='1D')
                                     document.querySelector('#select_day_menu5').value = day;
 
-                                document.querySelector('#select_logscope5').dispatchEvent(new Event('change'));
+                                nav_click(document.querySelector('#list_server_log_title').id);
                                 common.lov_close();
                             };
         common.lov_show('SERVER_LOG_FILES', function_event);
@@ -2636,7 +2465,6 @@ const show_config = async (file) => {
                     document.querySelector('#list_config').style.display = 'flex';
                     document.querySelector('#list_config').innerHTML = html;
                     
-                    list_events('list_config', 'list_config_row', ' .list_edit');
                     //set focus first column in first row
                     document.querySelectorAll('#list_config .list_edit')[0].focus();
                     break;
@@ -3051,6 +2879,38 @@ const app_events = (event_type, event)=> {
                     list_item_click('CHAT', {client_id: event.target.parentNode.getAttribute('data-id')});
                     break;
                 }
+                case 'list_apps':
+                case 'list_app_parameter':
+                case 'list_user_account':{
+                    const lov_event = (event_lov) => {
+                        //setting values from LOV
+                        common.element_row(event.target).querySelector('.common_input_lov').innerHTML = common.element_row(event_lov.target).getAttribute('data-id');
+                        common.element_row(event.target).querySelector('.common_input_lov').focus();
+                        common.element_row(event.target).querySelector('.common_lov_value').innerHTML = common.element_row(event_lov.target).getAttribute('data-value');
+                        document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
+                    };
+                    if (event.target.parentNode.classList.contains('common_list_lov_click')){
+                        switch (event_target_id){
+                            case 'list_apps':{
+                                common.lov_show('APP_CATEGORY', lov_event);
+                                break;
+                            }
+                            case 'list_app_parameter':{
+                                common.lov_show('PARAMETER_TYPE', lov_event);
+                                break;
+                            }
+                            case 'list_user_account':{
+                                common.lov_show('APP_ROLE', lov_event);
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                }        
+                case 'common_lov_list':{
+                    document.querySelector('#common_lov_list')['data-function'](event);
+                    break;
+                }
             }
             break;
         }
@@ -3088,9 +2948,91 @@ const app_events = (event_type, event)=> {
             break;
         }
         case 'focus':{
+            switch (event_target_id){
+                case 'list_apps':{
+                    //event on master to automatically show detail records
+                    if (APP_GLOBAL.previous_row != common.element_row(event.target)){
+                        APP_GLOBAL.previous_row = common.element_row(event.target);
+                        show_app_parameter(common.element_row(event.target).getAttribute('data-app_id'));
+                    }
+                    break;
+                }
+                case 'list_user_account':{
+                    //event on master to automatically show detail records
+                    if (APP_GLOBAL.previous_row != common.element_row(event.target)){
+                        APP_GLOBAL.previous_row = common.element_row(event.target);
+                        show_user_account_logon(common.element_row(event.target).getAttribute('data-user_account_id'));
+                    }
+                    break;
+                }   
+            }
             break;
         }
         case 'input':{
+            if (event.target.classList.contains('list_edit')){
+                common.element_row(event.target).setAttribute('data-changed-record','1');
+                const row_action = (err, result, item, event, nextindex) => {
+                    if (err){
+                        event.stopPropagation();
+                        event.preventDefault();
+                        //set old value
+                        item.innerHTML = event.target.getAttribute('defaultValue');
+                        item.focus();
+                        item.nextElementSibling.dispatchEvent(new Event('click'));
+                    }
+                    else{
+                        const list_result = JSON.parse(result);
+                        if (list_result.length == 1){
+                            //set new value from 3 column JSON result
+                            common.element_row(event.target).children[nextindex].children[0].innerHTML = Object.values(list_result[0])[2];
+                            //set new value in defaultValue used to save old value when editing next time
+                            event.target.setAttribute('defaultValue', Object.values(list_result[0])[0]);
+                        }
+                        else{
+                            event.stopPropagation();
+                            event.preventDefault();
+                            //set old value
+                            item.innerHTML = event.target.getAttribute('defaultValue');
+                            item.focus();    
+                            item.nextElementSibling.children[0].dispatchEvent(new Event('click', {'bubbles': true}));
+                        }
+                    }
+                };
+                //app category LOV
+                if (common.element_row(event.target).classList.contains('list_apps_row') && event.target.parentNode.parentNode.children[5].children[0] == event.target)
+                    if (event.target.innerHTML=='')
+                        event.target.parentNode.parentNode.children[6].children[0].innerHTML ='';
+                    else{
+                        common.FFB ('DB_API', `/app_category/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null, (err, result) => {
+                            row_action(err, result, event.target, event, 6, '');
+                        });
+                    }
+                //parameter type LOV
+                if (common.element_row(event.target).classList.contains('list_app_parameter_row') && common.element_row(event.target).children[1].children[0] == event.target)
+                    if (event.target.innerHTML=='')
+                        event.target.innerHTML = event.target.getAttribute('defaultValue');
+                    else{
+                        common.FFB ('DB_API', `/parameter_type/admin?id=${event.target.innerHTML}`, 'GET', 'APP_ACCESS', null, (err, result) => {
+                            row_action(err, result, event.target, event, 2);
+                        });
+                    }
+                //app role LOV
+                if (common.element_row(event.target).classList.contains('list_user_account_row') && common.element_row(event.target).children[2].children[0] == event.target){
+                    let app_role_id_lookup='';
+                    const old_value =event.target.innerHTML;
+                    //if empty then lookup default
+                    if (event.target.innerHTML=='')
+                        app_role_id_lookup=2;
+                    else
+                        app_role_id_lookup=event.target.innerHTML;
+                    common.FFB ('DB_API', `/app_role/admin?id=${app_role_id_lookup}`, 'GET', 'APP_ACCESS', null, (err, result) => {
+                        row_action(err, result, event.target, event, 3);
+                        //if wrong value then field is empty again, fetch default value for empty app_role
+                        if (old_value!='' && event.target.innerHTML=='')
+                            event.target.dispatchEvent(new Event('input'));
+                    });
+                }
+            }
             break;
         }
         case 'keyup':{
@@ -3117,6 +3059,22 @@ const app_events = (event_type, event)=> {
             break;
         }
         case 'keydown':{
+            if (event.target.classList.contains('list_edit')){
+                if (event.code=='ArrowUp') {
+                    APP_GLOBAL.previous_row = common.element_row(event.target);
+                    event.preventDefault();
+                    //focus on first list_edit item in the row
+                    if (common.element_row(event.target).previousSibling)
+                        common.element_row(event.target).previousSibling.querySelectorAll('.list_edit')[0].focus();
+                }
+                if (event.code=='ArrowDown') {
+                    APP_GLOBAL.previous_row = common.element_row(event.target);
+                    event.preventDefault();
+                    //focus on first list_edit item in the row
+                    if (common.element_row(event.target).nextSibling)
+                        common.element_row(event.target).nextSibling.querySelectorAll('.list_edit')[0].focus();       
+                }
+            }
             break;
         }
     }
