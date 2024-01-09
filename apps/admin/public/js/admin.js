@@ -243,7 +243,7 @@ const setEvents = () => {
             }
         }
         app_secure.app_events('click', event);
-    });
+    }, true);
     
     document.querySelector('#app').addEventListener('change', event => {
         common.common_event('change',event);
@@ -301,10 +301,10 @@ const setEvents = () => {
     });
     document.querySelector('#app').addEventListener('input', event => {
         app_secure.app_events('input', event);
-    });
+    }, true);
     document.querySelector('#app').addEventListener('focus', event => {
         app_secure.app_events('focus', event);
-    });
+    }, true);
 };
 
 const admin_exception = (error) => {

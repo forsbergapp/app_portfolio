@@ -1093,15 +1093,11 @@ const dialogue_user_edit_remove_error = () => {
     document.querySelector('#common_user_edit_input_password_reminder').classList.remove('common_input_error');
 };
 const lov_close = () => {
-    //remove all event listeners
-    document.querySelectorAll('.common_list_lov_row').forEach(e => 
-        e.replaceWith(e.cloneNode(true))
-    );
     document.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
     document.querySelector('#common_lov_title').innerHTML='';
     document.querySelector('#common_lov_search_input').innerHTML='';
     document.querySelector('#common_lov_list').innerHTML='';
-    
+    document.querySelector('#common_lov_list')['data-function'] = null;
 };
 const lov_show = (lov, function_event) => {
     
@@ -1150,12 +1146,12 @@ const lov_show = (lov, function_event) => {
             document.querySelector('#common_lov_list').innerHTML = '';
         else{
             document.querySelector('#common_lov_list').innerHTML = '';
+            document.querySelector('#common_lov_list')['data-function'] = function_event;
             const list_result = JSON.parse(result);
             let html = '';
-            let i=0;
             for (const list_row of list_result) {
                 html += 
-                `<div id='common_list_lov_row_${i}' tabindex=-1 class='common_list_lov_row'>
+                `<div data-id='${list_row.id}' data-value='${list_row[lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                     <div class='common_list_lov_col'>
                         <div>${list_row.id}</div>
                     </div>
@@ -1163,11 +1159,9 @@ const lov_show = (lov, function_event) => {
                         <div>${list_row[lov_column_value]}</div>
                     </div>
                 </div>`;
-                i++;
             }
             document.querySelector('#common_lov_list').innerHTML = html;
             document.querySelector('#common_lov_search_input').focus();
-            document.querySelectorAll('.common_list_lov_row').forEach(e => e.addEventListener('click', function_event));
         }
     });
 };
