@@ -564,7 +564,6 @@ select {
     overflow-x: hidden;
 	padding: 10px;
 	margin:0 auto;
-	display:none;
 }
 .common_profile_search_list_row{
 	height:1.8em;
@@ -590,6 +589,18 @@ select {
 	text-align:end;
 }
 /*Dialogue profile*/
+.common_unlike::before{
+	content:var(--app_user_unlike);
+}	
+.common_like::before{
+	content:var(--app_user_like);
+}	
+.common_user_follow::before{
+	content:var(--app_user_follow);
+}
+.common_user_followed::before{
+	content:var(--app_user_followed);
+}
 #common_dialogue_profile{
 	visibility:hidden;
 	top: 0px;
@@ -777,17 +788,20 @@ select {
 .common_profile_detail_list_app_delete{
 	cursor:pointer;
 }
+.common_profile_detail_list_app_logo{
+	height:1.4em;
+	width:1.4em;
+	vertical-align: middle;
+}
 .common_profile_top_list_avatar, 
 .common_profile_search_list_avatar, 
 .common_profile_detail_list_avatar, 
-.common_profile_detail_list_app_logo, 
 .common_profile_detail_list_app_delete{
 	height:1.4em;
 	width:1.4em;
 	border-radius: 50%;
 	vertical-align: middle;
 }
-
 .common_profile_detail_list_app_url, .common_profile_detail_list_date_created{
 	display: none;
 }
@@ -808,8 +822,7 @@ select {
 	width:100%;
 	margin-top: 10px;
 	overflow-x:auto;
-	display: flex;
-	flex-direction: column;
+	display: block;
 	height: calc(100% - 160px);
 }
 .common_profile_top_list_row{

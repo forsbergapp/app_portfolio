@@ -1507,8 +1507,11 @@ body{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-.common_like_unlike {
+.common_like {
     color: var(--app_red) !important;
+}
+.common_unlike{
+	color: var(--app_red) !important;
 }
 /*SECURE*/
 .common_switch {

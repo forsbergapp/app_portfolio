@@ -1061,7 +1061,10 @@ body,
 #common_user_menu_dropdown{
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_shadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_shadow_color2);
 }
-.common_like_unlike{
+.common_like{
+	color: var(--app_red) !important;
+}
+.common_unlike{
 	color: var(--app_red) !important;
 }
 .common_module_leaflet_control_button{
