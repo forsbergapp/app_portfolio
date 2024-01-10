@@ -970,9 +970,7 @@ const update_ui = async (option, item_id=null) => {
 /*----------------------- */
 //function sent as parameter, set the argument passed and convert result to integer with unary plus syntax
 //and ES6 arrow function and without function keyword
-const show_profile_function = (profile_id) => {
-                                profile_show_app(+profile_id);
-                            };
+const show_profile_function = profile_id => profile_show_app(+profile_id);
 
 const user_login_app = async () => {
     const username = document.querySelector('#common_login_username');
@@ -2060,11 +2058,9 @@ const setEvents = () => {
                 const x = document.querySelector('#common_profile_input_row'); 
                 if (x.style.visibility == 'visible') {
                     x.style.visibility = 'hidden';
-                    document.querySelector('#common_profile_search_list_wrap').style.visibility = 'hidden';
                 } 
                 else{
                     x.style.visibility = 'visible'; 
-                    document.querySelector('#common_profile_search_list_wrap').style.visibility = 'visible';
                     document.querySelector('#common_profile_search_input').focus();
                 }
                 break;
@@ -2227,7 +2223,7 @@ const setEvents = () => {
             case 'profile_main_btn_user_setting_likes':
             case 'profile_main_btn_user_setting_likes_user_setting':{
                 profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
-                                        `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
+                                        `<div class='common_like common_icon'></div>
                                         <div > ${common.ICONS.regional_day +
                                                 common.ICONS.regional_month +
                                                 common.ICONS.regional_year +
@@ -2237,7 +2233,7 @@ const setEvents = () => {
             case 'profile_main_btn_user_setting_liked':
             case 'profile_main_btn_user_setting_liked_user_setting':{
                 profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
-                                        `<div class='common_like_unlike'> ${common.ICONS.user_like}</div>
+                                        `<div class='common_like common_icon'></div>
                                         <div > ${common.ICONS.regional_day +
                                                 common.ICONS.regional_month +
                                                 common.ICONS.regional_year +
@@ -2600,14 +2596,13 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
         });
     });
 };
-const map_show_search_on_map_app = async (city) =>{
-    common.map_show_search_on_map(city);
+const map_show_search_on_map_app = async (data) =>{
+    common.map_show_search_on_map(data);
     map_show_qibbla();
     common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
-    document.querySelector('#setting_input_place').innerHTML =  city.querySelector('.common_module_leaflet_search_list_city .common_link').innerHTML + ', ' +
-                                                            city.querySelector('.common_module_leaflet_search_list_country .common_link').innerHTML;
-    document.querySelector('#setting_input_long').innerHTML = city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
-    document.querySelector('#setting_input_lat').innerHTML = city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
+    document.querySelector('#setting_input_place').innerHTML =  data.city + ', ' + data.country;
+    document.querySelector('#setting_input_long').innerHTML = data.longitude;
+    document.querySelector('#setting_input_lat').innerHTML = data.latitude;
     const {getTimezone} = await import('regional');
     document.querySelector('#setting_select_report_timezone').value = getTimezone(  document.querySelector('#setting_input_lat').innerHTML, 
                                                                                     document.querySelector('#setting_input_long').innerHTML);
@@ -2795,15 +2790,12 @@ const init_app = (parameters) => {
         document.querySelector('#scan_open_mobile_title1').innerHTML = common.ICONS.app_mobile;
         //profile info
         document.querySelector('#profile_main_btn_user_settings').innerHTML = common.ICONS.regional_day  + common.ICONS.regional_month + common.ICONS.regional_year;
-        document.querySelector('#profile_main_btn_user_setting_likes_heart').innerHTML = common.ICONS.user_like;
         document.querySelector('#profile_main_btn_user_setting_likes_user_setting').innerHTML = common.ICONS.regional_day + common.ICONS.regional_month + common.ICONS.regional_year + common.ICONS.user_follows;
-        document.querySelector('#profile_main_btn_user_setting_liked_heart').innerHTML = common.ICONS.user_like;
         document.querySelector('#profile_main_btn_user_setting_liked_user_setting').innerHTML = common.ICONS.regional_day + common.ICONS.regional_month + common.ICONS.regional_year + common.ICONS.user_followed;
     
         document.querySelector('#profile_user_settings_day').innerHTML = common.ICONS.regional_day;
         document.querySelector('#profile_user_settings_month').innerHTML = common.ICONS.regional_month;
         document.querySelector('#profile_user_settings_year').innerHTML = common.ICONS.regional_year;
-        document.querySelector('#profile_user_settings_like').innerHTML = common.ICONS.user_unlike + common.ICONS.user_like;
     
         document.querySelector('#profile_user_settings_info_likes').innerHTML = common.ICONS.user_like + '<div id="profile_user_settings_info_like_count"></div>';
         document.querySelector('#profile_user_settings_info_views').innerHTML = common.ICONS.user_views + '<div id="profile_user_settings_info_view_count"></div>';

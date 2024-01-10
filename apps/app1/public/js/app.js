@@ -151,7 +151,8 @@ const setEvents = () => {
                     common.profile_detail(3, null, true, null);
                     break;
                 }
-                case 'common_profile_main_btn_liked':{
+                case 'common_profile_main_btn_liked':
+                case 'common_profile_main_btn_liked_users':{
                     common.profile_detail(4, null, true, null);
                     break;
                 }

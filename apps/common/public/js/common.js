@@ -1363,7 +1363,6 @@ const show_hide_window_info_toolbar = () => {
   PROFILE               
 
   local objects:
-  show_profile_click_events
   search_profile
   ----------------------- */
 const profile_follow_like = async (function_name) => {
@@ -1373,20 +1372,10 @@ const profile_follow_like = async (function_name) => {
         }
     });
 };
-const show_profile_click_events = (item, click_function) => {
-    document.querySelectorAll(item).forEach(e => e.addEventListener('click', (event) => {
-        //execute function from inparameter or use default when not specified
-        const profile_id = event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML;
-        if (click_function ==null){
-            profile_show(profile_id,null,()=>{});
-        }
-        else{
-            click_function(profile_id);
-        }
-    }));
-};
 const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     let path;
+    const profile_top_list = document.querySelector('#common_profile_top_list');
+    profile_top_list.innerHTML = APP_SPINNER;
     document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
     document.querySelector('#common_profile_info').style.display = 'none';
     document.querySelector('#common_profile_top').style.display = 'block';
@@ -1402,16 +1391,14 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     //TOP
     FFB ('DB_API', path, 'GET', 'APP_DATA', null, (err, result) => {
         if (err)
-            null;
-        else{
-            const profile_top_list = document.querySelector('#common_profile_top_list');
             profile_top_list.innerHTML = '';
+        else{
             let html ='';
             let image='';
             for (const profile_top of JSON.parse(result)) {
                 image = list_image_format_src(profile_top.avatar ?? profile_top.provider_image);
                 html +=
-                `<div class='common_profile_top_list_row'>
+                `<div data-user_account_id='${profile_top.id}' class='common_profile_top_list_row common_row'>
                     <div class='common_profile_top_list_col'>
                         <div class='common_profile_top_list_user_account_id'>${profile_top.id}</div>
                     </div>
@@ -1419,8 +1406,8 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
                         <img class='common_profile_top_list_avatar' ${image}>
                     </div>
                     <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_username common_wide_list_column'>
-                            <div class='common_link'>${profile_top.username}</div>
+                        <div class='common_profile_top_list_username common_wide_list_column common_link'>
+                            ${profile_top.username}
                         </div>
                     </div>
                     <div class='common_profile_top_list_col'>
@@ -1429,12 +1416,14 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
                 </div>`;
             }
             profile_top_list.innerHTML = html;
-            show_profile_click_events('.common_profile_top_list_username', click_function);
+            document.querySelector('#common_profile_top_list')['data-function'] = click_function;
         }
     });
 };
 const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, click_function) => {
     let path;
+    const profile_detail_list = document.querySelector('#common_profile_detail_list');
+    profile_detail_list.innerHTML = APP_SPINNER;
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
         path = '/user_account/profile/detail';
@@ -1524,12 +1513,9 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
         if (fetch_detail){
             FFB ('DB_API', path, 'GET', 'APP_ACCESS', null, (err, result) => {
                 if (err)
-                    null;
+                    profile_detail_list.innerHTML = '';
                 else{
                     const list_items = JSON.parse(result);
-                    const profile_detail_list = document.querySelector('#common_profile_detail_list');
-                    profile_detail_list.innerHTML = '';
-
                     let html = '';
                     let image = '';
                     let delete_div ='';
@@ -1541,7 +1527,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                 
                             //App list in app 0
                             html += 
-                            `<div class='common_profile_detail_list_row'>
+                            `<div data-app_id='${list_item.APP_ID}' data-url='${list_item.PROTOCOL}${list_item.SUBDOMAIN}.${list_item.HOST}:${list_item.PORT}' class='common_profile_detail_list_row common_row'>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_app_id'>${list_item.APP_ID}</div>
                                 </div>
@@ -1557,9 +1543,6 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                     ${delete_div}
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_url'>${list_item.PROTOCOL}${list_item.SUBDOMAIN}.${list_item.HOST}:${list_item.PORT}</div>
-                                </div>
-                                <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_date_created'>${list_item.date_created}</div>
                                 </div>
                             </div>`;
@@ -1568,7 +1551,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                             //Username list
                             image = list_image_format_src(list_item.avatar ?? list_item.provider_image);
                             html += 
-                            `<div class='common_profile_detail_list_row'>
+                            `<div data-user_account_id='${list_item.id}' class='common_profile_detail_list_row common_row'>
                                 <div class='common_profile_detail_list_col'>
                                     <div class='common_profile_detail_list_user_account_id'>${list_item.id}</div>
                                 </div>
@@ -1576,36 +1559,15 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                                     <img class='common_profile_detail_list_avatar' ${image}>
                                 </div>
                                 <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_username common_wide_list_column'>
-                                        <div class='common_link'>${list_item.username}</div>
+                                    <div class='common_profile_detail_list_username common_wide_list_column common_link'>
+                                        ${list_item.username}
                                     </div>
                                 </div>
                             </div>`;
                         }
                     }
                     profile_detail_list.innerHTML = html;
-                    if (detailchoice==5){
-                        document.querySelector('#common_profile_detail_list').addEventListener('click', (event)=>{
-                            if (event.target.classList.contains('common_profile_detail_list_app_name'))
-                                window.open(event.target.parentNode.parentNode.children[4].children[0].innerHTML, '_blank');
-                            else
-                                if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id){
-                                    if (event.target.parentNode.classList.contains('common_profile_detail_list_app_delete'))
-                                        user_account_app_delete(null, 
-                                                                document.querySelector('#common_profile_id').innerHTML,
-                                                                event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML,
-                                                                () => { 
-                                                                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                                                                    user_account_app_delete(1, 
-                                                                                            document.querySelector('#common_profile_id').innerHTML, 
-                                                                                            event.target.parentNode.parentNode.parentNode.children[0].children[0].innerHTML, 
-                                                                                            null);
-                                                                });
-                            }
-                        }, false);
-                    }
-                    else
-                        show_profile_click_events('.common_profile_detail_list_username', click_function);
+                    document.querySelector('#common_profile_detail_list')['data-function'] = click_function;
                 }
             });
         }
@@ -1615,11 +1577,13 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
 const search_profile = (click_function) => {
     document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
     const profile_search_list = document.querySelector('#common_profile_search_list');
-    profile_search_list.innerHTML = '';
-    document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-    profile_search_list.style.display = 'none';
-    if (document.querySelector('#common_profile_search_input').innerHTML=='')
+    profile_search_list.innerHTML = APP_SPINNER;
+    document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+    if (document.querySelector('#common_profile_search_input').innerHTML==''){
+        profile_search_list.innerHTML ='';
+        document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         document.querySelector('#common_profile_search_input').classList.add('common_input_error');
+    }
     else{
         const searched_username = document.querySelector('#common_profile_search_input').innerHTML;
         let path;
@@ -1645,19 +1609,21 @@ const search_profile = (click_function) => {
                         };
         }
         FFB ('DB_API', path, 'POST', token, json_data, (err, result) => {
-            if (err)
-                null;
+            if (err){
+                profile_search_list.innerHTML ='';
+                document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+            }
             else{
-                if (JSON.parse(result).length > 0){
-                    profile_search_list.style.display = 'inline-block';
-                    document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+                if (JSON.parse(result).length == 0){
+                    profile_search_list.innerHTML ='';
+                    document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
                 }
                 let html = '';
                 let image= '';
                 for (const search_profile of JSON.parse(result)) {
                     image = list_image_format_src(search_profile.avatar ?? search_profile.provider_image);
                     html +=
-                    `<div class='common_profile_search_list_row' tabindex=-1>
+                    `<div data-user_account_id='${search_profile.id}' class='common_profile_search_list_row common_row' tabindex=-1>
                         <div class='common_profile_search_list_col'>
                             <div class='common_profile_search_list_user_account_id'>${search_profile.id}</div>
                         </div>
@@ -1665,14 +1631,14 @@ const search_profile = (click_function) => {
                             <img class='common_profile_search_list_avatar' ${image}>
                         </div>
                         <div class='common_profile_search_list_col'>
-                            <div class='common_profile_search_list_username common_wide_list_column'>
-                                <div class='common_link'>${search_profile.username}</div>
+                            <div class='common_profile_search_list_username common_wide_list_column common_link'>
+                                ${search_profile.username}
                             </div>
                         </div>
                     </div>`;
                 }
                 profile_search_list.innerHTML = html;
-                show_profile_click_events('.common_profile_search_list_username', click_function);
+                document.querySelector('#common_profile_search_list')['data-function'] = click_function;
             }
         });
     }
@@ -1802,7 +1768,7 @@ const search_input = (event, module, event_function) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            if (document.querySelector(`#common_${module}_search_list`) && document.querySelector(`#common_${module}_search_list`).style.display=='inline-block'){
+            if (document.querySelector(`#common_${module}_search_list`)){
                 const rows = document.querySelectorAll(`.common_${module}_search_list_row`);
                 const focus_item = (element) =>{
                     element.focus();
@@ -1857,29 +1823,34 @@ const search_input = (event, module, event_function) => {
         }
         case 'Enter':{
             //enter
-            if (document.querySelector(`#common_${module}_search_list`).style.display=='inline-block'){
-                const x = document.querySelectorAll(`.common_${module}_search_list_row`);
-                for (let i = 0; i <= x.length -1; i++) {
-                    if (x[i].classList.contains(`common_${module}_search_list_selected`)){
-                        /*Show profile and leave searchresult so user can go back to searchresult again*/
-                        if (event_function ==null){
-                            if (module=='profile')
-                                profile_show(x[i].children[0].children[0].innerHTML,null,()=>{});
-                            else{
-                                map_show_search_on_map(x[i]);
-                            }
-                        }
+            const x = document.querySelectorAll(`.common_${module}_search_list_row`);
+            for (let i = 0; i <= x.length -1; i++) {
+                if (x[i].classList.contains(`common_${module}_search_list_selected`)){
+                    /*Show profile and leave searchresult so user can go back to searchresult again*/
+                    if (event_function ==null){
+                        if (module=='profile')
+                            profile_show(x[i].children[0].children[0].innerHTML,null,()=>{});
                         else{
-                            if (module=='profile')
-                                event_function(x[i].children[0].children[0].innerHTML);
-                            else
-                                event_function(x[i]);
+                            map_show_search_on_map({city:x[i].getAttribute('data-city'),
+                                                    country:x[i].getAttribute('data-country'),
+                                                    latitude:x[i].getAttribute('data-latitude'),
+                                                    longitude:x[i].getAttribute('data-longitude')
+                                                });
                         }
-                            
-                        x[i].classList.remove (`common_${module}_search_list_selected`);
                     }
+                    else{
+                        if (module=='profile')
+                            event_function(x[i].children[0].children[0].innerHTML);
+                        else
+                            event_function({city:x[i].getAttribute('data-city'),
+                                            country:x[i].getAttribute('data-country'),
+                                            latitude:x[i].getAttribute('data-latitude'),
+                                            longitude:x[i].getAttribute('data-longitude')
+                                        });
+                    }
+                        
+                    x[i].classList.remove (`common_${module}_search_list_selected`);
                 }
-                return;
             }
             break;
         }
@@ -2631,6 +2602,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                                                             <div id='common_module_leaflet_search_icon'>${ICONS.app_search}</div>
                                                         </div>
                                                         <div id='common_module_leaflet_search_list_wrap'>
+                                                            <div id='common_module_leaflet_search_list'></div>
                                                         </div>
                                                     </div>
                                                  </div>`;
@@ -2759,20 +2731,17 @@ const map_toolbar_reset = ()=>{
     select_country.selectedIndex = 0;
     map_city_empty();
     document.querySelector('#common_module_leaflet_search_input').innerHTML ='';
-    document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML ='';
+    document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
     if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
         map_control_toggle_expand('search');
     if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
         map_control_toggle_expand('layer');
 };
-const map_show_search_on_map = (city)=>{
+const map_show_search_on_map = (data)=>{
     
-    const latitude =    city.querySelector('.common_module_leaflet_search_list_latitude').innerHTML;
-    const longitude =   city.querySelector('.common_module_leaflet_search_list_longitude').innerHTML;
-    const place =       city.querySelector('.common_module_leaflet_search_list_city .common_link').innerHTML + ', ' +
-                        city.querySelector('.common_module_leaflet_search_list_country .common_link').innerHTML;
-    map_update( longitude,
-                latitude,
+    const place =  data.city + ', ' + data.country;
+    map_update( data.longitude,
+                data.latitude,
                 COMMON_GLOBAL.module_leaflet_zoom_city,
                 place,
                 null,
@@ -3287,7 +3256,7 @@ const get_cities = async (countrycode, callBack) => {
 const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').innerHTML;
     if (search =='')
-        document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML = '';
+        document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
     else{
         const get_cities = async (search) =>{
             return new Promise ((resolve)=>{
@@ -3299,22 +3268,20 @@ const worldcities_search = async (event_function) =>{
                 });
             });
         };
+        document.querySelector('#common_module_leaflet_search_list').innerHTML = APP_SPINNER;
         const cities = await get_cities(search);
-        const search_list = document.querySelector('#common_module_leaflet_search_list_wrap');
-        //remove innerHTML with eventlistener
-        document.querySelector('#common_module_leaflet_search_list_wrap').innerHTML = '';
         let html = '';
         if (cities.length > 0){
             for (const city of cities){
-                html += `<div class='common_module_leaflet_search_list_row' tabindex=-1>
+                html += `<div data-city='${city.city}' data-country='${city.admin_name + ',' + city.country}' data-latitude='${city.lat}' data-longitude='${city.lng}' class='common_module_leaflet_search_list_row common_row' tabindex=-1>
                             <div class='common_module_leaflet_search_list_col'>
                                 <div class='common_module_leaflet_search_list_city_id'>${city.id}</div>
                             </div>
                             <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_city'><div class='common_link common_module_leaflet_click_city' >${city.city}</div></div>
+                                <div class='common_module_leaflet_search_list_city common_link common_module_leaflet_click_city'>${city.city}</div>
                             </div>
                             <div class='common_module_leaflet_search_list_col'>
-                                <div class='common_module_leaflet_search_list_country'><div class='common_link common_module_leaflet_click_city' >${city.admin_name + ',' + city.country}</div></div>
+                                <div class='common_module_leaflet_search_list_country common_link common_module_leaflet_click_city'>${city.admin_name + ',' + city.country}</div>
                             </div>
                             <div class='common_module_leaflet_search_list_col'>
                                 <div class='common_module_leaflet_search_list_latitude'>${city.lat}</div>
@@ -3324,21 +3291,11 @@ const worldcities_search = async (event_function) =>{
                             </div>
                         </div>`;
             }
-            search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:inline-block'>${html}</div>`;
+            document.querySelector('#common_module_leaflet_search_list').innerHTML = html;
+            document.querySelector('#common_module_leaflet_search_list')['data-function'] = event_function;
         }
         else
-            search_list.innerHTML = `<div id='common_module_leaflet_search_list' style='display:none'>${''}</div>`;
-        document.querySelector('#common_module_leaflet_search_list').addEventListener('click', (event) => {
-            //execute function from inparameter or use default when not specified
-            if (event.target.classList.contains('common_module_leaflet_click_city'))
-                if (event_function ==null){
-                    map_show_search_on_map(event.target.parentNode.parentNode.parentNode,null,()=>{map_toolbar_reset('search');});
-                }
-                else{
-                    event_function(event.target.parentNode.parentNode.parentNode);
-                    map_toolbar_reset();
-                }
-        });
+            document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
     }
 };
 /*-----------------------
@@ -3471,15 +3428,10 @@ const assign_icons = () => {
         document.querySelector('#common_profile_search_icon').innerHTML = ICONS.app_search;
     //profile info
     document.querySelector('#common_profile_joined_date_icon').innerHTML = ICONS.user_account_created;
-    document.querySelector('#common_profile_follow_follow').innerHTML = ICONS.user_follow_user;
-    document.querySelector('#common_profile_follow_followed').innerHTML = ICONS.user_followed_user;
-    document.querySelector('#common_profile_like_like').innerHTML = ICONS.user_like;
-    document.querySelector('#common_profile_like_unlike').innerHTML = ICONS.user_unlike;
+ 
     document.querySelector('#common_profile_info_view_count_icon').innerHTML = ICONS.user_views;
     document.querySelector('#common_profile_main_btn_following').innerHTML = ICONS.user_follows;
     document.querySelector('#common_profile_main_btn_followed').innerHTML = ICONS.user_followed;
-    document.querySelector('#common_profile_main_btn_likes').innerHTML = ICONS.user_like;
-    document.querySelector('#common_profile_main_btn_liked_heart').innerHTML = ICONS.user_like;
     document.querySelector('#common_profile_main_btn_liked_users').innerHTML = ICONS.user_followed;
     
     document.querySelector('#common_profile_private_title').innerHTML = ICONS.app_private;
@@ -3704,6 +3656,48 @@ const common_event = (event_type,event) =>{
                         dialogue_verify_clear();
                         break;
                     }
+                    //search list
+                    case 'common_profile_search_list':{
+                        if (event.target.classList.contains('common_profile_search_list_username')){
+                            if (document.querySelector('#common_profile_search_list')['data-function'])
+                                document.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                            else
+                                profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
+                        }
+                        break;
+                    }
+                    //dialogue profile and profile top
+                    case 'common_profile_top_list':
+                    case 'common_profile_detail_list':{
+                        if (event.target.classList.contains('common_profile_top_list_username')||
+                            event.target.classList.contains('common_profile_detail_list_username')){
+                            //execute function from inparameter or use default when not specified
+                            if (document.querySelector(`#${element_id(event.target)}`)['data-function'])
+                                document.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                            else
+                                profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
+                        }
+                        else{
+                            //app list
+                            if (event.target.classList.contains('common_profile_detail_list_app_name'))
+                                window.open(element_row(event.target).getAttribute('data-url'), '_blank');
+                            else
+                                if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id){
+                                    if (event.target.parentNode.classList.contains('common_profile_detail_list_app_delete'))
+                                        user_account_app_delete(null, 
+                                                                document.querySelector('#common_profile_id').innerHTML,
+                                                                element_row(event.target).getAttribute('data-app_id'),
+                                                                () => { 
+                                                                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                                                                    user_account_app_delete(1, 
+                                                                                            document.querySelector('#common_profile_id').innerHTML, 
+                                                                                            element_row(event.target).getAttribute('data-app_id'), 
+                                                                                            null);
+                                                                });
+                                }
+                        }
+                        break;
+                    }
                     //broadcast
                     case 'common_broadcast_close':{
                         document.querySelector('#common_broadcast_info').style.visibility='hidden';
@@ -3749,6 +3743,23 @@ const common_event = (event_type,event) =>{
                         if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
                             map_toolbar_reset();
                         map_control_toggle_expand('layer');
+                        break;
+                    }
+                    case 'common_module_leaflet_search_list':{
+                        //execute function from inparameter or use default when not specified
+                        if (event.target.classList.contains('common_module_leaflet_click_city')){
+                            const data = {  city: element_row(event.target).getAttribute('data-city'),
+                                            country: element_row(event.target).getAttribute('data-country'),
+                                            latitude: element_row(event.target).getAttribute('data-latitude'),
+                                            longitude: element_row(event.target).getAttribute('data-longitude')
+                                        };
+                            if (document.querySelector('#common_module_leaflet_search_list')['data-function']){
+                                document.querySelector('#common_module_leaflet_search_list')['data-function'](data);
+                                map_toolbar_reset();
+                            }
+                            else
+                                map_show_search_on_map(data,null,()=>{map_toolbar_reset('search');});
+                        }
                         break;
                     }
                     default:{
@@ -3886,7 +3897,7 @@ const set_events = () => {
             const x = document.querySelector('#common_profile_input_row'); 
             if (x.style.visibility == 'visible') {
                 x.style.visibility = 'hidden';
-                document.querySelector('#common_profile_search_list_wrap').style.visibility = 'hidden';
+                document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
             } 
         }
     }, false);

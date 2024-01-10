@@ -52,7 +52,11 @@
 	--report_shadow1: rgb(0 0 0 / 20%);
 	--report_shadow2: rgb(0 0 0 / 19%);
 	--report_white: white;
-
+	/*icons*/
+	--app_user_like: '\f004';
+	--app_user_unlike: '\f7a9';
+	--app_user_follow: '\f234';
+	--app_user_followed: '\f4fc';
 	/*fonts*/
 	--global_font_languages_1:  "Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
 								"Noto Sans Bengali", "Noto Sans Telugu","Noto Sans Tamil",

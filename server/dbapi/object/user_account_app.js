@@ -40,32 +40,30 @@ const getUserAccountApp = (app_id, query) => service.getUserAccountApp(app_id, g
  * @param {*} query 
  */
 const getUserAccountApps = async (app_id, query) => {
+    const fs = await import('node:fs');
     const {ConfigGet, ConfigGetApps} = await import(`file://${process.cwd()}/server/config.service.js`);
-    return new Promise((resolve, reject)=>{
-        service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')))
-        .then((/**@type{Types.db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/apps_db)=>{
-            const apps_registry = ConfigGetApps();
-            /**@type{Types.config_apps_with_db_columns[]}*/
-            const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
-                                                app.concat({APP_ID:current.APP_ID,
-                                                            NAME:current.NAME,
-                                                            LOGO:current.LOGO,
-                                                            SUBDOMAIN:current.SUBDOMAIN
-                                                            }) , []);    
-            
-            apps_db.map(app=>{
-                app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].NAME;
-                app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
-                app.SUBDOMAIN = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].SUBDOMAIN;
-                app.HOST = ConfigGet('SERVER', 'HOST');
-                app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
-                app.LOGO = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].LOGO;
-            });
-            resolve(apps_db);
-        })
-        .catch((/**@type{Types.error}*/error)=>{reject(error);});
-    });
-    
+    /**@type{Types.db_result_user_account_app_getUserAccountApps_with_app_registry[]}*/
+    const apps_db = await service.getUserAccountApps(app_id, getNumberValue(query.get('user_account_id')));
+    const apps_registry = ConfigGetApps();
+    /**@type{Types.config_apps_with_db_columns[]}*/
+    const apps = apps_registry.reduce(( /**@type{Types.config_apps_record} */app, /**@type {Types.config_apps_record}*/current)=> 
+                                        app.concat({APP_ID:current.APP_ID,
+                                                    NAME:current.NAME,
+                                                    LOGO:current.PATH + current.LOGO,
+                                                    SUBDOMAIN:current.SUBDOMAIN
+                                                    }) , []);    
+    for (const app of apps_db){
+        app.NAME = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].NAME;
+        app.PROTOCOL = ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?'https://':'http://';
+        app.SUBDOMAIN = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].SUBDOMAIN;
+        app.HOST = ConfigGet('SERVER', 'HOST');
+        app.PORT = getNumberValue(ConfigGet('SERVER', 'HTTPS_ENABLE')=='1'?ConfigGet('SERVER', 'HTTPS_PORT'):ConfigGet('SERVER', 'HTTP_PORT'));
+        app.LOGO = apps.filter(app_registry=>app_registry.APP_ID == app.app_id)[0].LOGO;
+        const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
+        /**@ts-ignore */
+        app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+    }
+    return apps_db;        
 };
 
 /**
