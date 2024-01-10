@@ -860,6 +860,7 @@
  *              'LOG_DB_INFO'|
  *              'LOG_DB_ERROR'|
  *              'LOG_REQUEST_INFO'|
+ *              'LOG_REQUEST_VERBOSE'|
  *              'LOG_REQUEST_ERROR'|
  *              'LOG_SERVER_INFO'|
  *              'LOG_SERVER_ERROR'|
