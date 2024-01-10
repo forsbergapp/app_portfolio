@@ -689,15 +689,15 @@ const show_users = () =>{
 };
 const search_users = (sort='username', order_by='asc', focus=true) => {
 
-    if (common.check_input(document.querySelector('#list_user_account_search_input').innerHTML, 100, false) == false)
+    if (common.check_input(document.querySelector('#list_user_account_search_input').innerText, 100, false) == false)
         return null;
 
     document.querySelector('#list_user_account').innerHTML = common.APP_SPINNER;
     
     let search_user='*';
     //show all records if no search criteria
-    if (document.querySelector('#list_user_account_search_input').innerHTML!='')
-        search_user = encodeURI(document.querySelector('#list_user_account_search_input').innerHTML);
+    if (document.querySelector('#list_user_account_search_input').innerText!='')
+        search_user = encodeURI(document.querySelector('#list_user_account_search_input').innerText);
     common.FFB ('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null, (err, result) => {
         if (err)
             document.querySelector('#list_user_account').innerHTML = '';
@@ -1492,7 +1492,7 @@ const nav_click = (item_id) => {
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='block';
             document.querySelector('#list_monitor_nav_3').classList.add('list_nav_selected_tab');
-            show_server_logs('logdate', 'desc', document.querySelector('#list_server_log_search_input').innerHTML);
+            show_server_logs('logdate', 'desc', document.querySelector('#list_server_log_search_input').innerText);
             break;
         }
         //SERVER CONFIG
@@ -2319,7 +2319,7 @@ const get_server_log_parameters = async () => {
 };
 const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
-        if (common.check_input(document.querySelector('#list_server_log_search_input').innerHTML, 100, false) == false)
+        if (common.check_input(document.querySelector('#list_server_log_search_input').innerText, 100, false) == false)
             return null;
     }
     const logscope = document.querySelector('#select_logscope5')[document.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
@@ -3052,7 +3052,7 @@ const app_events = (event_type, event)=> {
                         event.code != 'End' &&
                         event.code != 'PageUp' &&
                         event.code != 'PageDown')
-                        common.typewatch(show_server_logs, 'logdate', 'desc', document.querySelector('#list_server_log_search_input').innerHTML);
+                        common.typewatch(show_server_logs, 'logdate', 'desc', document.querySelector('#list_server_log_search_input').innerText);
                     break;
                 }
             }
