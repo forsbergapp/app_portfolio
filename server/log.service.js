@@ -393,11 +393,6 @@ const LogAppE = async (app_id, app_filename, app_function_name, app_line, logtex
  */
 const getLogs = async (data) => {
     return new Promise ((resolve)=>{
-        let filesuffix;
-        if (ConfigGet('SERVICE_LOG', 'FILE_INTERVAL')=='1D')
-            filesuffix = 'YYYYMMDD';
-        else
-            filesuffix = 'YYYYMM';
         /**
          * 
          * @param {object} record 
@@ -417,8 +412,9 @@ const getLogs = async (data) => {
             return false;
         };
         const file = `LOG_${data.logscope}_${data.loglevel}`;
+        const sample = `${data.year}${data.month.toString().padStart(2,'0')}${data.day.toString().padStart(2,'0')}`;
         /**@ts-ignore*/
-        file_get_log(file, filesuffix)
+        file_get_log(file, null, sample)
         .then(log_rows_array_obj=>{
             //filter records
             log_rows_array_obj = log_rows_array_obj.filter((/**@type{[object]}*/record) => {
