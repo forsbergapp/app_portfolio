@@ -1579,13 +1579,13 @@ const search_profile = (click_function) => {
     const profile_search_list = document.querySelector('#common_profile_search_list');
     profile_search_list.innerHTML = APP_SPINNER;
     document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
-    if (document.querySelector('#common_profile_search_input').innerHTML==''){
+    if (document.querySelector('#common_profile_search_input').innerText==''){
         profile_search_list.innerHTML ='';
         document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
     else{
-        const searched_username = document.querySelector('#common_profile_search_input').innerHTML;
+        const searched_username = document.querySelector('#common_profile_search_input').innerText;
         let path;
         let token;
         let json_data;
@@ -3254,7 +3254,7 @@ const get_cities = async (countrycode, callBack) => {
     });
 };
 const worldcities_search = async (event_function) =>{
-    const search = document.querySelector('#common_module_leaflet_search_input').innerHTML;
+    const search = document.querySelector('#common_module_leaflet_search_input').innerText;
     if (search =='')
         document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
     else{
