@@ -345,11 +345,12 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
  *  if decodeURIComponent() no error then return null else return 400
  * @param {string} ip
  * @param {string} host
+ * @param {string} method
  * @param {string} user_agent
  * @param {string} accept_language
  * @param {string} path
  */
- const AuthenticateRequest = (ip, host, user_agent, accept_language, path) => {
+ const AuthenticateRequest = (ip, host, method, user_agent, accept_language, path) => {
     /**
      * IP to number
      * @param {string} ip
@@ -464,9 +465,14 @@ const AuthenticateSocket = (service, parameters, res, next) =>{
                                                     resolve({   statusCode: 400, 
                                                                 statusMessage: 'decodeURIComponent error'});
                                                 }
-                                                else
-                                                    resolve(null);
-                                                
+                                                else{
+                                                    //check method
+                                                    if (['GET', 'POST', 'PUT', 'PATCH', 'DELETE'].filter(allowed=>allowed==method).length==0)
+                                                        resolve({   statusCode: 405, 
+                                                                    statusMessage: 'method error'});
+                                                    else    
+                                                        resolve(null);
+                                                }
                                             }
                                         }
                                     }
