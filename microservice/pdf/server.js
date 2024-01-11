@@ -22,8 +22,8 @@ const startserver = async () =>{
 						url: Buffer.from(query.get('url'), 'base64').toString('utf-8') ?? ''};
 		req.query = {	app_id:	getNumberValue(query.get('app_id')),
 						data:	data};
-		switch (req.url.substring(0, req.url.indexOf('?'))){
-			case '/pdf':{
+		switch (req.method + '_' + req.url.substring(0, req.url.indexOf('?'))){
+			case 'GET_/pdf':{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getPDF(req.query.data)
@@ -33,6 +33,9 @@ const startserver = async () =>{
 						return_result(401, '⛔', null, null, res);
 				});
 				break;
+			}
+			default:{
+				return_result(401, '⛔', null, null, res);
 			}
 		}
 		

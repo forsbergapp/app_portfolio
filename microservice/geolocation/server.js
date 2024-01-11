@@ -21,8 +21,8 @@ const startserver = async () =>{
 						ip: 		query.get('ip')};
 		req.query = {	app_id:	getNumberValue(query.get('app_id')),
 						data:	data};
-		switch (req.url.substring(0, req.url.indexOf('?'))){
-			case '/geolocation/place':{
+		switch (req.method + '_' + req.url.substring(0, req.url.indexOf('?'))){
+			case 'GET_/geolocation/place':{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getPlace(req.query.data.latitude, req.query.data.longitude, req.headers['accept-language'])
@@ -33,7 +33,7 @@ const startserver = async () =>{
 				});
 				break;
 			}
-			case '/geolocation/ip':{
+			case 'GET_/geolocation/ip':{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getIp(req.query.data.ip, req.headers['accept-language'])
@@ -45,7 +45,7 @@ const startserver = async () =>{
 				break;
 			}
 			default:{
-				res.end();
+				return_result(401, '⛔', null, null, res);
 			}
 		}
 		

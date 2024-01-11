@@ -1641,6 +1641,7 @@
  * MicroService - Request
  * @typedef {object}        req_microservice
  * @property {string}       url
+ * @property {string}       method
  * 
  * @property {{ authorization:string,
  *              'accept-language':string}}       headers

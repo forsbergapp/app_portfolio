@@ -480,7 +480,7 @@ const serverStart = async () =>{
     const database = await import(`file://${process.cwd()}/server/dbapi/object/database.js`);
     const {InitConfig, ConfigGet} = await import(`file://${process.cwd()}/server/config.service.js`);
     const {SocketCheckMaintenance} = await import(`file://${process.cwd()}/server/socket.service.js`);
-    const {serverExpress, serverExpressLogError} = await import(`file://${process.cwd()}/server/express/server.js`);
+    const {serverExpress} = await import(`file://${process.cwd()}/server/express/server.js`);
     const {LogServerI, LogServerE} = await import(`file://${process.cwd()}/server/log.service.js`);
     const fs = await import('node:fs');
     const http = await import('node:http');
@@ -501,7 +501,6 @@ const serverStart = async () =>{
         //Get express app with all configurations
         /**@type{Types.express}*/
         const app = await serverExpress();
-        serverExpressLogError(app);
         SocketCheckMaintenance();
         //START HTTP SERVER
         /**@ts-ignore*/
@@ -524,7 +523,7 @@ const serverStart = async () =>{
                 LogServerI('HTTPS Server up and running on PORT: ' + ConfigGet('SERVER', 'HTTPS_PORT')).then(() => {
                     null;
                 });
-            });
+            });            
         }
     } catch (/**@type{Types.error}*/error) {
         LogServerE('serverStart: ' + error.stack);
