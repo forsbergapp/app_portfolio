@@ -28,8 +28,8 @@ const startserver = async () =>{
 						html:               query.get('email_html') ?? ''};
 		req.query = {	app_id:	getNumberValue(query.get('app_id')),
 						data:	data};
-		switch (req.url.substring(0, req.url.indexOf('?'))){
-			case '/mail/sendemail':{
+		switch (req.method + '_' + req.url.substring(0, req.url.indexOf('?'))){
+			case 'POST_/mail/sendemail':{
 				req.query.data = query.get('data') ?? '';
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
@@ -42,7 +42,7 @@ const startserver = async () =>{
 				break;
 			}
 			default:{
-				res.end();
+				return_result(401, '⛔', null, null, res);
 			}
 		}
 		

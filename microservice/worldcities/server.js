@@ -20,8 +20,8 @@ const startserver = async () =>{
 								search: query.get('search') ?? '',
 								country:query.get('country') ?? ''}
 					};
-		switch (true){
-			case req.url.startsWith('/worldcities/city/search'):{
+		switch (req.method + '_' + req.url.substring(0, req.url.indexOf('?'))){
+			case 'GET_/worldcities/city/search':{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getCitySearch(decodeURI(req.query.data.search), req.query.data.limit)
@@ -32,7 +32,7 @@ const startserver = async () =>{
 				});
 				break;
 			}
-			case req.url.startsWith('/worldcities/city/random'):{
+			case 'GET_/worldcities/city/random':{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getCityRandom()
@@ -43,7 +43,7 @@ const startserver = async () =>{
 				});
 				break;
 			}
-			case req.url.startsWith('/worldcities/country'):{
+			case 'GET_/worldcities/country':{
 				AuthenticateApp(req.query.app_id, req.headers.authorization).then((/**@type{boolean}*/authenticate)=>{
 					if (authenticate)
 						service.getCities(req.query.data.country)
@@ -54,9 +54,9 @@ const startserver = async () =>{
 				});
 				break;
 			}
-			default:
-				res.end();
-				break;
+			default:{
+				return_result(401, '⛔', null, null, res);
+			}
 		}
 
 	}).listen(request.port, ()=>{

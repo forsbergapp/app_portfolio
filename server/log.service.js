@@ -62,7 +62,7 @@ const logdate = () => new Date().toISOString();
 const LogRequestE = async (req, statusCode, statusMessage, responsetime, err) => {
     return await new Promise((resolve) => {
         const log_json_server = {   logdate:            logdate(),
-                                    host:               req.host,
+                                    host:               req.headers.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
                                     correlationid:      req.headers['X-Correlation-Id'],
@@ -97,7 +97,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
             case '1':{
                 log_level = ConfigGet('SERVICE_LOG', 'LEVEL_INFO');
                 log_json_server = { logdate:            logdate(),
-                                    host:               req.host,
+                                    host:               req.headers.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
                                     correlationid:      req.headers['X-Correlation-Id'],
@@ -141,7 +141,7 @@ const LogRequestI = async (req, statusCode, statusMessage, responsetime) => {
                         logtext_req.rawHeaders[index] = 'Basic ...';
                 });
                 log_json_server = { logdate:            logdate(),
-                                    host:               req.host,
+                                    host:               req.headers.host,
                                     ip:                 req.ip,
                                     requestid:          req.headers['X-Request-Id'],
                                     correlationid:      req.headers['X-Correlation-Id'],
