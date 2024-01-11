@@ -394,7 +394,7 @@ const settings_translate = async (first=true) => {
             if (err)
                 null;
             else{
-                for (const app_object_item of JSON.parse(result).data){
+                for (const app_object_item of JSON.parse(result)){
                     if (first==true)
                         app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
                     else
