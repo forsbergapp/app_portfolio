@@ -137,8 +137,6 @@
 	www.react.dev
 	Font Awesome
 	www.fontawesome.com
-	Google Fonts
-	fonts.google.com
 	Leaflet
 	www.leafletjs.com
 	Geoplugin Geolocation
