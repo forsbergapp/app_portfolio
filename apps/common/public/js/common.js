@@ -350,14 +350,7 @@ const getGregorian = (HijriDate, adjustment) =>{
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getMonth() + 1,
             new Date((julian_day - UNIX_EPOCH_JULIAN_DATE) * DAY).getDate()];
 };
-const checkconnected = async () => {
-    try {
-      await fetch('https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap', {method: 'head', mode : 'no-cors'});
-      return true;
-    } catch (err) {
-      return false;
-    }
-  };
+const checkconnected = async () => navigator.onLine;
 let timer = 0;
 //delay API calls when typing to avoid too many calls 
 // ES6 spread operator, arrow function without function keyword

@@ -591,7 +591,7 @@ const getInfo = async (app_id, info) => {
                       <html>
                         <head>
                             <meta charset='UTF-8'>
-                            <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+                            <link href="/common/css/font/font1.css" rel="stylesheet">
                             <link rel='stylesheet' type='text/css' href='/common/css/common_info.css' />
                         </head>	
                         <body >`;
