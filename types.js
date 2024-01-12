@@ -221,6 +221,7 @@
  * @property {function} on
  * @property {function} write
  * @property {function} flush           - Used for EventSource
+ * @property {function} set
  */
 
 /**
