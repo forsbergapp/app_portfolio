@@ -5,9 +5,8 @@ import * as Types from './../types.js';
 
 const service = await import('./bff.service.js');
 
-const {getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
+const {responsetime,getNumberValue} = await import(`file://${process.cwd()}/server/server.service.js`);
 const {LogRequestI} = await import(`file://${process.cwd()}/server/log.service.js`);
-const {responsetime} = await import(`file://${process.cwd()}/server/express/server.js`);
 const {AuthenticateRequest} = await import(`file://${process.cwd()}/server/iam.service.js`);
 const {randomUUID, createHash} = await import('node:crypto');
 const {CheckFirstTime, ConfigGet, ConfigGetSaved} = await import(`file://${process.cwd()}/server/config.service.js`);
