@@ -141,163 +141,177 @@ const admin_login = async () => {
 const setEvents = () => {
 
     document.querySelector('#app').addEventListener('click', event => {
-        common.common_event('click',event);
-        const target_id = common.element_id(event.target);
-        switch (target_id){
-            case 'admin_login_button':{
-                admin_login();
-                break;
+        common.common_event('click',event)
+        .then(()=>{
+            const target_id = common.element_id(event.target);
+            switch (target_id){
+                case 'admin_login_button':{
+                    admin_login();
+                    break;
+                }
+                case 'admin_login_title':
+                case 'system_admin_login_title':{
+                    admin_login_nav(event.target);
+                    break;
+                }
+                case 'send_broadcast_send':{
+                    app_secure.sendBroadcast();
+                    break;
+                }
+                case 'send_broadcast_close':{
+                    app_secure.closeBroadcast();
+                    break;
+                }
+                case 'menu_open':{
+                    document.querySelector('#menu').style.display = 'block';
+                    break;
+                }
+                case 'menu_close': {
+                    document.querySelector('#menu').style.display = 'none';
+                    break;
+                }
+                case 'menu_1':
+                case 'menu_2':
+                case 'menu_3':
+                case 'menu_4':
+                case 'menu_5':
+                case 'menu_6':
+                case 'menu_7':
+                case 'menu_8':
+                case 'menu_9':
+                case 'menu_10':{
+                    app_secure.show_menu(parseInt(target_id.substring(5)));
+                    break;
+                }
+                case 'menu_11': {
+                    admin_logoff_app();
+                    break;
+                }
+                //common
+                case 'common_message_cancel':{
+                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                    break;
+                }
+                case 'common_profile_home':{
+                    common.profile_top(1);
+                    break;
+                }
+                case 'common_profile_close':{
+                    common.profile_close();
+                    break;
+                }
+                case 'common_profile_top_row1_1':{
+                    common.profile_top(1);
+                    break;
+                }
+                case 'common_profile_top_row1_2':{
+                    common.profile_top(2);
+                    break;
+                }
+                case 'common_profile_top_row1_3':{
+                    common.profile_top(3);
+                    break;
+                }
+                case 'common_profile_follow':{
+                    common.profile_follow_like('FOLLOW');
+                    break;
+                }
+                case 'common_profile_like':{
+                    common.profile_follow_like('LIKE');
+                    break;
+                }
+                case 'common_profile_main_btn_following':{
+                    common.profile_detail(1, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_followed':{
+                    common.profile_detail(2, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_likes':{
+                    common.profile_detail(3, null, true, null);
+                    break;
+                }
+                case 'common_profile_main_btn_liked':{
+                    common.profile_detail(4, null, true, null);
+                    break;
+                }
+                case 'common_user_menu_username':{
+                    document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                    common.profile_show(null,null,()=>{});
+                    document.querySelector('#common_user_menu_dropdown').style = 'none';
+                    break;
+                }
+                default:{
+                    app_secure.app_events('click', event);
+                    break;
+                }
             }
-            case 'admin_login_title':
-            case 'system_admin_login_title':{
-                admin_login_nav(event.target);
-                break;
-            }
-            case 'send_broadcast_send':{
-                app_secure.sendBroadcast();
-                break;
-            }
-            case 'send_broadcast_close':{
-                app_secure.closeBroadcast();
-                break;
-            }
-            case 'menu_open':{
-                document.querySelector('#menu').style.display = 'block';
-                break;
-            }
-            case 'menu_close': {
-                document.querySelector('#menu').style.display = 'none';
-                break;
-            }
-            case 'menu_1':
-            case 'menu_2':
-            case 'menu_3':
-            case 'menu_4':
-            case 'menu_5':
-            case 'menu_6':
-            case 'menu_7':
-            case 'menu_8':
-            case 'menu_9':
-            case 'menu_10':{
-                app_secure.show_menu(parseInt(target_id.substring(5)));
-                break;
-            }
-            case 'menu_11': {
-                admin_logoff_app();
-                break;
-            }
-            //common
-            case 'common_message_cancel':{
-                document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                break;
-            }
-            case 'common_profile_home':{
-                common.profile_top(1);
-                break;
-            }
-            case 'common_profile_close':{
-                common.profile_close();
-                break;
-            }
-            case 'common_profile_top_row1_1':{
-                common.profile_top(1);
-                break;
-            }
-            case 'common_profile_top_row1_2':{
-                common.profile_top(2);
-                break;
-            }
-            case 'common_profile_top_row1_3':{
-                common.profile_top(3);
-                break;
-            }
-            case 'common_profile_follow':{
-                common.profile_follow_like('FOLLOW');
-                break;
-            }
-            case 'common_profile_like':{
-                common.profile_follow_like('LIKE');
-                break;
-            }
-            case 'common_profile_main_btn_following':{
-                common.profile_detail(1, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_followed':{
-                common.profile_detail(2, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_likes':{
-                common.profile_detail(3, null, true, null);
-                break;
-            }
-            case 'common_profile_main_btn_liked':{
-                common.profile_detail(4, null, true, null);
-                break;
-            }
-            case 'common_user_menu_username':{
-                document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                common.profile_show(null,null,()=>{});
-                document.querySelector('#common_user_menu_dropdown').style = 'none';
-                break;
-            }
-        }
-        app_secure.app_events('click', event);
+        });
     }, true);
     
     document.querySelector('#app').addEventListener('change', event => {
-        common.common_event('change',event);
-        switch (event.target.id){
-            case 'select_broadcast_type':{
-                app_secure.set_broadcast_type();
-                break;
+        common.common_event('change',event)
+        .then(()=>{
+            switch (event.target.id){
+                case 'select_broadcast_type':{
+                    app_secure.set_broadcast_type();
+                    break;
+                }
+                //common
+                case 'common_user_direction_select':{
+                    app_secure.fix_pagination_buttons(event.target.value);
+                    break;
+                }
+                case 'common_user_locale_select':{
+                    common.common_translate_ui(event.target.value, ()=>{});
+                    break;
+                }
+                case 'common_user_arabic_script_select':{
+                    document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                    break;
+                }
+                case 'common_app_select_theme':{
+                    document.body.className = 'app_theme' + 
+                                                document.querySelector('#common_app_select_theme').value + ' ' + 
+                                                document.querySelector('#common_user_arabic_script_select').value;
+                    break;
+                }
+                default:{
+                    app_secure.app_events('change', event);
+                    break;
+                }
             }
-            //common
-            case 'common_user_direction_select':{
-                app_secure.fix_pagination_buttons(event.target.value);
-                break;
-            }
-            case 'common_user_locale_select':{
-                common.common_translate_ui(event.target.value, ()=>{});
-                break;
-            }
-            case 'common_user_arabic_script_select':{
-                document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
-                break;
-            }
-            case 'common_app_select_theme':{
-                document.body.className = 'app_theme' + 
-                                            document.querySelector('#common_app_select_theme').value + ' ' + 
-                                            document.querySelector('#common_user_arabic_script_select').value;
-                break;
-            }
-        }
-        app_secure.app_events('change', event);
+        });
     });
     document.querySelector('#app').addEventListener('keyup', event => {
-        common.common_event('keyup',event);
-        switch (event.target.id){
-            case 'admin_login_username_input':
-            case 'admin_login_password_input':
-            case 'system_admin_login_username_input':
-            case 'system_admin_login_password_input':
-            case 'system_admin_login_password_confirm_input':{
-                if (event.code === 'Enter') {
-                    event.preventDefault();
-                    admin_login();
-                    //unfocus
-                    document.querySelector('#' + event.target.id).blur();
-                }    
-                break;
+        common.common_event('keyup',event)
+        .then(()=>{
+            switch (event.target.id){
+                case 'admin_login_username_input':
+                case 'admin_login_password_input':
+                case 'system_admin_login_username_input':
+                case 'system_admin_login_password_input':
+                case 'system_admin_login_password_confirm_input':{
+                    if (event.code === 'Enter') {
+                        event.preventDefault();
+                        admin_login();
+                        //unfocus
+                        document.querySelector('#' + event.target.id).blur();
+                    }    
+                    break;
+                }
+                default:
+                    app_secure.app_events('keyup', event);
+                    break;
             }
-            default:
-                break;
-        }
-        app_secure.app_events('keyup', event);
+        });
     });
     document.querySelector('#app').addEventListener('keydown', event => {
-        common.common_event('keydown',event);
-        app_secure.app_events('keydown', event);
+        common.common_event('keydown',event)
+        .then(()=>{
+            app_secure.app_events('keydown', event);
+        });
     });
     document.querySelector('#app').addEventListener('input', event => {
         app_secure.app_events('input', event);

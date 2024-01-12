@@ -2006,101 +2006,105 @@ const user_edit = async () => {
     });
 };
 const user_update = async () => {
-    const username = document.querySelector('#common_user_edit_input_username').innerHTML;
-    const bio = document.querySelector('#common_user_edit_input_bio').innerHTML;
-    const avatar = document.querySelector('#common_user_edit_avatar_img').src;
-    const new_email = document.querySelector('#common_user_edit_input_new_email').innerHTML;
-
-    let path;
-    let json_data;
-
-    if (check_input(bio, 150) == false)
-        return null;
-        
-    if (document.querySelector('#common_user_edit_local').style.display == 'block') {
-        const email = document.querySelector('#common_user_edit_input_email').innerHTML;    
-        const password = document.querySelector('#common_user_edit_input_password').innerHTML;
-        const password_confirm = document.querySelector('#common_user_edit_input_password_confirm').innerHTML;
-        const password_new = document.querySelector('#common_user_edit_input_password_new').innerHTML;
-        const password_new_confirm = document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML;
-        const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').innerHTML;
-        if (check_input(username) == false ||
-            check_input(new_email) == false ||
-            check_input(password) == false ||
-            check_input(password_confirm) == false ||
-            check_input(password_new) == false ||
-            check_input(password_new_confirm) == false ||
-            check_input(password_reminder) == false)
-            return null;
-
-        dialogue_user_edit_remove_error();
+    return new Promise(resolve=>{
+        const username = document.querySelector('#common_user_edit_input_username').innerHTML;
+        const bio = document.querySelector('#common_user_edit_input_bio').innerHTML;
+        const avatar = document.querySelector('#common_user_edit_avatar_img').src;
+        const new_email = document.querySelector('#common_user_edit_input_new_email').innerHTML;
     
-        //validate input
-        if (username == '') {
-            //"Please enter username"
-            document.querySelector('#common_user_edit_input_username').classList.add('common_input_error');
-            show_message('ERROR', 20303, null, null);
+        let path;
+        let json_data;
+    
+        if (check_input(bio, 150) == false)
             return null;
-        }
-        if (password == '') {
-            //"Please enter password"
-            document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
-            show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-            return null;
-        }
-        if (password != password_confirm) {
-            //Password not the same
-            document.querySelector('#common_user_edit_input_password_confirm').classList.add('common_input_error');
-            show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
-            return null;
-        }
-        //check new passwords
-        if (password_new != password_new_confirm) {
-            //New Password are entered but they are not the same
-            document.querySelector('#common_user_edit_input_password_new').classList.add('common_input_error');
-            document.querySelector('#common_user_edit_input_password_new_confirm').classList.add('common_input_error');
-            show_message('ERROR', 20301, null, null);
-            return null;
-        }
-        json_data = {   username:           username,
-                        bio:                bio,
-                        private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
-                        password:           password,
-                        password_new:       password_new,
-                        password_reminder:  password_reminder,
-                        email:              email,
-                        new_email:          new_email==''?null:new_email,
-                        avatar:             avatar,
-                        ...get_uservariables()
-                    };
-        path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
-    } else {
-        json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
-                        username:       username,
-                        bio:            bio,
-                        private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
-                    };
-        path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
-    }
-    const old_button = document.querySelector('#common_user_edit_btn_user_update').innerHTML;
-    document.querySelector('#common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
-    //update user using REST API
-    FFB ('DB_API', path, 'PUT', 'APP_ACCESS', json_data, (err, result) => {
-        document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
-        if (err){    
-            return null;
-        }
-        else{
-            const user_update = JSON.parse(result);
-            set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
-            document.querySelector('#common_user_menu_username').innerHTML = username;
-            if (user_update.sent_change_email == 1){
-                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, null);
+            
+        if (document.querySelector('#common_user_edit_local').style.display == 'block') {
+            const email = document.querySelector('#common_user_edit_input_email').innerHTML;    
+            const password = document.querySelector('#common_user_edit_input_password').innerHTML;
+            const password_confirm = document.querySelector('#common_user_edit_input_password_confirm').innerHTML;
+            const password_new = document.querySelector('#common_user_edit_input_password_new').innerHTML;
+            const password_new_confirm = document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML;
+            const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').innerHTML;
+            if (check_input(username) == false ||
+                check_input(new_email) == false ||
+                check_input(password) == false ||
+                check_input(password_confirm) == false ||
+                check_input(password_new) == false ||
+                check_input(password_new_confirm) == false ||
+                check_input(password_reminder) == false)
+                return null;
+    
+            dialogue_user_edit_remove_error();
+        
+            //validate input
+            if (username == '') {
+                //"Please enter username"
+                document.querySelector('#common_user_edit_input_username').classList.add('common_input_error');
+                show_message('ERROR', 20303, null, null);
+                return null;
             }
-            else
-                dialogue_user_edit_clear();
-            return null;
+            if (password == '') {
+                //"Please enter password"
+                document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
+                show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
+                return null;
+            }
+            if (password != password_confirm) {
+                //Password not the same
+                document.querySelector('#common_user_edit_input_password_confirm').classList.add('common_input_error');
+                show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
+                return null;
+            }
+            //check new passwords
+            if (password_new != password_new_confirm) {
+                //New Password are entered but they are not the same
+                document.querySelector('#common_user_edit_input_password_new').classList.add('common_input_error');
+                document.querySelector('#common_user_edit_input_password_new_confirm').classList.add('common_input_error');
+                show_message('ERROR', 20301, null, null);
+                return null;
+            }
+            json_data = {   username:           username,
+                            bio:                bio,
+                            private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
+                            password:           password,
+                            password_new:       password_new,
+                            password_reminder:  password_reminder,
+                            email:              email,
+                            new_email:          new_email==''?null:new_email,
+                            avatar:             avatar,
+                            ...get_uservariables()
+                        };
+            path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
+        } else {
+            json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
+                            username:       username,
+                            bio:            bio,
+                            private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
+                        };
+            path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
         }
+        const old_button = document.querySelector('#common_user_edit_btn_user_update').innerHTML;
+        document.querySelector('#common_user_edit_btn_user_update').classList.add('spinner');
+        document.querySelector('#common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
+        //update user using REST API
+        FFB ('DB_API', path, 'PUT', 'APP_ACCESS', json_data, (err, result) => {
+            document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
+            document.querySelector('#common_user_edit_btn_user_update').classList.remove('spinner');
+            if (err){    
+                resolve(null);
+            }
+            else{
+                const user_update = JSON.parse(result);
+                set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
+                document.querySelector('#common_user_menu_username').innerHTML = username;
+                if (user_update.sent_change_email == 1){
+                    show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, null);
+                }
+                else
+                    dialogue_user_edit_clear();
+                resolve(null);
+            }
+        });
     });
 };
 const user_signup = () => {
@@ -3387,7 +3391,6 @@ const assign_icons = () => {
     //dialogue user edit
     document.querySelector('#common_user_edit_btn_avatar_img').innerHTML = ICONS.user_avatar_edit;
     document.querySelector('#common_user_edit_private').innerHTML = ICONS.app_private;
-    document.querySelector('#common_user_edit_btn_user_update').innerHTML = ICONS.app_update;
     document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = ICONS.user_delete_account;
     document.querySelector('#common_user_edit_close').innerHTML = ICONS.app_close;
     document.querySelector('#common_user_edit_label_provider').innerHTML = ICONS.provider;
@@ -3467,14 +3470,15 @@ const assign_icons = () => {
 const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
                                 COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
                                 COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
-const common_event = (event_type,event) =>{
+const common_event = async (event_type,event) =>{
     switch (event_type){
         case 'click':{
-            if (event.target.classList.contains('common_switch'))
+            if (event.target.classList.contains('common_switch')){
                 if (event.target.classList.contains('checked'))
                     event.target.classList.remove('checked');
                 else
                     event.target.classList.add('checked');
+            }
             else{
                 const target_id = element_id(event.target);
                 switch(target_id){
@@ -3512,7 +3516,7 @@ const common_event = (event_type,event) =>{
                         break;
                     }
                     case 'common_forgot_button':{
-                        user_forgot();
+                        await user_forgot();
                         break;
                     }
                     case 'common_forgot_close':{
@@ -3538,7 +3542,7 @@ const common_event = (event_type,event) =>{
                         break;
                     }
                     case 'common_user_password_new_ok':{
-                        updatePassword();
+                        await updatePassword();
                         break;
                     }
                     //dialogue lov
@@ -3618,7 +3622,10 @@ const common_event = (event_type,event) =>{
                         break;
                     }
                     case 'common_user_menu_dropdown_edit':{
-                        user_edit();document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        await user_edit()
+                        .then(()=>{
+                            document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        });
                         break;
                     }
                     case 'common_user_menu_dropdown_signup':{
@@ -3639,7 +3646,7 @@ const common_event = (event_type,event) =>{
                         break;
                     }
                     case 'common_user_edit_btn_user_update':{
-                        user_update();
+                        await user_update();
                         break;
                     }
                     //dialogue verify
@@ -3652,10 +3659,11 @@ const common_event = (event_type,event) =>{
                     //search list
                     case 'common_profile_search_list':{
                         if (event.target.classList.contains('common_profile_search_list_username')){
-                            if (document.querySelector('#common_profile_search_list')['data-function'])
+                            if (document.querySelector('#common_profile_search_list')['data-function']){
                                 document.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                            }
                             else
-                                profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
+                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
                         }
                         break;
                     }
@@ -3668,16 +3676,17 @@ const common_event = (event_type,event) =>{
                             if (document.querySelector(`#${element_id(event.target)}`)['data-function'])
                                 document.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                             else
-                                profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
+                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
                         }
                         else{
                             //app list
-                            if (event.target.classList.contains('common_profile_detail_list_app_name'))
+                            if (event.target.classList.contains('common_profile_detail_list_app_name')){
                                 window.open(element_row(event.target).getAttribute('data-url'), '_blank');
+                            }
                             else
-                                if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id){
-                                    if (event.target.parentNode.classList.contains('common_profile_detail_list_app_delete'))
-                                        user_account_app_delete(null, 
+                                if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
+                                    event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
+                                        await user_account_app_delete(null, 
                                                                 document.querySelector('#common_profile_id').innerHTML,
                                                                 element_row(event.target).getAttribute('data-app_id'),
                                                                 () => { 
@@ -3774,28 +3783,28 @@ const common_event = (event_type,event) =>{
                     //change navigator.language, however when logging out default navigator.language will be set
                     //commented at the moment
                     //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                    user_preference_save();
+                    await user_preference_save();
                     break;
                 }
                 case 'common_user_timezone_select':{
                     COMMON_GLOBAL.user_timezone = event.target.value;
-                        user_preference_save().then(()=>{
-                            if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
-                                dialogue_user_edit_clear();
-                                user_edit();
-                            }
-                        });
+                    await user_preference_save().then(()=>{
+                        if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
+                            dialogue_user_edit_clear();
+                            user_edit();
+                        }
+                    });
                     break;
                 }
                 case 'common_user_direction_select':{
                     document.body.style.direction = event.target.value;
                     COMMON_GLOBAL.user_direction = event.target.value;  
-                    user_preference_save();
+                    await user_preference_save();
                     break;
                 }
                 case 'common_user_arabic_script_select':{
                     COMMON_GLOBAL.user_arabic_script = event.target.value;
-                    user_preference_save();
+                    await user_preference_save();
                     break;
                 }
                 //module leaflet events
@@ -3804,7 +3813,7 @@ const common_event = (event_type,event) =>{
                         map_city(event.target[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
                     else{
                         map_toolbar_reset();
-                    }            
+                    }
                     break;
                 }
                 case 'common_module_leaflet_select_city':{
@@ -3825,6 +3834,9 @@ const common_event = (event_type,event) =>{
                     map_setstyle(event.target.value).then(()=>{null;});
                     break;
                 }
+                default:{
+                    break;
+                }
             }
             break;
         }
@@ -3832,14 +3844,15 @@ const common_event = (event_type,event) =>{
             if (event.target.classList.contains('common_password')){
                 if (event.target.innerText.indexOf('\n')>-1)
                     event.target.innerText = event.target.innerText.replace('\n','');
-                document.querySelector(`#${event.target.id}_mask`).innerText = event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
+                document.querySelector(`#${event.target.id}_mask`).innerText = 
+                    event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
             }
             else
                 switch (event.target.id){
                     case 'common_forgot_email':{
                         if (event.code === 'Enter') {
                             event.preventDefault();
-                            user_forgot().then(()=>{
+                            await user_forgot().then(()=>{
                                 //unfocus
                                 document.querySelector('#common_forgot_email').blur();
                             });
@@ -3855,24 +3868,32 @@ const common_event = (event_type,event) =>{
                         typewatch(search_input, event, 'module_leaflet', event.target['data-function']); 
                         break;
                     }
+                    default:{
+                        break;
+                    }
                 }
             break;
         }
         case 'keydown':{
-            if (disable_textediting())
-                if(event.target.classList.contains('common_input') && 
-                (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-                (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                            event.code=='ArrowRight' || 
-                                            event.code=='ArrowUp' || 
-                                            event.code=='ArrowDown'|| 
-                                            event.code=='Home'|| 
-                                            event.code=='End'|| 
-                                            event.code=='PageUp'|| 
-                                            event.code=='PageDown') ) ))
-                event.preventDefault();
+            if (disable_textediting() &&
+                event.target.classList.contains('common_input') && 
+                    (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+                    (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                                event.code=='ArrowRight' || 
+                                                event.code=='ArrowUp' || 
+                                                event.code=='ArrowDown'|| 
+                                                event.code=='Home'|| 
+                                                event.code=='End'|| 
+                                                event.code=='PageUp'|| 
+                                                event.code=='PageDown') ) )
+                ){
+                    event.preventDefault();
+            }
             break;
-        }        
+        } 
+        default:{
+            break;
+        }
     }
 };
 /**

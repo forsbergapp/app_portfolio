@@ -2008,500 +2008,506 @@ const user_settings_like = (user_account_app_data_post_id) => {
 const setEvents = () => {
     //app
     document.querySelector('#app').addEventListener('click', event => {
-        common.common_event('click',event);
-        const event_target_id = common.element_id(event.target);
-        switch (event_target_id){
-            //info dialogue
-            case 'app_link':{
-                if (common.COMMON_GLOBAL.app_link_url)
-                    window.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
-                break;
-            }
-            case 'info_link1':{
-                common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);
-                break;
-            }
-            case 'info_link2':{
-                common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);
-                break;
-            }
-            case 'info_link3':{
-                common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);
-                break;
-            }
-            case 'info_link4':{
-                common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
-                break;
-            }
-            case 'info_close':{
-                document.querySelector('#dialogue_info').style.visibility = 'hidden';
-                break;
-            }
-            //toolbar top
-            case 'toolbar_btn_zoomout':{
-                zoom_paper(-1);
-                break;
-            }
-            case 'toolbar_btn_zoomin':{
-                zoom_paper(1);
-                break;
-            }
-            case 'toolbar_btn_left':{
-                update_timetable_report(APP_GLOBAL.timetable_type, event_target_id, getReportSettings());
-                break;
-            }
-            case 'toolbar_btn_right':{
-                update_timetable_report(APP_GLOBAL.timetable_type, event_target_id, getReportSettings());
-                break;
-            }
-            case 'toolbar_btn_search':{
-                const x = document.querySelector('#common_profile_input_row'); 
-                if (x.style.visibility == 'visible') {
-                    x.style.visibility = 'hidden';
-                } 
-                else{
-                    x.style.visibility = 'visible'; 
-                    document.querySelector('#common_profile_search_input').focus();
+        common.common_event('click',event)
+        .then(()=>{
+            const event_target_id = common.element_id(event.target);
+            switch (event_target_id){
+                //info dialogue
+                case 'app_link':{
+                    if (common.COMMON_GLOBAL.app_link_url)
+                        window.open(common.COMMON_GLOBAL.app_link_url,'_blank','');
+                    break;
                 }
-                break;
+                case 'info_link1':{
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_policy_url);
+                    break;
+                }
+                case 'info_link2':{
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_disclaimer_url);
+                    break;
+                }
+                case 'info_link3':{
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_terms_url);
+                    break;
+                }
+                case 'info_link4':{
+                    common.show_window_info(1, common.COMMON_GLOBAL.info_link_about_url);
+                    break;
+                }
+                case 'info_close':{
+                    document.querySelector('#dialogue_info').style.visibility = 'hidden';
+                    break;
+                }
+                //toolbar top
+                case 'toolbar_btn_zoomout':{
+                    zoom_paper(-1);
+                    break;
+                }
+                case 'toolbar_btn_zoomin':{
+                    zoom_paper(1);
+                    break;
+                }
+                case 'toolbar_btn_left':{
+                    update_timetable_report(APP_GLOBAL.timetable_type, event_target_id, getReportSettings());
+                    break;
+                }
+                case 'toolbar_btn_right':{
+                    update_timetable_report(APP_GLOBAL.timetable_type, event_target_id, getReportSettings());
+                    break;
+                }
+                case 'toolbar_btn_search':{
+                    const x = document.querySelector('#common_profile_input_row'); 
+                    if (x.style.visibility == 'visible') {
+                        x.style.visibility = 'hidden';
+                    } 
+                    else{
+                        x.style.visibility = 'visible'; 
+                        document.querySelector('#common_profile_search_input').focus();
+                    }
+                    break;
+                }
+                //toolbar bottom
+                case 'toolbar_btn_about':{
+                    document.querySelector('#dialogue_info').style.visibility = 'visible';
+                    break;
+                }
+                case 'toolbar_btn_print':{
+                    toolbar_button(1);
+                    break;
+                }
+                case 'toolbar_btn_day':{
+                    toolbar_button(2);
+                    break;
+                }
+                case 'toolbar_btn_month':{
+                    toolbar_button(3);
+                    break;
+                }
+                case 'toolbar_btn_year':{
+                    toolbar_button(4);
+                    break;
+                }
+                case 'toolbar_btn_settings':{
+                    toolbar_button(5);
+                    break;
+                }
+                //tab navigation
+                case 'tab_nav_btn_1':{
+                    openTab('1');
+                    break;
+                }
+                case 'tab_nav_btn_2':{
+                    openTab('2');
+                    break;
+                }
+                case 'tab_nav_btn_3':{
+                    openTab('3');
+                    break;
+                }
+                case 'tab_nav_btn_4':{
+                    openTab('4');
+                    break;
+                }
+                case 'tab_nav_btn_5':{
+                    openTab('5');
+                    break;
+                }
+                case 'tab_nav_btn_6':{
+                    openTab('6');
+                    break;
+                }
+                case 'tab_nav_btn_7':
+                case 'user_setting_avatar_img':{
+                    openTab('7');
+                    break;
+                }
+                case 'scan_open_mobile_close':{
+                    document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
+                    break;
+                }
+                //setting design
+                case 'slider_prev_day':{
+                    theme_nav(-1, 'day');
+                    break;
+                }
+                case 'slider_prev_month':{
+                    theme_nav(-1, 'month');
+                    break;
+                }
+                case 'slider_prev_year':{
+                    theme_nav(-1, 'year');
+                    break;
+                }
+                case 'slider_next_day':{
+                    theme_nav(1, 'day');
+                    break;
+                }            
+                case 'slider_next_month':{
+                    theme_nav(1, 'month');
+                    break;
+                }            
+                case 'slider_next_year':{
+                    theme_nav(1, 'year');
+                    break;
+                }            
+                //settings image
+                case 'setting_icon_image_header_img':{
+                    document.querySelector('#setting_input_reportheader_img').click();
+                    break;
+                }
+                case 'setting_icon_image_header_clear':{
+                    update_ui(12);
+                    break;
+                }
+                case 'setting_icon_image_footer_img':{
+                    document.querySelector('#setting_input_reportfooter_img').click();
+                    break;
+                }
+                case 'setting_icon_image_footer_clear':{
+                    update_ui(14);
+                    break;
+                }
+                //settings text
+                case 'setting_icon_text_theme_day':
+                case 'setting_icon_text_theme_month':
+                case 'setting_icon_text_theme_year':{
+                    document.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
+                    document.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
+                    document.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+                    const  theme_type = event_target_id.substring(24);
+                    //mark active icon
+                    document.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
+                    document.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                                                                                        `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
+                                                                                        document.querySelector('#setting_select_report_arabic_script').value;
+                    break;
+                }
+                case 'setting_icon_text_header_aleft':
+                case 'setting_icon_text_header_acenter':
+                case 'setting_icon_text_header_aright':{
+                    update_ui(15, event_target_id);
+                    break;
+                }
+                case 'setting_icon_text_footer_aleft':
+                case 'setting_icon_text_footer_acenter':
+                case 'setting_icon_text_footer_aright':{
+                    update_ui(16, event_target_id);
+                    break;
+                }
+                //settings user
+                case 'setting_btn_user_save':{
+                    user_settings_function('SAVE', false, ()=>{});
+                    break;
+                }
+                case 'setting_btn_user_add':{
+                    user_settings_function('ADD', false, ()=>{});
+                    break;
+                }
+                case 'setting_btn_user_delete':{
+                    user_settings_delete();
+                    break;
+                }
+                case 'user_day_html':        
+                case 'user_day_pdf':
+                case 'user_month_html':
+                case 'user_month_pdf':
+                case 'user_year_html':
+                case 'user_year_pdf':{
+                    user_setting_link(document.querySelector('#' + event_target_id));
+                    break;
+                }
+                //profile
+                case 'profile_main_btn_user_settings':{
+                    profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
+                    break;
+                }
+                case 'profile_main_btn_user_setting_likes':
+                case 'profile_main_btn_user_setting_likes_user_setting':{
+                    profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
+                                            `<div class='common_like common_icon'></div>
+                                            <div > ${common.ICONS.regional_day +
+                                                    common.ICONS.regional_month +
+                                                    common.ICONS.regional_year +
+                                                    common.ICONS.user_follows}</div>`, show_profile_function);
+                    break;
+                }
+                case 'profile_main_btn_user_setting_liked':
+                case 'profile_main_btn_user_setting_liked_user_setting':{
+                    profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
+                                            `<div class='common_like common_icon'></div>
+                                            <div > ${common.ICONS.regional_day +
+                                                    common.ICONS.regional_month +
+                                                    common.ICONS.regional_year +
+                                                    common.ICONS.user_followed}</div>`, show_profile_function);
+                    break;
+                }
+                case 'profile_top_row2_1':{
+                    common.profile_top(4, '/user_account_app_data_post/profile/top', show_profile_function);
+                    break;
+                }
+                case 'profile_top_row2_2':{
+                    common.profile_top(5, '/user_account_app_data_post/profile/top', show_profile_function);
+                    break;
+                }
+                case 'profile_user_settings_day':
+                case 'profile_user_settings_month':
+                case 'profile_user_settings_year':
+                case 'profile_user_settings_like':{
+                    profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target);
+                    break;
+                }
+                //common
+                case 'common_user_menu_dropdown_log_out':{
+                    user_logoff_app();
+                    break;
+                }
+                case 'common_user_menu_username':{
+                    toolbar_button(6);
+                    break;
+                }
+                case 'common_profile_btn_top':{
+                    toolbar_button(7);
+                    break;
+                }
+                case 'common_login_button':{
+                    user_login_app();
+                    break;
+                }
+                case 'common_signup_button':{
+                    common.user_signup();
+                    break;
+                }
+                case 'common_identity_provider_login':{
+                    const target_row = common.element_row(event.target);
+                    ProviderSignIn_app(target_row.querySelector('.common_login_provider_id').innerHTML);
+                    break;
+                }
+                //dialogue profile
+                case 'common_profile_main_btn_following':{
+                    profile_detail_app(1, null, true, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_main_btn_followed':{
+                    profile_detail_app(2, null, true, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_main_btn_likes':{
+                    profile_detail_app(3, null, true, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_main_btn_liked':
+                case 'common_profile_main_btn_liked_users':{
+                    profile_detail_app(4, null, true, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_follow':{
+                    user_function_app('FOLLOW');
+                    break;
+                }
+                case 'common_profile_like':{
+                    user_function_app('LIKE');
+                    break;
+                }
+                case 'common_profile_top_row1_1':{
+                    common.profile_top(1, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_top_row1_2':{
+                    common.profile_top(2, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_top_row1_3':{
+                    common.profile_top(3, null, show_profile_function);
+                    break;
+                }
+                case 'common_profile_home':{
+                    toolbar_button(7);
+                    break;
+                }
+                case 'common_profile_close':{
+                    profile_close_app();
+                    break;
+                }    
+                //module leaflet
+                case 'common_module_leaflet_control_my_location_id':{
+                    document.querySelector('#setting_select_popular_place').selectedIndex = 0;
+                    document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
+                    document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+                    document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+                    //remove country and city in settings
+                    const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
+                    option.setAttribute('gps_country_id', '');
+                    option.setAttribute('gps_city_id', '');
+                    import('regional').then(({getTimezone})=>{
+                        //update timezone
+                        document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+                        //set qibbla
+                        map_show_qibbla();
+                        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
+                    });
+                    break;
+                }       
             }
-            //toolbar bottom
-            case 'toolbar_btn_about':{
-                document.querySelector('#dialogue_info').style.visibility = 'visible';
-                break;
-            }
-            case 'toolbar_btn_print':{
-                toolbar_button(1);
-                break;
-            }
-            case 'toolbar_btn_day':{
-                toolbar_button(2);
-                break;
-            }
-            case 'toolbar_btn_month':{
-                toolbar_button(3);
-                break;
-            }
-            case 'toolbar_btn_year':{
-                toolbar_button(4);
-                break;
-            }
-            case 'toolbar_btn_settings':{
-                toolbar_button(5);
-                break;
-            }
-            //tab navigation
-            case 'tab_nav_btn_1':{
-                openTab('1');
-                break;
-            }
-            case 'tab_nav_btn_2':{
-                openTab('2');
-                break;
-            }
-            case 'tab_nav_btn_3':{
-                openTab('3');
-                break;
-            }
-            case 'tab_nav_btn_4':{
-                openTab('4');
-                break;
-            }
-            case 'tab_nav_btn_5':{
-                openTab('5');
-                break;
-            }
-            case 'tab_nav_btn_6':{
-                openTab('6');
-                break;
-            }
-            case 'tab_nav_btn_7':
-            case 'user_setting_avatar_img':{
-                openTab('7');
-                break;
-            }
-            case 'scan_open_mobile_close':{
-                document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
-                break;
-            }
-            //setting design
-            case 'slider_prev_day':{
-                theme_nav(-1, 'day');
-                break;
-            }
-            case 'slider_prev_month':{
-                theme_nav(-1, 'month');
-                break;
-            }
-            case 'slider_prev_year':{
-                theme_nav(-1, 'year');
-                break;
-            }
-            case 'slider_next_day':{
-                theme_nav(1, 'day');
-                break;
-            }            
-            case 'slider_next_month':{
-                theme_nav(1, 'month');
-                break;
-            }            
-            case 'slider_next_year':{
-                theme_nav(1, 'year');
-                break;
-            }            
-            //settings image
-            case 'setting_icon_image_header_img':{
-                document.querySelector('#setting_input_reportheader_img').click();
-                break;
-            }
-            case 'setting_icon_image_header_clear':{
-                update_ui(12);
-                break;
-            }
-            case 'setting_icon_image_footer_img':{
-                document.querySelector('#setting_input_reportfooter_img').click();
-                break;
-            }
-            case 'setting_icon_image_footer_clear':{
-                update_ui(14);
-                break;
-            }
-            //settings text
-            case 'setting_icon_text_theme_day':
-            case 'setting_icon_text_theme_month':
-            case 'setting_icon_text_theme_year':{
-                document.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
-                document.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
-                document.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
-                const  theme_type = event_target_id.substring(24);
-                //mark active icon
-                document.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
-                document.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
-                                                                                    `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
-                                                                                    document.querySelector('#setting_select_report_arabic_script').value;
-                break;
-            }
-            case 'setting_icon_text_header_aleft':
-            case 'setting_icon_text_header_acenter':
-            case 'setting_icon_text_header_aright':{
-                update_ui(15, event_target_id);
-                break;
-            }
-            case 'setting_icon_text_footer_aleft':
-            case 'setting_icon_text_footer_acenter':
-            case 'setting_icon_text_footer_aright':{
-                update_ui(16, event_target_id);
-                break;
-            }
-            //settings user
-            case 'setting_btn_user_save':{
-                user_settings_function('SAVE', false, ()=>{});
-                break;
-            }
-            case 'setting_btn_user_add':{
-                user_settings_function('ADD', false, ()=>{});
-                break;
-            }
-            case 'setting_btn_user_delete':{
-                user_settings_delete();
-                break;
-            }
-            case 'user_day_html':        
-            case 'user_day_pdf':
-            case 'user_month_html':
-            case 'user_month_pdf':
-            case 'user_year_html':
-            case 'user_year_pdf':{
-                user_setting_link(document.querySelector('#' + event_target_id));
-                break;
-            }
-            //profile
-            case 'profile_main_btn_user_settings':{
-                profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
-                break;
-            }
-            case 'profile_main_btn_user_setting_likes':
-            case 'profile_main_btn_user_setting_likes_user_setting':{
-                profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
-                                        `<div class='common_like common_icon'></div>
-                                        <div > ${common.ICONS.regional_day +
-                                                common.ICONS.regional_month +
-                                                common.ICONS.regional_year +
-                                                common.ICONS.user_follows}</div>`, show_profile_function);
-                break;
-            }
-            case 'profile_main_btn_user_setting_liked':
-            case 'profile_main_btn_user_setting_liked_user_setting':{
-                profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
-                                        `<div class='common_like common_icon'></div>
-                                        <div > ${common.ICONS.regional_day +
-                                                common.ICONS.regional_month +
-                                                common.ICONS.regional_year +
-                                                common.ICONS.user_followed}</div>`, show_profile_function);
-                break;
-            }
-            case 'profile_top_row2_1':{
-                common.profile_top(4, '/user_account_app_data_post/profile/top', show_profile_function);
-                break;
-            }
-            case 'profile_top_row2_2':{
-                common.profile_top(5, '/user_account_app_data_post/profile/top', show_profile_function);
-                break;
-            }
-            case 'profile_user_settings_day':
-            case 'profile_user_settings_month':
-            case 'profile_user_settings_year':
-            case 'profile_user_settings_like':{
-                profile_user_setting_link(event.target.id ==''?event.target.parentElement:event.target);
-                break;
-            }
-            //common
-            case 'common_user_menu_dropdown_log_out':{
-                user_logoff_app();
-                break;
-            }
-            case 'common_user_menu_username':{
-                toolbar_button(6);
-                break;
-            }
-            case 'common_profile_btn_top':{
-                toolbar_button(7);
-                break;
-            }
-            case 'common_login_button':{
-                user_login_app();
-                break;
-            }
-            case 'common_signup_button':{
-                common.user_signup();
-                break;
-            }
-            case 'common_identity_provider_login':{
-                const target_row = common.element_row(event.target);
-                ProviderSignIn_app(target_row.querySelector('.common_login_provider_id').innerHTML);
-                break;
-            }
-            //dialogue profile
-            case 'common_profile_main_btn_following':{
-                profile_detail_app(1, null, true, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_main_btn_followed':{
-                profile_detail_app(2, null, true, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_main_btn_likes':{
-                profile_detail_app(3, null, true, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_main_btn_liked':
-            case 'common_profile_main_btn_liked_users':{
-                profile_detail_app(4, null, true, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_follow':{
-                user_function_app('FOLLOW');
-                break;
-            }
-            case 'common_profile_like':{
-                user_function_app('LIKE');
-                break;
-            }
-            case 'common_profile_top_row1_1':{
-                common.profile_top(1, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_top_row1_2':{
-                common.profile_top(2, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_top_row1_3':{
-                common.profile_top(3, null, show_profile_function);
-                break;
-            }
-            case 'common_profile_home':{
-                toolbar_button(7);
-                break;
-            }
-            case 'common_profile_close':{
-                profile_close_app();
-                break;
-            }    
-            //module leaflet
-            case 'common_module_leaflet_control_my_location_id':{
-                document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-                document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
-                document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-                document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-                //remove country and city in settings
-                const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
-                option.setAttribute('gps_country_id', '');
-                option.setAttribute('gps_city_id', '');
-                import('regional').then(({getTimezone})=>{
-                    //update timezone
-                    document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
-                    //set qibbla
-                    map_show_qibbla();
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
-                });
-                break;
-            }       
-        }
+        });
     }, true);
     document.querySelector('#app').addEventListener('change', event => {
-        common.common_event('change',event);
-        switch (event.target.id){
-            //settings regional
-            case 'setting_select_locale':{
-                settings_translate(true);
-                break;
+        common.common_event('change',event)
+        .then(()=>{
+            switch (event.target.id){
+                //settings regional
+                case 'setting_select_locale':{
+                    settings_translate(true);
+                    break;
+                }
+                case 'setting_select_report_timezone':{
+                    update_ui(2);
+                    break;
+                }
+                case 'setting_select_report_locale_second':{
+                    settings_translate(false);
+                    break;
+                }
+                //settings gps
+                case 'setting_select_popular_place':{
+                    update_ui(7);
+                    break;
+                }
+                //settings design
+                case 'setting_select_report_papersize':{
+                    update_ui(10);
+                    break;
+                }
+                //settings image
+                case 'setting_input_reportheader_img':{
+                    update_ui(11, event.target.id);
+                    break;
+                }
+                case 'setting_input_reportfooter_img':{
+                    update_ui(13, event.target.id);
+                    break;
+                }
+                //settings prayer
+                case 'setting_select_method':{
+                    update_ui(17);
+                    break;
+                }
+                //settings user
+                case 'setting_select_user_setting':{
+                    user_settings_load().then(() => settings_translate(true).then(() => settings_translate(false)));
+                    break;
+                }
+                //profile
+                case 'profile_select_user_settings':{
+                    profile_show_user_setting_detail(   event.target.options[event.target.selectedIndex].getAttribute('liked'), 
+                                                        event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
+                                                        event.target.options[event.target.selectedIndex].getAttribute('count_views'));
+                    break;
+                }
+                //common
+                case 'common_app_select_theme':{
+                    document.body.className = 'app_theme' + 
+                                                document.querySelector('#common_app_select_theme').value + ' ' + 
+                                                document.querySelector('#common_user_arabic_script_select').value;
+                    break;
+                }
+                case 'common_user_locale_select':{
+                    common_translate_ui_app(event.target.value, ()=>{});
+                    break;
+                }
+                case 'common_user_timezone_select':{
+                    document.querySelector('#setting_timezone_current').innerHTML = event.target.value;
+                    break;
+                }
+                case 'common_user_arabic_script_select':{
+                    document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                    break;
+                }
+                //module leaflet
+                case 'common_module_leaflet_select_country':{
+                    update_ui(5); 
+                    break;
+                }
+                case 'common_module_leaflet_select_city':{
+                    const select_country = document.querySelector('#common_module_leaflet_select_country');
+                    const select_city = document.querySelector('#common_module_leaflet_select_city');
+                    const select_setting = document.querySelector('#setting_select_user_setting');
+                    const option = select_setting.options[select_setting.selectedIndex];
+                    option.setAttribute('gps_country_id', select_country[select_country.selectedIndex].getAttribute('id'));
+                    option.setAttribute('gps_city_id', select_city[select_city.selectedIndex].getAttribute('id'));
+                    //popular place not on map is read when saving
+                    update_ui(6);
+                    import('regional').then(({getTimezone})=>{
+                        const timezone = getTimezone(   document.querySelector('#setting_input_lat').innerHTML,
+                                                        document.querySelector('#setting_input_long').innerHTML);
+                        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
+                    });
+                    break;
+                }
+                case 'common_module_leaflet_select_mapstyle':{
+                    update_ui(4);
+                    break;
+                }
             }
-            case 'setting_select_report_timezone':{
-                update_ui(2);
-                break;
-            }
-            case 'setting_select_report_locale_second':{
-                settings_translate(false);
-                break;
-            }
-            //settings gps
-            case 'setting_select_popular_place':{
-                update_ui(7);
-                break;
-            }
-            //settings design
-            case 'setting_select_report_papersize':{
-                update_ui(10);
-                break;
-            }
-            //settings image
-            case 'setting_input_reportheader_img':{
-                update_ui(11, event.target.id);
-                break;
-            }
-            case 'setting_input_reportfooter_img':{
-                update_ui(13, event.target.id);
-                break;
-            }
-            //settings prayer
-            case 'setting_select_method':{
-                update_ui(17);
-                break;
-            }
-            //settings user
-            case 'setting_select_user_setting':{
-                user_settings_load().then(() => settings_translate(true).then(() => settings_translate(false)));
-                break;
-            }
-            //profile
-            case 'profile_select_user_settings':{
-                profile_show_user_setting_detail(   event.target.options[event.target.selectedIndex].getAttribute('liked'), 
-                                                    event.target.options[event.target.selectedIndex].getAttribute('count_likes'), 
-                                                    event.target.options[event.target.selectedIndex].getAttribute('count_views'));
-                break;
-            }
-            //common
-            case 'common_app_select_theme':{
-                document.body.className = 'app_theme' + 
-                                            document.querySelector('#common_app_select_theme').value + ' ' + 
-                                            document.querySelector('#common_user_arabic_script_select').value;
-                break;
-            }
-            case 'common_user_locale_select':{
-                common_translate_ui_app(event.target.value, ()=>{});
-                break;
-            }
-            case 'common_user_timezone_select':{
-                document.querySelector('#setting_timezone_current').innerHTML = event.target.value;
-                break;
-            }
-            case 'common_user_arabic_script_select':{
-                document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
-                break;
-            }
-            //module leaflet
-            case 'common_module_leaflet_select_country':{
-                update_ui(5); 
-                break;
-            }
-            case 'common_module_leaflet_select_city':{
-                const select_country = document.querySelector('#common_module_leaflet_select_country');
-                const select_city = document.querySelector('#common_module_leaflet_select_city');
-                const select_setting = document.querySelector('#setting_select_user_setting');
-                const option = select_setting.options[select_setting.selectedIndex];
-                option.setAttribute('gps_country_id', select_country[select_country.selectedIndex].getAttribute('id'));
-                option.setAttribute('gps_city_id', select_city[select_city.selectedIndex].getAttribute('id'));
-                //popular place not on map is read when saving
-                update_ui(6);
-                import('regional').then(({getTimezone})=>{
-                    const timezone = getTimezone(   document.querySelector('#setting_input_lat').innerHTML,
-                                                    document.querySelector('#setting_input_long').innerHTML);
-                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                });
-                break;
-            }
-            case 'common_module_leaflet_select_mapstyle':{
-                update_ui(4);
-                break;
-            }
-        }
+        });
     }, true);
     document.querySelector('#app').addEventListener('keyup', event => {
-        common.common_event('keyup',event);
-        const target_id = common.element_id(event.target);
-        switch(target_id){
-            //settings gps
-            case 'setting_input_place':{
-                common.typewatch(update_ui, 8);
-                break;
-            }
-            case 'setting_input_long':
-            case 'setting_input_lat':{
-                common.typewatch(update_ui, 9);
-                break;
-            }
-            //common
-            case 'common_profile_search_input':{
-                common.search_input(event, 'profile', show_profile_function);
-                break;
-            }
-            case 'common_login_username':
-            case 'common_login_password':{
-                if (event.code === 'Enter') {
-                    event.preventDefault();
-                    user_login_app().then(() => {
-                        //unfocus
-                        event.target.blur();
-                    });
+        common.common_event('keyup',event)
+        .then(()=>{
+            const target_id = common.element_id(event.target);
+            switch(target_id){
+                //settings gps
+                case 'setting_input_place':{
+                    common.typewatch(update_ui, 8);
+                    break;
                 }
-                break;
+                case 'setting_input_long':
+                case 'setting_input_lat':{
+                    common.typewatch(update_ui, 9);
+                    break;
+                }
+                //common
+                case 'common_profile_search_input':{
+                    common.search_input(event, 'profile', show_profile_function);
+                    break;
+                }
+                case 'common_login_username':
+                case 'common_login_password':{
+                    if (event.code === 'Enter') {
+                        event.preventDefault();
+                        user_login_app().then(() => {
+                            //unfocus
+                            event.target.blur();
+                        });
+                    }
+                    break;
+                }
+                //dialogue verify
+                case 'common_user_verify_verification_char1':{
+                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
+                    break;
+                }
+                case 'common_user_verify_verification_char2':{
+                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
+                    break;
+                }
+                case 'common_user_verify_verification_char3':{
+                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
+                    break;
+                }
+                case 'common_user_verify_verification_char4':{
+                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
+                    break;
+                }
+                case 'common_user_verify_verification_char5':{
+                    user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
+                    break;
+                }
+                case 'common_user_verify_verification_char6':{
+                    user_verify_check_input_app(event.target, '');
+                    break;
+                }
             }
-            //dialogue verify
-            case 'common_user_verify_verification_char1':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char2');
-                break;
-            }
-            case 'common_user_verify_verification_char2':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char3');
-                break;
-            }
-            case 'common_user_verify_verification_char3':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char4');
-                break;
-            }
-            case 'common_user_verify_verification_char4':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char5');
-                break;
-            }
-            case 'common_user_verify_verification_char5':{
-                user_verify_check_input_app(event.target, 'common_user_verify_verification_char6');
-                break;
-            }
-            case 'common_user_verify_verification_char6':{
-                user_verify_check_input_app(event.target, '');
-                break;
-            }
-        }
+        });
     });  
     document.querySelector('#app').addEventListener('keydown', event => {
         common.common_event('keydown',event);

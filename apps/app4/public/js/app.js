@@ -11,7 +11,30 @@ const app_event_click = event =>{
     if (event==null){
         //javascript framework
         document.querySelector('#app').addEventListener('click',(event) => {
-            common.common_event('click',event);
+            common.common_event('click',event)
+            .then(()=>{
+                const event_target_id = common.element_id(event.target);
+                switch (event_target_id){
+                    case 'toolbar_btn_js':{
+                        init_map('1');
+                        break;
+                    }
+                    case 'toolbar_btn_vue':{
+                        init_map('2');
+                        break;
+                    }
+                    case 'toolbar_btn_react':{
+                        init_map('3');
+                        break;
+                    }
+                }
+            });
+        });
+    }
+    else{
+        //other framework
+        common.common_event('click', event)
+        .then(()=>{
             const event_target_id = common.element_id(event.target);
             switch (event_target_id){
                 case 'toolbar_btn_js':{
@@ -28,25 +51,6 @@ const app_event_click = event =>{
                 }
             }
         });
-    }
-    else{
-        //other framework
-        common.common_event('click', event);
-        const event_target_id = common.element_id(event.target);
-        switch (event_target_id){
-            case 'toolbar_btn_js':{
-                init_map('1');
-                break;
-            }
-            case 'toolbar_btn_vue':{
-                init_map('2');
-                break;
-            }
-            case 'toolbar_btn_react':{
-                init_map('3');
-                break;
-            }
-        }
     }
         
 };
