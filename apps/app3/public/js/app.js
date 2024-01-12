@@ -32,20 +32,23 @@ const getdocs = (docid = null) => {
 };
 const init_app = async () => {
     document.querySelector('#app').addEventListener('click',(event) => {
-        common.common_event('click',event);
-        const target_id = common.element_id(event.target);
-        switch (target_id){
-            case 'common_window_info_btn_close':{
-                document.querySelector('#dialogue_documents').style.visibility = 'visible';
-                break;
+        common.common_event('click',event)
+        .then(()=>{
+            const target_id = common.element_id(event.target);
+            switch (target_id){
+                case 'common_window_info_btn_close':{
+                    document.querySelector('#dialogue_documents').style.visibility = 'visible';
+                    break;
+                }
+                case 'doc_list':{
+                    const target_row = common.element_row(event.target);
+                    if (target_row.querySelector('.doc_list_item_image').getAttribute('full_size'))
+                        common.show_window_info(0, target_row.querySelector('.doc_list_item_image').getAttribute('full_size'));
+                    break;
+                }
             }
-            case 'doc_list':{
-                const target_row = common.element_row(event.target);
-                if (target_row.querySelector('.doc_list_item_image').getAttribute('full_size'))
-                    common.show_window_info(0, target_row.querySelector('.doc_list_item_image').getAttribute('full_size'));
-                break;
-            }
-        }
+        });
+        
     });
     document.querySelector('#app').addEventListener('keydown',(event) => {
         common.common_event('keydown',event);
