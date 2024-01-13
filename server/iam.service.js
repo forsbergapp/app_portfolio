@@ -52,9 +52,8 @@ const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
             const username = userpass.split(':')[0];
             const password = userpass.split(':')[1];
             if (CheckFirstTime())
-                CreateSystemAdmin(username, password, () =>{
-                    check_user(username, password);
-                });
+                CreateSystemAdmin(username, password)
+                .then(check_user(username, password));
             else
                 check_user(username, password);
         }
