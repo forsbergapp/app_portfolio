@@ -387,107 +387,95 @@ const common_translate_ui = async (lang_code, callBack) => {
         path = `/app_object?data_lang_code=${lang_code}&object_name=APP`;
     }
     //translate objects
-    await FFB ('DB_API', path, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            const app_objects = JSON.parse(result);
-            for (const app_object of app_objects){
-                switch (app_object.object_name){
-                    case 'APP':{
-                        //translate common items
-                        switch  (app_object.object_item_name){
-                            case 'USERNAME':{
-                                document.querySelector('#common_login_username').setAttribute('placeholder', app_object.text);
-                                document.querySelector('#common_signup_username').setAttribute('placeholder', app_object.text);
-                                document.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'EMAIL':{
-                                document.querySelector('#common_signup_email').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_forgot_email').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'NEW_EMAIL':{
-                                document.querySelector('#common_user_edit_input_new_email').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'BIO':{
-                                document.querySelector('#common_user_edit_input_bio').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'PASSWORD':{
-                                document.querySelector('#common_login_password').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_signup_password').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'PASSWORD_CONFIRM':{
-                                document.querySelector('#common_signup_password_confirm').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'PASSWORD_REMINDER':{
-                                document.querySelector('#common_signup_password_reminder').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'NEW_PASSWORD_CONFIRM':{
-                                document.querySelector('#common_user_edit_input_password_new_confirm').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_user_password_new_confirm').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'NEW_PASSWORD':{
-                                document.querySelector('#common_user_edit_input_password_new').setAttribute('placeholder',app_object.text);
-                                document.querySelector('#common_user_password_new').setAttribute('placeholder',app_object.text);
-                                break;
-                            }
-                            case 'CONFIRM_QUESTION':{
-                                document.querySelector('#common_confirm_question').innerHTML = app_object.text;
-                                break;
-                            }
-                        } 
+    const app_objects_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
+    for (const app_object of JSON.parse(app_objects_json)){
+        switch (app_object.object_name){
+            case 'APP':{
+                //translate common items
+                switch  (app_object.object_item_name){
+                    case 'USERNAME':{
+                        document.querySelector('#common_login_username').setAttribute('placeholder', app_object.text);
+                        document.querySelector('#common_signup_username').setAttribute('placeholder', app_object.text);
+                        document.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
                         break;
                     }
-                    case 'APP_LOV':{
-                        //translate items in select lists in current app
-                        const select_element = document.querySelector('#' + app_object.object_item_name.toLowerCase());
-                        for (let option_element = 0; option_element < select_element.options.length; option_element++){
-                            if (select_element.options[option_element].id == app_object.id)
-                                select_element.options[option_element].text = app_object.text;
-                        }
+                    case 'EMAIL':{
+                        document.querySelector('#common_signup_email').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_forgot_email').setAttribute('placeholder',app_object.text);
                         break;
-                    }   
-                }
-            }
-            //translate locales
-            if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-                path = `/locale/admin?lang_code=${lang_code}`;
-            }
-            else{
-                path = `/locale?lang_code=${lang_code}`;
-            }
-            FFB ('DB_API', path, 'GET', 'APP_DATA', null, (err, result) => {
-                if (err)
-                    null;
-                else{
-                    const locales = JSON.parse(result);
-                    let html='';
-                    const select_locale = document.querySelector('#common_user_locale_select');
-                    let i=0;
-                    for (const locale of locales){
-                        html += `<option id="${i}" value="${locale.locale}">${locale.text}</option>`;
-                        i++;
                     }
-                    select_locale.innerHTML = html;
-                    select_locale.value = lang_code;
+                    case 'NEW_EMAIL':{
+                        document.querySelector('#common_user_edit_input_new_email').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'BIO':{
+                        document.querySelector('#common_user_edit_input_bio').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'PASSWORD':{
+                        document.querySelector('#common_login_password').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_signup_password').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'PASSWORD_CONFIRM':{
+                        document.querySelector('#common_signup_password_confirm').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'PASSWORD_REMINDER':{
+                        document.querySelector('#common_signup_password_reminder').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'NEW_PASSWORD_CONFIRM':{
+                        document.querySelector('#common_user_edit_input_password_new_confirm').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_password_new_confirm').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'NEW_PASSWORD':{
+                        document.querySelector('#common_user_edit_input_password_new').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_password_new').setAttribute('placeholder',app_object.text);
+                        break;
+                    }
+                    case 'CONFIRM_QUESTION':{
+                        document.querySelector('#common_confirm_question').innerHTML = app_object.text;
+                        break;
+                    }
+                } 
+                break;
+            }
+            case 'APP_LOV':{
+                //translate items in select lists in current app
+                const select_element = document.querySelector('#' + app_object.object_item_name.toLowerCase());
+                for (let option_element = 0; option_element < select_element.options.length; option_element++){
+                    if (select_element.options[option_element].id == app_object.id)
+                        select_element.options[option_element].text = app_object.text;
                 }
-                map_country(lang_code).then(()=>{
-                    callBack(null,null);
-                });
-            });
+                break;
+            }   
         }
-    });                            
+    }
+    //translate locales
+    if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
+        path = `/locale/admin?lang_code=${lang_code}`;
+    }
+    else{
+        path = `/locale?lang_code=${lang_code}`;
+    }
+    const locales_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
+    let html='';
+    const select_locale = document.querySelector('#common_user_locale_select');
+    let i=0;
+    for (const locale of JSON.parse(locales_json)){
+        html += `<option id="${i}" value="${locale.locale}">${locale.text}</option>`;
+        i++;
+    }
+    select_locale.innerHTML = html;
+    select_locale.value = lang_code;
+    map_country(lang_code).then(()=>{
+        callBack(null,null);
+    });
 };
 const get_null_or_value = (value) => {
     if (value == null)
@@ -844,7 +832,7 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
  * @param {string|{part: number, total:number, text:string}} message 
  * @param {*} data_app_id 
  */
-const show_message = (message_type, code, function_event, message=null, data_app_id=null) => {
+const show_message = async (message_type, code, function_event, message=null, data_app_id=null) => {
     const confirm_question = document.querySelector('#common_confirm_question');
     const progressbar = document.querySelector('#common_message_progressbar');
     const progressbar_wrap = document.querySelector('#common_message_progressbar_wrap');
@@ -860,22 +848,22 @@ const show_message = (message_type, code, function_event, message=null, data_app
     
     switch (message_type){
         case 'ERROR':{
-            FFB ('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'APP_DATA', null, (err, result) => {
-                confirm_question.style.display = hide;
-                message_title.style.display = show;
-                message_title.style.fontSize = fontsize_normal;
-                progressbar.style.display = hide;
-                progressbar_wrap.style.display = hide;
-                button_cancel.style.display = hide;
-                button_close.style.display = show;
-                if(err)
-                    message_title.innerHTML = err;
-                else
-                    message_title.innerHTML = JSON.parse(result)[0].text;
-                button_close['data-function'] = function_close;
-                dialogue.style.visibility = 'visible';
-                button_close.focus();
-            });
+            const text = await FFB('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'APP_DATA')
+                        .then(result=>JSON.parse(result)[0].text)
+                        .catch(error=>error);
+            confirm_question.style.display = hide;
+            message_title.style.display = show;
+            message_title.style.fontSize = fontsize_normal;
+            progressbar.style.display = hide;
+            progressbar_wrap.style.display = hide;
+            button_cancel.style.display = hide;
+            button_close.style.display = show;
+            
+            message_title.innerHTML = text;
+            
+            button_close['data-function'] = function_close;
+            dialogue.style.visibility = 'visible';
+            button_close.focus();
             break;
         }
         case 'INFO':{
@@ -1127,15 +1115,12 @@ const lov_show = (lov, function_event) => {
             break;
         }
     }
-    FFB (service, path, 'GET', token_type, null, (err, result) => {
-        if (err)
-            document.querySelector('#common_lov_list').innerHTML = '';
-        else{
-            document.querySelector('#common_lov_list').innerHTML = '';
+    FFB(service, path, 'GET', token_type, null)
+    .then(result=>{
+        document.querySelector('#common_lov_list').innerHTML = '';
             document.querySelector('#common_lov_list')['data-function'] = function_event;
-            const list_result = JSON.parse(result);
             let html = '';
-            for (const list_row of list_result) {
+            for (const list_row of JSON.parse(result)) {
                 html += 
                 `<div data-id='${list_row.id}' data-value='${list_row[lov_column_value]}' tabindex=-1 class='common_list_lov_row common_row'>
                     <div class='common_list_lov_col'>
@@ -1148,8 +1133,9 @@ const lov_show = (lov, function_event) => {
             }
             document.querySelector('#common_lov_list').innerHTML = html;
             document.querySelector('#common_lov_search_input').focus();
-        }
-    });
+    })
+    .catch(()=>document.querySelector('#common_lov_list').innerHTML = '');
+        
 };
 const lov_keys = (event) => {
     switch (event.code){
@@ -1382,36 +1368,35 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
         path = `${app_rest_url}?statchoice=${statchoice}`;
     }
     //TOP
-    FFB ('DB_API', path, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            profile_top_list.innerHTML = '';
-        else{
-            let html ='';
-            let image='';
-            for (const profile_top of JSON.parse(result)) {
-                image = list_image_format_src(profile_top.avatar ?? profile_top.provider_image);
-                html +=
-                `<div data-user_account_id='${profile_top.id}' class='common_profile_top_list_row common_row'>
-                    <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_user_account_id'>${profile_top.id}</div>
+    FFB('DB_API', path, 'GET', 'APP_DATA', null)
+    .then(result=> {
+        let html ='';
+        let image='';
+        for (const profile_top of JSON.parse(result)) {
+            image = list_image_format_src(profile_top.avatar ?? profile_top.provider_image);
+            html +=
+            `<div data-user_account_id='${profile_top.id}' class='common_profile_top_list_row common_row'>
+                <div class='common_profile_top_list_col'>
+                    <div class='common_profile_top_list_user_account_id'>${profile_top.id}</div>
+                </div>
+                <div class='common_profile_top_list_col'>
+                    <img class='common_profile_top_list_avatar' ${image}>
+                </div>
+                <div class='common_profile_top_list_col'>
+                    <div class='common_profile_top_list_username common_wide_list_column common_link'>
+                        ${profile_top.username}
                     </div>
-                    <div class='common_profile_top_list_col'>
-                        <img class='common_profile_top_list_avatar' ${image}>
-                    </div>
-                    <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_username common_wide_list_column common_link'>
-                            ${profile_top.username}
-                        </div>
-                    </div>
-                    <div class='common_profile_top_list_col'>
-                        <div class='common_profile_top_list_count'>${profile_top.count}</div>
-                    </div>
-                </div>`;
-            }
-            profile_top_list.innerHTML = html;
-            document.querySelector('#common_profile_top_list')['data-function'] = click_function;
+                </div>
+                <div class='common_profile_top_list_col'>
+                    <div class='common_profile_top_list_count'>${profile_top.count}</div>
+                </div>
+            </div>`;
         }
-    });
+        profile_top_list.innerHTML = html;
+        document.querySelector('#common_profile_top_list')['data-function'] = click_function;
+    })
+    .catch(()=> profile_top_list.innerHTML = '');
+        
 };
 const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, click_function) => {
     let path;
@@ -1504,65 +1489,62 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                 }
         }
         if (fetch_detail){
-            FFB ('DB_API', path, 'GET', 'APP_ACCESS', null, (err, result) => {
-                if (err)
-                    profile_detail_list.innerHTML = '';
-                else{
-                    const list_items = JSON.parse(result);
-                    let html = '';
-                    let image = '';
-                    let delete_div ='';
-                    for (const list_item of list_items) {
-                        //id for username list, app_id for app list
-                        if (detailchoice==5 && typeof list_item.id =='undefined'){
-                            if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
-                                delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS.app_delete}</div>`;
-                                
-                            //App list in app 0
-                            html += 
-                            `<div data-app_id='${list_item.APP_ID}' data-url='${list_item.PROTOCOL}${list_item.SUBDOMAIN}.${list_item.HOST}:${list_item.PORT}' class='common_profile_detail_list_row common_row'>
-                                <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_id'>${list_item.APP_ID}</div>
+            FFB('DB_API', path, 'GET', 'APP_ACCESS', null)
+            .then(result=>{
+                let html = '';
+                let image = '';
+                let delete_div ='';
+                for (const list_item of JSON.parse(result)) {
+                    //id for username list, app_id for app list
+                    if (detailchoice==5 && typeof list_item.id =='undefined'){
+                        if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
+                            delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS.app_delete}</div>`;
+                            
+                        //App list in app 0
+                        html += 
+                        `<div data-app_id='${list_item.APP_ID}' data-url='${list_item.PROTOCOL}${list_item.SUBDOMAIN}.${list_item.HOST}:${list_item.PORT}' class='common_profile_detail_list_row common_row'>
+                            <div class='common_profile_detail_list_col'>
+                                <div class='common_profile_detail_list_app_id'>${list_item.APP_ID}</div>
+                            </div>
+                            <div class='common_profile_detail_list_col'>
+                                <img class='common_profile_detail_list_app_logo' src='${list_item.LOGO}'>
+                            </div>
+                            <div class='common_profile_detail_list_col'>
+                                <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
+                                    ${list_item.NAME}
                                 </div>
-                                <div class='common_profile_detail_list_col'>
-                                    <img class='common_profile_detail_list_app_logo' src='${list_item.LOGO}'>
-                                </div>
-                                <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_app_name common_wide_list_column common_link'>
-                                        ${list_item.NAME}
-                                    </div>
-                                </div>
-                                <div class='common_profile_detail_list_col'>
-                                    ${delete_div}
-                                </div>
-                                <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_date_created'>${list_item.date_created}</div>
-                                </div>
-                            </div>`;
-                        }
-                        else{
-                            //Username list
-                            image = list_image_format_src(list_item.avatar ?? list_item.provider_image);
-                            html += 
-                            `<div data-user_account_id='${list_item.id}' class='common_profile_detail_list_row common_row'>
-                                <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_user_account_id'>${list_item.id}</div>
-                                </div>
-                                <div class='common_profile_detail_list_col'>
-                                    <img class='common_profile_detail_list_avatar' ${image}>
-                                </div>
-                                <div class='common_profile_detail_list_col'>
-                                    <div class='common_profile_detail_list_username common_wide_list_column common_link'>
-                                        ${list_item.username}
-                                    </div>
-                                </div>
-                            </div>`;
-                        }
+                            </div>
+                            <div class='common_profile_detail_list_col'>
+                                ${delete_div}
+                            </div>
+                            <div class='common_profile_detail_list_col'>
+                                <div class='common_profile_detail_list_date_created'>${list_item.date_created}</div>
+                            </div>
+                        </div>`;
                     }
-                    profile_detail_list.innerHTML = html;
-                    document.querySelector('#common_profile_detail_list')['data-function'] = click_function;
+                    else{
+                        //Username list
+                        image = list_image_format_src(list_item.avatar ?? list_item.provider_image);
+                        html += 
+                        `<div data-user_account_id='${list_item.id}' class='common_profile_detail_list_row common_row'>
+                            <div class='common_profile_detail_list_col'>
+                                <div class='common_profile_detail_list_user_account_id'>${list_item.id}</div>
+                            </div>
+                            <div class='common_profile_detail_list_col'>
+                                <img class='common_profile_detail_list_avatar' ${image}>
+                            </div>
+                            <div class='common_profile_detail_list_col'>
+                                <div class='common_profile_detail_list_username common_wide_list_column common_link'>
+                                    ${list_item.username}
+                                </div>
+                            </div>
+                        </div>`;
+                    }
                 }
-            });
+                profile_detail_list.innerHTML = html;
+                document.querySelector('#common_profile_detail_list')['data-function'] = click_function;
+            })
+            .catch(()=>profile_detail_list.innerHTML = '');
         }
     } else
         show_common_dialogue('LOGIN');
@@ -1601,38 +1583,37 @@ const search_profile = (click_function) => {
                             client_longitude:   COMMON_GLOBAL.client_longitude
                         };
         }
-        FFB ('DB_API', path, 'POST', token, json_data, (err, result) => {
-            if (err){
+        FFB('DB_API', path, 'POST', token, json_data)
+        .then(result=>{
+            if (JSON.parse(result).length == 0){
                 profile_search_list.innerHTML ='';
                 document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
             }
-            else{
-                if (JSON.parse(result).length == 0){
-                    profile_search_list.innerHTML ='';
-                    document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-                }
-                let html = '';
-                let image= '';
-                for (const search_profile of JSON.parse(result)) {
-                    image = list_image_format_src(search_profile.avatar ?? search_profile.provider_image);
-                    html +=
-                    `<div data-user_account_id='${search_profile.id}' class='common_profile_search_list_row common_row' tabindex=-1>
-                        <div class='common_profile_search_list_col'>
-                            <div class='common_profile_search_list_user_account_id'>${search_profile.id}</div>
+            let html = '';
+            let image= '';
+            for (const search_profile of JSON.parse(result)) {
+                image = list_image_format_src(search_profile.avatar ?? search_profile.provider_image);
+                html +=
+                `<div data-user_account_id='${search_profile.id}' class='common_profile_search_list_row common_row' tabindex=-1>
+                    <div class='common_profile_search_list_col'>
+                        <div class='common_profile_search_list_user_account_id'>${search_profile.id}</div>
+                    </div>
+                    <div class='common_profile_search_list_col'>
+                        <img class='common_profile_search_list_avatar' ${image}>
+                    </div>
+                    <div class='common_profile_search_list_col'>
+                        <div class='common_profile_search_list_username common_wide_list_column common_link'>
+                            ${search_profile.username}
                         </div>
-                        <div class='common_profile_search_list_col'>
-                            <img class='common_profile_search_list_avatar' ${image}>
-                        </div>
-                        <div class='common_profile_search_list_col'>
-                            <div class='common_profile_search_list_username common_wide_list_column common_link'>
-                                ${search_profile.username}
-                            </div>
-                        </div>
-                    </div>`;
-                }
-                profile_search_list.innerHTML = html;
-                document.querySelector('#common_profile_search_list')['data-function'] = click_function;
+                    </div>
+                </div>`;
             }
+            profile_search_list.innerHTML = html;
+            document.querySelector('#common_profile_search_list')['data-function'] = click_function;
+        })
+        .catch(()=>{
+            profile_search_list.innerHTML ='';
+            document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         });
     }
 };
@@ -1667,64 +1648,62 @@ const profile_show = async (user_account_id_other = null, username = null, callB
                             client_latitude:    COMMON_GLOBAL.client_latitude,
                             client_longitude:   COMMON_GLOBAL.client_longitude
                         };
-        FFB ('DB_API', path, 'POST', 'APP_DATA', json_data, (err, result) => {
-            if (err)
-                return callBack(err,null);
-            else{
-                const profile = JSON.parse(result);
-                document.querySelector('#common_profile_info').style.display = 'block';
-                document.querySelector('#common_profile_main').style.display = 'block';
-                document.querySelector('#common_profile_id').innerHTML = profile.id;
-                set_avatar(profile.avatar ?? profile.provider_image, document.querySelector('#common_profile_avatar')); 
-                //show local username
-                document.querySelector('#common_profile_username').innerHTML = profile.username;
+        FFB('DB_API', path, 'POST', 'APP_DATA', json_data)
+        .then(result=>{
+            const profile = JSON.parse(result);
+            document.querySelector('#common_profile_info').style.display = 'block';
+            document.querySelector('#common_profile_main').style.display = 'block';
+            document.querySelector('#common_profile_id').innerHTML = profile.id;
+            set_avatar(profile.avatar ?? profile.provider_image, document.querySelector('#common_profile_avatar')); 
+            //show local username
+            document.querySelector('#common_profile_username').innerHTML = profile.username;
 
-                document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
-                document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
-                document.querySelector('#common_profile_qr').innerHTML = '';
-                create_qr('common_profile_qr', getHostname() + '/' + profile.username);
-                //User account followed and liked
-                if (profile.followed == 1) {
-                    //followed
-                    document.querySelector('#common_profile_follow').children[0].style.display = 'none';
-                    document.querySelector('#common_profile_follow').children[1].style.display = 'block';
-                } else {
-                    //not followed
-                    document.querySelector('#common_profile_follow').children[0].style.display = 'block';
-                    document.querySelector('#common_profile_follow').children[1].style.display = 'none';
-                }
-                if (profile.liked == 1) {
-                    //liked
-                    document.querySelector('#common_profile_like').children[0].style.display = 'none';
-                    document.querySelector('#common_profile_like').children[1].style.display = 'block';
-                } else {
-                    //not liked
-                    document.querySelector('#common_profile_like').children[0].style.display = 'block';
-                    document.querySelector('#common_profile_like').children[1].style.display = 'none';
-                } 
-                //if private then hide info, sql decides if private, no need to check here if same user
-                if (profile.private==1) {
-                    //private
-                    document.querySelector('#common_profile_public').style.display = 'none';
-                    document.querySelector('#common_profile_private').style.display = 'block';
-                } else {
-                    //public
-                    document.querySelector('#common_profile_public').style.display = 'block';
-                    document.querySelector('#common_profile_private').style.display = 'none';
-                    document.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
-                    document.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
-                    document.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
-                    document.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
-                    document.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
-                }    
-                if (COMMON_GLOBAL.user_account_id =='')
-                    setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
-                else
-                    checkOnline('common_profile_avatar_online_status', profile.id);
-                return callBack(null,{profile_id: profile.id,
-                                      private: profile.private});   
+            document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
+            document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
+            document.querySelector('#common_profile_qr').innerHTML = '';
+            create_qr('common_profile_qr', getHostname() + '/' + profile.username);
+            //User account followed and liked
+            if (profile.followed == 1) {
+                //followed
+                document.querySelector('#common_profile_follow').children[0].style.display = 'none';
+                document.querySelector('#common_profile_follow').children[1].style.display = 'block';
+            } else {
+                //not followed
+                document.querySelector('#common_profile_follow').children[0].style.display = 'block';
+                document.querySelector('#common_profile_follow').children[1].style.display = 'none';
             }
-        });
+            if (profile.liked == 1) {
+                //liked
+                document.querySelector('#common_profile_like').children[0].style.display = 'none';
+                document.querySelector('#common_profile_like').children[1].style.display = 'block';
+            } else {
+                //not liked
+                document.querySelector('#common_profile_like').children[0].style.display = 'block';
+                document.querySelector('#common_profile_like').children[1].style.display = 'none';
+            } 
+            //if private then hide info, sql decides if private, no need to check here if same user
+            if (profile.private==1) {
+                //private
+                document.querySelector('#common_profile_public').style.display = 'none';
+                document.querySelector('#common_profile_private').style.display = 'block';
+            } else {
+                //public
+                document.querySelector('#common_profile_public').style.display = 'block';
+                document.querySelector('#common_profile_private').style.display = 'none';
+                document.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
+                document.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
+                document.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
+                document.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
+                document.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
+            }    
+            if (COMMON_GLOBAL.user_account_id =='')
+                setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
+            else
+                checkOnline('common_profile_avatar_online_status', profile.id);
+            callBack(null,{ profile_id: profile.id,
+                            private: profile.private});  
+        })  
+        .catch(err=>callBack(err,null));
     }
 };
 const profile_close = () => {
@@ -1739,19 +1718,17 @@ const profile_update_stat = async (callBack) => {
                     };
     //get updated stat for given user
     //to avoid update in stat set searched by same user
-    FFB ('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data, (err, result) => {
-        if (err)
-            return callBack(err,null);
-        else{
-            const json = JSON.parse(result);
-            document.querySelector('#common_profile_info_view_count').innerHTML = json.count_views;
-            document.querySelector('#common_profile_info_following_count').innerHTML = json.count_following;
-            document.querySelector('#common_profile_info_followers_count').innerHTML = json.count_followed;
-            document.querySelector('#common_profile_info_likes_count').innerHTML = json.count_likes;
-            document.querySelector('#common_profile_info_liked_count').innerHTML = json.count_liked;
-            return callBack(null, {id : json.id});
-        }
-    });
+    FFB('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
+    .then(result=>{
+        const user_stat = JSON.parse(result);
+        document.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
+        document.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
+        document.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
+        document.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
+        document.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
+        callBack(null, {id : user_stat.id});
+    })
+    .catch(err=>callBack(err,null));
 };
 const search_input = (event, module, event_function) => {
     switch (event.code){
@@ -1889,34 +1866,32 @@ const user_login = async (username, password, callBack) => {
                         ...get_uservariables()
                     };
 
-    FFB ('IAM', '/user?', 'POST', 'IAM', json_data, (err, result) => {
-        if (err)
-            return callBack(err, null);
-        else{
-            profile_close();
-            const user = JSON.parse(result).items[0];
-            COMMON_GLOBAL.user_account_id = user.id;
-            COMMON_GLOBAL.user_identity_provider_id = '';
-            COMMON_GLOBAL.user_app_role_id = user.app_role_id;
-            COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
-            updateOnlineStatus();
-            user_preference_get(() =>{
-                if (user.active==0){
-                    show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
-                    return callBack('ERROR', null);
-                }
-                else{
-                    dialogue_login_clear();
-                    dialogue_signup_clear();
-                    return callBack(null, { user_id: user.id,
-                                            username: user.username,
-                                            bio: user.bio,
-                                            avatar: user.avatar,
-                                            app: JSON.parse(result).app});
-                }
-            });
-        }
-    });    
+    FFB('IAM', '/user?', 'POST', 'IAM', json_data)
+    .then(result=>{
+        profile_close();
+        const user = JSON.parse(result).items[0];
+        COMMON_GLOBAL.user_account_id = user.id;
+        COMMON_GLOBAL.user_identity_provider_id = '';
+        COMMON_GLOBAL.user_app_role_id = user.app_role_id;
+        COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+        updateOnlineStatus();
+        user_preference_get(() =>{
+            if (user.active==0){
+                show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
+                return callBack('ERROR', null);
+            }
+            else{
+                dialogue_login_clear();
+                dialogue_signup_clear();
+                return callBack(null, { user_id: user.id,
+                                        username: user.username,
+                                        bio: user.bio,
+                                        avatar: user.avatar,
+                                        app: JSON.parse(result).app});
+            }
+        });
+    })
+    .catch(err=>callBack(err, null));
 };
 const user_logoff = async () => {
     //remove access token
@@ -1950,60 +1925,58 @@ const user_logoff = async () => {
 };
 const user_edit = async () => {
     //get user from REST API
-    FFB ('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            const user = JSON.parse(result);
-            if (COMMON_GLOBAL.user_account_id == user.id) {
-                document.querySelector('#common_user_edit_local').style.display = 'none';
+    FFB('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
+    .then(result=>{
+        const user = JSON.parse(result);
+        if (COMMON_GLOBAL.user_account_id == user.id) {
+            document.querySelector('#common_user_edit_local').style.display = 'none';
+            document.querySelector('#common_user_edit_provider').style.display = 'none';
+            document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
+
+            if (Number(user.private))
+                document.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
+            else
+                document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
+
+            document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
+            document.querySelector('#common_user_edit_input_bio').innerHTML = get_null_or_value(user.bio);
+
+            if (user.provider_id == null) {
+                document.querySelector('#common_user_edit_local').style.display = 'block';
                 document.querySelector('#common_user_edit_provider').style.display = 'none';
-                document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
-                if (Number(user.private))
-                    document.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
-                else
-                    document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
+                //display fetched avatar editable
+                document.querySelector('#common_user_edit_avatar').style.display = 'block';
+                set_avatar(user.avatar, document.querySelector('#common_user_edit_avatar_img')); 
+                document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
+                document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
+                document.querySelector('#common_user_edit_input_password').innerHTML = '',
+                    document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
+                    document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
+                document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
 
-                document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
-                document.querySelector('#common_user_edit_input_bio').innerHTML = get_null_or_value(user.bio);
-
-                if (user.provider_id == null) {
-                    document.querySelector('#common_user_edit_local').style.display = 'block';
-                    document.querySelector('#common_user_edit_provider').style.display = 'none';
-
-                    //display fetched avatar editable
-                    document.querySelector('#common_user_edit_avatar').style.display = 'block';
-                    set_avatar(user.avatar, document.querySelector('#common_user_edit_avatar_img')); 
-                    document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
-                    document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
-                    document.querySelector('#common_user_edit_input_password').innerHTML = '',
-                        document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
-                        document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-                    document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
-
-                    document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
-                } else{
-                        document.querySelector('#common_user_edit_local').style.display = 'none';
-                        document.querySelector('#common_user_edit_provider').style.display = 'block';
-                        document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
-                        document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
-                        document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
-                        document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
-                        document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
-                        document.querySelector('#common_user_edit_avatar').style.display = 'none';
-                        set_avatar(user.provider_image, document.querySelector('#common_user_edit_avatar_img')); 
-                    } 
-                document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(user.last_logontime, null);
-                document.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(user.date_created, null);
-                document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(user.date_modified, null);
-                set_avatar(user.avatar ?? user.provider_image, document.querySelector('#common_user_menu_avatar_img'));
-            } else {
-                //User not found
-                show_message('ERROR', 20305, null, null, COMMON_GLOBAL.common_app_id);
-            }
+                document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
+            } else{
+                    document.querySelector('#common_user_edit_local').style.display = 'none';
+                    document.querySelector('#common_user_edit_provider').style.display = 'block';
+                    document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
+                    document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
+                    document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
+                    document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
+                    document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
+                    document.querySelector('#common_user_edit_avatar').style.display = 'none';
+                    set_avatar(user.provider_image, document.querySelector('#common_user_edit_avatar_img')); 
+                } 
+            document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(user.last_logontime, null);
+            document.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(user.date_created, null);
+            document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(user.date_modified, null);
+            set_avatar(user.avatar ?? user.provider_image, document.querySelector('#common_user_menu_avatar_img'));
+        } else {
+            //User not found
+            show_message('ERROR', 20305, null, null, COMMON_GLOBAL.common_app_id);
         }
-    });
+    })
+    .catch(()=>null);
 };
 const user_update = async () => {
     return new Promise(resolve=>{
@@ -2087,23 +2060,24 @@ const user_update = async () => {
         document.querySelector('#common_user_edit_btn_user_update').classList.add('spinner');
         document.querySelector('#common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
         //update user using REST API
-        FFB ('DB_API', path, 'PUT', 'APP_ACCESS', json_data, (err, result) => {
+        FFB('DB_API', path, 'PUT', 'APP_ACCESS', json_data)
+        .then(result=>{
             document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
             document.querySelector('#common_user_edit_btn_user_update').classList.remove('spinner');
-            if (err){    
-                resolve(null);
+            const user_update = JSON.parse(result);
+            set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
+            document.querySelector('#common_user_menu_username').innerHTML = username;
+            if (user_update.sent_change_email == 1){
+                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, null);
             }
-            else{
-                const user_update = JSON.parse(result);
-                set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
-                document.querySelector('#common_user_menu_username').innerHTML = username;
-                if (user_update.sent_change_email == 1){
-                    show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, null);
-                }
-                else
-                    dialogue_user_edit_clear();
-                resolve(null);
-            }
+            else
+                dialogue_user_edit_clear();
+            resolve(null);
+        })
+        .catch(()=>{
+            document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
+            document.querySelector('#common_user_edit_btn_user_update').classList.remove('spinner');
+            resolve(null);
         });
     });
 };
@@ -2146,18 +2120,15 @@ const user_signup = () => {
 
     const old_button = document.querySelector('#common_signup_button').innerHTML;
     document.querySelector('#common_signup_button').innerHTML = APP_SPINNER;
-    FFB ('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data, (err, result) => {
+    FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
+    .then(result=>{
         document.querySelector('#common_signup_button').innerHTML = old_button;
-        if (err){    
-            null;
-        }
-        else{
-            const json = JSON.parse(result);
-            COMMON_GLOBAL.rest_at = json.accessToken;
-            COMMON_GLOBAL.user_account_id = json.id;
-            show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, null);
-        }
-    });
+        const signup = JSON.parse(result);
+        COMMON_GLOBAL.rest_at = signup.accessToken;
+        COMMON_GLOBAL.user_account_id = signup.id;
+        show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, null);
+    })
+    .catch(()=>document.querySelector('#common_signup_button').innerHTML = old_button);
 };
 const user_verify_check_input = async (item, nextField, callBack) => {
 
@@ -2192,62 +2163,62 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                             verification_type:  verification_type,
                             ...get_uservariables()
                         };
-            FFB ('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data, (err, result) => {
+            FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data)
+            .then(result=>{
                 document.querySelector('#common_user_verify_email').innerHTML = old_button;
-                if (err){    
-                    return callBack(err, null);
-                }
-                else{
-                    const user_activate = JSON.parse(result).items[0];
-                    if (user_activate.affectedRows == 1) {
-                        switch (verification_type){
-                            case 1:{
-                                //LOGIN
-                                break;
-                            }
-                            case 2:{
-                                //SIGNUP
-                                //login with username and password from signup fields
-                                document.querySelector('#common_login_username').innerHTML =
-                                    document.querySelector('#common_signup_username').innerHTML;
-                                document.querySelector('#common_login_password').innerHTML =
-                                    document.querySelector('#common_signup_password').innerHTML;
-                                break;
-                            }
-                            case 3:{
-                                //FORGOT
-                                COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
-                                //show dialogue new password
-                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
-                                break;
-                            }
-                            case 4:{
-                                //NEW EMAIL
-                                break;
-                            }
+                const user_activate = JSON.parse(result).items[0];
+                if (user_activate.affectedRows == 1) {
+                    switch (verification_type){
+                        case 1:{
+                            //LOGIN
+                            break;
                         }
-                        
-                        document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                        
-                        dialogue_signup_clear();
-                        dialogue_forgot_clear();
-                        dialogue_verify_clear();
-                        dialogue_user_edit_clear();
-                        return callBack(null, {'actived': 1, 
-                                                'verification_type' : verification_type});
+                        case 2:{
+                            //SIGNUP
+                            //login with username and password from signup fields
+                            document.querySelector('#common_login_username').innerHTML =
+                                document.querySelector('#common_signup_username').innerHTML;
+                            document.querySelector('#common_login_password').innerHTML =
+                                document.querySelector('#common_signup_password').innerHTML;
+                            break;
+                        }
+                        case 3:{
+                            //FORGOT
+                            COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+                            //show dialogue new password
+                            show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
+                            break;
+                        }
+                        case 4:{
+                            //NEW EMAIL
+                            break;
+                        }
+                    }
+                    
+                    document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                    
+                    dialogue_signup_clear();
+                    dialogue_forgot_clear();
+                    dialogue_verify_clear();
+                    dialogue_user_edit_clear();
+                    return callBack(null, {'actived': 1, 
+                                            'verification_type' : verification_type});
 
-                        } else {
-                            document.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
-                            document.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
-                            document.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
-                            document.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
-                            document.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
-                            document.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
-                            //code not valid
-                            show_message('ERROR', 20306, null, null, COMMON_GLOBAL.common_app_id);
-                            return callBack('ERROR', null);
-                        }
-                }
+                    } else {
+                        document.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
+                        document.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
+                        document.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
+                        document.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
+                        document.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
+                        document.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
+                        //code not valid
+                        show_message('ERROR', 20306, null, null, COMMON_GLOBAL.common_app_id);
+                        return callBack('ERROR', null);
+                    }
+            })
+            .catch(err=>{
+                document.querySelector('#common_user_verify_email').innerHTML = old_button;
+                callBack(err, null);
             });
         } else{
             //not last, next!
@@ -2281,15 +2252,10 @@ const user_delete = async (choice=null, user_local, function_delete_event, callB
             document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
             const json_data = { password: password};
 
-            FFB ('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'DELETE', 'APP_ACCESS', json_data, (err) => {
-                document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = old_button;
-                if (err){
-                    return callBack(err,null);
-                }
-                else{
-                    return callBack(null,{deleted: 1});
-                }
-            });
+            FFB('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'DELETE', 'APP_ACCESS', json_data)
+            .then(()=>callBack(null,{deleted: 1}))
+            .catch(err=>callBack(err,null))
+            .finally(document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = old_button);
             break;
         }
         default:
@@ -2312,23 +2278,21 @@ const user_function = (user_function, callBack) => {
     if (COMMON_GLOBAL.user_account_id == '')
         show_common_dialogue('LOGIN');
     else {
-        FFB ('DB_API', path, method, 'APP_ACCESS', json_data, (err) => {
-            if (err)
-                return callBack(err, null);
-            else{
-                if (document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display == 'block'){
-                    //follow/like
-                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'none';
-                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'block';
-                }
-                else{
-                    //unfollow/unlike
-                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'block';
-                    document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'none';
-                }
-                return callBack(null, {});
+        FFB('DB_API', path, method, 'APP_ACCESS', json_data)
+        .then(()=> {
+            if (document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display == 'block'){
+                //follow/like
+                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'none';
+                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'block';
             }
-        });
+            else{
+                //unfollow/unlike
+                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'block';
+                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'none';
+            }
+            callBack(null, {});
+        })
+        .catch(err=>callBack(err, null));
     }
 };
 const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event) => {
@@ -2339,14 +2303,12 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-            FFB ('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 'APP_ACCESS', null, (err) => {
-                if (err)
-                    null;
-                else{
-                    //execute event and refresh app list
-                    document.querySelector('#common_profile_main_btn_cloud').click();
-                }
-            });
+            FFB('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 'APP_ACCESS', null)
+            .then(()=>{
+                //execute event and refresh app list
+                document.querySelector('#common_profile_main_btn_cloud').click();
+            })
+            .catch(()=>null);
             break;
         }
         default:
@@ -2363,18 +2325,16 @@ const user_forgot = async () => {
     else{
         const old_button = document.querySelector('#common_forgot_button').innerHTML;
         document.querySelector('#common_forgot_button').innerHTML = APP_SPINNER;
-        FFB ('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data, (err, result) => {
-            document.querySelector('#common_forgot_button').innerHTML = old_button;
-            if (err)
-                null;
-            else{
-                const json = JSON.parse(result);
-                if (json.sent == 1){
-                    COMMON_GLOBAL.user_account_id = json.id;
-                    show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
-                }
+        FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
+        .then(result=>{
+            const forgot = JSON.parse(result);
+            if (forgot.sent == 1){
+                COMMON_GLOBAL.user_account_id = forgot.id;
+                show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
             }
-        });
+        })
+        .catch(()=>null)
+        .finally(document.querySelector('#common_forgot_button').innerHTML = old_button);
     }
 };
 const updatePassword = () => {
@@ -2402,15 +2362,13 @@ const updatePassword = () => {
         }
         const old_button = document.querySelector('#common_user_password_new_icon').innerHTML;
         document.querySelector('#common_user_password_new_icon').innerHTML = APP_SPINNER;
-        FFB ('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data, (err) => {
-            document.querySelector('#common_user_password_new_icon').innerHTML = old_button;
-            if (err)
-                null;
-            else{
-                dialogue_password_new_clear();
-                show_common_dialogue('LOGIN');
-            }
-        });
+        FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
+        .then(()=>{
+            dialogue_password_new_clear();
+            show_common_dialogue('LOGIN');
+        })
+        .catch(()=>null)
+        .finally(document.querySelector('#common_user_password_new_icon').innerHTML = old_button);
     }
 };
 const user_preference_save = async () => {
@@ -2422,47 +2380,38 @@ const user_preference_save = async () => {
                 app_setting_preference_direction_id: document.querySelector('#common_user_direction_select').options[document.querySelector('#common_user_direction_select').selectedIndex].id,
                 app_setting_preference_arabic_script_id: document.querySelector('#common_user_arabic_script_select').options[document.querySelector('#common_user_arabic_script_select').selectedIndex].id
             };
-        await FFB ('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'APP_ACCESS', json_data, (err) => {
-            if (err)
-                null;
-            else{
-                null;
-            }
-        });
+        await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'APP_ACCESS', json_data);
     }
-        
 };
 const user_preference_get = async (callBack) => {
-    await FFB ('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            const user_account_app = JSON.parse(result)[0];
-            //locale
-            if (user_account_app.preference_locale==null){
-                user_preferences_set_default_globals('LOCALE');
-            }
-            else{
-                COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
-            }
-            //timezone
-            if (user_account_app.app_setting_preference_timezone_id==null){
-                user_preferences_set_default_globals('TIMEZONE');
-            }
-            else{
-                SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
-                COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
-            }
-            //direction
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
-            COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
-            //arabic script
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
-            COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
-            user_preferences_update_select();
-            return callBack(null, null);
+    await FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
+    .then(result=>{
+        const user_account_app = JSON.parse(result)[0];
+        //locale
+        if (user_account_app.preference_locale==null){
+            user_preferences_set_default_globals('LOCALE');
         }
-    });
+        else{
+            COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
+        }
+        //timezone
+        if (user_account_app.app_setting_preference_timezone_id==null){
+            user_preferences_set_default_globals('TIMEZONE');
+        }
+        else{
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
+            COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
+        }
+        //direction
+        SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
+        COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
+        //arabic script
+        SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
+        COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
+        user_preferences_update_select();
+        callBack(null, null);
+    })
+    .catch(err=>callBack(err, null));
 };
 const user_preferences_set_default_globals = (preference) => {
     switch (preference){
@@ -2514,28 +2463,26 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                             provider_email:         profile_email,
                             ...get_uservariables()
                         };
-        FFB ('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data, (err, result) => {
-            if (err)
-                return callBack(err, null);
-            else{
-                const user_login = JSON.parse(result).items[0];
-                COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
-                COMMON_GLOBAL.user_account_id = user_login.id;
-                COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
-                updateOnlineStatus();
-                user_preference_get(() =>{
-                    dialogue_login_clear();
-                    dialogue_signup_clear();
-                    return callBack(null, {user_account_id: user_login.id,
-                                            username: user_login.username,
-                                            bio: user_login.bio,
-                                            avatar: profile_image,
-                                            first_name: profile_first_name,
-                                            last_name: profile_last_name,
-                                            userCreated: JSON.parse(result).userCreated});
-                });
-            }
-        });
+        FFB('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data)
+        .then(result=>{
+            const user_login = JSON.parse(result).items[0];
+            COMMON_GLOBAL.rest_at = user_login.accessToken;
+            COMMON_GLOBAL.user_account_id = user_login.id;
+            COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
+            updateOnlineStatus();
+            user_preference_get(() =>{
+                dialogue_login_clear();
+                dialogue_signup_clear();
+                callBack(null, {user_account_id: user_login.id,
+                                username: user_login.username,
+                                bio: user_login.bio,
+                                avatar: profile_image,
+                                first_name: profile_first_name,
+                                last_name: profile_last_name,
+                                userCreated: user_login.userCreated});
+            });
+        })
+        .catch(err=>callBack(err, null));
     });
 };
 const ProviderSignIn = async (provider_id, callBack) => {
@@ -2658,43 +2605,42 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
 const map_country = (lang_code) =>{
     return new Promise ((resolve, reject)=>{
         //country
-        FFB ('DB_API', `/country?lang_code=${lang_code}`, 'GET', 'APP_DATA', null, (err, result) => {
-            if (err)
-                reject(err,null);
-            else{
-                const countries = JSON.parse(result);
-                let html='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
-                let current_group_name;
-                let i=0;
-                for (const country of countries){
-                    if (i === 0){
+        FFB('DB_API', `/country?lang_code=${lang_code}`, 'GET', 'APP_DATA', null)
+        .then(result=>{
+            let html='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
+            let current_group_name;
+            let i=0;
+            for (const country of JSON.parse(result)){
+                if (i === 0){
+                    html += `<optgroup label=${country.group_name} />`;
+                    current_group_name = country.group_name;
+                }
+                else{
+                    if (country.group_name !== current_group_name){
                         html += `<optgroup label=${country.group_name} />`;
                         current_group_name = country.group_name;
                     }
-                    else{
-                        if (country.group_name !== current_group_name){
-                            html += `<optgroup label=${country.group_name} />`;
-                            current_group_name = country.group_name;
-                        }
-                        html +=
-                        `<option value=${i}
-                                id=${country.id} 
-                                country_code=${country.country_code} 
-                                flag_emoji=${country.flag_emoji} 
-                                group_name=${country.group_name}>${country.flag_emoji} ${country.text}
-                        </option>`;
-                    }
-                    i++;
+                    html +=
+                    `<option value=${i}
+                            id=${country.id} 
+                            country_code=${country.country_code} 
+                            flag_emoji=${country.flag_emoji} 
+                            group_name=${country.group_name}>${country.flag_emoji} ${country.text}
+                    </option>`;
                 }
-                COMMON_GLOBAL.module_leaflet_countries = html;
-                if (document.querySelector('#common_module_leaflet_select_country')){
-                    const select_country = document.querySelector('#common_module_leaflet_select_country');
-                    const current_country = document.querySelector('#common_module_leaflet_select_country')[document.querySelector('#common_module_leaflet_select_country').selectedIndex].id;
-                    select_country.innerHTML = html;
-                    SearchAndSetSelectedIndex(current_country, document.querySelector('#common_module_leaflet_select_country'),0);    
-                }
-                resolve();
+                i++;
             }
+            COMMON_GLOBAL.module_leaflet_countries = html;
+            if (document.querySelector('#common_module_leaflet_select_country')){
+                const select_country = document.querySelector('#common_module_leaflet_select_country');
+                const current_country = document.querySelector('#common_module_leaflet_select_country')[document.querySelector('#common_module_leaflet_select_country').selectedIndex].id;
+                select_country.innerHTML = html;
+                SearchAndSetSelectedIndex(current_country, document.querySelector('#common_module_leaflet_select_country'),0);    
+            }
+            resolve();
+        })
+        .catch(err=>{
+            reject(err,null);
         });
     });
     
@@ -2873,7 +2819,16 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
 /*----------------------- */
 /* FFB                    */
 /*----------------------- */
-const FFB = async (service, path, method, authorization_type, json_data, callBack) => {
+/**
+ * 
+ * @param {string} service 
+ * @param {string} path 
+ * @param {string} method 
+ * @param {string} authorization_type 
+ * @param {*} json_data 
+ * @returns {Promise.<*>} 
+ */
+const FFB = async (service, path, method, authorization_type, json_data) => {
     let status;
     let authorization;
     let bff_path;
@@ -2950,10 +2905,10 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
     let url = `${bff_path}?service=${service}&app_id=${COMMON_GLOBAL.app_id}&parameters=${encodedparameters}`;
     url += `&user_account_logon_user_account_id=${COMMON_GLOBAL.user_account_id}&system_admin=${COMMON_GLOBAL.system_admin}`;
     if (service=='SOCKET' && authorization_type=='SOCKET'){
-        callBack(null, new EventSource(url));
+        return new EventSource(url);
     }
     else
-        await fetch(url, options)
+        return await fetch(url, options)
         .then((response) => {
             status = response.status;
             return response.text();
@@ -2962,50 +2917,41 @@ const FFB = async (service, path, method, authorization_type, json_data, callBac
             switch (status){
                 case 200:{
                     //OK
-                    callBack(null, result);
-                    break;
+                    return result;
                 }
                 case 400:{
                     //Bad request
                     show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
-                    callBack(result, null);
-                    break;
+                    return result;
                 }
                 case 404:{
                     //Not found
                     show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
-                    callBack(result, null);
-                    break;
+                    return result;
                 }
                 case 401:{
                     //Unauthorized, token expired
                     exception(COMMON_GLOBAL.exception_app_function, result);
-                    callBack(result, null);
-                    break;
+                    return result;
                 }
                 case 403:{
                     //Forbidden, not allowed to login or register new user
                     show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
-                    callBack(result, null);
-                    break;
+                    return result;
                 }
                 case 500:{
                     //Unknown error
                     exception(COMMON_GLOBAL.exception_app_function, result);
-                    callBack(result, null);
-                    break;
+                    return result;
                 }
                 case 503:{
                     //Service unavailable or other error in microservice
                     exception(COMMON_GLOBAL.exception_app_function, result);
-                    callBack(result, null);
-                    break;
+                    return result;
                 }
             }
         })
-        .catch(error=>{
-            callBack(error, null);
-        });
+        .catch(error=>{throw error;});
 };
 /*----------------------- 
   SERVICE SOCKET      
@@ -3098,34 +3044,28 @@ const updateOnlineStatus = () => {
                 `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`;
         token_type='APP_DATA';
     }
-    FFB ('SOCKET', path, 'PATCH', token_type, null, () => {});
+    FFB('SOCKET', path, 'PATCH', token_type, null);
 };
 const connectOnline = async () => {
-    FFB ('SOCKET', '/socket/connection/connect' +
-                      `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
-                      `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
-         'GET', 'SOCKET', null, (err, result_eventsource) => {
-        if (err)
+    FFB('SOCKET',   '/socket/connection/connect' +
+                    `?identity_provider_id=${COMMON_GLOBAL.user_identity_provider_id}` +
+                    `&system_admin=${COMMON_GLOBAL.system_admin}&latitude=${COMMON_GLOBAL.client_latitude}&longitude=${COMMON_GLOBAL.client_longitude}`, 
+         'GET', 'SOCKET', null)
+    .then((result_eventsource)=>{
+        COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
+        COMMON_GLOBAL.service_socket_eventsource.onmessage = event => {
+            show_broadcast(event.data);
+        };
+        COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
+            COMMON_GLOBAL.service_socket_eventsource.close();
             reconnect();
-        else{
-            COMMON_GLOBAL.service_socket_eventsource = result_eventsource;
-            COMMON_GLOBAL.service_socket_eventsource.onmessage = (event) => {
-                show_broadcast(event.data);
-            };
-            COMMON_GLOBAL.service_socket_eventsource.onerror = () => {
-                COMMON_GLOBAL.service_socket_eventsource.close();
-                reconnect();
-            };
-        }
-    });
+        };
+    })
+    .catch(()=>reconnect());
 };
 const checkOnline = (div_icon_online, user_account_id) => {
-    FFB ('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null, (err, result) => {
-        if (JSON.parse(result).online == 1)
-            document.querySelector('#' + div_icon_online).className = 'online';
-        else
-            document.querySelector('#' + div_icon_online).className= 'offline';
-    });
+    FFB('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
+    .then(result=>document.querySelector('#' + div_icon_online).className = JSON.parse(result).online == 1?'online':'offline');
 };
 /*-----------------------
   SERVICE GEOLOCATION   
@@ -3146,19 +3086,17 @@ const get_place_from_gps = async (longitude, latitude) => {
                 //not logged in or a user
                 tokentype = 'APP_DATA';
             }
-        FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
-            if (err)
+        FFB('GEOLOCATION', path, 'GET', tokentype, null)
+        .then(result=>{
+            const json = JSON.parse(result);
+            if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
                 resolve('');
-            else{
-                const json = JSON.parse(result);
-                if (json.geoplugin_place=='' && json.geoplugin_region =='' && json.geoplugin_countryCode =='')
-                    resolve('');
-                else
-                    resolve(json.geoplugin_place + ', ' +
-                            json.geoplugin_region + ', ' +
-                            json.geoplugin_countryCode);
-            }
-        });
+            else
+                resolve(json.geoplugin_place + ', ' +
+                        json.geoplugin_region + ', ' +
+                        json.geoplugin_countryCode);
+        })
+        .catch(()=>resolve(''));
     });
 };
 const get_gps_from_ip = async () => {
@@ -3178,22 +3116,20 @@ const get_gps_from_ip = async () => {
                 //not logged in or a user
                 tokentype = 'APP_DATA';
             }
-        FFB ('GEOLOCATION', path, 'GET', tokentype, null, (err, result) => {
-            if (err)
-                resolve(null);
-            else{
-                const json = JSON.parse(result);
-                COMMON_GLOBAL.client_latitude  = json.geoplugin_latitude;
-                COMMON_GLOBAL.client_longitude = json.geoplugin_longitude;
-                if (json.geoplugin_city=='' && json.geoplugin_regionName =='' && json.geoplugin_countryName =='')
-                    COMMON_GLOBAL.client_place = '';
-                else
-                    COMMON_GLOBAL.client_place = json.geoplugin_city + ', ' +
-                                                           json.geoplugin_regionName + ', ' +
-                                                           json.geoplugin_countryName;
-                resolve();
-            }
-        });
+        FFB('GEOLOCATION', path, 'GET', tokentype, null)
+        .then(result=>{
+            const geodata = JSON.parse(result);
+            COMMON_GLOBAL.client_latitude  = geodata.geoplugin_latitude;
+            COMMON_GLOBAL.client_longitude = geodata.geoplugin_longitude;
+            if (geodata.geoplugin_city=='' && geodata.geoplugin_regionName =='' && geodata.geoplugin_countryName =='')
+                COMMON_GLOBAL.client_place = '';
+            else
+                COMMON_GLOBAL.client_place =    geodata.geoplugin_city + ', ' +
+                                                geodata.geoplugin_regionName + ', ' +
+                                                geodata.geoplugin_countryName;
+            resolve();
+        })
+        .catch(()=>resolve(null));
     });
 
 };
@@ -3201,54 +3137,52 @@ const get_gps_from_ip = async () => {
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
 const get_cities = async (countrycode, callBack) => {
-    await FFB ('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            callBack(err, null);
-        else{
-            const cities = JSON.parse(result);
-            cities.sort((a, b) => {
-                const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-                const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
-                if (x < y) {
-                    return -1;
-                }
-                if (x > y) {
-                    return 1;
-                }
-                return 0;
-            });
-
-            let current_admin_name;
-            //fill list with cities
-            let cities_options='';
-            let i =0;
-            for (const city of cities) {
-                if (i == 0) {
-                    cities_options += `<option value='' id='' label='…' selected='selected'>…</option>
-                                <optgroup label='${city.admin_name}'>`;
-                    current_admin_name = city.admin_name;
-                } else
-                if (city.admin_name != current_admin_name) {
-                    cities_options += `</optgroup>
-                                <optgroup label='${city.admin_name}'>`;
-                    current_admin_name = city.admin_name;
-                }
-                cities_options +=
-                `<option 
-                    id=${city.id} 
-                    value=${i + 1}
-                    countrycode=${city.iso2}
-                    country='${city.country}'
-                    admin_name='${city.admin_name}'
-                    latitude=${city.lat}
-                    longitude=${city.lng}  
-                    >${city.city}
-                </option>`;
-                i++;
+    await FFB('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'APP_DATA', null)
+    .then(result=>{
+        const cities = JSON.parse(result);
+        cities.sort((a, b) => {
+            const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+            const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+            if (x < y) {
+                return -1;
             }
-            callBack(null, `${cities_options} </optgroup>`);
+            if (x > y) {
+                return 1;
+            }
+            return 0;
+        });
+
+        let current_admin_name;
+        //fill list with cities
+        let cities_options='';
+        let i =0;
+        for (const city of cities) {
+            if (i == 0) {
+                cities_options += `<option value='' id='' label='…' selected='selected'>…</option>
+                            <optgroup label='${city.admin_name}'>`;
+                current_admin_name = city.admin_name;
+            } else
+            if (city.admin_name != current_admin_name) {
+                cities_options += `</optgroup>
+                            <optgroup label='${city.admin_name}'>`;
+                current_admin_name = city.admin_name;
+            }
+            cities_options +=
+            `<option 
+                id=${city.id} 
+                value=${i + 1}
+                countrycode=${city.iso2}
+                country='${city.country}'
+                admin_name='${city.admin_name}'
+                latitude=${city.lat}
+                longitude=${city.lng}  
+                >${city.city}
+            </option>`;
+            i++;
         }
-    });
+        callBack(null, `${cities_options} </optgroup>`);
+    })
+    .then((err)=>callBack(err, null));
 };
 const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').innerText;
@@ -3257,12 +3191,9 @@ const worldcities_search = async (event_function) =>{
     else{
         const get_cities = async (search) =>{
             return new Promise ((resolve)=>{
-                FFB ('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null, (err, result) => {
-                    if (err)
-                        resolve(null);
-                    else
-                        resolve(JSON.parse(result));
-                });
+                FFB('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null)
+                .then(result=>resolve(JSON.parse(result)))
+                .catch(()=>resolve(null));
             });
         };
         document.querySelector('#common_module_leaflet_search_list').innerHTML = APP_SPINNER;
