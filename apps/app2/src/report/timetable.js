@@ -1228,81 +1228,73 @@ const makeTableRow = (data, columns, year, month, settings, date = null) => {
  * Timetable get user settings
  * @param {number} app_id 
  * @param {number} user_account_app_data_post_id 
- * @param {Types.callBack} callBack 
+ * @returns {Promise.<type_settings_report>}
  */
-const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id, callBack) => {
+const timetable_user_account_app_data_post_get = async (app_id, user_account_app_data_post_id) => {
     const { getUserPost} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
-	getUserPost(app_id, user_account_app_data_post_id)
+	return getUserPost(app_id, user_account_app_data_post_id)
 	.then((/**@type{Types.db_result_user_account_app_data_post_getUserPost[]}*/result_user_account_app_data_post)=>{
 		const user_account_app_data_post = JSON.parse(result_user_account_app_data_post[0].json_data);
-		/**@type{type_settings_report} */
-		const settings_report = {  	locale              	: user_account_app_data_post.regional_language_locale,  
-									timezone            	: user_account_app_data_post.regional_timezone,
-									number_system       	: user_account_app_data_post.regional_number_system,
-									direction           	: user_account_app_data_post.regional_layout_direction,
-									second_locale       	: user_account_app_data_post.regional_second_language_locale,
-									coltitle            	: user_account_app_data_post.regional_column_title,
-									arabic_script       	: user_account_app_data_post.regional_arabic_script,
-									calendartype        	: user_account_app_data_post.regional_calendar_type,
-									calendar_hijri_type 	: user_account_app_data_post.regional_calendar_hijri_type,
+		return  {  	locale              	: user_account_app_data_post.regional_language_locale,  
+					timezone            	: user_account_app_data_post.regional_timezone,
+					number_system       	: user_account_app_data_post.regional_number_system,
+					direction           	: user_account_app_data_post.regional_layout_direction,
+					second_locale       	: user_account_app_data_post.regional_second_language_locale,
+					coltitle            	: user_account_app_data_post.regional_column_title,
+					arabic_script       	: user_account_app_data_post.regional_arabic_script,
+					calendartype        	: user_account_app_data_post.regional_calendar_type,
+					calendar_hijri_type 	: user_account_app_data_post.regional_calendar_hijri_type,
 
-									/* app ui user_account_app_data_post
-									user_account_app_data_post.gps_map_type
-									user_account_app_data_post.gps_country_id		
-									user_account_app_data_post.gps_city_id		
-									user_account_app_data_post.gps_popular_place_id
-									*/              
-									place               	: user_account_app_data_post.description,
-									gps_lat             	: parseFloat(user_account_app_data_post.gps_lat_text),
-									gps_long            	: parseFloat(user_account_app_data_post.gps_long_text),
-									
-									theme_day           	: 'theme_day_' + user_account_app_data_post.design_theme_day_id,
-									theme_month         	: 'theme_month_' + user_account_app_data_post.design_theme_month_id,
-									theme_year          	: 'theme_year_' + user_account_app_data_post.design_theme_year_id,
-									papersize				: user_account_app_data_post.design_paper_size,
-									highlight           	: user_account_app_data_post.design_row_highlight,
-									show_weekday        	: getNumberValue(user_account_app_data_post.design_column_weekday_checked),
-									show_calendartype   	: getNumberValue(user_account_app_data_post.design_column_calendartype_checked),
-									show_notes          	: getNumberValue(user_account_app_data_post.design_column_notes_checked),
-									show_gps   	       		: getNumberValue(user_account_app_data_post.design_column_gps_checked),
-									show_timezone       	: getNumberValue(user_account_app_data_post.design_column_timezone_checked),
-												
-									header_img_src      	: (user_account_app_data_post.image_header_image_img == '' || user_account_app_data_post.image_header_image_img == null)?null:user_account_app_data_post.image_header_image_img,
-									footer_img_src      	: (user_account_app_data_post.image_footer_image_img == '' || user_account_app_data_post.image_footer_image_img == null)?null:user_account_app_data_post.image_footer_image_img,
+					place               	: user_account_app_data_post.description,
+					gps_lat             	: parseFloat(user_account_app_data_post.gps_lat_text),
+					gps_long            	: parseFloat(user_account_app_data_post.gps_long_text),
+					
+					theme_day           	: 'theme_day_' + user_account_app_data_post.design_theme_day_id,
+					theme_month         	: 'theme_month_' + user_account_app_data_post.design_theme_month_id,
+					theme_year          	: 'theme_year_' + user_account_app_data_post.design_theme_year_id,
+					papersize				: user_account_app_data_post.design_paper_size,
+					highlight           	: user_account_app_data_post.design_row_highlight,
+					show_weekday        	: getNumberValue(user_account_app_data_post.design_column_weekday_checked),
+					show_calendartype   	: getNumberValue(user_account_app_data_post.design_column_calendartype_checked),
+					show_notes          	: getNumberValue(user_account_app_data_post.design_column_notes_checked),
+					show_gps   	       		: getNumberValue(user_account_app_data_post.design_column_gps_checked),
+					show_timezone       	: getNumberValue(user_account_app_data_post.design_column_timezone_checked),
+								
+					header_img_src      	: (user_account_app_data_post.image_header_image_img == '' || user_account_app_data_post.image_header_image_img == null)?null:user_account_app_data_post.image_header_image_img,
+					footer_img_src      	: (user_account_app_data_post.image_footer_image_img == '' || user_account_app_data_post.image_footer_image_img == null)?null:user_account_app_data_post.image_footer_image_img,
 
-									header_txt1         	: user_account_app_data_post.text_header_1_text,
-									header_txt2         	: user_account_app_data_post.text_header_2_text,
-									header_txt3         	: user_account_app_data_post.text_header_3_text,
-									header_align      		: (user_account_app_data_post.text_header_align == '' || user_account_app_data_post.text_header_align ==null)?null:user_account_app_data_post.text_header_align,
-									footer_txt1         	: user_account_app_data_post.text_footer_1_text,
-									footer_txt2         	: user_account_app_data_post.text_footer_2_text,
-									footer_txt3    	   		: user_account_app_data_post.text_footer_3_text,
-									footer_align			: (user_account_app_data_post.text_footer_align == '' || user_account_app_data_post.text_footer_align ==null)?null:user_account_app_data_post.text_footer_align,
+					header_txt1         	: user_account_app_data_post.text_header_1_text,
+					header_txt2         	: user_account_app_data_post.text_header_2_text,
+					header_txt3         	: user_account_app_data_post.text_header_3_text,
+					header_align      		: (user_account_app_data_post.text_header_align == '' || user_account_app_data_post.text_header_align ==null)?null:user_account_app_data_post.text_header_align,
+					footer_txt1         	: user_account_app_data_post.text_footer_1_text,
+					footer_txt2         	: user_account_app_data_post.text_footer_2_text,
+					footer_txt3    	   		: user_account_app_data_post.text_footer_3_text,
+					footer_align			: (user_account_app_data_post.text_footer_align == '' || user_account_app_data_post.text_footer_align ==null)?null:user_account_app_data_post.text_footer_align,
 
-									method              	: user_account_app_data_post.prayer_method,
-									asr                 	: user_account_app_data_post.prayer_asr_method,
-									highlat             	: user_account_app_data_post.prayer_high_latitude_adjustment,
-									format              	: user_account_app_data_post.prayer_time_format,
-									hijri_adj           	: getNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
-									iqamat_fajr         	: user_account_app_data_post.prayer_fajr_iqamat,
-									iqamat_dhuhr        	: user_account_app_data_post.prayer_dhuhr_iqamat,
-									iqamat_asr          	: user_account_app_data_post.prayer_asr_iqamat,
-									iqamat_maghrib      	: user_account_app_data_post.prayer_maghrib_iqamat,
-									iqamat_isha         	: user_account_app_data_post.prayer_isha_iqamat,
-									show_imsak          	: getNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
-									show_sunset         	: getNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
-									show_midnight       	: getNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
-									show_fast_start_end 	: getNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
-									
-									timetable_class			: 'timetable_class',
-									timetable_month         : 'timetable_month_class',
-									timetable_year_month    : 'timetable_year_month',
-									reporttype_year_month  	: 'MONTH'
-								};
-		callBack(null, settings_report);
+					method              	: user_account_app_data_post.prayer_method,
+					asr                 	: user_account_app_data_post.prayer_asr_method,
+					highlat             	: user_account_app_data_post.prayer_high_latitude_adjustment,
+					format              	: user_account_app_data_post.prayer_time_format,
+					hijri_adj           	: getNumberValue(user_account_app_data_post.prayer_hijri_date_adjustment),
+					iqamat_fajr         	: user_account_app_data_post.prayer_fajr_iqamat,
+					iqamat_dhuhr        	: user_account_app_data_post.prayer_dhuhr_iqamat,
+					iqamat_asr          	: user_account_app_data_post.prayer_asr_iqamat,
+					iqamat_maghrib      	: user_account_app_data_post.prayer_maghrib_iqamat,
+					iqamat_isha         	: user_account_app_data_post.prayer_isha_iqamat,
+					show_imsak          	: getNumberValue(user_account_app_data_post.prayer_column_imsak_checked),
+					show_sunset         	: getNumberValue(user_account_app_data_post.prayer_column_sunset_checked),
+					show_midnight       	: getNumberValue(user_account_app_data_post.prayer_column_midnight_checked),
+					show_fast_start_end 	: getNumberValue(user_account_app_data_post.prayer_column_fast_start_end),
+					
+					timetable_class			: 'timetable_class',
+					timetable_month         : 'timetable_month_class',
+					timetable_year_month    : 'timetable_year_month',
+					reporttype_year_month  	: 'MONTH'
+				};
 	})
 	.catch((/**@type{Types.error}*/error)=>{
-		callBack(error, null);
+		throw error;
 	});
 };
 /**
@@ -1361,14 +1353,14 @@ const timetable_translate_settings = async (app_id, locale, locale_second) => {
  * Timetable get day user settings
  * @param {number} app_id 
  * @param {number} user_account_id 
- * @param {Types.callBack} callBack 
+ * @returns {Promise.<type_day_user_account_app_data_posts[]>}
  */
-const timetable_day_user_account_app_data_posts_get = async (app_id, user_account_id, callBack) => {
+const timetable_day_user_account_app_data_posts_get = async (app_id, user_account_id) => {
 	/**@type{type_day_user_account_app_data_posts[]} */
 	const user_account_app_data_posts = [];
 
     const { getUserPostsByUserId} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account_app_data_post.service.js`);
-    getUserPostsByUserId(app_id, user_account_id)
+    return getUserPostsByUserId(app_id, user_account_id)
 	.then((/**@type{Types.db_result_user_account_app_data_post_getUserPostsByUserId[]}*/result_user_account_app_data_posts)=>{
 		for (const user_account_app_data_post of result_user_account_app_data_posts) {
 			//use settings that can be used on a day timetable showing different user settings
@@ -1393,10 +1385,10 @@ const timetable_day_user_account_app_data_posts_get = async (app_id, user_accoun
 				}
 			);
 		}
-		callBack(null, user_account_app_data_posts);
+		return user_account_app_data_posts;
 	})
 	.catch((/**@type{Types.error}*/error)=>{
-		callBack(error, null);
+		throw error;
 	});
 };
 /**
@@ -2033,67 +2025,59 @@ const timetable = async (timetable_parameters) => {
                                     user_account_app_data_post_id:  getNumberValue(user_account_app_data_post_id)};
 			insertUserPostView(timetable_parameters.app_id, data_ViewStat)
 			.then(()=>{
-				timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id, (err, user_account_app_data_post) =>{
-					if (err)
-						resolve('');
-					else{
-						render_variables.push(['BODY_CLASSNAME',user_account_app_data_post.arabic_script]);
-						render_variables.push(['REPORT_PAPER_CLASSNAME',user_account_app_data_post.papersize]);
-						timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
-							if (err)
-								resolve('');
-							else{
-								/**@ts-ignore */
-								import('praytimes').then(({default: prayTimes}) => {
-									//set current date for report month
-									REPORT_GLOBAL.session_currentDate = new Date();
-									REPORT_GLOBAL.session_currentHijriDate = [0,0,0];
-									//get Hijri date from initial Gregorian date
-									REPORT_GLOBAL.session_currentHijriDate[0] = 
-										parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-															REPORT_GLOBAL.session_currentDate.getMonth(),
-															REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-									REPORT_GLOBAL.session_currentHijriDate[1] = 
-										//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
-										parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
-															REPORT_GLOBAL.session_currentDate.getMonth(),
-															REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-									set_prayer_method(timetable_parameters.app_id, user_account_app_data_post.locale).then(() => {
-										if (reporttype==0){
-											timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id, (err, user_account_app_data_posts_parameters) =>{
-												if (err)
-													resolve('');
-												else{
-													render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters)]);
-													getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-														render_variables.push(['REPORT_QRCODE',qrcode]);
-														resolve(render_app_with_data(timetable_parameters.report, render_variables));
-													});
-												}
+				timetable_user_account_app_data_post_get(timetable_parameters.app_id, user_account_app_data_post_id)
+				.then((user_account_app_data_post)=>{
+					render_variables.push(['BODY_CLASSNAME',user_account_app_data_post.arabic_script]);
+					render_variables.push(['REPORT_PAPER_CLASSNAME',user_account_app_data_post.papersize]);
+					timetable_translate_settings(timetable_parameters.app_id, user_account_app_data_post.locale, user_account_app_data_post.second_locale).then(() => {
+						/**@ts-ignore */
+						import('praytimes').then(({default: prayTimes}) => {
+							//set current date for report month
+							REPORT_GLOBAL.session_currentDate = new Date();
+							REPORT_GLOBAL.session_currentHijriDate = [0,0,0];
+							//get Hijri date from initial Gregorian date
+							REPORT_GLOBAL.session_currentHijriDate[0] = 
+								parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+													REPORT_GLOBAL.session_currentDate.getMonth(),
+													REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+							REPORT_GLOBAL.session_currentHijriDate[1] = 
+								//Number() does not work for hijri year that return characters after year, use parseInt() that only returns year
+								parseInt(new Date(	REPORT_GLOBAL.session_currentDate.getFullYear(),
+													REPORT_GLOBAL.session_currentDate.getMonth(),
+													REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+							set_prayer_method(timetable_parameters.app_id, user_account_app_data_post.locale).then(() => {
+								if (reporttype==0){
+									timetable_day_user_account_app_data_posts_get(timetable_parameters.app_id, user_account_id)
+									.then((user_account_app_data_posts_parameters)=>{
+										render_variables.push(['REPORT_TIMETABLE',displayDay(prayTimes, user_account_app_data_post, user_account_app_data_posts_parameters)]);
+										getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
+											render_variables.push(['REPORT_QRCODE',qrcode]);
+											resolve(render_app_with_data(timetable_parameters.report, render_variables));
+										});
+									})
+									.catch(()=>resolve(''));
+								}
+								else
+									if (reporttype==1){
+										render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_account_app_data_post)]);
+										getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
+											render_variables.push(['REPORT_QRCODE',qrcode]);
+											resolve(render_app_with_data(timetable_parameters.report, render_variables));
+										});
+									}
+									else 
+										if (reporttype==2){
+											render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_account_app_data_post)]);
+											getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
+												render_variables.push(['REPORT_QRCODE',qrcode]);
+												resolve(render_app_with_data(timetable_parameters.report, render_variables));
 											});
 										}
-										else
-											if (reporttype==1){
-												render_variables.push(['REPORT_TIMETABLE',displayMonth(prayTimes, user_account_app_data_post)]);
-												getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-													render_variables.push(['REPORT_QRCODE',qrcode]);
-													resolve(render_app_with_data(timetable_parameters.report, render_variables));
-												});
-											}
-											else 
-												if (reporttype==2){
-													render_variables.push(['REPORT_TIMETABLE',displayYear(prayTimes, user_account_app_data_post)]);
-													getQRCode(getQRUrl(decodedReportparameters)).then((qrcode)=>{
-														render_variables.push(['REPORT_QRCODE',qrcode]);
-														resolve(render_app_with_data(timetable_parameters.report, render_variables));
-													});
-												}
-									});
-								});
-							}
+							});
 						});
-					}
-				});
+					});
+				}) 
+				.catch(()=>resolve(''));
 			})
 			.catch((/**@type{Types.error}*/error)=>{
 				resolve(error);
