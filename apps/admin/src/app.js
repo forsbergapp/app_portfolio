@@ -12,23 +12,18 @@ const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.serv
  * @returns {Promise.<Types.app_create|Types.app_create_empty>}
  */
 const createAdmin = async (app_id, locale) => {
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
-    return new Promise((resolve, reject) => {
-        render_app_html(app_id, 'APP', locale, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
-            if (err)
-                reject(err);
-            else{
-                const app_config = ConfigGetApp(app_id, 'CONFIG');
+    return render_app_html(app_id, locale)
+            .then((/**@type{Types.render_common}*/app)=>{
                 if (app.settings)
-                    resolve({   app:app.app,
-                                map_styles: app.settings.map_styles,
-                                map:app_config.MAP});
+                    return {app:app.app,
+                            map:app.map,
+                            map_styles: app.settings.map_styles
+                            };
                 else
-                    resolve({   app:app.app,
-                                map_styles: null,
-                                map:app_config.MAP});
-            }
-        });
-    });
+                    return{ app:app.app,
+                            map:app.map,
+                            map_styles: null};
+            })
+            .catch((/**@type{Types.error}*/err)=>{throw err;});
 };
 export {createAdmin};
