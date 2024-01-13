@@ -378,7 +378,7 @@ const toBase64 = (str) => {
 const fromBase64 = (str) => {
     return decodeURIComponent(escape(window.atob(str)));
 };
-const common_translate_ui = async (lang_code, callBack) => {
+const common_translate_ui = async (lang_code) => {
     let path='';
     if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
         path = `/app_object/admin?data_lang_code=${lang_code}&object_name=APP`;
@@ -473,9 +473,7 @@ const common_translate_ui = async (lang_code, callBack) => {
     }
     select_locale.innerHTML = html;
     select_locale.value = lang_code;
-    map_country(lang_code).then(()=>{
-        callBack(null,null);
-    });
+    await map_country(lang_code);
 };
 const get_null_or_value = (value) => {
     if (value == null)
@@ -3838,12 +3836,14 @@ const set_events = () => {
             //hide use menu dropdown
             if (document.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
                 document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-            //hide search
-            const x = document.querySelector('#common_profile_input_row'); 
-            if (x.style.visibility == 'visible') {
-                x.style.visibility = 'hidden';
-                document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-            } 
+            if (document.querySelector('#common_profile_input_row')){
+                //hide search
+                const x = document.querySelector('#common_profile_input_row'); 
+                if (x.style.visibility == 'visible') {
+                    x.style.visibility = 'hidden';
+                    document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+                } 
+            }
         }
     }, false);
 
