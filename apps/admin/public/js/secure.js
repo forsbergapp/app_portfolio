@@ -570,11 +570,21 @@ const set_maintenance = () => {
 /*----------------------- */
 
 const count_users = async () => {
-    const count_connected = async (identity_provider_id, count_logged_in, callBack) => {
-        if (admin_token_has_value()){
-            await common.FFB('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
-            .then(result=>callBack(null, result))
-            .catch(err=>callBack(err, null));
+    const count_connected = async () => {
+        const get_count = async (identity_provider_id, count_logged_in) => {
+            return await common.FFB('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
+            .then(result=>JSON.parse(result))
+            .catch(err=>{throw err;});
+        };
+        for (const row of document.querySelectorAll('.list_user_stat_row')){
+            if (row.id !='list_user_stat_row_title'){
+                if (row.id=='list_user_stat_row_not_connected')
+                await get_count(row.children[0].children[0].innerHTML,0)
+                    .then(result=>row.children[3].children[0].innerHTML = result.count_connected);
+                else
+                await get_count(row.children[0].children[0].innerHTML,1)
+                    .then(result=>row.children[3].children[0].innerHTML = result.count_connected);
+            }
         }
     };    
     if (admin_token_has_value()){
@@ -628,18 +638,7 @@ const count_users = async () => {
                     </div>
                 </div>`;
             //count logged in
-            document.querySelectorAll('.list_user_stat_row').forEach(e => {
-                if (e.id !='list_user_stat_row_title'){
-                    if (e.id=='list_user_stat_row_not_connected')
-                        count_connected(e.children[0].children[0].innerHTML,0, (err, result)=>{
-                            e.children[3].children[0].innerHTML = JSON.parse(result).count_connected;
-                        });
-                    else
-                        count_connected(e.children[0].children[0].innerHTML,1, (err, result)=>{
-                                e.children[3].children[0].innerHTML = JSON.parse(result).count_connected;
-                        });
-                }
-            });
+            count_connected();
         })
         .catch(()=>document.querySelector('#menu_2_content').innerHTML = '');
     }
