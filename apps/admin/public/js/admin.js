@@ -86,30 +86,28 @@ const admin_login = async () => {
                 return;
             }
         }
-        common.FFB ('IAM', '/systemadmin?', 'POST', 'IAM', {username: encodeURI(document.querySelector('#system_admin_login_username_input').innerHTML),
-                                                            password: encodeURI(document.querySelector('#system_admin_login_password_input').innerHTML)}, (err, result_login) => {
+        common.FFB('IAM', '/systemadmin?', 'POST', 'IAM', {username: encodeURI(document.querySelector('#system_admin_login_username_input').innerHTML),
+                                                            password: encodeURI(document.querySelector('#system_admin_login_password_input').innerHTML)})
+        .then((result_login)=>{
             document.querySelector('#admin_login_button').innerHTML = old_button;
-            if (err)
-                null;
-            else{
-                common.COMMON_GLOBAL.system_admin = JSON.parse(result_login).username;
-                common.COMMON_GLOBAL.rest_admin_at = JSON.parse(result_login).token_at;
-                common.updateOnlineStatus();
-                common.dialogue_close('dialogue_admin_login').then(() => {
-                    document.querySelector('#common_user_menu_default_avatar').innerHTML = common.ICONS.app_system_admin;
-                    document.querySelector('#common_user_menu_username').innerHTML = common.ICONS.app_system_admin;
-                    document.querySelector('#menu').style.visibility = 'visible';
-                    document.querySelector('#menu_open').style.visibility = 'visible';
-                    document.querySelector('#common_user_preferences').style.display = 'none';
-                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                    document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                    clear_login();
-                    document.querySelector('#admin_secure').style.visibility = 'visible';
-                    app_secure.init();
-                });
-            }
-        });
+            common.COMMON_GLOBAL.system_admin = JSON.parse(result_login).username;
+            common.COMMON_GLOBAL.rest_admin_at = JSON.parse(result_login).token_at;
+            common.updateOnlineStatus();
+            common.dialogue_close('dialogue_admin_login').then(() => {
+                document.querySelector('#common_user_menu_default_avatar').innerHTML = common.ICONS.app_system_admin;
+                document.querySelector('#common_user_menu_username').innerHTML = common.ICONS.app_system_admin;
+                document.querySelector('#menu').style.visibility = 'visible';
+                document.querySelector('#menu_open').style.visibility = 'visible';
+                document.querySelector('#common_user_preferences').style.display = 'none';
+                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                clear_login();
+                document.querySelector('#admin_secure').style.visibility = 'visible';
+                app_secure.init();
+            });
+        })
+        .catch(()=>document.querySelector('#admin_login_button').innerHTML = old_button);
     }
     else {
         await common.user_login(encodeURI(document.querySelector('#admin_login_username_input').innerHTML),
