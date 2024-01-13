@@ -233,7 +233,6 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                         insertUserAccountLogon(app_id, data_login)
                         .then(()=>{
                             resolve({
-                                count: result_signin.length,
                                 accessToken: data_login.access_token,
                                 items: result_signin,
                                 userCreated: 0
@@ -262,7 +261,6 @@ const login_provider = (app_id, ip, user_agent, query, data, res) =>{
                                 insertUserAccountLogon(app_id, data_login)
                                 .then(()=>{
                                     resolve({
-                                        count: result_signin2.length,
                                         accessToken: data_login.access_token,
                                         items: result_signin2,
                                         userCreated: 1

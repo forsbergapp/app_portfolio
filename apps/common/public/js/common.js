@@ -2466,7 +2466,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
         FFB('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data)
         .then(result=>{
             const user_login = JSON.parse(result).items[0];
-            COMMON_GLOBAL.rest_at = user_login.accessToken;
+            COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
             COMMON_GLOBAL.user_account_id = user_login.id;
             COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
             updateOnlineStatus();
@@ -2479,7 +2479,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                                 avatar: profile_image,
                                 first_name: profile_first_name,
                                 last_name: profile_last_name,
-                                userCreated: user_login.userCreated});
+                                userCreated: JSON.parse(result).userCreated});
             });
         })
         .catch(err=>callBack(err, null));
