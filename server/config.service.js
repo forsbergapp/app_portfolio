@@ -316,21 +316,16 @@ const CheckFirstTime = () => {
  * @async
  * @param {string} admin_name
  * @param {string} admin_password
- * @param {Types.callBack} callBack
+ * @returns {Promise.<void>}
  */
-const CreateSystemAdmin = async (admin_name, admin_password, callBack) => {
+const CreateSystemAdmin = async (admin_name, admin_password) => {
     const { default: {genSalt, hash} } = await import('bcrypt');
     const file = await file_get('IAM_USER', true);
     file.file_content.username = admin_name;
     file.file_content.password = await hash(admin_password, await genSalt(10));
     file.file_content.modified = new Date().toISOString();
     await file_update('IAM_USER', file.transaction_id, file.file_content)
-    .then(()=> {
-        callBack(null, null);
-    })
-    .catch((/**@type{Types.error}*/error)=> {
-        callBack(error, null);
-    });
+    .catch((/**@type{Types.error}*/error)=>{throw error;});
 };
 
 export{ CreateRandomString,
