@@ -272,57 +272,54 @@ const app_theme_update = toggle_theme => {
 const get_apps = () => {
     const old_button = document.querySelector('#apps').innerHTML;
     const old_button_menu_list = document.querySelector('#app_menu_content_apps_list').innerHTML;
-    
-    common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err){
-            document.querySelector('#apps').innerHTML = old_button;
-            document.querySelector('#app_menu_content_apps_list').innerHTML = old_button_menu_list;
+    common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'APP_DATA', null)
+    .then(result=>{
+        let html_apps ='';
+        let html_menu_apps_list ='';
+        let apps_count=0;
+        for (const app of JSON.parse(result)) {
+            apps_count++;
+            html_apps +=`<div class='app_link_row'>
+                        <div class='app_link_col'>
+                            <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
+                        </div>
+                        <div class='app_link_col'>
+                            <img class='app_logo' src='${app.LOGO}' />
+                        </div>
+                        <div class='app_link_col'>
+                            <div class='app_name'>${app.NAME}</div>
+                        </div>
+                    </div>`;
+            html_menu_apps_list +=`<div class='app_link_row'>
+                        <div class='app_link_col'>
+                            <div class='app_id'>${app.APP_ID}</div>
+                        </div>
+                        <div class='app_link_col'>
+                            <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
+                        </div>
+                        <div class='app_link_col'>
+                            <img class='app_logo' src='${app.LOGO}' />
+                        </div>
+                        <div class='app_link_col'>
+                            <div class='app_name'>${app.NAME}</div>
+                            <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
+                            <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
+                        </div>
+                    </div>`;
         }
-        else{
-            const apps = JSON.parse(result);
-            let html_apps ='';
-            let html_menu_apps_list ='';
-            let apps_count=0;
-            for (const app of apps) {
-                apps_count++;
-                html_apps +=`<div class='app_link_row'>
-                            <div class='app_link_col'>
-                                <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                            </div>
-                            <div class='app_link_col'>
-                                <img class='app_logo' src='${app.LOGO}' />
-                            </div>
-                            <div class='app_link_col'>
-                                <div class='app_name'>${app.NAME}</div>
-                            </div>
+        //if odd add extra empty column
+        if (apps_count & 1)
+            html_apps +=`<div class='app_link_row'>
+                            <div class='app_link_col'></div>
+                            <div class='app_link_col'></div>
+                            <div class='app_link_col'></div>
                         </div>`;
-                html_menu_apps_list +=`<div class='app_link_row'>
-                            <div class='app_link_col'>
-                                <div class='app_id'>${app.APP_ID}</div>
-                            </div>
-                            <div class='app_link_col'>
-                                <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                            </div>
-                            <div class='app_link_col'>
-                                <img class='app_logo' src='${app.LOGO}' />
-                            </div>
-                            <div class='app_link_col'>
-                                <div class='app_name'>${app.NAME}</div>
-                                <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
-                                <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
-                            </div>
-                        </div>`;
-            }
-            //if odd add extra empty column
-            if (apps_count & 1)
-                html_apps +=`<div class='app_link_row'>
-                                <div class='app_link_col'></div>
-                                <div class='app_link_col'></div>
-                                <div class='app_link_col'></div>
-                            </div>`;
-            document.querySelector('#apps').innerHTML = html_apps;
-            document.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
-        }
+        document.querySelector('#apps').innerHTML = html_apps;
+        document.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
+    })
+    .catch(()=>{
+        document.querySelector('#apps').innerHTML = old_button;
+        document.querySelector('#app_menu_content_apps_list').innerHTML = old_button_menu_list;
     });
 };
 

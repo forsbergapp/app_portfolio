@@ -390,41 +390,38 @@ const settings_translate = async (first=true) => {
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
-        await common.FFB ('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'APP_DATA', null, (err, result) => {
-            if (err)
-                null;
-            else{
-                for (const app_object_item of JSON.parse(result)){
-                    if (first==true)
-                        app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-                    else
-                        app_report.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
-                }
-                //if translating first language and second language is not used
-                if (first == true &&
-                    document.querySelector('#setting_select_report_locale_second').value ==0){
-                    app_report.REPORT_GLOBAL.second_language.timetable_title= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_day= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_weekday= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_weekday_tr= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_caltype_hijri= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_caltype_gregorian= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_imsak= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_fajr= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_fajr_iqamat= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_sunrise= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_dhuhr= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_asr= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_asr_iqamat= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_sunset= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_maghrib= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_isha= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_isha_iqamat= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_midnight= '';
-                    app_report.REPORT_GLOBAL.second_language.coltitle_notes= '';
-                }
+        await common.FFB('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'APP_DATA', null)
+        .then(result=>{
+            for (const app_object_item of JSON.parse(result)){
+                if (first==true)
+                    app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+                else
+                    app_report.REPORT_GLOBAL.second_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
+            }
+            //if translating first language and second language is not used
+            if (first == true &&
+                document.querySelector('#setting_select_report_locale_second').value ==0){
+                app_report.REPORT_GLOBAL.second_language.timetable_title= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_day= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_weekday= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_weekday_tr= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_caltype_hijri= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_caltype_gregorian= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_imsak= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_fajr= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_fajr_iqamat= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_sunrise= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_dhuhr= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_dhuhr_iqamat= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_asr= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_asr_iqamat= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_sunset= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_maghrib= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_maghrib_iqamat= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_isha= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_isha_iqamat= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_midnight= '';
+                app_report.REPORT_GLOBAL.second_language.coltitle_notes= '';
             }
         });
     }
@@ -1193,74 +1190,71 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
 /*----------------------- */
 const user_settings_get = async () => {
     const select = document.querySelector('#setting_select_user_setting');
-    await common.FFB ('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            select.innerHTML = '';
-            //fill select
-            let option_html = '';
-            let i=0;
-            for (const user_account_app_setting of JSON.parse(result)) {
-                const settings = JSON.parse(user_account_app_setting.json_data);
-                option_html += `<option value=${i} id=${user_account_app_setting.id} description='${settings.description}'
-                                    regional_language_locale=${settings.regional_language_locale}
-                                    regional_timezone=${settings.regional_timezone}
-                                    regional_number_system=${settings.regional_number_system}
-                                    regional_layout_direction=${settings.regional_layout_direction}
-                                    regional_second_language_locale=${settings.regional_second_language_locale}
-                                    regional_column_title=${settings.regional_column_title}
-                                    regional_arabic_script=${settings.regional_arabic_script}
-                                    regional_calendar_type=${settings.regional_calendar_type}
-                                    regional_calendar_hijri_type=${settings.regional_calendar_hijri_type}
-                                    ${settings.gps_country_id==null?'gps_country_id ':'gps_country_id=' + settings.gps_country_id}
-                                    ${settings.gps_city_id==null?'gps_city_id ':'gps_city_id=' + settings.gps_city_id}
-                                    ${settings.gps_popular_place_id==null?'gps_popular_place_id ':'gps_popular_place_id=' + settings.gps_popular_place_id}
-                                    gps_lat_text=${settings.gps_lat_text}
-                                    gps_long_text=${settings.gps_long_text}
-                                    design_theme_day_id=${settings.design_theme_day_id}
-                                    design_theme_month_id=${settings.design_theme_month_id}
-                                    design_theme_year_id=${settings.design_theme_year_id}
-                                    design_paper_size=${settings.design_paper_size}
-                                    design_row_highlight=${settings.design_row_highlight}
-                                    design_column_weekday_checked=${settings.design_column_weekday_checked}
-                                    design_column_calendartype_checked=${settings.design_column_calendartype_checked}
-                                    design_column_notes_checked=${settings.design_column_notes_checked}
-                                    design_column_gps_checked=${settings.design_column_gps_checked}
-                                    design_column_timezone_checked=${settings.design_column_timezone_checked}
-                                    image_header_image_img='${common.image_format(settings.image_header_image_img)}'
-                                    image_footer_image_img='${common.image_format(settings.image_footer_image_img)}'
-                                    text_header_1_text='${settings.text_header_1_text==null?'':settings.text_header_1_text}'
-                                    text_header_2_text='${settings.text_header_2_text==null?'':settings.text_header_2_text}'
-                                    text_header_3_text='${settings.text_header_3_text==null?'':settings.text_header_3_text}'
-                                    text_header_align='${settings.text_header_align==null?'':settings.text_header_align}'
-                                    text_footer_1_text='${settings.text_footer_1_text==null?'':settings.text_footer_1_text}'
-                                    text_footer_2_text='${settings.text_footer_2_text==null?'':settings.text_footer_2_text}'
-                                    text_footer_3_text='${settings.text_footer_3_text==null?'':settings.text_footer_3_text}'
-                                    text_footer_align='${settings.text_footer_align==null?'':settings.text_footer_align}'    
-                                    prayer_method=${settings.prayer_method}
-                                    prayer_asr_method=${settings.prayer_asr_method}
-                                    prayer_high_latitude_adjustment=${settings.prayer_high_latitude_adjustment}
-                                    prayer_time_format=${settings.prayer_time_format}
-                                    prayer_hijri_date_adjustment=${settings.prayer_hijri_date_adjustment}
-                                    prayer_fajr_iqamat=${settings.prayer_fajr_iqamat}
-                                    prayer_dhuhr_iqamat=${settings.prayer_dhuhr_iqamat}
-                                    prayer_asr_iqamat=${settings.prayer_asr_iqamat}
-                                    prayer_maghrib_iqamat=${settings.prayer_maghrib_iqamat}
-                                    prayer_isha_iqamat=${settings.prayer_isha_iqamat}
-                                    prayer_column_imsak_checked=${settings.prayer_column_imsak_checked}
-                                    prayer_column_sunset_checked=${settings.prayer_column_sunset_checked}
-                                    prayer_column_midnight_checked=${settings.prayer_column_midnight_checked}
-                                    prayer_column_fast_start_end=${settings.prayer_column_fast_start_end}
-                                    user_account_id=${user_account_app_setting.user_account_app_user_account_id}
-                                    >${settings.description}
-                                </option>`;
-                i++;
-            }
-            select.innerHTML += option_html;
-            //show user setting select
-            document.querySelector('#user_settings').style.display = 'block';
+    await common.FFB('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_DATA', null)
+    .then(result=>{
+        select.innerHTML = '';
+        //fill select
+        let option_html = '';
+        let i=0;
+        for (const user_account_app_setting of JSON.parse(result)) {
+            const settings = JSON.parse(user_account_app_setting.json_data);
+            option_html += `<option value=${i} id=${user_account_app_setting.id} description='${settings.description}'
+                                regional_language_locale=${settings.regional_language_locale}
+                                regional_timezone=${settings.regional_timezone}
+                                regional_number_system=${settings.regional_number_system}
+                                regional_layout_direction=${settings.regional_layout_direction}
+                                regional_second_language_locale=${settings.regional_second_language_locale}
+                                regional_column_title=${settings.regional_column_title}
+                                regional_arabic_script=${settings.regional_arabic_script}
+                                regional_calendar_type=${settings.regional_calendar_type}
+                                regional_calendar_hijri_type=${settings.regional_calendar_hijri_type}
+                                ${settings.gps_country_id==null?'gps_country_id ':'gps_country_id=' + settings.gps_country_id}
+                                ${settings.gps_city_id==null?'gps_city_id ':'gps_city_id=' + settings.gps_city_id}
+                                ${settings.gps_popular_place_id==null?'gps_popular_place_id ':'gps_popular_place_id=' + settings.gps_popular_place_id}
+                                gps_lat_text=${settings.gps_lat_text}
+                                gps_long_text=${settings.gps_long_text}
+                                design_theme_day_id=${settings.design_theme_day_id}
+                                design_theme_month_id=${settings.design_theme_month_id}
+                                design_theme_year_id=${settings.design_theme_year_id}
+                                design_paper_size=${settings.design_paper_size}
+                                design_row_highlight=${settings.design_row_highlight}
+                                design_column_weekday_checked=${settings.design_column_weekday_checked}
+                                design_column_calendartype_checked=${settings.design_column_calendartype_checked}
+                                design_column_notes_checked=${settings.design_column_notes_checked}
+                                design_column_gps_checked=${settings.design_column_gps_checked}
+                                design_column_timezone_checked=${settings.design_column_timezone_checked}
+                                image_header_image_img='${common.image_format(settings.image_header_image_img)}'
+                                image_footer_image_img='${common.image_format(settings.image_footer_image_img)}'
+                                text_header_1_text='${settings.text_header_1_text==null?'':settings.text_header_1_text}'
+                                text_header_2_text='${settings.text_header_2_text==null?'':settings.text_header_2_text}'
+                                text_header_3_text='${settings.text_header_3_text==null?'':settings.text_header_3_text}'
+                                text_header_align='${settings.text_header_align==null?'':settings.text_header_align}'
+                                text_footer_1_text='${settings.text_footer_1_text==null?'':settings.text_footer_1_text}'
+                                text_footer_2_text='${settings.text_footer_2_text==null?'':settings.text_footer_2_text}'
+                                text_footer_3_text='${settings.text_footer_3_text==null?'':settings.text_footer_3_text}'
+                                text_footer_align='${settings.text_footer_align==null?'':settings.text_footer_align}'    
+                                prayer_method=${settings.prayer_method}
+                                prayer_asr_method=${settings.prayer_asr_method}
+                                prayer_high_latitude_adjustment=${settings.prayer_high_latitude_adjustment}
+                                prayer_time_format=${settings.prayer_time_format}
+                                prayer_hijri_date_adjustment=${settings.prayer_hijri_date_adjustment}
+                                prayer_fajr_iqamat=${settings.prayer_fajr_iqamat}
+                                prayer_dhuhr_iqamat=${settings.prayer_dhuhr_iqamat}
+                                prayer_asr_iqamat=${settings.prayer_asr_iqamat}
+                                prayer_maghrib_iqamat=${settings.prayer_maghrib_iqamat}
+                                prayer_isha_iqamat=${settings.prayer_isha_iqamat}
+                                prayer_column_imsak_checked=${settings.prayer_column_imsak_checked}
+                                prayer_column_sunset_checked=${settings.prayer_column_sunset_checked}
+                                prayer_column_midnight_checked=${settings.prayer_column_midnight_checked}
+                                prayer_column_fast_start_end=${settings.prayer_column_fast_start_end}
+                                user_account_id=${user_account_app_setting.user_account_app_user_account_id}
+                                >${settings.description}
+                            </option>`;
+            i++;
         }
+        select.innerHTML += option_html;
+        //show user setting select
+        document.querySelector('#user_settings').style.display = 'block';
     });
 };
 const user_setting_link = (item) => {
@@ -1596,38 +1590,37 @@ const user_settings_function = async (function_name, initial_user_setting, callB
             break;
         }
     }
-    await common.FFB ('DB_API', path, method, 'APP_ACCESS', json_data, (err, result) => {
-        if (err){
-            if (function_name !='ADD_LOGIN')
-                spinner_item.innerHTML = old_button;
-            callBack(err, null);
-        }
-        else{
-            if (function_name !='ADD_LOGIN')
-                spinner_item.innerHTML = old_button;
-            switch (function_name){
-                case 'ADD':{
-                    //update user settings select with saved data
-                    //save current settings to new option with 
-                    //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
-                    const select = document.querySelector('#setting_select_user_setting');
-                    select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
-                    select.selectedIndex = select.options[select.options.length - 1].index;
-                    select.options[select.options.length - 1].value = select.selectedIndex;
-                    set_settings_select();
-                    break;
-                }
-                case 'SAVE':{
-                    //update user settings select with saved data
-                    set_settings_select(); 
-                    break;
-                }
-                default:{
-                    break;
-                }
+    await common.FFB('DB_API', path, method, 'APP_ACCESS', json_data)
+    .then(result=>{
+        switch (function_name){
+            case 'ADD':{
+                //update user settings select with saved data
+                //save current settings to new option with 
+                //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
+                const select = document.querySelector('#setting_select_user_setting');
+                select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
+                select.selectedIndex = select.options[select.options.length - 1].index;
+                select.options[select.options.length - 1].value = select.selectedIndex;
+                set_settings_select();
+                break;
             }
-            callBack(null, null);
+            case 'SAVE':{
+                //update user settings select with saved data
+                set_settings_select(); 
+                break;
+            }
+            default:{
+                break;
+            }
         }
+        callBack(null, null);
+    })
+    .catch((err)=>{
+        callBack(err, null);
+    })
+    .finally(()=>{
+        if (function_name !='ADD_LOGIN')
+            spinner_item.innerHTML = old_button;
     });
 };
 
@@ -1645,24 +1638,17 @@ const user_settings_delete = (choice=null) => {
             if (select_user_setting.length > 1) {
                 const old_button = document.querySelector('#setting_btn_user_delete').innerHTML;
                 document.querySelector('#setting_btn_user_delete').innerHTML = common.APP_SPINNER;
-                common.FFB ('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null, (err) => {
-                    if (err){
-                        document.querySelector('#setting_btn_user_delete').innerHTML = old_button;
-                    }
-                    else{
-                        const select = document.querySelector('#setting_select_user_setting');
-                        //delete current option
-                        select.remove(select.selectedIndex);
-                        //load next available
-                        user_settings_load().then(() => {
-                            settings_translate(true).then(() => {
-                                settings_translate(false).then(() => {
-                                    document.querySelector('#setting_btn_user_delete').innerHTML = old_button;
-                                });
-                            });
-                        });
-                    }
-                });       
+                common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
+                .then(()=>{
+                    const select = document.querySelector('#setting_select_user_setting');
+                    //delete current option
+                    select.remove(select.selectedIndex);
+                    //load next available
+                    user_settings_load()
+                    .then(settings_translate(true))
+                    .then(settings_translate(false));
+                })
+                .finally(()=>document.querySelector('#setting_btn_user_delete').innerHTML = old_button);   
             } else {
                 //You can't delete last user setting
                 common.show_message('ERROR', 20302, null, null, common.COMMON_GLOBAL.common_app_id);
@@ -1880,13 +1866,10 @@ const set_settings_select = () => {
 };
 
 const profile_user_setting_stat = (id) => {
-    common.FFB ('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
-            document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
-        }
+    common.FFB('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'APP_DATA', null)
+    .then(result=>{
+        document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
+        document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
     });
 };
 
@@ -1926,80 +1909,65 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
 const profile_show_user_setting = () => {
     document.querySelector('#profile_user_settings_row').style.display = 'block';
 
-    common.FFB ('DB_API', `/user_account_app_data_post/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
-                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
-            profile_select_user_settings.innerHTML='';
-            let html = '';
-            let i = 0;
-            for (const profile_setting of JSON.parse(result)) {
-                html += `<option id="${i}" 
-                        value=""
-                        sid=${profile_setting.id} 
-                        user_account_id=${profile_setting.user_account_app_user_account_id}
-                        liked=${profile_setting.liked}
-                        count_likes=${profile_setting.count_likes}
-                        count_views=${profile_setting.count_views}
-                        paper_size=${JSON.parse(profile_setting.json_data).design_paper_size}
-                        >${profile_setting.description}
-                        </option>`;
-                i++;
-            }
-            profile_select_user_settings.innerHTML = html;
-            profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
-                                             profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
-                                             profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
+    common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
+                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
+    .then(result=>{
+        const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
+        profile_select_user_settings.innerHTML='';
+        let html = '';
+        let i = 0;
+        for (const profile_setting of JSON.parse(result)) {
+            html += `<option id="${i}" 
+                    value=""
+                    sid=${profile_setting.id} 
+                    user_account_id=${profile_setting.user_account_app_user_account_id}
+                    liked=${profile_setting.liked}
+                    count_likes=${profile_setting.count_likes}
+                    count_views=${profile_setting.count_views}
+                    paper_size=${JSON.parse(profile_setting.json_data).design_paper_size}
+                    >${profile_setting.description}
+                    </option>`;
+            i++;
         }
+        profile_select_user_settings.innerHTML = html;
+        profile_show_user_setting_detail(profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('liked'), 
+                                         profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_likes'), 
+                                         profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('count_views'));
     });
 };
 const profile_user_setting_update_stat = () => {
     const profile_id = document.querySelector('#common_profile_id').innerHTML;
-    common.FFB ('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
-                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null, (err, result) => {
-        if (err)
-            null;
-        else{
-            const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
-            for (const profile_setting of JSON.parse(result)) {
-                if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', profile_setting.user_account_id);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', profile_setting.liked);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', profile_setting.count_likes);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', profile_setting.count_views);
-                    profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = profile_setting.description;
-                    profile_show_user_setting_detail(profile_setting.liked, 
-                                                     profile_setting.count_likes, 
-                                                     profile_setting.count_views);
-                }
+    common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
+                      '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
+    .then(result=>{
+        const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
+        for (const profile_setting of JSON.parse(result)) {
+            if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
+                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', profile_setting.user_account_id);
+                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('liked', profile_setting.liked);
+                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_likes', profile_setting.count_likes);
+                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('count_views', profile_setting.count_views);
+                profile_select_user_settings.options[profile_select_user_settings.selectedIndex].text = profile_setting.description;
+                profile_show_user_setting_detail(profile_setting.liked, 
+                                                 profile_setting.count_likes, 
+                                                 profile_setting.count_views);
             }
-            profile_user_setting_stat(profile_id);
         }
+        profile_user_setting_stat(profile_id);
     });
 };
 const user_settings_like = (user_account_app_data_post_id) => {
     let method;
-
     const json_data = {user_account_app_data_post_id: user_account_app_data_post_id};
-
     if (common.COMMON_GLOBAL.user_account_id == '')
         common.show_common_dialogue('LOGIN');
     else {
-        if (document.querySelector('#profile_user_settings_like').children[0].style.display == 'block') {
+        if (document.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
             method = 'POST';
-        }
-        else {
+        else
             method = 'DELETE';
-        }
-        common.FFB ('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'APP_ACCESS', json_data, (err) => {
-            if (err)
-                null;
-            else{
-                    profile_user_setting_update_stat();
-                } 
-        });
+        common.FFB('DB_API', `/user_account_app_data_post_like?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, method, 'APP_ACCESS', json_data)
+        .then(()=>profile_user_setting_update_stat());
     }
 };
 /*----------------------- */
