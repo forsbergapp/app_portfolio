@@ -402,7 +402,7 @@ const init_app = (parameters) => {
     setEvents();
     if (parameters.app_service.system_admin_only == 0)
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-            common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{});
+            common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
 };
 const init = (parameters) => {
     //show admin login as default

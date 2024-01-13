@@ -187,7 +187,7 @@ const setEvents = () => {
         .then(()=>{
             switch (event.target.id){
                 case 'common_user_locale_select':{
-                    document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value, ()=>{get_apps();});
+                    document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value).then(()=>get_apps());
                     break;
                 }
                 case 'common_user_arabic_script_select':{
@@ -472,9 +472,7 @@ const init_app = async (parameters) => {
 
     document.querySelector('#apps').innerHTML = common.APP_SPINNER;
     if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-        common.common_translate_ui(common.COMMON_GLOBAL.user_locale, ()=>{
-                get_apps();
-        });
+        common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
     else
         get_apps();
     const show_start = async () => {

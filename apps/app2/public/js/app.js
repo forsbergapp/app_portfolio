@@ -360,24 +360,20 @@ const theme_nav = async (dir, type) => {
 /*----------------------- */
 /* UI                     */
 /*----------------------- */
-const common_translate_ui_app = async (lang_code, callBack) => {
-    await common.common_translate_ui(lang_code, (err) => {
-        if (err)
-            callBack(err,null);
-        else{
-            //translate locale in this app
-            const select_locale = document.querySelector('#setting_select_locale');
-            const select_second_locale = document.querySelector('#setting_select_report_locale_second'); 
-            const current_locale = select_locale.value;
-            const current_second_locale = select_second_locale.value;
-            select_locale.innerHTML = document.querySelector('#common_user_locale_select').innerHTML;
-            select_locale.value = current_locale;
-            select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + document.querySelector('#common_user_locale_select').innerHTML;
-            select_second_locale.value = current_second_locale;   
-            
-            callBack(null,null);
-        }
-    });
+const common_translate_ui_app = async (lang_code) => {
+    await common.common_translate_ui(lang_code)
+    .then(()=>{
+        //translate locale in this app
+        const select_locale = document.querySelector('#setting_select_locale');
+        const select_second_locale = document.querySelector('#setting_select_report_locale_second'); 
+        const current_locale = select_locale.value;
+        const current_second_locale = select_second_locale.value;
+        select_locale.innerHTML = document.querySelector('#common_user_locale_select').innerHTML;
+        select_locale.value = current_locale;
+        select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + document.querySelector('#common_user_locale_select').innerHTML;
+        select_second_locale.value = current_second_locale;   
+    })
+    .catch((error)=>{throw error;});
 };
 const settings_translate = async (first=true) => {
     let locale;
@@ -978,44 +974,41 @@ const user_login_app = async () => {
         document.querySelector('#common_login_button').innerHTML = old_button;
         if (err==null){
             //create intitial user setting if not exist, send initial=true
-            user_settings_function('ADD_LOGIN', true, (err) =>{
-                if (err)
-                    null;
-                else{
-                    common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
-                    document.querySelector('#tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-                    common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
+            user_settings_function('ADD_LOGIN', true)
+            .then(()=>{
+                common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
+                document.querySelector('#tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+                common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
 
-                    document.querySelector('#common_user_menu_username').innerHTML = result.username;
-                    document.querySelector('#common_user_menu_username').style.display = 'block';
-                    
-                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-                    
-                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'block';
-                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                document.querySelector('#common_user_menu_username').innerHTML = result.username;
+                document.querySelector('#common_user_menu_username').style.display = 'block';
+                
+                document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                
+                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'block';
+                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
 
-                    //Show user tab
-                    document.querySelector('#tab_nav_7').style.display = 'inline-block';
-                    //Hide settings
-                    document.querySelector('#settings').style.visibility = 'hidden';
-                    //Hide profile
-                    document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
-                    
-                    document.querySelector('#paper').innerHTML='';
-                    dialogue_loading(1);
-                    user_settings_get().then(() => {
-                        user_settings_load().then(() => {
-                            settings_translate(true).then(() => {
-                                settings_translate(false).then(() => {
-                                    //show default startup
-                                    toolbar_button(APP_GLOBAL.app_default_startup_page);
-                                    dialogue_loading(0);
-                                });
+                //Show user tab
+                document.querySelector('#tab_nav_7').style.display = 'inline-block';
+                //Hide settings
+                document.querySelector('#settings').style.visibility = 'hidden';
+                //Hide profile
+                document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
+                
+                document.querySelector('#paper').innerHTML='';
+                dialogue_loading(1);
+                user_settings_get().then(() => {
+                    user_settings_load().then(() => {
+                        settings_translate(true).then(() => {
+                            settings_translate(false).then(() => {
+                                //show default startup
+                                toolbar_button(APP_GLOBAL.app_default_startup_page);
+                                dialogue_loading(0);
                             });
                         });
-                    }); 
-                }         
+                    });
+                }); 
             });
         }
         
@@ -1084,37 +1077,34 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
         if(err==null){
             //create intitial user setting if not exist, send initial=true
-            user_settings_function('ADD_LOGIN', true, (err) =>{
-                if (err)
-                    null;
-                else{       
-                    common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
-                    document.querySelector('#tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-                    common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
-                    document.querySelector('#common_user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
-        
-                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'block';
-                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+            user_settings_function('ADD_LOGIN', true)
+            .then(()=>{
+                common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
+                document.querySelector('#tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+                common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
+                document.querySelector('#common_user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
+    
+                document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'block';
+                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
 
-                    //Show user tab
-                    document.querySelector('#tab_nav_7').style.display = 'inline-block';
-                    document.querySelector('#paper').innerHTML='';
-                    dialogue_loading(1);
-                    user_settings_get().then(() => {
-                        user_settings_load().then(() => {
-                            settings_translate(true).then(() => {
-                                settings_translate(false).then(() => {
-                                    //show default startup
-                                    toolbar_button(APP_GLOBAL.app_default_startup_page);
-                                    dialogue_loading(0);
-                                });
+                //Show user tab
+                document.querySelector('#tab_nav_7').style.display = 'inline-block';
+                document.querySelector('#paper').innerHTML='';
+                dialogue_loading(1);
+                user_settings_get().then(() => {
+                    user_settings_load().then(() => {
+                        settings_translate(true).then(() => {
+                            settings_translate(false).then(() => {
+                                //show default startup
+                                toolbar_button(APP_GLOBAL.app_default_startup_page);
+                                dialogue_loading(0);
                             });
                         });
                     });
-                }
-            });
+                });
+            });   
         }
     });
 };
@@ -1462,7 +1452,7 @@ const user_settings_load = async () => {
     return null;
 };
 
-const user_settings_function = async (function_name, initial_user_setting, callBack) => {
+const user_settings_function = async (function_name, initial_user_setting) => {
     const description = document.querySelector('#setting_input_place').innerHTML;
     
     const select_setting_popular_place = document.querySelector('#setting_select_popular_place');
@@ -1613,10 +1603,9 @@ const user_settings_function = async (function_name, initial_user_setting, callB
                 break;
             }
         }
-        callBack(null, null);
     })
     .catch((err)=>{
-        callBack(err, null);
+        throw err;
     })
     .finally(()=>{
         if (function_name !='ADD_LOGIN')
@@ -2164,11 +2153,11 @@ const setEvents = () => {
                 }
                 //settings user
                 case 'setting_btn_user_save':{
-                    user_settings_function('SAVE', false, ()=>{});
+                    user_settings_function('SAVE', false);
                     break;
                 }
                 case 'setting_btn_user_add':{
-                    user_settings_function('ADD', false, ()=>{});
+                    user_settings_function('ADD', false);
                     break;
                 }
                 case 'setting_btn_user_delete':{
@@ -2379,7 +2368,7 @@ const setEvents = () => {
                     break;
                 }
                 case 'common_user_locale_select':{
-                    common_translate_ui_app(event.target.value, ()=>{});
+                    common_translate_ui_app(event.target.value);
                     break;
                 }
                 case 'common_user_timezone_select':{
@@ -2966,11 +2955,8 @@ const init_app = (parameters) => {
                             dialogue_loading(0);
                             serviceworker();
                             if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-                                common_translate_ui_app(common.COMMON_GLOBAL.user_locale, ()=>{
-                                    resolve();
-                                });
-                            else
-                                resolve();
+                                common_translate_ui_app(common.COMMON_GLOBAL.user_locale)
+                                .then(resolve(null));
                         });
                     });
                 });
