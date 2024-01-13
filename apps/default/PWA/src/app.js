@@ -12,19 +12,16 @@ const { render_app_html } = await import(`file://${process.cwd()}/apps/apps.serv
  * @returns {Promise.<Types.app_create|Types.app_create_empty>}
  */
 const createApp = async (app_id, params) => {
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
     return new Promise((resolve, reject) => {
         if (params==null){
-            render_app_html(app_id, 'APP', null, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
-                if (err)
-                    reject(err);
-                else{
-                    const app_config = ConfigGetApp(app_id, 'CONFIG');
-                    resolve({   app:app.app,
-                                map:app_config.MAP,
-                                map_styles: app.settings.map_styles});
-                }
-            });
+            render_app_html(app_id, null)
+            .then((/**@type{Types.render_common}*/app)=>{
+                resolve({   app:app.app,
+                            map:app.map,
+                            map_styles: app.settings.map_styles});
+                
+            })
+            .catch((/**@type{Types.error}*/err)=>reject(err));
         }
         else{
             //redirect to /

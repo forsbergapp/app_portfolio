@@ -130,7 +130,6 @@ const nvl = value => value==null?'':value;
  * @returns {Promise.<Types.app_create|Types.app_create_empty>}
  */
 const createApp = async (app_id, username, locale) => {
-    const {ConfigGetApp} = await import(`file://${process.cwd()}/server/config.service.js`);
     return new Promise((resolve, reject) => {
         const main = async (/**@type{number}*/app_id) => {
             let USER_TIMEZONE ='';
@@ -149,121 +148,118 @@ const createApp = async (app_id, username, locale) => {
             let APP_HIJRI_DATE_ADJUSTMENT='';
             let APP_IQAMAT='';
             let APP_FAST_START_END='';
-            render_app_html(app_id, 'APP', locale, (/**@type{Types.error}*/err, /**@type{Types.render_common}*/app)=>{
-                if (err)
-                    reject(err);
-                else{
-                    //render settings
-                    let option;
-                    for (const setting of app.settings.settings) {
-                        option = `<option id=${setting.id} value='${setting.value}'>${setting.text}</option>`;
-                        switch (setting.app_setting_type_name){
-                            case 'TIMEZONE':{
-                                USER_TIMEZONE += option;
-                                break;
-                            }
-                            case 'DIRECTION':{
-                                USER_DIRECTION += option;
-                                break;
-                            }
-                            case 'ARABIC_SCRIPT':{
-                                USER_ARABIC_SCRIPT += option;
-                                break;
-                            }
-                            case 'NUMBER_SYSTEM':{
-                                APP_NUMBER_SYSTEM += option;
-                                break;
-                            }
-                            case 'COLUMN_TITLE':{
-                                APP_COLUMN_TITLE += option;
-                                break;
-                            }
-                            case 'CALENDAR_TYPE':{
-                                APP_CALENDAR_TYPE += option;
-                                break;
-                            }
-                            case 'CALENDAR_HIJRI_TYPE':{
-                                APP_CALENDAR_HIJRI_TYPE += option;
-                                break;
-                            }
-                            case 'PAPER_SIZE':{
-                                APP_PAPER_SIZE += option;
-                                break;
-                            }
-                            case 'HIGHLIGHT_ROW':{
-                                APP_HIGHLIGHT_ROW += option;
-                                break;
-                            }
-                            case 'METHOD':{
-                                option = `<option id=${setting.id} value='${setting.value}' ` +
-                                            `data2='${nvl(setting.data2)}' data3='${nvl(setting.data3)}' data4='${nvl(setting.data4)}' data5='${nvl(setting.data5)}'>${setting.text}</option>`;
-                                APP_METHOD += option;
-                                break;
-                            }
-                            case 'METHOD_ASR':{
-                                APP_METHOD_ASR += option;
-                                break;
-                            }
-                            case 'HIGH_LATITUDE_ADJUSTMENT':{
-                                APP_HIGH_LATITUDE_ADJUSTMENT += option;
-                                break;
-                            }
-                            case 'TIMEFORMAT':{
-                                APP_TIMEFORMAT += option;
-                                break;
-                            }
-                            case 'HIJRI_DATE_ADJUSTMENT':{
-                                APP_HIJRI_DATE_ADJUSTMENT += option;
-                                break;
-                            }
-                            case 'IQAMAT':{
-                                APP_IQAMAT += option;
-                                break;
-                            }
-                            case 'FAST_START_END':{
-                                APP_FAST_START_END += option;
-                                break;
-                            }
+            render_app_html(app_id, locale)
+            .then((/**@type{Types.render_common}*/app)=>{
+                //render settings
+                let option;
+                for (const setting of app.settings.settings) {
+                    option = `<option id=${setting.id} value='${setting.value}'>${setting.text}</option>`;
+                    switch (setting.app_setting_type_name){
+                        case 'TIMEZONE':{
+                            USER_TIMEZONE += option;
+                            break;
+                        }
+                        case 'DIRECTION':{
+                            USER_DIRECTION += option;
+                            break;
+                        }
+                        case 'ARABIC_SCRIPT':{
+                            USER_ARABIC_SCRIPT += option;
+                            break;
+                        }
+                        case 'NUMBER_SYSTEM':{
+                            APP_NUMBER_SYSTEM += option;
+                            break;
+                        }
+                        case 'COLUMN_TITLE':{
+                            APP_COLUMN_TITLE += option;
+                            break;
+                        }
+                        case 'CALENDAR_TYPE':{
+                            APP_CALENDAR_TYPE += option;
+                            break;
+                        }
+                        case 'CALENDAR_HIJRI_TYPE':{
+                            APP_CALENDAR_HIJRI_TYPE += option;
+                            break;
+                        }
+                        case 'PAPER_SIZE':{
+                            APP_PAPER_SIZE += option;
+                            break;
+                        }
+                        case 'HIGHLIGHT_ROW':{
+                            APP_HIGHLIGHT_ROW += option;
+                            break;
+                        }
+                        case 'METHOD':{
+                            option = `<option id=${setting.id} value='${setting.value}' ` +
+                                        `data2='${nvl(setting.data2)}' data3='${nvl(setting.data3)}' data4='${nvl(setting.data4)}' data5='${nvl(setting.data5)}'>${setting.text}</option>`;
+                            APP_METHOD += option;
+                            break;
+                        }
+                        case 'METHOD_ASR':{
+                            APP_METHOD_ASR += option;
+                            break;
+                        }
+                        case 'HIGH_LATITUDE_ADJUSTMENT':{
+                            APP_HIGH_LATITUDE_ADJUSTMENT += option;
+                            break;
+                        }
+                        case 'TIMEFORMAT':{
+                            APP_TIMEFORMAT += option;
+                            break;
+                        }
+                        case 'HIJRI_DATE_ADJUSTMENT':{
+                            APP_HIJRI_DATE_ADJUSTMENT += option;
+                            break;
+                        }
+                        case 'IQAMAT':{
+                            APP_IQAMAT += option;
+                            break;
+                        }
+                        case 'FAST_START_END':{
+                            APP_FAST_START_END += option;
+                            break;
                         }
                     }
-                    //render profile_info after COMMON:
-                    const render_variables = [];
-                    render_variables.push(['AppLocales',app.locales]);
-                    //add extra option for second locale
-                    render_variables.push(['AppLocalessecond',`<option id='' value='0' selected='selected'>None</option>${app.locales}`]);
-
-                    render_variables.push(['AppPlaces',places(app_id, locale, app.settings.settings)]);
-                    const appthemes = themes(app_id, locale, app.settings.settings);
-                    render_variables.push(['AppSettingsThemesDay',appthemes[0]]);
-                    render_variables.push(['AppSettingsThemesMonth',appthemes[1]]);
-                    render_variables.push(['AppSettingsThemesYear',appthemes[2]]);
-
-                    //app SETTING
-                    render_variables.push(['AppTimezones',USER_TIMEZONE]);
-                    render_variables.push(['AppDirection',USER_DIRECTION]);
-                    render_variables.push(['AppNumbersystem',APP_NUMBER_SYSTEM]);
-                    render_variables.push(['AppColumntitle',APP_COLUMN_TITLE]);
-                    render_variables.push(['AppArabicscript',USER_ARABIC_SCRIPT]);
-                    render_variables.push(['AppCalendartype',APP_CALENDAR_TYPE]);
-                    render_variables.push(['AppCalendarhijritype',APP_CALENDAR_HIJRI_TYPE]);
-                    render_variables.push(['AppPapersize',APP_PAPER_SIZE]);
-                    render_variables.push(['AppHighlightrow',APP_HIGHLIGHT_ROW]);
-                    render_variables.push(['AppMethod',APP_METHOD]);
-                    render_variables.push(['AppMethodAsr',APP_METHOD_ASR]);
-                    render_variables.push(['AppHighlatitudeadjustment',APP_HIGH_LATITUDE_ADJUSTMENT]);
-                    render_variables.push(['AppTimeformat',APP_TIMEFORMAT]);
-                    render_variables.push(['AppHijridateadjustment',APP_HIJRI_DATE_ADJUSTMENT]);
-                    //used several times:
-                    render_variables.push(['AppIqamat',APP_IQAMAT]);
-                    render_variables.push(['AppFaststartend',APP_FAST_START_END]);
-
-                    const app_config = ConfigGetApp(app_id, 'CONFIG');
-                    
-                    resolve({app:render_app_with_data(app.app, render_variables),
-                             map_styles: app.settings.map_styles,
-                             map:app_config.MAP});
                 }
-            });
+                //render profile_info after COMMON:
+                const render_variables = [];
+                render_variables.push(['AppLocales',app.locales]);
+                //add extra option for second locale
+                render_variables.push(['AppLocalessecond',`<option id='' value='0' selected='selected'>None</option>${app.locales}`]);
+
+                render_variables.push(['AppPlaces',places(app_id, locale, app.settings.settings)]);
+                const appthemes = themes(app_id, locale, app.settings.settings);
+                render_variables.push(['AppSettingsThemesDay',appthemes[0]]);
+                render_variables.push(['AppSettingsThemesMonth',appthemes[1]]);
+                render_variables.push(['AppSettingsThemesYear',appthemes[2]]);
+
+                //app SETTING
+                render_variables.push(['AppTimezones',USER_TIMEZONE]);
+                render_variables.push(['AppDirection',USER_DIRECTION]);
+                render_variables.push(['AppNumbersystem',APP_NUMBER_SYSTEM]);
+                render_variables.push(['AppColumntitle',APP_COLUMN_TITLE]);
+                render_variables.push(['AppArabicscript',USER_ARABIC_SCRIPT]);
+                render_variables.push(['AppCalendartype',APP_CALENDAR_TYPE]);
+                render_variables.push(['AppCalendarhijritype',APP_CALENDAR_HIJRI_TYPE]);
+                render_variables.push(['AppPapersize',APP_PAPER_SIZE]);
+                render_variables.push(['AppHighlightrow',APP_HIGHLIGHT_ROW]);
+                render_variables.push(['AppMethod',APP_METHOD]);
+                render_variables.push(['AppMethodAsr',APP_METHOD_ASR]);
+                render_variables.push(['AppHighlatitudeadjustment',APP_HIGH_LATITUDE_ADJUSTMENT]);
+                render_variables.push(['AppTimeformat',APP_TIMEFORMAT]);
+                render_variables.push(['AppHijridateadjustment',APP_HIJRI_DATE_ADJUSTMENT]);
+                //used several times:
+                render_variables.push(['AppIqamat',APP_IQAMAT]);
+                render_variables.push(['AppFaststartend',APP_FAST_START_END]);
+                
+                resolve({   app:render_app_with_data(app.app, render_variables),
+                            map:app.map,
+                            map_styles: app.settings.map_styles});
+                
+            })
+            .catch((/**@type{Types.error}*/err)=>reject(err));
         };
         if (username!=null){
             import(`file://${process.cwd()}/server/dbapi/app_portfolio/user_account.service.js`).then(({getProfileUser}) => {

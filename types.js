@@ -366,6 +366,7 @@
  * @property {string} app                         - HTML
  * @property {string} locales                     - HTML option format
  * @property {render_common_settings} settings    
+ * @property {boolean} map
  */
 /**
  * Apps - App common parameters
