@@ -76,20 +76,6 @@ const render_files = (app_id, type, component=null) => {
 };
 
 /**
- * Render html for APP or REPORT
- * 
- * @param {number} app_id
- * @param {'APP'} type
- * @param {string|null} locale
- * @param {Types.callBack} callBack
- * 
- */
- const render_app_html = (app_id, type, locale, callBack) => {
-        render_common_html(app_id, render_files(app_id, type), locale ?? '').then((app_with_common)=>{
-            callBack(null, app_with_common);
-        });
-};
-/**
  * Render html for REPORT
  * 
  * @param {number} app_id
@@ -126,18 +112,20 @@ const render_app_with_data = (app, data)=>{
     }
     return app;
 };
+
 /**
- * Render html for APP or REPORT
+ * Render html for APP
  * 
  * @async
- * @param {number} app_id                   - application_id
- * @param {string} module                   - html
- * @param {string} locale                   - locale
- * @returns {Promise<Types.render_common>}  - app HTML with rendered data
+ * @param {number} app_id
+ * @param {string|null} locale
+ * @returns {Promise<Types.render_common>}
  */
-const render_common_html = async (app_id, module, locale) =>{
+const render_app_html = async (app_id, locale) =>{
     /**@type{Types.config_apps_config} */
     const app_config = ConfigGetApp(app_id, 'CONFIG');
+    
+    const module = render_files(app_id, 'APP');
 
     /** @type {string}*/
     let user_locales='';
@@ -350,9 +338,10 @@ const render_common_html = async (app_id, module, locale) =>{
         else
             render_variables.push(['APP_FAVICON_192x192','']);
 
-        resolve({   app:render_app_with_data(app, render_variables),
-                    locales: user_locales, 
-                    settings: settings});
+        resolve({   app:        render_app_with_data(app, render_variables),
+                    locales:    user_locales, 
+                    settings:   settings,
+                    map:        app_config.MAP});
     });
 };
 /**
