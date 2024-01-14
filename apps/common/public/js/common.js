@@ -1343,10 +1343,9 @@ const show_hide_window_info_toolbar = () => {
   search_profile
   ----------------------- */
 const profile_follow_like = async (function_name) => {
-    await user_function(function_name, (err) => {
-        if (err==null)
-            profile_update_stat();
-    });
+    await user_function(function_name)
+    .then(()=>profile_update_stat())
+    .catch(()=>null);
 };
 const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     let path;
@@ -2274,38 +2273,40 @@ const user_delete = async (choice=null, user_local, function_delete_event ) => {
         }
     });
 };
-const user_function = (user_function, callBack) => {
-    const user_id_profile = document.querySelector('#common_profile_id').innerHTML;
-    let method;
-    let path;
-    const json_data = { user_account_id: user_id_profile};
-    const check_div = document.querySelector(`#common_profile_${user_function.toLowerCase()}`);
-    if (check_div.children[0].style.display == 'block') {
-        path = `/user_account_${user_function.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id}`;
-        method = 'POST';
-    } else {
-        path = `/user_account_${user_function.toLowerCase()}?DELETE_ID=${COMMON_GLOBAL.user_account_id}`;
-        method = 'DELETE';
-    }
-    if (COMMON_GLOBAL.user_account_id == '')
-        show_common_dialogue('LOGIN');
-    else {
-        FFB('DB_API', path, method, 'APP_ACCESS', json_data)
-        .then(()=> {
-            if (document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display == 'block'){
-                //follow/like
-                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'none';
-                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'block';
-            }
-            else{
-                //unfollow/unlike
-                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[0].style.display = 'block';
-                document.querySelector(`#common_profile_${user_function.toLowerCase()}`).children[1].style.display = 'none';
-            }
-            callBack(null, {});
-        })
-        .catch(err=>callBack(err, null));
-    }
+const user_function = function_name => {
+    return new Promise((resolve, reject)=>{
+        const user_id_profile = document.querySelector('#common_profile_id').innerHTML;
+        let method;
+        let path;
+        const json_data = { user_account_id: user_id_profile};
+        const check_div = document.querySelector(`#common_profile_${function_name.toLowerCase()}`);
+        if (check_div.children[0].style.display == 'block') {
+            path = `/user_account_${function_name.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id}`;
+            method = 'POST';
+        } else {
+            path = `/user_account_${function_name.toLowerCase()}?DELETE_ID=${COMMON_GLOBAL.user_account_id}`;
+            method = 'DELETE';
+        }
+        if (COMMON_GLOBAL.user_account_id == '')
+            show_common_dialogue('LOGIN');
+        else {
+            FFB('DB_API', path, method, 'APP_ACCESS', json_data)
+            .then(()=> {
+                if (document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
+                    //follow/like
+                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
+                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
+                }
+                else{
+                    //unfollow/unlike
+                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
+                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
+                }
+                resolve(null);
+            })
+            .catch(err=>reject(err));
+        }
+    });
 };
 const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event) => {
     switch (choice){
