@@ -2078,7 +2078,7 @@ const show_app_log = async (sort='id', order_by='desc', offset=0, limit=APP_GLOB
 }; 
 const get_sort = (order_by=0) => {
     const sort = '';
-    for (const col_title of document.querySelectorAll('#list_app_log_row_title > div')){
+    for (const col_title of document.querySelectorAll('#list_app_log .list_title')){
         if (col_title.classList.contains('asc'))
             if (order_by==0)
                 return col_title.id.substring(col_title.id.indexOf('col_title_')+'col_title_'.length);
@@ -2701,8 +2701,7 @@ const admin_token_has_value = () => {
         return true;
 };
 
-const app_events = (event_type, event)=> {
-    const event_target_id = common.element_id(event.target);
+const app_events = (event_type, event, event_target_id, event_list_title=null)=> {
     switch (event_type){
         case 'click':{
             switch (event_target_id){
@@ -2777,21 +2776,12 @@ const app_events = (event_type, event)=> {
                     break;
                 }
                 //users with icons
-                case event.target.parentNode.classList.contains('list_title')?event_target_id:'':{
-                    if (event.target.parentNode.classList.contains('list_sort_click'))
-                        list_sort_click(common.element_id(event.target.parentNode.parentNode), 
-                                        event.target.parentNode.getAttribute('data-column'),
-                                        event.target.parentNode.classList.contains('desc')?'asc':'desc'
-                                        );
-                    break;
-                }
                 //monitor logs no icons
-                case event.target.classList.contains('list_title')?event_target_id:'':{
-                    if (event.target.classList.contains('list_sort_click'))
-                        list_sort_click(common.element_id(event.target.parentNode), 
-                                        event.target.getAttribute('data-column'),
-                                        event.target.classList.contains('desc')?'asc':'desc'
-                                        );
+                case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
+                    list_sort_click(event_target_id, 
+                                    event_list_title.getAttribute('data-column'),
+                                    event_list_title.classList.contains('desc')?'asc':'desc'
+                                    );
                     break;
                 }
                 case event.target.classList.contains('gps_click')?event_target_id:'':{
@@ -2807,7 +2797,7 @@ const app_events = (event_type, event)=> {
                     list_item_click('CHAT', {client_id: event.target.getAttribute('data-id')});
                     break;
                 }
-                case event.target.parentNode.classList.contains('chat_click')?event_target_id:'':{
+                case event.target.parentNode && event.target.parentNode.classList.contains('chat_click')?event_target_id:'':{
                     list_item_click('CHAT', {client_id: event.target.parentNode.getAttribute('data-id')});
                     break;
                 }
@@ -2821,7 +2811,7 @@ const app_events = (event_type, event)=> {
                         common.element_row(event.target).querySelector('.common_lov_value').innerHTML = common.element_row(event_lov.target).getAttribute('data-value');
                         document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
                     };
-                    if (event.target.parentNode.classList.contains('common_list_lov_click')){
+                    if (event.target.classList.contains('common_list_lov_click') || event.target.parentNode.classList.contains('common_list_lov_click')){
                         switch (event_target_id){
                             case 'list_apps':{
                                 common.lov_show('APP_CATEGORY', lov_event);

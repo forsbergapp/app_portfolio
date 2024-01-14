@@ -304,6 +304,12 @@ const element_id = element => element.id==''?element_id(element.parentNode):elem
  * @returns {*} 
  */
 const element_row = element => element.classList.contains('common_row')?element:element_row(element.parentNode);
+/**
+ * Returns current target or parent with class list_title or returns empty. Use when clicking in a list title
+ * @param {*} element 
+ * @returns {*} 
+ */
+ const element_list_title = element => element.classList.contains('list_title')?element:(element.parentNode.classList.contains('list_title')?element.parentNode:null);
 
 const LengthWithoutDiacrites = (str) =>{
     return str.normalize('NFD').replace(/\p{Diacritic}/gu, '').length;
@@ -3972,7 +3978,7 @@ const init_common = async (parameters) => {
 export{/* GLOBALS*/
        COMMON_GLOBAL, ICONS, APP_SPINNER,
        /* MISC */
-       element_id, element_row, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
+       element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,

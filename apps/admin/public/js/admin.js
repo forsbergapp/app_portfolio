@@ -139,10 +139,11 @@ const admin_login = async () => {
 const setEvents = () => {
 
     document.querySelector('#app').addEventListener('click', event => {
-        const target_id = common.element_id(event.target);
+        const event_target_id = common.element_id(event.target);
+        const list_title = common.element_list_title(event.target);
         common.common_event('click',event)
         .then(()=>{
-            switch (target_id){
+            switch (event_target_id){
                 case 'admin_login_button':{
                     admin_login();
                     break;
@@ -178,7 +179,7 @@ const setEvents = () => {
                 case 'menu_8':
                 case 'menu_9':
                 case 'menu_10':{
-                    app_secure.show_menu(parseInt(target_id.substring(5)));
+                    app_secure.show_menu(parseInt(event_target_id.substring(5)));
                     break;
                 }
                 case 'menu_11': {
@@ -241,7 +242,7 @@ const setEvents = () => {
                     break;
                 }
                 default:{
-                    app_secure.app_events('click', event);
+                    app_secure.app_events('click', event, event_target_id, list_title);
                     break;
                 }
             }
@@ -249,9 +250,10 @@ const setEvents = () => {
     }, true);
     
     document.querySelector('#app').addEventListener('change', event => {
+        const target_id = common.element_id(event.target);
         common.common_event('change',event)
         .then(()=>{
-            switch (event.target.id){
+            switch (target_id){
                 case 'select_broadcast_type':{
                     app_secure.set_broadcast_type();
                     break;
@@ -276,16 +278,17 @@ const setEvents = () => {
                     break;
                 }
                 default:{
-                    app_secure.app_events('change', event);
+                    app_secure.app_events('change', event, target_id);
                     break;
                 }
             }
         });
     });
     document.querySelector('#app').addEventListener('keyup', event => {
+        const target_id = common.element_id(event.target);
         common.common_event('keyup',event)
         .then(()=>{
-            switch (event.target.id){
+            switch (target_id){
                 case 'admin_login_username_input':
                 case 'admin_login_password_input':
                 case 'system_admin_login_username_input':
@@ -300,22 +303,25 @@ const setEvents = () => {
                     break;
                 }
                 default:
-                    app_secure.app_events('keyup', event);
+                    app_secure.app_events('keyup', event, target_id);
                     break;
             }
         });
     });
     document.querySelector('#app').addEventListener('keydown', event => {
+        const target_id = common.element_id(event.target);
         common.common_event('keydown',event)
         .then(()=>{
-            app_secure.app_events('keydown', event);
+            app_secure.app_events('keydown', event, target_id);
         });
     });
     document.querySelector('#app').addEventListener('input', event => {
-        app_secure.app_events('input', event);
+        const target_id = common.element_id(event.target);
+        app_secure.app_events('input', event, target_id);
     }, true);
     document.querySelector('#app').addEventListener('focus', event => {
-        app_secure.app_events('focus', event);
+        const target_id = common.element_id(event.target);
+        app_secure.app_events('focus', event, target_id);
     }, true);
 };
 
