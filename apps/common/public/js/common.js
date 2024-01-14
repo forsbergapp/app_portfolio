@@ -2136,81 +2136,81 @@ const user_signup = () => {
     })
     .catch(()=>document.querySelector('#common_signup_button').innerHTML = old_button);
 };
-const user_verify_check_input = async (item, nextField, callBack) => {
-
-    let json_data;
-    const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
-    //only accept 0-9
-    if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
-        if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').innerHTML != '' &
-                document.querySelector('#common_user_verify_verification_char2').innerHTML != '' &
-                document.querySelector('#common_user_verify_verification_char3').innerHTML != '' &
-                document.querySelector('#common_user_verify_verification_char4').innerHTML != '' &
-                document.querySelector('#common_user_verify_verification_char5').innerHTML != '' &
-                document.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
-            //last field, validate entered code
-            const verification_code = parseInt(document.querySelector('#common_user_verify_verification_char1').innerHTML +
-                document.querySelector('#common_user_verify_verification_char2').innerHTML +
-                document.querySelector('#common_user_verify_verification_char3').innerHTML +
-                document.querySelector('#common_user_verify_verification_char4').innerHTML +
-                document.querySelector('#common_user_verify_verification_char5').innerHTML +
-                document.querySelector('#common_user_verify_verification_char6').innerHTML);
-            const old_button = document.querySelector('#common_user_verify_email').innerHTML;
-            document.querySelector('#common_user_verify_email').innerHTML = APP_SPINNER;
-            document.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
-            document.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
-            document.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
-            document.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
-            document.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
-            document.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
-
-            //activate user
-            json_data = {   verification_code:  verification_code,
-                            verification_type:  verification_type,
-                            ...get_uservariables()
-                        };
-            FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data)
-            .then(result=>{
-                document.querySelector('#common_user_verify_email').innerHTML = old_button;
-                const user_activate = JSON.parse(result).items[0];
-                if (user_activate.affectedRows == 1) {
-                    switch (verification_type){
-                        case 1:{
-                            //LOGIN
-                            break;
+const user_verify_check_input = async (item, nextField) => {
+    return new Promise((resolve, reject)=>{
+        let json_data;
+        const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
+        //only accept 0-9
+        if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
+            if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').innerHTML != '' &
+                    document.querySelector('#common_user_verify_verification_char2').innerHTML != '' &
+                    document.querySelector('#common_user_verify_verification_char3').innerHTML != '' &
+                    document.querySelector('#common_user_verify_verification_char4').innerHTML != '' &
+                    document.querySelector('#common_user_verify_verification_char5').innerHTML != '' &
+                    document.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
+                //last field, validate entered code
+                const verification_code = parseInt(document.querySelector('#common_user_verify_verification_char1').innerHTML +
+                    document.querySelector('#common_user_verify_verification_char2').innerHTML +
+                    document.querySelector('#common_user_verify_verification_char3').innerHTML +
+                    document.querySelector('#common_user_verify_verification_char4').innerHTML +
+                    document.querySelector('#common_user_verify_verification_char5').innerHTML +
+                    document.querySelector('#common_user_verify_verification_char6').innerHTML);
+                const old_button = document.querySelector('#common_user_verify_email').innerHTML;
+                document.querySelector('#common_user_verify_email').innerHTML = APP_SPINNER;
+                document.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
+                document.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
+                document.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
+                document.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
+                document.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
+                document.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
+    
+                //activate user
+                json_data = {   verification_code:  verification_code,
+                                verification_type:  verification_type,
+                                ...get_uservariables()
+                            };
+                FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data)
+                .then(result=>{
+                    document.querySelector('#common_user_verify_email').innerHTML = old_button;
+                    const user_activate = JSON.parse(result).items[0];
+                    if (user_activate.affectedRows == 1) {
+                        switch (verification_type){
+                            case 1:{
+                                //LOGIN
+                                break;
+                            }
+                            case 2:{
+                                //SIGNUP
+                                //login with username and password from signup fields
+                                document.querySelector('#common_login_username').innerHTML =
+                                    document.querySelector('#common_signup_username').innerHTML;
+                                document.querySelector('#common_login_password').innerHTML =
+                                    document.querySelector('#common_signup_password').innerHTML;
+                                break;
+                            }
+                            case 3:{
+                                //FORGOT
+                                COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+                                //show dialogue new password
+                                show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
+                                break;
+                            }
+                            case 4:{
+                                //NEW EMAIL
+                                break;
+                            }
                         }
-                        case 2:{
-                            //SIGNUP
-                            //login with username and password from signup fields
-                            document.querySelector('#common_login_username').innerHTML =
-                                document.querySelector('#common_signup_username').innerHTML;
-                            document.querySelector('#common_login_password').innerHTML =
-                                document.querySelector('#common_signup_password').innerHTML;
-                            break;
-                        }
-                        case 3:{
-                            //FORGOT
-                            COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
-                            //show dialogue new password
-                            show_common_dialogue('PASSWORD_NEW', null, JSON.parse(result).auth);
-                            break;
-                        }
-                        case 4:{
-                            //NEW EMAIL
-                            break;
-                        }
-                    }
-                    
-                    document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                    
-                    dialogue_signup_clear();
-                    dialogue_forgot_clear();
-                    dialogue_verify_clear();
-                    dialogue_user_edit_clear();
-                    return callBack(null, {'actived': 1, 
-                                            'verification_type' : verification_type});
-
-                    } else {
+                        
+                        document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
+                        
+                        dialogue_signup_clear();
+                        dialogue_forgot_clear();
+                        dialogue_verify_clear();
+                        dialogue_user_edit_clear();
+                        resolve({   actived: 1, 
+                                    verification_type : verification_type});
+                    } 
+                    else{
                         document.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
                         document.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
                         document.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
@@ -2219,54 +2219,60 @@ const user_verify_check_input = async (item, nextField, callBack) => {
                         document.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
                         show_message('ERROR', 20306, null, null, COMMON_GLOBAL.common_app_id);
-                        return callBack('ERROR', null);
+                        reject('ERROR');
                     }
-            })
-            .catch(err=>{
-                document.querySelector('#common_user_verify_email').innerHTML = old_button;
-                callBack(err, null);
-            });
-        } else{
-            //not last, next!
-            document.querySelector('#' + nextField).focus();
-            return callBack(null, null);
-        }
-    else{
-        //remove anything else than 0-9
-        document.querySelector('#' + item.id).innerHTML = '';
-        return callBack(null, null);
-    }
-};
-const user_delete = async (choice=null, user_local, function_delete_event, callBack ) => {
-    const password = document.querySelector('#common_user_edit_input_password').innerHTML;
-    switch (choice){
-        case null:{
-            if (user_local==true && password == '') {
-                //"Please enter password"
-                document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
-                show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-                return null;
+                })
+                .catch(err=>{
+                    document.querySelector('#common_user_verify_email').innerHTML = old_button;
+                    reject(err);
+                });
+            } else{
+                //not last, next!
+                document.querySelector('#' + nextField).focus();
+                resolve(null);
             }
-            show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
-            return callBack('CONFIRM',null);
+        else{
+            //remove anything else than 0-9
+            document.querySelector('#' + item.id).innerHTML = '';
+            resolve(null);
         }
-        case 1:{
-            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-            dialogue_user_edit_remove_error();
+    });
     
-            const old_button = document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML;
-            document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
-            const json_data = { password: password};
-
-            FFB('DB_API', `/user_account/${COMMON_GLOBAL.user_account_id}?`, 'DELETE', 'APP_ACCESS', json_data)
-            .then(()=>callBack(null,{deleted: 1}))
-            .catch(err=>callBack(err,null))
-            .finally(document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = old_button);
-            break;
+};
+const user_delete = async (choice=null, user_local, function_delete_event ) => {
+    return new Promise((resolve, reject)=>{
+        const password = document.querySelector('#common_user_edit_input_password').innerHTML;
+        switch (choice){
+            case null:{
+                if (user_local==true && password == '') {
+                    //"Please enter password"
+                    document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
+                    show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
+                }
+                else
+                    show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
+                resolve(null);
+                break;
+            }
+            case 1:{
+                document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                dialogue_user_edit_remove_error();
+        
+                const old_button = document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML;
+                document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
+                const json_data = { password: password};
+    
+                FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id}`, 'DELETE', 'APP_ACCESS', json_data)
+                .then(()=>resolve({deleted: 1}))
+                .catch(err=>reject(err))
+                .finally(document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = old_button);
+                break;
+            }
+            default:
+                resolve(null);
+                break;
         }
-        default:
-            break;
-    }
+    });
 };
 const user_function = (user_function, callBack) => {
     const user_id_profile = document.querySelector('#common_profile_id').innerHTML;
@@ -2309,7 +2315,7 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
         }
         case 1:{
             document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-            FFB('DB_API', `/user_account_app/${user_account_id}/${app_id}?`, 'DELETE', 'APP_ACCESS', null)
+            FFB('DB_API', `/user_account_app?DELETE_USER_ACCOUNT_ID=${user_account_id}&DELETE_APP_ID=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
                 document.querySelector('#common_profile_main_btn_cloud').click();

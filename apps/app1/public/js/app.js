@@ -23,12 +23,12 @@ const show_hide_apps_dialogue = () => {
 const setEvents = () => {
     //app
     document.querySelector('#app').addEventListener('click', event => {
+        const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
             if (event.target.className == 'app_logo')
                 window.open(event.target.parentNode.parentNode.querySelector('.app_url').innerHTML);
             else{
-                const event_target_id = common.element_id(event.target);
                 switch (event_target_id){
                     case 'app_menu_apps':{
                         document.querySelector('#app_menu_content_apps' ).style.display ='block';
@@ -368,15 +368,17 @@ const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
 const user_verify_check_input_app = async (item, nextField) => {
-    await common.user_verify_check_input(item, nextField, (err, result) => {
-        if ((err==null && result==null)==false)
-            if(err==null){
-                //login if LOGIN  or SIGNUP were verified successfully
-                if (result.verification_type==1 ||
-                    result.verification_type==2)
-                    user_login_app();
-            }
-    });
+    await common.user_verify_check_input(item, nextField)
+    .then(result=>{
+        if (result!=null){
+            //login if LOGIN  or SIGNUP were verified successfully
+            if (result.verification_type==1 ||
+                result.verification_type==2)
+                user_login_app();
+        }
+        
+    }) 
+    .catch(()=>null);
 };
 
 const user_delete_app = async () => {
@@ -386,17 +388,13 @@ const user_delete_app = async () => {
     else
         user_local = false;
     const function_delete_user_account = () => { 
-                                            common.user_delete(1, user_local, null, (err)=>{
-                                                if (err==null){
-                                                    common.user_logoff();
-                                                }
-                                            }); 
-                                        };
-    await common.user_delete(null, user_local, function_delete_user_account, (err) =>{
-        if (err==null){
-            common.user_logoff();
-        }
-    });
+                                                common.user_delete(1, user_local, null)
+                                                .then(()=>common.user_logoff())
+                                                .catch(()=>null);
+                                            };
+    await common.user_delete(null, user_local, function_delete_user_account)
+    .then(()=>null)
+    .catch(()=>null);
 };
 const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
     await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email)
