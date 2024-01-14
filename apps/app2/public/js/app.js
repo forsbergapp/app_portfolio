@@ -1028,11 +1028,9 @@ const user_verify_check_input_app = async (item, nextField) => {
     .catch(()=>null);
 };
 const user_function_app = async (function_name) => {
-    await common.user_function(function_name, (err) => {
-        if (err==null){
-            profile_update_stat_app();
-        }
-    });
+    await common.user_function(function_name)
+    .then(()=>profile_update_stat_app())
+    .catch(()=>null);
 };
 const profile_close_app = () => {
     common.profile_close();
