@@ -32,9 +32,9 @@ const getdocs = (docid = null) => {
 };
 const init_app = async () => {
     document.querySelector('#app').addEventListener('click',(event) => {
+        const target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
-            const target_id = common.element_id(event.target);
             switch (target_id){
                 case 'common_window_info_btn_close':{
                     document.querySelector('#dialogue_documents').style.visibility = 'visible';

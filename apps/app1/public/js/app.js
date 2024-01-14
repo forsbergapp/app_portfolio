@@ -327,7 +327,7 @@ const user_menu_item_click = (item) => {
     switch (item.id==''?item.parentNode.id:item.id){
         case 'common_user_menu_username':{
             document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null,null,()=>{});
+            common.profile_show(null,null);
             break;
         }
         case 'common_user_menu_dropdown_log_out':{
@@ -480,7 +480,7 @@ const init_app = async (parameters) => {
         if (user !='') {
             //show profile for user entered in url
             document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null, user,()=>{});
+            common.profile_show(null, user);
         }
     };
     show_start().then(()=>{

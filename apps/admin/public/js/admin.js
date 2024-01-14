@@ -139,9 +139,9 @@ const admin_login = async () => {
 const setEvents = () => {
 
     document.querySelector('#app').addEventListener('click', event => {
+        const target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
-            const target_id = common.element_id(event.target);
             switch (target_id){
                 case 'admin_login_button':{
                     admin_login();
@@ -236,7 +236,7 @@ const setEvents = () => {
                 }
                 case 'common_user_menu_username':{
                     document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                    common.profile_show(null,null,()=>{});
+                    common.profile_show(null,null);
                     document.querySelector('#common_user_menu_dropdown').style = 'none';
                     break;
                 }

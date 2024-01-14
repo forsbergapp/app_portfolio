@@ -282,6 +282,7 @@ const COMMON = {
                     resolve(db_user_account.deleteUser(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT/PROFILE/DETAIL_GET':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT/PROFILE/DETAIL_GET':{
                     resolve(db_user_account.getProfileDetail(routesparameters.app_id, query, routesparameters.res));
                     break;
@@ -290,22 +291,27 @@ const COMMON = {
                     resolve(db_user_account.searchProfile(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, query, routesparameters.body));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_FOLLOW_POST':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_POST':{
                     resolve(db_user_account.follow(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_FOLLOW_DELETE':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_FOLLOW_DELETE':{
                     resolve(db_user_account.unfollow(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_LIKE_POST':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_LIKE_POST':{
                     resolve(db_user_account.like(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_LIKE_DELETE':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_LIKE_DELETE':{
                     resolve(db_user_account.unlike(routesparameters.app_id, query, routesparameters.body));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_GET':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_APP_GET':{
                     resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, query));
                     break;
@@ -408,10 +414,6 @@ const COMMON = {
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT/ADMIN/COUNT_GET':{
                     resolve(db_user_account.getStatCountAdmin(routesparameters.app_id));
-                    break;
-                }
-                case 'ADMIN_DB_API_/USER_ACCOUNT_APP_GET':{
-                    resolve(db_user_account_app.getUserAccountApp(routesparameters.app_id, query));
                     break;
                 }
                 case 'ADMIN_DB_API_/USER_ACCOUNT_APP_PATCH':{

@@ -1139,19 +1139,18 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
         document.querySelector('#common_profile_info').style.display = 'none';
     }
     else
-        await common.profile_show(user_account_id_other, username, (err, result)=>{
-            if (err==null){
-                if (result.profile_id != null){
-                    if (result.private==1 && parseInt(common.COMMON_GLOBAL.user_account_id) !== result.profile_id) {
-                        //private
-                        null;
-                    } else {
-                        //public
-                        profile_show_user_setting();
-                        document.querySelector('#profile_main_stat_row2').style.display = 'block';
-                        profile_user_setting_stat(result.profile_id);
-                    }    
-                }
+        await common.profile_show(user_account_id_other, username)
+        .then((result)=>{
+            if (result.profile_id != null){
+                if (result.private==1 && parseInt(common.COMMON_GLOBAL.user_account_id) !== result.profile_id) {
+                    //private
+                    null;
+                } else {
+                    //public
+                    profile_show_user_setting();
+                    document.querySelector('#profile_main_stat_row2').style.display = 'block';
+                    profile_user_setting_stat(result.profile_id);
+                }    
             }
         });
 };
@@ -1965,9 +1964,9 @@ const user_settings_like = (user_account_app_data_post_id) => {
 const setEvents = () => {
     //app
     document.querySelector('#app').addEventListener('click', event => {
+        const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
-            const event_target_id = common.element_id(event.target);
             switch (event_target_id){
                 //info dialogue
                 case 'app_link':{
@@ -2408,9 +2407,9 @@ const setEvents = () => {
         });
     }, true);
     document.querySelector('#app').addEventListener('keyup', event => {
+        const target_id = common.element_id(event.target);
         common.common_event('keyup',event)
         .then(()=>{
-            const target_id = common.element_id(event.target);
             switch(target_id){
                 //settings gps
                 case 'setting_input_place':{
