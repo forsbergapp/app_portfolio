@@ -1615,94 +1615,100 @@ const search_profile = (click_function) => {
         });
     }
 };
-/*
-profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
-profile_show(userid, null) 	 from choosing profile in profile_top
-profile_show(userid, null) 	 from choosing profile in profile_detail
-profile_show(userid, null) 	 from choosing profile in search_profile
-profile_show(null, username) from init startup when user enters url
-*/
-const profile_show = async (user_account_id_other = null, username = null, callBack) => {
-    let user_account_id_search;
-    let path;
-
-    show_common_dialogue('PROFILE');
-    if (user_account_id_other == null && COMMON_GLOBAL.user_account_id == '' && username == null) {
-        return callBack(null,null);
-    } else {
-        if (user_account_id_other !== null) {
-            user_account_id_search = user_account_id_other;
-            path = `/user_account/profile/id?POST_ID=${user_account_id_search}&id=${COMMON_GLOBAL.user_account_id}`;
-        } else
-        if (username !== null) {
-            user_account_id_search = '';
-            path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL.user_account_id}`;
+/**
+ * profile_show(null, null)     from dropdown menu in apps or choosing logged in users profile
+ * profile_show(userid, null) 	 from choosing profile in profile_top, profile_detail and search_profile
+ * profile_show(null, username) from init startup when user enters url
+ * 
+ * @param {number} user_account_id_other 
+ * @param {string} username 
+ * @returns {{  profile_id:number,
+ *              private:number}}
+ */
+const profile_show = async (user_account_id_other = null, username = null) => {
+    return new Promise((resolve, reject)=>{
+        let user_account_id_search;
+        let path;
+    
+        show_common_dialogue('PROFILE');
+        if (user_account_id_other == null && COMMON_GLOBAL.user_account_id == '' && username == null) {
+            resolve(null);
         } else {
-            user_account_id_search = COMMON_GLOBAL.user_account_id;
-            path = `/user_account/profile/id?POST_ID=${user_account_id_search}&id=${COMMON_GLOBAL.user_account_id}`;
-        }
-        //PROFILE MAIN
-        const json_data ={  
-                            client_latitude:    COMMON_GLOBAL.client_latitude,
-                            client_longitude:   COMMON_GLOBAL.client_longitude
-                        };
-        FFB('DB_API', path, 'POST', 'APP_DATA', json_data)
-        .then(result=>{
-            const profile = JSON.parse(result);
-            document.querySelector('#common_profile_info').style.display = 'block';
-            document.querySelector('#common_profile_main').style.display = 'block';
-            document.querySelector('#common_profile_id').innerHTML = profile.id;
-            set_avatar(profile.avatar ?? profile.provider_image, document.querySelector('#common_profile_avatar')); 
-            //show local username
-            document.querySelector('#common_profile_username').innerHTML = profile.username;
-
-            document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
-            document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
-            document.querySelector('#common_profile_qr').innerHTML = '';
-            create_qr('common_profile_qr', getHostname() + '/' + profile.username);
-            //User account followed and liked
-            if (profile.followed == 1) {
-                //followed
-                document.querySelector('#common_profile_follow').children[0].style.display = 'none';
-                document.querySelector('#common_profile_follow').children[1].style.display = 'block';
+            if (user_account_id_other !== null) {
+                user_account_id_search = user_account_id_other;
+                path = `/user_account/profile/id?POST_ID=${user_account_id_search}&id=${COMMON_GLOBAL.user_account_id}`;
+            } else
+            if (username !== null) {
+                user_account_id_search = '';
+                path = `/user_account/profile/username?search=${username}&id=${COMMON_GLOBAL.user_account_id}`;
             } else {
-                //not followed
-                document.querySelector('#common_profile_follow').children[0].style.display = 'block';
-                document.querySelector('#common_profile_follow').children[1].style.display = 'none';
+                user_account_id_search = COMMON_GLOBAL.user_account_id;
+                path = `/user_account/profile/id?POST_ID=${user_account_id_search}&id=${COMMON_GLOBAL.user_account_id}`;
             }
-            if (profile.liked == 1) {
-                //liked
-                document.querySelector('#common_profile_like').children[0].style.display = 'none';
-                document.querySelector('#common_profile_like').children[1].style.display = 'block';
-            } else {
-                //not liked
-                document.querySelector('#common_profile_like').children[0].style.display = 'block';
-                document.querySelector('#common_profile_like').children[1].style.display = 'none';
-            } 
-            //if private then hide info, sql decides if private, no need to check here if same user
-            if (profile.private==1) {
-                //private
-                document.querySelector('#common_profile_public').style.display = 'none';
-                document.querySelector('#common_profile_private').style.display = 'block';
-            } else {
-                //public
-                document.querySelector('#common_profile_public').style.display = 'block';
-                document.querySelector('#common_profile_private').style.display = 'none';
-                document.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
-                document.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
-                document.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
-                document.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
-                document.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
-            }    
-            if (COMMON_GLOBAL.user_account_id =='')
-                setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
-            else
-                checkOnline('common_profile_avatar_online_status', profile.id);
-            callBack(null,{ profile_id: profile.id,
-                            private: profile.private});  
-        })  
-        .catch(err=>callBack(err,null));
-    }
+            //PROFILE MAIN
+            const json_data ={  
+                                client_latitude:    COMMON_GLOBAL.client_latitude,
+                                client_longitude:   COMMON_GLOBAL.client_longitude
+                            };
+            FFB('DB_API', path, 'POST', 'APP_DATA', json_data)
+            .then(result=>{
+                const profile = JSON.parse(result);
+                document.querySelector('#common_profile_info').style.display = 'block';
+                document.querySelector('#common_profile_main').style.display = 'block';
+                document.querySelector('#common_profile_id').innerHTML = profile.id;
+                set_avatar(profile.avatar ?? profile.provider_image, document.querySelector('#common_profile_avatar')); 
+                //show local username
+                document.querySelector('#common_profile_username').innerHTML = profile.username;
+    
+                document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
+                document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
+                document.querySelector('#common_profile_qr').innerHTML = '';
+                create_qr('common_profile_qr', getHostname() + '/' + profile.username);
+                //User account followed and liked
+                if (profile.followed == 1) {
+                    //followed
+                    document.querySelector('#common_profile_follow').children[0].style.display = 'none';
+                    document.querySelector('#common_profile_follow').children[1].style.display = 'block';
+                } else {
+                    //not followed
+                    document.querySelector('#common_profile_follow').children[0].style.display = 'block';
+                    document.querySelector('#common_profile_follow').children[1].style.display = 'none';
+                }
+                if (profile.liked == 1) {
+                    //liked
+                    document.querySelector('#common_profile_like').children[0].style.display = 'none';
+                    document.querySelector('#common_profile_like').children[1].style.display = 'block';
+                } else {
+                    //not liked
+                    document.querySelector('#common_profile_like').children[0].style.display = 'block';
+                    document.querySelector('#common_profile_like').children[1].style.display = 'none';
+                } 
+                //if private then hide info, sql decides if private, no need to check here if same user
+                if (profile.private==1) {
+                    //private
+                    document.querySelector('#common_profile_public').style.display = 'none';
+                    document.querySelector('#common_profile_private').style.display = 'block';
+                } else {
+                    //public
+                    document.querySelector('#common_profile_public').style.display = 'block';
+                    document.querySelector('#common_profile_private').style.display = 'none';
+                    document.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
+                    document.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
+                    document.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
+                    document.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
+                    document.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
+                }    
+                if (COMMON_GLOBAL.user_account_id =='')
+                    setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
+                else
+                    checkOnline('common_profile_avatar_online_status', profile.id);
+                resolve({   profile_id: profile.id,
+                            private: profile.private});
+            })  
+            .catch(err=>{reject(err);});
+        }
+    });
+    
 };
 const profile_close = () => {
     document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
@@ -1797,7 +1803,7 @@ const search_input = (event, module, event_function) => {
                     /*Show profile and leave searchresult so user can go back to searchresult again*/
                     if (event_function ==null){
                         if (module=='profile')
-                            profile_show(x[i].children[0].children[0].innerHTML,null,()=>{});
+                            profile_show(x[i].children[0].children[0].innerHTML,null);
                         else{
                             map_show_search_on_map({city:x[i].getAttribute('data-city'),
                                                     country:x[i].getAttribute('data-country'),
@@ -3592,7 +3598,7 @@ const common_event = async (event_type,event) =>{
                                 document.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                             }
                             else
-                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
+                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
                         }
                         break;
                     }
@@ -3605,7 +3611,7 @@ const common_event = async (event_type,event) =>{
                             if (document.querySelector(`#${element_id(event.target)}`)['data-function'])
                                 document.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                             else
-                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null,()=>{});
+                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
                         }
                         else{
                             //app list
