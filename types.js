@@ -1500,6 +1500,7 @@
  * @typedef {{  app_id:number,
  *              date_created:string}} db_result_user_account_app_getUserAccountApps
  * @typedef {{  app_id:number,
+ *              APP_ID:number,
  *              NAME:string,
  *              PROTOCOL:string,
  *              SUBDOMAIN:string,

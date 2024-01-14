@@ -62,6 +62,7 @@ const getUserAccountApps = async (app_id, query) => {
         const image = await fs.promises.readFile(`${process.cwd()}${app.LOGO}`);
         /**@ts-ignore */
         app.LOGO = 'data:image/webp;base64,' + Buffer.from(image, 'binary').toString('base64');
+        app.APP_ID = app.app_id;
     }
     return apps_db;        
 };
