@@ -11,9 +11,9 @@ const app_event_click = event =>{
     if (event==null){
         //javascript framework
         document.querySelector('#app').addEventListener('click',(event) => {
+            const event_target_id = common.element_id(event.target);
             common.common_event('click',event)
             .then(()=>{
-                const event_target_id = common.element_id(event.target);
                 switch (event_target_id){
                     case 'toolbar_btn_js':{
                         init_map('1');
@@ -33,9 +33,9 @@ const app_event_click = event =>{
     }
     else{
         //other framework
+        const event_target_id = common.element_id(event.target);
         common.common_event('click', event)
         .then(()=>{
-            const event_target_id = common.element_id(event.target);
             switch (event_target_id){
                 case 'toolbar_btn_js':{
                     init_map('1');
