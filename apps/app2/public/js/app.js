@@ -1015,15 +1015,17 @@ const user_login_app = async () => {
     .finally(document.querySelector('#common_login_button').innerHTML = old_button);
 };
 const user_verify_check_input_app = async (item, nextField) => {
-    await common.user_verify_check_input(item, nextField, (err, result) => {
-        if ((err==null && result==null)==false)
-            if(err==null){
-                //login if LOGIN  or SIGNUP were verified successfully
-                if (result.verification_type==1 ||
-                    result.verification_type==2)
-                    user_login_app();
-            }
-    });
+    await common.user_verify_check_input(item, nextField)
+    .then(result=>{
+        if (result!=null){
+            //login if LOGIN  or SIGNUP were verified successfully
+            if (result.verification_type==1 ||
+                result.verification_type==2)
+                user_login_app();
+        }
+        
+    }) 
+    .catch(()=>null);
 };
 const user_function_app = async (function_name) => {
     await common.user_function(function_name, (err) => {
