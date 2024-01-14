@@ -734,14 +734,9 @@ const update_ui = async (option, item_id=null) => {
                 settings.city.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
                 //common.SearchAndSetSelectedIndex('', settings.select_place,0);
                 if (settings.country[settings.country.selectedIndex].getAttribute('country_code')!=null){
-                    await common.get_cities(settings.country[settings.country.selectedIndex].getAttribute('country_code').toUpperCase(), (err, cities)=>{
-                        if (err)
-                            null;
-                        else{
-                            //fetch list including default option
-                            settings.city.innerHTML = cities;
-                        }
-                    });
+                    //fetch list including default option
+                    settings.city.innerHTML = await common.get_cities(settings.country[settings.country.selectedIndex]
+                                                    .getAttribute('country_code').toUpperCase());
                 }
                 break;
             }
