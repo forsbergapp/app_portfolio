@@ -354,7 +354,7 @@ const checkconnected = async () => navigator.onLine;
 let timer = 0;
 //delay API calls when typing to avoid too many calls 
 // ES6 spread operator, arrow function without function keyword
-const typewatch = (callBack, ...parameter) =>{
+const typewatch = (function_name, ...parameter) =>{
     let type_delay=250;
     if (parameter.length>0 && parameter[0] !=null)
         switch (parameter[0].code){
@@ -369,7 +369,7 @@ const typewatch = (callBack, ...parameter) =>{
         }
     clearTimeout(timer);
     timer = setTimeout(() => {
-        callBack(...parameter);
+        function_name(...parameter);
     }, type_delay);
 };
 const toBase64 = (str) => {
@@ -1879,7 +1879,8 @@ const user_login = async (username, password) => {
             COMMON_GLOBAL.user_app_role_id = user.app_role_id;
             COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
             updateOnlineStatus();
-            user_preference_get(() =>{
+            user_preference_get()
+            .then(()=>{
                 if (user.active==0){
                     show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
                     reject('ERROR');
@@ -2396,35 +2397,37 @@ const user_preference_save = async () => {
         await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'APP_ACCESS', json_data);
     }
 };
-const user_preference_get = async (callBack) => {
-    await FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
-    .then(result=>{
-        const user_account_app = JSON.parse(result)[0];
-        //locale
-        if (user_account_app.preference_locale==null){
-            user_preferences_set_default_globals('LOCALE');
-        }
-        else{
-            COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
-        }
-        //timezone
-        if (user_account_app.app_setting_preference_timezone_id==null){
-            user_preferences_set_default_globals('TIMEZONE');
-        }
-        else{
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
-            COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
-        }
-        //direction
-        SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
-        COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
-        //arabic script
-        SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
-        COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
-        user_preferences_update_select();
-        callBack(null, null);
-    })
-    .catch(err=>callBack(err, null));
+const user_preference_get = async () => {
+    return new Promise((resolve,reject)=>{
+        FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
+        .then(result=>{
+            const user_account_app = JSON.parse(result)[0];
+            //locale
+            if (user_account_app.preference_locale==null){
+                user_preferences_set_default_globals('LOCALE');
+            }
+            else{
+                COMMON_GLOBAL.user_locale = user_account_app.preference_locale;
+            }
+            //timezone
+            if (user_account_app.app_setting_preference_timezone_id==null){
+                user_preferences_set_default_globals('TIMEZONE');
+            }
+            else{
+                SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
+                COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
+            }
+            //direction
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
+            COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
+            //arabic script
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
+            COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
+            user_preferences_update_select();
+            resolve(null);
+        })
+        .catch(err=>reject(err));
+    });
 };
 const user_preferences_set_default_globals = (preference) => {
     switch (preference){
@@ -2484,7 +2487,8 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                 COMMON_GLOBAL.user_account_id = user_login.id;
                 COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
                 updateOnlineStatus();
-                user_preference_get(() =>{
+                user_preference_get()
+                .then(()=>{
                     dialogue_login_clear();
                     dialogue_signup_clear();
                     resolve({   user_account_id: user_login.id,
@@ -2666,13 +2670,10 @@ const map_city = (country_code) =>{
     //set default option
     select_cities.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
     if (country_code!=null){
-        get_cities(country_code, (err, cities)=>{
-            if (err)
-                null;
-            else{
-                //fetch list including default option
-                select_cities.innerHTML = cities;
-            }
+        get_cities(country_code)
+        .then(cities=>{
+            //fetch list including default option
+            select_cities.innerHTML = cities;
         });
     }
 };
@@ -3152,53 +3153,55 @@ const get_gps_from_ip = async () => {
 /*----------------------- */
 /* SERVICE WORLDCITIES    */
 /*----------------------- */
-const get_cities = async (countrycode, callBack) => {
-    await FFB('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'APP_DATA', null)
-    .then(result=>{
-        const cities = JSON.parse(result);
-        cities.sort((a, b) => {
-            const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
-            const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
-            if (x < y) {
-                return -1;
+const get_cities = async countrycode => {
+    return new Promise((resolve, reject)=>{
+        FFB('WORLDCITIES', `/country?country=${countrycode}`, 'GET', 'APP_DATA', null)
+        .then(result=>{
+            const cities = JSON.parse(result);
+            cities.sort((a, b) => {
+                const x = a.admin_name.toLowerCase() + a.city.toLowerCase();
+                const y = b.admin_name.toLowerCase() + b.city.toLowerCase();
+                if (x < y) {
+                    return -1;
+                }
+                if (x > y) {
+                    return 1;
+                }
+                return 0;
+            });
+    
+            let current_admin_name;
+            //fill list with cities
+            let cities_options='';
+            let i =0;
+            for (const city of cities) {
+                if (i == 0) {
+                    cities_options += `<option value='' id='' label='…' selected='selected'>…</option>
+                                <optgroup label='${city.admin_name}'>`;
+                    current_admin_name = city.admin_name;
+                } else
+                if (city.admin_name != current_admin_name) {
+                    cities_options += `</optgroup>
+                                <optgroup label='${city.admin_name}'>`;
+                    current_admin_name = city.admin_name;
+                }
+                cities_options +=
+                `<option 
+                    id=${city.id} 
+                    value=${i + 1}
+                    countrycode=${city.iso2}
+                    country='${city.country}'
+                    admin_name='${city.admin_name}'
+                    latitude=${city.lat}
+                    longitude=${city.lng}  
+                    >${city.city}
+                </option>`;
+                i++;
             }
-            if (x > y) {
-                return 1;
-            }
-            return 0;
-        });
-
-        let current_admin_name;
-        //fill list with cities
-        let cities_options='';
-        let i =0;
-        for (const city of cities) {
-            if (i == 0) {
-                cities_options += `<option value='' id='' label='…' selected='selected'>…</option>
-                            <optgroup label='${city.admin_name}'>`;
-                current_admin_name = city.admin_name;
-            } else
-            if (city.admin_name != current_admin_name) {
-                cities_options += `</optgroup>
-                            <optgroup label='${city.admin_name}'>`;
-                current_admin_name = city.admin_name;
-            }
-            cities_options +=
-            `<option 
-                id=${city.id} 
-                value=${i + 1}
-                countrycode=${city.iso2}
-                country='${city.country}'
-                admin_name='${city.admin_name}'
-                latitude=${city.lat}
-                longitude=${city.lng}  
-                >${city.city}
-            </option>`;
-            i++;
-        }
-        callBack(null, `${cities_options} </optgroup>`);
-    })
-    .then((err)=>callBack(err, null));
+            resolve(`${cities_options} </optgroup>`);
+        })
+        .then((err)=>reject(err));
+    });
 };
 const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').innerText;
