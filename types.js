@@ -268,12 +268,6 @@
  * @property {function} listen
  */
 /**
- * Server - Callback with error and result
- * @callback callBack
- * @param {(Error|string|number|null|unknown)} error
- * @param {(boolean|string|object|null|*)} result
- */
-/**
  * Server - Error stack
  * @typedef {string} error_stack
  */
