@@ -345,25 +345,24 @@ const user_login_app = async () => {
     const old_button = document.querySelector('#common_login_button').innerHTML;
     document.querySelector('#common_login_button').innerHTML = common.APP_SPINNER;
             
-    await common.user_login(username.innerHTML, password.innerHTML, (err, result)=>{
-        document.querySelector('#common_login_button').innerHTML = old_button;
-        if (err==null){            
-            //set avatar or empty
-            common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
-            document.querySelector('#common_user_menu_username').innerHTML = result.username;
-            
-            document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-
-            document.querySelector('#common_user_menu_username').style.display = 'block';
-            document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-            document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-
-            common.dialogue_login_clear();
-            common.dialogue_signup_clear();
-        }
+    await common.user_login(username.innerHTML, password.innerHTML)
+    .then((result)=>{        
+        //set avatar or empty
+        common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
+        document.querySelector('#common_user_menu_username').innerHTML = result.username;
         
-    });
+        document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+        document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+
+        document.querySelector('#common_user_menu_username').style.display = 'block';
+        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+
+        common.dialogue_login_clear();
+        common.dialogue_signup_clear();
+    })
+    .catch(()=>null)
+    .finally(document.querySelector('#common_login_button').innerHTML = old_button);
 };
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
@@ -400,31 +399,27 @@ const user_delete_app = async () => {
     });
 };
 const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
-    await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, (err, result)=>{
-        if(err==null){
-            //set avatar or empty
-            common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
-            document.querySelector('#common_user_menu_username').innerHTML = result.username;
+    await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email)
+    .then((result)=>{
+        //set avatar or empty
+        common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
+        document.querySelector('#common_user_menu_username').innerHTML = result.username;
 
-            document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+        document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+        document.querySelector('#common_user_menu_logged_out').style.display = 'none';
 
-            document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-            document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-        }
+        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
     });
 };
 const ProviderSignIn_app = async (provider_button) => {
-    await common.ProviderSignIn(provider_button, (err, result)=>{
-        if (err==null){
-            ProviderUser_update_app(result.identity_provider_id, 
-                                    result.profile_id, 
-                                    result.profile_first_name, 
-                                    result.profile_last_name, 
-                                    result.profile_image_url, 
-                                    result.profile_email);
-        }
-    });
+    const result = common.ProviderSignIn(provider_button);
+    ProviderUser_update_app(result.identity_provider_id, 
+                            result.profile_id, 
+                            result.profile_first_name, 
+                            result.profile_last_name, 
+                            result.profile_image_url, 
+                            result.profile_email);
 };
 const init_app = async (parameters) => {
     for (const parameter of parameters.app) {

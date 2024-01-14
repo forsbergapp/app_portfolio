@@ -469,7 +469,8 @@ const sendBroadcast = () => {
             common.show_message('INFO', null, null, `${common.ICONS.message_success} (${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
         else
             common.show_message('INFO', null, null, `${common.ICONS.message_fail}`, common.COMMON_GLOBAL.app_id);
-    });
+    })
+    .catch(()=>null);
 };    
 const closeBroadcast = () => {
     document.querySelector('#dialogue_send_broadcast').style.visibility='hidden'; 
@@ -551,7 +552,8 @@ const check_maintenance = async () => {
                 document.querySelector('#menu_1_checkbox_maintenance').classList.add('checked');
             else
                 document.querySelector('#menu_1_checkbox_maintenance').classList.remove('checked');
-        });
+        })
+        .catch(()=>null);
     }
 };
 const set_maintenance = () => {
@@ -562,7 +564,7 @@ const set_maintenance = () => {
         else
             check_value = 1;
         const json_data = {value: check_value};
-        common.FFB('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 'SYSTEMADMIN', json_data);
+        common.FFB('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 'SYSTEMADMIN', json_data).catch(()=>null);
     }
 };
 /*----------------------- */
@@ -1178,6 +1180,7 @@ const button_save = async (item) => {
                 const old_button = document.querySelector('#' + item).innerHTML;
                 document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
                 common.FFB('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data)
+                .catch(()=>null)
                 .finally(()=>document.querySelector('#' + item).innerHTML = old_button);
             }    
 };
@@ -1229,6 +1232,7 @@ const update_record = async (table,
         }
         await common.FFB('DB_API', path, 'PUT', token_type, json_data)
         .then(()=>row_element.setAttribute('data-changed-record', '0'))
+        .catch(()=>null)
         .finally(()=>document.querySelector('#' + button).innerHTML = old_button);
     }
 };
@@ -1379,7 +1383,8 @@ const show_monitor = async (yearvalues) =>{
                 show_map();
                 nav_click(document.querySelector('#list_connected_title').id);
             }    
-        });
+        })
+        .catch(()=>null);
     };
     //fetch geolocation once
     if (common.COMMON_GLOBAL.client_longitude && common.COMMON_GLOBAL.client_latitude)
@@ -2172,7 +2177,8 @@ const list_item_click = (item_type, data) => {
                                     null,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                     common.COMMON_GLOBAL.module_leaflet_jumpto);
-            });
+            })
+            .catch(()=>null);
         }
         else{
             //clicking on GPS, show on map
@@ -2193,7 +2199,8 @@ const list_item_click = (item_type, data) => {
                                     null,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                     common.COMMON_GLOBAL.module_leaflet_jumpto);
-            });
+            })
+            .catch(()=>null);
         }
     }
     else
@@ -2259,7 +2266,8 @@ const get_server_log_parameters = async () => {
             document.querySelector('#select_day_menu5').style.display = 'none';
         else
             document.querySelector('#select_day_menu5').style.display = 'inline-block';
-    });
+    })
+    .catch(()=>null);
 };
 const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
@@ -2435,6 +2443,7 @@ const db_install = () =>{
         document.querySelector('#install_db_icon').classList.add('installed');
         common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
     })
+    .catch(()=>null)
     .finally(()=>document.querySelector('#install_db_button_install').innerHTML = old_html);
 };
 const db_uninstall = () =>{
@@ -2446,6 +2455,7 @@ const db_uninstall = () =>{
         document.querySelector('#install_db_icon').classList.remove('installed');
         common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
     })
+    .catch(()=>null)
     .finally(()=>document.querySelector('#install_db_button_install').innerHTML = old_html);
 };
 const demo_install = () =>{
@@ -2460,6 +2470,7 @@ const demo_install = () =>{
         .then(result=>{
             common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
         })
+        .catch(()=>null)
         .finally(()=>document.querySelector('#install_demo_button_install').innerHTML = old_html);
     }
 
@@ -2471,6 +2482,7 @@ const demo_uninstall = () =>{
     .then(result=>{
         common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
     })
+    .catch(()=>null)
     .finally(()=>document.querySelector('#install_demo_button_install').innerHTML = old_html);
 };
 const show_installation = () =>{
@@ -2675,7 +2687,8 @@ const show_server_info = async () => {
                         <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>
                     </div>
                 </div>`;
-        });
+        })
+        .catch(()=>null);
     }
 };
 /*----------------------- */

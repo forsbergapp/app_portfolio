@@ -111,29 +111,29 @@ const admin_login = async () => {
     }
     else {
         await common.user_login(encodeURI(document.querySelector('#admin_login_username_input').innerHTML),
-                                encodeURI(document.querySelector('#admin_login_password_input').innerHTML), (err, result) => {
-                document.querySelector('#admin_login_button').innerHTML = old_button;
-                if (err == null) {
-                    common.dialogue_close('dialogue_admin_login').then(() => {
-                        document.querySelector('#menu').style.visibility = 'visible';
-                        document.querySelector('#menu_open').style.visibility = 'visible';
-                        document.querySelector('#common_user_preferences').style.display = 'block';
-                        common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
-                        document.querySelector('#common_user_menu_username').innerHTML = result.username;
+                                encodeURI(document.querySelector('#admin_login_password_input').innerHTML))
+            .then((result)=>{
+                common.dialogue_close('dialogue_admin_login').then(() => {
+                    document.querySelector('#menu').style.visibility = 'visible';
+                    document.querySelector('#menu_open').style.visibility = 'visible';
+                    document.querySelector('#common_user_preferences').style.display = 'block';
+                    common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
+                    document.querySelector('#common_user_menu_username').innerHTML = result.username;
 
-                        document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                        document.querySelector('#common_user_menu').classList.add('user_menu_logged_in');
-                        document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    document.querySelector('#common_user_menu').classList.add('user_menu_logged_in');
+                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
 
-                        document.querySelector('#common_user_menu_username').style.display = 'block';
-                        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-                        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                        clear_login();
-                        document.querySelector('#admin_secure').style.visibility = 'visible';
-                        app_secure.init();
-                    });
-                }
-            });
+                    document.querySelector('#common_user_menu_username').style.display = 'block';
+                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                    clear_login();
+                    document.querySelector('#admin_secure').style.visibility = 'visible';
+                    app_secure.init();
+                });
+            })
+            .catch(()=>null)
+            .finally(document.querySelector('#admin_login_button').innerHTML = old_button);
     }
 };
 const setEvents = () => {

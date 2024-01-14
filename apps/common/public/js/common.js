@@ -1344,9 +1344,8 @@ const show_hide_window_info_toolbar = () => {
   ----------------------- */
 const profile_follow_like = async (function_name) => {
     await user_function(function_name, (err) => {
-        if (err==null){
-            profile_update_stat(()=>{});
-        }
+        if (err==null)
+            profile_update_stat();
     });
 };
 const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
@@ -1714,25 +1713,27 @@ const profile_close = () => {
     document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
 };
-const profile_update_stat = async (callBack) => {
-    const profile_id = document.querySelector('#common_profile_id');
-    const json_data ={  
-                        client_latitude:    COMMON_GLOBAL.client_latitude,
-                        client_longitude:   COMMON_GLOBAL.client_longitude
-                    };
-    //get updated stat for given user
-    //to avoid update in stat set searched by same user
-    FFB('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
-    .then(result=>{
-        const user_stat = JSON.parse(result);
-        document.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
-        document.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
-        document.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
-        document.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
-        document.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
-        callBack(null, {id : user_stat.id});
-    })
-    .catch(err=>callBack(err,null));
+const profile_update_stat = async () => {
+    return new Promise((resolve, reject) => {
+        const profile_id = document.querySelector('#common_profile_id');
+        const json_data ={  
+                            client_latitude:    COMMON_GLOBAL.client_latitude,
+                            client_longitude:   COMMON_GLOBAL.client_longitude
+                        };
+        //get updated stat for given user
+        //to avoid update in stat set searched by same user
+        FFB('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
+        .then(result=>{
+            const user_stat = JSON.parse(result);
+            document.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
+            document.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
+            document.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
+            document.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
+            document.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
+            resolve({id : user_stat.id});
+        })
+        .catch(err=>reject(err));
+    });
 };
 const search_input = (event, module, event_function) => {
     switch (event.code){
@@ -1850,52 +1851,53 @@ const search_input = (event, module, event_function) => {
   user_preferences_update_select
 
   ----------------------- */
-const user_login = async (username, password, callBack) => {
-    if (check_input(username) == false || check_input(password)== false)
-        return callBack('ERROR', null);
+const user_login = async (username, password) => {
+    return new Promise((resolve,reject)=>{
+        if (check_input(username) == false || check_input(password)== false)
+            reject('ERROR');
+        if (username == '') {
+            //"Please enter username"
+            show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
+            reject('ERROR');
+        }
+        if (password == '') {
+            //"Please enter password"
+            show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
+            reject('ERROR');
+        }
+        // ES6 object spread operator for user variables
+        const json_data = { username:  encodeURI(username),
+                            password:  encodeURI(password),
+                            ...get_uservariables()
+                        };
 
-    if (username == '') {
-        //"Please enter username"
-        show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
-        return callBack('ERROR', null);
-    }
-    if (password == '') {
-        //"Please enter password"
-        show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-        return callBack('ERROR', null);
-    }
-    // ES6 object spread operator for user variables
-    const json_data = { username:  encodeURI(username),
-                        password:  encodeURI(password),
-                        ...get_uservariables()
-                    };
-
-    FFB('IAM', '/user?', 'POST', 'IAM', json_data)
-    .then(result=>{
-        profile_close();
-        const user = JSON.parse(result).items[0];
-        COMMON_GLOBAL.user_account_id = user.id;
-        COMMON_GLOBAL.user_identity_provider_id = '';
-        COMMON_GLOBAL.user_app_role_id = user.app_role_id;
-        COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
-        updateOnlineStatus();
-        user_preference_get(() =>{
-            if (user.active==0){
-                show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
-                return callBack('ERROR', null);
-            }
-            else{
-                dialogue_login_clear();
-                dialogue_signup_clear();
-                return callBack(null, { user_id: user.id,
-                                        username: user.username,
-                                        bio: user.bio,
-                                        avatar: user.avatar,
-                                        app: JSON.parse(result).app});
-            }
-        });
-    })
-    .catch(err=>callBack(err, null));
+        FFB('IAM', '/user?', 'POST', 'IAM', json_data)
+        .then(result=>{
+            profile_close();
+            const user = JSON.parse(result).items[0];
+            COMMON_GLOBAL.user_account_id = user.id;
+            COMMON_GLOBAL.user_identity_provider_id = '';
+            COMMON_GLOBAL.user_app_role_id = user.app_role_id;
+            COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+            updateOnlineStatus();
+            user_preference_get(() =>{
+                if (user.active==0){
+                    show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
+                    reject('ERROR');
+                }
+                else{
+                    dialogue_login_clear();
+                    dialogue_signup_clear();
+                    resolve({   user_id: user.id,
+                                username: user.username,
+                                bio: user.bio,
+                                avatar: user.avatar,
+                                app: JSON.parse(result).app});
+                }
+            });
+        })
+        .catch(err=>reject(err));
+    });
 };
 const user_logoff = async () => {
     //remove access token
@@ -2451,52 +2453,55 @@ const user_preferences_update_select = () => {
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
-const ProviderUser_update = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email, callBack) => {
-    convert_image(profile_image_url, 
-                  COMMON_GLOBAL.image_avatar_width,
-                  COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
-        const json_data ={  username:               null,
-                            password:               null,
-                            active:                 1,
-                            identity_provider_id:   identity_provider_id,
-                            provider_id:            profile_id,
-                            provider_first_name:    profile_first_name,
-                            provider_last_name:     profile_last_name,
-                            provider_image:         window.btoa(profile_image),
-                            provider_image_url:     profile_image_url,
-                            provider_email:         profile_email,
-                            ...get_uservariables()
-                        };
-        FFB('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data)
-        .then(result=>{
-            const user_login = JSON.parse(result).items[0];
-            COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
-            COMMON_GLOBAL.user_account_id = user_login.id;
-            COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
-            updateOnlineStatus();
-            user_preference_get(() =>{
-                dialogue_login_clear();
-                dialogue_signup_clear();
-                callBack(null, {user_account_id: user_login.id,
+const ProviderUser_update = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
+    return new Promise((resolve, reject)=>{
+        convert_image(profile_image_url, 
+            COMMON_GLOBAL.image_avatar_width,
+            COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
+            const json_data ={  username:               null,
+                                password:               null,
+                                active:                 1,
+                                identity_provider_id:   identity_provider_id,
+                                provider_id:            profile_id,
+                                provider_first_name:    profile_first_name,
+                                provider_last_name:     profile_last_name,
+                                provider_image:         window.btoa(profile_image),
+                                provider_image_url:     profile_image_url,
+                                provider_email:         profile_email,
+                                ...get_uservariables()
+                            };
+            FFB('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data)
+            .then(result=>{
+                const user_login = JSON.parse(result).items[0];
+                COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
+                COMMON_GLOBAL.user_account_id = user_login.id;
+                COMMON_GLOBAL.user_identity_provider_id = user_login.identity_provider_id;
+                updateOnlineStatus();
+                user_preference_get(() =>{
+                    dialogue_login_clear();
+                    dialogue_signup_clear();
+                    resolve({   user_account_id: user_login.id,
                                 username: user_login.username,
                                 bio: user_login.bio,
                                 avatar: profile_image,
                                 first_name: profile_first_name,
                                 last_name: profile_last_name,
                                 userCreated: JSON.parse(result).userCreated});
-            });
-        })
-        .catch(err=>callBack(err, null));
+                });
+            })
+            .catch(err=>reject(err));
+        });
     });
+    
 };
-const ProviderSignIn = async (provider_id, callBack) => {
+const ProviderSignIn = (provider_id) => {
     //add REST API to get user provider data
-    return callBack(null, { identity_provider_id:   provider_id,
-                            profile_id:             provider_id,
-                            profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
-                            profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
-                            profile_image_url:      '',
-                            profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`});
+    return {    identity_provider_id:   provider_id,
+                profile_id:             provider_id,
+                profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
+                profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
+                profile_image_url:      '',
+                profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
     
 };
 /*----------------------- */
@@ -2926,32 +2931,32 @@ const FFB = async (service, path, method, authorization_type, json_data) => {
                 case 400:{
                     //Bad request
                     show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
-                    return result;
+                    throw result;
                 }
                 case 404:{
                     //Not found
                     show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
-                    return result;
+                    throw result;
                 }
                 case 401:{
                     //Unauthorized, token expired
                     exception(COMMON_GLOBAL.exception_app_function, result);
-                    return result;
+                    throw result;
                 }
                 case 403:{
                     //Forbidden, not allowed to login or register new user
                     show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
-                    return result;
+                    throw result;
                 }
                 case 500:{
                     //Unknown error
                     exception(COMMON_GLOBAL.exception_app_function, result);
-                    return result;
+                    throw result;
                 }
                 case 503:{
                     //Service unavailable or other error in microservice
                     exception(COMMON_GLOBAL.exception_app_function, result);
-                    return result;
+                    throw result;
                 }
             }
         })
