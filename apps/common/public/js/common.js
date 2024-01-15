@@ -196,7 +196,6 @@ const ICONS = {
     'user_account_created':     icon_string('f4c6'),
     'user_account_modified':    icon_string('f044'),
     'user_password':            icon_string('f084'),
-    'user_delete_account':      icon_string('f2ed'),
     'user_account_reminder':    icon_string('f059'),
     'user_avatar_edit':         icon_string('f030'),
     'user_avatar':              icon_string('f2bd'),
@@ -2068,14 +2067,11 @@ const user_update = async () => {
                         };
             path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
         }
-        const old_button = document.querySelector('#common_user_edit_btn_user_update').innerHTML;
-        document.querySelector('#common_user_edit_btn_user_update').classList.add('spinner');
-        document.querySelector('#common_user_edit_btn_user_update').innerHTML = APP_SPINNER;
+        document.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
         FFB('DB_API', path, 'PUT', 'APP_ACCESS', json_data)
         .then(result=>{
-            document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
-            document.querySelector('#common_user_edit_btn_user_update').classList.remove('spinner');
+            document.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
             set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
             document.querySelector('#common_user_menu_username').innerHTML = username;
@@ -2084,11 +2080,10 @@ const user_update = async () => {
             }
             else
                 dialogue_user_edit_clear();
-            resolve(null);
         })
-        .catch(()=>{
-            document.querySelector('#common_user_edit_btn_user_update').innerHTML = old_button;
-            document.querySelector('#common_user_edit_btn_user_update').classList.remove('spinner');
+        .catch(()=>null)
+        .finally(()=>{
+            document.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             resolve(null);
         });
     });
@@ -2264,14 +2259,13 @@ const user_delete = async (choice=null, user_local, function_delete_event ) => {
                 document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                 dialogue_user_edit_remove_error();
         
-                const old_button = document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML;
-                document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = APP_SPINNER;
+                document.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
                 FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id}`, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>resolve({deleted: 1}))
                 .catch(err=>reject(err))
-                .finally(document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = old_button);
+                .finally(document.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner'));
                 break;
             }
             default:
@@ -3347,7 +3341,6 @@ const assign_icons = () => {
     //dialogue user edit
     document.querySelector('#common_user_edit_btn_avatar_img').innerHTML = ICONS.user_avatar_edit;
     document.querySelector('#common_user_edit_private').innerHTML = ICONS.app_private;
-    document.querySelector('#common_user_edit_btn_user_delete_account').innerHTML = ICONS.user_delete_account;
     document.querySelector('#common_user_edit_close').innerHTML = ICONS.app_close;
     document.querySelector('#common_user_edit_label_provider').innerHTML = ICONS.provider;
     document.querySelector('#common_user_edit_label_provider_id').innerHTML = ICONS.provider_id;

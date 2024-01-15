@@ -53,6 +53,8 @@ doc_list_item_title{
 }
 /*APP THEME*/
 body {
+	--app_spinner_color:var(--app_black);
+	--app_spinner_background:var(--app_blue1);
 	color: var(--app_black);
 	background: var(--app_blue1);
 	caret-color: var(--app_black);
