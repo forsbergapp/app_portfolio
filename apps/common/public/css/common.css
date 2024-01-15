@@ -37,6 +37,8 @@
 	--app_white3: #f2f2f2;
 	--app_white4: #e2e2e2;
 	--app_white_transparent: rgb(255,255,255,0.25);
+	--app_spinner_color:var(--app_blue1);
+	--app_spinner_background:var(--app_light);
 	/*report colors*/
 	--report_black: #404040;
 	--report_blue: #1da1f2;
@@ -58,6 +60,7 @@
 	--app_user_follow: '\f234';
 	--app_user_followed: '\f4fc';
 	--app_update: '\f0c7';
+	--app_delete: '\f2ed';
 	/*fonts*/
 	--global_font_languages_1:  "Noto Sans Hebrew", "Noto Sans Thai", "Noto Sans Khmer", 
 								"Noto Sans Bengali", "Noto Sans Telugu","Noto Sans Tamil",

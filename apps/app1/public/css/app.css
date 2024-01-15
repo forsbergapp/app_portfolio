@@ -675,7 +675,6 @@ div.ray8 {
 	--app_theme_list_selected_background_color: var(--app_theme_main_select_color);	
 
 	--app_theme_spinner_background_color:var(--app_theme_main_branding_color1);
-        
 }
 .app_theme_moon{
 
@@ -819,6 +818,8 @@ div.ray8 {
 }
 /*app colors*/
 body{
+	--app_spinner_color:var(--app_theme_dialogue_button_color);
+	--app_spinner_background:var(--app_theme_dialogue_background_color);
 	color: var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);

@@ -811,6 +811,8 @@
 
 /*theme app colors*/
 body{
+	--app_spinner_color:var(--app_theme_main_color3);
+	--app_spinner_background:var(--app_theme_main_color1);
 	caret-color: var(--app_theme_main_color3);
 }
 body,

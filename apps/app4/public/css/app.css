@@ -87,6 +87,8 @@
 	--app_theme_hover:var(--app_green);
 }
 body{
+	--app_spinner_color:var(--app_theme_text_color);
+	--app_spinner_background:var(--app_theme_background_color);
 	color: var(--app_theme_text_color);
 	fill:var(--app_theme_text_color);
 	background: var(--app_theme_background_color);
