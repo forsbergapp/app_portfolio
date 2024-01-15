@@ -993,6 +993,7 @@ const getApps = async (app_id, id, lang_code) =>{
 const getAssetFile = (app_id, url, basepath, res) =>{
     return new Promise((resolve, reject)=>{
         const maxage = getNumberValue(ConfigGet('SERVER','APP_CACHE_CONTROL_MAX_AGE'));
+        const maxage_font = getNumberValue(ConfigGet('SERVER','APP_CACHE_CONTROL_MAX_AGE_FONT'));
         switch (url.toLowerCase().substring(url.lastIndexOf('.'))){
             case '.css':{
                 res.type('text/css');
@@ -1035,14 +1036,14 @@ const getAssetFile = (app_id, url, basepath, res) =>{
             }
             case '.woff2':{
                 res.type('font/woff');
-                res.set('Cache-Control', `max-age=${maxage}, must-revalidate`);
+                res.set('Cache-Control', `max-age=${maxage_font}, must-revalidate`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
                 break;
             }
             case '.ttf':{
                 res.type('font/ttf');
-                res.set('Cache-Control', `max-age=${maxage}, must-revalidate`);
+                res.set('Cache-Control', `max-age=${maxage_font}, must-revalidate`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
                 break;
