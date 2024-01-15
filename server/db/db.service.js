@@ -275,10 +275,10 @@ const db_query = async (pool_id, db_use, sql, parameters, dba) => {
                      conn.config.queryFormat = (/**@type{string}*/sql, /**@type{[]}*/parameters) => {
                         if (!parameters) return sql;
                         return sql.replace(/:(\w+)/g, (txt, key) => {
-                           if (Object.prototype.hasOwnProperty.call(parameters, key)) {
-                           return conn.escape(parameters[key]);
-                           }
-                           return txt;
+                           if (key in parameters)
+                              return conn.escape(parameters[key]);
+                           else
+                              return txt;
                         });
                      };
                      conn.query(sql, parameters, (/**@type{Types.error}*/err, /**@type{[Types.db_pool_connection_1_2_result]}*/result, /**@type{Types.db_pool_connection_3_fields}*/fields) => {
