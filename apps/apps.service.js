@@ -992,63 +992,64 @@ const getApps = async (app_id, id, lang_code) =>{
  */
 const getAssetFile = (app_id, url, basepath, res) =>{
     return new Promise((resolve, reject)=>{
+        const maxage = getNumberValue(ConfigGet('SERVER','APP_CACHE_CONTROL_MAX_AGE'));
         switch (url.toLowerCase().substring(url.lastIndexOf('.'))){
             case '.css':{
                 res.type('text/css');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
                 break;
             }
             case '.js':{
                 res.type('text/javascript');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
                 break;
             }
             case '.html':{
                 res.type('text/html');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
                 break;
             }
             case '.ogg':{
                 res.type('audio/ogg');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/audio)=>Buffer.from(audio, 'binary')));
                 break;
             }
             case '.webp':{
                 res.type('image/webp');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/image)=>Buffer.from(image, 'binary')));
                 break;
             }
             case '.png':{
                 res.type('image/png');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/image)=>Buffer.from(image, 'binary')));
                 break;
             }
             case '.woff2':{
                 res.type('font/woff');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
                 break;
             }
             case '.ttf':{
                 res.type('font/ttf');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`)
                 .then((/**@type{*}*/font)=>Buffer.from(font, 'binary')));
                 break;
             }
             case '.json':{
                 res.type('application/json');
-                res.set('Cache-Control', `public, max-age=${1000 * 60 * 60}`);
+                res.set('Cache-Control', `public, max-age=${maxage}`);
                 resolve(fs.promises.readFile(`${process.cwd()}${basepath}${url}`, 'utf8'));
                 break;
             }
