@@ -478,6 +478,9 @@ select {
 	margin-top: 10px;
     margin-bottom: 10px;
 }
+#common_user_edit_buttons{
+	margin: 10px;
+}
 #common_dialogue_user_edit_content #common_user_edit_buttons .common_setting_horizontal_col:nth-child(1) {
 	width: 0%;
 	display: none;
@@ -870,6 +873,11 @@ select {
 }
 
 /*Dialogue User Edit*/
+
+#common_user_edit_btn_user_delete_account::before{
+	content:var(--app_delete);
+}	
+
 #common_user_edit_btn_user_update.spinner::before{
 	content: '';
 }
@@ -895,8 +903,10 @@ select {
 #common_user_edit_btn_user_update,
 #common_user_edit_btn_user_delete_account
 {
-	width:100px;
+	margin-left:10px;
+	margin-right:10px;
 	font-size:30px;
+	height: 30px;
 }
 /*User account / user preferences*/
 #common_app_select_theme{
@@ -974,6 +984,34 @@ select {
 	width: 100%;
 }
 /* SPINNER */
+@keyframes spin{
+	from {transform:rotate(0deg);}
+	to {transform:rotate(360deg);}
+}
+.css_spinner{	
+	position:relative;
+	vertical-align: sub;
+	width:30px;
+	height:30px;
+	border-radius:50%;
+	box-sizing:border-box;
+	background-image: conic-gradient(from 90deg at 50% 50%, rgba(39,174,96,0) 0deg, rgba(31, 144, 255, 0) 0.04deg, var(--app_spinner_color) 360deg);
+	animation:spin 1s linear infinite;
+	margin-left: 25px !important;
+    margin-right: 25px !important;
+}
+.css_spinner::before{
+	content:'' !important;
+	position:absolute;
+	inset-inline-start:50%;
+	top:50%;
+	transform:translate(-50%, -50%);
+	height: 25px;
+	width: 25px;
+	background:var(--app_spinner_background);
+	border-radius:50%;
+}
+
 #common_app_spinner{
 	visibility: visible;
 	display: inline-block;
