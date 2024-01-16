@@ -97,6 +97,11 @@ select {
 	padding-top: 4px;
     padding-bottom: 4px;
 }  
+.common_icon::before{
+	display: inline-block;
+    white-space: nowrap;
+	vertical-align: sub;
+}
 .common_icon svg{
 	font-size: 2em;
 	height: 0.6em;
@@ -1066,6 +1071,9 @@ select {
 	width: 25px;
 	background:var(--app_spinner_background);
 	border-radius:50%;
+}
+.common_list_scrollbar.css_spinner{
+	height:30px !important;
 }
 
 #common_app_spinner{
