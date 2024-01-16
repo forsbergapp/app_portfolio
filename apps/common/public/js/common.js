@@ -3357,9 +3357,6 @@ const assign_icons = () => {
     document.querySelector('#common_user_edit_label_last_logontime').innerHTML = ICONS.user_last_logontime;
     document.querySelector('#common_user_edit_label_account_created').innerHTML = ICONS.user_account_created;
     document.querySelector('#common_user_edit_label_account_modified').innerHTML = ICONS.user_account_modified;
-    //dialogue message
-    document.querySelector('#common_message_cancel').innerHTML = ICONS.app_cancel;
-    document.querySelector('#common_message_close').innerHTML = ICONS.app_close;
     //dialog lov
     document.querySelector('#common_lov_search_icon').innerHTML = ICONS.app_search;
     //profile detail
