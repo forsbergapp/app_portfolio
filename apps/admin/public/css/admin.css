@@ -150,7 +150,9 @@
 	padding: 8px 16px;
 	box-sizing: border-box;
 }
-#admin_login_password_input, #system_admin_login_password_input{
+#admin_login_password_input, 
+#system_admin_login_password_input, 
+#system_admin_login_password_confirm_input{
 	max-width: 100%;
 }
 #admin_secure{
