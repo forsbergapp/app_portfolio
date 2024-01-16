@@ -80,7 +80,6 @@
     {"DB4_POOL_INCREMENT": "0", "COMMENT": ""}
 ],
 "SERVICE_LOG":[
-    {"PATH_LOG": "", "COMMENT": ""},
     {"SCOPE_REQUEST": "REQUEST", "COMMENT": ""},
     {"SCOPE_SERVER": "SERVER", "COMMENT": ""},
     {"SCOPE_APP": "APP", "COMMENT": ""},
