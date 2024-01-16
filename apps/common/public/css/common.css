@@ -309,7 +309,6 @@ body.font_arabic_nashk{
 /*Arabic NotoNastaliq*/
 body.font_arabic_nastaliq{
 	font-family: var(--global_font_arabic_nastaliq);
-	line-height:1.6;
 }
 body.font_arabic_nastaliq select,
 body.font_arabic_nastaliq input{
