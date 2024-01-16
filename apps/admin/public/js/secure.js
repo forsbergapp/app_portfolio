@@ -605,6 +605,18 @@ const set_maintenance = () => {
 /*----------------------- */
 
 const count_users = async () => {
+    document.querySelector('#menu_2_content').innerHTML =
+               `<div id='menu_2_content' class='main_content'>
+                    <div id='menu_2_content_widget1' class='widget'>
+                        <div id='list_user_stat_row_title' class='list_user_stat_row'>
+                            <div id='list_user_stat_col_title1' class='list_user_stat_col common_icon'></div>
+                            <div id='list_user_stat_col_title2' class='list_user_stat_col common_icon'></div>
+                            <div id='list_user_stat_col_title3' class='list_user_stat_col common_icon'></div>
+                            <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
+                        </div>
+                        <div id='list_user_stat' class='common_list_scrollbar'></div>
+                    </div>
+                </div>`;
     const count_connected = async () => {
         const get_count = async (identity_provider_id, count_logged_in) => {
             return await common.FFB('SOCKET', `/socket/connection/Admin/count?identity_provider_id=${identity_provider_id}&count_logged_in=${count_logged_in}`, 'GET', 'APP_ACCESS', null)
@@ -623,8 +635,8 @@ const count_users = async () => {
         }
     };    
     if (admin_token_has_value()){
-        document.querySelector('#menu_2_content').classList.add('common_icon', 'css_spinner');
-        document.querySelector('#menu_2_content').innerHTML = '';
+        document.querySelector('#list_user_stat').classList.add('common_icon', 'css_spinner');
+        document.querySelector('#list_user_stat').innerHTML = '';
         await common.FFB('DB_API', '/user_account/admin/count?', 'GET', 'APP_ACCESS', null)
         .then(result=>{
             let html='';
@@ -661,33 +673,21 @@ const count_users = async () => {
                             <div></div>
                         </div>
                     </div>`;
-            document.querySelector('#menu_2_content').innerHTML =
-               `<div id='menu_2_content' class='main_content'>
-                    <div id='menu_2_content_widget1' class='widget'>
-                        <div id='list_user_stat_row_title' class='list_user_stat_row'>
-                            <div id='list_user_stat_col_title1' class='list_user_stat_col common_icon'></div>
-                            <div id='list_user_stat_col_title2' class='list_user_stat_col common_icon'></div>
-                            <div id='list_user_stat_col_title3' class='list_user_stat_col common_icon'></div>
-                            <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
-                        </div>
-                        <div id='list_user_stat'>${html}</div>
-                    </div>
-                </div>`;
+            document.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner');
+            document.querySelector('#list_user_stat').innerHTML = html;
             //count logged in
-            count_connected()
-            .then(document.querySelector('#menu_2_content').classList.remove('common_icon', 'css_spinner'));
+            count_connected();
         })
-        .catch(()=>document.querySelector('#menu_2_content').classList.remove('common_icon', 'css_spinner'));
+        .catch(()=>document.querySelector('#list_user_stat').classList.remove('common_icon', 'css_spinner'));
     }
 };
 /*----------------------- */
 /* USERS                  */
 /*----------------------- */
 const show_users = () =>{
-    document.querySelector('#menu_3_content').innerHTML = common.APP_SPINNER;
     document.querySelector('#menu_3_content').innerHTML = 
             `<div id='menu_3_content_widget1' class='widget'>
-                <div id='list_user_account_title' class='common_icon></div>
+                <div id='list_user_account_title' class='common_icon'></div>
                 <div class='list_search'>
                     <div id='list_user_account_search_input' contenteditable=true class='common_input list_search_input' /></div>
                     <div id='list_user_search_icon' 'class='list_search_icon common_icon'></div>
@@ -748,7 +748,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
         let lov_class = '';
         //superadmin can edit
         if (common.COMMON_GLOBAL.user_app_role_id==0){
-            lov_div = '<div class=\'common_lov_button common_icon common_list_lov_click\'></div>';
+            lov_div = '<div class=\'common_lov_button common_list_lov_click common_icon\'></div>';
             lov_class = 'common_input_lov';
             input_contentEditable = 'contenteditable=true';
         }
@@ -841,6 +841,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
                 </div>
             </div>`;
         }
+        document.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner');
         document.querySelector('#list_user_account').innerHTML = html;
         document.querySelector(`#list_user_account .list_title[data-column='${sort}']`).classList.add(order_by);
     
@@ -861,7 +862,7 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
             //trigger focus event on first row set focus back again to search field
             document.querySelectorAll('#list_user_account .list_edit')[0].focus();
             document.querySelector('#list_user_account_search_input').focus();
-        }   
+        }
     })
     .catch(()=>document.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner'));
 };
@@ -915,6 +916,7 @@ const show_user_account_logon = async (user_account_id) => {
             </div>`;
             i++;
         }
+        document.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner');
         document.querySelector('#list_user_account_logon').innerHTML = html;
     })
     .catch(()=>document.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner'));
@@ -923,8 +925,18 @@ const show_user_account_logon = async (user_account_id) => {
 /* APP ADMIN              */
 /*----------------------- */
 const show_apps = async () => {
-    document.querySelector('#menu_4_content').classList.add('common_icon', 'css_spinner');
-    document.querySelector('#menu_4_content').innerHTML='';
+    document.querySelector('#menu_4_content').innerHTML = 
+    `<div id='menu_4_content_widget1' class='widget'>
+         <div id='list_apps_title' class='common_icon'></div>
+         <div id='list_apps' class='common_list_scrollbar common_icon css_spinner'></div>
+     </div>
+     <div id='menu_4_content_widget2' class='widget'>
+         <div id='list_app_parameter_title' class='common_icon'></div>
+         <div id='list_app_parameter' class='common_list_scrollbar'></div>
+         <div id='apps_buttons' class="save_buttons">
+             <div id='apps_save' class='common_dialogue_button button_save common_icon'></div>
+         </div>
+     </div>`;
     await common.FFB('APP', '/apps/admin?', 'GET', 'APP_ACCESS', null)
     .then(result=>{
         let html = `<div id='list_apps_row_title' class='list_apps_row'>
@@ -956,31 +968,20 @@ const show_apps = async () => {
                 </div>
                 <div class='list_apps_col'>
                     <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${common.get_null_or_value(app.APP_CATEGORY_ID)}'/>${common.get_null_or_value(app.APP_CATEGORY_ID)}</div>
-                    <div class='common_lov_button common_list_lov_click'></div>
+                    <div class='common_lov_button common_list_lov_click common_icon'></div>
                 </div>
                 <div class='list_apps_col'>
                     <div class='list_readonly common_lov_value'>${common.get_null_or_value(app.APP_CATEGORY_TEXT)} </div>
                 </div>
             </div>`;
         }
-        document.querySelector('#menu_4_content').innerHTML = 
-               `<div id='menu_4_content_widget1' class='widget'>
-                    <div id='list_apps_title' class='common_icon></div>
-                    <div id='list_apps' class='common_list_scrollbar'>${html}</div>
-                </div>
-                <div id='menu_4_content_widget2' class='widget'>
-                    <div id='list_app_parameter_title' class='common_icon'></div>
-                    <div id='list_app_parameter' class='common_list_scrollbar'></div>
-                    <div id='apps_buttons' class="save_buttons">
-                        <div id='apps_save' class='common_dialogue_button button_save common_icon'></div>
-                    </div>
-                </div>`;
-        
+        document.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner');
+        document.querySelector('#list_apps').innerHTML = html;
         //set focus first column in first row
         //this will trigger to show detail records
         document.querySelectorAll('#list_apps .list_edit')[0].focus();
     })
-    .catch(()=>document.querySelector('#menu_4_content').classList.remove('common_icon', 'css_spinner'));
+    .catch(()=>document.querySelector('#list_apps').classList.remove('common_icon', 'css_spinner'));
 };
 const show_app_parameter = (app_id) => {
     document.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
@@ -1003,7 +1004,7 @@ const show_app_parameter = (app_id) => {
                 </div>
                 <div class='list_app_parameter_col'>
                     <div contenteditable=true class='common_input list_edit common_input_lov' defaultValue='${app_parameter.parameter_type_id}'/>${app_parameter.parameter_type_id}</div>
-                    <div class='common_lov_button common_list_lov_click'></div>
+                    <div class='common_lov_button common_list_lov_click common_icon'></div>
                 </div>
                 <div class='list_app_parameter_col'>
                     <div class='list_readonly common_lov_value'>${app_parameter.parameter_type_text}</div>
@@ -1019,6 +1020,7 @@ const show_app_parameter = (app_id) => {
                 </div>
             </div>`;
         }
+        document.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner');
         document.querySelector('#list_app_parameter').innerHTML = html;
     })
     .catch(()=>document.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner'));

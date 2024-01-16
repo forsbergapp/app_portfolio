@@ -1,4 +1,17 @@
 /*APP*/
+#menu_open::before{	content: var(--app_menu_open)}
+#menu_close::before{content: var(--app_menu_close)}
+#menu_1::before{	content: var(--app_chart)}
+#menu_2::before{	content: var(--app_users) ' ' var(--app_log)}
+#menu_3::before{	content: var(--app_users)}
+#menu_4::before{	content: var(--app_apps) ' ' var(--app_settings)}
+#menu_5::before{	content: var(--app_log)}
+#menu_6::before{	content: var(--app_server) ' ' var(--app_settings)}
+#menu_7::before{	content: var(--app_server) ' ' var(--app_install)}
+#menu_8::before{	content: var(--app_server) ' ' var(--app_database)}
+#menu_9::before{	content: var(--app_server) ' ' var(--app_backup) ' ' var(--app_restore)}
+#menu_10::before{	content: var(--app_server)}
+#menu_11::before{	content: var(--app_logoff)}
 
 #admin_login_title::before{							content:var(--user)}
 #system_admin_login_title::before{					content:var(--user_system_admin)}
@@ -38,30 +51,30 @@
 #list_user_search_icon::before{						content:var(--app_search)}
 #list_user_account_logon_title::before{				content:var(--app_login)}
 #users_save::before{								content:var(--app_save)}
-[data-colum='avatar'].list_title::before{			content:var(--user_avatar)}
-[data-colum='id'].list_title::before{				content:var(--provider_id)}
-[data-colum='app_role_id'].list_title::before{		content:var(--app_role)}
-[data-colum='app_role_icon'].list_title::before{	content:var(--app_role) ' ' var(--misc_image)}
-[data-colum='active'].list_title::before{			content:var(--app_inactive) ' ' var(--app_active)}
-[data-colum='user_level'].list_title::before{			content:'LEVEL'}
-[data-colum='private'].list_title::before{				content:var(--app_private)}
-[data-colum='username'].list_title::before{				content:var(--user) ' ' var(--username)}
-[data-colum='bio'].list_title::before{					content:var(--user_bio)}
-[data-colum='email'].list_title::before{				content:var(--app_email)}
-[data-colum='emal_unverified'].list_title::before{		content:var(--app_email ' ' var(--app_forgot))}
-[data-colum='password'].list_title::before{				content:var(--user_password)}
-[data-colum='password_reminder'].list_title::before{	content:var(--user_password) ' ' var(--app_info)}
-[data-colum='verification_code'].list_title::before{	content:var(--app_verification_code)}
-[data-colum='identity_provider_id'].list_title::before{	content:var(--provider_id)}
-[data-colum='provider_name'].list_title::before{		content:var(--provider)}
-[data-colum='provider_id'].list_title::before{			content:var(--provider_id) ' ' var(--user) ' ID'}
-[data-colum='provider_first_name'].list_title::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 1'}
-[data-colum='provider_last_name'].list_title::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 2'}
-[data-colum='provider_image'].list_title::before{		content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar)}
-[data-colum='provider_image_url'].list_title::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar) ' URL'}
-[data-colum='provider_email'].list_title::before{		content:var(--provider_id) ' ' var(--user) ' ' var(--app_email)}
-[data-colum='date_created'].list_title::before{			content:var(--user_account_created)}
-[data-colum='date_modified'].list_title::before{		content:var(--user_account_modified)}
+.list_title[data-column='avatar']::before{				content:var(--user_avatar)}
+.list_title[data-column='id']::before{					content:var(--provider_id)}
+.list_title[data-column='app_role_id']::before{			content:var(--app_role)}
+.list_title[data-column='app_role_icon']::before{		content:var(--app_role) ' ' var(--misc_image)}
+.list_title[data-column='active']::before{				content:var(--app_inactive) ' ' var(--app_active)}
+.list_title[data-column='user_level']::before{			content:'LEVEL'}
+.list_title[data-column='private']::before{				content:var(--app_private)}
+.list_title[data-column='username']::before{			content:var(--user) ' ' var(--username)}
+.list_title[data-column='bio']::before{					content:var(--user_bio)}
+.list_title[data-column='email']::before{				content:var(--app_email)}
+.list_title[data-column='emal_unverified']::before{		content:var(--app_email ' ' var(--app_forgot))}
+.list_title[data-column='password']::before{			content:var(--user_password)}
+.list_title[data-column='password_reminder']::before{	content:var(--user_password) ' ' var(--app_info)}
+.list_title[data-column='verification_code']::before{	content:var(--app_verification_code)}
+.list_title[data-column='identity_provider_id']::before{content:var(--provider_id)}
+.list_title[data-column='provider_name']::before{		content:var(--provider)}
+.list_title[data-column='provider_id']::before{			content:var(--provider_id) ' ' var(--user) ' ID'}
+.list_title[data-column='provider_first_name']::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 1'}
+.list_title[data-column='provider_last_name']::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 2'}
+.list_title[data-column='provider_image']::before{		content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar)}
+.list_title[data-column='provider_image_url']::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar) ' URL'}
+.list_title[data-column='provider_email']::before{		content:var(--provider_id) ' ' var(--user) ' ' var(--app_email)}
+.list_title[data-column='date_created']::before{		content:var(--user_account_created)}
+.list_title[data-column='date_modified']::before{		content:var(--user_account_modified)}
 
 #list_apps_title::before{								content:var(--app_apps)}
 #list_app_parameter_title::before{						content:var(--app_apps) ' ' var(--app_settings)}
@@ -192,19 +205,6 @@
 	width:100%;
 	height:100%;
 }
-#menu_open::before{	content: var(--app_menu_open)}
-#menu_close::before{content: var(--app_menu_close)}
-#menu_1::before{	content: var(--app_chart)}
-#menu_2::before{	content: var(--app_users) ' ' var(--app_log)}
-#menu_3::before{	content: var(--app_users)}
-#menu_4::before{	content: var(--app_apps) ' ' var(--app_settings)}
-#menu_5::before{	content: var(--app_log)}
-#menu_6::before{	content: var(--app_server) ' ' var(--app_settings)}
-#menu_7::before{	content: var(--app_server) ' ' var(--app_install)}
-#menu_8::before{	content: var(--app_server) ' ' var(--app_database)}
-#menu_9::before{	content: var(--app_server) ' ' var(--app_backup) ' ' var(--app_restore)}
-#menu_10::before{	content: var(--app_server)}
-#menu_11::before{	content: var(--app_logoff)}
 
 #menu{
 	width:150px;
@@ -1506,6 +1506,7 @@ body{
 }
 .list_title{
 	font-weight: bold;
+	vertical-align: middle;
 }
 .menu_8_db_info_space_detail_row,
 .list_user_account_row,
