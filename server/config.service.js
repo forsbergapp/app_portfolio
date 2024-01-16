@@ -202,8 +202,8 @@ const DefaultConfig = async () => {
     config_obj[1][1].APPS.map((/**@type{Types.config_apps_record}*/row)=>{
         row.CLIENT_ID = createHash('sha256').update(CreateRandomString()).digest('hex');
         row.CLIENT_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
-        row.ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.APP_DATA_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
+        row.APP_ACCESS_SECRET = createHash('sha256').update(CreateRandomString()).digest('hex');
     });
     //set created for user
     config_obj[5][1].created = new Date().toISOString();

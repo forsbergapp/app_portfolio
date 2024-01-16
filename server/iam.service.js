@@ -14,8 +14,8 @@ const {default:{sign, verify}} = await import('jsonwebtoken');
  * @param {string} ip
  * @param {Types.res} res 
  */
-const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
-    return new Promise((resolve,reject)=>{
+const AuthenticateSystemadmin = async (app_id, authorization, ip,res)=>{
+    return new Promise((resolve, reject)=>{
         const check_user = async (/**@type{string}*/username, /**@type{string}*/password) => {
             const { default: {compare} } = await import('bcrypt');
             const config_username = ConfigGetUser('username');
@@ -36,14 +36,14 @@ const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
                                     client_longitude:   null,
                                     client_latitude:    null,
                                     date_created:       new Date().toISOString()};
-            file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
+            await file_append_log('IAM_SYSTEMADMIN_LOGIN', file_content, 'YYYYMMDD')
             .then(()=>{
                 if (result == 1)
                     resolve({   username:username,
                                 token_at: jsontoken_at});
                 else{
                     res.statusCode =401;
-                    reject('⛔');
+                    reject ('⛔');
                 }
             });
         };
@@ -53,7 +53,7 @@ const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
             const password = userpass.split(':')[1];
             if (CheckFirstTime())
                 CreateSystemAdmin(username, password)
-                .then(check_user(username, password));
+                .then(()=>check_user(username, password));
             else
                 check_user(username, password);
         }
@@ -62,6 +62,7 @@ const AuthenticateSystemadmin =(app_id, authorization, ip,res)=>{
             reject('⛔');
         }
     });
+    
 };
 /**
  * Middleware authenticates system admin access token
