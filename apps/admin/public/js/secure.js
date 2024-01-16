@@ -152,7 +152,7 @@ const show_menu = (menu) => {
 const show_charts = async () => {
     if (admin_token_has_value()){
         //chart 1 shows for all apps, app id used for chart 2
-        const app_id = document.querySelector('#select_app_menu1').value; 
+        const app_id = document.querySelector('#select_app_menu1 .common_select_dropdown_value').getAttribute('data-value'); 
         const year = document.querySelector('#select_year_menu1').value;
         const month = document.querySelector('#select_month_menu1').value;
         const select_system_admin_stat = common.COMMON_GLOBAL.system_admin!=''?
@@ -164,10 +164,9 @@ const show_charts = async () => {
                                                 unique:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('unique'),
                                                 statGroup:select_system_admin_stat.options[select_system_admin_stat.selectedIndex].getAttribute('statGroup')
                                             }:null;
-        document.querySelector('#box1_chart').innerHTML = common.APP_SPINNER;
-        document.querySelector('#box1_legend').innerHTML = common.APP_SPINNER;
-        document.querySelector('#box2_chart').innerHTML = common.APP_SPINNER;
-        document.querySelector('#box2_legend').innerHTML = common.APP_SPINNER;
+
+        document.querySelector('#graphBox').classList.add('common_icon','css_spinner');
+        document.querySelector('#graphBox').innerHTML='';
         let service;
         let url;
         let authorization_type;
@@ -224,8 +223,10 @@ const show_charts = async () => {
                         legend_text_chart1 = stat.statValue;
                     else
                         legend_text_chart1 = SearchAndGetText(document.querySelector('#select_system_admin_stat'), stat.statValue);
-                else
-                    legend_text_chart1 = SearchAndGetText(document.querySelector('#select_app_menu1'), stat.app_id);
+                else{
+                    legend_text_chart1 = Array.from(document.querySelectorAll('#select_app_menu1 .common_select_option')).filter(app=>parseInt(app.getAttribute('data-value'))==stat.app_id)[0].innerHTML;
+                }
+                    
                 html += `<div id='box1_legend_row' class='box_legend_row'>
                             <div id='box1_legend_col1' class='box_legend_col' style='background-color:rgb(${i/chart_1.length*200},${i/chart_1.length*200},255)'></div>
                             <div id='box1_legend_col2' class='box_legend_col'>${legend_text_chart1}</div>
@@ -233,10 +234,9 @@ const show_charts = async () => {
                 degree_start = degree_start + stat.amount/sum_amount*360;
             });
             //display pie chart
-            document.querySelector('#box1_chart').innerHTML = '<div id=\'box1_pie\'></div>';
-            document.querySelector('#box1_pie').style.backgroundImage = `conic-gradient(${chart_colors})`;
+            const box1_chart = `<div id='box1_pie' style='background-image:conic-gradient(${chart_colors})'></div>`;
             //show legend below chart
-            document.querySelector('#box1_legend').innerHTML = html;
+            const box1_legend = html;
 
             //CHART 2
             html = '';
@@ -260,116 +260,112 @@ const show_charts = async () => {
                         </div>`;
             }
             //create bar chart
-            document.querySelector('#box2_chart').innerHTML = `<div id='box2_bar_legendY'>
-                                                                    <div id='box2_bar_legend_max'>${max_amount}</div>
-                                                                    <div id='box2_bar_legend_medium'>${max_amount/2}</div>
-                                                                    <div id='box2_bar_legend_min'>0</div>
-                                                            </div>
-                                                            <div id='box2_bar_data'>${html}</div>`;
+            const box2_chart = `<div id='box2_bar_legendY'>
+                                    <div id='box2_bar_legend_max'>${max_amount}</div>
+                                    <div id='box2_bar_legend_medium'>${max_amount/2}</div>
+                                    <div id='box2_bar_legend_min'>0</div>
+                                </div>
+                                <div id='box2_bar_data'>${html}</div>`;
             //legend below chart
             let legend_text_chart2;
+            let box2_legend = '';
             if (common.COMMON_GLOBAL.system_admin!=''){
                 //as system admin you can filter http codes and application
                 legend_text_chart2 = document.querySelector('#select_system_admin_stat').options[document.querySelector('#select_system_admin_stat').selectedIndex].text;
-                const legend_text_chart2_apps = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
-                document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
-                                                                    <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                    <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
-                                                                    <div id='box2_legend_col3' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                    <div id='box2_legend_col4' class='box_legend_col'>${legend_text_chart2_apps}</div>
-                                                                </div>` ;
+                const legend_text_chart2_apps = document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
+                box2_legend = ` <div id='box2_legend_row' class='box_legend_row'>
+                                    <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                    <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
+                                    <div id='box2_legend_col3' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                    <div id='box2_legend_col4' class='box_legend_col'>${legend_text_chart2_apps}</div>
+                                </div>` ;
             }
                 
             else{
                 // as admin you can filter application
-                legend_text_chart2 = document.querySelector('#select_app_menu1').options[document.querySelector('#select_app_menu1').selectedIndex].text;
-                document.querySelector('#box2_legend').innerHTML = `<div id='box2_legend_row' class='box_legend_row'>
-                                                                    <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
-                                                                    <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
-                                                                </div>` ;
+                legend_text_chart2 = document.querySelector('#select_app_menu1 .common_select_dropdown_value').innerHTML;
+                box2_legend = ` <div id='box2_legend_row' class='box_legend_row'>
+                                    <div id='box2_legend_col1' class='box_legend_col' style='background-color:${bar_color}'></div>
+                                    <div id='box2_legend_col2' class='box_legend_col'>${legend_text_chart2}</div>
+                                </div>` ;
             }
+            let box_title_class;
+            if (common.COMMON_GLOBAL.system_admin!='')
+                box_title_class = 'system_admin';
+            else
+                box_title_class = 'admin';
+
+            document.querySelector('#graphBox').innerHTML =  
+                `<div id='box1'>
+                    <div id='box1_title' class='box_title ${box_title_class} common_icon'></div>
+                    <div id='box1_chart' class='box_chart'>${box1_chart}</div>
+                    <div id='box1_legend' class='box_legend'>${box1_legend}</div>
+                </div>
+                <div id='box2'>
+                    <div id='box2_title' class='box_title ${box_title_class} common_icon'></div>
+                    <div id='box2_chart' class='box_chart'>${box2_chart}</div>
+                    <div id='box2_legend' class='box_legend'>${box2_legend}</div>
+                </div>`;
+            document.querySelector('#graphBox').classList.remove('common_icon','css_spinner');
         })
-        .catch(()=>{
-            document.querySelector('#box1_chart').innerHTML = '';
-            document.querySelector('#box1_legend').innerHTML = '';
-            document.querySelector('#box2_chart').innerHTML = '';
-            document.querySelector('#box2_legend').innerHTML = '';
-        }); 
+        .catch(()=>document.querySelector('#graphBox').classList.remove('common_icon','css_spinner')); 
     }
 };
 const show_start = async (yearvalues) =>{
     
-    document.querySelector('#menu_1_content').innerHTML = common.APP_SPINNER;
     const get_system_admin_stat = async () =>{
         return new Promise((resolve)=>{
             common.FFB('LOG', '/log/statuscode?', 'GET', 'SYSTEMADMIN', null)
             .then(result=>{
                 let html = `<optgroup label='REQUEST'>
-                                <option value="ip_total" unique=0 statGroup="ip">IP TOTAL</option>
-                                <option value="ip_unique" unique=1 statGroup="ip">IP UNIQUE</option>
-                                <option value="url_total" unique=0 statGroup="url">URL TOTAL</option>
-                                <option value="url_unique" unique=1 statGroup="url">URL UNIQUE</option>
-                                <option value="accept-language_total" unique=0 statGroup="accept-language">ACCEPT-LANGUAGE TOTAL</option>
-                                <option value="accept-language_unique" unique=1 statGroup="accept-language">ACCEPT-LANGUAGE UNIQUE</option>
-                                <option value="user-agent_total" unique=0 statGroup="user-agent">USER-AGENT TOTAL</option>
-                                <option value="user-agent_unique" unique=1 statGroup="user-agent">USER-AGENT UNIQUE</option>
+                                <option value='ip_total' unique=0 statGroup='ip'>IP TOTAL</option>
+                                <option value='ip_unique' unique=1 statGroup='ip'>IP UNIQUE</option>
+                                <option value='url_total' unique=0 statGroup='url'>URL TOTAL</option>
+                                <option value='url_unique' unique=1 statGroup='url'>URL UNIQUE</option>
+                                <option value='accept-language_total' unique=0 statGroup='accept-language'>ACCEPT-LANGUAGE TOTAL</option>
+                                <option value='accept-language_unique' unique=1 statGroup='accept-language'>ACCEPT-LANGUAGE UNIQUE</option>
+                                <option value='user-agent_total' unique=0 statGroup='user-agent'>USER-AGENT TOTAL</option>
+                                <option value='user-agent_unique' unique=1 statGroup='user-agent'>USER-AGENT UNIQUE</option>
                             </optgroup>
                             <optgroup label='RESPONSE HTTP Codes'>
-                                <option value="" unique=0 statGroup="">${common.ICONS.infinite}</option>
+                                <option value='' unique=0 statGroup=''>${common.ICONS.infinite}</option>
                             </optgroup>`;
                 const result_obj = JSON.parse(result);
                 for (const status_code of Object.entries(result_obj.status_codes)){
-                    html += `<option value='${status_code[0]}' statGroup="">${status_code[0]} - ${status_code[1]}</option>`;
+                    html += `<option value='${status_code[0]}' statGroup=''>${status_code[0]} - ${status_code[1]}</option>`;
                 }
+                document.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
                 resolve(html);
             })
-            .catch(()=>resolve(null)); 
+            .catch(()=>{
+                document.querySelector('#menu_1_content').classList.remove('common_icon', 'css_spinner');
+                resolve(null);
+            });
         });
     };
-    let box_title1, box_title2;
-    if (common.COMMON_GLOBAL.system_admin!=''){
-        box_title1 = `${common.ICONS.app_internet} ${common.ICONS.app_server} ${common.ICONS.app_chart}`;
-        box_title2 = `${common.ICONS.app_internet} ${common.ICONS.app_server} ${common.ICONS.regional_numbersystem}`;
-    }
-    else{
-        box_title1 = `${common.ICONS.app_users} ${common.ICONS.app_apps} ${common.ICONS.app_chart}`;
-        box_title2 = `${common.ICONS.app_users} ${common.ICONS.app_apps} ${common.ICONS.regional_numbersystem}`;
-    }
 
     document.querySelector('#menu_1_content').innerHTML = 
             `<div id='menu_1_content_widget1' class='widget'>
                 <div id='menu_1_row_sample'>
                     <select id='select_system_admin_stat'>${common.COMMON_GLOBAL.system_admin!=''?await get_system_admin_stat():null}</select>
-                    <select id='select_app_menu1'>${await get_apps()}</select>
+                    <div id='select_app_menu1' class='common_select'>${await get_apps_div()}</div>
                     <select id='select_year_menu1'>${yearvalues}</select>
                     <select id='select_month_menu1'>${list_generate(12)}</select>
                 </div>
-                <div id='graphBox'>
-                    <div id='box1'>
-                        <div id='box1_title' class='box_title'>${box_title1}</div>
-                        <div id='box1_chart' class='box_chart'></div>
-                        <div id='box1_legend' class='box_legend'></div>
-                    </div>
-                    <div id='box2'>
-                        <div id='box2_title' class='box_title'>${box_title2}</div>
-                        <div id='box2_chart' class='box_chart'></div>
-                        <div id='box2_legend' class='box_legend'></div>
-                    </div>
-                </div>
+                <div id='graphBox'></div>
             </div>
             <div id='menu_1_content_widget2' class='widget'>
                 <div id='menu_1_maintenance'>
-                    <div id='menu_1_maintenance_title'>${common.ICONS.app_maintenance}</div>
+                    <div id='menu_1_maintenance_title' class='common_icon'></div>
                     <div id='menu_1_maintenance_checkbox'>
                         <div id='menu_1_checkbox_maintenance' class='common_switch'></div>
                     </div>
                 </div>
                 <div id='menu_1_broadcast'>
-                    <div id='menu_1_broadcast_title'>${common.ICONS.app_broadcast}</div>
-                    <div id='menu_1_broadcast_button' class='chat_click'>${common.ICONS.app_chat}</div>
+                    <div id='menu_1_broadcast_title' class='common_icon'></div>
+                    <div id='menu_1_broadcast_button' class='chat_click common_icon'></div>
                 </div>
             </div>`;
-            
     if (common.COMMON_GLOBAL.system_admin!=''){
         document.querySelector('#menu_1_maintenance').style.display = 'inline-block';
         document.querySelector('#select_system_admin_stat').style.display = 'inline-block';
@@ -377,9 +373,7 @@ const show_start = async (yearvalues) =>{
     else{
         document.querySelector('#menu_1_maintenance').style.display = 'none';
         document.querySelector('#select_system_admin_stat').style.display = 'none';
-    }
-    
-        
+    }    
     document.querySelector('#select_year_menu1').selectedIndex = 0;
     document.querySelector('#select_month_menu1').selectedIndex = new Date().getMonth();
 
@@ -390,9 +384,48 @@ const show_start = async (yearvalues) =>{
 const show_user_agent = (user_agent) => {
     return user_agent;
 };
+const get_apps_div = async () =>{
+    return new Promise((resolve)=>{
+        let options = '';
+        let url;
+        let authorization_type;
+        let service;
+        if (common.COMMON_GLOBAL.system_admin!=''){
+            service = 'SERVER';
+            url = '/config/systemadmin/apps?';
+            authorization_type = 'SYSTEMADMIN';
+        }
+        else{
+            service = 'APP';
+            url = '/apps/admin?';
+            authorization_type = 'APP_ACCESS';
+        }
+        common.FFB(service, url, 'GET', authorization_type, null)
+        .then(result=>{
+            const apps = JSON.parse(result);
+            if (common.COMMON_GLOBAL.system_admin!='')
+                for (const app of apps) {
+                    options += `<div class='common_select_option' data-value='${app.APP_ID}'>${app.APP_ID} - ${' '}</div>`;
+                }
+            else
+                for (const app of apps) {
+                    options += `<div class='common_select_option' data-value='${app.ID}'>${app.ID} - ${app.NAME}</div>`;
+                }
+            resolve(`   <div class='common_select_dropdown'>
+                            <div class='common_select_dropdown_value' data-value=''>∞</div>
+                            <div class='common_select_dropdown_icon common_icon'></div>
+                        </div>
+                        <div class='common_select_options'>
+                            <div class='common_select_option' data-value=''>∞</div>
+                            ${options}
+                        </div>`);
+        })
+        .catch(()=>resolve(null));
+    });
+};
 const get_apps = async () => {
     return new Promise((resolve)=>{
-        let html = `<option value="">${common.ICONS.infinite}</option>`;
+        let html = `<option value=''>${'∞'}</option>`;
         let url;
         let authorization_type;
         let service;
@@ -590,7 +623,8 @@ const count_users = async () => {
         }
     };    
     if (admin_token_has_value()){
-        document.querySelector('#menu_2_content').innerHTML = common.APP_SPINNER;
+        document.querySelector('#menu_2_content').classList.add('common_icon', 'css_spinner');
+        document.querySelector('#menu_2_content').innerHTML = '';
         await common.FFB('DB_API', '/user_account/admin/count?', 'GET', 'APP_ACCESS', null)
         .then(result=>{
             let html='';
@@ -618,7 +652,7 @@ const count_users = async () => {
                             <div></div>
                         </div>
                         <div class='list_user_stat_col'>
-                            <div>${common.ICONS.app_logoff}</div>
+                            <div id='list_user_stat_not_connected_icon' class='common_icon'></div>
                         </div>
                         <div class='list_user_stat_col'>
                             <div></div>
@@ -631,18 +665,19 @@ const count_users = async () => {
                `<div id='menu_2_content' class='main_content'>
                     <div id='menu_2_content_widget1' class='widget'>
                         <div id='list_user_stat_row_title' class='list_user_stat_row'>
-                            <div id='list_user_stat_col_title1' class='list_user_stat_col'>${common.ICONS.provider_id}</div>
-                            <div id='list_user_stat_col_title2' class='list_user_stat_col'>${common.ICONS.provider}</div>
-                            <div id='list_user_stat_col_title3' class='list_user_stat_col'>${common.ICONS.app_sum}</div>
-                            <div id='list_user_stat_col_title4' class='list_user_stat_col'>${common.ICONS.app_user_connections}</div>
+                            <div id='list_user_stat_col_title1' class='list_user_stat_col common_icon'></div>
+                            <div id='list_user_stat_col_title2' class='list_user_stat_col common_icon'></div>
+                            <div id='list_user_stat_col_title3' class='list_user_stat_col common_icon'></div>
+                            <div id='list_user_stat_col_title4' class='list_user_stat_col common_icon'></div>
                         </div>
                         <div id='list_user_stat'>${html}</div>
                     </div>
                 </div>`;
             //count logged in
-            count_connected();
+            count_connected()
+            .then(document.querySelector('#menu_2_content').classList.remove('common_icon', 'css_spinner'));
         })
-        .catch(()=>document.querySelector('#menu_2_content').innerHTML = '');
+        .catch(()=>document.querySelector('#menu_2_content').classList.remove('common_icon', 'css_spinner'));
     }
 };
 /*----------------------- */
@@ -652,18 +687,18 @@ const show_users = () =>{
     document.querySelector('#menu_3_content').innerHTML = common.APP_SPINNER;
     document.querySelector('#menu_3_content').innerHTML = 
             `<div id='menu_3_content_widget1' class='widget'>
-                <div id='list_user_account_title'>${common.ICONS.app_users}</div>
+                <div id='list_user_account_title' class='common_icon></div>
                 <div class='list_search'>
                     <div id='list_user_account_search_input' contenteditable=true class='common_input list_search_input' /></div>
-                    <div id='list_user_search_icon' 'class='list_search_icon'>${common.ICONS.app_search}</div>
+                    <div id='list_user_search_icon' 'class='list_search_icon common_icon'></div>
                 </div>
                 <div id='list_user_account' class='common_list_scrollbar'></div>
             </div>
             <div id='menu_3_content_widget2' class='widget'>
-                <div id='list_user_account_logon_title'>${common.ICONS.app_login}</div>
+                <div id='list_user_account_logon_title' class='common_icon'></div>
                 <div id='list_user_account_logon' class='common_list_scrollbar'></div>
                 <div id='users_buttons' class="save_buttons">
-                    <div id='users_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
+                    <div id='users_save' class='common_dialogue_button button_save common_icon' ></div>
                 </div>
             </div>`;
     search_users();
@@ -674,8 +709,8 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
     if (common.check_input(document.querySelector('#list_user_account_search_input').innerText, 100, false) == false)
         return null;
 
-    document.querySelector('#list_user_account').innerHTML = common.APP_SPINNER;
-    
+    document.querySelector('#list_user_account').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#list_user_account').innerHTML = '';
     let search_user='*';
     //show all records if no search criteria
     if (document.querySelector('#list_user_account_search_input').innerText!='')
@@ -683,85 +718,37 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
     common.FFB('DB_API', `/user_account/admin?search=${search_user}&sort=${sort}&order_by=${order_by}`, 'GET', 'APP_ACCESS', null)
     .then(result=>{
         let html = `<div class='list_user_account_row'>
-                        <div data-column='avatar' class='list_user_account_col list_title'>
-                            ${common.ICONS.user_avatar}
-                        </div>
-                        <div data-column='id' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id}
-                        </div>
-                        <div data-column='app_role_id' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_role}
-                        </div>
-                        <div data-column='app_role_icon' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_role} ${common.ICONS.misc_image}
-                        </div>
-                        <div data-column='active' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_inactive} ${common.ICONS.app_active}
-                        </div>
-                        <div data-column='user_level' class='list_user_account_col list_sort_click list_title'>
-                            <div>LEVEL</div>
-                        </div>
-                        <div data-column='private' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_private}
-                        </div>
-                        <div data-column='username' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.user} ${common.ICONS.username}
-                        </div>
-                        <div data-column='bio' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.user_bio}
-                        </div>
-                        <div data-column='email' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_email}
-                        </div>
-                        <div data-column='emal_unverified' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_email} ${common.ICONS.app_forgot}
-                        </div>
-                        <div data-column='password' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.user_password}
-                        </div>
-                        <div data-column='password_reminder' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.user_password} ${common.ICONS.app_info}
-                        </div>
-                        <div data-column='verification_code' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.app_verification_code}
-                        </div>
-                        <div data-column='identity_provider_id' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id}
-                        </div>
-                        <div data-column='provider_name' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider}
-                        </div>
-                        <div data-column='provider_id' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id} ${common.ICONS.user} ID
-                        </div>
-                        <div data-column='provider_first_name' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 1
-                        </div>
-                        <div data-column='provider_last_name' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.username} 2
-                        </div>
-                        <div data-column='provider_image' class='list_user_account_col list_title'>
-                            ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar}
-                        </div>
-                        <div data-column='provider_image_url' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.user_avatar} URL
-                        </div>
-                        <div data-column='provider_email' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.provider_id} ${common.ICONS.user} ${common.ICONS.app_email}
-                        </div>
-                        <div data-column='date_created' class='list_user_account_col list_sort_click list_title'>
-                            ${common.ICONS.user_account_created}
-                        </div>
-                        <div data-column='date_modified' class='list_apps_col list_sort_click list_title'>
-                            ${common.ICONS.user_account_modified}
-                        </div>
+                        <div data-column='avatar' class='list_user_account_col list_title common_icon'></div>
+                        <div data-column='id' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='app_role_id' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='app_role_icon' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='active' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='user_level' class='list_user_account_col list_sort_click list_title'></div>
+                        <div data-column='private' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='username' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='bio' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='email' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='emal_unverified' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='password' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='password_reminder' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='verification_code' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='identity_provider_id' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='provider_name' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='provider_id' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='provider_first_name' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='provider_last_name' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='provider_image' class='list_user_account_col list_title common_icon'></div>
+                        <div data-column='provider_image_url' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='provider_email' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='date_created' class='list_user_account_col list_sort_click list_title common_icon'></div>
+                        <div data-column='date_modified' class='list_apps_col list_sort_click list_title common_icon'></div>
                     </div>`;
         let input_contentEditable = '';
         let lov_div = '';
         let lov_class = '';
         //superadmin can edit
         if (common.COMMON_GLOBAL.user_app_role_id==0){
-            lov_div = '<div class=\'common_lov_button common_list_lov_click\'></div>';
+            lov_div = '<div class=\'common_lov_button common_icon common_list_lov_click\'></div>';
             lov_class = 'common_input_lov';
             input_contentEditable = 'contenteditable=true';
         }
@@ -857,10 +844,6 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
         document.querySelector('#list_user_account').innerHTML = html;
         document.querySelector(`#list_user_account .list_title[data-column='${sort}']`).classList.add(order_by);
     
-        if (common.COMMON_GLOBAL.user_app_role_id==0){
-            //add lov icon for super admin
-            document.querySelectorAll('#list_user_account .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
-        }
         if (focus==true){
             //set focus at start
             //set focus first column in first row
@@ -880,40 +863,23 @@ const search_users = (sort='username', order_by='asc', focus=true) => {
             document.querySelector('#list_user_account_search_input').focus();
         }   
     })
-    .catch(()=>document.querySelector('#list_user_account').innerHTML = '');
+    .catch(()=>document.querySelector('#list_user_account').classList.remove('common_icon', 'css_spinner'));
 };
 const show_user_account_logon = async (user_account_id) => {
-    document.querySelector('#list_user_account_logon').innerHTML = common.APP_SPINNER;
+    document.querySelector('#list_user_account_logon').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#list_user_account_logon').innerHTML = '';
     common.FFB('DB_API', `/user_account_logon/admin?data_user_account_id=${parseInt(user_account_id)}&data_app_id=''`, 'GET', 'APP_ACCESS', null)
     .then(result=>{
         let html = `<div id='list_user_account_logon_row_title' class='list_user_account_logon_row'>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
-                            <div>USER ACCOUNT ID</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>
-                            <div>DATE CREATED</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
-                            <div>APP ID</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
-                            <div>RESULT</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>
-                            <div>IP</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>
-                            <div>GPS LONG</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>
-                            <div>GPS LAT</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>
-                            <div>USER AGENT</div>
-                        </div>
-                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>
-                            <div>ACCESS TOKEN</div>
-                        </div>
+                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>USER ACCOUNT ID</div>
+                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>DATE CREATED</div>
+                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>APP ID</div>
+                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>RESULT</div>
+                        <div id='list_user_account_logon_col_title2' class='list_user_account_logon_col list_title'>IP</div>
+                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>GPS LONG</div>
+                        <div id='list_user_account_logon_col_title4' class='list_user_account_logon_col list_title'>GPS LAT</div>
+                        <div id='list_user_account_logon_col_title3' class='list_user_account_logon_col list_title'>USER AGENT</div>
+                        <div id='list_user_account_logon_col_title1' class='list_user_account_logon_col list_title'>ACCESS TOKEN</div>
                     </div>`;
         let i=0;
         for (const user_account_logon of JSON.parse(result)) {
@@ -951,37 +917,24 @@ const show_user_account_logon = async (user_account_id) => {
         }
         document.querySelector('#list_user_account_logon').innerHTML = html;
     })
-    .catch(()=>document.querySelector('#list_user_account_logon').innerHTML = '');
+    .catch(()=>document.querySelector('#list_user_account_logon').classList.remove('common_icon', 'css_spinner'));
 };
 /*----------------------- */
 /* APP ADMIN              */
 /*----------------------- */
 const show_apps = async () => {
-    document.querySelector('#menu_4_content').innerHTML = common.APP_SPINNER;
+    document.querySelector('#menu_4_content').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#menu_4_content').innerHTML='';
     await common.FFB('APP', '/apps/admin?', 'GET', 'APP_ACCESS', null)
     .then(result=>{
         let html = `<div id='list_apps_row_title' class='list_apps_row'>
-                        <div id='list_apps_col_title1' class='list_apps_col list_title'>
-                            <div>ID</div>
-                        </div>
-                        <div id='list_apps_col_title2' class='list_apps_col list_title'>
-                            <div>NAME</div>
-                        </div>
-                        <div id='list_apps_col_title3' class='list_apps_col list_title'>
-                            <div>URL</div>
-                        </div>
-                        <div id='list_apps_col_title4' class='list_apps_col list_title'>
-                            <div>LOGO</div>
-                        </div>
-                        <div id='list_apps_col_title5' class='list_apps_col list_title'>
-                            <div>STATUS</div>
-                        </div>
-                        <div id='list_apps_col_title6' class='list_apps_col list_title'>
-                            <div>CATEGORY ID</div>
-                        </div>
-                        <div id='list_apps_col_title7' class='list_apps_col list_title'>
-                            <div>CATEGORY NAME</div>
-                        </div>
+                        <div id='list_apps_col_title1' class='list_apps_col list_title'>ID</div>
+                        <div id='list_apps_col_title2' class='list_apps_col list_title'>NAME</div>
+                        <div id='list_apps_col_title3' class='list_apps_col list_title'>URL</div>
+                        <div id='list_apps_col_title4' class='list_apps_col list_title'>LOGO</div>
+                        <div id='list_apps_col_title5' class='list_apps_col list_title'>STATUS</div>
+                        <div id='list_apps_col_title6' class='list_apps_col list_title'>CATEGORY ID</div>
+                        <div id='list_apps_col_title7' class='list_apps_col list_title'>CATEGORY NAME</div>
                     </div>`;
         for (const app of JSON.parse(result)) {
             html += 
@@ -1012,48 +965,35 @@ const show_apps = async () => {
         }
         document.querySelector('#menu_4_content').innerHTML = 
                `<div id='menu_4_content_widget1' class='widget'>
-                    <div id='list_apps_title'>${common.ICONS.app_apps}</div>
+                    <div id='list_apps_title' class='common_icon></div>
                     <div id='list_apps' class='common_list_scrollbar'>${html}</div>
                 </div>
                 <div id='menu_4_content_widget2' class='widget'>
-                    <div id='list_app_parameter_title'>${common.ICONS.app_apps + common.ICONS.app_settings}</div>
+                    <div id='list_app_parameter_title' class='common_icon'></div>
                     <div id='list_app_parameter' class='common_list_scrollbar'></div>
                     <div id='apps_buttons' class="save_buttons">
-                        <div id='apps_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
+                        <div id='apps_save' class='common_dialogue_button button_save common_icon'></div>
                     </div>
                 </div>`;
         
-        //add lov icon
-        document.querySelectorAll('#list_apps .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
         //set focus first column in first row
         //this will trigger to show detail records
         document.querySelectorAll('#list_apps .list_edit')[0].focus();
     })
-    .catch(()=>document.querySelector('#menu_4_content').innerHTML = '');
+    .catch(()=>document.querySelector('#menu_4_content').classList.remove('common_icon', 'css_spinner'));
 };
 const show_app_parameter = (app_id) => {
-    document.querySelector('#list_app_parameter').innerHTML = common.APP_SPINNER;
+    document.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#list_app_parameter').innerHTML = '';
     common.FFB('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 'APP_ACCESS', null)
     .then(result=>{
         let html = `<div id='list_app_parameter_row_title' class='list_app_parameter_row'>
-                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>
-                            <div>APP ID</div>
-                        </div>
-                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>
-                            <div>TYPE ID</div>
-                        </div>
-                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>
-                            <div>TYPE NAME</div>
-                        </div>
-                        <div id='list_app_parameter_col_title2' class='list_app_parameter_col list_title'>
-                            <div>NAME</div>
-                        </div>
-                        <div id='list_app_parameter_col_title3' class='list_app_parameter_col list_title'>
-                            <div>VALUE</div>
-                        </div>
-                        <div id='list_app_parameter_col_title4' class='list_app_parameter_col list_title'>
-                            <div>COMMENT</div>
-                        </div>
+                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>APP ID</div>
+                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>TYPE ID</div>
+                        <div id='list_app_parameter_col_title1' class='list_app_parameter_col list_title'>TYPE NAME</div>
+                        <div id='list_app_parameter_col_title2' class='list_app_parameter_col list_title'>NAME</div>
+                        <div id='list_app_parameter_col_title3' class='list_app_parameter_col list_title'>VALUE</div>
+                        <div id='list_app_parameter_col_title4' class='list_app_parameter_col list_title'>COMMENT</div>
                     </div>`;
         for (const app_parameter of JSON.parse(result)) {
             html += 
@@ -1080,10 +1020,8 @@ const show_app_parameter = (app_id) => {
             </div>`;
         }
         document.querySelector('#list_app_parameter').innerHTML = html;
-        //add lov icon
-        document.querySelectorAll('#list_app_parameter .common_lov_button').forEach(e => e.innerHTML = common.ICONS.app_lov);
     })
-    .catch(()=>document.querySelector('#list_app_parameter').innerHTML = '');
+    .catch(()=>document.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner'));
 };
 const button_save = async (item) => {
     if (item=='apps_save'){
@@ -1177,11 +1115,10 @@ const button_save = async (item) => {
                                                     ['MICROSERVICE_CONFIG',     file=='MICROSERVICE_CONFIG'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null],
                                                     ['MICROSERVICE_SERVICES',   file=='MICROSERVICE_SERVICES'?JSON.parse(document.querySelector('#list_config_edit').innerHTML):null]
                                                     ]};
-                const old_button = document.querySelector('#' + item).innerHTML;
-                document.querySelector('#' + item).innerHTML = common.APP_SPINNER;
+                document.querySelector('#' + item).classList.add('css_spinner');
                 common.FFB('SERVER', '/config/systemadmin?', 'PUT', 'SYSTEMADMIN', json_data)
-                .catch(()=>null)
-                .finally(()=>document.querySelector('#' + item).innerHTML = old_button);
+                .then(()=>document.querySelector('#' + item).classList.remove('css_spinner'))
+                .catch(()=>document.querySelector('#' + item).classList.remove('css_spinner'));
             }    
 };
 const update_record = async (table, 
@@ -1192,8 +1129,7 @@ const update_record = async (table,
         let path;
         let json_data;
         let token_type;
-        const old_button = document.querySelector('#' + button).innerHTML;
-        document.querySelector('#' + button).innerHTML = common.APP_SPINNER;
+        document.querySelector('#' + button).classList.add('css_spinner');
         switch (table){
             case 'user_account':{
                 json_data = {   app_role_id:        parameters.app_role_id,
@@ -1231,9 +1167,9 @@ const update_record = async (table,
             }
         }
         await common.FFB('DB_API', path, 'PUT', token_type, json_data)
-        .then(()=>row_element.setAttribute('data-changed-record', '0'))
-        .catch(()=>null)
-        .finally(()=>document.querySelector('#' + button).innerHTML = old_button);
+        .then(()=>{ row_element.setAttribute('data-changed-record', '0');
+                    document.querySelector('#' + button).classList.remove('css_spinner');})
+        .catch(()=>document.querySelector('#' + button).classList.remove('css_spinner'));
     }
 };
 
@@ -2356,7 +2292,7 @@ const show_server_config = () =>{
             <div id='list_config' class='common_list_scrollbar'></div>
             <div id='list_config_edit'></div>
             <div id='config_buttons' class="save_buttons">
-                <div id='config_save' class='common_dialogue_button button_save' >${common.ICONS.app_save}</div>
+                <div id='config_save' class='common_dialogue_button button_save common_icon' ></div>
             </div>
         </div>`;
     
@@ -2705,6 +2641,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
     switch (event_type){
         case 'click':{
             switch (event_target_id){
+                case (event_target_id=='select_app_menu1' && event.target.classList.contains('common_select_option'))?event_target_id:'':{
+                    show_charts();
+                    break;
+                }
                 case 'menu_1_broadcast_button':{
                     show_broadcast_dialogue('ALL');
                     break;
@@ -2839,7 +2779,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
         case 'change':{
             switch (event_target_id){
                 case 'select_system_admin_stat':
-                case 'select_app_menu1':
                 case 'select_year_menu1':
                 case 'select_month_menu1':{
                     show_charts();
