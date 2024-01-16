@@ -9,6 +9,56 @@ select {
 	font-family: inherit;
 	font-size:inherit;
 }
+.common_select{
+	display: inline-block;
+	vertical-align: middle;
+	border: 1px solid;
+	min-width: 20px;
+    min-height: 1.5em;
+	background-color: var(--app_white);
+}
+.common_select_dropdown{
+	width: 100%;
+	display: inline-block;
+	padding-inline-end: 4px;
+}
+.common_select_dropdown_value{
+	cursor: pointer;
+	text-align: start;
+	display: inline-block;
+	white-space: nowrap;
+}
+.common_select_dropdown_icon::after{
+	content: var(--app_select);
+}
+.common_select_dropdown_icon{
+	display: inline-block;
+	border-radius: 2px;
+	width: 15px;
+    height: 100%;
+	cursor:pointer;
+}
+.common_select_options{
+	display: none;
+	text-align: start;
+	padding: 2px;
+    padding-inline-end: 23px;
+	position: absolute;
+	border: 1px solid;
+	min-width: 20px;
+	border-radius: 2px;
+	cursor:pointer;
+	overflow-y:auto;
+	overflow-x:hidden;
+	background-color: var(--app_white);
+}
+.common_select_option{
+	display: block;
+}
+.common_select_option:hover,
+.common_select_option:active{
+	filter: invert(1);
+}
 [contentEditable=true]:empty::before{
 	content:attr(placeholder);
 	opacity:0.7;
@@ -44,6 +94,8 @@ select {
 	font-weight: 900;
 	font-style: normal;
 	display: inline-block;
+	padding-top: 4px;
+    padding-bottom: 4px;
 }  
 .common_icon svg{
 	font-size: 2em;
@@ -56,6 +108,9 @@ select {
 }
 .common_input_lov{
 	width: calc(100% - 15px) !important;
+}
+.common_lov_button::before{
+	content: var(--app_lov)
 }
 .common_lov_button{
 	display: inline-block;
@@ -125,7 +180,7 @@ select {
 	border: none;
 	font-size: 30px;
 	width: 60px;
-	height: 48px;
+	height: 30px;
 	padding:0px;
 	text-transform: uppercase;
 	cursor:pointer;
@@ -148,6 +203,7 @@ select {
 	height: 100%;
     display: grid;
     grid-auto-rows: max-content;
+	inset-inline-start: calc(50% - 40px);
 }
 /*dialogue*/
 .common_dialogue{
@@ -593,16 +649,16 @@ select {
 }
 /*Dialogue profile*/
 .common_unlike::before{
-	content:var(--app_user_unlike);
+	content:var(--user_unlike);
 }	
 .common_like::before{
-	content:var(--app_user_like);
+	content:var(--user_like);
 }	
 .common_user_follow::before{
-	content:var(--app_user_follow);
+	content:var(--user_follow_user);
 }
 .common_user_followed::before{
-	content:var(--app_user_followed);
+	content:var(--user_followed_user);
 }
 #common_dialogue_profile{
 	visibility:hidden;
@@ -993,7 +1049,7 @@ select {
 	vertical-align: sub;
 	width:30px;
 	height:30px;
-	border-radius:50%;
+	border-radius:50% !important;
 	box-sizing:border-box;
 	background-image: conic-gradient(from 90deg at 50% 50%, rgba(39,174,96,0) 0deg, rgba(31, 144, 255, 0) 0.04deg, var(--app_spinner_color) 360deg);
 	animation:spin 1s linear infinite;

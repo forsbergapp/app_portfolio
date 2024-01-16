@@ -3431,6 +3431,18 @@ const common_event = async (event_type,event) =>{
             else{
                 const target_id = element_id(event.target);
                 switch(target_id){
+                    case event.target.classList.contains('common_select_dropdown_value')?target_id:'':
+                    case event.target.classList.contains('common_select_dropdown_icon')?target_id:'':{
+                        document.querySelector(`#${target_id} .common_select_options`).style.display = 
+                            document.querySelector(`#${target_id} .common_select_options`).style.display=='block'?'none':'block';
+                        break;
+                    }
+                    case event.target.classList.contains('common_select_option')?target_id:'':{
+                        document.querySelector(`#${target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
+                        document.querySelector(`#${target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                        event.target.parentNode.style.display = 'none';
+                        break;
+                    }
                     // dialogue login/signup/forgot
                     case 'common_login_tab2':{
                         show_common_dialogue('SIGNUP');

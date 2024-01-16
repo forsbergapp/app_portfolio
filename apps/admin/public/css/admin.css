@@ -1,4 +1,76 @@
 /*APP*/
+
+#admin_login_title::before{							content:var(--user)}
+#system_admin_login_title::before{					content:var(--user_system_admin)}
+#system_admin_login_username_icon::before{			content:var(--user_system_admin)}
+#system_admin_login_password_icon::before{			content:var(--user_password)}
+#common_message_close::before{						content:var(--app_close)}
+#admin_login_username_icon::before{					content:var(--user)}
+#admin_login_password_icon::before{					content:var(--user_password)}
+#admin_first_time::before{							content:var(--app_init)}
+#system_admin_login_password_icon_confirm::before{	content:var(--user_password)}
+
+#common_message_close::before{						content:var(--app_close)}
+#common_message_cancel::before{						content:var(--app_cancel)}
+#send_broadcast_send::before{						content:var(--app_send)}
+#send_broadcast_close::before{						content:var(--app_close)}
+#common_lov_close::before{							content:var(--app_close)}
+#send_broadcast_title::before{						content:var(--app_broadcast)}
+#client_id_label::before{							content:var(--user)}
+#admin_login_button::before{						content:var(--app_login)}
+.icon_infinite::before{								content:var(--infinite)}
+
+#box1_title.system_admin::before{					content:var(--app_internet) ' ' var(--app_server) ' ' var(--app_chart)}
+#box2_title.system_admin::before{					content:var(--app_internet) ' ' var(--app_server) ' ' var(--regional_numbersystem)}
+#box1_title.admin::before{							content:var(--app_users) ' ' var(--app_apps) ' ' var(--app_chart)}
+#box2_title.admin::before{							content:var(--app_users) ' ' var(--app_apps) ' ' var(--regional_numbersystem)}
+#menu_1_maintenance_title::before{					content:var(--app_maintenance)}
+#menu_1_broadcast_title::before{					content:var(--app_broadcast)}
+#menu_1_broadcast_button::before{					content:var(--app_chat)}
+
+#list_user_stat_not_connected_icon::before{			content:var(--app_loggoff)}
+#list_user_stat_col_title1::before{					content:var(--provider_id)}
+#list_user_stat_col_title2::before{					content:var(--provider)}
+#list_user_stat_col_title3::before{					content:var(--app_sum)}
+#list_user_stat_col_title4::before{					content:var(--app_user_connections)}
+
+#list_user_account_title::before{					content:var(--app_users)}
+#list_user_search_icon::before{						content:var(--app_search)}
+#list_user_account_logon_title::before{				content:var(--app_login)}
+#users_save::before{								content:var(--app_save)}
+[data-colum='avatar'].list_title::before{			content:var(--user_avatar)}
+[data-colum='id'].list_title::before{				content:var(--provider_id)}
+[data-colum='app_role_id'].list_title::before{		content:var(--app_role)}
+[data-colum='app_role_icon'].list_title::before{	content:var(--app_role) ' ' var(--misc_image)}
+[data-colum='active'].list_title::before{			content:var(--app_inactive) ' ' var(--app_active)}
+[data-colum='user_level'].list_title::before{			content:'LEVEL'}
+[data-colum='private'].list_title::before{				content:var(--app_private)}
+[data-colum='username'].list_title::before{				content:var(--user) ' ' var(--username)}
+[data-colum='bio'].list_title::before{					content:var(--user_bio)}
+[data-colum='email'].list_title::before{				content:var(--app_email)}
+[data-colum='emal_unverified'].list_title::before{		content:var(--app_email ' ' var(--app_forgot))}
+[data-colum='password'].list_title::before{				content:var(--user_password)}
+[data-colum='password_reminder'].list_title::before{	content:var(--user_password) ' ' var(--app_info)}
+[data-colum='verification_code'].list_title::before{	content:var(--app_verification_code)}
+[data-colum='identity_provider_id'].list_title::before{	content:var(--provider_id)}
+[data-colum='provider_name'].list_title::before{		content:var(--provider)}
+[data-colum='provider_id'].list_title::before{			content:var(--provider_id) ' ' var(--user) ' ID'}
+[data-colum='provider_first_name'].list_title::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 1'}
+[data-colum='provider_last_name'].list_title::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--username) ' 2'}
+[data-colum='provider_image'].list_title::before{		content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar)}
+[data-colum='provider_image_url'].list_title::before{	content:var(--provider_id) ' ' var(--user) ' ' var(--user_avatar) ' URL'}
+[data-colum='provider_email'].list_title::before{		content:var(--provider_id) ' ' var(--user) ' ' var(--app_email)}
+[data-colum='date_created'].list_title::before{			content:var(--user_account_created)}
+[data-colum='date_modified'].list_title::before{		content:var(--user_account_modified)}
+
+#list_apps_title::before{								content:var(--app_apps)}
+#list_app_parameter_title::before{						content:var(--app_apps) ' ' var(--app_settings)}
+#apps_save::before{										content:var(--app_save)}
+
+#config_save::before{									content:var(--app_save)}
+
+
+
 #dialogue_admin_login{
 	background-color: inherit !important;
 	display: inline-flex;
@@ -96,7 +168,7 @@
 #send_broadcast_message{
 	width:80%;
 	height:100px;
-	margin-top:10px;
+	margin:10px;
 	resize: none;
 	display:inline-block;
 	border: 0.5px solid;
@@ -120,6 +192,20 @@
 	width:100%;
 	height:100%;
 }
+#menu_open::before{	content: var(--app_menu_open)}
+#menu_close::before{content: var(--app_menu_close)}
+#menu_1::before{	content: var(--app_chart)}
+#menu_2::before{	content: var(--app_users) ' ' var(--app_log)}
+#menu_3::before{	content: var(--app_users)}
+#menu_4::before{	content: var(--app_apps) ' ' var(--app_settings)}
+#menu_5::before{	content: var(--app_log)}
+#menu_6::before{	content: var(--app_server) ' ' var(--app_settings)}
+#menu_7::before{	content: var(--app_server) ' ' var(--app_install)}
+#menu_8::before{	content: var(--app_server) ' ' var(--app_database)}
+#menu_9::before{	content: var(--app_server) ' ' var(--app_backup) ' ' var(--app_restore)}
+#menu_10::before{	content: var(--app_server)}
+#menu_11::before{	content: var(--app_logoff)}
+
 #menu{
 	width:150px;
 	height:100%;
@@ -136,7 +222,7 @@
 	padding-inline-start: 20px;
 	padding-top: 10px;
 	padding-bottom: 10px;
-	margin: 1px;
+	margin: 0.5em;
 	font-size: 1.2em;
 	text-transform:uppercase;
 }
@@ -172,7 +258,7 @@
 	border-radius: 4px;
 }
 .save_buttons, .button_save{
-	height:50px !important;
+	margin:10px;
 	display:inline-block;
 }
 .button_save #common_app_spinner{
@@ -219,32 +305,32 @@
 	display: inline-block;
 	width: calc(50% - 10px);
 	vertical-align: middle;
-	margin-top: 20px;
 }
 
+#menu_1_maintenance_title{
+	font-size: 2em;
+}
 #menu_1_maintenance_checkbox{
 	margin-top: 10px;
 	margin-bottom: 5px;
+}
+#menu_1_broadcast_title{
+	font-size: 2em;
+	display: block;
 }
 #menu_1_broadcast_button{
 	font-size: 30px;
 	cursor:pointer;
 }
+#send_broadcast_title{
+	display: block;
+}
 
-
-/*MENU 2 USER STAT*/
-#menu_2_content_widget1{
-	height:calc(100% + 10px);
-}
-#menu_2_content_widget1 select{
-	display:inline-block;
-}
-#menu_2_row_sample{
-	margin-top:10px;
-	margin-bottom:10px;
-}
 #graphBox{
 	height:calc(100% - 40px);
+}
+#graphBox.css_spinner{
+	height:30px;
 }
 #box1{
 	width: 100%;
@@ -269,7 +355,7 @@
 	display: block;
   }
 .box_title{
-	margin:10px;
+	width: 95%;
 }
 .box_title .common_icon{
 	height: 1.3em;
@@ -340,6 +426,18 @@
 	margin-inline-start: 15px;
 	text-align: start;
 }
+/*MENU 2 USER STAT*/
+#menu_2_content_widget1{
+	height:calc(100% + 10px);
+}
+#menu_2_content_widget1 select{
+	display:inline-block;
+}
+#menu_2_row_sample{
+	margin-top:10px;
+	margin-bottom:10px;
+}
+
 #menu_2_content_widget2{
 	height:calc(30% - 10px);
 	display: block;
