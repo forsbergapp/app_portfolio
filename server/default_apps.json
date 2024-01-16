@@ -164,7 +164,7 @@
                     ["APP",                 null,           "AppBody",                      "/apps/app4/src/body.html"]
     ],
     "STATUS":"ONLINE"},
-    {"APP_ID": 5, "NAME": "Bank",           "SUBDOMAIN": "app5",    "PATH": "/apps/app4/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",    "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
+    {"APP_ID": 5, "NAME": "Bank",           "SUBDOMAIN": "app5",    "PATH": "/apps/app5/public",    "LOGO":"/images/logo.png",     "JS":"/js/app.js",     "JS_SECURE":"",                     "JS_REPORT":"",                         "CSS": "/css/app.css",   "CSS_REPORT": "",                         "FAVICON_32x32":"/images/favicon-32x32.png",   "FAVICON_192x192":"/images/favicon-192x192.png",    "SHOWPARAM":1, "CLIENT_ID": "", "CLIENT_SECRET":"", "APP_DATA_SECRET":"", "APP_DATA_EXPIRE":"2d", "APP_ACCESS_SECRET":"", "APP_ACCESS_EXPIRE":"1h",
     "DATA":{"COPYRIGHT": "©",
 		     "EMAIL": "",
 		     "LINK_TITLE": "",
