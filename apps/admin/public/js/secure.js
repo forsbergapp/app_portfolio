@@ -1179,10 +1179,10 @@ const show_monitor = async (yearvalues) =>{
             <div id='list_app_log_form'>
                 <div id='list_app_log' class='common_list_scrollbar'></div>
                 <div id='list_app_pagination'>
-                    <div id='list_app_log_first' ></div>
-                    <div id='list_app_log_previous' ></div>
-                    <div id='list_app_log_next' ></div>
-                    <div id='list_app_log_last' ></div>
+                    <div id='list_app_log_first' class='common_icon'></div>
+                    <div id='list_app_log_previous' class='common_icon'></div>
+                    <div id='list_app_log_next' class='common_icon'></div>
+                    <div id='list_app_log_last' class='common_icon'></div>
                 </div>
             </div>
             <div id='list_server_log_form'>
@@ -1286,11 +1286,8 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
 
     
-    if (common.COMMON_GLOBAL.system_admin==''){
+    if (common.COMMON_GLOBAL.system_admin=='')
         APP_GLOBAL.page = 0;
-        //log
-        fix_pagination_buttons();
-    }
     //show map only for this condition
     if (common.COMMON_GLOBAL.system_admin_only != 1)
         common.map_init(APP_GLOBAL.module_leaflet_map_container,
@@ -1310,26 +1307,7 @@ const show_monitor = async (yearvalues) =>{
         });
     nav_click('list_monitor_nav_connected'); 
 };
-const fix_pagination_buttons = () => {
-    //function triggered by change in user preference before innerHTML loaded html
-    //function called again when choosing app log monitor check if exist first
-    if (document.querySelector('#list_app_log_first')){
-        //fix rtl isse with images, items created after login
-        if (document.querySelector('#common_user_direction_select').value=='ltr'||
-            document.querySelector('#common_user_direction_select').value==''){
-            document.querySelector('#list_app_log_first').innerHTML = common.ICONS.app_first;
-            document.querySelector('#list_app_log_previous').innerHTML = common.ICONS.app_previous;
-            document.querySelector('#list_app_log_next').innerHTML = common.ICONS.app_next;
-            document.querySelector('#list_app_log_last').innerHTML = common.ICONS.app_last;
-        }
-        else{
-            document.querySelector('#list_app_log_first').innerHTML = common.ICONS.app_last;
-            document.querySelector('#list_app_log_previous').innerHTML = common.ICONS.app_next;
-            document.querySelector('#list_app_log_next').innerHTML = common.ICONS.app_previous;
-            document.querySelector('#list_app_log_last').innerHTML = common.ICONS.app_first;
-        }
-    }
-};
+
 const nav_click = (item_id) => {
     const reset_monitor = () => {
         document.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
@@ -1374,25 +1352,25 @@ const nav_click = (item_id) => {
             break;
         }
         //SERVER CONFIG
-        case 'list_config_server_title':{
+        case 'list_config_nav_config':{
             reset_config();
             document.querySelector('#list_config_nav_config').classList.add('list_nav_selected_tab');
             show_config('CONFIG');
             break;
         }
-        case 'list_config_blockip_title':{
+        case 'list_config_nav_iam_blockip':{
             reset_config();
             document.querySelector('#list_config_nav_iam_blockip').classList.add('list_nav_selected_tab');
             show_config('IAM_BLOCKIP');
             break;
         }
-        case 'list_config_useragent_title':{
+        case 'list_config_nav_iam_useragent':{
             reset_config();
             document.querySelector('#list_config_nav_iam_useragent').classList.add('list_nav_selected_tab');
             show_config('IAM_USERAGENT');
             break;
         }
-        case 'list_config_policy_title':{
+        case 'list_config_nav_iam_policy':{
             reset_config();
             document.querySelector('#list_config_nav_iam_policy').classList.add('list_nav_selected_tab');
             show_config('IAM_POLICY');
@@ -1747,9 +1725,7 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                                         <div class='list_connected_col common_wide_list_column'>
                                             ${common.get_null_or_value(show_user_agent(log.user_agent))}
                                         </div>
-                                        <div class='list_connected_col chat_click' data-id='${log.id}'>
-                                            ${common.ICONS.app_chat}
-                                        </div>
+                                        <div class='list_connected_col chat_click common_icon' data-id='${log.id}'></div>
                                     </div>`;
                             break;
                         }
@@ -2238,10 +2214,10 @@ const show_server_config = () =>{
     document.querySelector('#menu_6_content').innerHTML = 
         `<div id='menu_6_content_widget1' class='widget'>
             <div id='list_config_nav' class='list_nav'>
-                <div id='list_config_nav_config'        class='list_nav_list'><div id='list_config_server_title' class='list_button' >${common.ICONS.app_server}</div></div>
-                <div id='list_config_nav_iam_blockip'   class='list_nav_list'><div id='list_config_blockip_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.regional_numbersystem}</div></div>
-                <div id='list_config_nav_iam_useragent' class='list_nav_list'><div id='list_config_useragent_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.app_browser}</div></div>
-                <div id='list_config_nav_iam_policy'    class='list_nav_list'><div id='list_config_policy_title' class='list_button' >${common.ICONS.app_internet + common.ICONS.app_shield + common.ICONS.misc_book}</div></div>
+                <div id='list_config_nav_config'        class='list_nav_list list_button common_icon'></div>
+                <div id='list_config_nav_iam_blockip'   class='list_nav_list list_button common_icon'></div>
+                <div id='list_config_nav_iam_useragent' class='list_nav_list list_button common_icon'></div>
+                <div id='list_config_nav_iam_policy'    class='list_nav_list list_button common_icon'></div>
             </div>
             <div id='list_config' class='common_list_scrollbar'></div>
             <div id='list_config_edit'></div>
@@ -2249,12 +2225,22 @@ const show_server_config = () =>{
                 <div id='config_save' class='common_dialogue_button button_save common_icon' ></div>
             </div>
         </div>`;
-    
-
-    nav_click(document.querySelector('#list_config_server_title').id);
+    nav_click('list_config_nav_config');
 };
 const show_config = async (file) => {
-    document.querySelector('#list_config').innerHTML = common.APP_SPINNER;
+    document.querySelector('#list_config').innerHTML = '';
+    document.querySelector('#list_config_edit').innerHTML = '';
+    if (file=='CONFIG'){
+        document.querySelector('#list_config').classList.add('common_icon','css_spinner');
+        document.querySelector('#list_config').style.display = 'flex';
+        document.querySelector('#list_config_edit').style.display = 'none';
+    }
+    else{
+        document.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');
+        document.querySelector('#list_config_edit').style.display = 'flex';
+        document.querySelector('#list_config').style.display = 'none';
+    }
+
     await common.FFB('SERVER', `/config/systemadmin/saved?file=${file}`, 'GET', 'SYSTEMADMIN', null)
     .then(result=>{
         const config = JSON.parse(result);
@@ -2263,15 +2249,9 @@ const show_config = async (file) => {
         switch (file){
             case 'CONFIG':{
                 let html = `<div id='list_config_row_title' class='list_config_row'>
-                                <div id='list_config_col_title1' class='list_config_col list_title'>
-                                    <div>PARAMETER NAME</div>
-                                </div>
-                                <div id='list_config_col_title2' class='list_config_col list_title'>
-                                    <div>PARAMETER VALUE</div>
-                                </div>
-                                <div id='list_config_col_title3' class='list_config_col list_title'>
-                                    <div>COMMENT</div>
-                                </div>
+                                <div id='list_config_col_title1' class='list_config_col list_title'>PARAMETER NAME</div>
+                                <div id='list_config_col_title2' class='list_config_col list_title'>PARAMETER VALUE</div>
+                                <div id='list_config_col_title3' class='list_config_col list_title'>COMMENT</div>
                             </div>`;
                 //create div groups with parameters, each group with a title
                 //first 5 attributes in config json contains array of parameter records
@@ -2300,9 +2280,7 @@ const show_config = async (file) => {
                     html += '</div>';
                     
                 }
-                document.querySelector('#list_config_edit').innerHTML = '';
-                document.querySelector('#list_config_edit').style.display = 'none';
-                document.querySelector('#list_config').style.display = 'flex';
+                document.querySelector('#list_config').classList.remove('common_icon','css_spinner');
                 document.querySelector('#list_config').innerHTML = html;
                 
                 //set focus first column in first row
@@ -2310,43 +2288,42 @@ const show_config = async (file) => {
                 break;
             }
             default:{
-                document.querySelector('#list_config').innerHTML = '';
-                document.querySelector('#list_config').style.display = 'none';
-                document.querySelector('#list_config_edit').style.display = 'flex';
+                document.querySelector('#list_config_edit').classList.remove('common_icon','css_spinner');
                 document.querySelector('#list_config_edit').innerHTML = JSON.stringify(config, undefined, 2);
                 break;
             }
         }
     })
-    .catch(()=>document.querySelector('#list_config').innerHTML = '');
+    .catch(()=>{
+            document.querySelector('#list_config').classList.remove('common_icon','css_spinner');
+            document.querySelector('#list_config_edit').classList.add('common_icon','css_spinner');});
 };
 /*----------------------- */
 /* INSTALLATION           */
 /*----------------------- */
-const db_install = () =>{
-    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-    const old_html = document.querySelector('#install_db_button_install').innerHTML;
-    document.querySelector('#install_db_button_install').innerHTML = common.APP_SPINNER;
-    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
-    common.FFB('DB_API', path, 'POST', 'SYSTEMADMIN', null)
+const installation_function = (id, db_icon, path, method, tokentype, data) => {
+    document.querySelector(`#${id}`).classList.add('css_spinner');
+    common.FFB('DB_API', path, method, tokentype, data)
     .then(result=>{
-        document.querySelector('#install_db_icon').classList.add('installed');
+        document.querySelector(`#${id}`).classList.remove('css_spinner');
+        if (db_icon!=null)
+            if (db_icon)
+                document.querySelector('#install_db_icon').classList.add('installed');
+            else
+                document.querySelector('#install_db_icon').classList.remove('installed');
         common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
     })
-    .catch(()=>null)
-    .finally(()=>document.querySelector('#install_db_button_install').innerHTML = old_html);
+    .catch(()=>document.querySelector(`#${id}`).classList.remove('css_spinner'));
+};
+const db_install = () =>{
+    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}&optional=${Number(document.querySelector('#install_db_country_language_translations').classList.contains('checked'))}`;
+    installation_function('install_db_button_install', true, path, 'POST', 'SYSTEMADMIN', null);
 };
 const db_uninstall = () =>{
     document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-    const old_html = document.querySelector('#install_db_button_uninstall').innerHTML;
-    document.querySelector('#install_db_button_uninstall').innerHTML = common.APP_SPINNER;
-    common.FFB('DB_API', `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'SYSTEMADMIN', null)
-    .then(result=>{
-        document.querySelector('#install_db_icon').classList.remove('installed');
-        common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
-    })
-    .catch(()=>null)
-    .finally(()=>document.querySelector('#install_db_button_install').innerHTML = old_html);
+    const path = `/systemadmin/install?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
+    installation_function('install_db_button_uninstall', false, path, 'DELETE', 'SYSTEMADMIN', null);
 };
 const demo_install = () =>{
     if (document.querySelector('#install_demo_password').innerHTML == '') {
@@ -2354,63 +2331,51 @@ const demo_install = () =>{
     }
     else{
         const json_data = {demo_password: document.querySelector('#install_demo_password').innerHTML};
-        const old_html = document.querySelector('#install_demo_button_install').innerHTML;
-        document.querySelector('#install_demo_button_install').innerHTML = common.APP_SPINNER;
-        common.FFB('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'POST', 'APP_ACCESS', json_data)
-        .then(result=>{
-            common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
-        })
-        .catch(()=>null)
-        .finally(()=>document.querySelector('#install_demo_button_install').innerHTML = old_html);
+        const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
+        installation_function('install_db_demo_button_install', null, path, 'POST', 'APP_ACCESS', json_data);
     }
-
 };
 const demo_uninstall = () =>{
-    const old_html = document.querySelector('#install_demo_button_uninstall').innerHTML;
-    document.querySelector('#install_demo_button_uninstall').innerHTML = common.APP_SPINNER;
-    common.FFB('DB_API', `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`, 'DELETE', 'APP_ACCESS', null)
-    .then(result=>{
-        common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
-    })
-    .catch(()=>null)
-    .finally(()=>document.querySelector('#install_demo_button_install').innerHTML = old_html);
+    const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
+    installation_function('install_db_demo_button_uninstall', null, path, 'DELETE', 'APP_ACCESS', null);
 };
 const show_installation = () =>{
-    document.querySelector('#menu_7_content').innerHTML = common.APP_SPINNER;    
     if (common.COMMON_GLOBAL.system_admin!=''){
-        common.FFB('DB_API', '/systemadmin/install?', 'GET', 'SYSTEMADMIN', null)
-        .then(result=>{
-            document.querySelector('#menu_7_content').innerHTML =
+        document.querySelector('#menu_7_content').innerHTML =
             `<div id='menu_7_content_widget1' class='widget'>
                 <div id='install_db'>
-                    <div id='install_db_icon'>${common.ICONS.app_database}</div>
+                    <div id='install_db_icon' class='common_icon'></div>
                     <div id='install_db_button_row'>
-                        <div id='install_db_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
-                        <div id='install_db_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
+                        <div id='install_db_button_install' class='common_dialogue_button common_icon'></div>
+                        <div id='install_db_button_uninstall' class='common_dialogue_button common_icon'></div>
                     </div>
                     <div id='install_db_input'>
-                        <div id="install_db_country_language_translations_icon" >${common.ICONS.gps_country + common.ICONS.regional_locale}</div>
+                        <div id='install_db_country_language_translations_icon' class='common_icon'></div>
                         <div id='install_db_country_language_translations' class='common_switch'></div>
                     </div>
                 </div>
             </div>`;
+        document.querySelector('#install_db_icon').classList.add('css_spinner');
+        common.FFB('DB_API', '/systemadmin/install?', 'GET', 'SYSTEMADMIN', null)
+        .then(result=>{
+            document.querySelector('#install_db_icon').classList.remove('css_spinner');
             document.querySelector('#install_db_icon').classList.remove('installed');
             if (JSON.parse(result)[0].installed == 1)
                 document.querySelector('#install_db_icon').classList.add('installed');
             })
-        .catch(()=>document.querySelector('#menu_7_content').innerHTML = '');
+        .catch(()=>document.querySelector('#install_db_icon').classList.remove('css_spinner'));
     }
     else{
         document.querySelector('#menu_7_content').innerHTML =
             `<div id='menu_7_content_widget2' class='widget'>
                 <div id='install_demo'>
-                    <div id='install_demo_demo_users_icon'>${common.ICONS.app_users}</div>
+                    <div id='install_demo_demo_users_icon' class='common_icon'></div>
                     <div id='install_demo_button_row'>
-                        <div id='install_demo_button_install' class='common_dialogue_button'>${common.ICONS.app_add}</div>
-                        <div id='install_demo_button_uninstall' class='common_dialogue_button'>${common.ICONS.app_delete}</div>
+                        <div id='install_demo_button_install' class='common_dialogue_button common_icon'></div>
+                        <div id='install_demo_button_uninstall' class='common_dialogue_button common_icon'></div>
                     </div>
                     <div id='install_demo_input'>
-                        <div id="install_demo_password_icon" >${common.ICONS.user_password}</div>
+                        <div id="install_demo_password_icon" class='common_icon'></div>
                         <div class='common_password_container common_input'>
                                 <div id='install_demo_password' contenteditable=true class='common_input common_password'></div>
                                 <div id='install_demo_password_mask' class='common_input common_password_mask'/></div>
@@ -2426,98 +2391,67 @@ const show_installation = () =>{
 const show_db_info = async () => {
     if (admin_token_has_value()){
         const size = '(Mb)';
-
-        document.querySelector('#menu_8_content').innerHTML = common.APP_SPINNER;
-        await common.FFB('DB_API', '/systemadmin/DBInfo?', 'GET', 'SYSTEMADMIN', null)
-        .then(result=>{
-            const database = JSON.parse(result)[0];
-            document.querySelector('#menu_8_content').innerHTML = 
+        document.querySelector('#menu_8_content').innerHTML = 
                 `<div id='menu_8_content_widget1' class='widget'>
-                    <div id='menu_8_db_info1'>
-                        <div id='menu_8_db_info_database_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem}</div><div id='menu_8_db_info_database_data'>${database.database_use}</div>
-                        <div id='menu_8_db_info_name_title'>${common.ICONS.app_database}</div><div id='menu_8_db_info_name_data'>${database.database_name}</div>
-                        <div id='menu_8_db_info_version_title'>${common.ICONS.app_database + common.ICONS.regional_numbersystem + common.ICONS.app_info}</div><div id='menu_8_db_info_version_data'>${database.version}</div>
-                        <div id='menu_8_db_info_database_schema_title'>${common.ICONS.app_database + common.ICONS.app_database_schema}</div><div id='menu_8_db_info_database_schema_data'>${database.database_schema}</div>
-                        <div id='menu_8_db_info_host_title'>${common.ICONS.app_server}</div><div id='menu_8_db_info_host_data'>${database.hostname}</div>
-                        <div id='menu_8_db_info_connections_title'>${common.ICONS.app_user_connections}</div><div id='menu_8_db_info_connections_data'>${database.connections}</div>
-                        <div id='menu_8_db_info_started_title'>${common.ICONS.app_database_started}</div><div id='menu_8_db_info_started_data'>${database.started}</div>
-                    </div>
+                    <div id='menu_8_db_info1'></div>
                 </div>
                 <div id='menu_8_content_widget2' class='widget'>
-                    <div>
-                        <div id='menu_8_db_info_space_title'>${common.ICONS.app_database + common.ICONS.app_database_calc}</div>
-                    </div>
+                    <div id='menu_8_db_info_space_title' class='common_icon'></div>
                     <div id='menu_8_db_info_space_detail' class='common_list_scrollbar'></div>
                 </div>`;
-                document.querySelector('#menu_8_db_info_space_detail').innerHTML = common.APP_SPINNER;
-                common.FFB('DB_API', '/systemadmin/DBInfoSpace?', 'GET', 'SYSTEMADMIN', null)
-                .then(result=>{
-                    let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
-                                    <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>
-                                        <div>TABLE NAME</div>
-                                    </div>
-                                    <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>
-                                        <div>SIZE ${size}</div>
-                                    </div>
-                                    <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>
-                                        <div>DATA USED ${size}</div>
-                                    </div>
-                                    <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>
-                                        <div>DATA FREE ${size}</div>
-                                    </div>
-                                    <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>
-                                        <div>% USED</div>
-                                    </div>
-                                </div>`;
-                    let i=0;
-                    for (const databaseInfoSpaceTable of JSON.parse(result)) {
-                        html += 
-                        `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
-                            <div class='menu_8_db_info_space_detail_col'>
-                                <div>${databaseInfoSpaceTable.table_name}</div>
-                            </div>
-                            <div class='menu_8_db_info_space_detail_col'>
-                                <div>${roundOff(databaseInfoSpaceTable.total_size)}</div>
-                            </div>
-                            <div class='menu_8_db_info_space_detail_col'>
-                                <div>${roundOff(databaseInfoSpaceTable.data_used)}</div>
-                            </div>
-                            <div class='menu_8_db_info_space_detail_col'>
-                                <div>${roundOff(databaseInfoSpaceTable.data_free)}</div>
-                            </div>
-                            <div class='menu_8_db_info_space_detail_col'>
-                                <div>${roundOff(databaseInfoSpaceTable.pct_used)}</div>
-                            </div>
-                        </div>`;
-                        i=0;
-                    }
-                    document.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
-                    common.FFB('DB_API', '/systemadmin/DBInfoSpaceSum?', 'GET', 'SYSTEMADMIN', null)
-                    .then(result=>{
-                        const databaseInfoSpaceSum = JSON.parse(result)[0];
-                        document.querySelector('#menu_8_db_info_space_detail').innerHTML += 
-                            `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${common.ICONS.app_sum}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(databaseInfoSpaceSum.total_size)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(databaseInfoSpaceSum.data_used)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(databaseInfoSpaceSum.data_free)}</div>
-                                </div>
-                                <div class='menu_8_db_info_space_detail_col'>
-                                    <div>${roundOff(databaseInfoSpaceSum.pct_used)}</div>
-                                </div>
+        document.querySelector('#menu_8_db_info1').classList.add('css_spinner');
+        common.FFB('DB_API', '/systemadmin/DBInfo?', 'GET', 'SYSTEMADMIN', null)
+        .then(result=>{
+            const database = JSON.parse(result)[0];
+            document.querySelector('#menu_8_db_info1').classList.remove('css_spinner');
+            document.querySelector('#menu_8_db_info1').innerHTML = 
+                    `<div id='menu_8_db_info_database_title' class='common_icon'></div>          <div id='menu_8_db_info_database_data'>${database.database_use}</div>
+                        <div id='menu_8_db_info_name_title' class='common_icon'></div>              <div id='menu_8_db_info_name_data'>${database.database_name}</div>
+                        <div id='menu_8_db_info_version_title' class='common_icon'></div>           <div id='menu_8_db_info_version_data'>${database.version}</div>
+                        <div id='menu_8_db_info_database_schema_title' class='common_icon'></div>   <div id='menu_8_db_info_database_schema_data'>${database.database_schema}</div>
+                        <div id='menu_8_db_info_host_title' class='common_icon'></div>              <div id='menu_8_db_info_host_data'>${database.hostname}</div>
+                        <div id='menu_8_db_info_connections_title' class='common_icon'></div>       <div id='menu_8_db_info_connections_data'>${database.connections}</div>
+                        <div id='menu_8_db_info_started_title' class='common_icon'></div>           <div id='menu_8_db_info_started_data'>${database.started}</div>`;
+            document.querySelector('#menu_8_db_info_space_detail').classList.add('css_spinner');
+            common.FFB('DB_API', '/systemadmin/DBInfoSpace?', 'GET', 'SYSTEMADMIN', null)
+            .then(result=>{
+                let html = `<div id='menu_8_db_info_space_detail_row_title' class='menu_8_db_info_space_detail_row'>
+                                <div id='menu_8_db_info_space_detail_col_title1' class='menu_8_db_info_space_detail_col list_title'>TABLE NAME</div>
+                                <div id='menu_8_db_info_space_detail_col_title2' class='menu_8_db_info_space_detail_col list_title'>SIZE ${size}</div>
+                                <div id='menu_8_db_info_space_detail_col_title3' class='menu_8_db_info_space_detail_col list_title'>DATA USED ${size}</div>
+                                <div id='menu_8_db_info_space_detail_col_title4' class='menu_8_db_info_space_detail_col list_title'>DATA FREE ${size}</div>
+                                <div id='menu_8_db_info_space_detail_col_title5' class='menu_8_db_info_space_detail_col list_title'>% USED</div>
                             </div>`;
-                    });
-                })
-                .catch(()=>document.querySelector('#menu_8_db_info_space_detail').innerHTML = '');
+                let i=0;
+                for (const databaseInfoSpaceTable of JSON.parse(result)) {
+                    html += 
+                    `<div id='menu_8_db_info_space_detail_row_${i}' class='menu_8_db_info_space_detail_row' >
+                        <div class='menu_8_db_info_space_detail_col'>${databaseInfoSpaceTable.table_name}</div>
+                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.total_size)}</div>
+                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.data_used)}</div>
+                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.data_free)}</div>
+                        <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceTable.pct_used)}</div>
+                    </div>`;
+                    i=0;
+                }
+                document.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner');
+                document.querySelector('#menu_8_db_info_space_detail').innerHTML = html;
+                common.FFB('DB_API', '/systemadmin/DBInfoSpaceSum?', 'GET', 'SYSTEMADMIN', null)
+                .then(result=>{
+                    const databaseInfoSpaceSum = JSON.parse(result)[0];
+                    document.querySelector('#menu_8_db_info_space_detail').innerHTML += 
+                        `<div id='menu_8_db_info_space_detail_row_total' class='menu_8_db_info_space_detail_row' >
+                            <div id='menu_8_info_space_db_sum' class='menu_8_db_info_space_detail_col'></div>
+                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.total_size)}</div>
+                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.data_used)}</div>
+                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.data_free)}</div>
+                            <div class='menu_8_db_info_space_detail_col'>${roundOff(databaseInfoSpaceSum.pct_used)}</div>
+                        </div>`;
+                });
+            })
+            .catch(()=>document.querySelector('#menu_8_db_info_space_detail').classList.remove('css_spinner'));
         })
-        .catch(()=>document.querySelector('#menu_8_content').innerHTML = '');
+        .catch(()=>document.querySelector('#menu_8_db_info1').classList.remove('css_spinner'));
     }
 };
 /*----------------------- */
@@ -2525,7 +2459,18 @@ const show_db_info = async () => {
 /*----------------------- */
 const show_server_info = async () => {
     if (admin_token_has_value()){
-        await common.FFB('SERVER', '/info?', 'GET', 'SYSTEMADMIN', null)
+        document.querySelector('#menu_10_content').innerHTML = 
+                `<div id='menu_10_content_widget1' class='widget'>
+                    <div id='menu_10_os_title' class='common_icon'></div>
+                    <div id='menu_10_os_info'></div>
+                </div>
+                <div id='menu_10_content_widget2' class='widget'>
+                    <div id='menu_10_process_title' class='common_icon'></div>
+                    <div id='menu_10_process_info'></div>
+                </div>`;
+        document.querySelector('#menu_10_os_info').classList.add('css_spinner');
+        document.querySelector('#menu_10_process_info').classList.add('css_spinner');
+        common.FFB('SERVER', '/info?', 'GET', 'SYSTEMADMIN', null)
         .then(result=>{
             const seconds_to_time = (seconds) => {
                 let ut_sec = seconds;
@@ -2542,11 +2487,10 @@ const show_server_info = async () => {
                 return `${ut_hour} Hour(s) ${ut_min} minute(s) ${ut_sec} second(s)`;
             };
             const server_info = JSON.parse(result);
-            document.querySelector('#menu_10_content').innerHTML = 
-                `<div id='menu_10_content_widget1' class='widget'>
-                    <div id='menu_10_os_title'>${common.ICONS.app_server}</div>
-                    <div id='menu_10_os_info'>
-                        <div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${server_info.os.hostname}</div>
+            document.querySelector('#menu_10_os_info').classList.remove('css_spinner');
+            document.querySelector('#menu_10_process_info').classList.remove('css_spinner');
+            document.querySelector('#menu_10_os_info').innerHTML = 
+                       `<div id='menu_10_os_info_hostname_title'>${'HOSTNAME'}</div><div id='menu_10_os_info_hostname_data'>${server_info.os.hostname}</div>
                         <div id='menu_10_os_info_cpus_title'>${'CPUS'}</div><div id='menu_10_os_info_cpus_data'>${server_info.os.cpus.length}</div>
                         <div id='menu_10_os_info_arch_title'>${'ARCH'}</div><div id='menu_10_os_info_arch_data'>${server_info.os.arch}</div>
                         <div id='menu_10_os_info_freemem_title'>${'FREEMEM'}</div><div id='menu_10_os_info_freemem_data'>${server_info.os.freemem}</div>
@@ -2559,13 +2503,9 @@ const show_server_info = async () => {
                         <div id='menu_10_os_info_homedir_title'>${'HOMEDIR'}</div><div id='menu_10_os_info_homedir_data'>${server_info.os.homedir}</div>
                         <div id='menu_10_os_info_tmpdir_title'>${'TMPDIR'}</div><div id='menu_10_os_info_tmpdir_data'>${server_info.os.tmpdir}</div>
                         <div id='menu_10_os_info_userinfo_username_title'>${'USERNAME'}</div><div id='menu_10_os_info_userinfo_username_data'>${server_info.os.userinfo.username}</div>
-                        <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${server_info.os.userinfo.homedir}</div>
-                    </div>
-                </div>
-                <div id='menu_10_content_widget2' class='widget'>
-                    <div id='menu_10_process_title'>${common.ICONS.app_server + ' ' + common.ICONS.app_apps}</div>
-                    <div id='menu_10_process_info'>
-                        <div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${server_info.process.memoryusage_rss}</div>
+                        <div id='menu_10_os_info_userinfo_homedir_title'>${'USER HOMEDIR'}</div><div id='menu_10_os_info_userinfo_homedir_data'>${server_info.os.userinfo.homedir}</div>`;
+            document.querySelector('#menu_10_process_info').innerHTML =     
+                       `<div id='menu_10_process_info_memoryusage_rss_title'>${'MEMORY RSS'}</div><div id='menu_10_process_info_memoryusage_rss_data'>${server_info.process.memoryusage_rss}</div>
                         <div id='menu_10_process_info_memoryusage_heaptotal_title'>${'MEMORY HEAPTOTAL'}</div><div id='menu_10_process_info_memoryusage_heaptotal_data'>${server_info.process.memoryusage_heaptotal}</div>
                         <div id='menu_10_process_info_memoryusage_heapused_title'>${'MEMORY HEAPUSED'}</div><div id='menu_10_process_info_memoryusage_heapused_data'>${server_info.process.memoryusage_heapused}</div>
                         <div id='menu_10_process_info_memoryusage_external_title'>${'MEMORY EXTERNAL'}</div><div id='menu_10_process_info_memoryusage_external_data'>${server_info.process.memoryusage_external}</div>
@@ -2574,11 +2514,11 @@ const show_server_info = async () => {
                         <div id='menu_10_process_info_version_title'>${'NODEJS VERSION'}</div><div id='menu_10_process_info_version_data'>${server_info.process.version}</div>
                         <div id='menu_10_process_info_path_title'>${'PATH'}</div><div id='menu_10_process_info_path_data'>${server_info.process.path}</div>
                         <div id='menu_10_process_info_start_arg_0_title'>${'START ARG 0'}</div><div id='menu_10_process_info_start_arg_0_data'>${server_info.process.start_arg_0}</div>
-                        <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>
-                    </div>
-                </div>`;
+                        <div id='menu_10_process_info_start_arg_1_title'>${'START ARG 1'}</div><div id='menu_10_process_info_start_arg_1_data'>${server_info.process.start_arg_1}</div>`;
         })
-        .catch(()=>null);
+        .catch(()=>{
+                document.querySelector('#menu_10_os_info').classList.remove('css_spinner');
+                document.querySelector('#menu_10_process_info').classList.remove('css_spinner');});
     }
 };
 /*----------------------- */
@@ -2646,10 +2586,10 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     button_save('config_save');
                     break;
                 }
-                case 'list_config_server_title' :
-                case 'list_config_blockip_title':
-                case 'list_config_useragent_title':
-                case 'list_config_policy_title':{
+                case 'list_config_nav_config' :
+                case 'list_config_nav_iam_blockip':
+                case 'list_config_nav_iam_useragent':
+                case 'list_config_nav_iam_policy':{
                     nav_click(event_target_id);
                     break;
                 }
@@ -2761,11 +2701,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                 }
                 case 'select_broadcast_type':{
                     set_broadcast_type();
-                    break;
-                }
-                //common
-                case 'common_user_direction_select':{
-                    fix_pagination_buttons(event.target.value);
                     break;
                 }
             }            
