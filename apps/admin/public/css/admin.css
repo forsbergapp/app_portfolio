@@ -87,6 +87,19 @@
 #list_monitor_nav_server_log::before{					content:var(--app_server) ' ' var(--app_log)}
 #filesearch_menu5::before{								content:var(--app_search)}
 
+.chat_click::before{									content:var(--app_chat)}
+
+#list_app_log_first::before{							content:var(--app_first)}
+#list_app_log_previous::before{							content:var(--app_previous)}
+#list_app_log_next::before{								content:var(--app_next)}
+#list_app_log_last::before{								content:var(--app_last)}
+
+body.rtl #list_app_log_first::before{					content:var(--app_last)}
+body.rtl #list_app_log_previous::before{				content:var(--app_next)}
+body.rtl #list_app_log_next::before{					content:var(--app_previous)}
+body.rtl #list_app_log_last::before{					content:var(--app_first)}
+
+
 #menu5_row_parameters_col1::before{						content:var(--app_server) ' REQUEST'}
 #menu5_row_parameters_col1_1::before{					content:var(--app_checkbox_checked)}
 #menu5_row_parameters_col1_0::before{					content:var(--app_checkbox_empty)}
@@ -101,6 +114,33 @@
 
 #list_server_log_search_icon::before{					content:var(--app_search)}
 
+#list_config_nav_config::before{						content:var(--app_server)}
+#list_config_nav_iam_blockip::before{					content:var(--app_internet) ' ' var(--app_shield) ' ' var(--regional_numbersystem)}
+#list_config_nav_iam_useragent::before{					content:var(--app_internet) ' ' var(--app_shield) ' ' var(--app_browser)}
+#list_config_nav_iam_policy::before{					content:var(--app_internet) ' ' var(--app_shield) ' ' var(--misc_book)}
+
+#install_db_icon::before{								content:var(--app_database)}
+#install_db_button_install::before{						content:var(--app_add)}
+#install_db_button_uninstall::before{					content:var(--app_delete)}
+#install_db_country_language_translations_icon::before{	content:var(--gps_country) ' ' var(--regional_locale)}
+
+#install_demo_demo_users_icon::before{					content:var(--app_users)}
+#install_demo_button_install::before{					content:var(--app_add)}
+#install_demo_button_uninstall::before{					content:var(--app_delete)}
+#install_demo_password_icon::before{					content:var(--user_password)}
+
+#menu_8_db_info_database_title::before{					content:var(--app_database) ' ' var(--regional_numbersystem)}
+#menu_8_db_info_name_title::before{						content:var(--app_database)}
+#menu_8_db_info_version_title::before{					content:var(--app_database) ' ' var(--regional_numbersystem) ' ' var(--app_info)}
+#menu_8_db_info_database_schema_title::before{			content:var(--app_database) ' ' var(--app_database_schema)}
+#menu_8_db_info_host_title::before{						content:var(--app_server)}
+#menu_8_db_info_connections_title::before{				content:var(--app_user_connections)}
+#menu_8_db_info_started_title::before{					content:var(--app_database_started)}
+#menu_8_db_info_space_title::before{					content:var(--app_database) ' ' var(--app_database_calc)}
+#menu_8_info_space_db_sum::before{						content:var(--app_sum)}
+
+#menu_10_os_title::before{								content:var(--app_server)}
+#menu_10_process_title::before{							content:var(--app_server) ' ' var(--app_apps)}
 
 #dialogue_admin_login{
 	background-color: inherit !important;
@@ -309,8 +349,8 @@
 	margin-top:5px;
 	margin-bottom:5px;
 	box-sizing:unset !important;
+	inset-inline-start: calc(50% - 40px);
 }
-
 
 /*MENU 1 DASHBOARD*/
 #menu_1_content_widget1{
@@ -724,6 +764,13 @@
 	overflow-y:auto;
 	text-align: start;
 }
+#list_config_edit.css_spinner{
+	height:30px !important;
+	inset-inline-start: calc(50% - 40px);
+}
+#list_config_edit.css_spinner::before{
+	opacity:unset;
+}
 #list_config_row_title{
 	margin-inline-start: 4px;
 }
@@ -760,6 +807,12 @@
 	display: flex;
 	flex-direction: column;
 }
+#install_db_input{
+	margin:20px;
+}
+#install_db_input div{
+	margin:10px;
+}
 #install_db, #install_demo{
 	margin:auto;
 }
@@ -768,7 +821,7 @@
 	animation-iteration-count: infinite;
 }    
 #install_db_icon, #install_demo_demo_users_icon{
-	display: block;
+	display: inline-block;
 	font-size: 30px;
 }
 #install_db_button_row, #install_demo_button_row{
@@ -791,17 +844,21 @@
 #menu_8_content_widget1{
 	height: 130px;
 }
+#menu_8_db_info1.css_spinner{
+	inset-inline-start: calc(50% - 40px);
+}
 #menu_8_db_info1 div{
 	text-align: start;
 	display: inline-block;
 	font-size: 9px;
+	height: 1em;
 }
 #menu_8_db_info1>div:nth-child(odd){
 	width: 150px;
 	text-transform: uppercase;
 }
 #menu_8_db_info1>div:nth-child(even){
-	width: calc(100% - 150px);
+	width: calc(100% - (150px + 4px));
 }
 
 #menu_8_content_widget2{
@@ -850,6 +907,9 @@
 }
 #menu_10_content_widget1{
 	height:300px;
+}
+#menu_10_os_info, #menu_10_process_info{
+	inset-inline-start: calc(50% - 40px);
 }
 #menu_10_os_info div,
 #menu_10_process_info div{
