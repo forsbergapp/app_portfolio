@@ -2082,7 +2082,7 @@ const list_item_click = (item_type, data) => {
                 tokentype = 'APP_ACCESS';
             common.FFB('GEOLOCATION', path, 'GET', tokentype, null)
             .then(result=>{
-                const geodata = geodata.parse(result);
+                const geodata = JSON.parse(result);
                 common.map_update(  geodata.geoplugin_longitude,
                                     geodata.geoplugin_latitude,
                                     common.COMMON_GLOBAL.module_leaflet_zoom,
