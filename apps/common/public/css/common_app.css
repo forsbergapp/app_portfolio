@@ -4,6 +4,10 @@ body{
 	height: 100%;
 	padding: 0px;
 	width: auto;
+	direction:ltr;
+}
+body.rtl{
+	direction:rtl;
 }
 select {
 	font-family: inherit;

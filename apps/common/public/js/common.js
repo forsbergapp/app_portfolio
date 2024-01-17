@@ -3755,7 +3755,10 @@ const common_event = async (event_type,event) =>{
                     break;
                 }
                 case 'common_user_direction_select':{
-                    document.body.style.direction = event.target.value;
+                    if(event.target.value=='rtl')
+                        document.body.classList.add('rtl');
+                    else
+                        document.body.classList.remove('rtl');
                     COMMON_GLOBAL.user_direction = event.target.value;  
                     await user_preference_save();
                     break;
