@@ -416,16 +416,16 @@ const getLogs = async (data) => {
         /**@ts-ignore*/
         file_get_log(file, null, sample)
         .then(log_rows_array_obj=>{
+            data.search = data.search=='null'?'':data.search;
+            data.search = data.search==null?'':data.search;
+            if (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
+                data.select_app_id = null;
             //filter records
-            log_rows_array_obj = log_rows_array_obj.filter((/**@type{[object]}*/record) => {
+            log_rows_array_obj = log_rows_array_obj.filter((/**@type{*}*/record) => {
                     return (
-                            (
-                                (
-                                 (data.logscope=='APP' || data.logscope=='SERVICE' || data.logscope=='DB') && (data.app_id == data.select_app_id ||data.select_app_id ==null))||
-                                 (data.logscope!='APP' && data.logscope!='SERVICE' && data.logscope!='DB')
-                                ) &&
-                             ((data.search==null || data.search=='null' || data.search=='')|| 
-                              ((data.search!=null || data.search!='null' || data.search!='') && match(record, data.search)))
+                            (record.app_id == data.select_app_id ||data.select_app_id ==null)
+                                &&
+                            (data.search==''|| (data.search!='' && match(record, data.search)))
                         );
             });
             //sort 

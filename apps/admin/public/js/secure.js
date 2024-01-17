@@ -23,14 +23,6 @@ const APP_GLOBAL = {
     limit:'',
     previous_row:'',
     module_leaflet_map_container:'',
-    service_log_scope_request:'',
-    service_log_scope_server:'',
-    service_log_scope_app:'',
-    service_log_scope_service:'',
-    service_log_scope_db:'',
-    service_log_level_verbose:'',
-    service_log_level_error:'',
-    service_log_level_info:'',
     service_log_file_interval:''
 };
 Object.seal(APP_GLOBAL);
@@ -40,14 +32,6 @@ const delete_globals = () => {
     APP_GLOBAL.limit = null;
     APP_GLOBAL.previous_row = null;
     APP_GLOBAL.module_leaflet_map_container = null;
-    APP_GLOBAL.service_log_scope_request = null;
-    APP_GLOBAL.service_log_scope_server = null;
-    APP_GLOBAL.service_log_scope_app = null;
-    APP_GLOBAL.service_log_scope_service = null;
-    APP_GLOBAL.service_log_scope_db = null;
-    APP_GLOBAL.service_log_level_verbose = null;
-    APP_GLOBAL.service_log_level_error = null;
-    APP_GLOBAL.service_log_level_info = null;
     APP_GLOBAL.service_log_file_interval = null;
 };
 
@@ -985,6 +969,7 @@ const show_apps = async () => {
 };
 const show_app_parameter = (app_id) => {
     document.querySelector('#list_app_parameter').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#apps_save').style.display = 'none';
     document.querySelector('#list_app_parameter').innerHTML = '';
     common.FFB('DB_API', `/app_parameter/admin/all?data_app_id=${parseInt(app_id)}`, 'GET', 'APP_ACCESS', null)
     .then(result=>{
@@ -1021,6 +1006,7 @@ const show_app_parameter = (app_id) => {
             </div>`;
         }
         document.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner');
+        document.querySelector('#apps_save').style.display = 'inline-block';
         document.querySelector('#list_app_parameter').innerHTML = html;
     })
     .catch(()=>document.querySelector('#list_app_parameter').classList.remove('common_icon', 'css_spinner'));
@@ -1182,24 +1168,15 @@ const show_monitor = async (yearvalues) =>{
     document.querySelector('#menu_5_content').innerHTML = 
         `<div id='menu_5_content_widget1' class='widget'>
             <div id='list_monitor_nav' class='list_nav'>
-                <div id='list_monitor_nav_1' class='list_nav_list'><div id='list_connected_title' class='list_button' >${common.ICONS.app_user_connections + ' ' + common.ICONS.app_log}</div></div>
-                <div id='list_monitor_nav_2' class='list_nav_list'><div id='list_app_log_title' class='list_button' >${common.ICONS.app_apps + ' ' + common.ICONS.app_log}</div></div>
-                <div id='list_monitor_nav_3' class='list_nav_list'><div id='list_server_log_title' class='list_button' >${common.ICONS.app_server + ' ' + common.ICONS.app_log}</div></div>
+                <div id='list_monitor_nav_connected' class='list_nav_list list_button common_icon'></div>
+                <div id='list_monitor_nav_app_log' class='list_nav_list list_nav_list_hide list_button common_icon'></div>
+                <div id='list_monitor_nav_server_log' class='list_nav_list list_nav_list_hide list_button common_icon'></div>
             </div>
-            <div id='list_connected_form'>
-                <div class='list_row_sample'>
-                    <select id='select_app_menu5_list_connected'></select>
-                    <select id='select_year_menu5_list_connected'></select>
-                    <select id='select_month_menu5_list_connected'>${list_generate(12)}</select>
-                </div>
+            <div id='list_row_sample' class='common_icon css_spinner'></div>
+            <div id='list_connected_form'>    
                 <div id='list_connected' class='common_list_scrollbar'></div>
             </div>
             <div id='list_app_log_form'>
-                <div class='list_row_sample'>
-                    <select id='select_app_menu5_app_log'></select>
-                    <select id='select_year_menu5_app_log'></select>
-                    <select id='select_month_menu5_app_log'>${list_generate(12)}</select>
-                </div>
                 <div id='list_app_log' class='common_list_scrollbar'></div>
                 <div id='list_app_pagination'>
                     <div id='list_app_log_first' ></div>
@@ -1209,34 +1186,26 @@ const show_monitor = async (yearvalues) =>{
                 </div>
             </div>
             <div id='list_server_log_form'>
-                <div class='list_row_sample'>
-                    <select id='select_logscope5'></select>
-                    <select id='select_app_menu5'></select>
-                    <select id='select_year_menu5'></select>
-                    <select id='select_month_menu5'>${list_generate(12)}</select>
-                    <select id='select_day_menu5'>${list_generate(31)}</select>
-                    <div id='filesearch_menu5' class='common_dialogue_button' >${common.ICONS.app_search}</div>
-                </div>
                 <div id='menu5_row_parameters'>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col1'>${common.ICONS.app_server + ' REQUEST'}</div>
-                        <div id='menu5_row_parameters_col1_1'>${common.ICONS.app_checkbox_checked}</div>
-                        <div id='menu5_row_parameters_col1_0'>${common.ICONS.app_checkbox_empty}</div>
+                        <div id='menu5_row_parameters_col1' class='common_icon'></div>
+                        <div id='menu5_row_parameters_col1_1' class='common_icon'></div>
+                        <div id='menu5_row_parameters_col1_0' class='common_icon'></div>
                     </div>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col2'>${common.ICONS.app_server + ' SERVICE'}</div>
-                        <div id='menu5_row_parameters_col2_1'>${common.ICONS.app_checkbox_checked}</div>
-                        <div id='menu5_row_parameters_col2_0'>${common.ICONS.app_checkbox_empty}</div>
+                        <div id='menu5_row_parameters_col2' class='common_icon'></div>
+                        <div id='menu5_row_parameters_col2_1' class='common_icon'></div>
+                        <div id='menu5_row_parameters_col2_0' class='common_icon'></div>
                     </div>
                     <div class='menu5_row_parameters_col'>
-                        <div id='menu5_row_parameters_col3'>${common.ICONS.app_database}</div>
-                        <div id='menu5_row_parameters_col3_1'>${common.ICONS.app_checkbox_checked}</div>
-                        <div id='menu5_row_parameters_col3_0'>${common.ICONS.app_checkbox_empty}</div>
+                        <div id='menu5_row_parameters_col3' class='common_icon'></div>
+                        <div id='menu5_row_parameters_col3_1' class='common_icon'></div>
+                        <div id='menu5_row_parameters_col3_0' class='common_icon'></div>
                     </div>
                 </div>
                 <div class='list_search'>
                     <div id='list_server_log_search_input' contenteditable=true class='common_input list_search_input'/></div>
-                    <div id='list_server_log_search_icon' class='list_search_icon'>${common.ICONS.app_search}</div>
+                    <div id='list_server_log_search_icon' class='list_search_icon common_icon'></div>
                 </div>
                 <div id='list_server_log' class='common_list_scrollbar'></div>
             </div>
@@ -1244,93 +1213,102 @@ const show_monitor = async (yearvalues) =>{
         <div id='menu_5_content_widget2' class='widget'>
             <div id='mapid'></div>
         </div>`;
+    if (common.COMMON_GLOBAL.system_admin!='')
+        document.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_list_hide');
+    else
+        document.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_list_hide');
     
+    //both admin and system admin:
+    const monitor_apps =  await get_apps();
+    const monitor_years = yearvalues;
+    const monitor_month = list_generate(12);
+    const monitor_day = common.COMMON_GLOBAL.system_admin!=''?list_generate(31):'';
+    const monitor_log_data = common.COMMON_GLOBAL.system_admin !=''?await get_log_parameters():'';
+
+    //fetch geolocation once
+    if ((common.COMMON_GLOBAL.client_longitude && common.COMMON_GLOBAL.client_latitude)==false)
+        await common.get_gps_from_ip();
+    let path;
+    let token_type = '';
     if (common.COMMON_GLOBAL.system_admin!=''){
-        //hide APP LOG in MONITOR
-        document.querySelector('#list_monitor_nav_2').style.display='none';
+        path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+        token_type = 'SYSTEMADMIN';
     }
     else{
-        //hide SERVER LOG in MONITOR
-        document.querySelector('#list_monitor_nav_3').style.display='none';
-    }
-    //server log
-    document.querySelector('#select_app_menu5').innerHTML = await get_apps();
-    //app log
-    document.querySelector('#select_app_menu5_app_log').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
-    //connected
-    document.querySelector('#select_app_menu5_list_connected').innerHTML = document.querySelector('#select_app_menu5').innerHTML;
+        path  = '/config/admin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
+        token_type = 'APP_ACCESS';
+    }      
+    const result_limit = await common.FFB('SERVER', path, 'GET', token_type, null).catch(()=> null);
+    APP_GLOBAL.limit = parseInt(JSON.parse(result_limit).data);
 
-    const init_monitor = () =>{
-
-        let path;
-        let token_type = '';
-        const show_map = () =>{
-            //show map only for this condition
-            if (common.COMMON_GLOBAL.system_admin_only != 1)
-                common.map_init(APP_GLOBAL.module_leaflet_map_container,
-                                common.COMMON_GLOBAL.module_leaflet_style,
-                                common.COMMON_GLOBAL.client_longitude,
-                                common.COMMON_GLOBAL.client_latitude,
-                                true,
-                                null).then(() => {
-                    common.map_update(  common.COMMON_GLOBAL.client_longitude,
-                                        common.COMMON_GLOBAL.client_latitude,
-                                        common.COMMON_GLOBAL.module_leaflet_zoom,
-                                        common.COMMON_GLOBAL.client_place,
-                                        null,
-                                        common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                        common.COMMON_GLOBAL.module_leaflet_jumpto);
-                    common.map_resize();
-                });
-
-        };
+    document.querySelector('#list_row_sample').classList.remove('common_icon','css_spinner');
+    document.querySelector('#list_row_sample').innerHTML = 
+                        `<select id='select_logscope5'>${monitor_log_data.logscope_level_options}</select>
+                         <select id='select_app_menu5'>${monitor_apps}</select>
+                         <select id='select_year_menu5'>${monitor_years}</select>
+                         <select id='select_month_menu5'>${monitor_month}</select>
+                         <select id='select_day_menu5'>${monitor_day}</select>
+                         <div id='filesearch_menu5' class='common_dialogue_button common_icon'></div>`;
+    if (common.COMMON_GLOBAL.system_admin!=''){
+        //server log
+        document.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
         
-        if (common.COMMON_GLOBAL.system_admin!=''){
-            path  = '/config/systemadmin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-            token_type = 'SYSTEMADMIN';
-        }
-        else{
-            path  = '/config/admin?config_group=SERVICE_DB&parameter=LIMIT_LIST_SEARCH';
-            token_type = 'APP_ACCESS';
-        }      
-        common.FFB('SERVER', path, 'GET', token_type, null)
-        .then(result_limit=>{
-            APP_GLOBAL.limit = parseInt(JSON.parse(result_limit).data);
-            //connected
-            document.querySelector('#select_year_menu5_list_connected').innerHTML = yearvalues;
-            document.querySelector('#select_year_menu5_list_connected').selectedIndex = 0;
-            document.querySelector('#select_month_menu5_list_connected').selectedIndex = new Date().getMonth();            
-            if (common.COMMON_GLOBAL.system_admin!=''){
-                //server log
-                document.querySelector('#select_year_menu5').innerHTML = yearvalues;
-                document.querySelector('#select_year_menu5').selectedIndex = 0;
-                document.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
-                document.querySelector('#select_day_menu5').selectedIndex = new Date().getDate() -1;
-                get_server_log_parameters().then(() => {
-                    show_map();
-                    nav_click(document.querySelector('#list_connected_title').id);
-                });
-            }
-            else{
-                APP_GLOBAL.page = 0;
-                //log
-                document.querySelector('#select_year_menu5_app_log').innerHTML = yearvalues;
-                document.querySelector('#select_year_menu5_app_log').selectedIndex = 0;
-                document.querySelector('#select_month_menu5_app_log').selectedIndex = new Date().getMonth();
-                fix_pagination_buttons();
-                show_map();
-                nav_click(document.querySelector('#list_connected_title').id);
-            }    
-        })
-        .catch(()=>null);
-    };
-    //fetch geolocation once
-    if (common.COMMON_GLOBAL.client_longitude && common.COMMON_GLOBAL.client_latitude)
-        init_monitor();
-    else
-        common.get_gps_from_ip().then(() =>{
-            init_monitor();
+        document.querySelector('#menu5_row_parameters_col1_1').style.display = 'none';
+        document.querySelector('#menu5_row_parameters_col1_0').style.display = 'none';
+        document.querySelector('#menu5_row_parameters_col2_1').style.display = 'none';
+        document.querySelector('#menu5_row_parameters_col2_0').style.display = 'none';
+        document.querySelector('#menu5_row_parameters_col3_1').style.display = 'none';
+        document.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
+        if (monitor_log_data.parameters.SERVICE_LOG_REQUEST_LEVEL==1 ||monitor_log_data.parameters.SERVICE_LOG_REQUEST_LEVEL==2)
+                document.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
+            else
+                document.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
+            if (monitor_log_data.parameters.SERVICE_LOG_SERVICE_LEVEL==1 || monitor_log_data.parameters.SERVICE_LOG_SERVICE_LEVEL==2)
+                document.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
+            else
+                document.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
+            if (monitor_log_data.parameters.SERVICE_LOG_DB_LEVEL==1 || monitor_log_data.parameters.SERVICE_LOG_DB_LEVEL==2)
+                document.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
+            else
+                document.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
+        if (APP_GLOBAL.service_log_file_interval=='1M')
+            document.querySelector('#select_day_menu5').style.display = 'none';
+        else
+            document.querySelector('#select_day_menu5').style.display = 'inline-block';
+    }
+    else{
+        //app log
+        document.querySelector('#select_logscope5').style.display = 'none';
+        document.querySelector('#select_day_menu5').style.display = 'none';
+        document.querySelector('#filesearch_menu5').style.display = 'none';
+    }
+    document.querySelector('#select_year_menu5').selectedIndex = 0;
+    document.querySelector('#select_month_menu5').selectedIndex = new Date().getMonth();
+
+    
+    if (common.COMMON_GLOBAL.system_admin==''){
+        APP_GLOBAL.page = 0;
+        //log
+        fix_pagination_buttons();
+    }
+    //show map only for this condition
+    if (common.COMMON_GLOBAL.system_admin_only != 1)
+        common.map_init(APP_GLOBAL.module_leaflet_map_container,
+                        common.COMMON_GLOBAL.module_leaflet_style,
+                        common.COMMON_GLOBAL.client_longitude,
+                        common.COMMON_GLOBAL.client_latitude,
+                        true,
+                        null).then(() => {
+            common.map_update(  common.COMMON_GLOBAL.client_longitude,
+                                common.COMMON_GLOBAL.client_latitude,
+                                common.COMMON_GLOBAL.module_leaflet_zoom,
+                                common.COMMON_GLOBAL.client_place,
+                                null,
+                                common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                common.COMMON_GLOBAL.module_leaflet_jumpto);
+            common.map_resize();
         });
+    nav_click('list_monitor_nav_connected'); 
 };
 const fix_pagination_buttons = () => {
     //function triggered by change in user preference before innerHTML loaded html
@@ -1354,9 +1332,9 @@ const fix_pagination_buttons = () => {
 };
 const nav_click = (item_id) => {
     const reset_monitor = () => {
-        document.querySelector('#list_monitor_nav_1').classList.remove('list_nav_selected_tab');
-        document.querySelector('#list_monitor_nav_2').classList.remove('list_nav_selected_tab');
-        document.querySelector('#list_monitor_nav_3').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_monitor_nav_connected').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_monitor_nav_app_log').classList.remove('list_nav_selected_tab');
+        document.querySelector('#list_monitor_nav_server_log').classList.remove('list_nav_selected_tab');
     };
     const reset_config = () => {
         document.querySelector('#list_config_nav_config').classList.remove('list_nav_selected_tab');
@@ -1367,31 +1345,31 @@ const nav_click = (item_id) => {
     
     switch (item_id){
         //MONITOR
-        case 'list_connected_title':{
+        case 'list_monitor_nav_connected':{
             reset_monitor();
             document.querySelector('#list_connected_form').style.display='flex';
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='none';
-            document.querySelector('#list_monitor_nav_1').classList.add('list_nav_selected_tab');
+            document.querySelector('#list_monitor_nav_connected').classList.add('list_nav_selected_tab');
             show_connected();
             break;
         }
-        case 'list_app_log_title':{
+        case 'list_monitor_nav_app_log':{
             reset_monitor();
             document.querySelector('#list_connected_form').style.display='none';
             document.querySelector('#list_app_log_form').style.display='flex';
             document.querySelector('#list_server_log_form').style.display='none';
-            document.querySelector('#list_monitor_nav_2').classList.add('list_nav_selected_tab');
+            document.querySelector('#list_monitor_nav_app_log').classList.add('list_nav_selected_tab');
             APP_GLOBAL.page = 0;
             show_app_log();
             break;
         }
-        case 'list_server_log_title':{
+        case 'list_monitor_nav_server_log':{
             reset_monitor();
             document.querySelector('#list_connected_form').style.display='none';
             document.querySelector('#list_app_log_form').style.display='none';
             document.querySelector('#list_server_log_form').style.display='block';
-            document.querySelector('#list_monitor_nav_3').classList.add('list_nav_selected_tab');
+            document.querySelector('#list_monitor_nav_server_log').classList.add('list_nav_selected_tab');
             show_server_logs('logdate', 'desc', document.querySelector('#list_server_log_search_input').innerText);
             break;
         }
@@ -1429,7 +1407,6 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
         let token_type;
         let path;
         let service;
-        //set spinner
         switch (list_div){
             case 'list_connected':{
                 if (common.COMMON_GLOBAL.system_admin!=''){
@@ -1442,14 +1419,12 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                     service = 'SOCKET';
                     token_type = 'APP_ACCESS';
                 }
-                document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_app_log':{
                 path = `/app_log/admin?${url_parameters}`;
                 service = 'DB_API';
                 token_type = 'APP_ACCESS';
-                document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
             case 'list_server_log':{
@@ -1457,10 +1432,11 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                 path = `/log/logs?${url_parameters}`;
                 service = 'LOG';
                 token_type = 'SYSTEMADMIN';
-                document.querySelector('#' + list_div).innerHTML = common.APP_SPINNER;
                 break;
             }
         }
+        document.querySelector('#' + list_div).classList.add('css_spinner');
+        document.querySelector('#' + list_div).innerHTML = '';
         common.FFB(service, path, 'GET', token_type, null)
         .then(result=>{
             logs = JSON.parse(result);
@@ -1988,17 +1964,18 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                         }
                     }
                 }
+                document.querySelector('#' + list_div).classList.remove('css_spinner');
                 document.querySelector('#' + list_div).innerHTML = html;
                 document.querySelector(`#${list_div} .list_title[data-column='${sort}']`).classList.add(order_by);
             }  
         })
-        .catch(()=>document.querySelector('#' + list_div).innerHTML = '');   
+        .catch(()=>document.querySelector('#' + list_div).classList.remove('css_spinner'));   
     }
 };
 const show_connected = async (sort='connection_date', order_by='desc') => {
-    const app_id = document.querySelector('#select_app_menu5_list_connected').options[document.querySelector('#select_app_menu5_list_connected').selectedIndex].value;
-    const year = document.querySelector('#select_year_menu5_list_connected').value;
-    const month = document.querySelector('#select_month_menu5_list_connected').value;
+    const app_id = document.querySelector('#select_app_menu5').options[document.querySelector('#select_app_menu5').selectedIndex].value;
+    const year = document.querySelector('#select_year_menu5').value;
+    const month = document.querySelector('#select_month_menu5').value;
     show_list('list_connected', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&limit=${APP_GLOBAL.limit}`, 
               sort,
@@ -2006,9 +1983,9 @@ const show_connected = async (sort='connection_date', order_by='desc') => {
 };    
 
 const show_app_log = async (sort='id', order_by='desc', offset=0, limit=APP_GLOBAL.limit) => {
-    const app_id = document.querySelector('#select_app_menu5_app_log').options[document.querySelector('#select_app_menu5_app_log').selectedIndex].value;
-    const year = document.querySelector('#select_year_menu5_app_log').value;
-    const month = document.querySelector('#select_month_menu5_app_log').value;
+    const app_id = document.querySelector('#select_app_menu5').options[document.querySelector('#select_app_menu5').selectedIndex].value;
+    const year = document.querySelector('#select_year_menu5').value;
+    const month = document.querySelector('#select_month_menu5').value;
     show_list('list_app_log', 
               `select_app_id=${app_id}&year=${year}&month=${month}&sort=${sort}&order_by=${order_by}&offset=${offset}&limit=${limit}`, 
               sort,
@@ -2147,63 +2124,38 @@ const list_item_click = (item_type, data) => {
         }
     
 };
-const get_server_log_parameters = async () => {
-    let log_parameter;
-    await common.FFB('LOG', '/log/parameters?', 'GET', 'SYSTEMADMIN', null)
-    .then(result=>{
-        log_parameter = JSON.parse(result);
-        APP_GLOBAL.service_log_scope_request = log_parameter.SERVICE_LOG_SCOPE_REQUEST;
-        APP_GLOBAL.service_log_scope_server = log_parameter.SERVICE_LOG_SCOPE_SERVER;
-        APP_GLOBAL.service_log_scope_app = log_parameter.SERVICE_LOG_SCOPE_APP;
-        APP_GLOBAL.service_log_scope_service = log_parameter.SERVICE_LOG_SCOPE_SERVICE;
-        APP_GLOBAL.service_log_scope_db = log_parameter.SERVICE_LOG_SCOPE_DB;
-        
-        document.querySelector('#menu5_row_parameters_col1_1').style.display = 'none';
-        document.querySelector('#menu5_row_parameters_col1_0').style.display = 'none';
-        document.querySelector('#menu5_row_parameters_col2_1').style.display = 'none';
-        document.querySelector('#menu5_row_parameters_col2_0').style.display = 'none';
-        document.querySelector('#menu5_row_parameters_col3_1').style.display = 'none';
-        document.querySelector('#menu5_row_parameters_col3_0').style.display = 'none';
-
-        if (log_parameter.SERVICE_LOG_REQUEST_LEVEL==1 ||log_parameter.SERVICE_LOG_REQUEST_LEVEL==2)
-            document.querySelector('#menu5_row_parameters_col1_1').style.display = 'inline-block';
-        else
-            document.querySelector('#menu5_row_parameters_col1_0').style.display = 'inline-block';
-        if (log_parameter.SERVICE_LOG_SERVICE_LEVEL==1 || log_parameter.SERVICE_LOG_SERVICE_LEVEL==2)
-            document.querySelector('#menu5_row_parameters_col2_1').style.display = 'inline-block';
-        else
-            document.querySelector('#menu5_row_parameters_col2_0').style.display = 'inline-block';
-        if (log_parameter.SERVICE_LOG_DB_LEVEL==1 || log_parameter.SERVICE_LOG_DB_LEVEL==2)
-            document.querySelector('#menu5_row_parameters_col3_1').style.display = 'inline-block';
-        else
-            document.querySelector('#menu5_row_parameters_col3_0').style.display = 'inline-block';
-
-        APP_GLOBAL.service_log_level_verbose = log_parameter.SERVICE_LOG_LEVEL_VERBOSE;
-        APP_GLOBAL.service_log_level_error = log_parameter.SERVICE_LOG_LEVEL_ERROR;
-        APP_GLOBAL.service_log_level_info = log_parameter.SERVICE_LOG_LEVEL_INFO;
-
-        APP_GLOBAL.service_log_file_interval = log_parameter.SERVICE_LOG_FILE_INTERVAL;
-
-        let html = '';
-        html +=`<option value=0 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_info}</option>`;
-        html +=`<option value=1 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_error}</option>`;
-        html +=`<option value=2 log_scope='${APP_GLOBAL.service_log_scope_request}'  log_level='${APP_GLOBAL.service_log_level_verbose}'>${APP_GLOBAL.service_log_scope_request} - ${APP_GLOBAL.service_log_level_verbose}</option>`;
-        html +=`<option value=3 log_scope='${APP_GLOBAL.service_log_scope_server}'   log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_server} - ${APP_GLOBAL.service_log_level_info}</option>`;
-        html +=`<option value=4 log_scope='${APP_GLOBAL.service_log_scope_server}'   log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_server} - ${APP_GLOBAL.service_log_level_error}</option>`;
-        html +=`<option value=5 log_scope='${APP_GLOBAL.service_log_scope_app}'      log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_app} - ${APP_GLOBAL.service_log_level_info}</option>`;
-        html +=`<option value=6 log_scope='${APP_GLOBAL.service_log_scope_app}'      log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_app} - ${APP_GLOBAL.service_log_level_error}</option>`;
-        html +=`<option value=7 log_scope='${APP_GLOBAL.service_log_scope_service}'  log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_service} - ${APP_GLOBAL.service_log_level_info}</option>`;
-        html +=`<option value=8 log_scope='${APP_GLOBAL.service_log_scope_service}'  log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_service} - ${APP_GLOBAL.service_log_level_error}</option>`;
-        html +=`<option value=9 log_scope='${APP_GLOBAL.service_log_scope_db}'       log_level='${APP_GLOBAL.service_log_level_info}'>${APP_GLOBAL.service_log_scope_db} - ${APP_GLOBAL.service_log_level_info}</option>`;
-        html +=`<option value=10 log_scope='${APP_GLOBAL.service_log_scope_db}'      log_level='${APP_GLOBAL.service_log_level_error}'>${APP_GLOBAL.service_log_scope_db} - ${APP_GLOBAL.service_log_level_error}</option>`;
-
-        
-        document.querySelector('#select_logscope5').innerHTML = html;
-
-        if (APP_GLOBAL.service_log_file_interval=='1M')
-            document.querySelector('#select_day_menu5').style.display = 'none';
-        else
-            document.querySelector('#select_day_menu5').style.display = 'inline-block';
+const get_log_parameters = async () => {
+    return new Promise((resolve)=>{
+        common.FFB('LOG', '/log/parameters?', 'GET', 'SYSTEMADMIN', null)
+        .then(result=>{
+            const log_parameters = JSON.parse(result);
+            const logscope_level_options = 
+                    `   <option value=0 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        </option>
+                        <option value=1 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        </option>
+                        <option value=2 log_scope='${log_parameters.SERVICE_LOG_SCOPE_REQUEST}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_VERBOSE}'>${log_parameters.SERVICE_LOG_SCOPE_REQUEST} - ${log_parameters.SERVICE_LOG_LEVEL_VERBOSE}
+                        </option>
+                        <option value=3 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVER}'   log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_SERVER} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        </option>
+                        <option value=4 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVER}'   log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_SERVER} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        </option>
+                        <option value=5 log_scope='${log_parameters.SERVICE_LOG_SCOPE_APP}'      log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_APP} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        </option>
+                        <option value=6 log_scope='${log_parameters.SERVICE_LOG_SCOPE_APP}'      log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_APP} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        </option>
+                        <option value=7 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVICE}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_SERVICE} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        </option>
+                        <option value=8 log_scope='${log_parameters.SERVICE_LOG_SCOPE_SERVICE}'  log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_SERVICE} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        </option>
+                        <option value=9 log_scope='${log_parameters.SERVICE_LOG_SCOPE_DB}'       log_level='${log_parameters.SERVICE_LOG_LEVEL_INFO}'>${log_parameters.SERVICE_LOG_SCOPE_DB} - ${log_parameters.SERVICE_LOG_LEVEL_INFO}
+                        </option>
+                        <option value=10 log_scope='${log_parameters.SERVICE_LOG_SCOPE_DB}'      log_level='${log_parameters.SERVICE_LOG_LEVEL_ERROR}'>${log_parameters.SERVICE_LOG_SCOPE_DB} - ${log_parameters.SERVICE_LOG_LEVEL_ERROR}
+                        </option>`;
+            APP_GLOBAL.service_log_file_interval = log_parameters.SERVICE_LOG_FILE_INTERVAL;
+            resolve({   parameters:log_parameters,
+                        logscope_level_options:logscope_level_options});
+        });
     })
     .catch(()=>null);
 };
@@ -2273,7 +2225,7 @@ const show_existing_logfiles = () => {
                                 if (APP_GLOBAL.service_log_file_interval=='1D')
                                     document.querySelector('#select_day_menu5').value = day;
 
-                                nav_click(document.querySelector('#list_server_log_title').id);
+                                nav_click('list_monitor_nav_server_log');
                                 common.lov_close();
                             };
         common.lov_show('SERVER_LOG_FILES', function_event);
@@ -2673,9 +2625,9 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     document.querySelector('#list_server_log_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                     break;
                 }
-                case 'list_connected_title':
-                case 'list_app_log_title':
-                case 'list_server_log_title':{
+                case 'list_monitor_nav_connected':
+                case 'list_monitor_nav_app_log':
+                case 'list_monitor_nav_server_log':{
                     nav_click(event_target_id);    
                     break;
                 }
@@ -2770,7 +2722,16 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         }
                     }
                     break;
-                }        
+                }
+                case 'send_broadcast_send':{
+                    sendBroadcast();
+                    break;
+                }
+                case 'send_broadcast_close':{
+                    closeBroadcast();
+                    break;
+                }
+                //common
                 case 'common_lov_list':{
                     document.querySelector('#common_lov_list')['data-function'](event);
                     break;
@@ -2787,24 +2748,24 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
 
-                case 'select_app_menu5_app_log':
-                case 'select_year_menu5_app_log':
-                case 'select_month_menu5_app_log':{
-                    nav_click(document.querySelector('#list_app_log_title').id);
-                    break;
-                }
-                case 'select_app_menu5_list_connected':
-                case 'select_year_menu5_list_connected':
-                case 'select_month_menu5_list_connected':{
-                    nav_click(document.querySelector('#list_connected_title').id);
+                case 'select_app_menu5':
+                case 'select_year_menu5':
+                case 'select_month_menu5':{
+                    nav_click(document.querySelector('#list_monitor_nav .list_nav_selected_tab').id);
                     break;
                 }
                 case 'select_logscope5':
-                case 'select_app_menu5':
-                case 'select_year_menu5':
-                case 'select_month_menu5':
                 case 'select_day_menu5':{
-                    nav_click(document.querySelector('#list_server_log_title').id);
+                    nav_click('list_monitor_nav_server_log');
+                    break;
+                }
+                case 'select_broadcast_type':{
+                    set_broadcast_type();
+                    break;
+                }
+                //common
+                case 'common_user_direction_select':{
+                    fix_pagination_buttons(event.target.value);
                     break;
                 }
             }            
@@ -2951,17 +2912,7 @@ const init = () => {
     APP_GLOBAL.page = 0;
     APP_GLOBAL.page_last =0;
     APP_GLOBAL.previous_row= '';
-
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
-
-    APP_GLOBAL.service_log_scope_request= '';
-    APP_GLOBAL.service_log_scope_server= '';
-    APP_GLOBAL.service_log_scope_app= '';
-    APP_GLOBAL.service_log_scope_service= '';
-    APP_GLOBAL.service_log_scope_db= '';
-    APP_GLOBAL.service_log_level_verbose= '';
-    APP_GLOBAL.service_log_level_error= '';
-    APP_GLOBAL.service_log_level_info= '';                
     APP_GLOBAL.service_log_file_interval= '';
 
     if (common.COMMON_GLOBAL.system_admin!=''){
@@ -3017,4 +2968,4 @@ const init = () => {
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     }
 };
-export {delete_globals,fix_pagination_buttons, set_broadcast_type, sendBroadcast, closeBroadcast, show_menu, app_events, init};
+export {delete_globals, show_menu, app_events, init};
