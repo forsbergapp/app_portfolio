@@ -152,14 +152,6 @@ const setEvents = () => {
                     admin_login_nav(event.target);
                     break;
                 }
-                case 'send_broadcast_send':{
-                    app_secure.sendBroadcast();
-                    break;
-                }
-                case 'send_broadcast_close':{
-                    app_secure.closeBroadcast();
-                    break;
-                }
                 case 'menu_open':{
                     document.querySelector('#menu').style.display = 'block';
                     break;
@@ -255,15 +247,6 @@ const setEvents = () => {
         common.common_event('change',event)
         .then(()=>{
             switch (target_id){
-                case 'select_broadcast_type':{
-                    app_secure.set_broadcast_type();
-                    break;
-                }
-                //common
-                case 'common_user_direction_select':{
-                    app_secure.fix_pagination_buttons(event.target.value);
-                    break;
-                }
                 case 'common_user_locale_select':{
                     common.common_translate_ui(event.target.value, ()=>{});
                     break;
