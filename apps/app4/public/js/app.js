@@ -72,6 +72,15 @@ const app_event_keydown = event =>{
     else
         common.common_event('keydown', event);
 };
+const app_event_keyup = event =>{
+    if (event==null){
+        document.querySelector('#app').addEventListener('keyup',(event) => {
+            common.common_event('keyup', event);    
+        });
+    }
+    else
+        common.common_event('keyup', event);
+};
 const init_map = async (framework)=>{
     //remove listeners
     document.querySelector('#app_root').replaceWith(document.querySelector('#app_root').cloneNode(true));
@@ -89,7 +98,7 @@ const init_map = async (framework)=>{
                 data() {
                         return {};
                         },
-                        template: `<div id='app' @click='AppEventClick($event)' @change='AppEventChange($event)' @change='AppEventKeyDown($event)'>
+                        template: `<div id='app' @click='AppEventClick($event)' @change='AppEventChange($event)' @keydown='AppEventKeyDown($event)' @keyup='AppEventKeyUp($event)'>
                                         ${document.querySelector('#app').innerHTML}
                                     </div>`, 
                         methods:{
@@ -101,6 +110,9 @@ const init_map = async (framework)=>{
                             },
                             AppEventKeyDown: (event) => {
                                 app_event_keydown(event);
+                            },
+                            AppEventKeyUp: (event) => {
+                                app_event_keyup(event);
                             }
                         }
                     }).mount('#app_root');
@@ -135,6 +147,7 @@ const init_map = async (framework)=>{
             document.querySelector('#app').innerHTML = app_old;
             app_event_change();
             app_event_keydown();
+            app_event_keyup();
             break;
         }
         case '1':
@@ -146,6 +159,7 @@ const init_map = async (framework)=>{
             app_event_click();
             app_event_change();
             app_event_keydown();
+            app_event_keyup();
             break;
         }
     }

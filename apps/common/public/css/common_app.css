@@ -1285,7 +1285,6 @@ select {
 	margin-inline-start: 10px;
 	overflow-y: auto;
     overflow-x: hidden;
-	margin-bottom:10px;
 	max-height: calc(5 * 3em);
 	display:inline-block;
 }
