@@ -1,3 +1,5 @@
+#common_construction::before{								content:var(--app_maintenance)}	
+
 .common_lov_button::before{									content: var(--app_lov)}
 .common_unlike::before{										content:var(--user_unlike)}	
 .common_like::before{										content:var(--user_like)}	
@@ -102,6 +104,10 @@
 #common_broadcast_close::before{							content:var(--app_broadcast_close)}
 #common_broadcast_info_title::before{						content:var(--app_alert)}
 
+#common_toolbar_framework_js::before{						content:var(--app_javascript)}
+#common_toolbar_framework_vue::before{						content:var(--app_vue)}
+#common_toolbar_framework_react::before{					content:var(--app_react)}
+
 body{
 	font-size: 16px;
 	margin: 0;
@@ -117,6 +123,10 @@ select {
 	font-family: inherit;
 	font-size:inherit;
 }
+#common_construction{
+	font-size: 30px;
+}
+
 .common_select{
 	display: inline-block;
 	vertical-align: middle;
@@ -315,6 +325,27 @@ select {
     grid-auto-rows: max-content;
 	inset-inline-start: calc(50% - 40px);
 }
+/*framework*/
+#common_toolbar_framework.show{
+	display: flex;
+}
+#common_toolbar_framework{	
+	display: none;
+	z-index: 2;
+	flex-direction: row;
+	justify-content: center;
+	position:relative;
+	border-radius: 0px 0px 4px 4px;
+	font-size: 1.5em;
+	margin-inline-start: calc(50% - calc(1.5em * 3/2));
+	width: calc(1.5em * 3);
+}
+#common_toolbar_framework .common_icon{
+	cursor:pointer;
+	width: 1.25em;
+	text-align: center;
+}
+
 /*dialogue*/
 .common_dialogue{
 	visibility:hidden;

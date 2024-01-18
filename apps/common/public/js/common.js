@@ -3554,13 +3554,6 @@ const common_event = async (event_type,event) =>{
                         }
                         break;
                     }
-                    default:{
-                        if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
-                            COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
-                        if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
-                            COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
-                        break;
-                    }
                     case 'common_profile_main_btn_following':
                     case 'common_profile_main_btn_followed':
                     case 'common_profile_main_btn_likes':
@@ -3570,6 +3563,20 @@ const common_event = async (event_type,event) =>{
                     case 'common_profile_main_btn_cloud':{    
                         document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
                         document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                        break;
+                    }
+                    case 'common_toolbar_framework_js':
+                    case 'common_toolbar_framework_vue':
+                    case 'common_toolbar_framework_react':{
+                        document.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach(btn=>btn.classList.remove('common_toolbar_selected'));
+                        document.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                        break;
+                    }    
+                    default:{
+                        if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
+                            COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
+                        if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
+                            COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
                         break;
                     }
                 }

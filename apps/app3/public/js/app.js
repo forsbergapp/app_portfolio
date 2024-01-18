@@ -19,7 +19,7 @@ const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
 const getdocs = (docid = null) => {
-    document.querySelector('#doc_list').innerHTML = common.APP_SPINNER;
+    document.querySelector('#doc_list').classList.add('css_spinner');
     let html ='';
     for (const doc of APP_GLOBAL.docs) {
         if (docid== doc.id || docid==null)
@@ -28,6 +28,7 @@ const getdocs = (docid = null) => {
                         <div class='doc_list_item_title'>${doc.doc_title}</div>
                     </div>`;
     }
+    document.querySelector('#doc_list').classList.remove('css_spinner');
     document.querySelector('#doc_list').innerHTML = html;
 };
 const init_app = async () => {

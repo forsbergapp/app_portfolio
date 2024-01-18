@@ -2,27 +2,14 @@
 #mapid{
 	z-index: 0;
 }
-#mapid, #loading {
+#loading{
+	inset-inline-start: calc(50% - 40px);
+}
+#mapid {
 	position: absolute;
   	top: 0;
   	bottom: 0;
   	width: 100%;
-}
-#toolbar_top{
-	z-index: 2;
-	display: flex;
-	flex-direction: row;
-	justify-content: center;
-	position:relative;
-	border-radius: 0px 0px 4px 4px;
-	font-size: 1.5em;
-	margin-inline-start: calc(50% - calc(1.5em * 3/2));
-	width: calc(1.5em * 3);
-}
-#toolbar_top .common_icon{
-	cursor:pointer;
-	width: 1.25em;
-	text-align: center;
 }
 /*COMMON*/
 #common_profile_input_row,
@@ -94,7 +81,9 @@ body{
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);
 }
-#toolbar_top{
+
+/*APP THEME COMMON*/
+#common_toolbar_framework{
 	color: var(--app_theme_main_branding_color1);
 	background-color: var(--app_theme_main_branding_color3);
 	box-shadow: 0px -3px 3px var(--app_theme_dialogue_shadow_color1);
@@ -104,11 +93,9 @@ body{
 	color: var(--app_theme_user_menu_hover_color) !important;
 	background-color:var(--app_theme_user_menu_hover_background_color);	
 }
-.toolbar_selected>div{
+.common_toolbar_selected{
 	background-color: var(--app_theme_main_branding_color2);
 }
-
-/*APP THEME COMMON*/
 .common_input{
 	background-color:var(--app_theme_background_color) !important;
 }
