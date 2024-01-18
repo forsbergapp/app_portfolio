@@ -1,4 +1,120 @@
 /*APP */
+
+#info_close::before{										content:var(--app_close)}
+#scan_open_mobile_close::before{							content:var(--app_close)}
+#scan_open_mobile_title1::before{							content:var(--app_mobile)}
+#profile_main_btn_user_settings::before{					content:var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
+#profile_main_btn_user_setting_likes_user_setting::before{	content:var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year) ' ' var(--user_follows)}
+#profile_main_btn_user_setting_liked_user_setting::before{	content:var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year) ' ' var(--user_followed)}
+    
+#profile_user_settings_day::before{							content:var(--regional_day)}
+#profile_user_settings_month::before{						content:var(--regional_month)}
+#profile_user_settings_year::before{						content:var(--regional_year)}
+
+#profile_top_row2_1::before{								content:var(--user_like) ' ' var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
+#profile_top_row2_2::before{								content:var(--user_views) ' ' var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
+
+#tab_nav_1::before{											content:var(--regional)}
+#tab_nav_2::before{											content:var(--gps)}
+#tab_nav_3::before{											content:var(--misc_design)}
+#tab_nav_4::before{											content:var(--misc_image)}
+#tab_nav_5::before{											content:var(--misc_text)}
+#tab_nav_6::before{											content:var(--misc_prayer)}
+
+#setting_icon_regional_locale::before{						content:var(--regional_locale)}
+#setting_icon_regional_timezone_current::before{			content:var(--regional_timezone) ' ' var(--gps_position)}
+#setting_icon_regional_timezone::before{					content:var(--regional_timezone) ' ' var(--regional_calendar)}
+#setting_icon_regional_numbersystem::before{				content:var(--regional_numbersystem)}
+#setting_icon_regional_direction::before{					content:var(--regional_direction)}
+#setting_icon_regional_locale_second::before{				content:var(--regional_locale) ' ' var(--misc_second)}
+#setting_icon_regional_coltitle::before{					content:var(--misc_title)}
+#setting_icon_regional_arabic_script::before{				content:var(--regional_script)}
+#setting_icon_regional_calendartype::before{				content:var(--regional_calendar)}
+#setting_icon_regional_calendar_hijri_type::before{			content:var(--regional_calendar_hijri_type)}
+
+#setting_icon_gps_popular_place::before{					content:var(--gps_popular_place)}
+#setting_icon_gps_place::before{							content:var(--gps_position)}
+
+#setting_icon_design_theme_day::before{						content:var(--regional_day)}
+#setting_icon_design_theme_month::before{					content:var(--regional_month)}
+#setting_icon_design_theme_year::before{					content:var(--regional_year)}
+#setting_icon_design_papersize::before{						content:var(--app_papersize)}
+#setting_icon_design_highlight_row::before{					content:var(--app_highlight)}
+#setting_icon_design_show_weekday::before{					content:var(--app_show) ' ' var(--regional_weekday)}
+#setting_icon_design_show_calendartype::before{				content:var(--app_show) ' ' var(--regional_calendartype)}
+#setting_icon_design_show_notes::before{					content:var(--app_show) ' ' var(--app_notes)} 
+#setting_icon_design_show_gps::before{						content:var(--app_show) ' ' var(--gps_position)}
+#setting_icon_design_show_timezone::before{					content:var(--app_show) ' ' var(--regional_timezone)}
+
+#slider_prev_day::before{									content:var(--app_slider_left)}
+#slider_next_day::before{									content:var(--app_slider_right)}
+#slider_prev_month::before{									content:var(--app_slider_left)}
+#slider_next_month::before{									content:var(--app_slider_right)}
+#slider_prev_year::before{									content:var(--app_slider_left)}
+#slider_next_year::before{									content:var(--app_slider_right)}
+
+
+#setting_icon_image_header_clear::before{					content:var(--app_remove)}
+#setting_icon_image_footer_clear::before{					content:var(--app_remove)}
+#setting_icon_image_header_img::before{						content:var(--app_search)}
+#setting_icon_image_footer_img::before{						content:var(--app_search)}    
+
+#setting_icon_text_theme_day::before{						content:var(--regional_day)}
+#setting_icon_text_theme_month::before{						content:var(--regional_month)}
+#setting_icon_text_theme_year::before{						content:var(--regional_year)}
+#setting_icon_text_header_aleft::before{					content:var(--app_align_left)}
+#setting_icon_text_header_acenter::before{					content:var(--app_align_center)}
+#setting_icon_text_header_aright::before{					content:var(--app_align_right)}
+#setting_icon_text_footer_aleft::before{					content:var(--app_align_left)}
+#setting_icon_text_footer_acenter::before{					content:var(--app_align_center)}
+#setting_icon_text_footer_aright::before{					content:var(--app_align_right)}
+
+#setting_icon_prayer_method::before{						content:var(--misc_book)}
+#setting_icon_prayer_asr::before{							content:var(--misc_book) ' ' var(--sky_afternoon)}
+#setting_icon_prayer_highlatitude::before{					content:var(--gps_high_latitude)}
+#setting_icon_prayer_timeformat::before{					content:var(--regional_timeformat)}
+#setting_icon_prayer_hijri_adjustment::before{				content:var(--app_settings) ' ' var(--regional_calendar)}
+#setting_icon_prayer_report_iqamat_title_fajr::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_sunrise)}                                           
+#setting_icon_prayer_report_iqamat_title_dhuhr::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_midday)}
+#setting_icon_prayer_report_iqamat_title_asr::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_afternoon)}
+#setting_icon_prayer_report_iqamat_title_maghrib::before{	content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_sunset)}
+#setting_icon_prayer_report_iqamat_title_isha::before{		content:var(--app_show) ' ' var(--misc_calling) ' ' var(--misc_prayer) ' ' var(--sky_night)}
+#setting_icon_prayer_report_show_imsak::before{				content:var(--app_show) ' ' var(--sky_sunrise) ' ' var(--misc_food)}
+#setting_icon_prayer_report_show_sunset::before{			content:var(--app_show) ' ' var(--sky_sunet)}
+#setting_icon_prayer_report_show_midnight::before{			content:var(--app_show) ' ' var(--sky_midnight) ' ' var(--misc_prayer)}
+#setting_icon_prayer_report_show_fast_start_end::before{	content:var(--app_show) ' ' var(--misc_food) ' ' var(--misc_ban)}
+
+#setting_icon_user_settings::before{						content:var(--app_settings) ' ' var(--gps_position)}
+#setting_icon_user_url_day::before{							content:var(--regional_day)}
+#setting_icon_user_url_month::before{						content:var(--regional_month)}
+#setting_icon_user_url_year::before{						content:var(--regional_year)}
+    
+#user_day_html::before{										content:var(--app_html)}
+#user_day_pdf::before{										content:var(--app_pdf)}
+#user_month_html::before{									content:var(--app_html)}
+#user_month_pdf::before{									content:var(--app_pdf)}
+#user_year_html::before{									content:var(--app_html)}
+#user_year_pdf::before{										content:var(--app_pdf)}
+    
+#setting_btn_user_save::before{								content:var(--app_save)}
+#setting_btn_user_add::before{								content:var(--app_add)}
+#setting_btn_user_delete::before{							content:var(--app_delete)}
+
+
+#toolbar_btn_about::before{									content:var(--app_info)}
+#toolbar_btn_print::before{									content:var(--app_print)}
+#toolbar_btn_day::before{									content:var(--regional_day)}
+#toolbar_btn_month::before{									content:var(--regional_month)}
+#toolbar_btn_year::before{									content:var(--regional_year)}
+#toolbar_btn_settings::before{								content:var(--app_settings)}
+
+#toolbar_btn_zoomout::before{								content:var(--app_zoomout)}
+#toolbar_btn_zoomin::before{								content:var(--app_zoomin)}
+#toolbar_btn_left::before{									content:var(--app_left)}
+#toolbar_btn_right::before{									content:var(--app_right)}
+#toolbar_btn_search::before{								content:var(--app_search)}
+
+
 #paper #common_app_spinner{
 	margin-top: 50%;
     transform: scale(1);
@@ -38,7 +154,6 @@
 }
 #profile_select_user_settings{
 	width:100%;
-	margin-bottom:20px;
 }
 #profile_user_settings_detail{
 	width: 100% !important;
@@ -55,6 +170,7 @@
 #profile_user_settings_row div{
 	display:inline-block;
 	width:40px;
+	vertical-align: bottom;
 }
 #profile_user_settings_row div:nth-child(5),
 #profile_user_settings_row div:nth-child(6){
@@ -75,7 +191,7 @@
 	margin-right:10px;
 	display: inline-block;
 }
-/*DIALOUGE SETTINGS*/	
+/*DIALOUGE SETTINGS*/
 .dialogue{
 	visibility:hidden;
 	position: fixed;
@@ -105,6 +221,17 @@
 #dialogue_loading{
 	text-align:center;
 	background-color: inherit;
+	visibility: hidden;
+	position: absolute;
+	width: 100%;
+	height: 100%;
+}
+#dialogue_loading_content{
+	text-align:center;
+	vertical-align: middle;
+	background-color: inherit;
+	display: inline-block;
+	top: calc(50% - 100px);
 }
 
 /*Dialogue Info */
@@ -135,6 +262,7 @@
 	margin-top:10px;
 	margin-bottom:20px;
 	font-size: 48px;
+	display: block;
 }
 #dialogue_loading #common_app_spinner{
 	top: 50%;
@@ -283,13 +411,16 @@
 #settings #tab3 .setting_horizontal_row:first-child .setting_horizontal_col{
 	text-align: center !important;
 }
+#setting_icon_design_theme_day, #setting_icon_design_theme_month, #setting_icon_design_theme_year{
+	display: block;
+	padding-top: unset;
+}
 
 /* THEME SLIDER*/
 .slider {
 	display: inline-block;
 		overflow: hidden;
 		position: relative;
-	margin-bottom: 10px;
 }
 .slider_wrapper {
 		width: 96px;
@@ -327,7 +458,6 @@
 	font-size:30px;
 	width: 40px !important;
 	height: 40px !important;
-	margin-top: -15px;
 }
 /*theme live thumbnail fixes*/
 .slides .paper{
@@ -467,6 +597,7 @@
 }
 #settings #tab5 #setting_icon_text_theme_col > div{
     height: 2em;
+	width: 2em;
 }
 #settings #tab5 #setting_icon_text_theme_col .common_icon{
 	cursor: pointer;
@@ -570,10 +701,17 @@
 
 #profile_main_stat_row2{
 	text-align: center;
+	white-space: nowrap;
 }
 #profile_main_stat_row2 div{
 	display:inline-block;
 }
+#profile_info_user_setting_likes_count,
+#profile_info_user_setting_liked_count{
+	padding-inline-start: 0.5em;
+    vertical-align: sub;
+}
+
 #profile_main_btn_user_settings,
 #profile_main_btn_user_setting_likes,
 #profile_main_btn_user_setting_liked{
@@ -641,7 +779,7 @@
 /*CSS for minimum 768px*/
 @media only screen and (min-width: 768px) {
 	body {
-		margin: 10;
+		margin: 10px;
 		text-align: center;
 		width: auto;
 	}
@@ -814,6 +952,9 @@ body{
 	--app_spinner_color:var(--app_theme_main_color3);
 	--app_spinner_background:var(--app_theme_main_color1);
 	caret-color: var(--app_theme_main_color3);
+}
+#dialogue_loading{
+	background-color: var(--app_spinner_background);
 }
 body,
 .dialogue_content,

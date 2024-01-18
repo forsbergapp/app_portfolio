@@ -30,7 +30,7 @@ const clear_login = () => {
 };
 const admin_logoff_app = () => {
     common.COMMON_GLOBAL.rest_admin_at = '';
-    document.querySelector('#common_user_menu_default_avatar').innerHTML = '';
+    
     const clear_common = () => {
         app_secure.delete_globals();
         document.querySelectorAll('.main_content').forEach(content => {
@@ -42,6 +42,7 @@ const admin_logoff_app = () => {
         document.querySelector('#admin_secure').style.visibility = 'hidden';
     };
     if (common.COMMON_GLOBAL.system_admin != '') {
+        document.querySelector('#common_user_menu_default_avatar').classList.remove('system_admin');
         clear_common();
         common.COMMON_GLOBAL.system_admin = '';
     }
@@ -93,7 +94,7 @@ const admin_login = async () => {
             common.COMMON_GLOBAL.rest_admin_at = JSON.parse(result_login).token_at;
             common.updateOnlineStatus();
             common.dialogue_close('dialogue_admin_login').then(() => {
-                document.querySelector('#common_user_menu_default_avatar').innerHTML = common.ICONS.app_system_admin;
+                document.querySelector('#common_user_menu_default_avatar').classList.add('system_admin');
                 document.querySelector('#common_user_menu_username').innerHTML = common.ICONS.app_system_admin;
                 document.querySelector('#menu').style.visibility = 'visible';
                 document.querySelector('#menu_open').style.visibility = 'visible';
@@ -106,7 +107,9 @@ const admin_login = async () => {
                 app_secure.init();
             });
         })
-        .catch(()=>document.querySelector('#admin_login_button').classList.remove('css_spinner'));
+        .catch(()=>{
+            document.querySelector('#common_user_menu_default_avatar').classList.remove('system_admin');
+            document.querySelector('#admin_login_button').classList.remove('css_spinner');});
     }
     else {
         await common.user_login(encodeURI(document.querySelector('#admin_login_username_input').innerHTML),
