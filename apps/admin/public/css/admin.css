@@ -1552,7 +1552,7 @@ body{
 	color: var(--app_theme_nav_selected_color);
 	fill: var(--app_theme_nav_selected_color);
 }
-.list_nav .list_nav_selected_tab .list_button{
+.list_nav .list_nav_selected_tab{
 	background-color:var(--app_theme_nav_selected_background_color);
 }
 .widget:hover, .widget:active{

@@ -187,7 +187,7 @@ const setEvents = () => {
         .then(()=>{
             switch (event.target.id){
                 case 'common_user_locale_select':{
-                    document.querySelector('#apps').innerHTML = common.APP_SPINNER;common.common_translate_ui(event.target.value).then(()=>get_apps());
+                    common.common_translate_ui(event.target.value).then(()=>get_apps());
                     break;
                 }
                 case 'common_user_arabic_script_select':{
@@ -270,8 +270,11 @@ const app_theme_update = toggle_theme => {
 };
 
 const get_apps = () => {
-    const old_button = document.querySelector('#apps').innerHTML;
-    const old_button_menu_list = document.querySelector('#app_menu_content_apps_list').innerHTML;
+    
+    document.querySelector('#apps').innerHTML = '';
+    document.querySelector('#app_menu_content_apps_list').innerHTML = '';
+    document.querySelector('#apps').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
     common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'APP_DATA', null)
     .then(result=>{
         let html_apps ='';
@@ -314,12 +317,14 @@ const get_apps = () => {
                             <div class='app_link_col'></div>
                             <div class='app_link_col'></div>
                         </div>`;
+        document.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
+        document.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
         document.querySelector('#apps').innerHTML = html_apps;
         document.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
     })
     .catch(()=>{
-        document.querySelector('#apps').innerHTML = old_button;
-        document.querySelector('#app_menu_content_apps_list').innerHTML = old_button_menu_list;
+        document.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
+        document.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
     });
 };
 
@@ -342,9 +347,8 @@ const user_menu_item_click = (item) => {
 const user_login_app = async () => {
     const username = document.querySelector('#common_login_username');
     const password = document.querySelector('#common_login_password');
-    const old_button = document.querySelector('#common_login_button').innerHTML;
-    document.querySelector('#common_login_button').innerHTML = common.APP_SPINNER;
-            
+    document.querySelector('#common_login_button').classList.add('css_spinner');
+    
     await common.user_login(username.innerHTML, password.innerHTML)
     .then((result)=>{        
         //set avatar or empty
@@ -360,9 +364,9 @@ const user_login_app = async () => {
 
         common.dialogue_login_clear();
         common.dialogue_signup_clear();
+        document.querySelector('#common_login_button').classList.remove('css_spinner');
     })
-    .catch(()=>null)
-    .finally(document.querySelector('#common_login_button').innerHTML = old_button);
+    .catch(()=>document.querySelector('#common_login_button').classList.remove('css_spinner'));
 };
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
@@ -432,20 +436,14 @@ const init_app = async (parameters) => {
         if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
             common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
     }
-    //start
-    document.querySelector('#start_message').innerHTML = common.ICONS.app_info;
+    
     //info
     document.querySelector('#info_diagram_img').src=APP_GLOBAL.img_diagram_img_small;
     document.querySelector('#info_datamodel_img').src=APP_GLOBAL.img_datamodel_img_small;
-    document.querySelector('#title1').innerHTML = common.ICONS.sky_cloud + common.ICONS.misc_model;
-    document.querySelector('#title2').innerHTML = common.ICONS.app_database + common.ICONS.misc_model;
-    document.querySelector('#info_message').innerHTML = common.ICONS.app_home;
-    document.querySelector('#contact_text').innerHTML = common.ICONS.app_email;
+    
     document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
     document.querySelector('#app_email').innerHTML=common.COMMON_GLOBAL.app_email;
-
-    document.querySelector('#app_menu_apps').innerHTML=common.ICONS.app_apps;
-    document.querySelector('#app_menu_info').innerHTML=common.ICONS.app_info;
+    
     
     if (common.COMMON_GLOBAL.app_link_url==null)
         document.querySelector('#app_link').style.display = 'none';
@@ -456,14 +454,11 @@ const init_app = async (parameters) => {
     document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
     document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
-    //profile info
-    document.querySelector('#common_profile_main_btn_cloud').innerHTML = common.ICONS.sky_cloud;
     
     setEvents();
     common.zoom_info('');
     common.move_info(null,null);
 
-    document.querySelector('#apps').innerHTML = common.APP_SPINNER;
     if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
     else
@@ -487,6 +482,8 @@ const init_app = async (parameters) => {
 };
 
 const init = (parameters) => {
+    document.querySelector('#apps').classList.add('common_icon', 'css_spinner');
+    document.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app(parameters);

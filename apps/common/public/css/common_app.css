@@ -1,3 +1,13 @@
+.common_lov_button::before{							content: var(--app_lov)}
+.common_unlike::before{								content:var(--user_unlike)}	
+.common_like::before{								content:var(--user_like)}	
+.common_user_follow::before{						content:var(--user_follow_user)}
+.common_user_followed::before{						content:var(--user_followed_user)}
+#common_user_edit_btn_user_delete_account::before{	content:var(--app_delete)}	
+#common_user_edit_btn_user_update.spinner::before{	content: ''}
+#common_user_edit_btn_user_update::before{			content:var(--app_update)}	
+#common_profile_main_btn_cloud::before{				content:var(--sky_cloud)}
+
 body{
 	font-size: 16px;
 	margin: 0;
@@ -117,9 +127,6 @@ select {
 }
 .common_input_lov{
 	width: calc(100% - 15px) !important;
-}
-.common_lov_button::before{
-	content: var(--app_lov)
 }
 .common_lov_button{
 	display: inline-block;
@@ -657,18 +664,6 @@ select {
 	text-align:end;
 }
 /*Dialogue profile*/
-.common_unlike::before{
-	content:var(--user_unlike);
-}	
-.common_like::before{
-	content:var(--user_like);
-}	
-.common_user_follow::before{
-	content:var(--user_follow_user);
-}
-.common_user_followed::before{
-	content:var(--user_followed_user);
-}
 #common_dialogue_profile{
 	visibility:hidden;
 	top: 0px;
@@ -939,16 +934,6 @@ select {
 
 /*Dialogue User Edit*/
 
-#common_user_edit_btn_user_delete_account::before{
-	content:var(--app_delete);
-}	
-
-#common_user_edit_btn_user_update.spinner::before{
-	content: '';
-}
-#common_user_edit_btn_user_update::before{
-	content: var(--app_update);
-}	
 #common_user_edit_btn_label_user_update,
 #common_user_edit_btn_label_user_delete_account{
 	display:inline-block;
