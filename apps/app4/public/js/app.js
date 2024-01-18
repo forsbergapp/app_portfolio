@@ -15,15 +15,15 @@ const app_event_click = event =>{
             common.common_event('click',event)
             .then(()=>{
                 switch (event_target_id){
-                    case 'toolbar_btn_js':{
+                    case 'common_toolbar_framework_js':{
                         init_map('1');
                         break;
                     }
-                    case 'toolbar_btn_vue':{
+                    case 'common_toolbar_framework_vue':{
                         init_map('2');
                         break;
                     }
-                    case 'toolbar_btn_react':{
+                    case 'common_toolbar_framework_react':{
                         init_map('3');
                         break;
                     }
@@ -37,15 +37,15 @@ const app_event_click = event =>{
         common.common_event('click', event)
         .then(()=>{
             switch (event_target_id){
-                case 'toolbar_btn_js':{
+                case 'common_toolbar_framework_js':{
                     init_map('1');
                     break;
                 }
-                case 'toolbar_btn_vue':{
+                case 'common_toolbar_framework_vue':{
                     init_map('2');
                     break;
                 }
-                case 'toolbar_btn_react':{
+                case 'common_toolbar_framework_react':{
                     init_map('3');
                     break;
                 }
@@ -90,9 +90,6 @@ const init_map = async (framework)=>{
     switch (framework){
         case '2':{
             //Vue
-            document.querySelector('#toolbar_btn_js').classList = '';
-            document.querySelector('#toolbar_btn_vue').classList = 'toolbar_selected';
-            document.querySelector('#toolbar_btn_react').classList = '';
             const Vue = await import('Vue');
             Vue.createApp({
                 data() {
@@ -120,9 +117,6 @@ const init_map = async (framework)=>{
         }
         case '3':{
             //React
-            document.querySelector('#toolbar_btn_js').classList = '';
-            document.querySelector('#toolbar_btn_vue').classList = '';
-            document.querySelector('#toolbar_btn_react').classList = 'toolbar_selected';
             const {React} = await import('React');
             const {ReactDOM} = await import('ReactDOM');
             const App = () => {
@@ -153,9 +147,6 @@ const init_map = async (framework)=>{
         case '1':
         default:{
             //Javascript
-            document.querySelector('#toolbar_btn_js').classList = 'toolbar_selected';
-            document.querySelector('#toolbar_btn_vue').classList = '';
-            document.querySelector('#toolbar_btn_react').classList = '';
             app_event_click();
             app_event_change();
             app_event_keydown();
@@ -184,20 +175,17 @@ const init_map = async (framework)=>{
 };
 const init_app = async () =>{
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
-
-    document.querySelector('#toolbar_btn_js').innerHTML = common.ICONS.app_javascript;
-    document.querySelector('#toolbar_btn_vue').innerHTML = common.ICONS.app_vue;
-    document.querySelector('#toolbar_btn_react').innerHTML = common.ICONS.app_react;
-    
+    document.querySelector('#common_toolbar_framework').classList.add('show');
     init_map(window.location.pathname.substring(1));
 };
 const init = (parameters) => {
-    document.querySelector('#loading').innerHTML = common.APP_SPINNER;
+    document.querySelector('#loading').classList.add('css_spinner');
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app().then(()=>{
-            document.querySelector('#loading').innerHTML = '';
+            document.querySelector('#loading').classList.remove('css_spinner');
         });
-    });
+    })
+    .catch(()=>document.querySelector('#loading').classList.remove('css_spinner'));
 };
 export{APP_GLOBAL, init};
