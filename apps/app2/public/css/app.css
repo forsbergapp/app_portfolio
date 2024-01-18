@@ -14,6 +14,9 @@
 #profile_top_row2_1::before{								content:var(--user_like) ' ' var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
 #profile_top_row2_2::before{								content:var(--user_views) ' ' var(--regional_day) ' ' var(--regional_month) ' ' var(--regional_year)}
 
+#profile_user_settings_info_likes::before{					content:var(--user_like)}
+#profile_user_settings_info_views::before{					content:var(--user_views)}
+
 #tab_nav_1::before{											content:var(--regional)}
 #tab_nav_2::before{											content:var(--gps)}
 #tab_nav_3::before{											content:var(--misc_design)}
@@ -178,8 +181,8 @@
 	width:78px;
 	text-align: end;
 }
-#profile_user_settings_info_like_count,
-#profile_user_settings_info_view_count{
+#profile_user_settings_info_likes_count,
+#profile_user_settings_info_views_count{
 	display:inline !important;
 }
 /*Profile top*/
@@ -708,7 +711,6 @@
 }
 #profile_info_user_setting_likes_count,
 #profile_info_user_setting_liked_count{
-	padding-inline-start: 0.5em;
     vertical-align: sub;
 }
 
@@ -1142,6 +1144,9 @@ body,
 .profile_user_settings_row #profile_user_settings_like:hover,
 .profile_user_settings_row #profile_user_settings_like:active{
 	color:var(--app_theme_hover);
+}
+.common_profile_btn_selected{
+	background-color: var(--app_theme_main_color2);
 }
 .common_dialogue{
 	background-color: var(--app_theme_dialogue_background_color);

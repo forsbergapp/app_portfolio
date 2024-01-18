@@ -986,6 +986,9 @@ border-left: 12px solid var(--app_theme_sun_color);
 #common_profile_avatar_online_status.offline{
 	color:var(--app_theme_online_status_offline_color);
 }
+.common_profile_btn_selected{
+	background-color: var(--app_theme_list_selected_background_color);
+}
 .common_login_tab_button, 
 .common_signup_tab_button,
 .common_forgot_tab_button{

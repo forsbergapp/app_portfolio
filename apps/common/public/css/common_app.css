@@ -58,11 +58,6 @@
 #common_profile_main_btn_following::before{					content:var(--user_follows)}
 #common_profile_main_btn_followed::before{					content:var(--user_followed)}
 #common_profile_main_btn_liked_users::before{				content:var(--user_followed)}
-#common_profile_detail_header_following::before{			content:var(--user_follows)}
-#common_profile_detail_header_followed::before{				content:var(--user_followed)}
-#common_profile_detail_header_like::before{					content:var(--user_like)}
-#common_profile_detail_header_liked_heart::before{			content:var(--user_like)}
-#common_profile_detail_header_liked_users::before{			content:var(--user_followed)}
 #common_profile_detail_list_app_delete::before{				content:var(--app_delete)}
 
 #common_profile_btn_top::before{							content:var(--user_profile_top)}
@@ -914,8 +909,12 @@ select {
 	width: 100%;
 	height: 100%;	
 	display:inline-block;
+	margin-top: 10px;
 }
-
+.common_profile_btn_selected{
+    border-radius: 4px;
+    padding: 2px;
+}
 .common_profile_detail_list{
 	height:10.8em;
 	width:350px;

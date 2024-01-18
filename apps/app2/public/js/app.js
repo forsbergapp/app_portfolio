@@ -1032,8 +1032,8 @@ const profile_clear_app = () => {
     document.querySelector('#profile_info_user_setting_liked_count').innerHTML='';
     document.querySelector('#profile_select_user_settings').innerHTML='';
 
-    document.querySelector('#profile_user_settings_info_like_count').innerHTML='';
-    document.querySelector('#profile_user_settings_info_view_count').innerHTML='';
+    document.querySelector('#profile_user_settings_info_likes_count').innerHTML='';
+    document.querySelector('#profile_user_settings_info_views_count').innerHTML='';
 };
 const user_logoff_app = () => {
     const select = document.querySelector('#setting_select_user_setting');
@@ -1134,7 +1134,7 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
             }
         });
 };
-const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app, click_function) => {
+const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_function) => {
     if (parseInt(common.COMMON_GLOBAL.user_account_id) || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
@@ -1147,7 +1147,7 @@ const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, header_app
             //8 Liked user setting
             document.querySelector('#profile_user_settings_row').style.display = 'none';
         }
-        common.profile_detail(detailchoice, rest_url_app, fetch_detail, header_app, click_function);
+        common.profile_detail(detailchoice, rest_url_app, fetch_detail, click_function);
     } 
     else
         common.show_common_dialogue('LOGIN');
@@ -1870,8 +1870,8 @@ const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
     document.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
     document.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
 
-    document.querySelector('#profile_user_settings_info_like_count').innerHTML = count_likes;
-    document.querySelector('#profile_user_settings_info_view_count').innerHTML = count_views;
+    document.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
+    document.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
 };
 const profile_show_user_setting = () => {
     document.querySelector('#profile_user_settings_row').style.display = 'block';
@@ -2156,27 +2156,25 @@ const setEvents = () => {
                 }
                 //profile
                 case 'profile_main_btn_user_settings':{
+                    document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
+                case 'profile_main_btn_user_setting_likes_heart':
                 case 'profile_main_btn_user_setting_likes_user_setting':{
-                    profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, 
-                                            `<div class='common_like common_icon'></div>
-                                            <div > ${common.ICONS.regional_day +
-                                                    common.ICONS.regional_month +
-                                                    common.ICONS.regional_year +
-                                                    common.ICONS.user_follows}</div>`, show_profile_function);
+                    document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, show_profile_function);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
+                case 'profile_main_btn_user_setting_liked_heart':
                 case 'profile_main_btn_user_setting_liked_user_setting':{
-                    profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, 
-                                            `<div class='common_like common_icon'></div>
-                                            <div > ${common.ICONS.regional_day +
-                                                    common.ICONS.regional_month +
-                                                    common.ICONS.regional_year +
-                                                    common.ICONS.user_followed}</div>`, show_profile_function);
+                    document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, show_profile_function);
                     break;
                 }
                 case 'profile_top_row2_1':{
@@ -2222,20 +2220,21 @@ const setEvents = () => {
                 }
                 //dialogue profile
                 case 'common_profile_main_btn_following':{
-                    profile_detail_app(1, null, true, null, show_profile_function);
+                    profile_detail_app(1, null, true, show_profile_function);
                     break;
                 }
                 case 'common_profile_main_btn_followed':{
-                    profile_detail_app(2, null, true, null, show_profile_function);
+                    profile_detail_app(2, null, true, show_profile_function);
                     break;
                 }
                 case 'common_profile_main_btn_likes':{
-                    profile_detail_app(3, null, true, null, show_profile_function);
+                    profile_detail_app(3, null, true, show_profile_function);
                     break;
                 }
                 case 'common_profile_main_btn_liked':
+                case 'common_profile_main_btn_liked_heart':
                 case 'common_profile_main_btn_liked_users':{
-                    profile_detail_app(4, null, true, null, show_profile_function);
+                    profile_detail_app(4, null, true, show_profile_function);
                     break;
                 }
                 case 'common_profile_follow':{
@@ -2729,9 +2728,6 @@ const init_app = (parameters) => {
         common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.querySelector('#setting_select_locale'),1);
         document.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
         
-        document.querySelector('#profile_user_settings_info_likes').innerHTML = common.ICONS.user_like + '<div id="profile_user_settings_info_like_count"></div>';
-        document.querySelector('#profile_user_settings_info_views').innerHTML = common.ICONS.user_views + '<div id="profile_user_settings_info_view_count"></div>';
-
         
         //set about info
         document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
