@@ -1685,6 +1685,9 @@ body{
 #common_profile_avatar_online_status.offline{
 	color:var(--app_theme_online_status_offline_color);
 }
+.common_profile_btn_selected{
+	background-color: var(--app_theme_nav_selected_background_color);
+}
 .common_load-spinner div:after {
 	background-color: var(--app_theme_spinner_background_color);
 }
