@@ -213,7 +213,6 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                         'prayer_hijri_date_adjustment' : setting.getAttribute('prayer_hijri_date_adjustment')
                         });
                     }
-                    document.querySelector('#paper').innerHTML = common.APP_SPINNER;
                     document.querySelector('#paper').innerHTML = app_report.displayDay(prayTimes, settings, item_id, current_user_settings);
                     common.create_qr('timetable_qr_code', common.getHostname());
                     resolve();
@@ -221,7 +220,6 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 }
                 //1=create timetable month
                 case 1:{
-                    document.querySelector('#paper').innerHTML = common.APP_SPINNER;
                     document.querySelector('#paper').innerHTML = app_report.displayMonth(prayTimes, settings, item_id);
                     common.create_qr('timetable_qr_code', common.getHostname());
                     resolve();
@@ -229,7 +227,6 @@ const update_timetable_report = async (timetable_type = 0, item_id = null, setti
                 }
                 //2=create timetable year
                 case 2:{
-                    document.querySelector('#paper').innerHTML = common.APP_SPINNER;
                     document.querySelector('#paper').innerHTML = app_report.displayYear(prayTimes, settings, item_id);
                     common.create_qr('timetable_qr_code', common.getHostname());
                     resolve();
@@ -571,12 +568,10 @@ const toolbar_button = async (choice) => {
 
 
 const openTab = async (tab_selected) => {
-    for (let i = 1; i < 8; i++) {
-        //hide all tab content
-        document.querySelector('#tab' + i).style.display = 'none';
-        //remove mark for all tabs
-        document.querySelector('#tab_nav_' + i).classList.remove('tab_nav_selected');
-    }
+    //hide all tab content
+    document.querySelectorAll('.tab_content').forEach(tab_content=>tab_content.style.display = 'none');
+    //remove mark for all tabs
+    document.querySelectorAll('.tab_nav').forEach(tab=>tab.classList.remove('tab_nav_selected'));
     //show active tab content
     document.querySelector('#tab' + tab_selected).style.display = 'block';
     //mark active tab
@@ -613,11 +608,11 @@ const align_button_value = (report_align_where) => {
 
 const dialogue_loading = (visible) => {
     if (visible==1){
-        document.querySelector('#dialogue_loading').innerHTML = common.APP_SPINNER;
+        document.querySelector('#dialogue_loading_content').classList.add('css_spinner');
         document.querySelector('#dialogue_loading').style.visibility='visible';
     }
     else{
-        document.querySelector('#dialogue_loading').innerHTML = '';
+        document.querySelector('#dialogue_loading_content').classList.remove('css_spinner');
         document.querySelector('#dialogue_loading').style.visibility='hidden';
     }
 };
@@ -964,15 +959,13 @@ const show_profile_function = profile_id => profile_show_app(+profile_id);
 const user_login_app = async () => {
     const username = document.querySelector('#common_login_username');
     const password = document.querySelector('#common_login_password');
-    const old_button = document.querySelector('#common_login_button').innerHTML;
-    document.querySelector('#common_login_button').innerHTML = common.APP_SPINNER;
     await common.user_login(username.innerHTML, password.innerHTML)
     .then((result)=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
         .then(()=>{
             common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
-            document.querySelector('#tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+            document.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
             common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
 
             document.querySelector('#common_user_menu_username').innerHTML = result.username;
@@ -1006,8 +999,7 @@ const user_login_app = async () => {
             }); 
         });
     })
-    .catch(()=>null)
-    .finally(document.querySelector('#common_login_button').innerHTML = old_button);
+    .catch(()=>null);
 };
 const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField)
@@ -1048,7 +1040,7 @@ const user_logoff_app = () => {
     let option;
     //get new data token to avoid endless loop and invalid token
     common.user_logoff().then(() => {
-        document.querySelector('#tab_nav_btn_7').innerHTML = common.ICONS.user;
+        document.querySelector('#tab_nav_7').innerHTML = common.ICONS.user;
         document.querySelector('#user_settings').style.display = 'none';
         
         profile_clear_app();
@@ -1075,7 +1067,7 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
         user_settings_function('ADD_LOGIN', true)
         .then(()=>{
             common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
-            document.querySelector('#tab_nav_btn_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+            document.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
             common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
             document.querySelector('#common_user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
 
@@ -1539,25 +1531,17 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                     };
     let method;
     let path;
-    let old_button;
-    let spinner_item;
-    
     switch (function_name){
         case 'ADD_LOGIN':
         case 'ADD':{
-            if (function_name=='ADD'){
-                spinner_item = document.querySelector('#setting_btn_user_add');
-                old_button = spinner_item.innerHTML;
-                spinner_item.innerHTML = common.APP_SPINNER;    
-            }
+            if (function_name=='ADD')
+                document.querySelector('#setting_btn_user_add').classList.add('css_spinner');
             method = 'POST';
             path = `/user_account_app_data_post?initial=${initial_user_setting==true?1:0}`;
             break;
         }
         case 'SAVE':{
-            spinner_item = document.querySelector('#setting_btn_user_save');
-            old_button = spinner_item.innerHTML;
-            spinner_item.innerHTML = common.APP_SPINNER;
+            document.querySelector('#setting_btn_user_save').classList.add('css_spinner');
             method = 'PUT';
             const select_user_setting = document.querySelector('#setting_select_user_setting');
             const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
@@ -1580,11 +1564,13 @@ const user_settings_function = async (function_name, initial_user_setting) => {
                 select.selectedIndex = select.options[select.options.length - 1].index;
                 select.options[select.options.length - 1].value = select.selectedIndex;
                 set_settings_select();
+                document.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
                 break;
             }
             case 'SAVE':{
                 //update user settings select with saved data
-                set_settings_select(); 
+                set_settings_select();
+                document.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
                 break;
             }
             default:{
@@ -1593,11 +1579,11 @@ const user_settings_function = async (function_name, initial_user_setting) => {
         }
     })
     .catch((err)=>{
+        if (function_name=='ADD')
+            document.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
+        if (function_name=='SAVE')
+            document.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
         throw err;
-    })
-    .finally(()=>{
-        if (function_name !='ADD_LOGIN')
-            spinner_item.innerHTML = old_button;
     });
 };
 
@@ -1613,8 +1599,7 @@ const user_settings_delete = (choice=null) => {
         }
         case 1:{
             if (select_user_setting.length > 1) {
-                const old_button = document.querySelector('#setting_btn_user_delete').innerHTML;
-                document.querySelector('#setting_btn_user_delete').innerHTML = common.APP_SPINNER;
+                document.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
                 common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
                 .then(()=>{
                     const select = document.querySelector('#setting_select_user_setting');
@@ -1622,11 +1607,11 @@ const user_settings_delete = (choice=null) => {
                     select.remove(select.selectedIndex);
                     //load next available
                     user_settings_load()
-                    .then(settings_translate(true))
-                    .then(settings_translate(false));
+                    .then(()=>settings_translate(true))
+                    .then(()=>settings_translate(false))
+                    .then(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
                 })
-                .catch(()=>null)
-                .finally(()=>document.querySelector('#setting_btn_user_delete').innerHTML = old_button);   
+                .catch(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
             } else {
                 //You can't delete last user setting
                 common.show_message('ERROR', 20302, null, null, common.COMMON_GLOBAL.common_app_id);
@@ -1727,15 +1712,18 @@ const set_default_settings = async () => {
     document.querySelector('#setting_input_reportheader1').innerHTML = APP_GLOBAL.text_default_reporttitle1;
     document.querySelector('#setting_input_reportheader2').innerHTML = APP_GLOBAL.text_default_reporttitle2;
     document.querySelector('#setting_input_reportheader3').innerHTML = APP_GLOBAL.text_default_reporttitle3;
-    document.querySelector('#setting_icon_text_header_aleft').classList = 'setting_button'; //Align left not active
-    document.querySelector('#setting_icon_text_header_acenter').classList = 'setting_button'; //Align center not active
-    document.querySelector('#setting_icon_text_header_aright').classList = 'setting_button'; //Align right not active
+    
+    document.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
+    document.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
+    document.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
+    
     document.querySelector('#setting_input_reportfooter1').innerHTML = APP_GLOBAL.text_default_reportfooter1;
     document.querySelector('#setting_input_reportfooter2').innerHTML = APP_GLOBAL.text_default_reportfooter2;
     document.querySelector('#setting_input_reportfooter3').innerHTML = APP_GLOBAL.text_default_reportfooter3;
-    document.querySelector('#setting_icon_text_footer_aleft').classList = 'setting_button'; //Align left not active
-    document.querySelector('#setting_icon_text_footer_acenter').classList = 'setting_button'; //Align center not active
-    document.querySelector('#setting_icon_text_footer_aright').classList = 'setting_button'; //Align right not active
+    
+    document.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
+    document.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
+    document.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
 
     //Prayer
     common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_method, document.querySelector('#setting_select_method'),1);
@@ -2042,31 +2030,31 @@ const setEvents = () => {
                     break;
                 }
                 //tab navigation
-                case 'tab_nav_btn_1':{
+                case 'tab_nav_1':{
                     openTab('1');
                     break;
                 }
-                case 'tab_nav_btn_2':{
+                case 'tab_nav_2':{
                     openTab('2');
                     break;
                 }
-                case 'tab_nav_btn_3':{
+                case 'tab_nav_3':{
                     openTab('3');
                     break;
                 }
-                case 'tab_nav_btn_4':{
+                case 'tab_nav_4':{
                     openTab('4');
                     break;
                 }
-                case 'tab_nav_btn_5':{
+                case 'tab_nav_5':{
                     openTab('5');
                     break;
                 }
-                case 'tab_nav_btn_6':{
+                case 'tab_nav_6':{
                     openTab('6');
                     break;
                 }
-                case 'tab_nav_btn_7':
+                case 'tab_nav_7':
                 case 'user_setting_avatar_img':{
                     openTab('7');
                     break;
@@ -2740,153 +2728,10 @@ const init_app = (parameters) => {
         //set initial default language from clients settings
         common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.querySelector('#setting_select_locale'),1);
         document.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
-        //dialogues
-        document.querySelector('#info_close').innerHTML = common.ICONS.app_close;
-        document.querySelector('#scan_open_mobile_close').innerHTML = common.ICONS.app_close;
-        document.querySelector('#scan_open_mobile_title1').innerHTML = common.ICONS.app_mobile;
-        //profile info
-        document.querySelector('#profile_main_btn_user_settings').innerHTML = common.ICONS.regional_day  + common.ICONS.regional_month + common.ICONS.regional_year;
-        document.querySelector('#profile_main_btn_user_setting_likes_user_setting').innerHTML = common.ICONS.regional_day + common.ICONS.regional_month + common.ICONS.regional_year + common.ICONS.user_follows;
-        document.querySelector('#profile_main_btn_user_setting_liked_user_setting').innerHTML = common.ICONS.regional_day + common.ICONS.regional_month + common.ICONS.regional_year + common.ICONS.user_followed;
-    
-        document.querySelector('#profile_user_settings_day').innerHTML = common.ICONS.regional_day;
-        document.querySelector('#profile_user_settings_month').innerHTML = common.ICONS.regional_month;
-        document.querySelector('#profile_user_settings_year').innerHTML = common.ICONS.regional_year;
-    
+        
         document.querySelector('#profile_user_settings_info_likes').innerHTML = common.ICONS.user_like + '<div id="profile_user_settings_info_like_count"></div>';
         document.querySelector('#profile_user_settings_info_views').innerHTML = common.ICONS.user_views + '<div id="profile_user_settings_info_view_count"></div>';
-        //profile top
-        document.querySelector('#profile_top_row2_1').innerHTML = common.ICONS.user_like + common.ICONS.regional_day  + common.ICONS.regional_month + common.ICONS.regional_year;
-        document.querySelector('#profile_top_row2_2').innerHTML = common.ICONS.user_views + common.ICONS.regional_day  + common.ICONS.regional_month + common.ICONS.regional_year;
-        //tab navigation
-        document.querySelector('#tab_nav_btn_1').innerHTML = common.ICONS.regional;
-        document.querySelector('#tab_nav_btn_2').innerHTML = common.ICONS.gps;
-        document.querySelector('#tab_nav_btn_3').innerHTML = common.ICONS.misc_design;
-        document.querySelector('#tab_nav_btn_4').innerHTML = common.ICONS.misc_image;
-        document.querySelector('#tab_nav_btn_5').innerHTML = common.ICONS.misc_text;
-        document.querySelector('#tab_nav_btn_6').innerHTML = common.ICONS.misc_prayer;
-        //settings tab 1 Regional
-        document.querySelector('#setting_icon_regional_locale').innerHTML = common.ICONS.regional_locale;
-        document.querySelector('#setting_icon_regional_timezone_current').innerHTML = common.ICONS.regional_timezone + common.ICONS.gps_position;
-        document.querySelector('#setting_icon_regional_timezone').innerHTML = common.ICONS.regional_timezone + common.ICONS.regional_calendar;
-        document.querySelector('#setting_icon_regional_numbersystem').innerHTML = common.ICONS.regional_numbersystem;
-        document.querySelector('#setting_icon_regional_direction').innerHTML = common.ICONS.regional_direction;
-        document.querySelector('#setting_icon_regional_locale_second').innerHTML = common.ICONS.regional_locale + common.ICONS.misc_second;
-        document.querySelector('#setting_icon_regional_coltitle').innerHTML = common.ICONS.misc_title;
-        document.querySelector('#setting_icon_regional_arabic_script').innerHTML = common.ICONS.regional_script;
-        document.querySelector('#setting_icon_regional_calendartype').innerHTML = common.ICONS.regional_calendar;
-        document.querySelector('#setting_icon_regional_calendar_hijri_type').innerHTML = common.ICONS.regional_calendar_hijri_type;
-        //settings tab 2 GPS
-        document.querySelector('#setting_icon_gps_popular_place').innerHTML = common.ICONS.gps_popular_place;
-        document.querySelector('#setting_icon_gps_place').innerHTML = common.ICONS.gps_position;
-        //settings tab 3 Design
-        document.querySelector('#setting_icon_design_theme_day').innerHTML = common.ICONS.regional_day;
-        document.querySelector('#setting_icon_design_theme_month').innerHTML = common.ICONS.regional_month;
-        document.querySelector('#setting_icon_design_theme_year').innerHTML = common.ICONS.regional_year;
-        document.querySelector('#setting_icon_design_papersize').innerHTML = common.ICONS.app_papersize;
-        document.querySelector('#setting_icon_design_highlight_row').innerHTML = common.ICONS.app_highlight;
-        document.querySelector('#setting_icon_design_show_weekday').innerHTML = common.ICONS.app_show + common.ICONS.regional_weekday;
-        document.querySelector('#setting_icon_design_show_calendartype').innerHTML = common.ICONS.app_show + common.ICONS.regional_calendartype;
-        document.querySelector('#setting_icon_design_show_notes').innerHTML = common.ICONS.app_show + common.ICONS.app_notes;
-        document.querySelector('#setting_icon_design_show_gps').innerHTML = common.ICONS.app_show + common.ICONS.gps_position;
-        document.querySelector('#setting_icon_design_show_timezone').innerHTML = common.ICONS.app_show + common.ICONS.regional_timezone;
-        //settings tab 4 Image
-        document.querySelector('#setting_icon_image_header_clear').innerHTML = common.ICONS.app_remove;
-        document.querySelector('#setting_icon_image_footer_clear').innerHTML = common.ICONS.app_remove;
-        document.querySelector('#setting_icon_image_header_img').innerHTML = common.ICONS.app_search;
-        document.querySelector('#setting_icon_image_footer_img').innerHTML = common.ICONS.app_search;    
-        //settings tab 5 Text
-        document.querySelector('#setting_icon_text_theme_day').innerHTML = common.ICONS.regional_day;
-        document.querySelector('#setting_icon_text_theme_month').innerHTML = common.ICONS.regional_month;
-        document.querySelector('#setting_icon_text_theme_year').innerHTML = common.ICONS.regional_year;
-        document.querySelector('#setting_icon_text_header_aleft').innerHTML =  common.ICONS.app_align_left;
-        document.querySelector('#setting_icon_text_header_acenter').innerHTML = common.ICONS.app_align_center;
-        document.querySelector('#setting_icon_text_header_aright').innerHTML = common.ICONS.app_align_right;
-        document.querySelector('#setting_icon_text_footer_aleft').innerHTML = common.ICONS.app_align_left;
-        document.querySelector('#setting_icon_text_footer_acenter').innerHTML = common.ICONS.app_align_center;
-        document.querySelector('#setting_icon_text_footer_aright').innerHTML = common.ICONS.app_align_right;
-        //settings tab 6 Prayer
-        document.querySelector('#setting_icon_prayer_method').innerHTML = common.ICONS.misc_book;
-        document.querySelector('#setting_icon_prayer_asr').innerHTML = common.ICONS.misc_book + common.ICONS.sky_afternoon;
-        document.querySelector('#setting_icon_prayer_highlatitude').innerHTML = common.ICONS.gps_high_latitude;
-        document.querySelector('#setting_icon_prayer_timeformat').innerHTML = common.ICONS.regional_timeformat;
-        document.querySelector('#setting_icon_prayer_hijri_adjustment').innerHTML = common.ICONS.app_settings + common.ICONS.regional_calendar;
-        document.querySelector('#setting_icon_prayer_report_iqamat_title_fajr').innerHTML = common.ICONS.app_show + 
-                                                                                            common.ICONS.misc_calling + 
-                                                                                            common.ICONS.misc_prayer + 
-                                                                                            common.ICONS.sky_sunrise;
-        document.querySelector('#setting_icon_prayer_report_iqamat_title_dhuhr').innerHTML = common.ICONS.app_show + 
-                                                                                             common.ICONS.misc_calling + 
-                                                                                             common.ICONS.misc_prayer +
-                                                                                             common.ICONS.sky_midday;
-        document.querySelector('#setting_icon_prayer_report_iqamat_title_asr').innerHTML = common.ICONS.app_show + 
-                                                                                           common.ICONS.misc_calling + 
-                                                                                           common.ICONS.misc_prayer + 
-                                                                                           common.ICONS.sky_afternoon;
-        document.querySelector('#setting_icon_prayer_report_iqamat_title_maghrib').innerHTML = common.ICONS.app_show + 
-                                                                                               common.ICONS.misc_calling + 
-                                                                                               common.ICONS.misc_prayer + 
-                                                                                               common.ICONS.sky_sunset;
-        document.querySelector('#setting_icon_prayer_report_iqamat_title_isha').innerHTML = common.ICONS.app_show + 
-                                                                                            common.ICONS.misc_calling + 
-                                                                                            common.ICONS.misc_prayer + 
-                                                                                            common.ICONS.sky_night;
-        document.querySelector('#setting_icon_prayer_report_show_imsak').innerHTML = common.ICONS.app_show + 
-                                                                                     common.ICONS.sky_sunrise + 
-                                                                                     common.ICONS.misc_food;
-        document.querySelector('#setting_icon_prayer_report_show_sunset').innerHTML = common.ICONS.app_show + 
-                                                                                      common.ICONS.sky_sunset;
-        document.querySelector('#setting_icon_prayer_report_show_midnight').innerHTML = common.ICONS.app_show +
-                                                                                        common.ICONS.sky_midnight +
-                                                                                        common.ICONS.misc_prayer;
-        document.querySelector('#setting_icon_prayer_report_show_fast_start_end').innerHTML = common.ICONS.app_show + 
-                                                                                              common.ICONS.misc_food +
-                                                                                              common.ICONS.misc_ban;
-        //settings tab 7 User settings
-        document.querySelector('#setting_icon_user_settings').innerHTML = common.ICONS.app_settings + 
-                                                                          common.ICONS.gps_position;
-        document.querySelector('#setting_icon_user_url_day').innerHTML = common.ICONS.regional_day;
-        document.querySelector('#setting_icon_user_url_month').innerHTML = common.ICONS.regional_month;
-        document.querySelector('#setting_icon_user_url_year').innerHTML = common.ICONS.regional_year;
-    
-        document.querySelector('#user_day_html').innerHTML = common.ICONS.app_html;
-        document.querySelector('#user_day_pdf').innerHTML = common.ICONS.app_pdf;
-        document.querySelector('#user_month_html').innerHTML = common.ICONS.app_html;
-        document.querySelector('#user_month_pdf').innerHTML = common.ICONS.app_pdf;
-        document.querySelector('#user_year_html').innerHTML = common.ICONS.app_html;
-        document.querySelector('#user_year_pdf').innerHTML = common.ICONS.app_pdf;
-    
-        document.querySelector('#setting_btn_user_save').innerHTML = common.ICONS.app_save;
-        document.querySelector('#setting_btn_user_add').innerHTML = common.ICONS.app_add;
-        document.querySelector('#setting_btn_user_delete').innerHTML = common.ICONS.app_delete;
-        
-        //toolbar bottom
-        document.querySelector('#toolbar_btn_about').innerHTML = common.ICONS.app_info;
-        document.querySelector('#toolbar_btn_print').innerHTML = common.ICONS.app_print;
-        document.querySelector('#toolbar_btn_day').innerHTML = common.ICONS.regional_day;
-        document.querySelector('#toolbar_btn_month').innerHTML = common.ICONS.regional_month;
-        document.querySelector('#toolbar_btn_year').innerHTML = common.ICONS.regional_year;
-        document.querySelector('#toolbar_btn_settings').innerHTML = common.ICONS.app_settings;
-        //toolbar top
-        document.querySelector('#common_user_menu_default_avatar').innerHTML = common.ICONS.user_avatar;
-        document.querySelector('#toolbar_btn_zoomout').innerHTML = common.ICONS.app_zoomout;
-        document.querySelector('#toolbar_btn_zoomin').innerHTML = common.ICONS.app_zoomin;
-        document.querySelector('#toolbar_btn_left').innerHTML = common.ICONS.app_left;
-        document.querySelector('#toolbar_btn_right').innerHTML = common.ICONS.app_right;
-        document.querySelector('#toolbar_btn_search').innerHTML = common.ICONS.app_search;
-        //user menu dropdown
-        document.querySelector('#common_user_menu_dropdown_log_in').innerHTML = common.ICONS.app_login;
-        document.querySelector('#common_user_menu_dropdown_log_out').innerHTML =common.ICONS.app_logoff;
-        document.querySelector('#common_user_menu_dropdown_signup').innerHTML = common.ICONS.app_signup;
-        document.querySelector('#common_user_menu_dropdown_edit').innerHTML = common.ICONS.app_edit;
-        
-        //themes from client server generation
-        document.querySelector('#slider_prev_day').innerHTML = common.ICONS.app_slider_left;
-        document.querySelector('#slider_next_day').innerHTML =  common.ICONS.app_slider_right;
-        document.querySelector('#slider_prev_month').innerHTML = common.ICONS.app_slider_left;
-        document.querySelector('#slider_next_month').innerHTML = common.ICONS.app_slider_right;
-        document.querySelector('#slider_prev_year').innerHTML = common.ICONS.app_slider_left;
-        document.querySelector('#slider_next_year').innerHTML = common.ICONS.app_slider_right;
+
         
         //set about info
         document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;

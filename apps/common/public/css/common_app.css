@@ -1,12 +1,111 @@
-.common_lov_button::before{							content: var(--app_lov)}
-.common_unlike::before{								content:var(--user_unlike)}	
-.common_like::before{								content:var(--user_like)}	
-.common_user_follow::before{						content:var(--user_follow_user)}
-.common_user_followed::before{						content:var(--user_followed_user)}
-#common_user_edit_btn_user_delete_account::before{	content:var(--app_delete)}	
-#common_user_edit_btn_user_update.spinner::before{	content: ''}
-#common_user_edit_btn_user_update::before{			content:var(--app_update)}	
-#common_profile_main_btn_cloud::before{				content:var(--sky_cloud)}
+.common_lov_button::before{									content: var(--app_lov)}
+.common_unlike::before{										content:var(--user_unlike)}	
+.common_like::before{										content:var(--user_like)}	
+.common_user_follow::before{								content:var(--user_follow_user)}
+.common_user_followed::before{								content:var(--user_followed_user)}
+#common_user_edit_btn_user_delete_account::before{			content:var(--app_delete)}	
+#common_user_edit_btn_user_update.spinner::before{			content: ''}
+#common_user_edit_btn_user_update::before{					content:var(--app_update)}	
+#common_profile_main_btn_cloud::before{						content:var(--sky_cloud)}
+
+#common_user_menu_default_avatar::before{					content:var(--user_avatar)}
+#common_user_menu_default_avatar.system_admin::before{		content:var(--app_system_admin)}
+
+#common_user_menu_dropdown_edit::before{					content:var(--app_edit)}
+#common_user_menu_dropdown_log_out::before{					content:var(--app_logoff)}
+#common_user_menu_dropdown_signup::before{					content:var(--app_signup)}
+#common_user_menu_dropdown_log_in::before{					content:var(--app_login)}
+#common_user_preference_locale::before{						content:var(--regional_locale)}
+#common_user_preference_timezone::before{					content:var(--regional_timezone)}
+#common_user_preference_direction::before{					content:var(--regional_direction)}
+#common_user_preference_arabic_script::before{				content:var(--regional_script)}
+
+#common_user_verify_email_icon::before{						content:var(--app_email)}
+
+#common_login_tab1::before{									content:var(--app_login)}
+#common_login_tab2::before{									content:var(--app_signup)}
+#common_login_tab3::before{									content:var(--app_forgot)}
+#common_login_button::before{								content:var(--app_login)}
+#common_login_close::before{								content:var(--app_close)}
+
+#common_signup_tab1::before{								content:var(--app_login)}
+#common_signup_tab2::before{								content:var(--app_signup)}
+#common_signup_tab3::before{								content:var(--app_forgot)}
+#common_signup_button::before{								content:var(--app_signup)}
+#common_signup_close::before{								content:var(--app_close)}
+
+#common_forgot_tab1::before{								content:var(--app_login)}
+#common_forgot_tab2::before{								content:var(--app_signup)}
+#common_forgot_tab3::before{								content:var(--app_forgot)}
+#common_forgot_button::before{								content:var(--app_sendmail)}
+#common_forgot_close::before{								content:var(--app_close)}
+
+#common_user_password_new_icon::before{						content:var(--user_password)}
+#common_user_password_new_cancel::before{					content:var(--app_cancel)}
+#common_user_password_new_ok::before{						content:var(--app_close)}
+
+#common_profile_search_icon::before{						content:var(--app_search)}
+
+#common_profile_joined_date_icon::before{					content:var(--user_account_created)}
+#common_profile_private_title::before{						content:var(--app_private)}
+#common_profile_avatar_online_status::before{				content:var(--app_online)}
+#common_profile_top_row1_1::before{							content:var(--user_views)}
+#common_profile_top_row1_2::before{							content:var(--user_follows)}
+#common_profile_top_row1_3::before{							content:var(--user_like) ' ' var(--user_follows)}
+#common_profile_home::before{								content:var(--user_profile_top)}
+#common_profile_close::before{								content:var(--app_close)}
+#common_profile_info_view_count_icon::before{				content:var(--user_views)}
+#common_profile_main_btn_following::before{					content:var(--user_follows)}
+#common_profile_main_btn_followed::before{					content:var(--user_followed)}
+#common_profile_main_btn_liked_users::before{				content:var(--user_followed)}
+#common_profile_detail_header_following::before{			content:var(--user_follows)}
+#common_profile_detail_header_followed::before{				content:var(--user_followed)}
+#common_profile_detail_header_like::before{					content:var(--user_like)}
+#common_profile_detail_header_liked_heart::before{			content:var(--user_like)}
+#common_profile_detail_header_liked_users::before{			content:var(--user_followed)}
+#common_profile_detail_list_app_delete::before{				content:var(--app_delete)}
+
+#common_profile_btn_top::before{							content:var(--user_profile_top)}
+
+#common_user_edit_btn_avatar_img::before{					content:var(--user_avatar_edit)}
+#common_user_edit_private::before{							content:var(--app_private)}
+#common_user_edit_close::before{							content:var(--app_close)}
+#common_user_edit_label_provider::before{					content:var(--provider)}
+#common_user_edit_label_provider_id::before{				content:var(--provider_id)}
+#common_user_edit_label_provider_email::before{				content:var(--app_email)}
+#common_user_edit_input_username_icon::before{				content:var(--user)}
+#common_user_edit_input_bio_icon::before{					content:var(--user_profile)}
+#common_user_edit_input_email_icon::before{					content:var(--app_email)}
+#common_user_edit_input_new_email_icon::before{				content:var(--app_email)}
+#common_user_edit_input_password_icon::before{				content:var(--user_password)}
+#common_user_edit_input_password_confirm_icon::before{		content:var(--user_password)}
+#common_user_edit_input_password_new_icon::before{			content:var(--user_password)}
+#common_user_edit_input_password_new_confirm_icon::before{	content:var(--user_password)}
+#common_user_edit_input_password_reminder_icon::before{		content:var(--user_account_reminder)}
+#common_user_edit_label_last_logontime::before{				content:var(--user_last_logontime)}
+#common_user_edit_label_account_created::before{			content:var(--user_account_created)}
+#common_user_edit_label_account_modified::before{			content:var(--user_account_modified)}
+
+#common_lov_search_icon::before{							content:var(--app_search)}
+
+#common_window_info_btn_close::before{						content:var(--app_close)}
+#common_window_info_toolbar_btn_zoomout::before{			content:var(--app_zoomout)}
+#common_window_info_toolbar_btn_zoomin::before{				content:var(--app_zoomin)}
+#common_window_info_toolbar_btn_left::before{				content:var(--app_left)}
+#common_window_info_toolbar_btn_right::before{				content:var(--app_right)}
+#common_window_info_toolbar_btn_up::before{					content:var(--app_up)}
+#common_window_info_toolbar_btn_down::before{				content:var(--app_down)}
+#common_window_info_toolbar_btn_fullscreen::before{			content:var(--app_fullscreen)}
+
+#common_module_leaflet_control_search_button::before{		content:var(--app_search)}
+#common_module_leaflet_search_icon::before{					content:var(--app_search)}
+#common_module_leaflet_control_fullscreen_id::before{		content:var(--app_fullscreen)}
+#common_module_leaflet_control_my_location_id::before{		content:var(--map_my_location)}
+#common_module_leaflet_control_layer_button::before{		content:var(--map_layer)}
+#common_module_leaflet_popup_sub_title::before{				content:var(--regional_timezone) ' ' var(--gps_position)}
+
+#common_broadcast_close::before{							content:var(--app_broadcast_close)}
+#common_broadcast_info_title::before{						content:var(--app_alert)}
 
 body{
 	font-size: 16px;
@@ -471,6 +570,7 @@ select {
 	width: 30%;
 }
 .common_login_button, .common_signup_button, .common_forgot_button{
+	display: inline-block;
 	border-radius: 20px;
 	width:100%;
 	height:40px;
@@ -528,7 +628,7 @@ select {
 	display: block;
 }
 #common_dialogue_user_edit_content #common_user_edit_common .common_setting_horizontal_row:first-child{
-	height: 65px;
+	height: 60px;
 }
 #common_dialogue_user_edit_content #common_user_edit_common .common_setting_horizontal_row:first-child .common_setting_horizontal_col:nth-child(2){
 	text-align: center !important;
@@ -551,7 +651,10 @@ select {
     margin-bottom: 10px;
 }
 #common_user_edit_buttons{
-	margin: 10px;
+	margin-bottom: 10px;
+}
+#common_user_edit_close{
+	margin-bottom:20px;
 }
 #common_dialogue_user_edit_content #common_user_edit_buttons .common_setting_horizontal_col:nth-child(1) {
 	width: 0%;
@@ -981,6 +1084,11 @@ select {
 	border-radius:50%;
 	vertical-align: middle;
 }
+#common_user_menu_dropdown_signup,
+#common_user_menu_dropdown_edit
+{
+	display: block;
+}
 #common_user_menu_logged_in, #common_user_menu_dropdown_logged_in{
 	display: none;
 }
@@ -993,7 +1101,7 @@ select {
 }
 #common_user_menu_default_avatar{
 	font-size: 48px;
-	margin-top:-10px;
+	margin-top:-14px;
 }
 #common_user_menu_dropdown{
 	visibility: hidden;
@@ -1224,6 +1332,7 @@ select {
 #common_module_leaflet_popup_sub_title_gps{
 	font-weight: bold;
 	text-align: center;
+	display: block;
 }
 .leaflet-popup-content{
 	width:200px !important;
@@ -1231,8 +1340,12 @@ select {
 .common_module_leaflet_control_button {
 	text-align: center;
 	height: 30px;
+	width: 30px;
+	display: block;
 	line-height: 30px;
 	cursor: pointer;
+	padding-top: unset;
+    padding-bottom: unset;
 }
 .common_module_leaflet_control_expand{
 	position: absolute;

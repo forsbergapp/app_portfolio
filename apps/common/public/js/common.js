@@ -1499,7 +1499,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, header_app, cl
                     //id for username list, app_id for app list
                     if (detailchoice==5 && typeof list_item.id =='undefined'){
                         if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
-                            delete_div = `<div class='common_profile_detail_list_app_delete'>${ICONS.app_delete}</div>`;
+                            delete_div = `<div class='common_profile_detail_list_app_delete common_icon'>${''}</div>`;
                             
                         //App list in app 0
                         html += 
@@ -1874,7 +1874,7 @@ const user_login = async (username, password) => {
                             password:  encodeURI(password),
                             ...get_uservariables()
                         };
-
+        document.querySelector('#common_login_button').classList.add('css_spinner');
         FFB('IAM', '/user?', 'POST', 'IAM', json_data)
         .then(result=>{
             profile_close();
@@ -1893,6 +1893,7 @@ const user_login = async (username, password) => {
                 else{
                     dialogue_login_clear();
                     dialogue_signup_clear();
+                    document.querySelector('#common_login_button').classList.remove('css_spinner');
                     resolve({   user_id: user.id,
                                 username: user.username,
                                 bio: user.bio,
@@ -1901,7 +1902,9 @@ const user_login = async (username, password) => {
                 }
             });
         })
-        .catch(err=>reject(err));
+        .catch(err=>{
+            document.querySelector('#common_login_button').classList.remove('css_spinner');
+            reject(err);});
     });
 };
 const user_logoff = async () => {
@@ -2553,7 +2556,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                     //add custom HTML inside div with class .leaflet-control
                     const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
                     //add search button with expand content country select, city select and search input
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='Search' role='button'>${ICONS.app_search}
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='Search' role='button'>
+                                                    <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
                                                     <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_country'>
                                                             ${COMMON_GLOBAL.module_leaflet_countries}
@@ -2563,7 +2567,7 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                                                         </select>
                                                         <div id='common_module_leaflet_search_input_row'>
                                                             <div id='common_module_leaflet_search_input' contenteditable=true class='common_input'/></div>
-                                                            <div id='common_module_leaflet_search_icon'>${ICONS.app_search}</div>
+                                                            <div id='common_module_leaflet_search_icon' class='common_icon'></div>
                                                         </div>
                                                         <div id='common_module_leaflet_search_list_wrap'>
                                                             <div id='common_module_leaflet_search_list'></div>
@@ -2571,11 +2575,11 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                                                     </div>
                                                  </div>`;
                     //add fullscreen button
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button' title='Fullscreen' role='button'>${ICONS.app_fullscreen}
+                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='Fullscreen' role='button'>
                                                  </div>`;
                     if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
                         //add my location button
-                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button' title='My location' role='button'>${ICONS.map_my_location}
+                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button common_icon' title='My location' role='button'>
                                                     </div>`;
                     }
                     //add layers button with pop out div
@@ -2583,7 +2587,8 @@ const map_init = async (containervalue, stylevalue, longitude, latitude, doublec
                     for (const map_style_option of COMMON_GLOBAL.module_leaflet_map_styles){
                         map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
                     }
-                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>${ICONS.map_layer}
+                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
+                                                    <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
                                                     <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
                                                         <select id='common_module_leaflet_select_mapstyle' >
                                                             ${map_styles_options}
@@ -2812,7 +2817,7 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
             };
             const map_update_text = (timezone_text) => {
                 const popuptext = `<div id="common_module_leaflet_popup_title">${text_place}</div>
-                                   <div id="common_module_leaflet_popup_sub_title">${ICONS.regional_timezone + ICONS.gps_position}</div>
+                                   <div id="common_module_leaflet_popup_sub_title" class='common_icon'></div>
                                    <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
                                    <div id="common_module_leaflet_popup_sub_title_gps">${latitude + ', ' + longitude}</div>`;
                 COMMON_GLOBAL.module_leaflet_library.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
@@ -2981,9 +2986,6 @@ const FFB = async (service, path, method, authorization_type, json_data) => {
   checkOnline
   ----------------------- */
 const broadcast_init = () => {
-    //broadcast
-    document.querySelector('#common_broadcast_close').innerHTML = ICONS.app_broadcast_close;
-    document.querySelector('#common_broadcast_info_title').innerHTML = ICONS.app_alert;
     connectOnline();
 };
 const maintenance_countdown = (remaining) => {
@@ -3259,7 +3261,6 @@ const exception = (app_exception_function, error) => {
 
   local objects:
   set_app_service_parameters
-  assign_icons
   set_events
   set_user_account_app_settings
   set_app_parameters
@@ -3313,106 +3314,7 @@ const set_app_service_parameters = async (parameters) => {
         COMMON_GLOBAL.user_arabic_script         = '';
     }  
 };
-const assign_icons = () => {
-    //dialogue user verify
-    document.querySelector('#common_user_verify_email_icon').innerHTML = ICONS.app_email;
-    //dialogue login
-    document.querySelector('#common_login_tab1').innerHTML = ICONS.app_login;
-    document.querySelector('#common_login_tab2').innerHTML = ICONS.app_signup;
-    document.querySelector('#common_login_tab3').innerHTML = ICONS.app_forgot;
-    document.querySelector('#common_login_button').innerHTML = ICONS.app_login;
-    document.querySelector('#common_login_close').innerHTML = ICONS.app_close;
-    //dialogue signup
-    document.querySelector('#common_signup_tab1').innerHTML = ICONS.app_login;
-    document.querySelector('#common_signup_tab2').innerHTML = ICONS.app_signup;
-    document.querySelector('#common_signup_tab3').innerHTML = ICONS.app_forgot;
-    document.querySelector('#common_signup_button').innerHTML = ICONS.app_signup;
-    document.querySelector('#common_signup_close').innerHTML = ICONS.app_close;
-    //dialogue forgot
-    document.querySelector('#common_forgot_tab1').innerHTML = ICONS.app_login;
-    document.querySelector('#common_forgot_tab2').innerHTML = ICONS.app_signup;
-    document.querySelector('#common_forgot_tab3').innerHTML = ICONS.app_forgot;
-    document.querySelector('#common_forgot_button').innerHTML = ICONS.app_sendmail;
-    document.querySelector('#common_forgot_close').innerHTML = ICONS.app_close;
-    //dialogue new password
-    document.querySelector('#common_user_password_new_icon').innerHTML = ICONS.user_password;
-    document.querySelector('#common_user_password_new_cancel').innerHTML = ICONS.app_cancel;
-    document.querySelector('#common_user_password_new_ok').innerHTML = ICONS.app_close;
-    //dialogue user edit
-    document.querySelector('#common_user_edit_btn_avatar_img').innerHTML = ICONS.user_avatar_edit;
-    document.querySelector('#common_user_edit_private').innerHTML = ICONS.app_private;
-    document.querySelector('#common_user_edit_close').innerHTML = ICONS.app_close;
-    document.querySelector('#common_user_edit_label_provider').innerHTML = ICONS.provider;
-    document.querySelector('#common_user_edit_label_provider_id').innerHTML = ICONS.provider_id;
-    document.querySelector('#common_user_edit_label_provider_email').innerHTML = ICONS.app_email;
-    document.querySelector('#common_user_edit_input_username_icon').innerHTML = ICONS.user;
-    document.querySelector('#common_user_edit_input_bio_icon').innerHTML = ICONS.user_profile;
-    document.querySelector('#common_user_edit_input_email_icon').innerHTML = ICONS.app_email;
-    document.querySelector('#common_user_edit_input_new_email_icon').innerHTML = ICONS.app_email;
-    document.querySelector('#common_user_edit_input_password_icon').innerHTML = ICONS.user_password;
-    document.querySelector('#common_user_edit_input_password_confirm_icon').innerHTML = ICONS.user_password;
-    document.querySelector('#common_user_edit_input_password_new_icon').innerHTML = ICONS.user_password;
-    document.querySelector('#common_user_edit_input_password_new_confirm_icon').innerHTML = ICONS.user_password;
-    document.querySelector('#common_user_edit_input_password_reminder_icon').innerHTML = ICONS.user_account_reminder;
-    document.querySelector('#common_user_edit_label_last_logontime').innerHTML = ICONS.user_last_logontime;
-    document.querySelector('#common_user_edit_label_account_created').innerHTML = ICONS.user_account_created;
-    document.querySelector('#common_user_edit_label_account_modified').innerHTML = ICONS.user_account_modified;
-    //dialog lov
-    document.querySelector('#common_lov_search_icon').innerHTML = ICONS.app_search;
-    //profile detail
-    document.querySelector('#common_profile_detail_header_following').innerHTML = ICONS.user_follows;
-    document.querySelector('#common_profile_detail_header_followed').innerHTML = ICONS.user_followed;
-    document.querySelector('#common_profile_detail_header_like').innerHTML = ICONS.user_like;
-    document.querySelector('#common_profile_detail_header_liked_heart').innerHTML = ICONS.user_like;
-    document.querySelector('#common_profile_detail_header_liked_users').innerHTML =  ICONS.user_followed;
-    //profile info search
-    if (document.querySelector('#common_profile_search_icon'))
-        document.querySelector('#common_profile_search_icon').innerHTML = ICONS.app_search;
-    //profile info
-    document.querySelector('#common_profile_joined_date_icon').innerHTML = ICONS.user_account_created;
- 
-    document.querySelector('#common_profile_info_view_count_icon').innerHTML = ICONS.user_views;
-    document.querySelector('#common_profile_main_btn_following').innerHTML = ICONS.user_follows;
-    document.querySelector('#common_profile_main_btn_followed').innerHTML = ICONS.user_followed;
-    document.querySelector('#common_profile_main_btn_liked_users').innerHTML = ICONS.user_followed;
-    
-    document.querySelector('#common_profile_private_title').innerHTML = ICONS.app_private;
-    document.querySelector('#common_profile_avatar_online_status').innerHTML = ICONS.app_online;
-    //profile top
-    document.querySelector('#common_profile_top_row1_1').innerHTML = ICONS.user_views;
-    document.querySelector('#common_profile_top_row1_2').innerHTML = ICONS.user_follows;
-    document.querySelector('#common_profile_top_row1_3').innerHTML = ICONS.user_like + ICONS.user_follows;
-    document.querySelector('#common_profile_home').innerHTML = ICONS.user_profile_top;
-    document.querySelector('#common_profile_close').innerHTML = ICONS.app_close;
 
-    //profile button top
-    if (document.querySelector('#common_profile_btn_top'))
-        document.querySelector('#common_profile_btn_top').innerHTML = ICONS.user_profile_top;
-
-    //window info
-    document.querySelector('#common_window_info_btn_close').innerHTML = ICONS.app_close;
-    document.querySelector('#common_window_info_toolbar_btn_zoomout').innerHTML = ICONS.app_zoomout;
-    document.querySelector('#common_window_info_toolbar_btn_zoomin').innerHTML = ICONS.app_zoomin;
-    document.querySelector('#common_window_info_toolbar_btn_left').innerHTML =  ICONS.app_left;
-    document.querySelector('#common_window_info_toolbar_btn_right').innerHTML = ICONS.app_right;
-    document.querySelector('#common_window_info_toolbar_btn_up').innerHTML =  ICONS.app_up;
-    document.querySelector('#common_window_info_toolbar_btn_down').innerHTML = ICONS.app_down;
-    document.querySelector('#common_window_info_toolbar_btn_fullscreen').innerHTML = ICONS.app_fullscreen;
-    
-    //user menu
-    if (document.querySelector('#common_user_menu_dropdown_edit')){
-        document.querySelector('#common_user_menu_dropdown_edit').innerHTML = ICONS.app_edit;
-        document.querySelector('#common_user_menu_dropdown_log_out').innerHTML = ICONS.app_logoff;
-        document.querySelector('#common_user_menu_dropdown_signup').innerHTML = ICONS.app_signup;
-        document.querySelector('#common_user_menu_dropdown_log_in').innerHTML = ICONS.app_login;
-        document.querySelector('#common_user_menu_default_avatar').innerHTML = ICONS.user_avatar;
-        document.querySelector('#common_user_preference_locale').innerHTML = ICONS.regional_locale;
-        document.querySelector('#common_user_preference_timezone').innerHTML = ICONS.regional_timezone;
-        document.querySelector('#common_user_preference_direction').innerHTML = ICONS.regional_direction;
-        document.querySelector('#common_user_preference_arabic_script').innerHTML = ICONS.regional_script;
-    }
-
-};
 const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
                                 COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
                                 COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
@@ -3671,7 +3573,7 @@ const common_event = async (event_type,event) =>{
                         document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                         break;
                     }
-                    case 'common_module_leaflet_control_search':{
+                    case 'common_module_leaflet_control_search_button':{
                         if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
                             map_control_toggle_expand('layer');
                         map_control_toggle_expand('search');
@@ -3699,7 +3601,7 @@ const common_event = async (event_type,event) =>{
                         }
                         break;
                     }
-                    case 'common_module_leaflet_control_layer':{
+                    case 'common_module_leaflet_control_layer_button':{
                         if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
                             map_toolbar_reset();
                         map_control_toggle_expand('layer');
@@ -3956,7 +3858,6 @@ const init_common = async (parameters) => {
             else{
                 set_app_parameters(parameters.app);
                 if (COMMON_GLOBAL.ui){
-                    assign_icons();
                     set_events();
                     set_user_account_app_settings();
                     resolve();
@@ -3970,7 +3871,6 @@ const init_common = async (parameters) => {
             broadcast_init();
             set_app_parameters(parameters.app);
             if (COMMON_GLOBAL.ui){
-                assign_icons();
                 set_events();
                 set_user_account_app_settings();
                 resolve();
