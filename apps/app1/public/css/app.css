@@ -1,4 +1,16 @@
 /*APP */
+
+#start_message::before{	content:var(--app_info)}
+
+#title1::before{		content:var(--sky_cloud) ' ' var(--misc_model)}
+#title2::before{		content:var(--app_database) ' ' var(--misc_model)}
+
+#info_message::before{	content:var(--app_home)}
+#contact_text::before{	content:var(--app_email)}
+
+#app_menu_apps::before{	content:var(--app_apps)}
+#app_menu_info::before{	content:var(--app_info)}
+
 body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	top: -5px;
 }
@@ -20,11 +32,21 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	border-radius: 4px;
 }
 /*DIALOGUE START*/
+#start_message{
+	width: 100%;
+}
 #dialogue_start_content{
 	visibility:visible;
 	overflow: hidden;
 	width: 350px;
 	transform:             rotateY( 0deg );
+	height: calc(100% - 200px);
+}
+#app_menu_content{
+	width: 100%;
+}
+#apps.css_spinner, #app_menu_content_apps_list.css_spinner{
+	height: 30px !important;
 }
 #apps, #app_menu_content_apps_list{
 	margin-top:10px;
