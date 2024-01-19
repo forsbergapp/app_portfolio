@@ -161,11 +161,11 @@ const setEvents = () => {
                         common.profile_detail(5, '/user_account_app/apps', true);
                         break;
                     }
-                    case 'common_login_button':{
+                    case 'common_user_start_login_button':{
                         user_login_app();
                         break;
                     }
-                    case 'common_signup_button':{
+                    case 'common_user_start_signup_button':{
                         common.user_signup();
                         break;
                     }
@@ -205,8 +205,8 @@ const setEvents = () => {
                     common.search_input(event, 'profile', null);
                     break;
                 }
-                case 'common_login_username':
-                case 'common_login_password':{
+                case 'common_user_start_login_username':
+                case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
                         user_login_app().then(() => {
@@ -345,28 +345,11 @@ const user_menu_item_click = (item) => {
     document.querySelector('#common_user_menu_dropdown').style='none';
 };
 const user_login_app = async () => {
-    const username = document.querySelector('#common_login_username');
-    const password = document.querySelector('#common_login_password');
-    document.querySelector('#common_login_button').classList.add('css_spinner');
+    const username = document.querySelector('#common_user_start_login_username');
+    const password = document.querySelector('#common_user_start_login_password');
     
     await common.user_login(username.innerHTML, password.innerHTML)
-    .then((result)=>{        
-        //set avatar or empty
-        common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
-        document.querySelector('#common_user_menu_username').innerHTML = result.username;
-        
-        document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-        document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-
-        document.querySelector('#common_user_menu_username').style.display = 'block';
-        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-
-        common.dialogue_login_clear();
-        common.dialogue_signup_clear();
-        document.querySelector('#common_login_button').classList.remove('css_spinner');
-    })
-    .catch(()=>document.querySelector('#common_login_button').classList.remove('css_spinner'));
+    .catch(()=>null);
 };
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);

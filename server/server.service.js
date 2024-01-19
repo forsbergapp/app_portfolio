@@ -266,10 +266,12 @@ const COMMON = {
                     resolve(db_user_account.updatePassword(routesparameters.app_id, query, routesparameters.body, routesparameters.res));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_PUT':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_PUT':{
                     resolve(db_user_account.updateUserLocal(routesparameters.app_id, routesparameters.ip, routesparameters.user_agent, routesparameters.host, routesparameters.accept_language, query, routesparameters.body, routesparameters.res));
                     break;
                 }
+                case 'ADMIN_DB_API_/USER_ACCOUNT_GET':
                 case 'APP_ACCESS_DB_API_/USER_ACCOUNT_GET':{
                     resolve(db_user_account.getUserByUserId(routesparameters.app_id, query, routesparameters.res));
                     break;
