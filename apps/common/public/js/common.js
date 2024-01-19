@@ -399,14 +399,14 @@ const common_translate_ui = async (lang_code) => {
                 //translate common items
                 switch  (app_object.object_item_name){
                     case 'USERNAME':{
-                        document.querySelector('#common_login_username').setAttribute('placeholder', app_object.text);
-                        document.querySelector('#common_signup_username').setAttribute('placeholder', app_object.text);
+                        document.querySelector('#common_user_start_login_username').setAttribute('placeholder', app_object.text);
+                        document.querySelector('#common_user_start_signup_username').setAttribute('placeholder', app_object.text);
                         document.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'EMAIL':{
-                        document.querySelector('#common_signup_email').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_forgot_email').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_start_signup_email').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_start_forgot_email').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'NEW_EMAIL':{
@@ -418,18 +418,18 @@ const common_translate_ui = async (lang_code) => {
                         break;
                     }
                     case 'PASSWORD':{
-                        document.querySelector('#common_login_password').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_signup_password').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_start_login_password').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_start_signup_password').setAttribute('placeholder',app_object.text);
                         document.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'PASSWORD_CONFIRM':{
-                        document.querySelector('#common_signup_password_confirm').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_start_signup_password_confirm').setAttribute('placeholder',app_object.text);
                         document.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'PASSWORD_REMINDER':{
-                        document.querySelector('#common_signup_password_reminder').setAttribute('placeholder',app_object.text);
+                        document.querySelector('#common_user_start_signup_password_reminder').setAttribute('placeholder',app_object.text);
                         document.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
                         break;
                     }
@@ -703,7 +703,6 @@ const SearchAndSetSelectedIndex = (search, select_item, colcheck) => {
   dialogue_verify_clear
   dialogue_password_new_clear
   dialogue_user_edit_clear
-  dialogue_forgot_clear
   dialogue_profile_clear
   dialogue_user_edit_remove_error
   lov_keys
@@ -794,36 +793,25 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
                 document.querySelector('#common_user_verify_email').innerHTML = title;
                 document.querySelector('#common_user_verify_cancel').innerHTML = icon;
                 
-                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
+                document.querySelector('#common_dialouge_user_start').style.visibility = 'hidden';
                 document.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
-        case 'LOGIN':
-            {
-                document.querySelector('#common_dialogue_login').style.visibility = 'visible';
-                document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
-                document.querySelector('#common_login_username').focus();
-                break;
-            }
-        case 'SIGNUP':
-            {
-                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_signup').style.visibility = 'visible';
-                document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
-                document.querySelector('#common_signup_username').focus();
-                break;
-            }
-        case 'FORGOT':
-            {
-                document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_forgot').style.visibility = 'visible';
-                document.querySelector('#common_forgot_email').focus();
-                break;
-            }
+        case 'LOGIN':{
+            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            document.querySelector('#common_user_start_login').click();
+            break;
+        }
+        case 'SIGNUP':{
+            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            document.querySelector('#common_user_start_signup').click();
+            break;
+        }
+        case 'FORGOT':{
+            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            document.querySelector('#common_user_start_forgot').click();
+            break;
+        }
     }
     return null;   
 };
@@ -1012,24 +1000,21 @@ const dialogue_user_edit_clear = () => {
     document.querySelector('#common_user_edit_label_data_account_created').innerHTML = '';
     document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = '';
 };
-const dialogue_login_clear = () => {
-    document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-    document.querySelector('#common_login_username').innerHTML = '';
-    document.querySelector('#common_login_password').innerHTML = '';
-    document.querySelector('#common_login_password_mask').innerHTML = '';
-};
-const dialogue_signup_clear = () => {
-    document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
-    document.querySelector('#common_signup_username').innerHTML = '';
-    document.querySelector('#common_signup_email').innerHTML = '';
-    document.querySelector('#common_signup_password').innerHTML = '';
-    document.querySelector('#common_signup_password_mask').innerHTML = '';
-    document.querySelector('#common_signup_password_confirm').innerHTML = '';
-    document.querySelector('#common_signup_password_confirm_mask').innerHTML = '';
-    document.querySelector('#common_signup_password_reminder').innerHTML = '';
-};
-const dialogue_forgot_clear = () => {
-    document.querySelector('#common_forgot_email').innerHTML = '';
+const dialogue_user_start_clear = () => {
+    document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
+    document.querySelector('#common_user_start_login_username').innerHTML = '';
+    document.querySelector('#common_user_start_login_password').innerHTML = '';
+    document.querySelector('#common_user_start_login_password_mask').innerHTML = '';
+
+    document.querySelector('#common_user_start_signup_username').innerHTML = '';
+    document.querySelector('#common_user_start_signup_email').innerHTML = '';
+    document.querySelector('#common_user_start_signup_password').innerHTML = '';
+    document.querySelector('#common_user_start_signup_password_mask').innerHTML = '';
+    document.querySelector('#common_user_start_signup_password_confirm').innerHTML = '';
+    document.querySelector('#common_user_start_signup_password_confirm_mask').innerHTML = '';
+    document.querySelector('#common_user_start_signup_password_reminder').innerHTML = '';
+
+    document.querySelector('#common_user_start_forgot_email').innerHTML = '';
 };
 const dialogue_profile_clear = () => {
     document.querySelector('#common_profile_info').style.display = 'none';
@@ -1785,55 +1770,131 @@ const search_input = (event, module, event_function) => {
   user_preferences_update_select
 
   ----------------------- */
-const user_login = async (username, password) => {
+const user_login = async (username, password, system_admin) => {
     return new Promise((resolve,reject)=>{
-        if (check_input(username) == false || check_input(password)== false)
-            reject('ERROR');
-        if (username == '') {
-            //"Please enter username"
-            show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
-            reject('ERROR');
+        let path = '';
+        if (system_admin) {
+            path = '/systemadmin?';
+            if (document.querySelector('#common_user_start_login_system_admin_username').innerHTML == '') {
+                show_message('INFO', null, null, ICONS.app_system_admin + ' ' + ICONS.message_text, COMMON_GLOBAL.common_app_id);
+                return;
+            }
+            if (document.querySelector('#common_user_start_login_system_admin_password').innerHTML == '') {
+                show_message('INFO', null, null, ICONS.user_password + ' ' + ICONS.message_text, COMMON_GLOBAL.common_app_id);
+                return;
+            }
+            if (check_input(document.querySelector('#common_user_start_login_system_admin_username').innerHTML, 100, true) == false ||
+                check_input(document.querySelector('#common_user_start_login_system_admin_password').innerHTML, 100, true) == false)
+                return;
+            //no : in username
+            if (document.querySelector('#common_user_start_login_system_admin_username').innerHTML.indexOf(':') > -1) {
+                show_message('INFO', null, null, ICONS.app_system_admin + ' ":" ' + ICONS.message_error, COMMON_GLOBAL.common_app_id);
+                return;
+            }
+            //no : in username
+            if (document.querySelector('#common_user_start_login_system_admin_password').innerHTML.indexOf(':') > -1) {
+                show_message('INFO', null, null, ICONS.user_password + ' ":" ' + ICONS.message_error, COMMON_GLOBAL.common_app_id);
+                return;
+            }
+            //if first time then password confirm is shown
+            if (document.querySelector('#common_user_start_login_system_admin_password_confirm').style.display == 'block') {
+                if (document.querySelector('#common_user_start_login_system_admin_password_confirm').innerHTML == '') {
+                    show_message('INFO', null, null, ICONS.user_password + ' ' + ICONS.message_text, COMMON_GLOBAL.common_app_id);
+                    return;
+                }
+                if (document.querySelector('#common_user_start_login_system_admin_password').innerHTML !=
+                    document.querySelector('#common_user_start_login_system_admin_password_confirm').innerHTML) {
+                    show_message('INFO', null, null, ICONS.user_password + ' <> ' + ICONS.user_password, COMMON_GLOBAL.common_app_id);
+                    return;
+                }
+            }
         }
-        if (password == '') {
-            //"Please enter password"
-            show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-            reject('ERROR');
+        else{
+            path = '/user?';
+            if (check_input(username) == false || check_input(password)== false)
+                return reject('ERROR');
+            if (username == '') {
+                //"Please enter username"
+                show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
+                return reject('ERROR');
+            }
+            if (password == '') {
+                //"Please enter password"
+                show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
+                return reject('ERROR');
+            }
         }
+            
         // ES6 object spread operator for user variables
         const json_data = { username:  encodeURI(username),
                             password:  encodeURI(password),
                             ...get_uservariables()
                         };
-        document.querySelector('#common_login_button').classList.add('css_spinner');
-        FFB('IAM', '/user?', 'POST', 'IAM', json_data)
+        if (system_admin)
+            document.querySelector('#common_user_start_login_system_admin_button').classList.add('css_spinner');
+        else
+            document.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+        FFB('IAM', path, 'POST', 'IAM', json_data)
         .then(result=>{
-            profile_close();
-            const user = JSON.parse(result).items[0];
-            COMMON_GLOBAL.user_account_id = user.id;
-            COMMON_GLOBAL.user_identity_provider_id = '';
-            COMMON_GLOBAL.user_app_role_id = user.app_role_id;
-            COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
-            updateOnlineStatus();
-            user_preference_get()
-            .then(()=>{
-                if (user.active==0){
-                    show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
-                    reject('ERROR');
-                }
-                else{
-                    dialogue_login_clear();
-                    dialogue_signup_clear();
-                    document.querySelector('#common_login_button').classList.remove('css_spinner');
-                    resolve({   user_id: user.id,
-                                username: user.username,
-                                bio: user.bio,
-                                avatar: user.avatar,
-                                app: JSON.parse(result).app});
-                }
-            });
+            if (system_admin){
+                COMMON_GLOBAL.system_admin = JSON.parse(result).username;
+                COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
+                updateOnlineStatus();
+                document.querySelector('#common_user_menu_default_avatar').classList.add('system_admin');
+                document.querySelector('#common_user_menu_username').innerHTML = ICONS.app_system_admin;
+                document.querySelector('#common_user_preferences').style.display = 'none';
+                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                dialogue_user_start_clear();
+                document.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
+                resolve({   user_id: null,
+                            username: JSON.parse(result).username,
+                            bio: null,
+                            avatar: null});
+            }
+            else{
+                profile_close();
+                const user = JSON.parse(result).items[0];
+                COMMON_GLOBAL.user_account_id = user.id;
+                COMMON_GLOBAL.user_identity_provider_id = '';
+                COMMON_GLOBAL.user_app_role_id = user.app_role_id;
+                COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+                
+                //set avatar or empty
+                set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
+                document.querySelector('#common_user_menu_username').innerHTML = user.username;
+                document.querySelector('#common_user_menu_username').style.display = 'block';
+    
+                document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+    
+                
+                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+    
+                updateOnlineStatus();
+                user_preference_get()
+                .then(()=>{
+                    if (user.active==0){
+                        show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
+                        reject('ERROR');
+                    }
+                    else{
+                        dialogue_user_start_clear();
+                        document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                        resolve({   user_id: user.id,
+                                    username: user.username,
+                                    bio: user.bio,
+                                    avatar: user.avatar});
+                    }
+                });
+            }
         })
         .catch(err=>{
-            document.querySelector('#common_login_button').classList.remove('css_spinner');
+            if (system_admin)
+                document.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
+            else
+                document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
             reject(err);});
     });
 };
@@ -1856,9 +1917,7 @@ const user_logoff = async () => {
     dialogue_user_edit_clear();
     dialogue_verify_clear();
     dialogue_password_new_clear();
-    dialogue_login_clear();
-    dialogue_signup_clear();
-    dialogue_forgot_clear();
+    dialogue_user_start_clear();
     document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
     user_preferences_set_default_globals('LOCALE');
@@ -2022,11 +2081,11 @@ const user_update = async () => {
     });
 };
 const user_signup = () => {
-    const username = document.querySelector('#common_signup_username').innerHTML;
-    const email = document.querySelector('#common_signup_email').innerHTML;
-    const password = document.querySelector('#common_signup_password').innerHTML;
-    const password_confirm = document.querySelector('#common_signup_password_confirm').innerHTML;
-    const password_reminder = document.querySelector('#common_signup_password_reminder').innerHTML;
+    const username = document.querySelector('#common_user_start_signup_username').innerHTML;
+    const email = document.querySelector('#common_user_start_signup_email').innerHTML;
+    const password = document.querySelector('#common_user_start_signup_password').innerHTML;
+    const password_confirm = document.querySelector('#common_user_start_signup_password_confirm').innerHTML;
+    const password_reminder = document.querySelector('#common_user_start_signup_password_reminder').innerHTML;
 
     if (check_input(username) == false || 
         check_input(email)== false ||
@@ -2058,17 +2117,17 @@ const user_signup = () => {
         return null;
     }
 
-    const old_button = document.querySelector('#common_signup_button').innerHTML;
-    document.querySelector('#common_signup_button').innerHTML = APP_SPINNER;
+    const old_button = document.querySelector('#common_user_start_signup_button').innerHTML;
+    document.querySelector('#common_user_start_signup_button').innerHTML = APP_SPINNER;
     FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
     .then(result=>{
-        document.querySelector('#common_signup_button').innerHTML = old_button;
+        document.querySelector('#common_user_start_signup_button').innerHTML = old_button;
         const signup = JSON.parse(result);
         COMMON_GLOBAL.rest_at = signup.accessToken;
         COMMON_GLOBAL.user_account_id = signup.id;
         show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, null);
     })
-    .catch(()=>document.querySelector('#common_signup_button').innerHTML = old_button);
+    .catch(()=>document.querySelector('#common_user_start_signup_button').innerHTML = old_button);
 };
 const user_verify_check_input = async (item, nextField) => {
     return new Promise((resolve, reject)=>{
@@ -2116,10 +2175,10 @@ const user_verify_check_input = async (item, nextField) => {
                             case 2:{
                                 //SIGNUP
                                 //login with username and password from signup fields
-                                document.querySelector('#common_login_username').innerHTML =
-                                    document.querySelector('#common_signup_username').innerHTML;
-                                document.querySelector('#common_login_password').innerHTML =
-                                    document.querySelector('#common_signup_password').innerHTML;
+                                document.querySelector('#common_user_start_login_username').innerHTML =
+                                    document.querySelector('#common_user_start_signup_username').innerHTML;
+                                document.querySelector('#common_user_start_login_password').innerHTML =
+                                    document.querySelector('#common_user_start_signup_password').innerHTML;
                                 break;
                             }
                             case 3:{
@@ -2135,10 +2194,7 @@ const user_verify_check_input = async (item, nextField) => {
                             }
                         }
                         
-                        document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                        
-                        dialogue_signup_clear();
-                        dialogue_forgot_clear();
+                        dialogue_user_start_clear();
                         dialogue_verify_clear();
                         dialogue_user_edit_clear();
                         resolve({   actived: 1, 
@@ -2263,15 +2319,15 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
     }
 };
 const user_forgot = async () => {
-    const email = document.querySelector('#common_forgot_email').innerHTML;
+    const email = document.querySelector('#common_user_start_forgot_email').innerHTML;
     const json_data = { email: email,
                         ...get_uservariables()
                     };
     if (check_input(email) == false || email =='')
         return;
     else{
-        const old_button = document.querySelector('#common_forgot_button').innerHTML;
-        document.querySelector('#common_forgot_button').innerHTML = APP_SPINNER;
+        const old_button = document.querySelector('#common_user_start_forgot_button').innerHTML;
+        document.querySelector('#common_user_start_forgot_button').innerHTML = APP_SPINNER;
         FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
         .then(result=>{
             const forgot = JSON.parse(result);
@@ -2281,7 +2337,7 @@ const user_forgot = async () => {
             }
         })
         .catch(()=>null)
-        .finally(document.querySelector('#common_forgot_button').innerHTML = old_button);
+        .finally(document.querySelector('#common_user_start_forgot_button').innerHTML = old_button);
     }
 };
 const updatePassword = () => {
@@ -2422,8 +2478,7 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                 updateOnlineStatus();
                 user_preference_get()
                 .then(()=>{
-                    dialogue_login_clear();
-                    dialogue_signup_clear();
+                    dialogue_user_start_clear();
                     resolve({   user_account_id: user_login.id,
                                 username: user_login.username,
                                 bio: user_login.bio,
@@ -3273,44 +3328,24 @@ const common_event = async (event_type,event) =>{
                         break;
                     }
                     // dialogue login/signup/forgot
-                    case 'common_login_tab2':{
-                        show_common_dialogue('SIGNUP');
+                    case 'common_user_start_login':
+                    case 'common_user_start_login_system_admin':
+                    case 'common_user_start_signup':
+                    case 'common_user_start_forgot':{
+                        document.querySelectorAll('#common_user_start_nav > div').forEach(tab=>tab.classList.remove('common_user_start_selected'));
+                        document.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
+                        
+                        document.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach(form=>form.style.display='none');
+                        document.querySelector(`#${event_target_id}_form`).style.display='inline-block';
+
                         break;
                     }
-                    case 'common_login_tab3':{
-                        show_common_dialogue('FORGOT');
+                    case 'common_user_start_close':{
+                        document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
                         break;
                     }
-                    case 'common_login_close':{
-                        document.querySelector('#common_dialogue_login').style.visibility = 'hidden';
-                        break;
-                    }
-                    case 'common_signup_tab1':{
-                        show_common_dialogue('LOGIN');
-                        break;
-                    }
-                    case 'common_signup_tab3':{
-                        show_common_dialogue('FORGOT');
-                        break;
-                    }
-                    case 'common_signup_close':{
-                        document.querySelector('#common_dialogue_signup').style.visibility = 'hidden';
-                        break;
-                    }
-                    case 'common_forgot_tab1':{
-                        show_common_dialogue('LOGIN');
-                        break;
-                    }
-                    case 'common_forgot_tab2':{
-                        show_common_dialogue('SIGNUP');
-                        break;
-                    }
-                    case 'common_forgot_button':{
+                    case 'common_user_start_forgot_button':{
                         await user_forgot();
-                        break;
-                    }
-                    case 'common_forgot_close':{
-                        document.querySelector('#common_dialogue_forgot').style.visibility = 'hidden';
                         break;
                     }
                     //dialogue message
@@ -3408,7 +3443,8 @@ const common_event = async (event_type,event) =>{
                         break;
                     }
                     case 'common_user_menu_dropdown_log_in':{
-                        show_common_dialogue('LOGIN'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        show_common_dialogue('LOGIN');
                         break;
                     }
                     case 'common_user_menu_dropdown_edit':{
@@ -3419,7 +3455,8 @@ const common_event = async (event_type,event) =>{
                         break;
                     }
                     case 'common_user_menu_dropdown_signup':{
-                        show_common_dialogue('SIGNUP'); document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                        show_common_dialogue('SIGNUP');
                         break;
                     }
                     //dialogue user edit
@@ -3660,12 +3697,12 @@ const common_event = async (event_type,event) =>{
             }
             else
                 switch (event.target.id){
-                    case 'common_forgot_email':{
+                    case 'common_user_start_forgot_email':{
                         if (event.code === 'Enter') {
                             event.preventDefault();
                             await user_forgot().then(()=>{
                                 //unfocus
-                                document.querySelector('#common_forgot_email').blur();
+                                document.querySelector('#common_user_start_forgot_email').blur();
                             });
                         }
                         break;
@@ -3837,7 +3874,7 @@ export{/* GLOBALS*/
        inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
-       dialogue_login_clear, dialogue_signup_clear,
+       dialogue_user_start_clear,
        lov_close, lov_show,
        /* WINDOW INFO */
        zoom_info, move_info, show_window_info,

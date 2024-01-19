@@ -902,7 +902,7 @@ const providers_buttons = async (app_id) =>{
         .then((/**@type{Types.db_result_identity_provider_getIdentityProviders[]}*/result)=>{
             let html = '';
             for (const provider of result){
-                html += `<div class='common_login_button common_login_provider_button common_row' >
+                html += `<div class='common_user_start_button common_link common_row' >
                             <div class='common_login_provider_id'>${provider.id}</div>
                             <div class='common_login_provider_name'>${provider.provider_name}</div>
                         </div>`;

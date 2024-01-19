@@ -13,24 +13,12 @@
 #menu_10::before{	content: var(--app_server)}
 #menu_11::before{	content: var(--app_logoff)}
 
-#admin_login_title::before{							content:var(--user)}
-#system_admin_login_title::before{					content:var(--user_system_admin)}
-#system_admin_login_username_icon::before{			content:var(--user_system_admin)}
-#system_admin_login_password_icon::before{			content:var(--user_password)}
-#common_message_close::before{						content:var(--app_close)}
-#admin_login_username_icon::before{					content:var(--user)}
-#admin_login_password_icon::before{					content:var(--user_password)}
-#admin_first_time::before{							content:var(--app_init)}
-#system_admin_login_password_icon_confirm::before{	content:var(--user_password)}
 
-#common_message_close::before{						content:var(--app_close)}
-#common_message_cancel::before{						content:var(--app_cancel)}
 #send_broadcast_send::before{						content:var(--app_send)}
 #send_broadcast_close::before{						content:var(--app_close)}
 #common_lov_close::before{							content:var(--app_close)}
 #send_broadcast_title::before{						content:var(--app_broadcast)}
 #client_id_label::before{							content:var(--user)}
-#admin_login_button::before{						content:var(--app_login)}
 .icon_infinite::before{								content:var(--infinite)}
 
 #box1_title.system_admin::before{					content:var(--app_internet) ' ' var(--app_server) ' ' var(--app_chart)}
@@ -142,14 +130,10 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 #menu_10_os_title::before{								content:var(--app_server)}
 #menu_10_process_title::before{							content:var(--app_server) ' ' var(--app_apps)}
 
-#dialogue_admin_login{
-	background-color: inherit !important;
-	display: inline-flex;
-	font-size: 16px;
+#common_user_start_logo{
+	background-image: url('/images/logo.png') !important;
 }
-#admin_login, #system_admin_login{
-	display: none;
-}
+
 .dialogue{
 	width: 100%;
 	height: 100%;
@@ -166,53 +150,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	margin:auto;
 	border-radius: 4px;
 }
-#dialogue_admin_login_content{
-	height:auto;
-	width: 350px;
-}
-#admin_login_nav{
-	padding: 0px;
-	margin-block-start: 1em;
-    margin-block-end: 1em;
-}
-#admin_login_nav .admin_login_list{
-	display: inline-block;
-	width: 25%;
-}
-.login_nav_button{
-	border: none;
-	background: none;
-	border-radius: 4px;
-	cursor: pointer;
-	font-size: 1.5em;
-}
-#admin_first_time, #system_admin_login_password_confirm{
-	display:none;
-}
-#admin_login_logo {
-	background-size: contain;
-	background-repeat: no-repeat;
-	background-position: center;
-	height: 50px;
-}
-.admin_login_icon{
-	display: inline-block;
-	font-size: 1.5em;
-	width: 1.5em;
-}
-.admin_login_input{
-	border-radius: 16px;
-	height:40px;
-	max-width:85%;
-	margin-top:10px;
-	padding: 8px 16px;
-	box-sizing: border-box;
-}
-#admin_login_password_input, 
-#system_admin_login_password_input, 
-#system_admin_login_password_confirm_input{
-	max-width: 100%;
-}
+
 #admin_secure{
 	width:100%;
     height:100%;
@@ -1226,6 +1164,15 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 }
 
 /* COMMON */
+#common_user_start_login_system_admin, 
+#common_user_start_login_system_admin_form{
+	display: inline-block;
+}
+#common_user_start_signup,
+#common_user_start_forgot{
+	display: none;	
+}
+
 #common_profile_input_row,
 #common_profile_search_list_wrap{
 	visibility: hidden;
@@ -1493,9 +1440,7 @@ body{
 	background: var(--app_theme_background_color);
 	caret-color: var(--app_theme_text_color);
 }
-.login_nav_button_selected{
-	background-color:var(--app_theme_login_nav_selected_background_color);
-}
+
 .menuitem{
 	color: var(--app_theme_menuitem_color);
 	fill: var(--app_theme_menuitem_color);
@@ -1508,11 +1453,7 @@ body{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1), 0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);
 }
-.admin_login_input{
-	border: 1px solid var(--app_theme_input_border_color);
-}
-.common_dialogue_button,
-.admin_login_icon{
+.common_dialogue_button{
 	color: var(--app_theme_text_color) !important;
 }
 /*SECURE*/
@@ -1649,10 +1590,15 @@ body{
 }
 .common_password_container{
 	display: inline-block !important;
-    width: 85% !important;
     vertical-align: super;
 }
 /*APP THEME COMMON*/
+#common_dialogue_user_start .common_input{
+	border: 1px solid var(--app_theme_input_border_color);
+}
+.common_user_start_selected {
+	background-color:var(--app_theme_login_nav_selected_background_color);
+}
 .common_input{
 	background-color: var(--app_theme_dialogue_background_color);
 }

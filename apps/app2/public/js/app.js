@@ -957,25 +957,15 @@ const update_ui = async (option, item_id=null) => {
 const show_profile_function = profile_id => profile_show_app(+profile_id);
 
 const user_login_app = async () => {
-    const username = document.querySelector('#common_login_username');
-    const password = document.querySelector('#common_login_password');
+    const username = document.querySelector('#common_user_start_login_username');
+    const password = document.querySelector('#common_user_start_login_password');
     await common.user_login(username.innerHTML, password.innerHTML)
     .then((result)=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
         .then(()=>{
-            common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
             document.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
             common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
-
-            document.querySelector('#common_user_menu_username').innerHTML = result.username;
-            document.querySelector('#common_user_menu_username').style.display = 'block';
-            
-            document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-            
-            document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'block';
-            document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
 
             //Show user tab
             document.querySelector('#tab_nav_7').style.display = 'inline-block';
@@ -2205,11 +2195,11 @@ const setEvents = () => {
                     toolbar_button(7);
                     break;
                 }
-                case 'common_login_button':{
+                case 'common_user_start_login_button':{
                     user_login_app();
                     break;
                 }
-                case 'common_signup_button':{
+                case 'common_user_start_signup_button':{
                     common.user_signup();
                     break;
                 }
@@ -2407,8 +2397,8 @@ const setEvents = () => {
                     common.search_input(event, 'profile', show_profile_function);
                     break;
                 }
-                case 'common_login_username':
-                case 'common_login_password':{
+                case 'common_user_start_login_username':
+                case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
                         user_login_app().then(() => {
