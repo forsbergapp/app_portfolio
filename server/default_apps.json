@@ -17,7 +17,7 @@
                 "RENDER_APP_THEMES":true, 
                 "RENDER_LOCALES":true, 
                 "RENDER_SETTINGS":true, 
-                "RENDER_PROVIDER_BUTTONS":true},
+                "RENDER_PROVIDER_BUTTONS":false},
     "RENDER_FILES":[
                     ["APP",                 null,           null,                           "/apps/admin/src/index.html"],
                     ["APP",                 null,           "AppMenu",                      "/apps/admin/src/menu.html"],
