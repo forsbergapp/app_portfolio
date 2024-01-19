@@ -233,7 +233,7 @@ const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, error);
 };
 const init_app = (parameters) => {
-    common.show_common_dialogue('LOGIN');
+    setEvents();
     document.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
     if (parameters.app_service.first_time == 1) {
         document.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
@@ -242,8 +242,7 @@ const init_app = (parameters) => {
     if (parameters.app_service.system_admin_only == 1) {
         document.querySelector('#common_user_start_login').style.display = 'none';
         document.querySelector('#common_user_start_login_form').style.display = 'none';
-        document.querySelector('#common_user_start_login_system_admin_form').style.display = 'block';
-        document.querySelector('#common_user_start_system_admin_login').click();
+        common.show_common_dialogue('LOGIN_SYSTEM_ADMIN');
     }
     else {
         for (let i = 0; i < parameters.app.length; i++) {
@@ -258,11 +257,8 @@ const init_app = (parameters) => {
             if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
                 common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
         }
-        document.querySelector('#common_user_start_login').style.display = 'inline-block';
-        document.querySelector('#common_user_start_login').click();
+        common.show_common_dialogue('LOGIN');
     }
-    
-    setEvents();
     if (parameters.app_service.system_admin_only == 0)
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
