@@ -6,9 +6,7 @@ const init = (parameters) => {
     
 
     document.title = common.ICONS.app_maintenance;
-    document.querySelector('#common_broadcast_close').innerHTML = common.ICONS.app_broadcast_close;
-    document.querySelector('#common_maintenance_footer').innerHTML= common.APP_SPINNER;
-    document.querySelector('#common_maintenance_message').innerHTML = common.ICONS.app_maintenance;
+    document.querySelector('#common_maintenance_footer').innerHTML= '';
     
     common.COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
     common.COMMON_GLOBAL.app_id = parameters.app_id;

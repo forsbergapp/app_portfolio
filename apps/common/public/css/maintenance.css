@@ -1,3 +1,13 @@
+#common_broadcast_close::before{		content:var(--app_broadcast_close)}
+#common_maintenance_message::before{	content:var(--app_maintenance)}
+
+
+#common_maintenance_logo {
+	background-image: url('/maintenance/images/logo_maintenance.png') !important;
+}
+#common_broadcast_info_logo {
+	background-image: url('/maintenance/images/logo_broadcast.png') !important;
+}
 body{
     font-size: 16px;
     margin: 0;
@@ -8,7 +18,7 @@ body{
 }
 
 .common_icon {
-	font-family: "Font Awesome 6 Free", "Font Awesome 6 Brands";
+	font-family: "Font Awesome 6 Free MAINTENANCE", "Font Awesome 6 Brands MAINTENANCE";
 	font-weight: 900;
 	font-style: normal;
 	display: inline-block;

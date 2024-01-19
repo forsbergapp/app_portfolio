@@ -577,9 +577,9 @@ const set_maintenance = () => {
     if (admin_token_has_value()){
         let check_value;
         if (document.querySelector('#menu_1_checkbox_maintenance').classList.contains('checked'))
-            check_value = 0;
-        else
             check_value = 1;
+        else
+            check_value = 0;
         const json_data = {value: check_value};
         common.FFB('SERVER', '/config/systemadmin/maintenance?', 'PATCH', 'SYSTEMADMIN', json_data).catch(()=>null);
     }
