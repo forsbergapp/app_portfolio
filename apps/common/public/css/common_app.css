@@ -1,5 +1,8 @@
 #common_construction::before{								content:var(--app_maintenance)}	
 
+#common_message_close::before{								content:var(--app_close)}
+#common_message_cancel::before{								content:var(--app_cancel)}
+
 .common_lov_button::before{									content: var(--app_lov)}
 .common_unlike::before{										content:var(--user_unlike)}	
 .common_like::before{										content:var(--user_like)}	
@@ -11,7 +14,7 @@
 #common_profile_main_btn_cloud::before{						content:var(--sky_cloud)}
 
 #common_user_menu_default_avatar::before{					content:var(--user_avatar)}
-#common_user_menu_default_avatar.system_admin::before{		content:var(--app_system_admin)}
+#common_user_menu_default_avatar.system_admin::before{		content:var(--user_system_admin)}
 
 #common_user_menu_dropdown_edit::before{					content:var(--app_edit)}
 #common_user_menu_dropdown_log_out::before{					content:var(--app_logoff)}
@@ -24,27 +27,27 @@
 
 #common_user_verify_email_icon::before{						content:var(--app_email)}
 
-#common_login_tab1::before{									content:var(--app_login)}
-#common_login_tab2::before{									content:var(--app_signup)}
-#common_login_tab3::before{									content:var(--app_forgot)}
-#common_login_button::before{								content:var(--app_login)}
-#common_login_close::before{								content:var(--app_close)}
+#common_user_start_login::before{							content:var(--user)}
+#common_user_start_login_button::before{					content:var(--app_login)}
 
-#common_signup_tab1::before{								content:var(--app_login)}
-#common_signup_tab2::before{								content:var(--app_signup)}
-#common_signup_tab3::before{								content:var(--app_forgot)}
-#common_signup_button::before{								content:var(--app_signup)}
-#common_signup_close::before{								content:var(--app_close)}
+#common_user_start_login_system_admin::before{				content:var(--user_system_admin)}
+#common_user_start_login_system_admin_button::before{		content:var(--app_login)}
 
-#common_forgot_tab1::before{								content:var(--app_login)}
-#common_forgot_tab2::before{								content:var(--app_signup)}
-#common_forgot_tab3::before{								content:var(--app_forgot)}
-#common_forgot_button::before{								content:var(--app_sendmail)}
-#common_forgot_close::before{								content:var(--app_close)}
+#common_user_start_signup::before{							content:var(--app_signup)}
+#common_user_start_signup_button::before{					content:var(--app_signup)}
+
+#common_user_start_forgot::before{							content:var(--app_forgot)}
+#common_user_start_forgot_button::before{					content:var(--app_email)}
+
+#common_user_start_close::before{							content:var(--app_close)}
+
+
+#common_user_start_login_system_admin_first_time::before{	content:var(--app_init)}
 
 #common_user_password_new_icon::before{						content:var(--user_password)}
 #common_user_password_new_cancel::before{					content:var(--app_cancel)}
 #common_user_password_new_ok::before{						content:var(--app_close)}
+
 
 #common_profile_search_icon::before{						content:var(--app_search)}
 
@@ -201,6 +204,7 @@ select {
 .common_password{
 	position:absolute;
 	z-index: 0;
+	max-width: calc(100% - 40px);
 	color:transparent !important;
 	background-color: transparent !important;
 }
@@ -467,9 +471,7 @@ select {
 
 
 
-#common_dialogue_login,
-#common_dialogue_signup,
-#common_dialogue_forgot,
+#common_dialogue_user_start,
 #common_user_menu_dropdown{
 	z-index:51;
 }
@@ -554,65 +556,66 @@ select {
 #common_user_password_new{
 	margin-top: 40px;
 }
-/*Dialogue login/signup/forgot*/
-#common_dialogue_login,
-#common_dialogue_signup,
-#common_dialogue_forgot{
+/*Dialogue user start*/
+#common_user_start_login_system_admin, 
+#common_user_start_login_system_admin_form,
+#common_user_start_login_system_admin_first_time, 
+#common_user_start_login_system_admin_password_confirm{
+	display:none;
+}
+#common_dialogue_user_start{
 	visibility: hidden;
 }
-#common_dialogue_login_content{
-	overflow-y: auto;
+.common_user_start_form{
+	width: 100%;;
+}
+#common_dialogue_user_start_content{
 	max-height: 90%;
+	width: 300px;
+	height: 430px;
 }
-#common_dialogue_login_content,
-#common_dialogue_signup_content,
-#common_dialogue_forgot_content{
-	height:auto;
+#common_user_start_nav > div{
+	margin:10px;
+	cursor: pointer;
+	width: 20%;
 }
-#common_login_form, #common_signup_form, #common_forgot_form{
-	margin: 0px auto;
-	width:300px;
-}
-#common_login_logo, #common_signup_logo, #common_forgot_logo{
+#common_user_start_logo{
 	background-image: url('/common/images/logo.png');
 	background-size: contain;
 	width: 40px;
 	height: 40px;
 	margin: 0 auto;
 }
-.common_login_input, .common_signup_input, .common_forgot_input, .common_password_new_input{
-	border-radius: 16px;
-	height:40px;
-	width:100%;
+#common_dialogue_user_start .common_input, .common_login_input{
+	height:30px;
+	width: calc(100% - 40px);
 	margin-top:10px;
-	padding: 8px 16px;
-	box-sizing: border-box;
+	padding: 4px 10px;
+	box-sizing: border-box;	
 }
-#common_login_tab1, #common_login_tab2, #common_login_tab3, 
-#common_signup_tab1, #common_signup_tab2, #common_signup_tab3,
-#common_forgot_tab1, #common_forgot_tab2, #common_forgot_tab3
-{
-	display:inline-block;
-	width: 30%;
-}
-.common_login_button, .common_signup_button, .common_forgot_button{
+#common_dialogue_user_start .common_user_start_button{
 	display: inline-block;
-	border-radius: 20px;
-	width:100%;
-	height:40px;
+	height:30px;
 	padding:1px;
 	border: 0px solid;
 	margin-top:10px;
+	margin-bottom:10px;
 	cursor:pointer;
 }
-.common_login_tab_button, .common_signup_tab_button, .common_forgot_tab_button{
-	border: 0px;
-	margin-top:10px;
-	cursor:pointer;
-	background:none;
-}
-.common_login_provider_id, .common_login_provider_name{
+#common_dialogue_user_start .common_login_provider_id, 
+#common_dialogue_user_start .common_login_provider_name{
 	display:inline-block;
+}
+#common_user_start_forgot_form{
+	width: 100%;
+}
+#common_user_start_forgot_button{
+	margin:10px;
+	cursor:pointer;
+}
+#common_user_start_close{
+	width: 100%;
+	margin-top:10px;
 }
 /*Dialogue user edit*/
 #common_dialogue_user_edit{
