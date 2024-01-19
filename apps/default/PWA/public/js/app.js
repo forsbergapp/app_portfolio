@@ -11,7 +11,7 @@ const serviceworker = () => {
     }
 };
 const init_app = () => {
-    document.querySelector('#app_construction').innerHTML = common.ICONS.app_maintenance;
+    null;
     serviceworker();
 };
 const init = (parameters) => {
