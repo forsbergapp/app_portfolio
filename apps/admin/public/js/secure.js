@@ -50,26 +50,13 @@ const list_generate = (amount)=>{
     return html;
 };
 const show_menu = (menu) => {
-    document.querySelector('#menu_1_content').style.display='none';
-    document.querySelector('#menu_1').classList.remove('menuitem_selected');
-    document.querySelector('#menu_2_content').style.display='none';
-    document.querySelector('#menu_2').classList.remove('menuitem_selected');
-    document.querySelector('#menu_3_content').style.display='none';
-    document.querySelector('#menu_3').classList.remove('menuitem_selected');
-    document.querySelector('#menu_4_content').style.display='none';
-    document.querySelector('#menu_4').classList.remove('menuitem_selected');
-    document.querySelector('#menu_5_content').style.display='none';
-    document.querySelector('#menu_5').classList.remove('menuitem_selected');
-    document.querySelector('#menu_6_content').style.display='none';
-    document.querySelector('#menu_6').classList.remove('menuitem_selected');
-    document.querySelector('#menu_7_content').style.display='none';
-    document.querySelector('#menu_7').classList.remove('menuitem_selected');
-    document.querySelector('#menu_8_content').style.display='none';
-    document.querySelector('#menu_8').classList.remove('menuitem_selected');
-    document.querySelector('#menu_9_content').style.display='none';
-    document.querySelector('#menu_9').classList.remove('menuitem_selected');
-    document.querySelector('#menu_10_content').style.display='none';
-    document.querySelector('#menu_10').classList.remove('menuitem_selected');
+    document.querySelectorAll('.menuitem').forEach(content => {
+        content.classList.remove('menuitem_selected');
+    });
+    document.querySelectorAll('.main_content').forEach(content => {
+        content.innerHTML = '';
+        content.style.display='none';
+    });
     document.querySelector(`#menu_${menu}_content`).style.display='block';
     document.querySelector(`#menu_${menu}`).classList.add('menuitem_selected');
     const current_year = new Date().getFullYear();
