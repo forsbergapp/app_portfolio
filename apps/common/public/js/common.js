@@ -802,6 +802,11 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
             document.querySelector('#common_user_start_login').click();
             break;
         }
+        case 'LOGIN_SYSTEM_ADMIN':{
+            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            document.querySelector('#common_user_start_login_system_admin').click();
+            break;
+        }
         case 'SIGNUP':{
             document.querySelector('#common_dialogue_user_start').style.visibility='visible';
             document.querySelector('#common_user_start_signup').click();
