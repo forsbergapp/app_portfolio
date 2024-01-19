@@ -267,20 +267,6 @@ const ICONS = {
     'message_text':             icon_string('41') + icon_string('42') + icon_string('43')
 };
 Object.seal(ICONS);
-const APP_SPINNER = `<div id="common_app_spinner" class="common_load-spinner">
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                                    <div></div>
-                    </div>`;
 /*-----------------------
   MISC                   
 
@@ -793,7 +779,7 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
                 document.querySelector('#common_user_verify_email').innerHTML = title;
                 document.querySelector('#common_user_verify_cancel').innerHTML = icon;
                 
-                document.querySelector('#common_dialouge_user_start').style.visibility = 'hidden';
+                document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
                 document.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
@@ -1069,14 +1055,16 @@ const lov_close = () => {
 const lov_show = (lov, function_event) => {
     
     document.querySelector('#common_dialogue_lov').style.visibility = 'visible';
-    document.querySelector('#common_lov_list').innerHTML = APP_SPINNER;
+    document.querySelector('#common_lov_list').classList.add('css_spinner');
+    document.querySelector('#common_lov_list').innerHTML = '';
+    document.querySelector('#common_lov_title').className = 'common_icon';
     let path = '';
     let token_type = '';
     let lov_column_value='';
     let service;
     switch (lov){
         case 'PARAMETER_TYPE':{
-            document.querySelector('#common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_settings  + ' ' + ICONS.app_type;
+            document.querySelector('#common_lov_title').classList.add('parameter_type');
             lov_column_value = 'parameter_type_text';            
             path = '/parameter_type/admin?';
             service = 'DB_API';
@@ -1084,7 +1072,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'SERVER_LOG_FILES':{
-            document.querySelector('#common_lov_title').innerHTML = ICONS.app_server + ' ' + ICONS.app_file_path;
+            document.querySelector('#common_lov_title').classList.add('server_log_file');
             lov_column_value = 'filename';
             path = '/log/files?';
             service = 'LOG';
@@ -1092,7 +1080,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_CATEGORY':{
-            document.querySelector('#common_lov_title').innerHTML = ICONS.app_apps + ' ' + ICONS.app_type;
+            document.querySelector('#common_lov_title').classList.add('app_category');
             lov_column_value = 'app_category_text';
             path = '/app_category/admin?';
             service = 'DB_API';
@@ -1100,7 +1088,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_ROLE':{
-            document.querySelector('#common_lov_title').innerHTML = ICONS.app_role;
+            document.querySelector('#common_lov_title').classList.add('app_role');
             lov_column_value = 'icon';
             path = '/app_role/admin?';
             service = 'DB_API';
@@ -1110,7 +1098,6 @@ const lov_show = (lov, function_event) => {
     }
     FFB(service, path, 'GET', token_type, null)
     .then(result=>{
-        document.querySelector('#common_lov_list').innerHTML = '';
             document.querySelector('#common_lov_list')['data-function'] = function_event;
             let html = '';
             for (const list_row of JSON.parse(result)) {
@@ -1124,10 +1111,11 @@ const lov_show = (lov, function_event) => {
                     </div>
                 </div>`;
             }
+            document.querySelector('#common_lov_list').classList.remove('css_spinner');
             document.querySelector('#common_lov_list').innerHTML = html;
             document.querySelector('#common_lov_search_input').focus();
     })
-    .catch(()=>document.querySelector('#common_lov_list').innerHTML = '');
+    .catch(()=>document.querySelector('#common_lov_list').classList.remove('css_spinner'));
         
 };
 const lov_keys = (event) => {
@@ -1292,11 +1280,12 @@ const show_window_info = (info, url, content_type, iframe_content) => {
             document.querySelector('#common_window_info_content').style.display = 'block';
             document.querySelector('#common_window_info').style.overflowY = 'auto';
             document.querySelector('#common_window_info').style.visibility = 'visible';
-            document.querySelector('#common_window_info_info').innerHTML = APP_SPINNER;
-            document.querySelector('#common_window_info_info').style.display = 'inline-block';
+            document.querySelector('#common_window_info_content').classList.add('css_spinner');
+            document.querySelector('#common_window_info_info').innerHTML = '';
+            document.querySelector('#common_window_info_info').style.display = 'none';
             if (content_type == 'HTML'){
-                document.querySelector('#common_window_info_info').innerHTML = '';
                 document.querySelector('#common_window_info_content').src=iframe_content;
+                document.querySelector('#common_window_info_content').classList.remove('css_spinner');
             }
             else
                 if (content_type=='PDF'){
@@ -1315,8 +1304,7 @@ const show_window_info = (info, url, content_type, iframe_content) => {
                         reader.readAsDataURL(pdf); 
                         reader.onloadend = () => {
                             const base64PDF = reader.result;
-                            document.querySelector('#common_window_info_info').innerHTML = '';
-                            document.querySelector('#common_window_info_info').style.display = 'none';
+                            document.querySelector('#common_window_info_content').classList.remove('css_spinner');
                             document.querySelector('#common_window_info_content').src = base64PDF;
                         };
                     });
@@ -1345,7 +1333,8 @@ const profile_follow_like = async (function_name) => {
 const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     let path;
     const profile_top_list = document.querySelector('#common_profile_top_list');
-    profile_top_list.innerHTML = APP_SPINNER;
+    profile_top_list.innerHTML = '';
+    profile_top_list.classList.add('css_spinner');
     document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
     document.querySelector('#common_profile_info').style.display = 'none';
     document.querySelector('#common_profile_top').style.display = 'block';
@@ -1383,16 +1372,18 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
                 </div>
             </div>`;
         }
+        profile_top_list.classList.remove('css_spinner');
         profile_top_list.innerHTML = html;
         document.querySelector('#common_profile_top_list')['data-function'] = click_function;
     })
-    .catch(()=> profile_top_list.innerHTML = '');
+    .catch(()=> profile_top_list.classList.remove('css_spinner'));
         
 };
 const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function) => {
     let path;
     const profile_detail_list = document.querySelector('#common_profile_detail_list');
-    profile_detail_list.innerHTML = APP_SPINNER;
+    profile_detail_list.innerHTML = '';
+    profile_detail_list.classList.add('css_spinner');
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
         /*detailchoice 1,2,3, 4: user_account*/
         path = '/user_account/profile/detail';
@@ -1462,10 +1453,11 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
                         </div>`;
                     }
                 }
+                profile_detail_list.classList.remove('css_spinner');
                 profile_detail_list.innerHTML = html;
                 document.querySelector('#common_profile_detail_list')['data-function'] = click_function;
             })
-            .catch(()=>profile_detail_list.innerHTML = '');
+            .catch(()=>profile_detail_list.classList.remove('css_spinner'));
         }
     } else
         show_common_dialogue('LOGIN');
@@ -1473,14 +1465,14 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
 const search_profile = (click_function) => {
     document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
     const profile_search_list = document.querySelector('#common_profile_search_list');
-    profile_search_list.innerHTML = APP_SPINNER;
     document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+    profile_search_list.innerHTML ='';
     if (document.querySelector('#common_profile_search_input').innerText==''){
-        profile_search_list.innerHTML ='';
         document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         document.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
     else{
+        profile_search_list.classList.add('css_spinner');
         const searched_username = document.querySelector('#common_profile_search_input').innerText;
         let path;
         let token;
@@ -1507,7 +1499,6 @@ const search_profile = (click_function) => {
         FFB('DB_API', path, 'POST', token, json_data)
         .then(result=>{
             if (JSON.parse(result).length == 0){
-                profile_search_list.innerHTML ='';
                 document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
             }
             let html = '';
@@ -1529,11 +1520,12 @@ const search_profile = (click_function) => {
                     </div>
                 </div>`;
             }
+            profile_search_list.classList.remove('css_spinner');
             profile_search_list.innerHTML = html;
             document.querySelector('#common_profile_search_list')['data-function'] = click_function;
         })
         .catch(()=>{
-            profile_search_list.innerHTML ='';
+            profile_search_list.classList.remove('css_spinner');
             document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         });
     }
@@ -1866,7 +1858,7 @@ const user_login = async (username, password, system_admin) => {
                 COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
                 
                 //set avatar or empty
-                set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
+                set_avatar(user.avatar, document.querySelector('#common_user_menu_avatar_img'));
                 document.querySelector('#common_user_menu_username').innerHTML = user.username;
                 document.querySelector('#common_user_menu_username').style.display = 'block';
     
@@ -2078,11 +2070,8 @@ const user_update = async () => {
             else
                 dialogue_user_edit_clear();
         })
-        .catch(()=>null)
-        .finally(()=>{
-            document.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
-            resolve(null);
-        });
+        .catch(()=>document.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner'))
+        .finally(()=>resolve(null));
     });
 };
 const user_signup = () => {
@@ -2121,18 +2110,17 @@ const user_signup = () => {
         show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
         return null;
     }
+    document.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
 
-    const old_button = document.querySelector('#common_user_start_signup_button').innerHTML;
-    document.querySelector('#common_user_start_signup_button').innerHTML = APP_SPINNER;
     FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
     .then(result=>{
-        document.querySelector('#common_user_start_signup_button').innerHTML = old_button;
+        document.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
         const signup = JSON.parse(result);
         COMMON_GLOBAL.rest_at = signup.accessToken;
         COMMON_GLOBAL.user_account_id = signup.id;
         show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, null);
     })
-    .catch(()=>document.querySelector('#common_user_start_signup_button').innerHTML = old_button);
+    .catch(()=>document.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
 };
 const user_verify_check_input = async (item, nextField) => {
     return new Promise((resolve, reject)=>{
@@ -2153,8 +2141,7 @@ const user_verify_check_input = async (item, nextField) => {
                     document.querySelector('#common_user_verify_verification_char4').innerHTML +
                     document.querySelector('#common_user_verify_verification_char5').innerHTML +
                     document.querySelector('#common_user_verify_verification_char6').innerHTML);
-                const old_button = document.querySelector('#common_user_verify_email').innerHTML;
-                document.querySelector('#common_user_verify_email').innerHTML = APP_SPINNER;
+                document.querySelector('#common_user_verify_email_icon').classList.add('css_spinner');
                 document.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
                 document.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
                 document.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
@@ -2169,7 +2156,7 @@ const user_verify_check_input = async (item, nextField) => {
                             };
                 FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
-                    document.querySelector('#common_user_verify_email').innerHTML = old_button;
+                    document.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
                         switch (verification_type){
@@ -2218,7 +2205,7 @@ const user_verify_check_input = async (item, nextField) => {
                     }
                 })
                 .catch(err=>{
-                    document.querySelector('#common_user_verify_email').innerHTML = old_button;
+                    document.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     reject(err);
                 });
             } else{
@@ -2257,9 +2244,12 @@ const user_delete = async (choice=null, user_local, function_delete_event ) => {
                 const json_data = { password: password};
     
                 FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id}`, 'DELETE', 'APP_ACCESS', json_data)
-                .then(()=>resolve({deleted: 1}))
-                .catch(err=>reject(err))
-                .finally(document.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner'));
+                .then(()=>{
+                    document.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');resolve({deleted: 1});
+                })
+                .catch(err=>{
+                    document.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
+                    reject(err);});
                 break;
             }
             default:
@@ -2331,18 +2321,17 @@ const user_forgot = async () => {
     if (check_input(email) == false || email =='')
         return;
     else{
-        const old_button = document.querySelector('#common_user_start_forgot_button').innerHTML;
-        document.querySelector('#common_user_start_forgot_button').innerHTML = APP_SPINNER;
+        document.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
         FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
         .then(result=>{
+            document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
             const forgot = JSON.parse(result);
             if (forgot.sent == 1){
                 COMMON_GLOBAL.user_account_id = forgot.id;
                 show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
             }
         })
-        .catch(()=>null)
-        .finally(document.querySelector('#common_user_start_forgot_button').innerHTML = old_button);
+        .catch(()=>document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
     }
 };
 const updatePassword = () => {
@@ -2368,15 +2357,14 @@ const updatePassword = () => {
             show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
             return null;
         }
-        const old_button = document.querySelector('#common_user_password_new_icon').innerHTML;
-        document.querySelector('#common_user_password_new_icon').innerHTML = APP_SPINNER;
+        document.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
         FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
         .then(()=>{
+            document.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
             dialogue_password_new_clear();
             show_common_dialogue('LOGIN');
         })
-        .catch(()=>null)
-        .finally(document.querySelector('#common_user_password_new_icon').innerHTML = old_button);
+        .catch(()=>document.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
     }
 };
 const user_preference_save = async () => {
@@ -3197,9 +3185,8 @@ const get_cities = async countrycode => {
 };
 const worldcities_search = async (event_function) =>{
     const search = document.querySelector('#common_module_leaflet_search_input').innerText;
-    if (search =='')
-        document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
-    else{
+    document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
+    if (search !=''){
         const get_cities = async (search) =>{
             return new Promise ((resolve)=>{
                 FFB('WORLDCITIES', `/city/search?search=${encodeURI(search)}`, 'GET', 'APP_DATA', null)
@@ -3207,8 +3194,9 @@ const worldcities_search = async (event_function) =>{
                 .catch(()=>resolve(null));
             });
         };
-        document.querySelector('#common_module_leaflet_search_list').innerHTML = APP_SPINNER;
+        document.querySelector('#common_module_leaflet_search_list').classList.add('css_spinner');
         const cities = await get_cities(search);
+        document.querySelector('#common_module_leaflet_search_list').classList.remove('css_spinner');
         let html = '';
         if (cities.length > 0){
             for (const city of cities){
@@ -3233,8 +3221,6 @@ const worldcities_search = async (event_function) =>{
             document.querySelector('#common_module_leaflet_search_list').innerHTML = html;
             document.querySelector('#common_module_leaflet_search_list')['data-function'] = event_function;
         }
-        else
-            document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
     }
 };
 /*-----------------------
@@ -3346,7 +3332,7 @@ const common_event = async (event_type,event) =>{
                         break;
                     }
                     case 'common_user_start_close':{
-                        document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
+                        dialogue_user_start_clear();
                         break;
                     }
                     case 'common_user_start_forgot_button':{
@@ -3871,7 +3857,7 @@ const init_common = async (parameters) => {
     });
 };
 export{/* GLOBALS*/
-       COMMON_GLOBAL, ICONS, APP_SPINNER,
+       COMMON_GLOBAL, ICONS,
        /* MISC */
        element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
