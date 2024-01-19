@@ -1168,7 +1168,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	height: auto !important;
 }
 #common_user_start_close{
-	margin-bottom: 20px;
+	display: none;
 }
 #common_user_start_login_system_admin, 
 #common_user_start_login_system_admin_form{

@@ -3,7 +3,13 @@
 #common_message_close::before{								content:var(--app_close)}
 #common_message_cancel::before{								content:var(--app_cancel)}
 
-.common_lov_button::before{									content: var(--app_lov)}
+.common_lov_button::before{									content:var(--app_lov)}
+#common_lov_search_icon::before{							content:var(--app_search)}
+#common_lov_title.parameter_type::before{					content:var(--app_apps) ' ' var(--app_settings) ' ' var(--app_type)}
+#common_lov_title.server_log_files::before{					content:var(--app_server) ' ' var(--app_file_path)}
+#common_lov_title.app_category::before{						content:var(--app_apps) ' ' var(--app_type)}
+#common_lov_title.app_role::before{							content:var(--app_role)}
+
 .common_unlike::before{										content:var(--user_unlike)}	
 .common_like::before{										content:var(--user_like)}	
 .common_user_follow::before{								content:var(--user_follow_user)}
@@ -86,7 +92,7 @@
 #common_user_edit_label_account_created::before{			content:var(--user_account_created)}
 #common_user_edit_label_account_modified::before{			content:var(--user_account_modified)}
 
-#common_lov_search_icon::before{							content:var(--app_search)}
+
 
 #common_window_info_btn_close::before{						content:var(--app_close)}
 #common_window_info_toolbar_btn_zoomout::before{			content:var(--app_zoomout)}
@@ -1023,6 +1029,7 @@ select {
 	overflow-x:auto;
 	display: block;
 	height: calc(100% - 160px);
+	inset-inline-start: calc(50% - 40px);
 }
 .common_profile_top_list_row{
 	height: 1.8em;
@@ -1182,8 +1189,8 @@ select {
 .css_spinner{	
 	position:relative;
 	vertical-align: sub;
-	width:30px;
-	height:30px;
+	width:30px !important;
+	height:30px !important;
 	border-radius:50% !important;
 	box-sizing:border-box;
 	background-image: conic-gradient(from 90deg at 50% 50%, rgba(39,174,96,0) 0deg, rgba(31, 144, 255, 0) 0.04deg, var(--app_spinner_color) 360deg);
@@ -1201,9 +1208,6 @@ select {
 	width: 25px;
 	background:var(--app_spinner_background);
 	border-radius:50%;
-}
-.common_list_scrollbar.css_spinner{
-	height:30px !important;
 }
 
 #common_app_spinner{
