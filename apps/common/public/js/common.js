@@ -592,12 +592,12 @@ const show_image = (item_img, item_input, image_width, image_height) => {
     const fileExtension = fileName.split('.').pop();
     if (!allowedExtensions.includes(fileExtension)){
         //File type not allowed
-        show_message('ERROR', 20307, null,null, COMMON_GLOBAL.common_app_id);
+        show_message('ERROR', 20307, null,null, null, COMMON_GLOBAL.common_app_id);
     }
     else
         if (fileSize > COMMON_GLOBAL.image_file_max_size){
             //File size too large
-            show_message('ERROR', 20308, null, null, COMMON_GLOBAL.common_app_id);
+            show_message('ERROR', 20308, null, null, null, COMMON_GLOBAL.common_app_id);
         }
         else {
             reader.onloadend = (event) => {
@@ -615,7 +615,113 @@ const show_image = (item_img, item_input, image_width, image_height) => {
 const getHostname = () =>{
     return `${location.protocol}//${location.hostname}${location.port==''?'':':' + location.port}`;
 };
-const check_input = (text, text_length=100, nodb_message=false) => {
+const input_control = (dialogue, elements) =>{
+    let result = true;
+    const valid_text = (element) =>{
+        //remove any html
+        element.innerHTML = element.innerText;
+        if (element.innerText.indexOf(':') > -1 || element.innerText.includes('"') || element.innerText.includes('\\') )
+            return false;
+        else
+            try {
+                if (JSON.parse(JSON.stringify(element.innerText)))
+                    return true;
+                
+            } catch (error) {
+                return false;
+            }
+    };
+    const set_error = (element, element2) => {
+        element.classList.add('common_input_error');
+        element2?element.classList.add('common_input_error'):null;
+        result = false;
+    };
+    if (dialogue)
+        dialogue.querySelectorAll('.common_input_error').forEach(element=>element.classList.remove('common_input_error'));
+    
+    if (elements.check_valid_list)
+        for (const element of elements.check_valid_list){
+            element[0].classList.remove('common_input_error');
+        }
+
+    //validate text content
+    if (elements.username && valid_text(elements.username) == false){
+        set_error(elements.username);
+    }
+    if (elements.password && valid_text(elements.password)== false){
+        set_error(elements.password);
+    }
+    if (elements.password_reminder && valid_text(elements.password_reminder)== false){
+        set_error(elements.password);
+    }
+    if (elements.password_new && valid_text(elements.password_new)){
+        set_error(elements.password);
+    }
+    if (elements.password_new_confirm && valid_text(elements.password_new_confirm)){
+        set_error(elements.password);
+    }
+    if (elements.email && valid_text(elements.email)== false){
+        set_error(elements.email);
+    }
+    if (elements.bio && valid_text(elements.bio)== false){
+        set_error(elements.bio);
+    }
+    if (elements.check_valid_list){
+        for (const element of elements.check_valid_list){
+            if (valid_text(element[0])==false)
+                set_error(element[0]);
+        }
+    }
+    //validate text length
+    if (elements.username && elements.username.innerText.length > 100){
+        set_error(elements.username);
+    }
+    if (elements.password && elements.password.innerText.length > 100){
+        set_error(elements.password);
+    }
+    if (elements.password_reminder && elements.password_reminder.innerText.length > 100){
+        set_error(elements.password_reminder);
+    }
+    if (elements.password_new && elements.password_new.innerText.length > 100){
+        set_error(elements.password_new);
+    }
+    if (elements.bio && elements.bio.innerText.length > 150){
+        set_error(elements.bio);
+    }
+    if (elements.check_valid_list){
+        for (const element of elements.check_valid_list){
+            if (element[0] && element[0].innerText > element[1])
+                set_error(element);
+        }
+    }
+    //validate not empty
+    if (elements.username && elements.username.innerText == '') {
+        set_error(elements.username);
+    }
+    if (elements.password && elements.password.innerText == '') {
+        set_error(elements.password);
+    }
+    if (elements.email && elements.email.innerText == '') {
+        set_error(elements.email);
+    }
+    if (elements.password && elements.password_confirm && elements.password_confirm.innerText ==''){
+        set_error(elements.password_confirm);
+    }
+    //validate same password
+    if (elements.password && elements.password_confirm && (elements.password.innerText != elements.password_confirm.innerText)){
+        set_error(elements.password, elements.password_confirm);
+    }
+    if (elements.password_new && elements.password_new.innerText.length > 0 && (elements.password_new.innerText != elements.password_new_confirm.innerText)){
+        set_error(elements.password_new, elements.password_new_confirm);
+    }
+    if (result==false){
+        show_message('INFO', null, null, 'message_text','!', COMMON_GLOBAL.common_app_id);
+        return false;
+    }
+    else
+        return true;
+};
+const check_input = (text, text_length=100, db_message=true) => {
     if (text==null || text=='')
         return true;
     else{
@@ -623,30 +729,30 @@ const check_input = (text, text_length=100, nodb_message=false) => {
             if (JSON.parse(JSON.stringify(text))){
                 if (text.includes('"') || text.includes('\\')){
                     //not valid text
-                    if (nodb_message==true)
-                        show_message('INFO', null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
+                    if (db_message==true)
+                        show_message('ERROR', 20309, null, null, null,  COMMON_GLOBAL.common_app_id);
                     else
-                        show_message('ERROR', 20309, null, null, COMMON_GLOBAL.common_app_id);
+                        show_message('INFO', null, null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
                     return false;
                 }
             }
             
         } catch (error) {
             //not valid text
-            if (nodb_message==true)
-                show_message('INFO', null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
+            if (db_message==true)
+                show_message('ERROR', 20309, null, null, null, COMMON_GLOBAL.common_app_id);
             else
-                show_message('ERROR', 20309, null, null, COMMON_GLOBAL.common_app_id);
+                show_message('INFO', null, null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
             return false;
         }
         try {
             //check default max length 100 characters or parameter value
             if (text.length>text_length){
                 //text too long
-                if (nodb_message==true)
-                    show_message('INFO', null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
+                if (db_message==true)
+                    show_message('ERROR', 20310, null, null, null, COMMON_GLOBAL.common_app_id);
                 else
-                    show_message('ERROR', 20310, null, null, COMMON_GLOBAL.common_app_id);
+                    show_message('INFO', null, null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
                 return false;
             }
         } catch (error) {
@@ -814,7 +920,7 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
  * @param {string|{part: number, total:number, text:string}} message 
  * @param {*} data_app_id 
  */
-const show_message = async (message_type, code, function_event, message=null, data_app_id=null) => {
+const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
     const confirm_question = document.querySelector('#common_confirm_question');
     const progressbar = document.querySelector('#common_message_progressbar');
     const progressbar_wrap = document.querySelector('#common_message_progressbar_wrap');
@@ -827,7 +933,8 @@ const show_message = async (message_type, code, function_event, message=null, da
     const fontsize_log = '0.5em';
     const show = 'inline-block';
     const hide = 'none';
-    
+    document.querySelector('#common_message_title_icon').className=text_class;
+
     switch (message_type){
         case 'ERROR':{
             const text = await FFB('DB_API', `/message?code=${code}&data_app_id=${data_app_id}`, 'GET', 'APP_DATA')
@@ -1031,19 +1138,6 @@ const dialogue_profile_clear = () => {
     document.querySelector('#common_profile_qr').innerHTML = '';
     document.querySelector('#common_profile_detail_list').innerHTML = '';
     document.querySelector('#common_profile_top_list').innerHTML = '';
-};
-const dialogue_user_edit_remove_error = () => {
-    document.querySelector('#common_user_edit_input_username').classList.remove('common_input_error');
-
-    document.querySelector('#common_user_edit_input_bio').classList.remove('common_input_error');
-    document.querySelector('#common_user_edit_input_new_email').classList.remove('common_input_error');
-
-    document.querySelector('#common_user_edit_input_password').classList.remove('common_input_error');
-    document.querySelector('#common_user_edit_input_password_confirm').classList.remove('common_input_error');
-    document.querySelector('#common_user_edit_input_password_new').classList.remove('common_input_error');
-    document.querySelector('#common_user_edit_input_password_new_confirm').classList.remove('common_input_error');
-
-    document.querySelector('#common_user_edit_input_password_reminder').classList.remove('common_input_error');
 };
 const lov_close = () => {
     document.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
@@ -1477,7 +1571,7 @@ const search_profile = (click_function) => {
         let path;
         let token;
         let json_data;
-        if (check_input(searched_username) == false)
+        if (input_control(null,{check_valid_list:[document.querySelector('#common_profile_search_input')]})==false)
             return;
         if (COMMON_GLOBAL.user_account_id!=''){
             //search using access token with logged in user_account_id
@@ -1767,59 +1861,34 @@ const search_input = (event, module, event_function) => {
   user_preferences_update_select
 
   ----------------------- */
-const user_login = async (username, password, system_admin) => {
+const user_login = async (system_admin=false) => {
     return new Promise((resolve,reject)=>{
         let path = '';
+        let username = '';
+        let password = '';
         if (system_admin) {
             path = '/systemadmin?';
-            if (document.querySelector('#common_user_start_login_system_admin_username').innerHTML == '') {
-                show_message('INFO', null, null, ICONS.app_system_admin + ' ' + ICONS.message_text, COMMON_GLOBAL.common_app_id);
-                return;
-            }
-            if (document.querySelector('#common_user_start_login_system_admin_password').innerHTML == '') {
-                show_message('INFO', null, null, ICONS.user_password + ' ' + ICONS.message_text, COMMON_GLOBAL.common_app_id);
-                return;
-            }
-            if (check_input(document.querySelector('#common_user_start_login_system_admin_username').innerHTML, 100, true) == false ||
-                check_input(document.querySelector('#common_user_start_login_system_admin_password').innerHTML, 100, true) == false)
-                return;
-            //no : in username
-            if (document.querySelector('#common_user_start_login_system_admin_username').innerHTML.indexOf(':') > -1) {
-                show_message('INFO', null, null, ICONS.app_system_admin + ' ":" ' + ICONS.message_error, COMMON_GLOBAL.common_app_id);
-                return;
-            }
-            //no : in username
-            if (document.querySelector('#common_user_start_login_system_admin_password').innerHTML.indexOf(':') > -1) {
-                show_message('INFO', null, null, ICONS.user_password + ' ":" ' + ICONS.message_error, COMMON_GLOBAL.common_app_id);
-                return;
-            }
-            //if first time then password confirm is shown
-            if (document.querySelector('#common_user_start_login_system_admin_password_confirm').style.display == 'block') {
-                if (document.querySelector('#common_user_start_login_system_admin_password_confirm').innerHTML == '') {
-                    show_message('INFO', null, null, ICONS.user_password + ' ' + ICONS.message_text, COMMON_GLOBAL.common_app_id);
-                    return;
-                }
-                if (document.querySelector('#common_user_start_login_system_admin_password').innerHTML !=
-                    document.querySelector('#common_user_start_login_system_admin_password_confirm').innerHTML) {
-                    show_message('INFO', null, null, ICONS.user_password + ' <> ' + ICONS.user_password, COMMON_GLOBAL.common_app_id);
-                    return;
-                }
-            }
+            if (input_control(document.querySelector('#common_dialogue_user_start_content'),
+                            {
+                            username:document.querySelector('#common_user_start_login_system_admin_username'),
+                            password:document.querySelector('#common_user_start_login_system_admin_password'),
+                            password_confirm:document.querySelector('#common_user_start_login_system_admin_password_confirm').style.display == 'block'?
+                                                document.querySelector('#common_user_start_login_system_admin_password_confirm'):null
+                            })==false)
+            return reject('ERROR');   
+            username = document.querySelector('#common_user_start_login_system_admin_username').innerHTML;
+            password = document.querySelector('#common_user_start_login_system_admin_password').innerHTML;
         }
         else{
             path = '/user?';
-            if (check_input(username) == false || check_input(password)== false)
+            if (input_control(document.querySelector('#common_dialogue_user_start_content'),
+                            {
+                            username:document.querySelector('#common_user_start_login_username'),
+                            password:document.querySelector('#common_user_start_login_password')
+                            })==false)
                 return reject('ERROR');
-            if (username == '') {
-                //"Please enter username"
-                show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
-                return reject('ERROR');
-            }
-            if (password == '') {
-                //"Please enter password"
-                show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-                return reject('ERROR');
-            }
+            username = document.querySelector('#common_user_start_login_username').innerHTML;
+            password = document.querySelector('#common_user_start_login_password').innerHTML;
         }
             
         // ES6 object spread operator for user variables
@@ -1973,7 +2042,7 @@ const user_edit = async () => {
             set_avatar(user.avatar ?? user.provider_image, document.querySelector('#common_user_menu_avatar_img'));
         } else {
             //User not found
-            show_message('ERROR', 20305, null, null, COMMON_GLOBAL.common_app_id);
+            show_message('ERROR', 20305, null, null, null, COMMON_GLOBAL.common_app_id);
         }
     })
     .catch(()=>null);
@@ -1987,55 +2056,27 @@ const user_update = async () => {
     
         let path;
         let json_data;
-    
-        if (check_input(bio, 150) == false)
-            return null;
             
+        
         if (document.querySelector('#common_user_edit_local').style.display == 'block') {
+            if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+                            {
+                            username:document.querySelector('#common_user_edit_input_username'),
+                            password:document.querySelector('#common_user_edit_input_password'),
+                            password_confirm:document.querySelector('#common_user_edit_input_password_confirm'),
+                            password_confirm_reminder:document.querySelector('#common_user_edit_input_password_reminder'),
+                            password_new:document.querySelector('#common_user_edit_input_password_new'),
+                            password_new_confirm:document.querySelector('#common_user_edit_input_password_new_confirm'),
+                            bio:document.querySelector('#common_user_edit_input_bio'),
+                            email:document.querySelector('#common_user_edit_input_email')
+                            })==false)
+                return null;
+
             const email = document.querySelector('#common_user_edit_input_email').innerHTML;    
             const password = document.querySelector('#common_user_edit_input_password').innerHTML;
-            const password_confirm = document.querySelector('#common_user_edit_input_password_confirm').innerHTML;
             const password_new = document.querySelector('#common_user_edit_input_password_new').innerHTML;
-            const password_new_confirm = document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML;
             const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').innerHTML;
-            if (check_input(username) == false ||
-                check_input(new_email) == false ||
-                check_input(password) == false ||
-                check_input(password_confirm) == false ||
-                check_input(password_new) == false ||
-                check_input(password_new_confirm) == false ||
-                check_input(password_reminder) == false)
-                return null;
-    
-            dialogue_user_edit_remove_error();
         
-            //validate input
-            if (username == '') {
-                //"Please enter username"
-                document.querySelector('#common_user_edit_input_username').classList.add('common_input_error');
-                show_message('ERROR', 20303, null, null);
-                return null;
-            }
-            if (password == '') {
-                //"Please enter password"
-                document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
-                show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-                return null;
-            }
-            if (password != password_confirm) {
-                //Password not the same
-                document.querySelector('#common_user_edit_input_password_confirm').classList.add('common_input_error');
-                show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
-                return null;
-            }
-            //check new passwords
-            if (password_new != password_new_confirm) {
-                //New Password are entered but they are not the same
-                document.querySelector('#common_user_edit_input_password_new').classList.add('common_input_error');
-                document.querySelector('#common_user_edit_input_password_new_confirm').classList.add('common_input_error');
-                show_message('ERROR', 20301, null, null);
-                return null;
-            }
             json_data = {   username:           username,
                             bio:                bio,
                             private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
@@ -2049,6 +2090,11 @@ const user_update = async () => {
                         };
             path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
         } else {
+            if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+                            {
+                            bio:document.querySelector('#common_user_edit_input_bio')
+                            })==false)
+                return null;
             json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
                             username:       username,
                             bio:            bio,
@@ -2075,41 +2121,25 @@ const user_update = async () => {
     });
 };
 const user_signup = () => {
-    const username = document.querySelector('#common_user_start_signup_username').innerHTML;
     const email = document.querySelector('#common_user_start_signup_email').innerHTML;
-    const password = document.querySelector('#common_user_start_signup_password').innerHTML;
-    const password_confirm = document.querySelector('#common_user_start_signup_password_confirm').innerHTML;
-    const password_reminder = document.querySelector('#common_user_start_signup_password_reminder').innerHTML;
+    if (input_control(document.querySelector('#common_dialogue_user_start_content'),
+                            {
+                            username:document.querySelector('#common_user_start_signup_username'),
+                            password:document.querySelector('#common_user_start_signup_password'),
+                            password_confirm:document.querySelector('#common_user_start_signup_password_confirm'),
+                            password_confirm_reminder:document.querySelector('#common_user_start_signup_password_reminder'),
+                            email:document.querySelector('#common_user_start_signup_email')
+                            })==false)
+            return null;
 
-    if (check_input(username) == false || 
-        check_input(email)== false ||
-        check_input(password)== false ||
-        check_input(password_confirm)== false ||
-        check_input(password_reminder)== false)
-        return null;
-
-    const json_data = { username:           username,
-                        password:           password,
-                        password_reminder:  password_reminder,
+    const json_data = { username:           document.querySelector('#common_user_start_signup_username').innerHTML,
+                        password:           document.querySelector('#common_user_start_signup_password').innerHTML,
+                        password_reminder:  document.querySelector('#common_user_start_signup_password_reminder').innerHTML,
                         email:              email,
                         active:             0,
                         ...get_uservariables()
                      };
-    if (username == '') {
-        //"Please enter username"
-        show_message('ERROR', 20303, null, null, COMMON_GLOBAL.common_app_id);
-        return null;
-    }
-    if (password == '') {
-        //"Please enter password"
-        show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-        return null;
-    }
-    if (password != password_confirm) {
-        //Password not the same
-        show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
-        return null;
-    }
+    
     document.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
 
     FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
@@ -2200,7 +2230,7 @@ const user_verify_check_input = async (item, nextField) => {
                         document.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
                         document.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
-                        show_message('ERROR', 20306, null, null, COMMON_GLOBAL.common_app_id);
+                        show_message('ERROR', 20306, null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
@@ -2221,24 +2251,25 @@ const user_verify_check_input = async (item, nextField) => {
     });
     
 };
-const user_delete = async (choice=null, user_local, function_delete_event ) => {
+const user_delete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
         const password = document.querySelector('#common_user_edit_input_password').innerHTML;
         switch (choice){
             case null:{
-                if (user_local==true && password == '') {
-                    //"Please enter password"
-                    document.querySelector('#common_user_edit_input_password').classList.add('common_input_error');
-                    show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-                }
-                else
+                if (document.querySelector('#common_user_edit_local').style.display == 'block' &&
+                    input_control(document.querySelector('#common_dialogue_user_edit_content'),
+                                    {
+                                        password: document.querySelector('#common_user_edit_input_password')
+                                    })==false)
+                    resolve(null);
+                else{
                     show_message('CONFIRM',null,function_delete_event, null, null, COMMON_GLOBAL.app_id);
-                resolve(null);
+                    resolve(null);
+                }
                 break;
             }
             case 1:{
                 document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                dialogue_user_edit_remove_error();
         
                 document.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
@@ -2318,54 +2349,50 @@ const user_forgot = async () => {
     const json_data = { email: email,
                         ...get_uservariables()
                     };
-    if (check_input(email) == false || email =='')
-        return;
-    else{
-        document.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
-        FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
-        .then(result=>{
-            document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
-            const forgot = JSON.parse(result);
-            if (forgot.sent == 1){
-                COMMON_GLOBAL.user_account_id = forgot.id;
-                show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
-            }
-        })
-        .catch(()=>document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
-    }
+
+    if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+                    {
+                    email:document.querySelector('#common_user_start_forgot_email')
+                    })==false)
+        return null;
+        
+    document.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
+    FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
+    .then(result=>{
+        document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
+        const forgot = JSON.parse(result);
+        if (forgot.sent == 1){
+            COMMON_GLOBAL.user_account_id = forgot.id;
+            show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
+        }
+    })
+    .catch(()=>document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
 };
 const updatePassword = () => {
     const password_new = document.querySelector('#common_user_password_new').innerHTML;
-    const password_new_confirm = document.querySelector('#common_user_password_new_confirm').innerHTML;
     const user_password_new_auth = document.querySelector('#common_user_password_new_auth').innerHTML;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
                         ...get_uservariables()
                      };
-    if (check_input(password_new) == false ||
-        check_input(password_new_confirm) == false)
-        return;
-    else{
-        if (password_new == '') {
-            //"Please enter password"
-            document.querySelector('#common_user_password_new').classList.add('common_input_error');
-            show_message('ERROR', 20304, null, null, COMMON_GLOBAL.common_app_id);
-            return null;
-        }
-        if (password_new != password_new_confirm) {
-            //Password not the same
-            show_message('ERROR', 20301, null, null, COMMON_GLOBAL.common_app_id);
-            return null;
-        }
-        document.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-        FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
-        .then(()=>{
-            document.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
-            dialogue_password_new_clear();
-            show_common_dialogue('LOGIN');
-        })
-        .catch(()=>document.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
-    }
+
+
+    if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+                     {
+                     password:document.querySelector('#common_user_password_new'),
+                     password_confirm:document.querySelector('#common_user_password_new_confirm'),
+                     
+                     })==false)
+         return null;
+
+    document.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
+    FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
+    .then(()=>{
+        document.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
+        dialogue_password_new_clear();
+        show_common_dialogue('LOGIN');
+    })
+    .catch(()=>document.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
 };
 const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != ''){
@@ -2921,12 +2948,12 @@ const FFB = async (service, path, method, authorization_type, json_data) => {
                 }
                 case 400:{
                     //Bad request
-                    show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
+                    show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
                     throw result;
                 }
                 case 404:{
                     //Not found
-                    show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
+                    show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
                     throw result;
                 }
                 case 401:{
@@ -2936,7 +2963,7 @@ const FFB = async (service, path, method, authorization_type, json_data) => {
                 }
                 case 403:{
                     //Forbidden, not allowed to login or register new user
-                    show_message('INFO', null,null, result, COMMON_GLOBAL.app_id);
+                    show_message('INFO', null,null, null, result, COMMON_GLOBAL.app_id);
                     throw result;
                 }
                 case 500:{
@@ -2995,7 +3022,7 @@ const show_broadcast = (broadcast_message) => {
             break;
         }
 		case 'PROGRESS':{
-			show_message('PROGRESS', null, null, JSON.parse(window.atob(message)));
+			show_message('PROGRESS', null, null, null, JSON.parse(window.atob(message)));
             break;
         }
     }

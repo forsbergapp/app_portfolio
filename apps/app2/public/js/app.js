@@ -957,9 +957,7 @@ const update_ui = async (option, item_id=null) => {
 const show_profile_function = profile_id => profile_show_app(+profile_id);
 
 const user_login_app = async () => {
-    const username = document.querySelector('#common_user_start_login_username');
-    const password = document.querySelector('#common_user_start_login_password');
-    await common.user_login(username.innerHTML, password.innerHTML)
+    await common.user_login()
     .then((result)=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
@@ -1426,16 +1424,19 @@ const user_settings_function = async (function_name, initial_user_setting) => {
     const description = document.querySelector('#setting_input_place').innerHTML;
     
     const select_setting_popular_place = document.querySelector('#setting_select_popular_place');
-    if (common.check_input(description) == false ||
-        common.check_input(document.querySelector('#setting_input_lat').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_long').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_reportheader1').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_reportheader2').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_reportheader3').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_reportfooter1').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_reportfooter2').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_reportfooter3').innerHTML) == false ||
-        common.check_input(document.querySelector('#setting_input_long').innerHTML) == false)
+    if (common.input_control(null,{
+                                    check_valid_list:[
+                                                [document.querySelector('#setting_input_place'),null],
+                                                [document.querySelector('#setting_input_lat'),null],
+                                                [document.querySelector('#setting_input_long'),null],
+                                                [document.querySelector('#setting_input_reportheader1'),null],
+                                                [document.querySelector('#setting_input_reportheader2'),null],
+                                                [document.querySelector('#setting_input_reportheader3'),null],
+                                                [document.querySelector('#setting_input_reportfooter1'),null],
+                                                [document.querySelector('#setting_input_reportfooter2'),null],
+                                                [document.querySelector('#setting_input_reportfooter3'),null],
+                                                [document.querySelector('#setting_input_long'),null]
+                                                ]})==false)
         return;
     let country_id, city_id;
     if (document.querySelector('#common_module_leaflet_select_country')){
@@ -1584,7 +1585,7 @@ const user_settings_delete = (choice=null) => {
     
     switch (choice){
         case null:{
-            common.show_message('CONFIRM',null,function_delete_user_setting, null, common.COMMON_GLOBAL.app_id);
+            common.show_message('CONFIRM',null,function_delete_user_setting, null, null, common.COMMON_GLOBAL.app_id);
             break;
         }
         case 1:{
@@ -1604,7 +1605,7 @@ const user_settings_delete = (choice=null) => {
                 .catch(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
             } else {
                 //You can't delete last user setting
-                common.show_message('ERROR', 20302, null, null, common.COMMON_GLOBAL.common_app_id);
+                common.show_message('ERROR', 20302, null, null, null, common.COMMON_GLOBAL.common_app_id);
             }
         }
     }
@@ -2545,7 +2546,7 @@ const map_show_search_on_map_app = async (data) =>{
 /* EXCEPTION              */
 /*----------------------- */
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, error);
+    common.show_message('EXCEPTION', null, null, null, error);
 };
 /*----------------------- */
 /* INIT                   */
