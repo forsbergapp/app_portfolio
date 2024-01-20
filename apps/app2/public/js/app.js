@@ -1419,11 +1419,11 @@ const user_settings_function = async (function_name, initial_user_setting) => {
     else{
         //choose user settings first if exists or else null
         const select_user_setting = document.querySelector('#setting_select_user_setting');
-        if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'))
+        if (select_user_setting[select_user_setting.selectedIndex] && select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'))
             country_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id');
         else  
             country_id =  null;
-        if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id'))
+        if (select_user_setting[select_user_setting.selectedIndex] && select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id'))
             city_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id');
         else
             city_id = null;
@@ -1560,24 +1560,26 @@ const user_settings_delete = (choice=null) => {
             break;
         }
         case 1:{
-            if (select_user_setting.length > 1) {
-                document.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
-                common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
-                .then(()=>{
-                    const select = document.querySelector('#setting_select_user_setting');
-                    //delete current option
-                    select.remove(select.selectedIndex);
+            document.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
+            common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
+            .then(()=>{
+                const select = document.querySelector('#setting_select_user_setting');
+                //delete current option
+                select.remove(select.selectedIndex);
+                if (select_user_setting.length == 0) {
+                    user_settings_function('ADD', false)
+                    .then(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
+                }
+                else{
                     //load next available
                     user_settings_load()
                     .then(()=>settings_translate(true))
                     .then(()=>settings_translate(false))
                     .then(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
-                })
-                .catch(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
-            } else {
-                //You can't delete last user setting
-                common.show_message('ERROR', 20302, null, null, null, common.COMMON_GLOBAL.common_app_id);
-            }
+                }
+                
+            })
+            .catch(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
         }
     }
     return null;

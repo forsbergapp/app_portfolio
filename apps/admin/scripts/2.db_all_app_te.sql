@@ -40,14 +40,9 @@ INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code,
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',531,'వినియోగదారు పేరు ఇప్పటికే ఉంది');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',531,'చాలా పొడవు విలువ');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',531,'వినియోగదారు పేరు లేదా పాస్‌వర్డ్ కనుగొనబడలేదు');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',531,'పాస్‌వర్డ్ ఒకేలా ఉండదు');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',531,'దయచేసి వినియోగదారు పేరును నమోదు చేయండి');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',531,'దయచేసి పాస్‌వర్డ్‌ని నమోదు చేయండి');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',531,'వినియోగదారుడు కనపడలేదు');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',531,'కోడ్ చెల్లదు');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',531,'ఫైల్ రకం అనుమతించబడదు');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',531,'ఫైల్ పరిమాణం చాలా పెద్దది');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',531,'వచనం చెల్లదు');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',531,'టెక్స్ట్ చాలా పొడవుగా ఉంది');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',531,'రికార్డు దొరకలేదు');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',531,'చెల్లని పాస్వర్డ్');
