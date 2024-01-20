@@ -2,6 +2,10 @@
 
 #common_message_close::before{								content:var(--app_close)}
 #common_message_cancel::before{								content:var(--app_cancel)}
+#common_message_title_icon::before{							content:''}
+#common_message_title_icon.message_text::before{			content:var(--message_text)}
+#common_message_title_icon.message_success::before{			content:var(--message_success)}
+#common_message_title_icon.message_fail::before{			content:var(--message_fail)}
 
 .common_lov_button::before{									content:var(--app_lov)}
 #common_lov_search_icon::before{							content:var(--app_search)}
@@ -465,6 +469,9 @@ select {
 #common_message_title{
 	cursor:default;
 	display:inline-block;
+}
+#common_message_title_icon{
+	display: inline-block;
 }
 #common_message_cancel{
 	cursor:pointer;

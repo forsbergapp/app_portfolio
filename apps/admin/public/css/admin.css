@@ -1235,6 +1235,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_main_select_color: var(--app_white2);
 	--app_theme_main_select_color2: var(--app_green);
 	--app_theme_main_select_color3: var(--app_red);
+	--app_theme_main_select_color4: var(--app_blue1);
 	--app_theme_main_border_color: var(--app_white2);
 	--app_theme_main_border_color2: var(--app_blue2);
 	--app_theme_main_border_color3: var(--app_white1);
@@ -1289,7 +1290,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_checkbox-checked_color: var(--app_theme_main_select_color2);
 	--app_theme_checkbox-unchecked_color: var(--app_theme_main_select_color3);
 	--app_theme_dialogue_modal-background_color: var(--app_theme_main_shadow_color2);
-	--app_theme_input_error_color:var(--app_theme_main_select_color3);
+	--app_theme_input_error_color:var(--app_theme_main_select_color4);
 	--app_theme_nav_selected_color:var(--app_theme_main_branding_color4);
 	--app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
 	--app_theme_menuitem_selected_background_color: var(--app_theme_main_branding_color2);
@@ -1307,6 +1308,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_main_select_color: var(--app_white2);
 	--app_theme_main_select_color2: var(--app_green);
 	--app_theme_main_select_color3: var(--app_red);
+	--app_theme_main_select_color4: var(--app_dark);
 	--app_theme_main_border_color: var(--app_white2);
 	--app_theme_main_border_color2: var(--app_blue2);
 	--app_theme_main_border_color3: var(--app_white1);
@@ -1361,7 +1363,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_checkbox-checked_color: var(--app_theme_main_select_color2);
 	--app_theme_checkbox-unchecked_color: var(--app_theme_main_select_color3);
 	--app_theme_dialogue_modal-background_color: var(--app_theme_main_shadow_color2);
-	--app_theme_input_error_color:var(--app_theme_main_select_color3);
+	--app_theme_input_error_color:var(--app_theme_main_select_color4);
 	--app_theme_nav_selected_color:var(--app_theme_main_branding_color4);
 	--app_theme_nav_selected_background_color:var(--app_theme_main_branding_color2);
 	--app_theme_menuitem_selected_background_color: var(--app_theme_main_branding_color2);
@@ -1379,6 +1381,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_main_select_color: var(--app_white2);
 	--app_theme_main_select_color2: var(--app_green);
 	--app_theme_main_select_color3: var(--app_red);
+	--app_theme_main_select_color4: var(--app_cafe_latte);
 	--app_theme_main_border_color: var(--app_white2);
 	--app_theme_main_border_color2: var(--app_blue2);
 	--app_theme_main_border_color3: var(--app_white1);
@@ -1433,7 +1436,7 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	--app_theme_checkbox-checked_color: var(--app_theme_main_select_color2);
 	--app_theme_checkbox-unchecked_color: var(--app_theme_main_select_color3);
 	--app_theme_dialogue_modal-background_color: var(--app_theme_main_shadow_color2);
-	--app_theme_input_error_color:var(--app_theme_main_select_color3);
+	--app_theme_input_error_color:var(--app_theme_main_select_color4);
 	--app_theme_nav_selected_color:var(--app_theme_main_branding_color3);
 	--app_theme_nav_selected_background_color:var(--app_theme_main_branding_color1);
 	--app_theme_menuitem_selected_background_color: var(--app_theme_main_branding_color1);
@@ -1677,7 +1680,7 @@ body{
 	scrollbar-color: var(--app_theme_list_scrollbar_color1) var(--app_theme_list_scrollbar_color2);
 }
 .common_input_error{
-	border:1px solid var(--app_theme_input_error_color) !important;
+	border: 2px solid var(--app_theme_input_error_color) !important;
 }
 .common_module_leaflet_control_button{
 	background-color: var(--app_theme_main_branding_color2);
