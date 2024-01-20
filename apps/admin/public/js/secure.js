@@ -618,7 +618,7 @@ const count_users = async () => {
                                     <div>${common.get_null_or_value(user.identity_provider_id)}</div>
                                 </div>
                                 <div class='list_user_stat_col'>
-                                    <div>${user.provider_name==null?common.ICONS.app_home:user.provider_name}</div>
+                                    <div class='${user.provider_name==null?'list_user_start_common_logo':''}'>${user.provider_name==null?'':user.provider_name}</div>
                                 </div>
                                 <div class='list_user_stat_col'>
                                     <div>${user.count_users}</div>

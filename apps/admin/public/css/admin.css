@@ -450,6 +450,15 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 	display: block;
 	text-align: start;
 }
+.list_user_stat_row .list_user_start_common_logo{
+	background-image: url('/common/images/logo.png');
+	background-size: contain;
+	background-repeat: no-repeat;
+	width: 1em;
+    height: 1em;
+	margin-bottom: -2px;
+}
+
 .list_user_stat_col{
 	display: inline-block;
 }
