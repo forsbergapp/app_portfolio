@@ -1013,9 +1013,8 @@ const profile_clear_app = () => {
 const user_logoff_app = () => {
     const select = document.querySelector('#setting_select_user_setting');
     let option;
-    //get new data token to avoid endless loop and invalid token
     common.user_logoff().then(() => {
-        document.querySelector('#tab_nav_7').innerHTML = common.ICONS.user;
+        document.querySelector('#tab_nav_7').innerHTML = '';
         document.querySelector('#user_settings').style.display = 'none';
         
         profile_clear_app();
