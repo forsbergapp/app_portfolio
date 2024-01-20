@@ -622,14 +622,9 @@ INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_t
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20203', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20204', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20300', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20301', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20303', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20304', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20305', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20306', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20307', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20308', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20309', 1, 1);
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20310', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20400', 1, 1);
 INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (0, '20401', 1, 1);
