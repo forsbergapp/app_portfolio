@@ -647,19 +647,6 @@ const select_get_selectindex = (select, id) => {
     }
     return null;
 };
-const select_get_id = (select, selectindex) => {
-    if (selectindex == 0)
-        return 'null';
-    else {
-        return document.querySelector('#' + select)[selectindex].getAttribute('id');
-    }
-};
-const set_null_or_value = (value) => {
-    if (value == null || value == '')
-        return 'null';
-    else
-        return value;
-};
 
 const show_dialogue = (dialogue) => {
     switch (dialogue) {
@@ -1048,21 +1035,14 @@ const user_logoff_app = () => {
         });
     });    
 };
-const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
-    await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email)
+const ProviderSignIn_app = async (provider_id) => {
+    common.ProviderSignIn(provider_id)
     .then(result=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
         .then(()=>{
-            common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img')); 
             document.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
             common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
-            document.querySelector('#common_user_menu_username').innerHTML = result.first_name + ' ' + result.last_name;
-
-            document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-            document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-            document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'block';
-            document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
 
             //Show user tab
             document.querySelector('#tab_nav_7').style.display = 'inline-block';
@@ -1081,15 +1061,6 @@ const ProviderUser_update_app = async (identity_provider_id, profile_id, profile
             });
         });   
     });
-};
-const ProviderSignIn_app = async (provider_id) => {
-    const result = common.ProviderSignIn(provider_id);
-    ProviderUser_update_app(result.identity_provider_id, 
-                            result.profile_id, 
-                            result.profile_first_name, 
-                            result.profile_last_name, 
-                            result.profile_image_url, 
-                            result.profile_email);
 };
 const profile_update_stat_app = async () => {
     const result = await common.profile_update_stat();
@@ -2795,31 +2766,4 @@ const init = (parameters) => {
         init_app(parameters);   
     });
 };
-export{ /**GLOBAL */
-        APP_GLOBAL,
-        /*REPORT*/
-        printTable, getReportSettings, update_timetable_report, get_report_url,
-        /*MAP*/
-        init_map, map_show_qibbla, map_update_app,
-        /*THEME*/
-        update_all_theme_thumbnails,update_theme_thumbnail, get_theme_id, set_theme_id, set_theme_title,
-        load_themes,
-        /*UI*/
-        common_translate_ui_app, settings_translate, get_align, showcurrenttime, showreporttime,
-        toolbar_button, openTab, align_button_value, dialogue_loading, zoom_paper, select_get_selectindex,
-        select_get_id, set_null_or_value, show_dialogue, update_ui,
-        /*USER*/
-        user_login_app, user_verify_check_input_app, user_function_app, profile_close_app, profile_clear_app,
-        user_logoff_app, ProviderUser_update_app, ProviderSignIn_app, profile_update_stat_app, profile_show_app,
-        profile_detail_app,
-        /*USER SETTINGS*/
-        user_settings_get, user_setting_link, user_settings_load, user_settings_function, user_settings_delete,
-        set_default_settings, set_settings_select, profile_user_setting_stat, profile_user_setting_link,
-        profile_show_user_setting_detail, profile_show_user_setting, profile_user_setting_update_stat,
-        user_settings_like,
-        /*EVENTS*/
-        setEvents,
-        /*SERVICE WORKER*/
-        serviceworker,
-        /*INIT*/
-        init_app, init};
+export{ init};
