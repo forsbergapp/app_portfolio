@@ -188,4 +188,4 @@ const init = (parameters) => {
     })
     .catch(()=>document.querySelector('#loading').classList.remove('css_spinner'));
 };
-export{APP_GLOBAL, init};
+export{init};

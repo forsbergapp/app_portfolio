@@ -721,46 +721,6 @@ const input_control = (dialogue, elements) =>{
     else
         return true;
 };
-const check_input = (text, text_length=100, db_message=true) => {
-    if (text==null || text=='')
-        return true;
-    else{
-        try {
-            if (JSON.parse(JSON.stringify(text))){
-                if (text.includes('"') || text.includes('\\')){
-                    //not valid text
-                    if (db_message==true)
-                        show_message('ERROR', 20309, null, null, null,  COMMON_GLOBAL.common_app_id);
-                    else
-                        show_message('INFO', null, null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
-                    return false;
-                }
-            }
-            
-        } catch (error) {
-            //not valid text
-            if (db_message==true)
-                show_message('ERROR', 20309, null, null, null, COMMON_GLOBAL.common_app_id);
-            else
-                show_message('INFO', null, null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
-            return false;
-        }
-        try {
-            //check default max length 100 characters or parameter value
-            if (text.length>text_length){
-                //text too long
-                if (db_message==true)
-                    show_message('ERROR', 20310, null, null, null, COMMON_GLOBAL.common_app_id);
-                else
-                    show_message('INFO', null, null, null, COMMON_GLOBAL.icon_message_error, COMMON_GLOBAL.app_id);
-                return false;
-            }
-        } catch (error) {
-            return false;
-        }
-        return true;
-    }
-};
 const get_uservariables = () => {
     return {    user_language:      navigator.language,
                 user_timezone:      Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -2472,24 +2432,33 @@ const user_preferences_update_select = () => {
 /*----------------------- */
 /* USER PROVIDER          */
 /*----------------------- */
-const ProviderUser_update = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
+const ProviderSignIn = (provider_id) => {
     return new Promise((resolve, reject)=>{
-        convert_image(profile_image_url, 
+        //add REST API to get user provider data
+        const provider_data = { identity_provider_id:   provider_id,
+                                profile_id:             provider_id,
+                                profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
+                                profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
+                                profile_image_url:      '',
+                                profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
+
+        document.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+        convert_image(provider_data.profile_image_url, 
             COMMON_GLOBAL.image_avatar_width,
             COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
             const json_data ={  username:               null,
                                 password:               null,
                                 active:                 1,
-                                identity_provider_id:   identity_provider_id,
-                                provider_id:            profile_id,
-                                provider_first_name:    profile_first_name,
-                                provider_last_name:     profile_last_name,
+                                identity_provider_id:   provider_data.identity_provider_id,
+                                provider_id:            provider_data.profile_id,
+                                provider_first_name:    provider_data.profile_first_name,
+                                provider_last_name:     provider_data.profile_last_name,
                                 provider_image:         window.btoa(profile_image),
-                                provider_image_url:     profile_image_url,
-                                provider_email:         profile_email,
+                                provider_image_url:     provider_data.profile_image_url,
+                                provider_email:         provider_data.profile_email,
                                 ...get_uservariables()
                             };
-            FFB('IAM', `/provider?PUT_ID=${profile_id}`, 'POST', 'IAM', json_data)
+            FFB('IAM', `/provider?PUT_ID=${provider_data.profile_id}`, 'POST', 'IAM', json_data)
             .then(result=>{
                 const user_login = JSON.parse(result).items[0];
                 COMMON_GLOBAL.rest_at = JSON.parse(result).accessToken;
@@ -2498,30 +2467,32 @@ const ProviderUser_update = async (identity_provider_id, profile_id, profile_fir
                 updateOnlineStatus();
                 user_preference_get()
                 .then(()=>{
+                    //set avatar or empty
+                    set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
+                    document.querySelector('#common_user_menu_username').innerHTML = user_login.username;
+
+                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+
+                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block'; //block app2?
+                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                    document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                     dialogue_user_start_clear();
                     resolve({   user_account_id: user_login.id,
                                 username: user_login.username,
                                 bio: user_login.bio,
                                 avatar: profile_image,
-                                first_name: profile_first_name,
-                                last_name: profile_last_name,
+                                first_name: provider_data.profile_first_name,
+                                last_name: provider_data.profile_last_name,
                                 userCreated: JSON.parse(result).userCreated});
                 });
             })
-            .catch(err=>reject(err));
+            .catch(err=>{
+                document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                reject(err);
+            });
         });
     });
-    
-};
-const ProviderSignIn = (provider_id) => {
-    //add REST API to get user provider data
-    return {    identity_provider_id:   provider_id,
-                profile_id:             provider_id,
-                profile_first_name:     `PROVIDER_USERNAME${provider_id}`,
-                profile_last_name:      `PROVIDER LAST_NAME${provider_id}`,
-                profile_image_url:      '',
-                profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
-    
 };
 /*----------------------- */
 /* MODULE EASY.QRCODE     */
@@ -3889,7 +3860,7 @@ export{/* GLOBALS*/
        element_id, element_row, element_list_title, getTimezoneOffset, getTimezoneDate, getGregorian, typewatch, toBase64, fromBase64, common_translate_ui,
        get_null_or_value, mobile, image_format,
        list_image_format_src, recreate_img, convert_image, set_avatar,
-       inIframe, show_image, getHostname, check_input, SearchAndSetSelectedIndex,
+       inIframe, show_image, getHostname, input_control, SearchAndSetSelectedIndex,
        /* MESSAGE & DIALOGUE */
        show_message_info_list, dialogue_close, show_common_dialogue, show_message,
        dialogue_user_start_clear,
@@ -3903,7 +3874,7 @@ export{/* GLOBALS*/
        user_login, user_logoff, user_edit, user_update, user_signup, user_verify_check_input, user_delete, user_function,
        updatePassword,
        /* USER PROVIDER */
-       ProviderUser_update, ProviderSignIn,
+       ProviderSignIn,
        /* MODULE LEAFLET  */
        map_init, map_country, map_show_search_on_map, map_resize, map_line_removeall, map_line_create,
        map_setevent, map_setstyle, map_update_popup, map_update,
