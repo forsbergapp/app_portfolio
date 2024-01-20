@@ -1866,8 +1866,8 @@ const user_login = async (system_admin=false) => {
                 COMMON_GLOBAL.system_admin = JSON.parse(result).username;
                 COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
                 updateOnlineStatus();
-                document.querySelector('#common_user_menu_default_avatar').classList.add('system_admin');
-                document.querySelector('#common_user_menu_username').innerHTML = ICONS.app_system_admin;
+                document.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
+                document.querySelector('#common_user_menu_username').innerHTML = JSON.parse(result).username;
                 document.querySelector('#common_user_preferences').style.display = 'none';
                 document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
                 document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
@@ -1924,33 +1924,42 @@ const user_login = async (system_admin=false) => {
             reject(err);});
     });
 };
-const user_logoff = async () => {
-    //remove access token
-    COMMON_GLOBAL.rest_at ='';
-    COMMON_GLOBAL.user_account_id = '';
-    
-    set_avatar(null, document.querySelector('#common_user_menu_avatar_img')); 
-    //clear logged in info
-    document.querySelector('#common_user_menu_username').innerHTML = '';
-    document.querySelector('#common_user_menu_username').style.display = 'none';
-    document.querySelector('#common_user_menu_logged_in').style.display = 'none';
-    document.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
+const user_logoff = async (system_admin) => {
+    if (system_admin){
+        COMMON_GLOBAL.rest_admin_at = '';
+        COMMON_GLOBAL.system_admin = '';
+        document.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
+        document.querySelector('#common_user_menu_username').innerHTML = '';
+        document.querySelector('#common_user_menu_username').style.display = 'none';
+    }
+    else{
+        //remove access token
+        COMMON_GLOBAL.rest_at ='';
+        COMMON_GLOBAL.user_account_id = '';
 
-    updateOnlineStatus();
-    document.querySelector('#common_profile_avatar_online_status').className='';
-    dialogue_user_edit_clear();
-    dialogue_verify_clear();
-    dialogue_password_new_clear();
-    dialogue_user_start_clear();
-    document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
-    dialogue_profile_clear();
-    user_preferences_set_default_globals('LOCALE');
-    user_preferences_set_default_globals('TIMEZONE');
-    user_preferences_set_default_globals('DIRECTION');
-    user_preferences_set_default_globals('ARABIC_SCRIPT');
-    user_preferences_update_select();
+        set_avatar(null, document.querySelector('#common_user_menu_avatar_img')); 
+        //clear logged in info
+        document.querySelector('#common_user_menu_username').innerHTML = '';
+        document.querySelector('#common_user_menu_username').style.display = 'none';
+        document.querySelector('#common_user_menu_logged_in').style.display = 'none';
+        document.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
+
+        updateOnlineStatus();
+        document.querySelector('#common_profile_avatar_online_status').className='';
+        dialogue_user_edit_clear();
+        dialogue_verify_clear();
+        dialogue_password_new_clear();
+        dialogue_user_start_clear();
+        document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
+        dialogue_profile_clear();
+        user_preferences_set_default_globals('LOCALE');
+        user_preferences_set_default_globals('TIMEZONE');
+        user_preferences_set_default_globals('DIRECTION');
+        user_preferences_set_default_globals('ARABIC_SCRIPT');
+        user_preferences_update_select();
+    }
 };
 const user_edit = async () => {
     //get user from REST API
