@@ -40,14 +40,9 @@ INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code,
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',267,'사용자 이름이 이미 존재합니다');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',267,'값이 너무 깁니다.');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',267,'사용자 이름 또는 암호를 찾을 수 없습니다');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',267,'비밀번호가 같지 않음');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',267,'사용자 이름을 입력하십시오');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',267,'비밀번호를 입력 해주세요');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',267,'사용자를 찾을 수 없음');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',267,'코드가 유효하지 않음');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',267,'허용되지 않는 파일 형식');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',267,'파일 크기가 너무 큽니다.');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',267,'텍스트가 잘못되었습니다.');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',267,'텍스트가 너무 깁니다.');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',267,'레코드를 찾을 수 없음');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',267,'유효하지 않은 비밀번호');

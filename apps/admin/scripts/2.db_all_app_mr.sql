@@ -40,14 +40,9 @@ INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code,
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',338,'वापरकर्तानाव आधीपासून अस्तित्वात आहे');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',338,'खूप मोठे मूल्य');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',338,'वापरकर्तानाव किंवा पासवर्ड सापडला नाही');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',338,'पासवर्ड समान नाही');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',338,'कृपया वापरकर्तानाव प्रविष्ट करा');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',338,'कृपया पासवर्ड टाका');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',338,'वापरकर्ता सापडला नाही');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',338,'कोड वैध नाही');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',338,'फाइल प्रकार परवानगी नाही');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',338,'फाइल आकार खूप मोठा आहे');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',338,'मजकूर वैध नाही');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',338,'मजकूर खूप मोठा आहे');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',338,'रेकॉर्ड सापडला नाही');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',338,'अवैध पासवर्ड');

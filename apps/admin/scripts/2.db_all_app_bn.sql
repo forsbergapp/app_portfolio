@@ -40,14 +40,9 @@ INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code,
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20203',63,'ব্যবহারকারীর নাম ইতিমধ্যে বিদ্যমান');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20204',63,'অনেক লম্বা মান');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20300',63,'ব্যবহারকারীর নাম বা পাসওয়ার্ড পাওয়া যায়নি');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20301',63,'পাসওয়ার্ড একই নয়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20303',63,'অনুগ্রহ করে ব্যবহারকারীর নাম লিখুন');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20304',63,'পাসওয়ার্ড লিখুন');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20305',63,'ব্যবহারকারী খুঁজে পাওয়া যায় না');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20306',63,'কোড বৈধ নয়');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20307',63,'ফাইলের ধরন অনুমোদিত নয়');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20308',63,'ফাইলের আকার খুব বড়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20309',63,'পাঠ্য বৈধ নয়');
-INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20310',63,'টেক্সট অনেক লম্বা');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20400',63,'রেকর্ড পাওয়া যায়নি');
 INSERT INTO app_portfolio.app_translation (app_message_app_id, app_message_code, language_id, text) VALUES (0,'20401',63,'অবৈধ পাসওয়ার্ড');

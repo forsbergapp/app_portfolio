@@ -197,10 +197,6 @@ INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'REPORT','COLTITLE_WEEKDAY_TR',NULL, NULL);
 INSERT INTO app_portfolio.app_object_item (app_object_app_id, app_object_object_name, object_item_name, app_setting_type_app_setting_type_name, app_setting_type_app_id) VALUES (<APP_ID/>,'REPORT','TIMETABLE_TITLE',NULL, NULL);
 --
--- app_message
---
-INSERT INTO app_portfolio.app_message (app_id, code, message_level_id, message_type_id) VALUES (<APP_ID/>, '20302', 1, 1);
---
 -- app_parameter
 --
 INSERT INTO app_portfolio.app_parameter (app_id, parameter_type_id, parameter_name, parameter_value, parameter_comment) VALUES (<APP_ID/>,'0','APP_DEFAULT_STARTUP_PAGE','3','1=print, 2=day, 3=month, 4=year, 5=settings, 6=profile');
