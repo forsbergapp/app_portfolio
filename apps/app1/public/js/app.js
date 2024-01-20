@@ -171,7 +171,7 @@ const setEvents = () => {
                     }
                     case 'common_identity_provider_login':{
                         const target_row = common.element_row(event.target);
-                        ProviderSignIn_app(target_row.querySelector('.common_login_provider_id').innerHTML);
+                        common.ProviderSignIn(target_row.querySelector('.common_login_provider_id').innerHTML);
                         break;
                     }
                     case 'common_user_edit_btn_user_delete_account':{
@@ -196,7 +196,7 @@ const setEvents = () => {
                 }
             }
         });
-    });
+    },true);
     document.querySelector('#app').addEventListener('keyup', event => {
         common.common_event('keyup',event)
         .then(()=>{
@@ -374,29 +374,6 @@ const user_delete_app = async () => {
     .then(()=>null)
     .catch(()=>null);
 };
-const ProviderUser_update_app = async (identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email) => {
-    await common.ProviderUser_update(identity_provider_id, profile_id, profile_first_name, profile_last_name, profile_image_url, profile_email)
-    .then((result)=>{
-        //set avatar or empty
-        common.set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
-        document.querySelector('#common_user_menu_username').innerHTML = result.username;
-
-        document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-        document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-
-        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-    });
-};
-const ProviderSignIn_app = async (provider_button) => {
-    const result = common.ProviderSignIn(provider_button);
-    ProviderUser_update_app(result.identity_provider_id, 
-                            result.profile_id, 
-                            result.profile_first_name, 
-                            result.profile_last_name, 
-                            result.profile_image_url, 
-                            result.profile_email);
-};
 const init_app = async (parameters) => {
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
@@ -463,6 +440,4 @@ const init = (parameters) => {
         init_app(parameters);
     });
 };
-export{show_hide_apps_dialogue, setEvents, app_theme_update, get_apps, user_menu_item_click,
-       user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
-       init_app, init};
+export{init};
