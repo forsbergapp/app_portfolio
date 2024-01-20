@@ -1,6 +1,6 @@
 const common = await import('common');
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, error);
+    common.show_message('EXCEPTION', null, null, null, error);
 };
 const serviceworker = () => {
     if (!window.Promise) {

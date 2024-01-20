@@ -4,7 +4,7 @@ const APP_GLOBAL = {
 };
 Object.seal(APP_GLOBAL);
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, error);
+    common.show_message('EXCEPTION', null, null, null, error);
 };
 
 const app_event_click = event =>{

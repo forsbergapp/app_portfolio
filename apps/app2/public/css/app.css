@@ -843,7 +843,7 @@
 	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
 	--app_theme_setting_button_color:var(--app_white);
 	--app_theme_setting_button_background_color:var(--app_gold);
-	--app_theme_input_error_border_color:var(--app_red);
+	--app_theme_input_error_border_color:var(--app_blue1);
 	--app_theme_input_border_color:var(--app_lightgrey);
 	--app_theme_input_background_color:var(--app_white);
 	--app_theme_button_color:var(--app_gold);
@@ -886,7 +886,7 @@
 	--app_theme_user_menu_hover_background_color:var(--app_lightgrey);
 	--app_theme_setting_button_color:var(--app_white);
 	--app_theme_setting_button_background_color:var(--app_gold);
-	--app_theme_input_error_border_color:var(--app_red);
+	--app_theme_input_error_border_color:var(--app_gold);
 	--app_theme_input_border_color:var(--app_lightgrey);
 	--app_theme_input_background_color:var(--app_white);
 	--app_theme_button_color:var(--app_gold);
@@ -929,7 +929,7 @@
 	--app_theme_user_menu_hover_background_color:var(--app_cafe_latte3);
 	--app_theme_setting_button_color:var(--app_white);
 	--app_theme_setting_button_background_color:var(--app_gold);
-	--app_theme_input_error_border_color:var(--app_red);
+	--app_theme_input_error_border_color:var(--app_cafe_latte3);
 	--app_theme_input_border_color:var(--app_lightgrey);
 	--app_theme_input_background_color:var(--app_white);
 	--app_theme_button_color:var(--app_gold);
@@ -1080,7 +1080,7 @@ body,
 	color:var(--app_theme_hover);
 }
 .common_input_error{
-	border:1px solid var(--app_theme_input_error_border_color) !important;
+	border: 2px solid var(--app_theme_input_error_border_color) !important;
 }
 #common_profile_btn_top{
 	background: var(--app_theme_main_color2);

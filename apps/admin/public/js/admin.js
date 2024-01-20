@@ -26,19 +26,10 @@ const admin_logoff_app = () => {
         });
 };
 const admin_login = async () => {
-    let username = '';
-    let password = '';
     let system_admin = false;
-    if (document.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin') {
+    if (document.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
         system_admin = true;
-        username = encodeURI(document.querySelector('#common_user_start_login_system_admin_username').innerHTML);
-        password = encodeURI(document.querySelector('#common_user_start_login_system_admin_password').innerHTML);
-    }
-    else{
-        username = encodeURI(document.querySelector('#common_user_start_login_username').innerHTML);
-        password = encodeURI(document.querySelector('#common_user_start_login_password').innerHTML);
-    }
-    await common.user_login(username, password, system_admin)
+    await common.user_login(system_admin)
     .then(()=>{
         if (system_admin){
             document.querySelector('#menu').style.visibility = 'visible';
@@ -230,7 +221,7 @@ const setEvents = () => {
 };
 
 const admin_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, error);
+    common.show_message('EXCEPTION', null, null, null, error);
 };
 const init_app = (parameters) => {
     setEvents();

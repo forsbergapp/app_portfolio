@@ -437,7 +437,7 @@ const sendBroadcast = () => {
     const broadcast_message = document.querySelector('#send_broadcast_message').innerHTML;
 
     if (broadcast_message==''){
-        common.show_message('INFO', null, null, `${common.ICONS.message_text}!`, common.COMMON_GLOBAL.app_id);
+        common.show_message('INFO', null, null, 'message_text', '!', common.COMMON_GLOBAL.app_id);
         return null;
     }
     
@@ -470,9 +470,9 @@ const sendBroadcast = () => {
     common.FFB('SOCKET', path, 'POST', token_type, json_data)
     .then(result=>{
         if (Number(JSON.parse(result).sent) > 0)
-            common.show_message('INFO', null, null, `${common.ICONS.message_success} (${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
+            common.show_message('INFO', null, null, 'message_success', `(${Number(JSON.parse(result).sent)})`, common.COMMON_GLOBAL.app_id);
         else
-            common.show_message('INFO', null, null, `${common.ICONS.message_fail}`, common.COMMON_GLOBAL.app_id);
+            common.show_message('INFO', null, null, 'message_fail', null, common.COMMON_GLOBAL.app_id);
     })
     .catch(()=>null);
 };    
@@ -677,8 +677,8 @@ const show_users = () =>{
 };
 const search_users = (sort='username', order_by='asc', focus=true) => {
 
-    if (common.check_input(document.querySelector('#list_user_account_search_input').innerText, 100, false) == false)
-        return null;
+    if (common.input_control(null,{check_valid_list:[[document.querySelector('#list_user_account_search_input'),100]]})==false)
+        return;
 
     document.querySelector('#list_user_account').classList.add('common_icon', 'css_spinner');
     document.querySelector('#list_user_account').innerHTML = '';
@@ -2124,8 +2124,8 @@ const get_log_parameters = async () => {
 };
 const show_server_logs = (sort='logdate', order_by='desc', search=null) => {
     if (search != null){
-        if (common.check_input(document.querySelector('#list_server_log_search_input').innerText, 100, false) == false)
-            return null;
+        if (common.input_control(null,{check_valid_list:[[document.querySelector('#list_server_log_search_input'),100]]})==false)
+            return;
     }
     const logscope = document.querySelector('#select_logscope5')[document.querySelector('#select_logscope5').selectedIndex].getAttribute('log_scope');
     const loglevel = document.querySelector('#select_logscope5')[document.querySelector('#select_logscope5').selectedIndex].getAttribute('log_level');
@@ -2298,7 +2298,7 @@ const installation_function = (id, db_icon, path, method, tokentype, data) => {
                 document.querySelector('#install_db_icon').classList.add('installed');
             else
                 document.querySelector('#install_db_icon').classList.remove('installed');
-        common.show_message('LOG', null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
+        common.show_message('LOG', null, null, null, common.show_message_info_list(JSON.parse(result).info), common.COMMON_GLOBAL.common_app_id);
     })
     .catch(()=>document.querySelector(`#${id}`).classList.remove('css_spinner'));
 };
@@ -2313,9 +2313,11 @@ const db_uninstall = () =>{
     installation_function('install_db_button_uninstall', false, path, 'DELETE', 'SYSTEMADMIN', null);
 };
 const demo_install = () =>{
-    if (document.querySelector('#install_demo_password').innerHTML == '') {
-        common.show_message('INFO', null, null, common.ICONS.user_password + ' ' + common.ICONS.message_text, common.COMMON_GLOBAL.common_app_id);
-    }
+    if (common.input_control(null,
+                        {
+                        check_valid_list:[[document.querySelector('#install_demo_password'),null]]
+                        })==false)
+        return null;
     else{
         const json_data = {demo_password: document.querySelector('#install_demo_password').innerHTML};
         const path = `/admin/demo?client_id=${common.COMMON_GLOBAL.service_socket_client_ID}`;
@@ -2581,11 +2583,11 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     break;
                 }
                 case 'install_db_button_install':{
-                    common.show_message('CONFIRM',null,db_install, null, common.COMMON_GLOBAL.app_id);
+                    common.show_message('CONFIRM',null,db_install, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
                 case 'install_db_button_uninstall':{
-                    common.show_message('CONFIRM',null,db_uninstall, null, common.COMMON_GLOBAL.app_id);
+                    common.show_message('CONFIRM',null,db_uninstall, null, null, common.COMMON_GLOBAL.app_id);
                     break;
                 }
                 case 'install_demo_button_install':{

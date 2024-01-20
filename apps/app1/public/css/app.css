@@ -641,7 +641,7 @@ div.ray8 {
 	--app_theme_main_shadow_color4: var(--app_white);
 	--app_theme_main_select_color: var(--app_white2);
 	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_red);
+	--app_theme_main_select_color3: var(--app_blue1);
 	--app_theme_main_select_color4: var(--app_black);
 	--app_theme_main_border_color: var(--app_white2);
 	--app_theme_main_border_color2: var(--app_blue2);
@@ -720,7 +720,7 @@ div.ray8 {
 	--app_theme_main_shadow_color4: var(--app_white);
 	--app_theme_main_select_color: var(--app_white2);
 	--app_theme_main_select_color2: var(--app_green);
-	--app_theme_main_select_color3: var(--app_red);
+	--app_theme_main_select_color3: var(--app_dark);
 	--app_theme_main_select_color4: var(--app_dark2);
 	--app_theme_main_border_color: var(--app_white2);
 	--app_theme_main_border_color2: var(--app_blue2);
@@ -903,7 +903,7 @@ border-left: 12px solid var(--app_theme_sun_color);
 	color:var(--app_theme_a_color);
 }
 .common_input{
-	background-color: var(--app_theme_dialogue_background_color);	
+	background-color: var(--app_theme_dialogue_background_color);
 }
 .common_link:hover,
 .common_link:active{
@@ -920,9 +920,8 @@ border-left: 12px solid var(--app_theme_sun_color);
 	color: var(--app_theme_toolbar_button_color) !important;
 }
 .common_input_error{
-	border:1px solid var(--app_theme_input_error_color) !important;
+	border: 2px solid var(--app_theme_input_error_color) !important;
 }
-
 #common_profile_btn_top{
 	background-color: var(--app_theme_dialogue_background_color);
 	box-shadow: 0 4px 8px 0 var(--app_theme_dialogue_boxshadow_color1),0 6px 20px 0 var(--app_theme_dialogue_boxshadow_color2);

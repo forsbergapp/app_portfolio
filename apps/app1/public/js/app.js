@@ -162,7 +162,7 @@ const setEvents = () => {
                         break;
                     }
                     case 'common_user_start_login_button':{
-                        user_login_app();
+                        common.user_login().catch(()=>null);
                         break;
                     }
                     case 'common_user_start_signup_button':{
@@ -209,10 +209,12 @@ const setEvents = () => {
                 case 'common_user_start_login_password':{
                     if (event.code === 'Enter') {
                         event.preventDefault();
-                        user_login_app().then(() => {
+                        common.user_login()
+                        .then(() => {
                             //unfocus
                             event.target.blur();
-                        });
+                        })
+                        .catch(()=>null);
                     }        
                     break;
                 }
@@ -344,15 +346,8 @@ const user_menu_item_click = (item) => {
     }
     document.querySelector('#common_user_menu_dropdown').style='none';
 };
-const user_login_app = async () => {
-    const username = document.querySelector('#common_user_start_login_username');
-    const password = document.querySelector('#common_user_start_login_password');
-    
-    await common.user_login(username.innerHTML, password.innerHTML)
-    .catch(()=>null);
-};
 const app_exception = (error) => {
-    common.show_message('EXCEPTION', null, null, error);
+    common.show_message('EXCEPTION', null, null, null, error);
 };
 const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField)
@@ -361,7 +356,7 @@ const user_verify_check_input_app = async (item, nextField) => {
             //login if LOGIN  or SIGNUP were verified successfully
             if (result.verification_type==1 ||
                 result.verification_type==2)
-                user_login_app();
+                common.user_login().catch(()=>null);
         }
         
     }) 
@@ -369,17 +364,13 @@ const user_verify_check_input_app = async (item, nextField) => {
 };
 
 const user_delete_app = async () => {
-    let user_local;
-    if (document.querySelector('#common_user_edit_local').style.display == 'block')
-        user_local = true;
-    else
-        user_local = false;
+    
     const function_delete_user_account = () => { 
-                                                common.user_delete(1, user_local, null)
+                                                common.user_delete(1, null)
                                                 .then(()=>common.user_logoff())
                                                 .catch(()=>null);
                                             };
-    await common.user_delete(null, user_local, function_delete_user_account)
+    await common.user_delete(null, function_delete_user_account)
     .then(()=>null)
     .catch(()=>null);
 };
@@ -472,6 +463,6 @@ const init = (parameters) => {
         init_app(parameters);
     });
 };
-export{show_hide_apps_dialogue, setEvents, app_theme_update, get_apps, user_menu_item_click, user_login_app,
+export{show_hide_apps_dialogue, setEvents, app_theme_update, get_apps, user_menu_item_click,
        user_verify_check_input_app, user_delete_app, ProviderUser_update_app, ProviderSignIn_app,
        init_app, init};
