@@ -24,7 +24,7 @@
 #common_profile_main_btn_cloud::before{						content:var(--sky_cloud)}
 
 #common_user_menu_default_avatar::before{					content:var(--user_avatar)}
-#common_user_menu_default_avatar.system_admin::before{		content:var(--user_system_admin)}
+.app_role_system_admin::before{								content:var(--user_system_admin) !important}
 
 #common_user_menu_dropdown_edit::before{					content:var(--app_edit)}
 #common_user_menu_dropdown_log_out::before{					content:var(--app_logoff)}

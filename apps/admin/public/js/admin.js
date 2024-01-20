@@ -1,10 +1,7 @@
 const common = await import('common');
 const app_secure = await import('app_secure');
-common.COMMON_GLOBAL.rest_admin_at = '';
 
 const admin_logoff_app = () => {
-    common.COMMON_GLOBAL.rest_admin_at = '';
-    
     const clear_common = () => {
         app_secure.delete_globals();
         document.querySelectorAll('.main_content').forEach(content => {
@@ -15,15 +12,9 @@ const admin_logoff_app = () => {
         document.querySelector('#menu_open').style.visibility = 'hidden';
         document.querySelector('#admin_secure').style.visibility = 'hidden';
     };
-    if (common.COMMON_GLOBAL.system_admin != '') {
-        document.querySelector('#common_user_menu_default_avatar').classList.remove('system_admin');
+    common.user_logoff(common.COMMON_GLOBAL.system_admin != '').then(() => {
         clear_common();
-        common.COMMON_GLOBAL.system_admin = '';
-    }
-    else
-        common.user_logoff().then(() => {
-            clear_common();
-        });
+    });
 };
 const admin_login = async () => {
     let system_admin = false;
@@ -137,7 +128,7 @@ const setEvents = () => {
                     break;
                 }
                 case 'common_user_menu_username':{
-                    if (common.COMMON_GLOBAL.system_admin_only == 0){
+                    if (common.COMMON_GLOBAL.system_admin == ''){
                         document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                         common.profile_show(null,null);
                         document.querySelector('#common_user_menu_dropdown').style = 'none';

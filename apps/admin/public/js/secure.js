@@ -1660,8 +1660,8 @@ const show_list = async (list_div, url_parameters, sort, order_by) => {
                             let app_role_class;
                             let app_role_icon = log.app_role_icon;
                             if (log.system_admin!=''){
-                                app_role_class = 'app_role_system_admin';
-                                app_role_icon = common.ICONS.app_system_admin;
+                                app_role_class = 'app_role_system_admin common_icon';
+                                app_role_icon = '';
                             }
                             else
                                 switch (log.app_role_id){

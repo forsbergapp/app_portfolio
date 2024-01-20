@@ -5,7 +5,7 @@ const app_exception = () => {
 const init = (parameters) => {
     
 
-    document.title = common.ICONS.app_maintenance;
+    document.title = '⚒';
     document.querySelector('#common_maintenance_footer').innerHTML= '';
     
     common.COMMON_GLOBAL.common_app_id= parseInt(parameters.common_app_id);
