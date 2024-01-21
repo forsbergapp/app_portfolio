@@ -803,7 +803,7 @@ const dialogue_close = async (dialogue) => {
     });
     
 };
-const show_common_dialogue = (dialogue, user_verification_type, title=null, icon=null, click_cancel_event) => {
+const show_common_dialogue = (dialogue, user_verification_type, title=null, click_cancel_event) => {
     switch (dialogue) {
         case 'PROFILE':
             {    
@@ -843,7 +843,6 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, icon
                 document.querySelector('#common_user_verify_cancel')['data-function'] = click_cancel_event;
 
                 document.querySelector('#common_user_verify_email').innerHTML = title;
-                document.querySelector('#common_user_verify_cancel').innerHTML = icon;
                 
                 document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
                 document.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
@@ -1862,6 +1861,7 @@ const user_login = async (system_admin=false) => {
             document.querySelector('#common_user_start_login_button').classList.add('css_spinner');
         FFB('IAM', path, 'POST', 'IAM', json_data)
         .then(result=>{
+            document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
             if (system_admin){
                 COMMON_GLOBAL.system_admin = JSON.parse(result).username;
                 COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
@@ -1879,41 +1879,43 @@ const user_login = async (system_admin=false) => {
                             avatar: null});
             }
             else{
-                profile_close();
                 const user = JSON.parse(result).items[0];
                 COMMON_GLOBAL.user_account_id = user.id;
-                COMMON_GLOBAL.user_identity_provider_id = '';
-                COMMON_GLOBAL.user_app_role_id = user.app_role_id;
-                COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
-                
-                //set avatar or empty
-                set_avatar(user.avatar, document.querySelector('#common_user_menu_avatar_img'));
-                document.querySelector('#common_user_menu_username').innerHTML = user.username;
-                document.querySelector('#common_user_menu_username').style.display = 'block';
-    
-                document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                document.querySelector('#common_user_menu_logged_out').style.display = 'none';
-    
-                
-                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-    
-                updateOnlineStatus();
-                user_preference_get()
-                .then(()=>{
-                    if (user.active==0){
-                        show_common_dialogue('VERIFY', 'LOGIN', user.email, ICONS.app_logoff, null);
-                        reject('ERROR');
-                    }
-                    else{
+                if (user.active==0){
+                    show_common_dialogue('VERIFY', 'LOGIN', user.email, null);
+                    reject('ERROR');
+                }
+                else{
+                    profile_close();
+                    
+                    COMMON_GLOBAL.user_account_id = user.id;
+                    COMMON_GLOBAL.user_identity_provider_id = '';
+                    COMMON_GLOBAL.user_app_role_id = user.app_role_id;
+                    COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
+                    
+                    //set avatar or empty
+                    set_avatar(user.avatar, document.querySelector('#common_user_menu_avatar_img'));
+                    document.querySelector('#common_user_menu_username').innerHTML = user.username;
+                    document.querySelector('#common_user_menu_username').style.display = 'block';
+        
+                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+        
+                    
+                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+        
+                    updateOnlineStatus();
+                    user_preference_get()
+                    .then(()=>{
                         dialogue_user_start_clear();
                         document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                         resolve({   user_id: user.id,
                                     username: user.username,
                                     bio: user.bio,
                                     avatar: user.avatar});
-                    }
-                });
+                    });
+                }
             }
         })
         .catch(err=>{
@@ -2080,7 +2082,7 @@ const user_update = async () => {
             set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
             document.querySelector('#common_user_menu_username').innerHTML = username;
             if (user_update.sent_change_email == 1){
-                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, ICONS.app_cancel, null);
+                show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
                 dialogue_user_edit_clear();
@@ -2117,7 +2119,7 @@ const user_signup = () => {
         const signup = JSON.parse(result);
         COMMON_GLOBAL.rest_at = signup.accessToken;
         COMMON_GLOBAL.user_account_id = signup.id;
-        show_common_dialogue('VERIFY', 'SIGNUP', email, ICONS.app_logoff, null);
+        show_common_dialogue('VERIFY', 'SIGNUP', email, null);
     })
     .catch(()=>document.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
 };
@@ -2184,8 +2186,6 @@ const user_verify_check_input = async (item, nextField) => {
                                 break;
                             }
                         }
-                        
-                        dialogue_user_start_clear();
                         dialogue_verify_clear();
                         dialogue_user_edit_clear();
                         resolve({   actived: 1, 
@@ -2332,7 +2332,7 @@ const user_forgot = async () => {
         const forgot = JSON.parse(result);
         if (forgot.sent == 1){
             COMMON_GLOBAL.user_account_id = forgot.id;
-            show_common_dialogue('VERIFY', 'FORGOT', email, ICONS.app_cancel, null);
+            show_common_dialogue('VERIFY', 'FORGOT', email, null);
         }
     })
     .catch(()=>document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
