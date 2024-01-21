@@ -50,9 +50,7 @@ const list_generate = (amount)=>{
     return html;
 };
 const show_menu = (menu) => {
-    document.querySelectorAll('.menuitem').forEach(content => {
-        content.classList.remove('menuitem_selected');
-    });
+    document.querySelectorAll('.menuitem').forEach(content =>content.classList.remove('menuitem_selected'));
     document.querySelectorAll('.main_content').forEach(content => {
         content.innerHTML = '';
         content.style.display='none';
@@ -2843,38 +2841,12 @@ const init = () => {
     }
     if (common.COMMON_GLOBAL.system_admin!=''){
         document.querySelector('#select_broadcast_type').classList.add('system_admin');
-        //show DASHBOARD
-        document.querySelector('#menu_1').style.display='block';
-        
-        //show MONITOR (only SERVER LOG)
-        document.querySelector('#menu_5').style.display='block';
-        //show PARAMETER
-        document.querySelector('#menu_6').style.display='block';
-        //show INSTALLATION
-        document.querySelector('#menu_7').style.display='block';
-        //show DATABASE
-        document.querySelector('#menu_8').style.display='block';
-        //show BACKUP/RESTORE
-        document.querySelector('#menu_9').style.display='block';
-        //show SERVER
-        document.querySelector('#menu_10').style.display='block';
-        //start with DASHBOARD
+        document.querySelector('#menu_secure').classList.add('system_admin');
         show_menu(1);
     }
     else{
-        //show DASHBOARD
-        document.querySelector('#menu_1').style.display='block';
-        //show USER STAT
-        document.querySelector('#menu_2').style.display='block';
-        //show USERS
-        document.querySelector('#menu_3').style.display='block';
-        //show APP ADMIN
-        document.querySelector('#menu_4').style.display='block';
-        //show MONITOR
-        document.querySelector('#menu_5').style.display='block';
-        //show INSTALLATION
-        document.querySelector('#menu_7').style.display='block';
-        //start with DASHBOARD
+        document.querySelector('#select_broadcast_type').classList.add('admin');
+        document.querySelector('#menu_secure').classList.add('admin');
         show_menu(1);
         common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     }
