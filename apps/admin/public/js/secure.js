@@ -2598,8 +2598,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     demo_uninstall();
                     break;
                 }
-                //users with icons
-                //monitor logs no icons
                 case event_list_title && event_list_title.classList.contains('list_sort_click')?event_target_id:'':{
                     list_sort_click(event_target_id, 
                                     event_list_title.getAttribute('data-column'),
@@ -2620,10 +2618,6 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                     list_item_click('CHAT', {client_id: event.target.getAttribute('data-id')});
                     break;
                 }
-                case event.target.parentNode && event.target.parentNode.classList.contains('chat_click')?event_target_id:'':{
-                    list_item_click('CHAT', {client_id: event.target.parentNode.getAttribute('data-id')});
-                    break;
-                }
                 case 'list_apps':
                 case 'list_app_parameter':
                 case 'list_user_account':{
@@ -2634,7 +2628,7 @@ const app_events = (event_type, event, event_target_id, event_list_title=null)=>
                         common.element_row(event.target).querySelector('.common_lov_value').innerHTML = common.element_row(event_lov.target).getAttribute('data-value');
                         document.querySelector('#common_lov_close').dispatchEvent(new Event('click'));
                     };
-                    if (event.target.classList.contains('common_list_lov_click') || event.target.parentNode.classList.contains('common_list_lov_click')){
+                    if (event.target.classList.contains('common_list_lov_click')){
                         switch (event_target_id){
                             case 'list_apps':{
                                 common.lov_show('APP_CATEGORY', lov_event);
