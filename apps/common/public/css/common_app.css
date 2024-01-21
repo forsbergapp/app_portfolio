@@ -7,6 +7,8 @@
 #common_message_title_icon.message_success::before{			content:var(--message_success)}
 #common_message_title_icon.message_fail::before{			content:var(--message_fail)}
 
+#common_confirm_question:empty::before{						content:var(--app_question)}
+
 .common_lov_button::before{									content:var(--app_lov)}
 #common_lov_search_icon::before{							content:var(--app_search)}
 #common_lov_title.parameter_type::before{					content:var(--app_apps) ' ' var(--app_settings) ' ' var(--app_type)}
@@ -36,6 +38,7 @@
 #common_user_preference_arabic_script::before{				content:var(--regional_script)}
 
 #common_user_verify_email_icon::before{						content:var(--app_email)}
+#common_user_verify_cancel::before{							content:var(--app_cancel)}
 
 #common_user_start_login::before{							content:var(--user)}
 #common_user_start_login_button::before{					content:var(--app_login)}

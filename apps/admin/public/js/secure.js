@@ -2843,7 +2843,7 @@ const init = () => {
         common.COMMON_GLOBAL.module_leaflet_style			            ='OpenStreetMap_Mapnik';
         common.COMMON_GLOBAL.module_leaflet_jumpto		                ='0';
         common.COMMON_GLOBAL.module_leaflet_popup_offset		        ='-25';
-        document.querySelector('#common_confirm_question').innerHTML    = common.ICONS.app_question;
+        document.querySelector('#common_confirm_question').innerHTML    = '';
     }
 
     //hide all first (display none in css using eval not working)
