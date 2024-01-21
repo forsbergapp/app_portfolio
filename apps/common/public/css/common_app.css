@@ -3,9 +3,9 @@
 #common_message_close::before{								content:var(--app_close)}
 #common_message_cancel::before{								content:var(--app_cancel)}
 #common_message_title_icon::before{							content:''}
-#common_message_title_icon.message_text::before{			content:var(--message_text)}
-#common_message_title_icon.message_success::before{			content:var(--message_success)}
-#common_message_title_icon.message_fail::before{			content:var(--message_fail)}
+#common_message_title_icon[data-text_class='message_text']::before{		content:var(--message_text)}
+#common_message_title_icon[data-text_class='message_success']::before{	content:var(--message_success)}
+#common_message_title_icon[data-text_class='message_fail']::before{		content:var(--message_fail)}
 
 #common_confirm_question:empty::before{						content:var(--app_question)}
 
@@ -161,6 +161,7 @@ select {
 	text-align: start;
 	display: inline-block;
 	white-space: nowrap;
+	width: calc(100% - 25px);
 }
 .common_select_dropdown_icon::after{
 	content: var(--app_select);

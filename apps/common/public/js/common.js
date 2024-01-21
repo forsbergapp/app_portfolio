@@ -727,7 +727,7 @@ const show_message = async (message_type, code, function_event, text_class=null,
     const fontsize_log = '0.5em';
     const show = 'inline-block';
     const hide = 'none';
-    document.querySelector('#common_message_title_icon').className=text_class;
+    document.querySelector('#common_message_title_icon').setAttribute('data-text_class',text_class);
 
     switch (message_type){
         case 'ERROR':{

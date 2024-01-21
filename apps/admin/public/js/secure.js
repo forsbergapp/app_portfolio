@@ -444,7 +444,7 @@ const sendBroadcast = () => {
     if (document.querySelector('#client_id').innerHTML==''){
         app_id = document.querySelector('#select_app_broadcast').options[document.querySelector('#select_app_broadcast').selectedIndex].value;
         client_id = '';
-        broadcast_type = document.querySelector('#select_broadcast_type').options[document.querySelector('#select_broadcast_type').selectedIndex].value;
+        broadcast_type = document.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value');
     }
     else{
         client_id = document.querySelector('#client_id').innerHTML;
@@ -490,7 +490,6 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
         case 'CHAT':{
             //hide and set INFO, should not be able to send MAINTENANCE message here
             document.querySelector('#select_broadcast_type').style.display='none';
-            document.querySelector('#select_broadcast_type').selectedIndex = 0;
             //hide app selection
             document.querySelector('#select_app_broadcast').style.display='none';
             //show client id
@@ -502,7 +501,6 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
         case 'APP':{
             //hide and set INFO, should not be able to send MAINTENANCE message here
             document.querySelector('#select_broadcast_type').style.display='none';
-            document.querySelector('#select_broadcast_type').selectedIndex = 0;
             //show app selection
             document.querySelector('#select_app_broadcast').style.display='block';
             //hide client id
@@ -514,7 +512,6 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
         case 'ALL':{
             //show broadcast type and INFO
             document.querySelector('#select_broadcast_type').style.display='inline-block';
-            document.querySelector('#select_broadcast_type').selectedIndex = 0;
             //show app selection
             document.querySelector('#select_app_broadcast').style.display='block';
             //hide client id
@@ -527,7 +524,7 @@ const show_broadcast_dialogue = async (dialogue_type, client_id=null) => {
     document.querySelector('#dialogue_send_broadcast').style.visibility='visible';
 };
 const set_broadcast_type = () => {
-    switch (document.querySelector('#select_broadcast_type').value){
+    switch (document.querySelector('#select_broadcast_type .common_select_dropdown_value').getAttribute('data-value')){
         case 'ALERT':{
             //show app selection
             document.querySelector('#select_app_broadcast').style.display='block';
@@ -2845,11 +2842,9 @@ const init = () => {
         document.querySelector(`#menu_${i}`).style.display='none';
     }
     if (common.COMMON_GLOBAL.system_admin!=''){
+        document.querySelector('#select_broadcast_type').classList.add('system_admin');
         //show DASHBOARD
         document.querySelector('#menu_1').style.display='block';
-        document.querySelector('#select_broadcast_type').innerHTML = 
-            `<option value='ALERT' selected='selected'>${common.ICONS.app_alert}</option>
-             <option value='MAINTENANCE' selected='selected'>${common.ICONS.app_maintenance}</option>`;                 
         
         //show MONITOR (only SERVER LOG)
         document.querySelector('#menu_5').style.display='block';
@@ -2869,8 +2864,6 @@ const init = () => {
     else{
         //show DASHBOARD
         document.querySelector('#menu_1').style.display='block';
-        document.querySelector('#select_broadcast_type').innerHTML = 
-            `<option value='ALERT' selected='selected'>${common.ICONS.app_alert}</option>`;
         //show USER STAT
         document.querySelector('#menu_2').style.display='block';
         //show USERS
