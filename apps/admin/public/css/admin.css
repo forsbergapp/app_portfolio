@@ -15,8 +15,9 @@
 
 #select_broadcast_type .common_select_dropdown_value[data-value='ALERT']::before{			content:var(--app_alert)}
 #select_broadcast_type .common_select_dropdown_value[data-value='MAINTENANCE']::before{		content:var(--app_maintenance)}
-#select_broadcast_type .common_select_option[data-value='ALERT']::before{			content:var(--app_alert)}
-#select_broadcast_type .common_select_option[data-value='MAINTENANCE']::before{		content:var(--app_maintenance)}
+
+#select_broadcast_type .common_select_option[data-value='ALERT']::before{					content:var(--app_alert)}
+#select_broadcast_type .common_select_option[data-value='MAINTENANCE']::before{				content:var(--app_maintenance)}
  
 #send_broadcast_send::before{														content:var(--app_send)}
 #send_broadcast_close::before{														content:var(--app_close)}
@@ -134,6 +135,31 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 #menu_10_os_title::before{								content:var(--app_server)}
 #menu_10_process_title::before{							content:var(--app_server) ' ' var(--app_apps)}
 
+
+#menu_secure .menuitem{
+	display: none;
+}
+#menu_secure.system_admin #menu_1,
+#menu_secure.system_admin #menu_5,
+#menu_secure.system_admin #menu_6,
+#menu_secure.system_admin #menu_7,
+#menu_secure.system_admin #menu_8,
+#menu_secure.system_admin #menu_9,
+#menu_secure.system_admin #menu_10,
+#menu_secure.system_admin #menu_11{
+	display: block !important;
+}
+#menu_secure.admin #menu_1,
+#menu_secure.admin #menu_2,
+#menu_secure.admin #menu_3,
+#menu_secure.admin #menu_4,
+#menu_secure.admin #menu_5,
+#menu_secure.admin #menu_7,
+#menu_secure.admin #menu_11{
+	display: block !important;
+}
+
+
 #common_user_start_logo{
 	background-image: url('/images/logo.png') !important;
 }
@@ -193,8 +219,12 @@ body.rtl #list_app_log_last::before{					content:var(--app_first)}
 #client_id_label{
 	width:100%;
 }
+#select_broadcast_type.admin .common_select_option[data-value='ALERT'],
+#select_broadcast_type.system_admin .common_select_option[data-value='ALERT']{
+	display: block;
+}
 #select_broadcast_type.system_admin .common_select_option[data-value='MAINTENANCE']{
-	display: inline-block;
+	display: block;
 }
 #select_broadcast_type .common_select_option[data-value='MAINTENANCE']{
 	display: none;

@@ -4,8 +4,8 @@ const app_secure = await import('app_secure');
 const admin_logoff_app = () => {
     const clear_common = () => {
         app_secure.delete_globals();
-        document.querySelector('#select_broadcast_type').classList.remove('system_admin');
-        
+        document.querySelector('#select_broadcast_type').classList.remove('admin','system_admin');
+        document.querySelector('#menu_secure').classList.remove('admin','system_admin');
         document.querySelectorAll('.main_content').forEach(content => {
             content.innerHTML = '';
         });
