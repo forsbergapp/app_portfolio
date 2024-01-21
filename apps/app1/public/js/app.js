@@ -99,11 +99,14 @@ const setEvents = () => {
                     }
                     //user menu
                     case 'common_user_menu_username':{
-                        user_menu_item_click(event.target);
+                        document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                        common.profile_show(null,null);
+                        document.querySelector('#common_user_menu_dropdown').style='none';
                         break;
                     }
                     case 'common_user_menu_dropdown_log_out':{
-                        user_menu_item_click(event.target);
+                        common.user_logoff();
+                        document.querySelector('#common_user_menu_dropdown').style='none';
                         break;
                     }
                     //user preferences
@@ -330,22 +333,6 @@ const get_apps = () => {
     });
 };
 
-const user_menu_item_click = (item) => {
-    switch (item.id==''?item.parentNode.id:item.id){
-        case 'common_user_menu_username':{
-            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null,null);
-            break;
-        }
-        case 'common_user_menu_dropdown_log_out':{
-            common.user_logoff();            
-            break;
-        }
-        default:
-            break;
-    }
-    document.querySelector('#common_user_menu_dropdown').style='none';
-};
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
