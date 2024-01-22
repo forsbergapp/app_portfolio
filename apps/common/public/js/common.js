@@ -1366,7 +1366,7 @@ const search_profile = (click_function) => {
         let path;
         let token;
         let json_data;
-        if (input_control(null,{check_valid_list:[document.querySelector('#common_profile_search_input')]})==false)
+        if (input_control(null,{check_valid_list:[[document.querySelector('#common_profile_search_input'),null]]})==false)
             return;
         if (COMMON_GLOBAL.user_account_id!=''){
             //search using access token with logged in user_account_id
