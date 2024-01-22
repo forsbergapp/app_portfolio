@@ -36,7 +36,7 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 	width: 100%;
 }
 #dialogue_start_content{
-	visibility:visible;
+	visibility:hidden;
 	overflow: hidden;
 	width: 350px;
 	transform:             rotateY( 0deg );
@@ -579,6 +579,11 @@ div.ray8 {
   }
 
 /*COMMON*/
+#common_toolbar_framework{
+	margin-inline-start: 0px !important;
+	bottom:0px !important;
+	top: unset !important;
+}
 #common_app_select_theme{
 	display:none;
 }
@@ -899,6 +904,14 @@ border-left: 12px solid var(--app_theme_sun_color);
 }
 
 /*THEME COMMON*/
+.common_toolbar_selected{
+	background-color: var(--app_theme_list_selected_background_color);
+}
+#common_toolbar_framework {
+    color: var(--app_theme_main_branding_color1);
+    background-color: var(--app_theme_main_branding_color3);
+    box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
+}
 #common_user_edit_btn_avatar_img{
 	background-color: var(--app_theme_dialogue_background_color);
 }
