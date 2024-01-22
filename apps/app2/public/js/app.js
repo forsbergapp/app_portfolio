@@ -1957,14 +1957,14 @@ const setEvents = () => {
                     break;
                 }
                 case 'toolbar_btn_search':{
-                    const x = document.querySelector('#common_profile_input_row'); 
-                    if (x.style.visibility == 'visible') {
-                        x.style.visibility = 'hidden';
-                    } 
-                    else{
-                        x.style.visibility = 'visible'; 
-                        document.querySelector('#common_profile_search_input').focus();
-                    }
+                
+                    const input_row = document.querySelector('#common_profile_search_input');
+                    const searchlist = document.querySelector('#common_profile_search_list_wrap');
+                    input_row.style.visibility=input_row.style.visibility=='visible'?'hidden':'visible';
+                    //show list if list input is visible and is not empty
+                    searchlist.style.display=(input_row.style.visibility=='visible' && input_row.innerHTML !='')?'flex':'none';
+                    
+                    document.querySelector('#common_profile_search_input').focus();
                     break;
                 }
                 //toolbar bottom
