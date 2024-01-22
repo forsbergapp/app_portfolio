@@ -25,7 +25,9 @@ body {
 	padding: 3em;
 	display:inline-block;
 	border-radius: 4px;
-	
+}
+#dialogue_documents{
+	visibility: hidden;
 }
 /*COMMON*/
 #common_profile_input_row,
@@ -66,6 +68,14 @@ body {
 	box-shadow: 0 0 35px 4px var(--app_white_transparent);
 }
 /* APP THEME COMMON*/
+.common_toolbar_selected{
+	background-color: var(--app_blue1);
+}
+#common_toolbar_framework {
+    color: var(--app_black);
+    background-color: var(--app_white1);
+    box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
+}
 .common_dialogue_button,
 .common_toolbar_button{
 	color: var(--app_black) !important;
