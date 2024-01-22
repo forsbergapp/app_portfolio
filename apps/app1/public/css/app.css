@@ -145,8 +145,11 @@ body.font_arabic_nastaliq #common_user_menu_default_avatar{
 #app_menu_space{
 	height: 200px;
 }
-#app_menu_content_info{
+#app_menu_content_apps{
 	display: none;
+}
+#app_menu_content_info{
+	display: block;
 }
 #app_menu_content_info #datamodel{
 	margin-bottom:30px;
