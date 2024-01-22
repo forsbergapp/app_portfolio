@@ -3137,445 +3137,454 @@ const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_a
                                 COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
                                 COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
 const common_event = async (event_type,event) =>{
-    switch (event_type){
-        case 'click':{
-            if (event.target.classList.contains('common_switch')){
-                if (event.target.classList.contains('checked'))
-                    event.target.classList.remove('checked');
-                else
-                    event.target.classList.add('checked');
-            }
-            else{
-                const event_target_id = element_id(event.target);
-                switch(event_target_id){
-                    case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
-                    case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
-                        document.querySelector(`#${event_target_id} .common_select_options`).style.display = 
-                            document.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
-                        break;
-                    }
-                    case event.target.classList.contains('common_select_option')?event_target_id:'':{
-                        document.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
-                        document.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
-                        event.target.parentNode.style.display = 'none';
-                        break;
-                    }
-                    // dialogue login/signup/forgot
-                    case 'common_user_start_login':
-                    case 'common_user_start_login_system_admin':
-                    case 'common_user_start_signup':
-                    case 'common_user_start_forgot':{
-                        document.querySelectorAll('#common_user_start_nav > div').forEach(tab=>tab.classList.remove('common_user_start_selected'));
-                        document.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
-                        
-                        document.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach(form=>form.style.display='none');
-                        document.querySelector(`#${event_target_id}_form`).style.display='inline-block';
-
-                        break;
-                    }
-                    case 'common_user_start_close':{
-                        dialogue_user_start_clear();
-                        break;
-                    }
-                    case 'common_user_start_forgot_button':{
-                        await user_forgot();
-                        break;
-                    }
-                    //dialogue message
-                    case 'common_message_close':{
-                        if (document.querySelector('#common_message_close')['data-function'])
-                            document.querySelector('#common_message_close')['data-function']();
-                        document.querySelector('#common_message_close')['data-function'] = null;
-                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                        document.querySelector('#common_message_title').innerHTML ='';
-                        break;
-                    }
-                    case 'common_message_cancel':{
-                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                        break;
-                    }
-                    //dialouge password
-                    case 'common_user_password_new_cancel':{
-                        dialogue_password_new_clear();
-                        break;
-                    }
-                    case 'common_user_password_new_ok':{
-                        await updatePassword();
-                        break;
-                    }
-                    //dialogue lov
-                    case 'common_lov_search_icon':{
-                        lov_filter(document.querySelector('#common_lov_search_input').innerHTML);
-                        break;
-                    }
-                    case 'common_lov_close':{
-                        lov_close();
-                        break;
-                    }
-                    case 'common_profile_search_icon':{
-                        document.querySelector('#common_profile_search_input').focus();
-                        document.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
-                        break;
-                    }
-                    //window info
-                    case 'common_window_info_btn_close':{
-                        document.querySelector('#common_window_info').style.visibility = 'hidden'; 
-                        document.querySelector('#common_window_info_info').innerHTML='';
-                        document.querySelector('#common_window_info_content').src='';
-                        document.querySelector('#common_window_info_content').classList='';
-                        document.querySelector('#common_window_info_toolbar').classList='';
-                        break;
-                    }
-                    case 'common_window_info_info':{
-                        show_hide_window_info_toolbar();
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_zoomout':{
-                        zoom_info(-1);
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_zoomin':{
-                        zoom_info(1);
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_left':{
-                        move_info(-1,0);
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_right':{
-                        move_info(1,0);
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_up':{
-                        move_info(0,-1);
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_down':{
-                        move_info(0,1);
-                        break;
-                    }
-                    case 'common_window_info_toolbar_btn_fullscreen':{
-                        if (document.fullscreenElement)
-                            document.exitFullscreen();
-                        else
-                            document.body.requestFullscreen();
-                        break;
-                    }
-                    //user menu
-                    case 'common_user_menu':
-                    case 'common_user_menu_logged_in':
-                    case 'common_user_menu_avatar':
-                    case 'common_user_menu_avatar_img':
-                    case 'common_user_menu_logged_out':
-                    case 'common_user_menu_default_avatar':{
-                        const menu = document.querySelector('#common_user_menu_dropdown');
-                        if (menu.style.visibility == 'visible') 
-                            menu.style.visibility = 'hidden'; 
-                        else 
-                            menu.style.visibility = 'visible'; 
-                        break;
-                    }
-                    case 'common_user_menu_dropdown_log_in':{
-                        document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-                        show_common_dialogue('LOGIN');
-                        break;
-                    }
-                    case 'common_user_menu_dropdown_edit':{
-                        await user_edit()
-                        .then(()=>{
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener(event_type,event => {
+            common_event(event_type, event);
+        });
+    }
+    else{
+        switch (event_type){
+            case 'click':{
+                if (event.target.classList.contains('common_switch')){
+                    if (event.target.classList.contains('checked'))
+                        event.target.classList.remove('checked');
+                    else
+                        event.target.classList.add('checked');
+                }
+                else{
+                    const event_target_id = element_id(event.target);
+                    switch(event_target_id){
+                        case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
+                        case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
+                            document.querySelector(`#${event_target_id} .common_select_options`).style.display = 
+                                document.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                            break;
+                        }
+                        case event.target.classList.contains('common_select_option')?event_target_id:'':{
+                            document.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
+                            document.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                            event.target.parentNode.style.display = 'none';
+                            break;
+                        }
+                        // dialogue login/signup/forgot
+                        case 'common_user_start_login':
+                        case 'common_user_start_login_system_admin':
+                        case 'common_user_start_signup':
+                        case 'common_user_start_forgot':{
+                            document.querySelectorAll('#common_user_start_nav > div').forEach(tab=>tab.classList.remove('common_user_start_selected'));
+                            document.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
+                            
+                            document.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach(form=>form.style.display='none');
+                            document.querySelector(`#${event_target_id}_form`).style.display='inline-block';
+    
+                            break;
+                        }
+                        case 'common_user_start_close':{
+                            dialogue_user_start_clear();
+                            break;
+                        }
+                        case 'common_user_start_forgot_button':{
+                            await user_forgot();
+                            break;
+                        }
+                        //dialogue message
+                        case 'common_message_close':{
+                            if (document.querySelector('#common_message_close')['data-function'])
+                                document.querySelector('#common_message_close')['data-function']();
+                            document.querySelector('#common_message_close')['data-function'] = null;
+                            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                            document.querySelector('#common_message_title').innerHTML ='';
+                            break;
+                        }
+                        case 'common_message_cancel':{
+                            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                            break;
+                        }
+                        //dialouge password
+                        case 'common_user_password_new_cancel':{
+                            dialogue_password_new_clear();
+                            break;
+                        }
+                        case 'common_user_password_new_ok':{
+                            await updatePassword();
+                            break;
+                        }
+                        //dialogue lov
+                        case 'common_lov_search_icon':{
+                            lov_filter(document.querySelector('#common_lov_search_input').innerHTML);
+                            break;
+                        }
+                        case 'common_lov_close':{
+                            lov_close();
+                            break;
+                        }
+                        case 'common_profile_search_icon':{
+                            document.querySelector('#common_profile_search_input').focus();
+                            document.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            break;
+                        }
+                        //window info
+                        case 'common_window_info_btn_close':{
+                            document.querySelector('#common_window_info').style.visibility = 'hidden'; 
+                            document.querySelector('#common_window_info_info').innerHTML='';
+                            document.querySelector('#common_window_info_content').src='';
+                            document.querySelector('#common_window_info_content').classList='';
+                            document.querySelector('#common_window_info_toolbar').classList='';
+                            break;
+                        }
+                        case 'common_window_info_info':{
+                            show_hide_window_info_toolbar();
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_zoomout':{
+                            zoom_info(-1);
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_zoomin':{
+                            zoom_info(1);
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_left':{
+                            move_info(-1,0);
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_right':{
+                            move_info(1,0);
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_up':{
+                            move_info(0,-1);
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_down':{
+                            move_info(0,1);
+                            break;
+                        }
+                        case 'common_window_info_toolbar_btn_fullscreen':{
+                            if (document.fullscreenElement)
+                                document.exitFullscreen();
+                            else
+                                document.body.requestFullscreen();
+                            break;
+                        }
+                        //user menu
+                        case 'common_user_menu':
+                        case 'common_user_menu_logged_in':
+                        case 'common_user_menu_avatar':
+                        case 'common_user_menu_avatar_img':
+                        case 'common_user_menu_logged_out':
+                        case 'common_user_menu_default_avatar':{
+                            const menu = document.querySelector('#common_user_menu_dropdown');
+                            if (menu.style.visibility == 'visible') 
+                                menu.style.visibility = 'hidden'; 
+                            else 
+                                menu.style.visibility = 'visible'; 
+                            break;
+                        }
+                        case 'common_user_menu_dropdown_log_in':{
                             document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                            show_common_dialogue('LOGIN');
+                            break;
+                        }
+                        case 'common_user_menu_dropdown_edit':{
+                            await user_edit()
+                            .then(()=>{
+                                document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                            });
+                            break;
+                        }
+                        case 'common_user_menu_dropdown_signup':{
+                            document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                            show_common_dialogue('SIGNUP');
+                            break;
+                        }
+                        //dialogue user edit
+                        case 'common_user_edit_close':{
+                            dialogue_user_edit_clear();
+                            break;
+                        }
+                        case 'common_user_edit_btn_avatar_img':{
+                            document.querySelector('#common_user_edit_input_avatar_img').click();
+                            break;
+                        }
+                        case 'common_user_edit_input_avatar_img':{
+                            show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                            break;
+                        }
+                        case 'common_user_edit_btn_user_update':{
+                            await user_update();
+                            break;
+                        }
+                        //dialogue verify
+                        case 'common_user_verify_cancel':{
+                            if (document.querySelector('#common_user_verify_cancel')['data-function'])
+                                document.querySelector('#common_user_verify_cancel')['data-function']();
+                            dialogue_verify_clear();
+                            break;
+                        }
+                        //search list
+                        case 'common_profile_search_list':{
+                            if (event.target.classList.contains('common_profile_search_list_username')){
+                                if (document.querySelector('#common_profile_search_list')['data-function']){
+                                    document.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                }
+                                else
+                                    await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
+                            }
+                            break;
+                        }
+                        //dialogue profile and profile top
+                        case 'common_profile_top_list':
+                        case 'common_profile_detail_list':{
+                            if (event.target.classList.contains('common_profile_top_list_username')||
+                                event.target.classList.contains('common_profile_detail_list_username')){
+                                //execute function from inparameter or use default when not specified
+                                if (document.querySelector(`#${element_id(event.target)}`)['data-function'])
+                                    document.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                else
+                                    await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
+                            }
+                            else{
+                                //app list
+                                if (event.target.classList.contains('common_profile_detail_list_app_name')){
+                                    window.open(element_row(event.target).getAttribute('data-url'), '_blank');
+                                }
+                                else
+                                    if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
+                                        event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
+                                            await user_account_app_delete(null, 
+                                                                    document.querySelector('#common_profile_id').innerHTML,
+                                                                    element_row(event.target).getAttribute('data-app_id'),
+                                                                    () => { 
+                                                                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                                                                        user_account_app_delete(1, 
+                                                                                                document.querySelector('#common_profile_id').innerHTML, 
+                                                                                                element_row(event.target).getAttribute('data-app_id'), 
+                                                                                                null);
+                                                                    });
+                                    }
+                            }
+                            break;
+                        }
+                        //broadcast
+                        case 'common_broadcast_close':{
+                            document.querySelector('#common_broadcast_info').style.visibility='hidden';
+                            document.querySelector('#common_broadcast_info_message_item').innerHTML='';
+                            document.querySelector('#common_broadcast_info_message').style.animationName='unset';
+                            break;
+                        }
+                        //module leaflet
+                        case 'common_module_leaflet_search_icon':{
+                            document.querySelector('#common_module_leaflet_search_input').focus();
+                            document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            break;
+                        }
+                        case 'common_module_leaflet_control_search_button':{
+                            if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+                                map_control_toggle_expand('layer');
+                            map_control_toggle_expand('search');
+                            break;
+                        }
+                        case 'common_module_leaflet_control_fullscreen_id':{
+                            if (document.fullscreenElement)
+                                document.exitFullscreen();
+                            else
+                                document.querySelector('.leaflet-container').requestFullscreen();
+                            break;
+                        }
+                        case 'common_module_leaflet_control_my_location_id':{
+                            if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
+                                map_update( COMMON_GLOBAL.client_longitude,
+                                            COMMON_GLOBAL.client_latitude,
+                                            COMMON_GLOBAL.module_leaflet_zoom,
+                                            COMMON_GLOBAL.client_place,
+                                            null,
+                                            COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                            COMMON_GLOBAL.module_leaflet_jumpto);
+                                const select_country = document.querySelector('#common_module_leaflet_select_country');
+                                select_country.selectedIndex = 0;
+                                map_toolbar_reset();
+                            }
+                            break;
+                        }
+                        case 'common_module_leaflet_control_layer_button':{
+                            if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+                                map_toolbar_reset();
+                            map_control_toggle_expand('layer');
+                            break;
+                        }
+                        case 'common_module_leaflet_search_list':{
+                            //execute function from inparameter or use default when not specified
+                            if (event.target.classList.contains('common_module_leaflet_click_city')){
+                                const data = {  city: element_row(event.target).getAttribute('data-city'),
+                                                country: element_row(event.target).getAttribute('data-country'),
+                                                latitude: element_row(event.target).getAttribute('data-latitude'),
+                                                longitude: element_row(event.target).getAttribute('data-longitude')
+                                            };
+                                if (document.querySelector('#common_module_leaflet_search_list')['data-function']){
+                                    document.querySelector('#common_module_leaflet_search_list')['data-function'](data);
+                                    map_toolbar_reset();
+                                }
+                                else
+                                    map_show_search_on_map(data,null,()=>{map_toolbar_reset('search');});
+                            }
+                            break;
+                        }
+                        case 'common_profile_main_btn_following':
+                        case 'common_profile_main_btn_followed':
+                        case 'common_profile_main_btn_likes':
+                        case 'common_profile_main_btn_liked':
+                        case 'common_profile_main_btn_liked_heart':
+                        case 'common_profile_main_btn_liked_users':
+                        case 'common_profile_main_btn_cloud':{    
+                            document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                            document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            break;
+                        }
+                        case 'common_toolbar_framework_js':
+                        case 'common_toolbar_framework_vue':
+                        case 'common_toolbar_framework_react':{
+                            document.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach(btn=>btn.classList.remove('common_toolbar_selected'));
+                            document.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                            break;
+                        }    
+                        default:{
+                            if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
+                                COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
+                            if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
+                                COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
+                            break;
+                        }
+                    }
+                }   
+                break;
+            }
+            case 'change':{
+                switch (event.target.id){
+                    //define globals and save settings here, in apps define what should happen when changing
+                    case 'common_user_locale_select':{
+                        COMMON_GLOBAL.user_locale = event.target.value;
+                        //change navigator.language, however when logging out default navigator.language will be set
+                        //commented at the moment
+                        //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
+                        await user_preference_save();
+                        break;
+                    }
+                    case 'common_user_timezone_select':{
+                        COMMON_GLOBAL.user_timezone = event.target.value;
+                        await user_preference_save().then(()=>{
+                            if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
+                                dialogue_user_edit_clear();
+                                user_edit();
+                            }
                         });
                         break;
                     }
-                    case 'common_user_menu_dropdown_signup':{
-                        document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-                        show_common_dialogue('SIGNUP');
-                        break;
-                    }
-                    //dialogue user edit
-                    case 'common_user_edit_close':{
-                        dialogue_user_edit_clear();
-                        break;
-                    }
-                    case 'common_user_edit_btn_avatar_img':{
-                        document.querySelector('#common_user_edit_input_avatar_img').click();
-                        break;
-                    }
-                    case 'common_user_edit_input_avatar_img':{
-                        show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
-                        break;
-                    }
-                    case 'common_user_edit_btn_user_update':{
-                        await user_update();
-                        break;
-                    }
-                    //dialogue verify
-                    case 'common_user_verify_cancel':{
-                        if (document.querySelector('#common_user_verify_cancel')['data-function'])
-                            document.querySelector('#common_user_verify_cancel')['data-function']();
-                        dialogue_verify_clear();
-                        break;
-                    }
-                    //search list
-                    case 'common_profile_search_list':{
-                        if (event.target.classList.contains('common_profile_search_list_username')){
-                            if (document.querySelector('#common_profile_search_list')['data-function']){
-                                document.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
-                            }
-                            else
-                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
-                        }
-                        break;
-                    }
-                    //dialogue profile and profile top
-                    case 'common_profile_top_list':
-                    case 'common_profile_detail_list':{
-                        if (event.target.classList.contains('common_profile_top_list_username')||
-                            event.target.classList.contains('common_profile_detail_list_username')){
-                            //execute function from inparameter or use default when not specified
-                            if (document.querySelector(`#${element_id(event.target)}`)['data-function'])
-                                document.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
-                            else
-                                await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
-                        }
-                        else{
-                            //app list
-                            if (event.target.classList.contains('common_profile_detail_list_app_name')){
-                                window.open(element_row(event.target).getAttribute('data-url'), '_blank');
-                            }
-                            else
-                                if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
-                                    event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
-                                        await user_account_app_delete(null, 
-                                                                document.querySelector('#common_profile_id').innerHTML,
-                                                                element_row(event.target).getAttribute('data-app_id'),
-                                                                () => { 
-                                                                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                                                                    user_account_app_delete(1, 
-                                                                                            document.querySelector('#common_profile_id').innerHTML, 
-                                                                                            element_row(event.target).getAttribute('data-app_id'), 
-                                                                                            null);
-                                                                });
-                                }
-                        }
-                        break;
-                    }
-                    //broadcast
-                    case 'common_broadcast_close':{
-                        document.querySelector('#common_broadcast_info').style.visibility='hidden';
-                        document.querySelector('#common_broadcast_info_message_item').innerHTML='';
-                        document.querySelector('#common_broadcast_info_message').style.animationName='unset';
-                        break;
-                    }
-                    //module leaflet
-                    case 'common_module_leaflet_search_icon':{
-                        document.querySelector('#common_module_leaflet_search_input').focus();
-                        document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
-                        break;
-                    }
-                    case 'common_module_leaflet_control_search_button':{
-                        if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
-                            map_control_toggle_expand('layer');
-                        map_control_toggle_expand('search');
-                        break;
-                    }
-                    case 'common_module_leaflet_control_fullscreen_id':{
-                        if (document.fullscreenElement)
-                            document.exitFullscreen();
+                    case 'common_user_direction_select':{
+                        if(event.target.value=='rtl')
+                            document.body.classList.add('rtl');
                         else
-                            document.querySelector('.leaflet-container').requestFullscreen();
+                            document.body.classList.remove('rtl');
+                        COMMON_GLOBAL.user_direction = event.target.value;  
+                        await user_preference_save();
                         break;
                     }
-                    case 'common_module_leaflet_control_my_location_id':{
-                        if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
-                            map_update( COMMON_GLOBAL.client_longitude,
-                                        COMMON_GLOBAL.client_latitude,
-                                        COMMON_GLOBAL.module_leaflet_zoom,
-                                        COMMON_GLOBAL.client_place,
-                                        null,
-                                        COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                        COMMON_GLOBAL.module_leaflet_jumpto);
-                            const select_country = document.querySelector('#common_module_leaflet_select_country');
-                            select_country.selectedIndex = 0;
+                    case 'common_user_arabic_script_select':{
+                        COMMON_GLOBAL.user_arabic_script = event.target.value;
+                        await user_preference_save();
+                        break;
+                    }
+                    //module leaflet events
+                    case 'common_module_leaflet_select_country':{
+                        if (event.target[event.target.selectedIndex].getAttribute('country_code'))
+                            map_city(event.target[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
+                        else{
                             map_toolbar_reset();
                         }
                         break;
                     }
-                    case 'common_module_leaflet_control_layer_button':{
-                        if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+                    case 'common_module_leaflet_select_city':{
+                        const longitude_selected = event.target[event.target.selectedIndex].getAttribute('longitude');
+                        const latitude_selected = event.target[event.target.selectedIndex].getAttribute('latitude');
+                        map_update( longitude_selected, 
+                                    latitude_selected, 
+                                    COMMON_GLOBAL.module_leaflet_zoom_city,
+                                    event.target.options[event.target.selectedIndex].text, 
+                                    null, 
+                                    COMMON_GLOBAL.module_leaflet_marker_div_city,
+                                    COMMON_GLOBAL.module_leaflet_flyto).then(()=> {
                             map_toolbar_reset();
-                        map_control_toggle_expand('layer');
+                        });
                         break;
                     }
-                    case 'common_module_leaflet_search_list':{
-                        //execute function from inparameter or use default when not specified
-                        if (event.target.classList.contains('common_module_leaflet_click_city')){
-                            const data = {  city: element_row(event.target).getAttribute('data-city'),
-                                            country: element_row(event.target).getAttribute('data-country'),
-                                            latitude: element_row(event.target).getAttribute('data-latitude'),
-                                            longitude: element_row(event.target).getAttribute('data-longitude')
-                                        };
-                            if (document.querySelector('#common_module_leaflet_search_list')['data-function']){
-                                document.querySelector('#common_module_leaflet_search_list')['data-function'](data);
-                                map_toolbar_reset();
+                    case 'common_module_leaflet_select_mapstyle':{
+                        map_setstyle(event.target.value).then(()=>{null;});
+                        break;
+                    }
+                    default:{
+                        break;
+                    }
+                }
+                break;
+            }
+            case 'keyup':{
+                if (event.target.classList.contains('common_password')){
+                    if (event.target.innerText.indexOf('\n')>-1)
+                        event.target.innerText = event.target.innerText.replace('\n','');
+                    document.querySelector(`#${event.target.id}_mask`).innerText = 
+                        event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
+                }
+                else
+                    switch (event.target.id){
+                        case 'common_user_start_forgot_email':{
+                            if (event.code === 'Enter') {
+                                event.preventDefault();
+                                await user_forgot().then(()=>{
+                                    //unfocus
+                                    document.querySelector('#common_user_start_forgot_email').blur();
+                                });
                             }
-                            else
-                                map_show_search_on_map(data,null,()=>{map_toolbar_reset('search');});
+                            break;
                         }
-                        break;
-                    }
-                    case 'common_profile_main_btn_following':
-                    case 'common_profile_main_btn_followed':
-                    case 'common_profile_main_btn_likes':
-                    case 'common_profile_main_btn_liked':
-                    case 'common_profile_main_btn_liked_heart':
-                    case 'common_profile_main_btn_liked_users':
-                    case 'common_profile_main_btn_cloud':{    
-                        document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
-                        document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
-                        break;
-                    }
-                    case 'common_toolbar_framework_js':
-                    case 'common_toolbar_framework_vue':
-                    case 'common_toolbar_framework_react':{
-                        document.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach(btn=>btn.classList.remove('common_toolbar_selected'));
-                        document.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
-                        break;
-                    }    
-                    default:{
-                        if (event.target.classList.contains('leaflet-control-zoom-in') || event.target.parentNode.classList.contains('leaflet-control-zoom-in'))
-                            COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() + 1);
-                        if (event.target.classList.contains('leaflet-control-zoom-out') || event.target.parentNode.classList.contains('leaflet-control-zoom-out'))
-                            COMMON_GLOBAL.module_leaflet_session_map.setZoom(COMMON_GLOBAL.module_leaflet_session_map.getZoom() - 1);
-                        break;
-                    }
-                }
-            }   
-            break;
-        }
-        case 'change':{
-            switch (event.target.id){
-                //define globals and save settings here, in apps define what should happen when changing
-                case 'common_user_locale_select':{
-                    COMMON_GLOBAL.user_locale = event.target.value;
-                    //change navigator.language, however when logging out default navigator.language will be set
-                    //commented at the moment
-                    //Object.defineProperties(navigator, {'language': {'value':COMMON_GLOBAL.user_locale, writable: true}});
-                    await user_preference_save();
-                    break;
-                }
-                case 'common_user_timezone_select':{
-                    COMMON_GLOBAL.user_timezone = event.target.value;
-                    await user_preference_save().then(()=>{
-                        if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
-                            dialogue_user_edit_clear();
-                            user_edit();
+                        case 'common_lov_search_input':{
+                            lov_keys(event);
+                            break;
                         }
-                    });
-                    break;
-                }
-                case 'common_user_direction_select':{
-                    if(event.target.value=='rtl')
-                        document.body.classList.add('rtl');
-                    else
-                        document.body.classList.remove('rtl');
-                    COMMON_GLOBAL.user_direction = event.target.value;  
-                    await user_preference_save();
-                    break;
-                }
-                case 'common_user_arabic_script_select':{
-                    COMMON_GLOBAL.user_arabic_script = event.target.value;
-                    await user_preference_save();
-                    break;
-                }
-                //module leaflet events
-                case 'common_module_leaflet_select_country':{
-                    if (event.target[event.target.selectedIndex].getAttribute('country_code'))
-                        map_city(event.target[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
-                    else{
-                        map_toolbar_reset();
-                    }
-                    break;
-                }
-                case 'common_module_leaflet_select_city':{
-                    const longitude_selected = event.target[event.target.selectedIndex].getAttribute('longitude');
-                    const latitude_selected = event.target[event.target.selectedIndex].getAttribute('latitude');
-                    map_update( longitude_selected, 
-                                latitude_selected, 
-                                COMMON_GLOBAL.module_leaflet_zoom_city,
-                                event.target.options[event.target.selectedIndex].text, 
-                                null, 
-                                COMMON_GLOBAL.module_leaflet_marker_div_city,
-                                COMMON_GLOBAL.module_leaflet_flyto).then(()=> {
-                        map_toolbar_reset();
-                    });
-                    break;
-                }
-                case 'common_module_leaflet_select_mapstyle':{
-                    map_setstyle(event.target.value).then(()=>{null;});
-                    break;
-                }
-                default:{
-                    break;
-                }
-            }
-            break;
-        }
-        case 'keyup':{
-            if (event.target.classList.contains('common_password')){
-                if (event.target.innerText.indexOf('\n')>-1)
-                    event.target.innerText = event.target.innerText.replace('\n','');
-                document.querySelector(`#${event.target.id}_mask`).innerText = 
-                    event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
-            }
-            else
-                switch (event.target.id){
-                    case 'common_user_start_forgot_email':{
-                        if (event.code === 'Enter') {
-                            event.preventDefault();
-                            await user_forgot().then(()=>{
-                                //unfocus
-                                document.querySelector('#common_user_start_forgot_email').blur();
-                            });
+                        //module leaflet
+                        case 'common_module_leaflet_search_input':{
+                            typewatch(search_input, event, 'module_leaflet', event.target['data-function']); 
+                            break;
                         }
-                        break;
+                        default:{
+                            break;
+                        }
                     }
-                    case 'common_lov_search_input':{
-                        lov_keys(event);
-                        break;
-                    }
-                    //module leaflet
-                    case 'common_module_leaflet_search_input':{
-                        typewatch(search_input, event, 'module_leaflet', event.target['data-function']); 
-                        break;
-                    }
-                    default:{
-                        break;
-                    }
-                }
-            break;
-        }
-        case 'keydown':{
-            if (disable_textediting() &&
-                event.target.classList.contains('common_input') && 
-                    (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
-                    (event.shiftKey ==true && (event.code=='ArrowLeft' || 
-                                                event.code=='ArrowRight' || 
-                                                event.code=='ArrowUp' || 
-                                                event.code=='ArrowDown'|| 
-                                                event.code=='Home'|| 
-                                                event.code=='End'|| 
-                                                event.code=='PageUp'|| 
-                                                event.code=='PageDown') ) )
-                ){
-                    event.preventDefault();
+                break;
             }
-            break;
-        } 
-        default:{
-            break;
-        }
+            case 'keydown':{
+                if (disable_textediting() &&
+                    event.target.classList.contains('common_input') && 
+                        (event.code=='' || event.code=='Enter' || event.altKey == true || event.ctrlKey == true || 
+                        (event.shiftKey ==true && (event.code=='ArrowLeft' || 
+                                                    event.code=='ArrowRight' || 
+                                                    event.code=='ArrowUp' || 
+                                                    event.code=='ArrowDown'|| 
+                                                    event.code=='Home'|| 
+                                                    event.code=='End'|| 
+                                                    event.code=='PageUp'|| 
+                                                    event.code=='PageDown') ) )
+                    ){
+                        event.preventDefault();
+                }
+                break;
+            } 
+            default:{
+                break;
+            }
+        }    
     }
+    
 };
 /**
  * Sets common events for all apps

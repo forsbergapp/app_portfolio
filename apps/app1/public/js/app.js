@@ -20,9 +20,9 @@ const show_hide_apps_dialogue = () => {
         document.querySelector('#common_profile_btn_top').style.visibility='visible';
     }
 };
-const setEvents = () => {
-    //app
-    document.querySelector('#app').addEventListener('click', event => {
+
+const app_event_click = event => {
+    const events = event => {
         const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
@@ -30,6 +30,18 @@ const setEvents = () => {
                 window.open(event.target.parentNode.parentNode.querySelector('.app_url').innerHTML);
             else{
                 switch (event_target_id){
+                    case 'common_toolbar_framework_js':{
+                        mount_app_app('1');
+                        break;
+                    }
+                    case 'common_toolbar_framework_vue':{
+                        mount_app_app('2');
+                        break;
+                    }
+                    case 'common_toolbar_framework_react':{
+                        mount_app_app('3');
+                        break;
+                    }
                     case 'app_menu_apps':{
                         document.querySelector('#app_menu_content_apps' ).style.display ='block';
                         document.querySelector('#app_menu_content_info' ).style.display ='none';
@@ -184,11 +196,24 @@ const setEvents = () => {
                 }
             }
         });
-    });
-    document.querySelector('#app').addEventListener('change', event => {
+    };
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('click',(event) => {
+            events(event);
+        });
+    }
+    else{
+        //other framework
+        events(event);
+    }
+};
+const app_event_change = event => {
+    const events = event => {
+        const event_target_id = common.element_id(event.target);
         common.common_event('change',event)
         .then(()=>{
-            switch (event.target.id){
+            switch (event_target_id){
                 case 'common_user_locale_select':{
                     common.common_translate_ui(event.target.value).then(()=>get_apps());
                     break;
@@ -199,11 +224,24 @@ const setEvents = () => {
                 }
             }
         });
-    },true);
-    document.querySelector('#app').addEventListener('keyup', event => {
+    };
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('change',(event) => {
+            events(event);
+        }, true);
+    }
+    else{
+        //other framework
+        events(event);
+    }
+};
+const app_event_keyup = event => {
+    const events = event => {
+        const event_target_id = common.element_id(event.target);
         common.common_event('keyup',event)
         .then(()=>{
-            switch (event.target.id){
+            switch (event_target_id){
                 case 'common_profile_search_input':{
                     common.search_input(event, 'profile', null);
                     break;
@@ -247,11 +285,18 @@ const setEvents = () => {
                     break;
                 }
             }
-        });        
-    });
-    document.querySelector('#app').addEventListener('keydown', event => {
-        common.common_event('keydown',event);
-    });
+        });
+    };
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('keyup',(event) => {
+            events(event);
+        });
+    }
+    else{
+        //other framework
+        events(event);
+    }
 };
 const app_theme_update = toggle_theme => {
     let theme = '';
@@ -361,6 +406,35 @@ const user_delete_app = async () => {
     .then(()=>null)
     .catch(()=>null);
 };
+const mount_app_app = async framework => {
+    await common.mount_app(framework,
+        {   Click: app_event_click,
+            Change: app_event_change,
+            KeyDown: null,
+            KeyUp: app_event_keyup,
+            Focus: null,
+            Input:null})
+    .then(()=> {
+        document.querySelector('#dialogue_start_content').style.visibility = 'visible';
+        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+            common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
+        else
+            get_apps();
+        
+        const user = window.location.pathname.substring(1);
+        if (user !='') {
+            //show profile for user entered in url
+            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+            common.profile_show(null, user);
+        }
+        //use transition from now and not when starting app
+        document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
+            dialogue.style.transition = 'all 1s';
+        });
+        //show app themes from now to avoid startup css render issues
+        document.querySelector('#app_themes').style.display = 'block';
+    });
+};
 const init_app = async (parameters) => {
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
@@ -392,31 +466,10 @@ const init_app = async (parameters) => {
     document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
     document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
-    
-    setEvents();
     common.zoom_info('');
     common.move_info(null,null);
 
-    if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-        common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
-    else
-        get_apps();
-    const show_start = async () => {
-        const user = window.location.pathname.substring(1);
-        if (user !='') {
-            //show profile for user entered in url
-            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-            common.profile_show(null, user);
-        }
-    };
-    show_start().then(()=>{
-        //use transition from now and not when starting app
-        document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
-            dialogue.style.transition = 'all 1s';
-        });
-        //show app themes from now to avoid startup css render issues
-        document.querySelector('#app_themes').style.display = 'block';
-    });
+    mount_app_app();
 };
 
 const init = (parameters) => {

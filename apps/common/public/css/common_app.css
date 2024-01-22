@@ -352,7 +352,8 @@ select {
 	z-index: 2;
 	flex-direction: row;
 	justify-content: center;
-	position:relative;
+	position:absolute;
+	top: 0px;
 	border-radius: 0px 0px 4px 4px;
 	font-size: 1.5em;
 	margin-inline-start: calc(50% - calc(1.5em * 3/2));
@@ -760,11 +761,10 @@ select {
 	margin-inline-start: calc(50% - 140px);
 }
 #common_profile_search_input{
-	border-radius: 16px;
+	border-radius: 4px;
 	width:240px;
-	margin-top:10px;
 	margin-inline-end:10px;
-	padding: 8px 16px;
+	padding: 4px 8px;
 	box-sizing: border-box;
 }
 #common_profile_search_icon{
@@ -772,7 +772,7 @@ select {
 	cursor: pointer;
 }
 #common_profile_search_list_wrap{
-	border-radius: 16px;
+	border-radius: 4px;
 	padding: 6px;
 	width: 275px;
 	z-index:1;
@@ -1187,7 +1187,7 @@ select {
 	width: 10%;
 }
 #common_user_preferences .common_user_preference_col2{
-	width: 80%;
+	width: 85%;
 }
 #common_user_preferences .common_user_preference_col2 select {
 	width: 100%;
