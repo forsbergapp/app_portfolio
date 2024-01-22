@@ -25,9 +25,19 @@ body {
 	padding: 3em;
 	display:inline-block;
 	border-radius: 4px;
-	
+}
+#dialogue_documents{
+	visibility: hidden;
 }
 /*COMMON*/
+.common_toolbar_selected{
+	background-color: var(--app_blue1);
+}
+#common_toolbar_framework {
+    color: var(--app_black);
+    background-color: var(--app_white1);
+    box-shadow: 0px -3px 3px var(--app_theme_dialogue_boxshadow_color1);
+}
 #common_profile_input_row,
 #common_profile_search_list_wrap{
 	visibility: hidden;
