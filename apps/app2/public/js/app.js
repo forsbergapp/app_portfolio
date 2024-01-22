@@ -1906,13 +1906,30 @@ const user_settings_like = (user_account_app_data_post_id) => {
 /*----------------------- */
 /* EVENTS                 */
 /*----------------------- */
-const setEvents = () => {
-    //app
-    document.querySelector('#app').addEventListener('click', event => {
+const app_event_click = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('click',(event) => {
+            app_event_click(event);
+        }, true);
+    }
+    else{
         const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
+                case 'common_toolbar_framework_js':{
+                    mount_app_app('1');
+                    break;
+                }
+                case 'common_toolbar_framework_vue':{
+                    mount_app_app('2');
+                    break;
+                }
+                case 'common_toolbar_framework_react':{
+                    mount_app_app('3');
+                    break;
+                }
                 //info dialogue
                 case 'app_link':{
                     if (common.COMMON_GLOBAL.app_link_url)
@@ -2249,11 +2266,20 @@ const setEvents = () => {
                 }       
             }
         });
-    }, true);
-    document.querySelector('#app').addEventListener('change', event => {
+    }
+};
+const app_event_change = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('change',(event) => {
+            app_event_change(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
         common.common_event('change',event)
         .then(()=>{
-            switch (event.target.id){
+            switch (event_target_id){
                 //settings regional
                 case 'setting_select_locale':{
                     settings_translate(true);
@@ -2279,11 +2305,11 @@ const setEvents = () => {
                 }
                 //settings image
                 case 'setting_input_reportheader_img':{
-                    update_ui(11, event.target.id);
+                    update_ui(11, event_target_id);
                     break;
                 }
                 case 'setting_input_reportfooter_img':{
-                    update_ui(13, event.target.id);
+                    update_ui(13, event_target_id);
                     break;
                 }
                 //settings prayer
@@ -2349,12 +2375,20 @@ const setEvents = () => {
                 }
             }
         });
-    }, true);
-    document.querySelector('#app').addEventListener('keyup', event => {
-        const target_id = common.element_id(event.target);
-        common.common_event('keyup',event)
+    }
+};
+const app_event_keyup = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('change',(event) => {
+            app_event_keyup(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('change',event)
         .then(()=>{
-            switch(target_id){
+            switch(event_target_id){
                 //settings gps
                 case 'setting_input_place':{
                     common.typewatch(update_ui, 8);
@@ -2408,12 +2442,7 @@ const setEvents = () => {
                 }
             }
         });
-    });  
-    document.querySelector('#app').addEventListener('keydown', event => {
-        common.common_event('keydown',event);
-    });  
-    
-    
+    }
 };
 /*----------------------- */
 /* SERVICE WORKER         */
@@ -2523,6 +2552,49 @@ const app_exception = (error) => {
 /*----------------------- */
 /* INIT                   */
 /*----------------------- */
+const mount_app_app = async framework => {
+    await common.mount_app(framework,
+        {   Click: app_event_click,
+            Change: app_event_change,
+            KeyDown: null,
+            KeyUp: app_event_keyup,
+            Focus: null,
+            Input:null})
+    .then(()=> {
+        //set timers
+        //set current date and time for current locale and timezone
+        clearInterval(showcurrenttime);
+        setInterval(showcurrenttime, 1000);
+        //set report date and time for current locale, report timezone
+        clearInterval(showreporttime);
+        setInterval(showreporttime, 1000);
+        //show dialogue about using mobile and scan QR code after 5 seconds
+        setTimeout(() => {show_dialogue('SCAN');}, 5000);
+        set_default_settings().then(() => {
+            settings_translate(true).then(() => {
+                settings_translate(false).then(() => {
+                    const show_start = async () => {
+                        //show default startup
+                        toolbar_button(APP_GLOBAL.app_default_startup_page);
+                        const user = window.location.pathname.substring(1);
+                        if (user !='') {
+                            //show profile for user entered in url
+                            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                            profile_show_app(null, user);
+                        }
+                    };
+                    show_start().then(() => {
+                        dialogue_loading(0);
+                        serviceworker();
+                        if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
+                            common_translate_ui_app(common.COMMON_GLOBAL.user_locale);
+                    });
+                });
+            });
+        });
+    });
+};
+
 const init_app = (parameters) => {
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
@@ -2668,98 +2740,55 @@ const init_app = (parameters) => {
         if (parameter.parameter_name=='MODULE_EASY.QRCODE_BACKGROUND_COLOR')
             common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameter.parameter_value;
     }
-    return new Promise((resolve) => {
-        dialogue_loading(1);
-        //set app globals
-        //set current date for report month
-        //if client_timezone is set, set Date with client_timezone
-        if (common.COMMON_GLOBAL.client_timezone)
-            app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
-        else
-            app_report.REPORT_GLOBAL.session_currentDate = new Date();
-        app_report.REPORT_GLOBAL.session_currentHijriDate = new Array();
-        //get Hijri date from initial Gregorian date
-        app_report.REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
-            app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
-            app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
-        app_report.REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
-            app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
-            app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
-            APP_GLOBAL.timetable_type = '';
+    dialogue_loading(1);
+    //set app globals
+    //set current date for report month
+    //if client_timezone is set, set Date with client_timezone
+    if (common.COMMON_GLOBAL.client_timezone)
+        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(common.COMMON_GLOBAL.client_timezone);
+    else
+        app_report.REPORT_GLOBAL.session_currentDate = new Date();
+    app_report.REPORT_GLOBAL.session_currentHijriDate = new Array();
+    //get Hijri date from initial Gregorian date
+    app_report.REPORT_GLOBAL.session_currentHijriDate[0] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
+        app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
+        app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { month: 'numeric' }));
+    app_report.REPORT_GLOBAL.session_currentHijriDate[1] = parseInt(new Date(app_report.REPORT_GLOBAL.session_currentDate.getFullYear(),
+        app_report.REPORT_GLOBAL.session_currentDate.getMonth(),
+        app_report.REPORT_GLOBAL.session_currentDate.getDate()).toLocaleDateString('en-us-u-ca-islamic', { year: 'numeric' }));
+        APP_GLOBAL.timetable_type = '';
+
+    //set initial default language from clients settings
+    common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.querySelector('#setting_select_locale'),1);
+    document.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
     
-        //set initial default language from clients settings
-        common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.querySelector('#setting_select_locale'),1);
-        document.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
-        
-        
-        //set about info
-        document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
-        if (common.COMMON_GLOBAL.app_link_url==null)
-            document.querySelector('#app_link').style.display = 'none';
-        else
-            document.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
-        document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
-        document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
-        document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
-        document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
     
-        //set default geolocation
-        document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-        document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-        document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-        //load themes in Design tab
-        load_themes();
-        //set papersize
-        zoom_paper();
-        //set events
-        setEvents();
-        //user interface font depending selected arabic script in user preference, not in settings
-        //dispatch event in common after events har defined above
-        document.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
-        //set timers
-        //set current date and time for current locale and timezone
-        clearInterval(showcurrenttime);
-        setInterval(showcurrenttime, 1000);
-        //set report date and time for current locale, report timezone
-        clearInterval(showreporttime);
-        setInterval(showreporttime, 1000);
-        //show dialogue about using mobile and scan QR code after 5 seconds
-        setTimeout(() => {show_dialogue('SCAN');}, 5000);
-        
-        //Start of app:
-        //1.set_prayer_method
-        //2.set default settings
-        //3.translate ui
-        //4.display default timetable settings
-        //5.show profile if user in url
-        //6.user provider login
-        //7.service worker
-        app_report.set_prayer_method().then(() => {
-            set_default_settings().then(() => {
-                settings_translate(true).then(() => {
-                    settings_translate(false).then(() => {
-                        const show_start = async () => {
-                            //show default startup
-                            toolbar_button(APP_GLOBAL.app_default_startup_page);
-                            const user = window.location.pathname.substring(1);
-                            if (user !='') {
-                                //show profile for user entered in url
-                                document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-                                profile_show_app(null, user);
-                            }
-                        };
-                        show_start().then(() => {
-                            dialogue_loading(0);
-                            serviceworker();
-                            if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
-                                common_translate_ui_app(common.COMMON_GLOBAL.user_locale)
-                                .then(resolve(null));
-                        });
-                    });
-                });
-            });
-        });
-    });    
+    //set about info
+    document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
+    if (common.COMMON_GLOBAL.app_link_url==null)
+        document.querySelector('#app_link').style.display = 'none';
+    else
+        document.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
+    document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
+    document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
+    document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
+    document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
+
+    //set default geolocation
+    document.querySelector('#setting_select_popular_place').selectedIndex = 0;
+    document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+    document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+    //load themes in Design tab
+    load_themes();
+    //set papersize
+    zoom_paper();
+    //user interface font depending selected arabic script in user preference, not in settings
+    //dispatch event in common after events har defined above
+    document.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
+    
+    app_report.set_prayer_method().then(() => {
+        mount_app_app();
+    });
 };
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
