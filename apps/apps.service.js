@@ -419,11 +419,11 @@ const get_module_with_initBFF = async (app_info) => {
             app_copyright: ConfigGetApp(app_info.app_id, 'DATA').COPYRIGHT,
             app_link_url: ConfigGetApp(app_info.app_id, 'DATA').LINK_URL,
             app_link_title: ConfigGetApp(app_info.app_id, 'DATA').LINK_TITLE,
+            app_framework : getNumberValue(ConfigGet('SERVER', 'APP_FRAMEWORK')),
             app_datatoken: app_info.datatoken,
             countries:countries,
             map_styles: app_info.map_styles,
             locale: app_info.locale,
-            ui: app_info.ui,
             system_admin_only: app_info.system_admin_only,
             client_latitude: app_info.latitude,
             client_longitude: app_info.longitude,
@@ -635,7 +635,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
     let config_map;
     /** @type {Types.map_styles} */
     let config_map_styles;
-    let config_ui;
     /**@type {[string, string][]} */
     const render_variables = [];
 
@@ -652,7 +651,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
         app_module_type = 'ADMIN';
         config_map = app.map;
         config_map_styles = app.map_styles;
-        config_ui = true;
         const result_objects = [];
         result_objects.push({object_item_name:'PASSWORD_NEW', text:'New password'});
         result_objects.push({object_item_name:'PASSWORD_NEW_CONFIRM', text:'New password confirm'});
@@ -680,7 +678,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
         app_module_type = 'APP';
         config_map = app.map;
         config_map_styles = app.map_styles;
-        config_ui = true;
         //get translation data
         const {getObjects} = await import(`file://${process.cwd()}/server/dbapi/app_portfolio/app_object.service.js`);
         const result_objects = await getObjects(app_id, client_locale(app_parameters.accept_language), 'APP', null);
@@ -696,7 +693,6 @@ const getAppBFF = async (app_id, app_parameters) =>{
                                                             system_admin_only:  system_admin_only,
                                                             map:                config_map, 
                                                             map_styles:         config_map_styles,
-                                                            ui:                 config_ui,
                                                             datatoken:          datatoken,
                                                             latitude:           result_geodata.latitude,
                                                             longitude:          result_geodata.longitude,

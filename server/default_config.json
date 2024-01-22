@@ -15,6 +15,7 @@
     {"APP_CACHE_CONTROL_MAX_AGE": "3600", "COMMENT": "Cache control for assets except fonts, max-age value in milliseconds default 1 hour"},
     {"APP_CACHE_CONTROL_MAX_AGE_FONT": "3600", "COMMENT": "Cache control for fonts, max-age value in milliseconds default 1 hour"},
     {"APP_COMMON_APP_ID": "0", "COMMENT": "admin and common app id"},
+    {"APP_FRAMEWORK": "1", "COMMENT": "0=choosable, 1=Javascript (default if choosable), 2=Vue, 3=React"},
     {"REST_RESOURCE_BFF": "/bff","COMMENT": "rest resource path for apps backend for frontend (BFF)"}
 ],
 "SERVICE_IAM":[

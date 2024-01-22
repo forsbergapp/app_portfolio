@@ -34,6 +34,7 @@ const COMMON_GLOBAL = {
     app_copyright:'',
     app_link_url:'',
     app_link_title:'',
+    app_framework:'',
     info_link_policy_name:'',
     info_link_disclaimer_name:'',
     info_link_terms_name:'',
@@ -3095,6 +3096,7 @@ const set_app_service_parameters = async (parameters) => {
     COMMON_GLOBAL.app_copyright= parameters.app_copyright;
     COMMON_GLOBAL.app_link_url= parameters.app_link_url;
     COMMON_GLOBAL.app_link_title= parameters.app_link_title;
+    COMMON_GLOBAL.app_framework = parseInt(parameters.app_framework);
 
     //rest 
     COMMON_GLOBAL.rest_resource_bff = parameters.rest_resource_bff;
@@ -3122,15 +3124,13 @@ const set_app_service_parameters = async (parameters) => {
         user_preferences_set_default_globals('DIRECTION');
         user_preferences_set_default_globals('ARABIC_SCRIPT');
     }
-    COMMON_GLOBAL.ui = parameters.ui;
-    if (COMMON_GLOBAL.ui==true){
-        COMMON_GLOBAL.module_leaflet_countries   = parameters.countries;
-        COMMON_GLOBAL.module_leaflet_map_styles  = parameters.map_styles;
-        COMMON_GLOBAL.user_locale                = parameters.locale;
-        COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
-        COMMON_GLOBAL.user_direction             = '';
-        COMMON_GLOBAL.user_arabic_script         = '';
-    }  
+
+    COMMON_GLOBAL.module_leaflet_countries   = parameters.countries;
+    COMMON_GLOBAL.module_leaflet_map_styles  = parameters.map_styles;
+    COMMON_GLOBAL.user_locale                = parameters.locale;
+    COMMON_GLOBAL.user_timezone              = parameters.client_timezone ?? Intl.DateTimeFormat().resolvedOptions().timeZone;
+    COMMON_GLOBAL.user_direction             = '';
+    COMMON_GLOBAL.user_arabic_script         = '';  
 };
 
 const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
@@ -3662,39 +3662,133 @@ const set_app_parameters = (common_parameters) => {
         }
     }
 };
+/**
+ * Mounts app using given framework or pure javascript and using given list of event functions
+ * @param {{Click:function,
+ *          Change:function,
+ *          KeyDown:function,
+ *          KeyUp:function,
+ *          Focus:function,
+ *          Input:function}} events 
+ */
+const mount_app = async (framework, events) => {
+    const app_root_div  = 'app_root';
+    const app_div       = 'app';
+    //remove listeners
+    document.querySelector(`#${app_root_div}`).replaceWith(document.querySelector(`#${app_root_div}`).cloneNode(true));
+    document.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
 
+    //set default function if anyone missing
+    events.Change?null:events.Change = ((event)=>common_event('change', event));
+    events.Click?null:events.Click = ((event)=>common_event('click', event));
+    events.Focus?null:events.Focus = ((event)=>common_event('focus', event));
+    events.Input?null:events.Input = ((event)=>common_event('input', event));
+    events.KeyDown?null:events.KeyDown = ((event)=>common_event('keydown', event));
+    events.KeyUp?null:events.KeyUp = ((event)=>common_event('keyup', event));
+    //app can override framework or use default javascript if Vue or React is not set
+    switch (framework ?? COMMON_GLOBAL.framework){
+        case '2':{
+            //Vue
+            const Vue = await import('Vue');
+            Vue.createApp({
+                data() {
+                        return {};
+                        },
+                        template: `<div id=${app_div}
+                                        @change ='AppEventChange($event)'
+                                        @click  ='AppEventClick($event)'
+                                        @input  ='AppEventInput($event)' 
+                                        @focus  ='AppEventFocus($event)' 
+                                        @keydown='AppEventKeyDown($event)' 
+                                        @keyup  ='AppEventKeyUp($event)'>
+                                        ${document.querySelector('#' + app_div).innerHTML}
+                                    </div>`, 
+                        methods:{
+                            AppEventChange: (event) => {
+                                events.Change(event);
+                            },
+                            AppEventClick: (event) => {
+                                events.Click(event);
+                            },
+                            AppEventInput: (event) => {
+                                events.Input(event);
+                            },
+                            AppEventFocus: (event) => {
+                                events.Focus(event);
+                            },
+                            AppEventKeyDown: (event) => {
+                                events.KeyDown(event);
+                            },
+                            AppEventKeyUp: (event) => {
+                                events.KeyUp(event);
+                            }
+                        }
+                    }).mount('#' + app_root_div);
+            break;
+        }
+        case '3':{
+            //React
+            const {React} = await import('React');
+            const {ReactDOM} = await import('ReactDOM');
+            const App = () => {
+                //onClick handles single and doubleclick in this React component since onClick and onDoubleClick does not work in React
+                //without tricks
+                //using dblClick on leaflet on() function to get coordinates
+                //JSX syntax
+                //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
+                //Using pure Javascript
+                return React.createElement('div', { id: app_div,
+                                                    onClick:   ()=> {events.Click(event);}
+                                                    });
+            };
+            const app_old = document.querySelector('#' + app_div).innerHTML;
+            const application = ReactDOM.createRoot(document.querySelector('#' + app_root_div));
+            //JSX syntax
+            //application.render( <App/>);
+            //Using pure Javascript
+            application.render( App());
+            //set delay so some browsers render ok.
+            await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
+            document.querySelector('#' + app_div).innerHTML = app_old;
+            events.Change();
+            events.Focus();
+            events.Input();
+            events.KeyDown();
+            events.KeyUp();
+            
+            break;
+        }
+        case '1':
+        default:{
+            //Javascript
+            events.Click();
+            events.Change();
+            events.Focus();
+            events.Input();
+            events.KeyDown();
+            events.KeyUp();            
+            break;
+        }
+    }
+};
 const init_common = async (parameters) => {
     return new Promise((resolve) =>{
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(parameters.app_service);
-        if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id){
-            //admin app
-            broadcast_init();
-            if (COMMON_GLOBAL.system_admin_only==1){
-                resolve();
-            }
-            else{
-                set_app_parameters(parameters.app);
-                if (COMMON_GLOBAL.ui){
-                    set_events();
-                    set_user_account_app_settings();
-                    resolve();
-                }
-                else
-                resolve();
-            }
+        if (COMMON_GLOBAL.app_framework==0){
+            document.querySelector('#common_toolbar_framework').classList.add('show');
+            document.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
+        }
+            
+        broadcast_init();
+        if (COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && COMMON_GLOBAL.system_admin_only==1){
+            resolve();
         }
         else{
-            //other apps
-            broadcast_init();
             set_app_parameters(parameters.app);
-            if (COMMON_GLOBAL.ui){
-                set_events();
-                set_user_account_app_settings();
-                resolve();
-            }
-            else
-                resolve();
+            set_events();
+            set_user_account_app_settings();
+            resolve();
         }
     });
 };
@@ -3735,4 +3829,5 @@ export{/* GLOBALS*/
        get_cities,
        /* INIT */
        common_event,
+       mount_app,
        init_common};
