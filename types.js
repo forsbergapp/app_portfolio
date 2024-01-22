@@ -321,7 +321,6 @@
  * @property {number} system_admin_only     - 0/1
  * @property {boolean|null} map             - map
  * @property {map_styles} map_styles        - map styles
- * @property {boolean|null} ui              - ui true/false app=true, report=false
  * @property {string} datatoken             - JW token
  * @property {string} latitude              - geodata latitude
  * @property {string} longitude             - geodata longitude
@@ -372,11 +371,11 @@
  * @property {string|null}  app_copyright
  * @property {string|null}  app_link_url
  * @property {string|null}  app_link_title
+ * @property {number}       app_framework
  * @property {string}       app_datatoken
  * @property {string|null}  countries
  * @property {map_styles}   map_styles
  * @property {string}       locale
- * @property {boolean|null} ui
  * @property {number}       system_admin_only
  * @property {string|null}  client_latitude
  * @property {string|null}  client_longitude

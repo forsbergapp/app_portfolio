@@ -8,33 +8,9 @@ const app_exception = (error) => {
 };
 
 const app_event_click = event =>{
-    if (event==null){
-        //javascript framework
-        document.querySelector('#app').addEventListener('click',(event) => {
-            const event_target_id = common.element_id(event.target);
-            common.common_event('click',event)
-            .then(()=>{
-                switch (event_target_id){
-                    case 'common_toolbar_framework_js':{
-                        init_map('1');
-                        break;
-                    }
-                    case 'common_toolbar_framework_vue':{
-                        init_map('2');
-                        break;
-                    }
-                    case 'common_toolbar_framework_react':{
-                        init_map('3');
-                        break;
-                    }
-                }
-            });
-        });
-    }
-    else{
-        //other framework
+    const events = event => {
         const event_target_id = common.element_id(event.target);
-        common.common_event('click', event)
+        common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
                 case 'common_toolbar_framework_js':{
@@ -51,6 +27,16 @@ const app_event_click = event =>{
                 }
             }
         });
+    };
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('click',(event) => {
+            events(event);
+        });
+    }
+    else{
+        //other framework
+        events(event);
     }
         
 };
@@ -82,101 +68,33 @@ const app_event_keyup = event =>{
         common.common_event('keyup', event);
 };
 const init_map = async (framework)=>{
-    //remove listeners
-    document.querySelector('#app_root').replaceWith(document.querySelector('#app_root').cloneNode(true));
-    document.querySelector('#app_root').removeAttribute('data-v-app');
     document.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
     
-    switch (framework){
-        case '2':{
-            //Vue
-            const Vue = await import('Vue');
-            Vue.createApp({
-                data() {
-                        return {};
-                        },
-                        template: `<div id='app' @click='AppEventClick($event)' @change='AppEventChange($event)' @keydown='AppEventKeyDown($event)' @keyup='AppEventKeyUp($event)'>
-                                        ${document.querySelector('#app').innerHTML}
-                                    </div>`, 
-                        methods:{
-                            AppEventClick: (event) => {
-                                app_event_click(event);
-                            },
-                            AppEventChange: (event) => {
-                                app_event_change(event);
-                            },
-                            AppEventKeyDown: (event) => {
-                                app_event_keydown(event);
-                            },
-                            AppEventKeyUp: (event) => {
-                                app_event_keyup(event);
-                            }
-                        }
-                    }).mount('#app_root');
-            break;
-        }
-        case '3':{
-            //React
-            const {React} = await import('React');
-            const {ReactDOM} = await import('ReactDOM');
-            const App = () => {
-                //onClick handles single and doubleclick in this React component since onClick and onDoubleClick does not work in React
-                //without tricks
-                //using dblClick on leaflet on() function to get coordinates
-                //JSX syntax
-                //return (<div id='mapid' onClick={(e) => {app.map_click_event(event)}}></div>);
-                //Using pure Javascript
-                return React.createElement('div', { id: 'app',   
-                                                    onClick:   ()=> {app_event_click(event);}
-                                                    });
-            };
-            const app_old = document.querySelector('#app').innerHTML;
-            const application = ReactDOM.createRoot(document.querySelector('#app_root'));
-            //JSX syntax
-            //application.render( <App/>);
-            //Using pure Javascript
-            application.render( App());
-            //set delay so some browsers render ok.
-            await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
-            document.querySelector('#app').innerHTML = app_old;
-            app_event_change();
-            app_event_keydown();
-            app_event_keyup();
-            break;
-        }
-        case '1':
-        default:{
-            //Javascript
-            app_event_click();
-            app_event_change();
-            app_event_keydown();
-            app_event_keyup();
-            break;
-        }
-    }
-    return new Promise((resolve)=>{
-        common.map_init(APP_GLOBAL.module_leaflet_map_container,
-                        common.COMMON_GLOBAL.module_leaflet_style, 
-                        common.COMMON_GLOBAL.client_longitude,
-                        common.COMMON_GLOBAL.client_latitude,
-                        true,
-                        null).then(()=>{
-            
-            common.map_update(  common.COMMON_GLOBAL.client_longitude,
+    await common.mount_app(framework,
+                    {   Click: app_event_click,
+                        Change: app_event_change,
+                        KeyDown: app_event_keydown,
+                        KeyUp: app_event_keyup,
+                        Focus: null,
+                        Input:null})
+    .then(()=>  common.map_init(APP_GLOBAL.module_leaflet_map_container,
+                                common.COMMON_GLOBAL.module_leaflet_style, 
+                                common.COMMON_GLOBAL.client_longitude,
                                 common.COMMON_GLOBAL.client_latitude,
-                                common.COMMON_GLOBAL.module_leaflet_zoom,
-                                common.COMMON_GLOBAL.client_place,
-                                null,
-                                common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                common.COMMON_GLOBAL.module_leaflet_jumpto);
-            resolve();
-        });
-    });
+                                true,
+                                null))
+    .then(()=>  common.map_update(  common.COMMON_GLOBAL.client_longitude,
+                                    common.COMMON_GLOBAL.client_latitude,
+                                    common.COMMON_GLOBAL.module_leaflet_zoom,
+                                    common.COMMON_GLOBAL.client_place,
+                                    null,
+                                    common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                    common.COMMON_GLOBAL.module_leaflet_jumpto)
+    );
 };
 const init_app = async () =>{
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
-    document.querySelector('#common_toolbar_framework').classList.add('show');
-    init_map(window.location.pathname.substring(1));
+    init_map();
 };
 const init = (parameters) => {
     document.querySelector('#loading').classList.add('css_spinner');
