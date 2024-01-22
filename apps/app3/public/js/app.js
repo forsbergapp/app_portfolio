@@ -31,12 +31,30 @@ const getdocs = (docid = null) => {
     document.querySelector('#doc_list').classList.remove('css_spinner');
     document.querySelector('#doc_list').innerHTML = html;
 };
-const init_app = async () => {
-    document.querySelector('#app').addEventListener('click',(event) => {
-        const target_id = common.element_id(event.target);
+const app_event_click = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('click',(event) => {
+            app_event_click(event);
+        });
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
-            switch (target_id){
+            switch (event_target_id){
+                case 'common_toolbar_framework_js':{
+                    mount_app_app('1');
+                    break;
+                }
+                case 'common_toolbar_framework_vue':{
+                    mount_app_app('2');
+                    break;
+                }
+                case 'common_toolbar_framework_react':{
+                    mount_app_app('3');
+                    break;
+                }
                 case 'common_window_info_btn_close':{
                     document.querySelector('#dialogue_documents').style.visibility = 'visible';
                     break;
@@ -49,21 +67,29 @@ const init_app = async () => {
                 }
             }
         });
-        
-    });
-    document.querySelector('#app').addEventListener('keydown',(event) => {
-        common.common_event('keydown',event);
-    });
-    getdocs();
-
-    const docid = window.location.pathname.substring(1);
-    if (docid!=''){
-        document.querySelector('#dialogue_documents').style.visibility = 'hidden';
-        common.show_window_info(0, document.querySelector(`#doc_${docid}`).getAttribute('full_size'));
     }
-    else{
-        document.querySelector('#dialogue_documents').style.visibility = 'visible';
-    }
+};
+const mount_app_app = async framework => {
+    await common.mount_app(framework,
+        {   Click: app_event_click,
+            Change: null,
+            KeyDown: null,
+            KeyUp: null,
+            Focus: null,
+            Input:null})
+    .then(()=> {
+        getdocs();
+        const docid = window.location.pathname.substring(1);
+        if (docid!=''){
+            document.querySelector('#dialogue_documents').style.visibility = 'hidden';
+            common.show_window_info(0, document.querySelector(`#doc_${docid}`).getAttribute('full_size'));
+        }
+        else
+            document.querySelector('#dialogue_documents').style.visibility = 'visible';
+    });
+};
+const init_app = async () => {
+    mount_app_app();
 };
 const init = (parameters) => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
