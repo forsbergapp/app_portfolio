@@ -40,14 +40,31 @@ const admin_login = async () => {
     })
     .catch(()=>null);
 };
-const setEvents = () => {
-
-    document.querySelector('#app').addEventListener('click', event => {
+const app_event_click = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('click',(event) => {
+            app_event_click(event);
+        }, true);
+    }
+    else{
         const event_target_id = common.element_id(event.target);
         const list_title = common.element_list_title(event.target);
         common.common_event('click',event)
         .then(()=>{
             switch (event_target_id){
+                case 'common_toolbar_framework_js':{
+                    mount_app_app('1');
+                    break;
+                }
+                case 'common_toolbar_framework_vue':{
+                    mount_app_app('2');
+                    break;
+                }
+                case 'common_toolbar_framework_react':{
+                    mount_app_app('3');
+                    break;
+                }
                 case 'common_user_start_login_button':
                 case 'common_user_start_login_system_admin_button':{
                     admin_login();
@@ -143,13 +160,21 @@ const setEvents = () => {
                 }
             }
         });
-    }, true);
-    
-    document.querySelector('#app').addEventListener('change', event => {
-        const target_id = common.element_id(event.target);
+    }
+};
+
+const app_event_change = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('change',(event) => {
+            app_event_change(event);
+        });
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
         common.common_event('change',event)
         .then(()=>{
-            switch (target_id){
+            switch (event_target_id){
                 case 'common_user_locale_select':{
                     common.common_translate_ui(event.target.value, ()=>{});
                     break;
@@ -165,17 +190,26 @@ const setEvents = () => {
                     break;
                 }
                 default:{
-                    app_secure.app_events('change', event, target_id);
+                    app_secure.app_events('change', event, event_target_id);
                     break;
                 }
             }
         });
-    });
-    document.querySelector('#app').addEventListener('keyup', event => {
-        const target_id = common.element_id(event.target);
+    }
+};
+
+const app_event_keyup = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('keyup',(event) => {
+            app_event_keyup(event);
+        });
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
         common.common_event('keyup',event)
         .then(()=>{
-            switch (target_id){
+            switch (event_target_id){
                 case 'common_user_start_login_username':
                 case 'common_user_start_login_password':
                 case 'common_user_start_login_system_admin_username':
@@ -191,33 +225,79 @@ const setEvents = () => {
                     break;
                 }
                 default:
-                    app_secure.app_events('keyup', event, target_id);
+                    app_secure.app_events('keyup', event, event_target_id);
                     break;
             }
         });
-    });
-    document.querySelector('#app').addEventListener('keydown', event => {
-        const target_id = common.element_id(event.target);
+    }
+};
+
+const app_event_keydown = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('keydown',(event) => {
+            app_event_keydown(event);
+        });
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
         common.common_event('keydown',event)
         .then(()=>{
-            app_secure.app_events('keydown', event, target_id);
+            app_secure.app_events('keydown', event, event_target_id);
         });
-    });
-    document.querySelector('#app').addEventListener('input', event => {
-        const target_id = common.element_id(event.target);
-        app_secure.app_events('input', event, target_id);
-    }, true);
-    document.querySelector('#app').addEventListener('focus', event => {
-        const target_id = common.element_id(event.target);
-        app_secure.app_events('focus', event, target_id);
-    }, true);
+    }
+};
+const app_event_input = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('input',(event) => {
+            app_event_input(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('input',event)
+        .then(()=>{
+            app_secure.app_events('input', event, event_target_id);
+        });
+    }
+};
+const app_event_focus = event => {
+    if (event==null){
+        //javascript framework
+        document.querySelector('#app').addEventListener('focus',(event) => {
+            app_event_focus(event);
+        }, true);
+    }
+    else{
+        const event_target_id = common.element_id(event.target);
+        common.common_event('focus',event)
+        .then(()=>{
+            app_secure.app_events('focus', event, event_target_id);
+        });
+    }
 };
 
 const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
+const mount_app_app = async framework => {
+    await common.mount_app(framework,
+        {   Click: app_event_click,
+            Change: app_event_change,
+            KeyDown: app_event_keydown,
+            KeyUp: app_event_keyup,
+            Focus: app_event_focus,
+            Input:app_event_input})
+    .then(()=>{
+        if (common.COMMON_GLOBAL.user_account_id =='' & common.COMMON_GLOBAL.system_admin=='')
+            if (common.COMMON_GLOBAL.system_admin_only == 1)
+                common.show_common_dialogue('LOGIN_SYSTEM_ADMIN');
+            else
+                common.show_common_dialogue('LOGIN'); 
+    });
+};
 const init_app = (parameters) => {
-    setEvents();
     document.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
     if (parameters.app_service.first_time == 1) {
         document.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
@@ -226,7 +306,6 @@ const init_app = (parameters) => {
     if (parameters.app_service.system_admin_only == 1) {
         document.querySelector('#common_user_start_login').style.display = 'none';
         document.querySelector('#common_user_start_login_form').style.display = 'none';
-        common.show_common_dialogue('LOGIN_SYSTEM_ADMIN');
     }
     else {
         for (let i = 0; i < parameters.app.length; i++) {
@@ -241,12 +320,13 @@ const init_app = (parameters) => {
             if (parameters.app[i].parameter_name == 'MODULE_EASY.QRCODE_BACKGROUND_COLOR')
                 common.COMMON_GLOBAL['module_easy.qrcode_background_color'] = parameters.app[i].parameter_value;
         }
-        common.show_common_dialogue('LOGIN');
     }
     if (parameters.app_service.system_admin_only == 0)
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
-    document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+    mount_app_app()
+    .then (()=>document.querySelector('#common_user_start_login_button').classList.remove('css_spinner'))
+    .catch(()=>document.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
 };
 const init = (parameters) => {
     //show admin login as default
