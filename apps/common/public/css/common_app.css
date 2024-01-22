@@ -349,7 +349,7 @@ select {
 }
 #common_toolbar_framework{	
 	display: none;
-	z-index: 2;
+	z-index: 100;
 	flex-direction: row;
 	justify-content: center;
 	position:absolute;
