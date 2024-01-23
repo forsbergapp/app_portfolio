@@ -290,7 +290,7 @@ const mount_app_app = async framework => {
             Focus: app_event_focus,
             Input:app_event_input})
     .then(()=>{
-        if (common.COMMON_GLOBAL.user_account_id =='' & common.COMMON_GLOBAL.system_admin=='')
+        if (common.COMMON_GLOBAL.user_account_id =='' && common.COMMON_GLOBAL.system_admin=='')
             if (common.COMMON_GLOBAL.system_admin_only == 1)
                 common.show_common_dialogue('LOGIN_SYSTEM_ADMIN');
             else
