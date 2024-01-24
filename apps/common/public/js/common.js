@@ -1,19 +1,50 @@
-/*  Functions and globals in this order:
-    GLOBALS
-    MISC
-    MESSAGE & DIALOGUE
-    WINDOW INFO
-    PROFILE
-    USER
-    USER PROVIDER
-    MODULE EASY.QRCODE
-    MODULE LEAFLET
-    FFB
-    SERVICE BROADCAST
-    SERVICE GEOLOCATION
-    SERVICE WORLDCITIES
-    EXCEPTION
-    INIT
+/**@ts-ignore */
+const Vue = await import('Vue');
+/**@ts-ignore */
+const {React} = await import('React');
+/**@ts-ignore */
+const {ReactDOM} = await import('ReactDOM');
+/**@ts-ignore */
+const {QRCode} = await import('easy.qrcode');
+/**@ts-ignore */
+const {L:Leaflet} = await import('leaflet');
+/**@ts-ignore */
+const {getTimezone} = await import('regional');
+
+/**@type{{body:{className:string, requestFullscreen:function, classList:{add:function, remove:function}},
+ *        createElement:function,
+ *        addEventListener:function,
+ *        fullscreenElement:Element|null,
+ *        exitFullscreen:function,
+ *        querySelector:function,
+ *        querySelectorAll:function}} */
+ const AppDocument = document;
+ /**
+ * @typedef {object} AppEvent
+ * @property {string} code
+ * @property {function} preventDefault
+ * @property {string} key
+ * @property {boolean} altKey
+ * @property {boolean} ctrlKey
+ * @property {boolean} shiftKey
+ * @property {{ id:                 string,
+ *              innerHTML:          string,
+ *              value:              string,
+ *              parentNode:         {nextElementSibling:{querySelector:function}, style:{display:string}, classList: {contains:function}},
+ *              nextElementSibling: {dispatchEvent:function},
+ *              focus:              function,
+ *              blur:               function,
+ *              getAttribute:       function,
+ *              setAttribute:       function,
+ *              selectedIndex:      number,
+ *              innerText:          string,
+ *              nodeName:           string,
+ *              dispatchEvent:      function,
+ *              options:            HTMLOptionsCollection,
+ *              'data-function':    function,
+ *              classList:          {contains:function, remove:function, add:function}
+ *              className:          string
+ *            }}  target
  */
 /*-----------------------
   GLOBALS               
@@ -72,7 +103,6 @@ const COMMON_GLOBAL = {
     user_direction:'',
     user_arabic_script:'',
     user_preference_save:'',
-    module_leaflet_library: '',
     module_leaflet_flyto:'',
     module_leaflet_jumpto:'',
     module_leaflet_popup_offset:'',
@@ -221,52 +251,52 @@ const common_translate_ui = async (lang_code) => {
                 //translate common items
                 switch  (app_object.object_item_name){
                     case 'USERNAME':{
-                        document.querySelector('#common_user_start_login_username').setAttribute('placeholder', app_object.text);
-                        document.querySelector('#common_user_start_signup_username').setAttribute('placeholder', app_object.text);
-                        document.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_login_username').setAttribute('placeholder', app_object.text);
+                        AppDocument.querySelector('#common_user_start_signup_username').setAttribute('placeholder', app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_username').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'EMAIL':{
-                        document.querySelector('#common_user_start_signup_email').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_start_forgot_email').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_signup_email').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_forgot_email').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'NEW_EMAIL':{
-                        document.querySelector('#common_user_edit_input_new_email').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_new_email').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'BIO':{
-                        document.querySelector('#common_user_edit_input_bio').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_bio').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'PASSWORD':{
-                        document.querySelector('#common_user_start_login_password').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_start_signup_password').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_login_password').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_signup_password').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_password').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'PASSWORD_CONFIRM':{
-                        document.querySelector('#common_user_start_signup_password_confirm').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_signup_password_confirm').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_password_confirm').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'PASSWORD_REMINDER':{
-                        document.querySelector('#common_user_start_signup_password_reminder').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_start_signup_password_reminder').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_password_reminder').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'NEW_PASSWORD_CONFIRM':{
-                        document.querySelector('#common_user_edit_input_password_new_confirm').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_password_new_confirm').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_password_new_confirm').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_password_new_confirm').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'NEW_PASSWORD':{
-                        document.querySelector('#common_user_edit_input_password_new').setAttribute('placeholder',app_object.text);
-                        document.querySelector('#common_user_password_new').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_edit_input_password_new').setAttribute('placeholder',app_object.text);
+                        AppDocument.querySelector('#common_user_password_new').setAttribute('placeholder',app_object.text);
                         break;
                     }
                     case 'CONFIRM_QUESTION':{
-                        document.querySelector('#common_confirm_question').innerHTML = app_object.text;
+                        AppDocument.querySelector('#common_confirm_question').innerHTML = app_object.text;
                         break;
                     }
                 } 
@@ -274,7 +304,7 @@ const common_translate_ui = async (lang_code) => {
             }
             case 'APP_LOV':{
                 //translate items in select lists in current app
-                const select_element = document.querySelector('#' + app_object.object_item_name.toLowerCase());
+                const select_element = AppDocument.querySelector('#' + app_object.object_item_name.toLowerCase());
                 for (let option_element = 0; option_element < select_element.options.length; option_element++){
                     if (select_element.options[option_element].id == app_object.id)
                         select_element.options[option_element].text = app_object.text;
@@ -292,7 +322,7 @@ const common_translate_ui = async (lang_code) => {
     }
     const locales_json = await FFB('DB_API', path, 'GET', 'APP_DATA', null);
     let html='';
-    const select_locale = document.querySelector('#common_user_locale_select');
+    const select_locale = AppDocument.querySelector('#common_user_locale_select');
     let i=0;
     for (const locale of JSON.parse(locales_json)){
         html += `<option id="${i}" value="${locale.locale}">${locale.text}</option>`;
@@ -343,6 +373,7 @@ const format_json_date = (db_date, short) => {
             db_date.substr(14, 2), //min
             db_date.substr(17, 2) //sec
         ));
+        /**@ts-ignore */
         const format_date = utc_date.toLocaleDateString(COMMON_GLOBAL.user_locale, options);
         return format_date;
     }
@@ -370,7 +401,7 @@ const recreate_img = (img_item) => {
     const parentnode = img_item.parentNode;
     const id = img_item.id;
     const alt = img_item.alt;
-    const img = document.createElement('img');
+    const img = AppDocument.createElement('img');
 
     parentnode.removeChild(img_item);
     img.id = id;
@@ -390,7 +421,7 @@ const convert_image = async (image_url, image_width, image_height) => {
             //to allow any image url source, uncomment:
             //img.crossOrigin = 'Anonymous';
             img.onload = (el) => {
-                const elem = document.createElement('canvas');
+                const elem = AppDocument.createElement('canvas');
                 elem.width = image_width;
                 elem.height = image_height;
                 const ctx = elem.getContext('2d');
@@ -415,7 +446,7 @@ const inIframe = () => {
     }
 };
 const show_image = (item_img, item_input, image_width, image_height) => {
-    const file = document.querySelector('#' + item_input).files[0];
+    const file = AppDocument.querySelector('#' + item_input).files[0];
     const reader = new FileReader();
 
     const allowedExtensions = [COMMON_GLOBAL.image_file_allowed_type1,
@@ -620,7 +651,7 @@ const dialogue_close = async (dialogue) => {
         let soundDuration;
         if (COMMON_GLOBAL.app_sound==1){
             //add sound effect if needed
-            const meepmeep = document.createElement('audio');
+            const meepmeep = AppDocument.createElement('audio');
             meepmeep.src = '/common/audio/meepmeep.ogg';
             meepmeep.play();
             soundDuration = 400;
@@ -629,10 +660,10 @@ const dialogue_close = async (dialogue) => {
             soundDuration = 0;
 
         setTimeout(()=>{
-            document.querySelector('#' + dialogue).classList.add('common_dialogue_close');
+            AppDocument.querySelector('#' + dialogue).classList.add('common_dialogue_close');
             setTimeout(()=>{
-                document.querySelector('#' + dialogue).style.visibility = 'hidden';
-                document.querySelector('#' + dialogue).classList.remove('common_dialogue_close');
+                AppDocument.querySelector('#' + dialogue).style.visibility = 'hidden';
+                AppDocument.querySelector('#' + dialogue).classList.remove('common_dialogue_close');
                 resolve();
             }, animationDuration);
         }, soundDuration);
@@ -644,15 +675,15 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, clic
         case 'PROFILE':
             {    
                 dialogue_profile_clear();
-                document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                 break;
             }
         case 'PASSWORD_NEW':
             {    
-                document.querySelector('#common_user_password_new_auth').innerHTML=title;
-                document.querySelector('#common_user_password_new').innerHTML='';
-                document.querySelector('#common_user_password_new_confirm').innerHTML='';
-                document.querySelector('#common_dialogue_user_password_new').style.visibility = 'visible';
+                AppDocument.querySelector('#common_user_password_new_auth').innerHTML=title;
+                AppDocument.querySelector('#common_user_password_new').innerHTML='';
+                AppDocument.querySelector('#common_user_password_new_confirm').innerHTML='';
+                AppDocument.querySelector('#common_dialogue_user_password_new').style.visibility = 'visible';
                 break;
             }
         case 'VERIFY':
@@ -660,48 +691,48 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, clic
                 dialogue_verify_clear();
                 switch (user_verification_type){
                     case 'LOGIN':{
-                        document.querySelector('#common_user_verification_type').innerHTML = 1;
+                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 1;
                         break;
                     }
                     case 'SIGNUP':{
-                        document.querySelector('#common_user_verification_type').innerHTML = 2;
+                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 2;
                         break;
                     }
                     case 'FORGOT':{
-                        document.querySelector('#common_user_verification_type').innerHTML = 3;
+                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 3;
                         break;
                     }
                     case 'NEW_EMAIL':{
-                        document.querySelector('#common_user_verification_type').innerHTML = 4;
+                        AppDocument.querySelector('#common_user_verification_type').innerHTML = 4;
                         break;
                     }
                 }
-                document.querySelector('#common_user_verify_cancel')['data-function'] = click_cancel_event;
+                AppDocument.querySelector('#common_user_verify_cancel')['data-function'] = click_cancel_event;
 
-                document.querySelector('#common_user_verify_email').innerHTML = title;
+                AppDocument.querySelector('#common_user_verify_email').innerHTML = title;
                 
-                document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
-                document.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
+                AppDocument.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
+                AppDocument.querySelector('#common_dialogue_user_verify').style.visibility = 'visible';
                 break;
             }
         case 'LOGIN':{
-            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            document.querySelector('#common_user_start_login').click();
+            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            AppDocument.querySelector('#common_user_start_login').click();
             break;
         }
         case 'LOGIN_SYSTEM_ADMIN':{
-            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            document.querySelector('#common_user_start_login_system_admin').click();
+            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            AppDocument.querySelector('#common_user_start_login_system_admin').click();
             break;
         }
         case 'SIGNUP':{
-            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            document.querySelector('#common_user_start_signup').click();
+            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            AppDocument.querySelector('#common_user_start_signup').click();
             break;
         }
         case 'FORGOT':{
-            document.querySelector('#common_dialogue_user_start').style.visibility='visible';
-            document.querySelector('#common_user_start_forgot').click();
+            AppDocument.querySelector('#common_dialogue_user_start').style.visibility='visible';
+            AppDocument.querySelector('#common_user_start_forgot').click();
             break;
         }
     }
@@ -716,19 +747,19 @@ const show_common_dialogue = (dialogue, user_verification_type, title=null, clic
  * @param {*} data_app_id 
  */
 const show_message = async (message_type, code, function_event, text_class=null, message=null, data_app_id=null) => {
-    const confirm_question = document.querySelector('#common_confirm_question');
-    const progressbar = document.querySelector('#common_message_progressbar');
-    const progressbar_wrap = document.querySelector('#common_message_progressbar_wrap');
-    const message_title = document.querySelector('#common_message_title');
-    const dialogue = document.querySelector('#common_dialogue_message');
-    const button_close = document.querySelector('#common_message_close');
-    const button_cancel = document.querySelector('#common_message_cancel');
-    const function_close = () => { document.querySelector('#common_dialogue_message').style.visibility = 'hidden';};
+    const confirm_question = AppDocument.querySelector('#common_confirm_question');
+    const progressbar = AppDocument.querySelector('#common_message_progressbar');
+    const progressbar_wrap = AppDocument.querySelector('#common_message_progressbar_wrap');
+    const message_title = AppDocument.querySelector('#common_message_title');
+    const dialogue = AppDocument.querySelector('#common_dialogue_message');
+    const button_close = AppDocument.querySelector('#common_message_close');
+    const button_cancel = AppDocument.querySelector('#common_message_cancel');
+    const function_close = () => { AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';};
     const fontsize_normal = '1em';
     const fontsize_log = '0.5em';
     const show = 'inline-block';
     const hide = 'none';
-    document.querySelector('#common_message_title_icon').setAttribute('data-text_class',text_class);
+    AppDocument.querySelector('#common_message_title_icon').setAttribute('data-text_class',text_class);
 
     switch (message_type){
         case 'ERROR':{
@@ -843,117 +874,117 @@ const show_message = async (message_type, code, function_event, text_class=null,
     }
 };
 const dialogue_verify_clear = () => {
-    document.querySelector('#common_dialogue_user_verify').style.visibility = 'hidden';
-    document.querySelector('#common_user_verification_type').innerHTML='';
-    document.querySelector('#common_user_verify_email').innerHTML='';
-    document.querySelector('#common_user_verify_verification_char1').innerHTML = '';
-    document.querySelector('#common_user_verify_verification_char2').innerHTML = '';
-    document.querySelector('#common_user_verify_verification_char3').innerHTML = '';
-    document.querySelector('#common_user_verify_verification_char4').innerHTML = '';
-    document.querySelector('#common_user_verify_verification_char5').innerHTML = '';
-    document.querySelector('#common_user_verify_verification_char6').innerHTML = '';
-    document.querySelector('#common_user_verify_cancel')['data-function'] = null;
+    AppDocument.querySelector('#common_dialogue_user_verify').style.visibility = 'hidden';
+    AppDocument.querySelector('#common_user_verification_type').innerHTML='';
+    AppDocument.querySelector('#common_user_verify_email').innerHTML='';
+    AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML = '';
+    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML = '';
+    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML = '';
+    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML = '';
+    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML = '';
+    AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML = '';
+    AppDocument.querySelector('#common_user_verify_cancel')['data-function'] = null;
 };
 const dialogue_password_new_clear = () => {
-    document.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
-    document.querySelector('#common_user_password_new_auth').innerHTML='';
-    document.querySelector('#common_user_password_new').innerHTML='';
-    document.querySelector('#common_user_password_new_confirm').innerHTML='';
+    AppDocument.querySelector('#common_dialogue_user_password_new').style.visibility = 'hidden';
+    AppDocument.querySelector('#common_user_password_new_auth').innerHTML='';
+    AppDocument.querySelector('#common_user_password_new').innerHTML='';
+    AppDocument.querySelector('#common_user_password_new_confirm').innerHTML='';
     COMMON_GLOBAL.user_account_id = '';
     COMMON_GLOBAL.rest_at = '';
 };
 const dialogue_user_edit_clear = () => {
-    document.querySelector('#common_dialogue_user_edit').style.visibility = 'hidden';
-    document.querySelector('#common_user_edit_avatar').style.display = 'none';
+    AppDocument.querySelector('#common_dialogue_user_edit').style.visibility = 'hidden';
+    AppDocument.querySelector('#common_user_edit_avatar').style.display = 'none';
                 
     //common
-    document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
-    document.querySelector('#common_user_edit_input_username').innerHTML = '';
-    document.querySelector('#common_user_edit_input_bio').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
+    AppDocument.querySelector('#common_user_edit_input_username').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_bio').innerHTML = '';
     //local
-    document.querySelector('#common_user_edit_input_email').innerHTML = '';
-    document.querySelector('#common_user_edit_input_new_email').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_mask').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_confirm_mask').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_new_mask').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_new_confirm_mask').innerHTML = '';
-    document.querySelector('#common_user_edit_input_password_reminder').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_email').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_new_email').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_mask').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_confirm').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_confirm_mask').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_new').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_new_mask').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_new_confirm_mask').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML = '';
     //provider
-    document.querySelector('#common_user_edit_provider_id').innerHTML = '';
-    document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = '';
-    document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = '';
-    document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = '';
-    document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_provider_id').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_provider_id_data').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_provider_name_data').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_provider_email_data').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = '';
     //account info
-    document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = '';
-    document.querySelector('#common_user_edit_label_data_account_created').innerHTML = '';
-    document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_data_account_created').innerHTML = '';
+    AppDocument.querySelector('#common_user_edit_label_data_account_modified').innerHTML = '';
 };
 const dialogue_user_start_clear = () => {
-    document.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
-    document.querySelector('#common_user_start_login_username').innerHTML = '';
-    document.querySelector('#common_user_start_login_password').innerHTML = '';
-    document.querySelector('#common_user_start_login_password_mask').innerHTML = '';
+    AppDocument.querySelector('#common_dialogue_user_start').style.visibility = 'hidden';
+    AppDocument.querySelector('#common_user_start_login_username').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_login_password').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_login_password_mask').innerHTML = '';
 
-    document.querySelector('#common_user_start_signup_username').innerHTML = '';
-    document.querySelector('#common_user_start_signup_email').innerHTML = '';
-    document.querySelector('#common_user_start_signup_password').innerHTML = '';
-    document.querySelector('#common_user_start_signup_password_mask').innerHTML = '';
-    document.querySelector('#common_user_start_signup_password_confirm').innerHTML = '';
-    document.querySelector('#common_user_start_signup_password_confirm_mask').innerHTML = '';
-    document.querySelector('#common_user_start_signup_password_reminder').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_username').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_email').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_password').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_password_mask').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_password_confirm').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_password_confirm_mask').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML = '';
 
-    document.querySelector('#common_user_start_forgot_email').innerHTML = '';
+    AppDocument.querySelector('#common_user_start_forgot_email').innerHTML = '';
 };
 const dialogue_profile_clear = () => {
-    document.querySelector('#common_profile_info').style.display = 'none';
-    document.querySelector('#common_profile_top').style.display = 'none';
-    document.querySelector('#common_profile_detail').style.display = 'none';
+    AppDocument.querySelector('#common_profile_info').style.display = 'none';
+    AppDocument.querySelector('#common_profile_top').style.display = 'none';
+    AppDocument.querySelector('#common_profile_detail').style.display = 'none';
     
-    document.querySelector('#common_profile_follow').children[0].style.display = 'block';
-    document.querySelector('#common_profile_follow').children[1].style.display = 'none';
-    document.querySelector('#common_profile_like').children[0].style.display = 'block';
-    document.querySelector('#common_profile_like').children[1].style.display = 'none';
+    AppDocument.querySelector('#common_profile_follow').children[0].style.display = 'block';
+    AppDocument.querySelector('#common_profile_follow').children[1].style.display = 'none';
+    AppDocument.querySelector('#common_profile_like').children[0].style.display = 'block';
+    AppDocument.querySelector('#common_profile_like').children[1].style.display = 'none';
 
-    document.querySelector('#common_profile_avatar').src = '';
-    document.querySelector('#common_profile_username').innerHTML = '';
-    document.querySelector('#common_profile_bio').innerHTML = '';
-    document.querySelector('#common_profile_joined_date').innerHTML = '';
+    AppDocument.querySelector('#common_profile_avatar').src = '';
+    AppDocument.querySelector('#common_profile_username').innerHTML = '';
+    AppDocument.querySelector('#common_profile_bio').innerHTML = '';
+    AppDocument.querySelector('#common_profile_joined_date').innerHTML = '';
 
-    document.querySelector('#common_profile_info_view_count').innerHTML = '';
-    document.querySelector('#common_profile_info_following_count').innerHTML = '';
-    document.querySelector('#common_profile_info_followers_count').innerHTML = '';
-    document.querySelector('#common_profile_info_likes_count').innerHTML = '';
-    document.querySelector('#common_profile_info_liked_count').innerHTML = '';
+    AppDocument.querySelector('#common_profile_info_view_count').innerHTML = '';
+    AppDocument.querySelector('#common_profile_info_following_count').innerHTML = '';
+    AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = '';
+    AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = '';
+    AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = '';
     
-    document.querySelector('#common_profile_qr').innerHTML = '';
-    document.querySelector('#common_profile_detail_list').innerHTML = '';
-    document.querySelector('#common_profile_top_list').innerHTML = '';
+    AppDocument.querySelector('#common_profile_qr').innerHTML = '';
+    AppDocument.querySelector('#common_profile_detail_list').innerHTML = '';
+    AppDocument.querySelector('#common_profile_top_list').innerHTML = '';
 };
 const lov_close = () => {
-    document.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
-    document.querySelector('#common_lov_title').innerHTML='';
-    document.querySelector('#common_lov_search_input').innerHTML='';
-    document.querySelector('#common_lov_list').innerHTML='';
-    document.querySelector('#common_lov_list')['data-function'] = null;
+    AppDocument.querySelector('#common_dialogue_lov').style.visibility = 'hidden';
+    AppDocument.querySelector('#common_lov_title').innerHTML='';
+    AppDocument.querySelector('#common_lov_search_input').innerHTML='';
+    AppDocument.querySelector('#common_lov_list').innerHTML='';
+    AppDocument.querySelector('#common_lov_list')['data-function'] = null;
 };
 const lov_show = (lov, function_event) => {
     
-    document.querySelector('#common_dialogue_lov').style.visibility = 'visible';
-    document.querySelector('#common_lov_list').classList.add('css_spinner');
-    document.querySelector('#common_lov_list').innerHTML = '';
-    document.querySelector('#common_lov_title').className = 'common_icon';
+    AppDocument.querySelector('#common_dialogue_lov').style.visibility = 'visible';
+    AppDocument.querySelector('#common_lov_list').classList.add('css_spinner');
+    AppDocument.querySelector('#common_lov_list').innerHTML = '';
+    AppDocument.querySelector('#common_lov_title').className = 'common_icon';
     let path = '';
     let token_type = '';
     let lov_column_value='';
     let service;
     switch (lov){
         case 'PARAMETER_TYPE':{
-            document.querySelector('#common_lov_title').classList.add('parameter_type');
+            AppDocument.querySelector('#common_lov_title').classList.add('parameter_type');
             lov_column_value = 'parameter_type_text';            
             path = '/parameter_type/admin?';
             service = 'DB_API';
@@ -961,7 +992,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'SERVER_LOG_FILES':{
-            document.querySelector('#common_lov_title').classList.add('server_log_file');
+            AppDocument.querySelector('#common_lov_title').classList.add('server_log_file');
             lov_column_value = 'filename';
             path = '/log/files?';
             service = 'LOG';
@@ -969,7 +1000,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_CATEGORY':{
-            document.querySelector('#common_lov_title').classList.add('app_category');
+            AppDocument.querySelector('#common_lov_title').classList.add('app_category');
             lov_column_value = 'app_category_text';
             path = '/app_category/admin?';
             service = 'DB_API';
@@ -977,7 +1008,7 @@ const lov_show = (lov, function_event) => {
             break;
         }
         case 'APP_ROLE':{
-            document.querySelector('#common_lov_title').classList.add('app_role');
+            AppDocument.querySelector('#common_lov_title').classList.add('app_role');
             lov_column_value = 'icon';
             path = '/app_role/admin?';
             service = 'DB_API';
@@ -987,7 +1018,7 @@ const lov_show = (lov, function_event) => {
     }
     FFB(service, path, 'GET', token_type, null)
     .then(result=>{
-            document.querySelector('#common_lov_list')['data-function'] = function_event;
+            AppDocument.querySelector('#common_lov_list')['data-function'] = function_event;
             let html = '';
             for (const list_row of JSON.parse(result)) {
                 html += 
@@ -1000,11 +1031,11 @@ const lov_show = (lov, function_event) => {
                     </div>
                 </div>`;
             }
-            document.querySelector('#common_lov_list').classList.remove('css_spinner');
-            document.querySelector('#common_lov_list').innerHTML = html;
-            document.querySelector('#common_lov_search_input').focus();
+            AppDocument.querySelector('#common_lov_list').classList.remove('css_spinner');
+            AppDocument.querySelector('#common_lov_list').innerHTML = html;
+            AppDocument.querySelector('#common_lov_search_input').focus();
     })
-    .catch(()=>document.querySelector('#common_lov_list').classList.remove('css_spinner'));
+    .catch(()=>AppDocument.querySelector('#common_lov_list').classList.remove('css_spinner'));
         
 };
 const lov_keys = (event) => {
@@ -1016,10 +1047,10 @@ const lov_keys = (event) => {
         case 'ArrowUp':
         case 'ArrowDown':{
             //loop rows not hidden
-            const rows = document.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
+            const rows = AppDocument.querySelectorAll('.common_list_lov_row:not(.list_lov_row_hide)');
             const focus_item = (element) =>{
                 element.focus();
-                document.querySelector('#common_lov_search_input').focus();
+                AppDocument.querySelector('#common_lov_search_input').focus();
             };
             let i = 0;
             for (const row of rows) {
@@ -1068,7 +1099,7 @@ const lov_keys = (event) => {
         }
         case 'Enter':{
             //enter
-            const rows = document.querySelectorAll('.common_list_lov_row');
+            const rows = AppDocument.querySelectorAll('.common_list_lov_row');
             for (const row of rows) {
                 if (row.classList.contains('common_list_lov_row_selected')){
                     //event on row is set in app when calling lov, dispatch it!
@@ -1080,14 +1111,14 @@ const lov_keys = (event) => {
         }
         default:{
             //if db call will be implemented, add delay
-            //typewatch(lov_filter, document.querySelector('#common_lov_search_input').innerHTML); 
-            lov_filter(document.querySelector('#common_lov_search_input').innerHTML); 
+            //typewatch(lov_filter, AppDocument.querySelector('#common_lov_search_input').innerHTML); 
+            lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML); 
             break;
         }    
     }
 };
 const lov_filter = (text_filter) => {
-    const rows = document.querySelectorAll('.common_list_lov_row');
+    const rows = AppDocument.querySelectorAll('.common_list_lov_row');
     for (const row of rows) {
         row.classList.remove ('common_list_lov_row_hide');
         row.classList.remove ('common_list_lov_row_selected');
@@ -1110,7 +1141,7 @@ const lov_filter = (text_filter) => {
 const zoom_info = (zoomvalue = '') => {
     let old;
     let old_scale;
-    const div = document.querySelector('#common_window_info_info');
+    const div = AppDocument.querySelector('#common_window_info_info');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
     if (zoomvalue == '') {
@@ -1124,7 +1155,7 @@ const zoom_info = (zoomvalue = '') => {
 };
 const move_info = (move1, move2) => {
     let old;
-    const div = document.querySelector('#common_window_info_info');
+    const div = AppDocument.querySelector('#common_window_info_info');
     if (move1==null && move2==null) {
         div.style.transformOrigin = '50% 50%';
     } else {
@@ -1142,39 +1173,39 @@ const show_window_info = (info, url, content_type, iframe_content) => {
     switch(info){
         case 0:{
             //show image
-            document.querySelector('#common_window_info_content').src='';
-            document.querySelector('#common_window_info_toolbar').style.display = 'flex';
-            document.querySelector('#common_window_info_content').style.display = 'none';
-            document.querySelector('#common_window_info').style.overflowY = 'auto';
-            document.querySelector('#common_window_info').style.visibility = 'visible';
-            document.querySelector('#common_window_info_info').innerHTML = `<img src='${url}'/>`;
-            document.querySelector('#common_window_info_info').style.display = 'inline-block';
+            AppDocument.querySelector('#common_window_info_content').src='';
+            AppDocument.querySelector('#common_window_info_toolbar').style.display = 'flex';
+            AppDocument.querySelector('#common_window_info_content').style.display = 'none';
+            AppDocument.querySelector('#common_window_info').style.overflowY = 'auto';
+            AppDocument.querySelector('#common_window_info').style.visibility = 'visible';
+            AppDocument.querySelector('#common_window_info_info').innerHTML = `<img src='${url}'/>`;
+            AppDocument.querySelector('#common_window_info_info').style.display = 'inline-block';
             break;
         }
         case 1:{
             //show url in iframe, use overflowY=hidden
-            document.querySelector('#common_window_info_content').src=url;
-            document.querySelector('#common_window_info_toolbar').style.display = 'none';
-            document.querySelector('#common_window_info_content').style.display = 'block';
-            document.querySelector('#common_window_info').style.overflowY = 'hidden';
-            document.querySelector('#common_window_info').style.visibility = 'visible';
-            document.querySelector('#common_window_info_info').innerHTML = '';
-            document.querySelector('#common_window_info_info').style.display = 'none';
+            AppDocument.querySelector('#common_window_info_content').src=url;
+            AppDocument.querySelector('#common_window_info_toolbar').style.display = 'none';
+            AppDocument.querySelector('#common_window_info_content').style.display = 'block';
+            AppDocument.querySelector('#common_window_info').style.overflowY = 'hidden';
+            AppDocument.querySelector('#common_window_info').style.visibility = 'visible';
+            AppDocument.querySelector('#common_window_info_info').innerHTML = '';
+            AppDocument.querySelector('#common_window_info_info').style.display = 'none';
             break;
         }    
         case 2:{
             //show spinner first and then url in iframe, HTML or PDF
-            document.querySelector('#common_window_info_content').src='';
-            document.querySelector('#common_window_info_toolbar').style.display = 'none';
-            document.querySelector('#common_window_info_content').style.display = 'block';
-            document.querySelector('#common_window_info').style.overflowY = 'auto';
-            document.querySelector('#common_window_info').style.visibility = 'visible';
-            document.querySelector('#common_window_info_content').classList.add('css_spinner');
-            document.querySelector('#common_window_info_info').innerHTML = '';
-            document.querySelector('#common_window_info_info').style.display = 'none';
+            AppDocument.querySelector('#common_window_info_content').src='';
+            AppDocument.querySelector('#common_window_info_toolbar').style.display = 'none';
+            AppDocument.querySelector('#common_window_info_content').style.display = 'block';
+            AppDocument.querySelector('#common_window_info').style.overflowY = 'auto';
+            AppDocument.querySelector('#common_window_info').style.visibility = 'visible';
+            AppDocument.querySelector('#common_window_info_content').classList.add('css_spinner');
+            AppDocument.querySelector('#common_window_info_info').innerHTML = '';
+            AppDocument.querySelector('#common_window_info_info').style.display = 'none';
             if (content_type == 'HTML'){
-                document.querySelector('#common_window_info_content').src=iframe_content;
-                document.querySelector('#common_window_info_content').classList.remove('css_spinner');
+                AppDocument.querySelector('#common_window_info_content').src=iframe_content;
+                AppDocument.querySelector('#common_window_info_content').classList.remove('css_spinner');
             }
             else
                 if (content_type=='PDF'){
@@ -1193,8 +1224,8 @@ const show_window_info = (info, url, content_type, iframe_content) => {
                         reader.readAsDataURL(pdf); 
                         reader.onloadend = () => {
                             const base64PDF = reader.result;
-                            document.querySelector('#common_window_info_content').classList.remove('css_spinner');
-                            document.querySelector('#common_window_info_content').src = base64PDF;
+                            AppDocument.querySelector('#common_window_info_content').classList.remove('css_spinner');
+                            AppDocument.querySelector('#common_window_info_content').src = base64PDF;
                         };
                     });
                 }
@@ -1202,11 +1233,11 @@ const show_window_info = (info, url, content_type, iframe_content) => {
     }
 };
 const show_hide_window_info_toolbar = () => {
-    if (document.querySelector('#common_window_info_toolbar').style.display=='flex' ||
-        document.querySelector('#common_window_info_toolbar').style.display=='')
-        document.querySelector('#common_window_info_toolbar').style.display='none';
+    if (AppDocument.querySelector('#common_window_info_toolbar').style.display=='flex' ||
+        AppDocument.querySelector('#common_window_info_toolbar').style.display=='')
+        AppDocument.querySelector('#common_window_info_toolbar').style.display='none';
     else
-        document.querySelector('#common_window_info_toolbar').style.display='flex';
+        AppDocument.querySelector('#common_window_info_toolbar').style.display='flex';
 };
 /*-----------------------
   PROFILE               
@@ -1221,12 +1252,12 @@ const profile_follow_like = async (function_name) => {
 };
 const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
     let path;
-    const profile_top_list = document.querySelector('#common_profile_top_list');
+    const profile_top_list = AppDocument.querySelector('#common_profile_top_list');
     profile_top_list.innerHTML = '';
     profile_top_list.classList.add('css_spinner');
-    document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-    document.querySelector('#common_profile_info').style.display = 'none';
-    document.querySelector('#common_profile_top').style.display = 'block';
+    AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+    AppDocument.querySelector('#common_profile_info').style.display = 'none';
+    AppDocument.querySelector('#common_profile_top').style.display = 'block';
                 
     if (statchoice ==1 || statchoice ==2 || statchoice ==3){
         /*statschoice 1,2,3: user_account*/
@@ -1263,14 +1294,14 @@ const profile_top = (statchoice, app_rest_url = null, click_function=null) => {
         }
         profile_top_list.classList.remove('css_spinner');
         profile_top_list.innerHTML = html;
-        document.querySelector('#common_profile_top_list')['data-function'] = click_function;
+        AppDocument.querySelector('#common_profile_top_list')['data-function'] = click_function;
     })
     .catch(()=> profile_top_list.classList.remove('css_spinner'));
         
 };
 const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function) => {
     let path;
-    const profile_detail_list = document.querySelector('#common_profile_detail_list');
+    const profile_detail_list = AppDocument.querySelector('#common_profile_detail_list');
     profile_detail_list.innerHTML = '';
     profile_detail_list.classList.add('css_spinner');
     if (detailchoice == 1 || detailchoice == 2 || detailchoice == 3 || detailchoice == 4){
@@ -1281,16 +1312,16 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
         /* detailchoice 5, apps, returns same columns*/
         path = `${rest_url_app}`;
     }
-    path += `?user_account_id=${document.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`;
+    path += `?user_account_id=${AppDocument.querySelector('#common_profile_id').innerHTML}&detailchoice=${detailchoice}`;
     //DETAIL
     //show only if user logged in
     if (parseInt(COMMON_GLOBAL.user_account_id) || 0 !== 0) {
         if (detailchoice==0){
             //show only other app specific hide common
-            document.querySelector('#common_profile_detail').style.display = 'none';
+            AppDocument.querySelector('#common_profile_detail').style.display = 'none';
         }
         else
-            document.querySelector('#common_profile_detail').style.display = 'block';
+            AppDocument.querySelector('#common_profile_detail').style.display = 'block';
         if (fetch_detail){
             FFB('DB_API', path, 'GET', 'APP_ACCESS', null)
             .then(result=>{
@@ -1299,7 +1330,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
                 let delete_div ='';
                 for (const list_item of JSON.parse(result)) {
                     if (detailchoice==5 && typeof list_item.id =='undefined'){
-                        if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
+                        if (AppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id)
                             delete_div = `<div class='common_profile_detail_list_app_delete common_icon'>${''}</div>`;
                         html += 
                         //Apps list
@@ -1344,7 +1375,7 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
                 }
                 profile_detail_list.classList.remove('css_spinner');
                 profile_detail_list.innerHTML = html;
-                document.querySelector('#common_profile_detail_list')['data-function'] = click_function;
+                AppDocument.querySelector('#common_profile_detail_list')['data-function'] = click_function;
             })
             .catch(()=>profile_detail_list.classList.remove('css_spinner'));
         }
@@ -1352,21 +1383,21 @@ const profile_detail = (detailchoice, rest_url_app, fetch_detail, click_function
         show_common_dialogue('LOGIN');
 };
 const search_profile = (click_function) => {
-    document.querySelector('#common_profile_search_input').classList.remove('common_input_error');
-    const profile_search_list = document.querySelector('#common_profile_search_list');
-    document.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
+    AppDocument.querySelector('#common_profile_search_input').classList.remove('common_input_error');
+    const profile_search_list = AppDocument.querySelector('#common_profile_search_list');
+    AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'flex';
     profile_search_list.innerHTML ='';
-    if (document.querySelector('#common_profile_search_input').innerText==''){
-        document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
-        document.querySelector('#common_profile_search_input').classList.add('common_input_error');
+    if (AppDocument.querySelector('#common_profile_search_input').innerText==''){
+        AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+        AppDocument.querySelector('#common_profile_search_input').classList.add('common_input_error');
     }
     else{
         profile_search_list.classList.add('css_spinner');
-        const searched_username = document.querySelector('#common_profile_search_input').innerText;
+        const searched_username = AppDocument.querySelector('#common_profile_search_input').innerText;
         let path;
         let token;
         let json_data;
-        if (input_control(null,{check_valid_list:[[document.querySelector('#common_profile_search_input'),null]]})==false)
+        if (input_control(null,{check_valid_list:[[AppDocument.querySelector('#common_profile_search_input'),null]]})==false)
             return;
         if (COMMON_GLOBAL.user_account_id!=''){
             //search using access token with logged in user_account_id
@@ -1388,7 +1419,7 @@ const search_profile = (click_function) => {
         FFB('DB_API', path, 'POST', token, json_data)
         .then(result=>{
             if (JSON.parse(result).length == 0){
-                document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+                AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
             }
             let html = '';
             let image= '';
@@ -1411,11 +1442,11 @@ const search_profile = (click_function) => {
             }
             profile_search_list.classList.remove('css_spinner');
             profile_search_list.innerHTML = html;
-            document.querySelector('#common_profile_search_list')['data-function'] = click_function;
+            AppDocument.querySelector('#common_profile_search_list')['data-function'] = click_function;
         })
         .catch(()=>{
             profile_search_list.classList.remove('css_spinner');
-            document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+            AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
         });
     }
 };
@@ -1457,50 +1488,50 @@ const profile_show = async (user_account_id_other = null, username = null) => {
             FFB('DB_API', path, 'POST', 'APP_DATA', json_data)
             .then(result=>{
                 const profile = JSON.parse(result);
-                document.querySelector('#common_profile_info').style.display = 'block';
-                document.querySelector('#common_profile_main').style.display = 'block';
-                document.querySelector('#common_profile_id').innerHTML = profile.id;
-                set_avatar(profile.avatar ?? profile.provider_image, document.querySelector('#common_profile_avatar')); 
+                AppDocument.querySelector('#common_profile_info').style.display = 'block';
+                AppDocument.querySelector('#common_profile_main').style.display = 'block';
+                AppDocument.querySelector('#common_profile_id').innerHTML = profile.id;
+                set_avatar(profile.avatar ?? profile.provider_image, AppDocument.querySelector('#common_profile_avatar')); 
                 //show local username
-                document.querySelector('#common_profile_username').innerHTML = profile.username;
+                AppDocument.querySelector('#common_profile_username').innerHTML = profile.username;
     
-                document.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
-                document.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
-                document.querySelector('#common_profile_qr').innerHTML = '';
+                AppDocument.querySelector('#common_profile_bio').innerHTML = get_null_or_value(profile.bio);
+                AppDocument.querySelector('#common_profile_joined_date').innerHTML = format_json_date(profile.date_created, true);
+                AppDocument.querySelector('#common_profile_qr').innerHTML = '';
                 create_qr('common_profile_qr', getHostname() + '/' + profile.username);
                 //User account followed and liked
                 if (profile.followed == 1) {
                     //followed
-                    document.querySelector('#common_profile_follow').children[0].style.display = 'none';
-                    document.querySelector('#common_profile_follow').children[1].style.display = 'block';
+                    AppDocument.querySelector('#common_profile_follow').children[0].style.display = 'none';
+                    AppDocument.querySelector('#common_profile_follow').children[1].style.display = 'block';
                 } else {
                     //not followed
-                    document.querySelector('#common_profile_follow').children[0].style.display = 'block';
-                    document.querySelector('#common_profile_follow').children[1].style.display = 'none';
+                    AppDocument.querySelector('#common_profile_follow').children[0].style.display = 'block';
+                    AppDocument.querySelector('#common_profile_follow').children[1].style.display = 'none';
                 }
                 if (profile.liked == 1) {
                     //liked
-                    document.querySelector('#common_profile_like').children[0].style.display = 'none';
-                    document.querySelector('#common_profile_like').children[1].style.display = 'block';
+                    AppDocument.querySelector('#common_profile_like').children[0].style.display = 'none';
+                    AppDocument.querySelector('#common_profile_like').children[1].style.display = 'block';
                 } else {
                     //not liked
-                    document.querySelector('#common_profile_like').children[0].style.display = 'block';
-                    document.querySelector('#common_profile_like').children[1].style.display = 'none';
+                    AppDocument.querySelector('#common_profile_like').children[0].style.display = 'block';
+                    AppDocument.querySelector('#common_profile_like').children[1].style.display = 'none';
                 } 
                 //if private then hide info, sql decides if private, no need to check here if same user
                 if (profile.private==1) {
                     //private
-                    document.querySelector('#common_profile_public').style.display = 'none';
-                    document.querySelector('#common_profile_private').style.display = 'block';
+                    AppDocument.querySelector('#common_profile_public').style.display = 'none';
+                    AppDocument.querySelector('#common_profile_private').style.display = 'block';
                 } else {
                     //public
-                    document.querySelector('#common_profile_public').style.display = 'block';
-                    document.querySelector('#common_profile_private').style.display = 'none';
-                    document.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
-                    document.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
-                    document.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
-                    document.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
-                    document.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
+                    AppDocument.querySelector('#common_profile_public').style.display = 'block';
+                    AppDocument.querySelector('#common_profile_private').style.display = 'none';
+                    AppDocument.querySelector('#common_profile_info_view_count').innerHTML = profile.count_views;
+                    AppDocument.querySelector('#common_profile_info_following_count').innerHTML = profile.count_following;
+                    AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = profile.count_followed;
+                    AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = profile.count_likes;
+                    AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = profile.count_liked;
                 }    
                 if (COMMON_GLOBAL.user_account_id =='')
                     setTimeout(()=> {show_common_dialogue('LOGIN');}, 2000);
@@ -1515,12 +1546,12 @@ const profile_show = async (user_account_id_other = null, username = null) => {
     
 };
 const profile_close = () => {
-    document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
+    AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
     dialogue_profile_clear();
 };
 const profile_update_stat = async () => {
     return new Promise((resolve, reject) => {
-        const profile_id = document.querySelector('#common_profile_id');
+        const profile_id = AppDocument.querySelector('#common_profile_id');
         const json_data ={  
                             client_latitude:    COMMON_GLOBAL.client_latitude,
                             client_longitude:   COMMON_GLOBAL.client_longitude
@@ -1530,11 +1561,11 @@ const profile_update_stat = async () => {
         FFB('DB_API', `/user_account/profile/id?POST_ID=${profile_id.innerHTML}&id=${profile_id.innerHTML}`, 'POST', 'APP_DATA', json_data)
         .then(result=>{
             const user_stat = JSON.parse(result);
-            document.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
-            document.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
-            document.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
-            document.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
-            document.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
+            AppDocument.querySelector('#common_profile_info_view_count').innerHTML = user_stat.count_views;
+            AppDocument.querySelector('#common_profile_info_following_count').innerHTML = user_stat.count_following;
+            AppDocument.querySelector('#common_profile_info_followers_count').innerHTML = user_stat.count_followed;
+            AppDocument.querySelector('#common_profile_info_likes_count').innerHTML = user_stat.count_likes;
+            AppDocument.querySelector('#common_profile_info_liked_count').innerHTML = user_stat.count_liked;
             resolve({id : user_stat.id});
         })
         .catch(err=>reject(err));
@@ -1548,11 +1579,11 @@ const search_input = (event, module, event_function) => {
         }
         case 'ArrowUp':
         case 'ArrowDown':{
-            if (document.querySelector(`#common_${module}_search_list`)){
-                const rows = document.querySelectorAll(`.common_${module}_search_list_row`);
+            if (AppDocument.querySelector(`#common_${module}_search_list`)){
+                const rows = AppDocument.querySelectorAll(`.common_${module}_search_list_row`);
                 const focus_item = (element) =>{
                     element.focus();
-                    document.querySelector(`#common_${module}_search_input`).focus();
+                    AppDocument.querySelector(`#common_${module}_search_input`).focus();
                 };
                 let i=0;
                 for (const row of rows) {
@@ -1603,7 +1634,7 @@ const search_input = (event, module, event_function) => {
         }
         case 'Enter':{
             //enter
-            const x = document.querySelectorAll(`.common_${module}_search_list_row`);
+            const x = AppDocument.querySelectorAll(`.common_${module}_search_list_row`);
             for (let i = 0; i <= x.length -1; i++) {
                 if (x[i].classList.contains(`common_${module}_search_list_selected`)){
                     /*Show profile and leave searchresult so user can go back to searchresult again*/
@@ -1663,27 +1694,27 @@ const user_login = async (system_admin=false) => {
         let password = '';
         if (system_admin) {
             path = '/systemadmin?';
-            if (input_control(document.querySelector('#common_dialogue_user_start_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
                             {
-                            username:document.querySelector('#common_user_start_login_system_admin_username'),
-                            password:document.querySelector('#common_user_start_login_system_admin_password'),
-                            password_confirm:document.querySelector('#common_user_start_login_system_admin_password_confirm').style.display == 'block'?
-                                                document.querySelector('#common_user_start_login_system_admin_password_confirm'):null
+                            username: AppDocument.querySelector('#common_user_start_login_system_admin_username'),
+                            password: AppDocument.querySelector('#common_user_start_login_system_admin_password'),
+                            password_confirm: AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm').style.display == 'block'?
+                                                AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm'):null
                             })==false)
             return reject('ERROR');   
-            username = document.querySelector('#common_user_start_login_system_admin_username').innerHTML;
-            password = document.querySelector('#common_user_start_login_system_admin_password').innerHTML;
+            username = AppDocument.querySelector('#common_user_start_login_system_admin_username').innerHTML;
+            password = AppDocument.querySelector('#common_user_start_login_system_admin_password').innerHTML;
         }
         else{
             path = '/user?';
-            if (input_control(document.querySelector('#common_dialogue_user_start_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
                             {
-                            username:document.querySelector('#common_user_start_login_username'),
-                            password:document.querySelector('#common_user_start_login_password')
+                            username: AppDocument.querySelector('#common_user_start_login_username'),
+                            password: AppDocument.querySelector('#common_user_start_login_password')
                             })==false)
                 return reject('ERROR');
-            username = document.querySelector('#common_user_start_login_username').innerHTML;
-            password = document.querySelector('#common_user_start_login_password').innerHTML;
+            username = AppDocument.querySelector('#common_user_start_login_username').innerHTML;
+            password = AppDocument.querySelector('#common_user_start_login_password').innerHTML;
         }
             
         // ES6 object spread operator for user variables
@@ -1692,23 +1723,23 @@ const user_login = async (system_admin=false) => {
                             ...get_uservariables()
                         };
         if (system_admin)
-            document.querySelector('#common_user_start_login_system_admin_button').classList.add('css_spinner');
+            AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.add('css_spinner');
         else
-            document.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+            AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
         FFB('IAM', path, 'POST', 'IAM', json_data)
         .then(result=>{
-            document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+            AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
             if (system_admin){
                 COMMON_GLOBAL.system_admin = JSON.parse(result).username;
                 COMMON_GLOBAL.rest_admin_at = JSON.parse(result).token_at;
                 updateOnlineStatus();
-                document.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
-                document.querySelector('#common_user_menu_username').innerHTML = JSON.parse(result).username;
-                document.querySelector('#common_user_preferences').style.display = 'none';
-                document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-                document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                AppDocument.querySelector('#common_user_menu_default_avatar').classList.add('app_role_system_admin');
+                AppDocument.querySelector('#common_user_menu_username').innerHTML = JSON.parse(result).username;
+                AppDocument.querySelector('#common_user_preferences').style.display = 'none';
+                AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+                AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                 dialogue_user_start_clear();
-                document.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
+                AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
                 resolve({   user_id: null,
                             username: JSON.parse(result).username,
                             bio: null,
@@ -1730,22 +1761,22 @@ const user_login = async (system_admin=false) => {
                     COMMON_GLOBAL.rest_at	= JSON.parse(result).accessToken;
                     
                     //set avatar or empty
-                    set_avatar(user.avatar, document.querySelector('#common_user_menu_avatar_img'));
-                    document.querySelector('#common_user_menu_username').innerHTML = user.username;
-                    document.querySelector('#common_user_menu_username').style.display = 'block';
+                    set_avatar(user.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+                    AppDocument.querySelector('#common_user_menu_username').innerHTML = user.username;
+                    AppDocument.querySelector('#common_user_menu_username').style.display = 'block';
         
-                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
         
                     
-                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
-                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                    AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block';
+                    AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
         
                     updateOnlineStatus();
                     user_preference_get()
                     .then(()=>{
                         dialogue_user_start_clear();
-                        document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                        AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                         resolve({   user_id: user.id,
                                     username: user.username,
                                     bio: user.bio,
@@ -1756,9 +1787,9 @@ const user_login = async (system_admin=false) => {
         })
         .catch(err=>{
             if (system_admin)
-                document.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
+                AppDocument.querySelector('#common_user_start_login_system_admin_button').classList.remove('css_spinner');
             else
-                document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
             reject(err);});
     });
 };
@@ -1766,31 +1797,31 @@ const user_logoff = async (system_admin) => {
     if (system_admin){
         COMMON_GLOBAL.rest_admin_at = '';
         COMMON_GLOBAL.system_admin = '';
-        document.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
-        document.querySelector('#common_user_menu_username').innerHTML = '';
-        document.querySelector('#common_user_menu_username').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_default_avatar').classList.remove('app_role_system_admin');
+        AppDocument.querySelector('#common_user_menu_username').innerHTML = '';
+        AppDocument.querySelector('#common_user_menu_username').style.display = 'none';
     }
     else{
         //remove access token
         COMMON_GLOBAL.rest_at ='';
         COMMON_GLOBAL.user_account_id = '';
 
-        set_avatar(null, document.querySelector('#common_user_menu_avatar_img')); 
+        set_avatar(null, AppDocument.querySelector('#common_user_menu_avatar_img')); 
         //clear logged in info
-        document.querySelector('#common_user_menu_username').innerHTML = '';
-        document.querySelector('#common_user_menu_username').style.display = 'none';
-        document.querySelector('#common_user_menu_logged_in').style.display = 'none';
-        document.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
-        document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
-        document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
+        AppDocument.querySelector('#common_user_menu_username').innerHTML = '';
+        AppDocument.querySelector('#common_user_menu_username').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'inline-block';
+        AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'none';
+        AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'inline-block';
 
         updateOnlineStatus();
-        document.querySelector('#common_profile_avatar_online_status').className='';
+        AppDocument.querySelector('#common_profile_avatar_online_status').className='';
         dialogue_user_edit_clear();
         dialogue_verify_clear();
         dialogue_password_new_clear();
         dialogue_user_start_clear();
-        document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
+        AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
         dialogue_profile_clear();
         user_preferences_set_default_globals('LOCALE');
         user_preferences_set_default_globals('TIMEZONE');
@@ -1805,48 +1836,48 @@ const user_edit = async () => {
     .then(result=>{
         const user = JSON.parse(result);
         if (COMMON_GLOBAL.user_account_id == user.id) {
-            document.querySelector('#common_user_edit_local').style.display = 'none';
-            document.querySelector('#common_user_edit_provider').style.display = 'none';
-            document.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
+            AppDocument.querySelector('#common_user_edit_local').style.display = 'none';
+            AppDocument.querySelector('#common_user_edit_provider').style.display = 'none';
+            AppDocument.querySelector('#common_dialogue_user_edit').style.visibility = 'visible';
 
             if (Number(user.private))
-                document.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
+                AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.add('checked');
             else
-                document.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
+                AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.remove('checked');
 
-            document.querySelector('#common_user_edit_input_username').innerHTML = user.username;
-            document.querySelector('#common_user_edit_input_bio').innerHTML = get_null_or_value(user.bio);
+            AppDocument.querySelector('#common_user_edit_input_username').innerHTML = user.username;
+            AppDocument.querySelector('#common_user_edit_input_bio').innerHTML = get_null_or_value(user.bio);
 
             if (user.provider_id == null) {
-                document.querySelector('#common_user_edit_local').style.display = 'block';
-                document.querySelector('#common_user_edit_provider').style.display = 'none';
+                AppDocument.querySelector('#common_user_edit_local').style.display = 'block';
+                AppDocument.querySelector('#common_user_edit_provider').style.display = 'none';
 
                 //display fetched avatar editable
-                document.querySelector('#common_user_edit_avatar').style.display = 'block';
-                set_avatar(user.avatar, document.querySelector('#common_user_edit_avatar_img')); 
-                document.querySelector('#common_user_edit_input_email').innerHTML = user.email;
-                document.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
-                document.querySelector('#common_user_edit_input_password').innerHTML = '',
-                    document.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
-                    document.querySelector('#common_user_edit_input_password_new').innerHTML = '';
-                document.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
+                AppDocument.querySelector('#common_user_edit_avatar').style.display = 'block';
+                set_avatar(user.avatar, AppDocument.querySelector('#common_user_edit_avatar_img')); 
+                AppDocument.querySelector('#common_user_edit_input_email').innerHTML = user.email;
+                AppDocument.querySelector('#common_user_edit_input_new_email').innerHTML = user.email_unverified;
+                AppDocument.querySelector('#common_user_edit_input_password').innerHTML = '',
+                    AppDocument.querySelector('#common_user_edit_input_password_confirm').innerHTML = '',
+                    AppDocument.querySelector('#common_user_edit_input_password_new').innerHTML = '';
+                AppDocument.querySelector('#common_user_edit_input_password_new_confirm').innerHTML = '';
 
-                document.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
+                AppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML = user.password_reminder;
             } else{
-                    document.querySelector('#common_user_edit_local').style.display = 'none';
-                    document.querySelector('#common_user_edit_provider').style.display = 'block';
-                    document.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
-                    document.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
-                    document.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
-                    document.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
-                    document.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
-                    document.querySelector('#common_user_edit_avatar').style.display = 'none';
-                    set_avatar(user.provider_image, document.querySelector('#common_user_edit_avatar_img')); 
+                    AppDocument.querySelector('#common_user_edit_local').style.display = 'none';
+                    AppDocument.querySelector('#common_user_edit_provider').style.display = 'block';
+                    AppDocument.querySelector('#common_user_edit_provider_id').innerHTML = user.identity_provider_id;
+                    AppDocument.querySelector('#common_user_edit_label_provider_id_data').innerHTML = user.provider_id;
+                    AppDocument.querySelector('#common_user_edit_label_provider_name_data').innerHTML = user.provider_first_name + ' ' + user.provider_last_name;
+                    AppDocument.querySelector('#common_user_edit_label_provider_email_data').innerHTML = user.provider_email;
+                    AppDocument.querySelector('#common_user_edit_label_provider_image_url_data').innerHTML = user.provider_image_url;
+                    AppDocument.querySelector('#common_user_edit_avatar').style.display = 'none';
+                    set_avatar(user.provider_image, AppDocument.querySelector('#common_user_edit_avatar_img')); 
                 } 
-            document.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(user.last_logontime, null);
-            document.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(user.date_created, null);
-            document.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(user.date_modified, null);
-            set_avatar(user.avatar ?? user.provider_image, document.querySelector('#common_user_menu_avatar_img'));
+            AppDocument.querySelector('#common_user_edit_label_data_last_logontime').innerHTML = format_json_date(user.last_logontime, null);
+            AppDocument.querySelector('#common_user_edit_label_data_account_created').innerHTML = format_json_date(user.date_created, null);
+            AppDocument.querySelector('#common_user_edit_label_data_account_modified').innerHTML = format_json_date(user.date_modified, null);
+            set_avatar(user.avatar ?? user.provider_image, AppDocument.querySelector('#common_user_menu_avatar_img'));
         } else {
             //User not found
             show_message('ERROR', 20305, null, null, null, COMMON_GLOBAL.common_app_id);
@@ -1856,37 +1887,37 @@ const user_edit = async () => {
 };
 const user_update = async () => {
     return new Promise(resolve=>{
-        const username = document.querySelector('#common_user_edit_input_username').innerHTML;
-        const bio = document.querySelector('#common_user_edit_input_bio').innerHTML;
-        const avatar = document.querySelector('#common_user_edit_avatar_img').src;
-        const new_email = document.querySelector('#common_user_edit_input_new_email').innerHTML;
+        const username = AppDocument.querySelector('#common_user_edit_input_username').innerHTML;
+        const bio = AppDocument.querySelector('#common_user_edit_input_bio').innerHTML;
+        const avatar = AppDocument.querySelector('#common_user_edit_avatar_img').src;
+        const new_email = AppDocument.querySelector('#common_user_edit_input_new_email').innerHTML;
     
         let path;
         let json_data;
             
         
-        if (document.querySelector('#common_user_edit_local').style.display == 'block') {
-            if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+        if (AppDocument.querySelector('#common_user_edit_local').style.display == 'block') {
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                             {
-                            username:document.querySelector('#common_user_edit_input_username'),
-                            password:document.querySelector('#common_user_edit_input_password'),
-                            password_confirm:document.querySelector('#common_user_edit_input_password_confirm'),
-                            password_confirm_reminder:document.querySelector('#common_user_edit_input_password_reminder'),
-                            password_new:document.querySelector('#common_user_edit_input_password_new'),
-                            password_new_confirm:document.querySelector('#common_user_edit_input_password_new_confirm'),
-                            bio:document.querySelector('#common_user_edit_input_bio'),
-                            email:document.querySelector('#common_user_edit_input_email')
+                            username: AppDocument.querySelector('#common_user_edit_input_username'),
+                            password: AppDocument.querySelector('#common_user_edit_input_password'),
+                            password_confirm: AppDocument.querySelector('#common_user_edit_input_password_confirm'),
+                            password_confirm_reminder: AppDocument.querySelector('#common_user_edit_input_password_reminder'),
+                            password_new: AppDocument.querySelector('#common_user_edit_input_password_new'),
+                            password_new_confirm: AppDocument.querySelector('#common_user_edit_input_password_new_confirm'),
+                            bio: AppDocument.querySelector('#common_user_edit_input_bio'),
+                            email: AppDocument.querySelector('#common_user_edit_input_email')
                             })==false)
                 return null;
 
-            const email = document.querySelector('#common_user_edit_input_email').innerHTML;    
-            const password = document.querySelector('#common_user_edit_input_password').innerHTML;
-            const password_new = document.querySelector('#common_user_edit_input_password_new').innerHTML;
-            const password_reminder = document.querySelector('#common_user_edit_input_password_reminder').innerHTML;
+            const email = AppDocument.querySelector('#common_user_edit_input_email').innerHTML;    
+            const password = AppDocument.querySelector('#common_user_edit_input_password').innerHTML;
+            const password_new = AppDocument.querySelector('#common_user_edit_input_password_new').innerHTML;
+            const password_reminder = AppDocument.querySelector('#common_user_edit_input_password_reminder').innerHTML;
         
             json_data = {   username:           username,
                             bio:                bio,
-                            private:            Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
+                            private:            Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked')),
                             password:           password,
                             password_new:       password_new,
                             password_reminder:  password_reminder,
@@ -1897,94 +1928,94 @@ const user_update = async () => {
                         };
             path = `/user_account?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
         } else {
-            if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+            if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                             {
-                            bio:document.querySelector('#common_user_edit_input_bio')
+                            bio: AppDocument.querySelector('#common_user_edit_input_bio')
                             })==false)
                 return null;
-            json_data = {   provider_id:    document.querySelector('#common_user_edit_provider_id').innerHTML,
+            json_data = {   provider_id:    AppDocument.querySelector('#common_user_edit_provider_id').innerHTML,
                             username:       username,
                             bio:            bio,
-                            private:        Number(document.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
+                            private:        Number(AppDocument.querySelector('#common_user_edit_checkbox_profile_private').classList.contains('checked'))
                         };
             path = `/user_account/common?PUT_ID=${COMMON_GLOBAL.user_account_id}`;
         }
-        document.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
+        AppDocument.querySelector('#common_user_edit_btn_user_update').classList.add('css_spinner');
         //update user using REST API
         FFB('DB_API', path, 'PUT', 'APP_ACCESS', json_data)
         .then(result=>{
-            document.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
+            AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner');
             const user_update = JSON.parse(result);
-            set_avatar(avatar, document.querySelector('#common_user_menu_avatar_img'));
-            document.querySelector('#common_user_menu_username').innerHTML = username;
+            set_avatar(avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+            AppDocument.querySelector('#common_user_menu_username').innerHTML = username;
             if (user_update.sent_change_email == 1){
                 show_common_dialogue('VERIFY', 'NEW_EMAIL', new_email, null);
             }
             else
                 dialogue_user_edit_clear();
         })
-        .catch(()=>document.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner'))
+        .catch(()=>AppDocument.querySelector('#common_user_edit_btn_user_update').classList.remove('css_spinner'))
         .finally(()=>resolve(null));
     });
 };
 const user_signup = () => {
-    const email = document.querySelector('#common_user_start_signup_email').innerHTML;
-    if (input_control(document.querySelector('#common_dialogue_user_start_content'),
+    const email = AppDocument.querySelector('#common_user_start_signup_email').innerHTML;
+    if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
                             {
-                            username:document.querySelector('#common_user_start_signup_username'),
-                            password:document.querySelector('#common_user_start_signup_password'),
-                            password_confirm:document.querySelector('#common_user_start_signup_password_confirm'),
-                            password_confirm_reminder:document.querySelector('#common_user_start_signup_password_reminder'),
-                            email:document.querySelector('#common_user_start_signup_email')
+                            username: AppDocument.querySelector('#common_user_start_signup_username'),
+                            password: AppDocument.querySelector('#common_user_start_signup_password'),
+                            password_confirm: AppDocument.querySelector('#common_user_start_signup_password_confirm'),
+                            password_confirm_reminder: AppDocument.querySelector('#common_user_start_signup_password_reminder'),
+                            email: AppDocument.querySelector('#common_user_start_signup_email')
                             })==false)
             return null;
 
-    const json_data = { username:           document.querySelector('#common_user_start_signup_username').innerHTML,
-                        password:           document.querySelector('#common_user_start_signup_password').innerHTML,
-                        password_reminder:  document.querySelector('#common_user_start_signup_password_reminder').innerHTML,
+    const json_data = { username:           AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
+                        password:           AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
+                        password_reminder:  AppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML,
                         email:              email,
                         active:             0,
                         ...get_uservariables()
                      };
     
-    document.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
+    AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
 
     FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
     .then(result=>{
-        document.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
+        AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
         const signup = JSON.parse(result);
         COMMON_GLOBAL.rest_at = signup.accessToken;
         COMMON_GLOBAL.user_account_id = signup.id;
         show_common_dialogue('VERIFY', 'SIGNUP', email, null);
     })
-    .catch(()=>document.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
+    .catch(()=>AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
 };
 const user_verify_check_input = async (item, nextField) => {
     return new Promise((resolve, reject)=>{
         let json_data;
-        const verification_type = parseInt(document.querySelector('#common_user_verification_type').innerHTML);
+        const verification_type = parseInt(AppDocument.querySelector('#common_user_verification_type').innerHTML);
         //only accept 0-9
         if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
-            if (nextField == '' || (document.querySelector('#common_user_verify_verification_char1').innerHTML != '' &
-                    document.querySelector('#common_user_verify_verification_char2').innerHTML != '' &
-                    document.querySelector('#common_user_verify_verification_char3').innerHTML != '' &
-                    document.querySelector('#common_user_verify_verification_char4').innerHTML != '' &
-                    document.querySelector('#common_user_verify_verification_char5').innerHTML != '' &
-                    document.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
+            if (nextField == '' || (AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML != '' &
+                    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML != '' &
+                    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML != '' &
+                    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML != '' &
+                    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML != '' &
+                    AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
                 //last field, validate entered code
-                const verification_code = parseInt(document.querySelector('#common_user_verify_verification_char1').innerHTML +
-                    document.querySelector('#common_user_verify_verification_char2').innerHTML +
-                    document.querySelector('#common_user_verify_verification_char3').innerHTML +
-                    document.querySelector('#common_user_verify_verification_char4').innerHTML +
-                    document.querySelector('#common_user_verify_verification_char5').innerHTML +
-                    document.querySelector('#common_user_verify_verification_char6').innerHTML);
-                document.querySelector('#common_user_verify_email_icon').classList.add('css_spinner');
-                document.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
-                document.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
-                document.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
-                document.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
-                document.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
-                document.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
+                const verification_code = parseInt(AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML +
+                    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML +
+                    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML +
+                    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML +
+                    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML +
+                    AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML);
+                AppDocument.querySelector('#common_user_verify_email_icon').classList.add('css_spinner');
+                AppDocument.querySelector('#common_user_verify_verification_char1').classList.remove('common_input_error');
+                AppDocument.querySelector('#common_user_verify_verification_char2').classList.remove('common_input_error');
+                AppDocument.querySelector('#common_user_verify_verification_char3').classList.remove('common_input_error');
+                AppDocument.querySelector('#common_user_verify_verification_char4').classList.remove('common_input_error');
+                AppDocument.querySelector('#common_user_verify_verification_char5').classList.remove('common_input_error');
+                AppDocument.querySelector('#common_user_verify_verification_char6').classList.remove('common_input_error');
     
                 //activate user
                 json_data = {   verification_code:  verification_code,
@@ -1993,7 +2024,7 @@ const user_verify_check_input = async (item, nextField) => {
                             };
                 FFB('DB_API', `/user_account/activate?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_DATA', json_data)
                 .then(result=>{
-                    document.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
+                    AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     const user_activate = JSON.parse(result).items[0];
                     if (user_activate.affectedRows == 1) {
                         switch (verification_type){
@@ -2004,10 +2035,10 @@ const user_verify_check_input = async (item, nextField) => {
                             case 2:{
                                 //SIGNUP
                                 //login with username and password from signup fields
-                                document.querySelector('#common_user_start_login_username').innerHTML =
-                                    document.querySelector('#common_user_start_signup_username').innerHTML;
-                                document.querySelector('#common_user_start_login_password').innerHTML =
-                                    document.querySelector('#common_user_start_signup_password').innerHTML;
+                                AppDocument.querySelector('#common_user_start_login_username').innerHTML =
+                                    AppDocument.querySelector('#common_user_start_signup_username').innerHTML;
+                                AppDocument.querySelector('#common_user_start_login_password').innerHTML =
+                                    AppDocument.querySelector('#common_user_start_signup_password').innerHTML;
                                 break;
                             }
                             case 3:{
@@ -2028,29 +2059,29 @@ const user_verify_check_input = async (item, nextField) => {
                                     verification_type : verification_type});
                     } 
                     else{
-                        document.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
-                        document.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
-                        document.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
-                        document.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
-                        document.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
-                        document.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
+                        AppDocument.querySelector('#common_user_verify_verification_char1').classList.add('common_input_error');
+                        AppDocument.querySelector('#common_user_verify_verification_char2').classList.add('common_input_error');
+                        AppDocument.querySelector('#common_user_verify_verification_char3').classList.add('common_input_error');
+                        AppDocument.querySelector('#common_user_verify_verification_char4').classList.add('common_input_error');
+                        AppDocument.querySelector('#common_user_verify_verification_char5').classList.add('common_input_error');
+                        AppDocument.querySelector('#common_user_verify_verification_char6').classList.add('common_input_error');
                         //code not valid
                         show_message('ERROR', 20306, null, null, null, COMMON_GLOBAL.common_app_id);
                         reject('ERROR');
                     }
                 })
                 .catch(err=>{
-                    document.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
+                    AppDocument.querySelector('#common_user_verify_email_icon').classList.remove('css_spinner');
                     reject(err);
                 });
             } else{
                 //not last, next!
-                document.querySelector('#' + nextField).focus();
+                AppDocument.querySelector('#' + nextField).focus();
                 resolve(null);
             }
         else{
             //remove anything else than 0-9
-            document.querySelector('#' + item.id).innerHTML = '';
+            AppDocument.querySelector('#' + item.id).innerHTML = '';
             resolve(null);
         }
     });
@@ -2058,13 +2089,13 @@ const user_verify_check_input = async (item, nextField) => {
 };
 const user_delete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
-        const password = document.querySelector('#common_user_edit_input_password').innerHTML;
+        const password = AppDocument.querySelector('#common_user_edit_input_password').innerHTML;
         switch (choice){
             case null:{
-                if (document.querySelector('#common_user_edit_local').style.display == 'block' &&
-                    input_control(document.querySelector('#common_dialogue_user_edit_content'),
+                if (AppDocument.querySelector('#common_user_edit_local').style.display == 'block' &&
+                    input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                                     {
-                                        password: document.querySelector('#common_user_edit_input_password')
+                                        password: AppDocument.querySelector('#common_user_edit_input_password')
                                     })==false)
                     resolve(null);
                 else{
@@ -2074,17 +2105,17 @@ const user_delete = async (choice=null, function_delete_event ) => {
                 break;
             }
             case 1:{
-                document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
         
-                document.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
+                AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.add('css_spinner');
                 const json_data = { password: password};
     
                 FFB('DB_API', `/user_account/common?DELETE_ID=${COMMON_GLOBAL.user_account_id}`, 'DELETE', 'APP_ACCESS', json_data)
                 .then(()=>{
-                    document.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');resolve({deleted: 1});
+                    AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');resolve({deleted: 1});
                 })
                 .catch(err=>{
-                    document.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
+                    AppDocument.querySelector('#common_user_edit_btn_user_delete_account').classList.remove('css_spinner');
                     reject(err);});
                 break;
             }
@@ -2096,11 +2127,11 @@ const user_delete = async (choice=null, function_delete_event ) => {
 };
 const user_function = function_name => {
     return new Promise((resolve, reject)=>{
-        const user_id_profile = document.querySelector('#common_profile_id').innerHTML;
+        const user_id_profile = AppDocument.querySelector('#common_profile_id').innerHTML;
         let method;
         let path;
         const json_data = { user_account_id: user_id_profile};
-        const check_div = document.querySelector(`#common_profile_${function_name.toLowerCase()}`);
+        const check_div = AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`);
         if (check_div.children[0].style.display == 'block') {
             path = `/user_account_${function_name.toLowerCase()}?POST_ID=${COMMON_GLOBAL.user_account_id}`;
             method = 'POST';
@@ -2113,15 +2144,15 @@ const user_function = function_name => {
         else {
             FFB('DB_API', path, method, 'APP_ACCESS', json_data)
             .then(()=> {
-                if (document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
+                if (AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display == 'block'){
                     //follow/like
-                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
-                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
+                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'none';
+                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'block';
                 }
                 else{
                     //unfollow/unlike
-                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
-                    document.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
+                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[0].style.display = 'block';
+                    AppDocument.querySelector(`#common_profile_${function_name.toLowerCase()}`).children[1].style.display = 'none';
                 }
                 resolve(null);
             })
@@ -2136,11 +2167,11 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
             break;
         }
         case 1:{
-            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+            AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
             FFB('DB_API', `/user_account_app?DELETE_USER_ACCOUNT_ID=${user_account_id}&DELETE_APP_ID=${app_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
                 //execute event and refresh app list
-                document.querySelector('#common_profile_main_btn_cloud').click();
+                AppDocument.querySelector('#common_profile_main_btn_cloud').click();
             })
             .catch(()=>null);
             break;
@@ -2150,63 +2181,63 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
     }
 };
 const user_forgot = async () => {
-    const email = document.querySelector('#common_user_start_forgot_email').innerHTML;
+    const email = AppDocument.querySelector('#common_user_start_forgot_email').innerHTML;
     const json_data = { email: email,
                         ...get_uservariables()
                     };
 
-    if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                     {
-                    email:document.querySelector('#common_user_start_forgot_email')
+                    email: AppDocument.querySelector('#common_user_start_forgot_email')
                     })==false)
         return null;
         
-    document.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
+    AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
     FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
     .then(result=>{
-        document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
+        AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
         const forgot = JSON.parse(result);
         if (forgot.sent == 1){
             COMMON_GLOBAL.user_account_id = forgot.id;
             show_common_dialogue('VERIFY', 'FORGOT', email, null);
         }
     })
-    .catch(()=>document.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
+    .catch(()=>AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
 };
 const updatePassword = () => {
-    const password_new = document.querySelector('#common_user_password_new').innerHTML;
-    const user_password_new_auth = document.querySelector('#common_user_password_new_auth').innerHTML;
+    const password_new = AppDocument.querySelector('#common_user_password_new').innerHTML;
+    const user_password_new_auth = AppDocument.querySelector('#common_user_password_new_auth').innerHTML;
     const json_data = { password_new:   password_new,
                         auth:           user_password_new_auth,
                         ...get_uservariables()
                      };
 
 
-    if (input_control(document.querySelector('#common_dialogue_user_edit_content'),
+    if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                      {
-                     password:document.querySelector('#common_user_password_new'),
-                     password_confirm:document.querySelector('#common_user_password_new_confirm'),
+                     password: AppDocument.querySelector('#common_user_password_new'),
+                     password_confirm: AppDocument.querySelector('#common_user_password_new_confirm'),
                      
                      })==false)
          return null;
 
-    document.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
+    AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
     FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
     .then(()=>{
-        document.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
+        AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
         dialogue_password_new_clear();
         show_common_dialogue('LOGIN');
     })
-    .catch(()=>document.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
+    .catch(()=>AppDocument.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
 };
 const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != ''){
         const json_data =
             {  
-                preference_locale: document.querySelector('#common_user_locale_select').value,
-                app_setting_preference_timezone_id: document.querySelector('#common_user_timezone_select').options[document.querySelector('#common_user_timezone_select').selectedIndex].id,
-                app_setting_preference_direction_id: document.querySelector('#common_user_direction_select').options[document.querySelector('#common_user_direction_select').selectedIndex].id,
-                app_setting_preference_arabic_script_id: document.querySelector('#common_user_arabic_script_select').options[document.querySelector('#common_user_arabic_script_select').selectedIndex].id
+                preference_locale: AppDocument.querySelector('#common_user_locale_select').value,
+                app_setting_preference_timezone_id: AppDocument.querySelector('#common_user_timezone_select').options[AppDocument.querySelector('#common_user_timezone_select').selectedIndex].id,
+                app_setting_preference_direction_id: AppDocument.querySelector('#common_user_direction_select').options[AppDocument.querySelector('#common_user_direction_select').selectedIndex].id,
+                app_setting_preference_arabic_script_id: AppDocument.querySelector('#common_user_arabic_script_select').options[AppDocument.querySelector('#common_user_arabic_script_select').selectedIndex].id
             };
         await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'APP_ACCESS', json_data);
     }
@@ -2228,15 +2259,15 @@ const user_preference_get = async () => {
                 user_preferences_set_default_globals('TIMEZONE');
             }
             else{
-                SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, document.querySelector('#common_user_timezone_select'), 0);
-                COMMON_GLOBAL.user_timezone = document.querySelector('#common_user_timezone_select').value;
+                SearchAndSetSelectedIndex(user_account_app.app_setting_preference_timezone_id, AppDocument.querySelector('#common_user_timezone_select'), 0);
+                COMMON_GLOBAL.user_timezone = AppDocument.querySelector('#common_user_timezone_select').value;
             }
             //direction
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, document.querySelector('#common_user_direction_select'), 0);
-            COMMON_GLOBAL.user_direction = document.querySelector('#common_user_direction_select').value;
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_direction_id, AppDocument.querySelector('#common_user_direction_select'), 0);
+            COMMON_GLOBAL.user_direction = AppDocument.querySelector('#common_user_direction_select').value;
             //arabic script
-            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, document.querySelector('#common_user_arabic_script_select'), 0);
-            COMMON_GLOBAL.user_arabic_script = document.querySelector('#common_user_arabic_script_select').value;
+            SearchAndSetSelectedIndex(user_account_app.app_setting_preference_arabic_script_id, AppDocument.querySelector('#common_user_arabic_script_select'), 0);
+            COMMON_GLOBAL.user_arabic_script = AppDocument.querySelector('#common_user_arabic_script_select').value;
             user_preferences_update_select();
             resolve(null);
         })
@@ -2268,10 +2299,10 @@ const user_preferences_update_select = () => {
     //don't save changes now, just execute other code
     //or it would save preferences 4 times
     COMMON_GLOBAL.user_preference_save = false;
-    document.querySelector('#common_user_locale_select').dispatchEvent(new Event('change'));
-	document.querySelector('#common_user_timezone_select').dispatchEvent(new Event('change'));
-	document.querySelector('#common_user_direction_select').dispatchEvent(new Event('change'));
-	document.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
+    AppDocument.querySelector('#common_user_locale_select').dispatchEvent(new Event('change'));
+	AppDocument.querySelector('#common_user_timezone_select').dispatchEvent(new Event('change'));
+	AppDocument.querySelector('#common_user_direction_select').dispatchEvent(new Event('change'));
+	AppDocument.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
     COMMON_GLOBAL.user_preference_save = true;
 };
 /*----------------------- */
@@ -2287,7 +2318,7 @@ const ProviderSignIn = (provider_id) => {
                                 profile_image_url:      '',
                                 profile_email:          `PROVIDER_EMAIL${provider_id}@${location.hostname}`};
 
-        document.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+        AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
         convert_image(provider_data.profile_image_url, 
             COMMON_GLOBAL.image_avatar_width,
             COMMON_GLOBAL.image_avatar_height).then((profile_image)=>{
@@ -2313,15 +2344,15 @@ const ProviderSignIn = (provider_id) => {
                 user_preference_get()
                 .then(()=>{
                     //set avatar or empty
-                    set_avatar(result.avatar, document.querySelector('#common_user_menu_avatar_img'));
-                    document.querySelector('#common_user_menu_username').innerHTML = user_login.username;
+                    set_avatar(result.avatar, AppDocument.querySelector('#common_user_menu_avatar_img'));
+                    AppDocument.querySelector('#common_user_menu_username').innerHTML = user_login.username;
 
-                    document.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
-                    document.querySelector('#common_user_menu_logged_out').style.display = 'none';
+                    AppDocument.querySelector('#common_user_menu_logged_in').style.display = 'inline-block';
+                    AppDocument.querySelector('#common_user_menu_logged_out').style.display = 'none';
 
-                    document.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block'; //block app2?
-                    document.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
-                    document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                    AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block'; //block app2?
+                    AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
+                    AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                     dialogue_user_start_clear();
                     resolve({   user_account_id: user_login.id,
                                 username: user_login.username,
@@ -2333,7 +2364,7 @@ const ProviderSignIn = (provider_id) => {
                 });
             })
             .catch(err=>{
-                document.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
+                AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
                 reject(err);
             });
         });
@@ -2343,17 +2374,14 @@ const ProviderSignIn = (provider_id) => {
 /* MODULE EASY.QRCODE     */
 /*----------------------- */
 const create_qr = (div, url) => {
-    import('easy.qrcode').then(({QRCode})=>{
-        new QRCode(document.querySelector('#' + div), {
-            text: url,
-            width: COMMON_GLOBAL['module_easy.qrcode_width'],
-            height: COMMON_GLOBAL['module_easy.qrcode_height'],
-            colorDark: COMMON_GLOBAL['module_easy.qrcode_color_dark'],
-            colorLight: COMMON_GLOBAL['module_easy.qrcode_color_light'],
-            drawer: 'svg'
-        });
+    new QRCode(AppDocument.querySelector('#' + div), {
+        text: url,
+        width: COMMON_GLOBAL['module_easy.qrcode_width'],
+        height: COMMON_GLOBAL['module_easy.qrcode_height'],
+        colorDark: COMMON_GLOBAL['module_easy.qrcode_color_dark'],
+        colorLight: COMMON_GLOBAL['module_easy.qrcode_color_light'],
+        drawer: 'svg'
     });
-    
 };
 /*----------------------- */
 /* MODULE LEAFLET         */
@@ -2361,86 +2389,83 @@ const create_qr = (div, url) => {
 const map_init = async (containervalue, stylevalue, longitude, latitude, doubleclick_event, search_event_function) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
-            import('leaflet').then(({L})=>{
-                //save library in variable for optimization
-                COMMON_GLOBAL.module_leaflet_library = L;
-                COMMON_GLOBAL.module_leaflet_session_map = '';
-                COMMON_GLOBAL.module_leaflet_session_map = COMMON_GLOBAL.module_leaflet_library.map(containervalue).setView([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
-                map_setstyle(stylevalue).then(()=>{
-                    //disable doubleclick in event dblclick since e.preventdefault() does not work
-                    COMMON_GLOBAL.module_leaflet_session_map.doubleClickZoom.disable(); 
-        
-                    //add scale
-                    //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
-                    COMMON_GLOBAL.module_leaflet_library.control.scale({position: 'topright'}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+            
+            COMMON_GLOBAL.module_leaflet_session_map = '';
+            COMMON_GLOBAL.module_leaflet_session_map = Leaflet.map(containervalue).setView([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
+            map_setstyle(stylevalue).then(()=>{
+                //disable doubleclick in event dblclick since e.preventdefault() does not work
+                COMMON_GLOBAL.module_leaflet_session_map.doubleClickZoom.disable(); 
+    
+                //add scale
+                //position values: 'topleft', 'topright', 'bottomleft' or 'bottomright'
+                Leaflet.control.scale({position: 'topright'}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
 
-                    //add custom HTML inside div with class .leaflet-control
-                    const mapcontrol = document.querySelectorAll(`#${containervalue} .leaflet-control`);
-                    //add search button with expand content country select, city select and search input
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='Search' role='button'>
-                                                    <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
-                                                    <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
-                                                        <select id='common_module_leaflet_select_country'>
-                                                            ${COMMON_GLOBAL.module_leaflet_countries}
-                                                        </select>
-                                                        <select id='common_module_leaflet_select_city'  >
-                                                            <option value='' id='' label='…' selected='selected'>…</option>
-                                                        </select>
-                                                        <div id='common_module_leaflet_search_input_row'>
-                                                            <div id='common_module_leaflet_search_input' contenteditable=true class='common_input'/></div>
-                                                            <div id='common_module_leaflet_search_icon' class='common_icon'></div>
-                                                        </div>
-                                                        <div id='common_module_leaflet_search_list_wrap'>
-                                                            <div id='common_module_leaflet_search_list'></div>
-                                                        </div>
+                //add custom HTML inside div with class .leaflet-control
+                const mapcontrol = AppDocument.querySelectorAll(`#${containervalue} .leaflet-control`);
+                //add search button with expand content country select, city select and search input
+                mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_search' class='common_module_leaflet_control_button' title='Search' role='button'>
+                                                <div id='common_module_leaflet_control_search_button' class='common_icon'></div>
+                                                <div id='common_module_leaflet_control_expand_search' class='common_module_leaflet_control_expand'>
+                                                    <select id='common_module_leaflet_select_country'>
+                                                        ${COMMON_GLOBAL.module_leaflet_countries}
+                                                    </select>
+                                                    <select id='common_module_leaflet_select_city'  >
+                                                        <option value='' id='' label='…' selected='selected'>…</option>
+                                                    </select>
+                                                    <div id='common_module_leaflet_search_input_row'>
+                                                        <div id='common_module_leaflet_search_input' contenteditable=true class='common_input'/></div>
+                                                        <div id='common_module_leaflet_search_icon' class='common_icon'></div>
                                                     </div>
-                                                 </div>`;
-                    //add fullscreen button
-                    mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='Fullscreen' role='button'>
-                                                 </div>`;
-                    if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
-                        //add my location button
-                        mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button common_icon' title='My location' role='button'>
-                                                    </div>`;
-                    }
-                    //add layers button with pop out div
-                    let map_styles_options ='';
-                    for (const map_style_option of COMMON_GLOBAL.module_leaflet_map_styles){
-                        map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
-                    }
-                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
-                                                    <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
-                                                    <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
-                                                        <select id='common_module_leaflet_select_mapstyle' >
-                                                            ${map_styles_options}
-                                                        </select>
+                                                    <div id='common_module_leaflet_search_list_wrap'>
+                                                        <div id='common_module_leaflet_search_list'></div>
                                                     </div>
+                                                </div>
                                                 </div>`;
-                    SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, document.querySelector('#common_module_leaflet_select_mapstyle'),1);                
-                    
-                    //add search function in data-function that event delegation will use
-                    document.querySelector('#common_module_leaflet_search_input')['data-function'] = search_event_function;
-                    
-                    if (doubleclick_event){
-                        map_setevent('dblclick', (e) => {
-                            if (e.originalEvent.target.id == 'mapid'){
-                                const lng = e.latlng.lng;
-                                const lat = e.latlng.lat;
-                                //Update GPS position
-                                get_place_from_gps(lng, lat).then((gps_place) => {
-                                    map_update(lng,
-                                                lat,
-                                                '', //do not change zoom 
-                                                gps_place,
-                                                null,
-                                                COMMON_GLOBAL.module_leaflet_marker_div_gps,
-                                                COMMON_GLOBAL.module_leaflet_jumpto);
-                                });
-                            }
-                        });
-                    }
-                    resolve();
-                });
+                //add fullscreen button
+                mapcontrol[0].innerHTML +=  `<div id='common_module_leaflet_control_fullscreen_id' class='common_module_leaflet_control_button common_icon' title='Fullscreen' role='button'>
+                                                </div>`;
+                if (COMMON_GLOBAL.client_latitude!='' && COMMON_GLOBAL.client_longitude!=''){
+                    //add my location button
+                    mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_my_location_id' class='common_module_leaflet_control_button common_icon' title='My location' role='button'>
+                                                </div>`;
+                }
+                //add layers button with pop out div
+                let map_styles_options ='';
+                for (const map_style_option of COMMON_GLOBAL.module_leaflet_map_styles){
+                    map_styles_options +=`<option id=${map_style_option.id} value='${map_style_option.data}'>${map_style_option.description}</option>`;
+                }
+                mapcontrol[0].innerHTML += `<div id='common_module_leaflet_control_layer' class='common_module_leaflet_control_button' title='Layer' role='button'>
+                                                <div id='common_module_leaflet_control_layer_button' class='common_icon'></div>
+                                                <div id='common_module_leaflet_control_expand_layer' class='common_module_leaflet_control_expand'>
+                                                    <select id='common_module_leaflet_select_mapstyle' >
+                                                        ${map_styles_options}
+                                                    </select>
+                                                </div>
+                                            </div>`;
+                SearchAndSetSelectedIndex(COMMON_GLOBAL.module_leaflet_style, AppDocument.querySelector('#common_module_leaflet_select_mapstyle'),1);                
+                
+                //add search function in data-function that event delegation will use
+                AppDocument.querySelector('#common_module_leaflet_search_input')['data-function'] = search_event_function;
+                
+                if (doubleclick_event){
+                    map_setevent('dblclick', (e) => {
+                        if (e.originalEvent.target.id == 'mapid'){
+                            const lng = e.latlng.lng;
+                            const lat = e.latlng.lat;
+                            //Update GPS position
+                            get_place_from_gps(lng, lat).then((gps_place) => {
+                                map_update(lng,
+                                            lat,
+                                            '', //do not change zoom 
+                                            gps_place,
+                                            null,
+                                            COMMON_GLOBAL.module_leaflet_marker_div_gps,
+                                            COMMON_GLOBAL.module_leaflet_jumpto);
+                            });
+                        }
+                    });
+                }
+                resolve();
             });
         }
         else
@@ -2477,11 +2502,11 @@ const map_country = (lang_code) =>{
                 i++;
             }
             COMMON_GLOBAL.module_leaflet_countries = html;
-            if (document.querySelector('#common_module_leaflet_select_country')){
-                const select_country = document.querySelector('#common_module_leaflet_select_country');
-                const current_country = document.querySelector('#common_module_leaflet_select_country')[document.querySelector('#common_module_leaflet_select_country').selectedIndex].id;
+            if (AppDocument.querySelector('#common_module_leaflet_select_country')){
+                const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                const current_country = AppDocument.querySelector('#common_module_leaflet_select_country')[AppDocument.querySelector('#common_module_leaflet_select_country').selectedIndex].id;
                 select_country.innerHTML = html;
-                SearchAndSetSelectedIndex(current_country, document.querySelector('#common_module_leaflet_select_country'),0);    
+                SearchAndSetSelectedIndex(current_country, AppDocument.querySelector('#common_module_leaflet_select_country'),0);    
             }
             resolve();
         })
@@ -2492,7 +2517,7 @@ const map_country = (lang_code) =>{
     
 };
 const map_city = (country_code) =>{
-    const select_cities = document.querySelector('#common_module_leaflet_select_city');
+    const select_cities = AppDocument.querySelector('#common_module_leaflet_select_city');
     //set default option
     select_cities.innerHTML='<option value=\'\' id=\'\' label=\'…\' selected=\'selected\'>…</option>';
     if (country_code!=null){
@@ -2505,7 +2530,7 @@ const map_city = (country_code) =>{
 };
 const map_city_empty = () =>{
     //remove old city list:      
-    const select_city = document.querySelector('#common_module_leaflet_select_city');
+    const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
     const old_groups = select_city.querySelectorAll('optgroup');
     for (let old_index = old_groups.length - 1; old_index >= 0; old_index--)
         select_city.removeChild(old_groups[old_index]);
@@ -2513,14 +2538,14 @@ const map_city_empty = () =>{
     select_city.selectedIndex = 0;
 };
 const map_toolbar_reset = ()=>{
-    const select_country = document.querySelector('#common_module_leaflet_select_country');
+    const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
     select_country.selectedIndex = 0;
     map_city_empty();
-    document.querySelector('#common_module_leaflet_search_input').innerHTML ='';
-    document.querySelector('#common_module_leaflet_search_list').innerHTML ='';
-    if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+    AppDocument.querySelector('#common_module_leaflet_search_input').innerHTML ='';
+    AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML ='';
+    if (AppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
         map_control_toggle_expand('search');
-    if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+    if (AppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
         map_control_toggle_expand('layer');
 };
 const map_show_search_on_map = (data)=>{
@@ -2537,12 +2562,12 @@ const map_show_search_on_map = (data)=>{
 };
 const map_control_toggle_expand = (item) =>{
     let style_display;
-    if (document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
-        document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
+    if (AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display=='none' ||
+        AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display =='')
         style_display = 'block';
     else
         style_display = 'none';
-    document.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
+    AppDocument.querySelector(`#common_module_leaflet_control_expand_${item}`).style.display = style_display;
 };
 const map_resize = async () => {
     if (checkconnected()) {
@@ -2576,7 +2601,7 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
             'weight': width,
             'opacity': opacity
         };
-        const layer = COMMON_GLOBAL.module_leaflet_library.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+        const layer = Leaflet.geoJSON(geojsonFeature, {style: myStyle}).addTo(COMMON_GLOBAL.module_leaflet_session_map);
         if(!COMMON_GLOBAL.module_leaflet_session_map_layer)
             COMMON_GLOBAL.module_leaflet_session_map_layer=[];
             COMMON_GLOBAL.module_leaflet_session_map_layer.push(layer);
@@ -2585,7 +2610,7 @@ const map_line_create = (id, title, text_size, from_longitude, from_latitude, to
 const map_setevent = (event, function_event) => {
     if (checkconnected()) {
         //also creates event:
-        //COMMON_GLOBAL.module_leaflet_library.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
+        //Leaflet.DomEvent.addListener(COMMON_GLOBAL.module_leaflet_session_map, 'dblclick', function_event);
         COMMON_GLOBAL.module_leaflet_session_map.on(event, function_event);
     }
 };
@@ -2599,12 +2624,12 @@ const map_setstyle = async (mapstyle) => {
             //mapstyle_record [{id, description, data, data2, data3, data4, data5, session_map_layer});
             const mapstyle_record = COMMON_GLOBAL.module_leaflet_map_styles.filter(map_style=>map_style.data==mapstyle)[0];
             if (mapstyle_record.data3)
-                mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet_library.tileLayer(mapstyle_record.data2, {
+                mapstyle_record.session_map_layer = Leaflet.tileLayer(mapstyle_record.data2, {
                     maxZoom: mapstyle_record.data3,
                     attribution: mapstyle_record.data4
                 }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
             else
-                mapstyle_record.session_map_layer = COMMON_GLOBAL.module_leaflet_library.tileLayer(mapstyle_record.data2, {
+                mapstyle_record.session_map_layer = Leaflet.tileLayer(mapstyle_record.data2, {
                     attribution: mapstyle_record.data4
                 }).addTo(COMMON_GLOBAL.module_leaflet_session_map);
             resolve();
@@ -2614,26 +2639,25 @@ const map_setstyle = async (mapstyle) => {
     });
 };
 const map_update_popup = (title) => {
-    document.querySelector('#common_module_leaflet_popup_title').innerHTML = title;
+    AppDocument.querySelector('#common_module_leaflet_popup_title').innerHTML = title;
 };
 const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_text = null, marker_id, to_method) => {
-    const {getTimezone} = await import('regional');
     return new Promise((resolve)=> {
         if (checkconnected()) {
             const map_update_gps = (to_method, zoomvalue, longitude, latitude) => {
                 switch (Number(to_method)){
                     case 0:{
                         if (zoomvalue == '')
-                            COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet_library.LatLng(latitude, longitude));
+                            COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude));
                         else
-                            COMMON_GLOBAL.module_leaflet_session_map.setView(new COMMON_GLOBAL.module_leaflet_library.LatLng(latitude, longitude), zoomvalue);
+                            COMMON_GLOBAL.module_leaflet_session_map.setView(new Leaflet.LatLng(latitude, longitude), zoomvalue);
                         break;
                     }
                     case 1:{
                         COMMON_GLOBAL.module_leaflet_session_map.flyTo([latitude, longitude], COMMON_GLOBAL.module_leaflet_zoom);
                         break;
                     }
-                    //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new COMMON_GLOBAL.module_leaflet_library.LatLng({lng: longitude, lat: latitude}));
+                    //also have COMMON_GLOBAL.module_leaflet_session_map.panTo(new Leaflet.LatLng({lng: longitude, lat: latitude}));
                 }
             };
             const map_update_text = (timezone_text) => {
@@ -2641,11 +2665,11 @@ const map_update = async (longitude, latitude, zoomvalue, text_place, timezone_t
                                    <div id="common_module_leaflet_popup_sub_title" class='common_icon'></div>
                                    <div id="common_module_leaflet_popup_sub_title_timezone">${timezone_text}</div>
                                    <div id="common_module_leaflet_popup_sub_title_gps">${latitude + ', ' + longitude}</div>`;
-                COMMON_GLOBAL.module_leaflet_library.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
+                Leaflet.popup({ offset: [0, COMMON_GLOBAL.module_leaflet_popup_offset], closeOnClick: false })
                             .setLatLng([latitude, longitude])
                             .setContent(popuptext)
                             .openOn(COMMON_GLOBAL.module_leaflet_session_map);
-                const marker = COMMON_GLOBAL.module_leaflet_library.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
+                const marker = Leaflet.marker([latitude, longitude]).addTo(COMMON_GLOBAL.module_leaflet_session_map);
                 //setting id so apps can customize if necessary
                 marker._icon.id = marker_id;
                 resolve(timezone_text);
@@ -2812,7 +2836,7 @@ const broadcast_init = () => {
 const maintenance_countdown = (remaining) => {
     if(remaining <= 0)
         location.reload(true);
-    document.querySelector('#common_maintenance_countdown').innerHTML = remaining;
+    AppDocument.querySelector('#common_maintenance_countdown').innerHTML = remaining;
     setTimeout(()=>{ maintenance_countdown(remaining - 1); }, 1000);
 };
 const show_broadcast = (broadcast_message) => {
@@ -2821,7 +2845,7 @@ const show_broadcast = (broadcast_message) => {
     const message = JSON.parse(broadcast_message).broadcast_message;
     switch (broadcast_type){
         case 'MAINTENANCE':{
-            if (document.querySelector('#app'))
+            if (AppDocument.querySelector('#app'))
                 location.href = '/';
             else
                 if (message)
@@ -2844,19 +2868,19 @@ const show_broadcast = (broadcast_message) => {
     }
 };
 const show_broadcast_info = (message) => {
-    document.querySelector('#common_broadcast_info_message').style.animationName='common_ticker';
-    document.querySelector('#common_broadcast_info_message_item').innerHTML = message;
-    document.querySelector('#common_broadcast_info').style.visibility='visible';
+    AppDocument.querySelector('#common_broadcast_info_message').style.animationName='common_ticker';
+    AppDocument.querySelector('#common_broadcast_info_message_item').innerHTML = message;
+    AppDocument.querySelector('#common_broadcast_info').style.visibility='visible';
 };
 const show_maintenance = (message, init) => {
     const countdown_timer = 60;
 
     if (init==1){
-        document.querySelector('#common_dialogue_maintenance').style.visibility='visible';
+        AppDocument.querySelector('#common_dialogue_maintenance').style.visibility='visible';
         maintenance_countdown(countdown_timer);
     }
     else
-        document.querySelector('#common_maintenance_footer').innerHTML = message;
+        AppDocument.querySelector('#common_maintenance_footer').innerHTML = message;
 };
 const reconnect = () => {
     setTimeout(()=>{
@@ -2905,7 +2929,7 @@ const connectOnline = async () => {
 };
 const checkOnline = (div_icon_online, user_account_id) => {
     FFB('SOCKET', `/socket/connection/check?user_account_id=${user_account_id}`, 'GET', 'APP_DATA', null)
-    .then(result=>document.querySelector('#' + div_icon_online).className = JSON.parse(result).online == 1?'online':'offline');
+    .then(result=>AppDocument.querySelector('#' + div_icon_online).className = JSON.parse(result).online == 1?'online':'offline');
 };
 /*-----------------------
   SERVICE GEOLOCATION   
@@ -3027,8 +3051,8 @@ const get_cities = async countrycode => {
     });
 };
 const worldcities_search = async (event_function) =>{
-    const search = document.querySelector('#common_module_leaflet_search_input').innerText;
-    document.querySelector('#common_module_leaflet_search_list').innerHTML = '';
+    const search = AppDocument.querySelector('#common_module_leaflet_search_input').innerText;
+    AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML = '';
     if (search !=''){
         const get_cities = async (search) =>{
             return new Promise ((resolve)=>{
@@ -3037,9 +3061,9 @@ const worldcities_search = async (event_function) =>{
                 .catch(()=>resolve(null));
             });
         };
-        document.querySelector('#common_module_leaflet_search_list').classList.add('css_spinner');
+        AppDocument.querySelector('#common_module_leaflet_search_list').classList.add('css_spinner');
         const cities = await get_cities(search);
-        document.querySelector('#common_module_leaflet_search_list').classList.remove('css_spinner');
+        AppDocument.querySelector('#common_module_leaflet_search_list').classList.remove('css_spinner');
         let html = '';
         if (cities.length > 0){
             for (const city of cities){
@@ -3061,8 +3085,8 @@ const worldcities_search = async (event_function) =>{
                             </div>
                         </div>`;
             }
-            document.querySelector('#common_module_leaflet_search_list').innerHTML = html;
-            document.querySelector('#common_module_leaflet_search_list')['data-function'] = event_function;
+            AppDocument.querySelector('#common_module_leaflet_search_list').innerHTML = html;
+            AppDocument.querySelector('#common_module_leaflet_search_list')['data-function'] = event_function;
         }
     }
 };
@@ -3136,10 +3160,15 @@ const set_app_service_parameters = async (parameters) => {
 const disable_textediting = () =>(COMMON_GLOBAL.app_id == COMMON_GLOBAL.common_app_id && 
                                 COMMON_GLOBAL.rest_at =='' && COMMON_GLOBAL.rest_admin_at =='') ||
                                 COMMON_GLOBAL.app_id != COMMON_GLOBAL.common_app_id;
+/**
+ * Common events
+ * @param {string} event_type 
+ * @param {AppEvent} event 
+ */
 const common_event = async (event_type,event) =>{
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener(event_type,event => {
+        AppDocument.querySelector('#app').addEventListener(event_type, (/**@type{AppEvent}*/event) => {
             common_event(event_type, event);
         });
     }
@@ -3157,13 +3186,13 @@ const common_event = async (event_type,event) =>{
                     switch(event_target_id){
                         case event.target.classList.contains('common_select_dropdown_value')?event_target_id:'':
                         case event.target.classList.contains('common_select_dropdown_icon')?event_target_id:'':{
-                            document.querySelector(`#${event_target_id} .common_select_options`).style.display = 
-                                document.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
+                            AppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display = 
+                                AppDocument.querySelector(`#${event_target_id} .common_select_options`).style.display=='block'?'none':'block';
                             break;
                         }
                         case event.target.classList.contains('common_select_option')?event_target_id:'':{
-                            document.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
-                            document.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
+                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).innerHTML = event.target.innerHTML;
+                            AppDocument.querySelector(`#${event_target_id} .common_select_dropdown_value`).setAttribute('data-value', event.target.getAttribute('data-value'));
                             event.target.parentNode.style.display = 'none';
                             break;
                         }
@@ -3172,11 +3201,11 @@ const common_event = async (event_type,event) =>{
                         case 'common_user_start_login_system_admin':
                         case 'common_user_start_signup':
                         case 'common_user_start_forgot':{
-                            document.querySelectorAll('#common_user_start_nav > div').forEach(tab=>tab.classList.remove('common_user_start_selected'));
-                            document.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
+                            AppDocument.querySelectorAll('#common_user_start_nav > div').forEach(tab=>tab.classList.remove('common_user_start_selected'));
+                            AppDocument.querySelector(`#${event_target_id}`).classList.add('common_user_start_selected');
                             
-                            document.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach(form=>form.style.display='none');
-                            document.querySelector(`#${event_target_id}_form`).style.display='inline-block';
+                            AppDocument.querySelectorAll('#common_dialogue_user_start_content .common_user_start_form').forEach(form=>form.style.display='none');
+                            AppDocument.querySelector(`#${event_target_id}_form`).style.display='inline-block';
     
                             break;
                         }
@@ -3190,15 +3219,15 @@ const common_event = async (event_type,event) =>{
                         }
                         //dialogue message
                         case 'common_message_close':{
-                            if (document.querySelector('#common_message_close')['data-function'])
-                                document.querySelector('#common_message_close')['data-function']();
-                            document.querySelector('#common_message_close')['data-function'] = null;
-                            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
-                            document.querySelector('#common_message_title').innerHTML ='';
+                            if (AppDocument.querySelector('#common_message_close')['data-function'])
+                                AppDocument.querySelector('#common_message_close')['data-function']();
+                            AppDocument.querySelector('#common_message_close')['data-function'] = null;
+                            AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                            AppDocument.querySelector('#common_message_title').innerHTML ='';
                             break;
                         }
                         case 'common_message_cancel':{
-                            document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                            AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                             break;
                         }
                         //dialouge password
@@ -3212,7 +3241,7 @@ const common_event = async (event_type,event) =>{
                         }
                         //dialogue lov
                         case 'common_lov_search_icon':{
-                            lov_filter(document.querySelector('#common_lov_search_input').innerHTML);
+                            lov_filter(AppDocument.querySelector('#common_lov_search_input').innerHTML);
                             break;
                         }
                         case 'common_lov_close':{
@@ -3220,17 +3249,17 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_profile_search_icon':{
-                            document.querySelector('#common_profile_search_input').focus();
-                            document.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            AppDocument.querySelector('#common_profile_search_input').focus();
+                            AppDocument.querySelector('#common_profile_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
                         //window info
                         case 'common_window_info_btn_close':{
-                            document.querySelector('#common_window_info').style.visibility = 'hidden'; 
-                            document.querySelector('#common_window_info_info').innerHTML='';
-                            document.querySelector('#common_window_info_content').src='';
-                            document.querySelector('#common_window_info_content').classList='';
-                            document.querySelector('#common_window_info_toolbar').classList='';
+                            AppDocument.querySelector('#common_window_info').style.visibility = 'hidden'; 
+                            AppDocument.querySelector('#common_window_info_info').innerHTML='';
+                            AppDocument.querySelector('#common_window_info_content').src='';
+                            AppDocument.querySelector('#common_window_info_content').classList='';
+                            AppDocument.querySelector('#common_window_info_toolbar').classList='';
                             break;
                         }
                         case 'common_window_info_info':{
@@ -3262,10 +3291,10 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_window_info_toolbar_btn_fullscreen':{
-                            if (document.fullscreenElement)
-                                document.exitFullscreen();
+                            if (AppDocument.fullscreenElement)
+                                AppDocument.exitFullscreen();
                             else
-                                document.body.requestFullscreen();
+                                AppDocument.body.requestFullscreen();
                             break;
                         }
                         //user menu
@@ -3275,7 +3304,7 @@ const common_event = async (event_type,event) =>{
                         case 'common_user_menu_avatar_img':
                         case 'common_user_menu_logged_out':
                         case 'common_user_menu_default_avatar':{
-                            const menu = document.querySelector('#common_user_menu_dropdown');
+                            const menu = AppDocument.querySelector('#common_user_menu_dropdown');
                             if (menu.style.visibility == 'visible') 
                                 menu.style.visibility = 'hidden'; 
                             else 
@@ -3283,19 +3312,19 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_user_menu_dropdown_log_in':{
-                            document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                            AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
                             show_common_dialogue('LOGIN');
                             break;
                         }
                         case 'common_user_menu_dropdown_edit':{
                             await user_edit()
                             .then(()=>{
-                                document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
                             });
                             break;
                         }
                         case 'common_user_menu_dropdown_signup':{
-                            document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                            AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
                             show_common_dialogue('SIGNUP');
                             break;
                         }
@@ -3305,11 +3334,11 @@ const common_event = async (event_type,event) =>{
                             break;
                         }
                         case 'common_user_edit_btn_avatar_img':{
-                            document.querySelector('#common_user_edit_input_avatar_img').click();
+                            AppDocument.querySelector('#common_user_edit_input_avatar_img').click();
                             break;
                         }
                         case 'common_user_edit_input_avatar_img':{
-                            show_image(document.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
+                            show_image(AppDocument.querySelector('#common_user_edit_avatar_img'), event.target.id, COMMON_GLOBAL.image_avatar_width, COMMON_GLOBAL.image_avatar_height);
                             break;
                         }
                         case 'common_user_edit_btn_user_update':{
@@ -3318,16 +3347,16 @@ const common_event = async (event_type,event) =>{
                         }
                         //dialogue verify
                         case 'common_user_verify_cancel':{
-                            if (document.querySelector('#common_user_verify_cancel')['data-function'])
-                                document.querySelector('#common_user_verify_cancel')['data-function']();
+                            if (AppDocument.querySelector('#common_user_verify_cancel')['data-function'])
+                                AppDocument.querySelector('#common_user_verify_cancel')['data-function']();
                             dialogue_verify_clear();
                             break;
                         }
                         //search list
                         case 'common_profile_search_list':{
                             if (event.target.classList.contains('common_profile_search_list_username')){
-                                if (document.querySelector('#common_profile_search_list')['data-function']){
-                                    document.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                if (AppDocument.querySelector('#common_profile_search_list')['data-function']){
+                                    AppDocument.querySelector('#common_profile_search_list')['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 }
                                 else
                                     await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
@@ -3340,8 +3369,8 @@ const common_event = async (event_type,event) =>{
                             if (event.target.classList.contains('common_profile_top_list_username')||
                                 event.target.classList.contains('common_profile_detail_list_username')){
                                 //execute function from inparameter or use default when not specified
-                                if (document.querySelector(`#${element_id(event.target)}`)['data-function'])
-                                    document.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
+                                if (AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'])
+                                    AppDocument.querySelector(`#${element_id(event.target)}`)['data-function'](element_row(event.target).getAttribute('data-user_account_id'));
                                 else
                                     await profile_show(element_row(event.target).getAttribute('data-user_account_id'),null);
                             }
@@ -3351,15 +3380,15 @@ const common_event = async (event_type,event) =>{
                                     window.open(element_row(event.target).getAttribute('data-url'), '_blank');
                                 }
                                 else
-                                    if (document.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
+                                    if (AppDocument.querySelector('#common_profile_id').innerHTML==COMMON_GLOBAL.user_account_id &&
                                         event.target.parentNode.classList.contains('common_profile_detail_list_app_delete')){
                                             await user_account_app_delete(null, 
-                                                                    document.querySelector('#common_profile_id').innerHTML,
+                                                                    AppDocument.querySelector('#common_profile_id').innerHTML,
                                                                     element_row(event.target).getAttribute('data-app_id'),
                                                                     () => { 
-                                                                        document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                                                                        AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                                                                         user_account_app_delete(1, 
-                                                                                                document.querySelector('#common_profile_id').innerHTML, 
+                                                                                                AppDocument.querySelector('#common_profile_id').innerHTML, 
                                                                                                 element_row(event.target).getAttribute('data-app_id'), 
                                                                                                 null);
                                                                     });
@@ -3369,28 +3398,28 @@ const common_event = async (event_type,event) =>{
                         }
                         //broadcast
                         case 'common_broadcast_close':{
-                            document.querySelector('#common_broadcast_info').style.visibility='hidden';
-                            document.querySelector('#common_broadcast_info_message_item').innerHTML='';
-                            document.querySelector('#common_broadcast_info_message').style.animationName='unset';
+                            AppDocument.querySelector('#common_broadcast_info').style.visibility='hidden';
+                            AppDocument.querySelector('#common_broadcast_info_message_item').innerHTML='';
+                            AppDocument.querySelector('#common_broadcast_info_message').style.animationName='unset';
                             break;
                         }
                         //module leaflet
                         case 'common_module_leaflet_search_icon':{
-                            document.querySelector('#common_module_leaflet_search_input').focus();
-                            document.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
+                            AppDocument.querySelector('#common_module_leaflet_search_input').focus();
+                            AppDocument.querySelector('#common_module_leaflet_search_input').dispatchEvent(new KeyboardEvent('keyup'));
                             break;
                         }
                         case 'common_module_leaflet_control_search_button':{
-                            if (document.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
+                            if (AppDocument.querySelector('#common_module_leaflet_control_expand_layer').style.display=='block')
                                 map_control_toggle_expand('layer');
                             map_control_toggle_expand('search');
                             break;
                         }
                         case 'common_module_leaflet_control_fullscreen_id':{
-                            if (document.fullscreenElement)
-                                document.exitFullscreen();
+                            if (AppDocument.fullscreenElement)
+                                AppDocument.exitFullscreen();
                             else
-                                document.querySelector('.leaflet-container').requestFullscreen();
+                                AppDocument.querySelector('.leaflet-container').requestFullscreen();
                             break;
                         }
                         case 'common_module_leaflet_control_my_location_id':{
@@ -3402,14 +3431,14 @@ const common_event = async (event_type,event) =>{
                                             null,
                                             COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                             COMMON_GLOBAL.module_leaflet_jumpto);
-                                const select_country = document.querySelector('#common_module_leaflet_select_country');
+                                const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
                                 select_country.selectedIndex = 0;
                                 map_toolbar_reset();
                             }
                             break;
                         }
                         case 'common_module_leaflet_control_layer_button':{
-                            if (document.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
+                            if (AppDocument.querySelector('#common_module_leaflet_control_expand_search').style.display=='block')
                                 map_toolbar_reset();
                             map_control_toggle_expand('layer');
                             break;
@@ -3422,8 +3451,8 @@ const common_event = async (event_type,event) =>{
                                                 latitude: element_row(event.target).getAttribute('data-latitude'),
                                                 longitude: element_row(event.target).getAttribute('data-longitude')
                                             };
-                                if (document.querySelector('#common_module_leaflet_search_list')['data-function']){
-                                    document.querySelector('#common_module_leaflet_search_list')['data-function'](data);
+                                if (AppDocument.querySelector('#common_module_leaflet_search_list')['data-function']){
+                                    AppDocument.querySelector('#common_module_leaflet_search_list')['data-function'](data);
                                     map_toolbar_reset();
                                 }
                                 else
@@ -3438,15 +3467,15 @@ const common_event = async (event_type,event) =>{
                         case 'common_profile_main_btn_liked_heart':
                         case 'common_profile_main_btn_liked_users':
                         case 'common_profile_main_btn_cloud':{    
-                            document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
-                            document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                            AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                            AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                             break;
                         }
                         case 'common_toolbar_framework_js':
                         case 'common_toolbar_framework_vue':
                         case 'common_toolbar_framework_react':{
-                            document.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach(btn=>btn.classList.remove('common_toolbar_selected'));
-                            document.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
+                            AppDocument.querySelectorAll('#common_toolbar_framework .common_toolbar_selected').forEach(btn=>btn.classList.remove('common_toolbar_selected'));
+                            AppDocument.querySelector(`#${event_target_id}`).classList.add('common_toolbar_selected');
                             break;
                         }    
                         default:{
@@ -3474,7 +3503,7 @@ const common_event = async (event_type,event) =>{
                     case 'common_user_timezone_select':{
                         COMMON_GLOBAL.user_timezone = event.target.value;
                         await user_preference_save().then(()=>{
-                            if (document.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
+                            if (AppDocument.querySelector('#common_dialogue_user_edit').style.visibility == 'visible') {
                                 dialogue_user_edit_clear();
                                 user_edit();
                             }
@@ -3483,9 +3512,9 @@ const common_event = async (event_type,event) =>{
                     }
                     case 'common_user_direction_select':{
                         if(event.target.value=='rtl')
-                            document.body.classList.add('rtl');
+                            AppDocument.body.classList.add('rtl');
                         else
-                            document.body.classList.remove('rtl');
+                            AppDocument.body.classList.remove('rtl');
                         COMMON_GLOBAL.user_direction = event.target.value;  
                         await user_preference_save();
                         break;
@@ -3497,16 +3526,16 @@ const common_event = async (event_type,event) =>{
                     }
                     //module leaflet events
                     case 'common_module_leaflet_select_country':{
-                        if (event.target[event.target.selectedIndex].getAttribute('country_code'))
-                            map_city(event.target[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
+                        if (event.target.options[event.target.selectedIndex].getAttribute('country_code'))
+                            map_city(event.target.options[event.target.selectedIndex].getAttribute('country_code').toUpperCase());
                         else{
                             map_toolbar_reset();
                         }
                         break;
                     }
                     case 'common_module_leaflet_select_city':{
-                        const longitude_selected = event.target[event.target.selectedIndex].getAttribute('longitude');
-                        const latitude_selected = event.target[event.target.selectedIndex].getAttribute('latitude');
+                        const longitude_selected = event.target.options[event.target.selectedIndex].getAttribute('longitude');
+                        const latitude_selected = event.target.options[event.target.selectedIndex].getAttribute('latitude');
                         map_update( longitude_selected, 
                                     latitude_selected, 
                                     COMMON_GLOBAL.module_leaflet_zoom_city,
@@ -3532,7 +3561,7 @@ const common_event = async (event_type,event) =>{
                 if (event.target.classList.contains('common_password')){
                     if (event.target.innerText.indexOf('\n')>-1)
                         event.target.innerText = event.target.innerText.replace('\n','');
-                    document.querySelector(`#${event.target.id}_mask`).innerText = 
+                    AppDocument.querySelector(`#${event.target.id}_mask`).innerText = 
                         event.target.innerText.replace(event.target.innerText, '*'.repeat(LengthWithoutDiacrites(event.target.innerText)));
                 }
                 else
@@ -3542,7 +3571,7 @@ const common_event = async (event_type,event) =>{
                                 event.preventDefault();
                                 await user_forgot().then(()=>{
                                     //unfocus
-                                    document.querySelector('#common_user_start_forgot_email').blur();
+                                    AppDocument.querySelector('#common_user_start_forgot_email').blur();
                                 });
                             }
                             break;
@@ -3588,26 +3617,31 @@ const common_event = async (event_type,event) =>{
 };
 /**
  * Sets common events for all apps
+ * @returns {void}
  */
 const set_events = () => {
     //only works on document level:
-    document.addEventListener('keydown', (event) =>{ 
+    AppDocument.addEventListener('keydown', (/**@type{AppEvent}*/event) =>{ 
         if (event.key === 'Escape') {
             event.preventDefault();
             //hide use menu dropdown
-            if (document.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
-                document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
-            if (document.querySelector('#common_profile_input_row')){
+            if (AppDocument.querySelector('#common_user_menu_dropdown').style.visibility=='visible')
+                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+            if (AppDocument.querySelector('#common_profile_input_row')){
                 //hide search
-                const x = document.querySelector('#common_profile_input_row'); 
+                const x = AppDocument.querySelector('#common_profile_input_row'); 
                 if (x.style.visibility == 'visible') {
                     x.style.visibility = 'hidden';
-                    document.querySelector('#common_profile_search_list_wrap').style.display = 'none';
+                    AppDocument.querySelector('#common_profile_search_list_wrap').style.display = 'none';
                 } 
             }
         }
     }, false);
 
+    /**
+     * Disable copy cut paste
+     * @param {AppEvent} event 
+     */
     const disable_copy_paste_cut = event => {
         if (disable_textediting())
             if(event.target.nodeName !='SELECT'){
@@ -3615,6 +3649,10 @@ const set_events = () => {
                 event.target.focus();
             }
     };
+    /**
+     * Disable common input textediting
+     * @param {AppEvent} event 
+     */
     const disable_common_input = event => {
         if (disable_textediting())
             if (event.target.classList.contains('common_input')){
@@ -3622,19 +3660,19 @@ const set_events = () => {
                 event.target.focus();
             }
     };
-    document.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('mousedown', disable_copy_paste_cut, false);
-    document.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
+    AppDocument.querySelector('#app').addEventListener('copy', disable_copy_paste_cut, false);
+    AppDocument.querySelector('#app').addEventListener('paste', disable_copy_paste_cut, false);
+    AppDocument.querySelector('#app').addEventListener('cut', disable_copy_paste_cut, false);
+    AppDocument.querySelector('#app').addEventListener('mousedown', disable_copy_paste_cut, false);
+    AppDocument.querySelector('#app').addEventListener('touchstart', disable_common_input, false);
 
 };
 const set_user_account_app_settings = () =>{
-    if (document.querySelector('#common_user_menu')){
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, document.querySelector('#common_user_locale_select'), 1);
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, document.querySelector('#common_user_timezone_select'), 1);
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, document.querySelector('#common_user_direction_select'), 1);
-        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, document.querySelector('#common_user_arabic_script_select'), 1);
+    if (AppDocument.querySelector('#common_user_menu')){
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_locale, AppDocument.querySelector('#common_user_locale_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_timezone, AppDocument.querySelector('#common_user_timezone_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_direction, AppDocument.querySelector('#common_user_direction_select'), 1);
+        SearchAndSetSelectedIndex(COMMON_GLOBAL.user_arabic_script, AppDocument.querySelector('#common_user_arabic_script_select'), 1);
     }
 };
 const set_app_parameters = (common_parameters) => {
@@ -3684,8 +3722,8 @@ const mount_app = async (framework, events) => {
     const app_root_div  = 'app_root';
     const app_div       = 'app';
     //remove listeners
-    document.querySelector(`#${app_root_div}`).replaceWith(document.querySelector(`#${app_root_div}`).cloneNode(true));
-    document.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
+    AppDocument.querySelector(`#${app_root_div}`).replaceWith(AppDocument.querySelector(`#${app_root_div}`).cloneNode(true));
+    AppDocument.querySelector(`#${app_root_div}`).removeAttribute('data-v-app');
 
     //set default function if anyone missing
     events.Change?null:events.Change = ((event)=>common_event('change', event));
@@ -3698,7 +3736,6 @@ const mount_app = async (framework, events) => {
     switch (framework ?? COMMON_GLOBAL.framework){
         case '2':{
             //Vue
-            const Vue = await import('Vue');
             Vue.createApp({
                 data() {
                         return {};
@@ -3710,7 +3747,7 @@ const mount_app = async (framework, events) => {
                                         @focus  ='AppEventFocus($event)' 
                                         @keydown='AppEventKeyDown($event)' 
                                         @keyup  ='AppEventKeyUp($event)'>
-                                        ${document.querySelector('#' + app_div).innerHTML}
+                                        ${AppDocument.querySelector('#' + app_div).innerHTML}
                                     </div>`, 
                         methods:{
                             AppEventChange: (event) => {
@@ -3737,8 +3774,6 @@ const mount_app = async (framework, events) => {
         }
         case '3':{
             //React
-            const {React} = await import('React');
-            const {ReactDOM} = await import('ReactDOM');
             const App = () => {
                 //onClick handles single and doubleclick in this React component since onClick and onDoubleClick does not work in React
                 //without tricks
@@ -3750,15 +3785,15 @@ const mount_app = async (framework, events) => {
                                                     onClick:   ()=> {events.Click(event);}
                                                     });
             };
-            const app_old = document.querySelector('#' + app_div).innerHTML;
-            const application = ReactDOM.createRoot(document.querySelector('#' + app_root_div));
+            const app_old = AppDocument.querySelector('#' + app_div).innerHTML;
+            const application = ReactDOM.createRoot(AppDocument.querySelector('#' + app_root_div));
             //JSX syntax
             //application.render( <App/>);
             //Using pure Javascript
             application.render( App());
             //set delay so some browsers render ok.
             await new Promise ((resolve)=>{setTimeout(()=> resolve(), 200);});
-            document.querySelector('#' + app_div).innerHTML = app_old;
+            AppDocument.querySelector('#' + app_div).innerHTML = app_old;
             events.Change();
             events.Focus();
             events.Input();
@@ -3785,8 +3820,8 @@ const init_common = async (parameters) => {
         if (COMMON_GLOBAL.app_id ==null)
             set_app_service_parameters(parameters.app_service);
         if (COMMON_GLOBAL.app_framework==0){
-            document.querySelector('#common_toolbar_framework').classList.add('show');
-            document.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
+            AppDocument.querySelector('#common_toolbar_framework').classList.add('show');
+            AppDocument.querySelector('#common_toolbar_framework_js').classList.add('common_toolbar_selected');
         }
             
         broadcast_init();
