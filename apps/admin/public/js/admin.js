@@ -1,49 +1,75 @@
+/**@ts-ignore */
 const common = await import('common');
+/**@ts-ignore */
 const app_secure = await import('app_secure');
 
+/**@type{{body:{className:string},
+ *        querySelector:function,
+ *        querySelectorAll:function}} */
+const AppDocument = document;
+
+/**
+ * @typedef {object} AppEvent
+ * @property {string} code
+ * @property {function} preventDefault
+ * @property {object} target
+ * @property {string} target.id
+ * @property {string} target.value
+ */
+/**
+ * Admin log off
+ */
 const admin_logoff_app = () => {
     const clear_common = () => {
         app_secure.delete_globals();
-        document.querySelector('#select_broadcast_type').classList.remove('admin','system_admin');
-        document.querySelector('#menu_secure').classList.remove('admin','system_admin');
-        document.querySelectorAll('.main_content').forEach(content => {
+        AppDocument.querySelector('#select_broadcast_type').classList.remove('admin','system_admin');
+        AppDocument.querySelector('#select_broadcast_type').classList.remove('admin','system_admin');
+        AppDocument.querySelector('#menu_secure').classList.remove('admin','system_admin');
+        AppDocument.querySelectorAll('.main_content').forEach((/**@type{Element}*/content) => {
             content.innerHTML = '';
         });
         common.show_common_dialogue('LOGIN');
-        document.querySelector('#menu').style.visibility = 'hidden';
-        document.querySelector('#menu_open').style.visibility = 'hidden';
-        document.querySelector('#admin_secure').style.visibility = 'hidden';
+        AppDocument.querySelector('#menu').style.visibility = 'hidden';
+        AppDocument.querySelector('#menu_open').style.visibility = 'hidden';
+        AppDocument.querySelector('#admin_secure').style.visibility = 'hidden';
     };
     common.user_logoff(common.COMMON_GLOBAL.system_admin != '').then(() => {
         clear_common();
     });
 };
+/**
+ * Admin login
+ */
 const admin_login = async () => {
     let system_admin = false;
-    if (document.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
+    if (AppDocument.querySelector('#common_user_start_nav .common_user_start_selected').id == 'common_user_start_login_system_admin')
         system_admin = true;
     await common.user_login(system_admin)
     .then(()=>{
         if (system_admin){
-            document.querySelector('#menu').style.visibility = 'visible';
-            document.querySelector('#menu_open').style.visibility = 'visible';
-            document.querySelector('#admin_secure').style.visibility = 'visible';
+            AppDocument.querySelector('#menu').style.visibility = 'visible';
+            AppDocument.querySelector('#menu_open').style.visibility = 'visible';
+            AppDocument.querySelector('#admin_secure').style.visibility = 'visible';
             app_secure.init();
         }
         else{
-            document.querySelector('#menu').style.visibility = 'visible';
-            document.querySelector('#menu_open').style.visibility = 'visible';
-            document.querySelector('#common_user_preferences').style.display = 'block';
-            document.querySelector('#admin_secure').style.visibility = 'visible';
+            AppDocument.querySelector('#menu').style.visibility = 'visible';
+            AppDocument.querySelector('#menu_open').style.visibility = 'visible';
+            AppDocument.querySelector('#common_user_preferences').style.display = 'block';
+            AppDocument.querySelector('#admin_secure').style.visibility = 'visible';
             app_secure.init();
         }
     })
     .catch(()=>null);
 };
+/**
+ * Event click
+ * @param {AppEvent} event 
+ */
 const app_event_click = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('click',(event) => {
+        AppDocument.querySelector('#app').addEventListener('click', (/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
     }
@@ -71,11 +97,11 @@ const app_event_click = event => {
                     break;
                 }
                 case 'menu_open':{
-                    document.querySelector('#menu').style.display = 'block';
+                    AppDocument.querySelector('#menu').style.display = 'block';
                     break;
                 }
                 case 'menu_close': {
-                    document.querySelector('#menu').style.display = 'none';
+                    AppDocument.querySelector('#menu').style.display = 'none';
                     break;
                 }
                 case 'menu_1':
@@ -97,7 +123,7 @@ const app_event_click = event => {
                 }
                 //common
                 case 'common_message_cancel':{
-                    document.querySelector('#common_dialogue_message').style.visibility = 'hidden';
+                    AppDocument.querySelector('#common_dialogue_message').style.visibility = 'hidden';
                     break;
                 }
                 case 'common_profile_home':{
@@ -148,9 +174,9 @@ const app_event_click = event => {
                 }
                 case 'common_user_menu_username':{
                     if (common.COMMON_GLOBAL.system_admin == ''){
-                        document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                        AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                         common.profile_show(null,null);
-                        document.querySelector('#common_user_menu_dropdown').style = 'none';
+                        AppDocument.querySelector('#common_user_menu_dropdown').style = 'none';
                     }
                     break;
                 }
@@ -162,11 +188,14 @@ const app_event_click = event => {
         });
     }
 };
-
+/**
+ * Event change
+ * @param {AppEvent} event 
+ */
 const app_event_change = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('change',(event) => {
+        AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         });
     }
@@ -176,17 +205,18 @@ const app_event_change = event => {
         .then(()=>{
             switch (event_target_id){
                 case 'common_user_locale_select':{
-                    common.common_translate_ui(event.target.value, ()=>{});
+                    common.common_translate_ui((/**@type{AppEvent}*/event.target.value), ()=>{});
                     break;
                 }
                 case 'common_user_arabic_script_select':{
-                    document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                    AppDocument.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
                     break;
                 }
                 case 'common_app_select_theme':{
-                    document.body.className = 'app_theme' + 
-                                                document.querySelector('#common_app_select_theme').value + ' ' + 
-                                                document.querySelector('#common_user_arabic_script_select').value;
+                    /**@ts-ignore */
+                    AppDocument.body.className = 'app_theme' + 
+                                                AppDocument.querySelector('#common_app_select_theme').value + ' ' + 
+                                                AppDocument.querySelector('#common_user_arabic_script_select').value;
                     break;
                 }
                 default:{
@@ -197,11 +227,14 @@ const app_event_change = event => {
         });
     }
 };
-
+/**
+ * Event keyup
+ * @param {AppEvent} event 
+ */
 const app_event_keyup = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('keyup',(event) => {
+        AppDocument.querySelector('#app').addEventListener('keyup',(/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         });
     }
@@ -219,7 +252,7 @@ const app_event_keyup = event => {
                         event.preventDefault();
                         admin_login().then(() => {
                             //unfocus
-                            document.querySelector('#' + event.target.id).blur();
+                            AppDocument.querySelector('#' + event_target_id).blur();
                         });
                     }
                     break;
@@ -231,11 +264,14 @@ const app_event_keyup = event => {
         });
     }
 };
-
+/**
+ * Event keydown
+ * @param {AppEvent} event 
+ */
 const app_event_keydown = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('keydown',(event) => {
+        AppDocument.querySelector('#app').addEventListener('keydown',(/**@type{AppEvent}*/event) => {
             app_event_keydown(event);
         });
     }
@@ -247,10 +283,14 @@ const app_event_keydown = event => {
         });
     }
 };
+/**
+ * Event input
+ * @param {AppEvent} event 
+ */
 const app_event_input = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('input',(event) => {
+        AppDocument.querySelector('#app').addEventListener('input',(/**@type{AppEvent}*/event) => {
             app_event_input(event);
         }, true);
     }
@@ -262,10 +302,14 @@ const app_event_input = event => {
         });
     }
 };
+/**
+ * Event focus
+ * @param {AppEvent} event 
+ */
 const app_event_focus = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('focus',(event) => {
+        AppDocument.querySelector('#app').addEventListener('focus',(/**@type{AppEvent}*/event) => {
             app_event_focus(event);
         }, true);
     }
@@ -278,10 +322,18 @@ const app_event_focus = event => {
     }
 };
 
+/**
+ * Exception function
+ * @param {Error} error 
+ */
 const admin_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
-const mount_app_app = async framework => {
+/**
+ * Mounts app
+ * @param {string|null} framework 
+ */
+const mount_app_app = async (framework=null) => {
     await common.mount_app(framework,
         {   Click: app_event_click,
             Change: app_event_change,
@@ -297,15 +349,19 @@ const mount_app_app = async framework => {
                 common.show_common_dialogue('LOGIN'); 
     });
 };
+/**
+ * App init
+ * @param {*} parameters 
+ */
 const init_app = (parameters) => {
-    document.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
+    AppDocument.querySelector('#common_user_start_login_system_admin').style.display = 'inline-block';
     if (parameters.app_service.first_time == 1) {
-        document.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
-        document.querySelector('#common_user_start_login_system_admin_password_confirm').style.display = 'block';
+        AppDocument.querySelector('#common_user_start_login_system_admin_first_time').style.display = 'block';
+        AppDocument.querySelector('#common_user_start_login_system_admin_password_confirm').style.display = 'block';
     }
     if (parameters.app_service.system_admin_only == 1) {
-        document.querySelector('#common_user_start_login').style.display = 'none';
-        document.querySelector('#common_user_start_login_form').style.display = 'none';
+        AppDocument.querySelector('#common_user_start_login').style.display = 'none';
+        AppDocument.querySelector('#common_user_start_login_form').style.display = 'none';
     }
     else {
         for (let i = 0; i < parameters.app.length; i++) {
@@ -325,16 +381,20 @@ const init_app = (parameters) => {
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale);
     mount_app_app()
-    .then (()=>document.querySelector('#common_user_start_login_button').classList.remove('css_spinner'))
-    .catch(()=>document.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
+    .then (()=>AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner'))
+    .catch(()=>AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
 };
+/**
+ * Init common
+ * @param {*} parameters 
+ */
 const init = (parameters) => {
     //show admin login as default
-    document.querySelector('#common_user_start_login_button').classList.add('css_spinner');
+    AppDocument.querySelector('#common_user_start_login_button').classList.add('css_spinner');
     common.COMMON_GLOBAL.exception_app_function = admin_exception;
     common.init_common(parameters).then(()=>{
         init_app(parameters);  
     })
-    .catch(()=>document.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
+    .catch(()=>AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner'));
 };
 export { init };
