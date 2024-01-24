@@ -1,19 +1,35 @@
-/*  Functions and globals in this order:
-    REPORT (USES MODULE PRAYTIMES)
-    THEME
-    UI
-    USER
-    USER SETTING
-    EVENTS
-    SERVICE WORKER
-    MODULE LEAFLET
-    EXCEPTION
-    INIT
-*/
+/**@ts-ignore */
 const common = await import('common');
+/**@ts-ignore */
 const app_report = await import('app_report');
+/**@ts-ignore */
+const {prayTimes} = await import('PrayTimes');
+/**@ts-ignore */
+const {getTimezone} = await import('regional');
+
+/**@type{{body:{className:string},
+ *        querySelector:function,
+ *        querySelectorAll:function}} */
+const AppDocument = document;
+
+/**
+ * @typedef {object}        AppEvent
+ * @property {string}       code
+ * @property {function}     preventDefault
+ * @property {function}     stopPropagation
+ * @property {{ id:                 string,
+ *              innerHTML:          string,
+ *              value:              string,
+ *              focus:              function,
+ *              blur:               function,
+ *              dispatchEvent:      function,
+ *              classList:          {contains:function}
+ *              className:          string
+ *            }}  target
+ */
+
 const APP_GLOBAL = {
-    app_default_startup_page:'',
+    app_default_startup_page:0,
     app_report_timetable:'',
 
     regional_default_direction:'',
@@ -23,7 +39,7 @@ const APP_GLOBAL = {
     regional_default_calendartype:'',
     regional_default_calendar_hijri_type:'',
 
-    gps_default_place_id:'',
+    gps_default_place_id:0,
     gps_module_leaflet_container:'',
     gps_module_leaflet_qibbla_title:'',
     gps_module_leaflet_qibbla_text_size:'',
@@ -79,16 +95,16 @@ const APP_GLOBAL = {
     prayer_default_show_fast_start_end:'',
 
     //session variables
-    timetable_type:''
+    timetable_type:0
 };
 Object.seal(APP_GLOBAL);
-/*----------------------- */
-/* REPORT                 */
-/*----------------------- */
-
-const printTable = () => {
+/**
+ * Print timetable
+ * @returns {void}
+ */
+const printTimetable = () => {
     dialogue_loading(1);
-    const whatToPrint = document.querySelector('#paper');
+    const whatToPrint = AppDocument.querySelector('#paper');
 	const html = `<!DOCTYPE html>
 			<html>
 			<head>
@@ -103,77 +119,82 @@ const printTable = () => {
 			</html>`;
 	
     
-    document.querySelector('#common_window_info_content').contentWindow.document.open();
-    document.querySelector('#common_window_info_content').contentWindow.document.write(html);
-    document.querySelector('#common_window_info_content').classList = document.querySelector('#paper').classList;
-    window.frames.common_window_info_content.focus();
-    setTimeout(() => {document.querySelector('#common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
+    AppDocument.querySelector('#common_window_info_content').contentWindow.document.open();
+    AppDocument.querySelector('#common_window_info_content').contentWindow.document.write(html);
+    AppDocument.querySelector('#common_window_info_content').classList = AppDocument.querySelector('#paper').classList;
+    /**@type{AppDocument} */
+    const frame = window.frames.document;
+    frame.querySelector('#common_window_info_content').focus();
+    setTimeout(() => {AppDocument.querySelector('#common_window_info_content').contentWindow.print();dialogue_loading(0);}, 500);
     if (common.mobile())
         null;
     else
-        document.querySelector('#common_window_info_content').contentWindow.onafterprint = () => {
-            document.querySelector('#common_window_info_content').src='';
-            document.querySelector('#common_window_info_content').classList ='';
+        AppDocument.querySelector('#common_window_info_content').contentWindow.onafterprint = () => {
+            AppDocument.querySelector('#common_window_info_content').src='';
+            AppDocument.querySelector('#common_window_info_content').classList ='';
         };
 };
-
+/**
+ * Get report settings
+ * @returns {object}
+ */
 const getReportSettings = () => {
-    return {    locale              	: document.querySelector('#setting_select_locale').value,  
-                timezone            	: document.querySelector('#setting_select_report_timezone').value,
-                number_system       	: document.querySelector('#setting_select_report_numbersystem').value,
-                direction           	: document.querySelector('#setting_select_report_direction').value,
-                second_locale       	: document.querySelector('#setting_select_report_locale_second').value,
-                arabic_script       	: document.querySelector('#setting_select_report_arabic_script').value,
-                calendartype        	: document.querySelector('#setting_select_calendartype').value,
-                calendar_hijri_type 	: document.querySelector('#setting_select_calendar_hijri_type').value,
+    return {    locale              	: AppDocument.querySelector('#setting_select_locale').value,  
+                timezone            	: AppDocument.querySelector('#setting_select_report_timezone').value,
+                number_system       	: AppDocument.querySelector('#setting_select_report_numbersystem').value,
+                direction           	: AppDocument.querySelector('#setting_select_report_direction').value,
+                second_locale       	: AppDocument.querySelector('#setting_select_report_locale_second').value,
+                arabic_script       	: AppDocument.querySelector('#setting_select_report_arabic_script').value,
+                calendartype        	: AppDocument.querySelector('#setting_select_calendartype').value,
+                calendar_hijri_type 	: AppDocument.querySelector('#setting_select_calendar_hijri_type').value,
 
-                place               	: document.querySelector('#setting_input_place').innerHTML,
-                gps_lat             	: parseFloat(document.querySelector('#setting_input_lat').innerHTML),
-                gps_long            	: parseFloat(document.querySelector('#setting_input_long').innerHTML),
+                place               	: AppDocument.querySelector('#setting_input_place').innerHTML,
+                gps_lat             	: parseFloat(AppDocument.querySelector('#setting_input_lat').innerHTML),
+                gps_long            	: parseFloat(AppDocument.querySelector('#setting_input_long').innerHTML),
 
                 theme_day           	: 'theme_day_' + get_theme_id('day'),
                 theme_month         	: 'theme_month_' + get_theme_id('month'),
                 theme_year          	: 'theme_year_' + get_theme_id('year'),
-                coltitle            	: document.querySelector('#setting_select_report_coltitle').value,
-                highlight           	: document.querySelector('#setting_select_report_highlight_row').value,
-                show_weekday        	: Number(document.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')),
-                show_calendartype   	: Number(document.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')),
-                show_notes          	: Number(document.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')),
-                show_gps   	       		: Number(document.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')),
-                show_timezone       	: Number(document.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')),
+                coltitle            	: AppDocument.querySelector('#setting_select_report_coltitle').value,
+                highlight           	: AppDocument.querySelector('#setting_select_report_highlight_row').value,
+                show_weekday        	: Number(AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')),
+                show_calendartype   	: Number(AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')),
+                show_notes          	: Number(AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')),
+                show_gps   	       		: Number(AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')),
+                show_timezone       	: Number(AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')),
                 
-                header_img_src      	: document.querySelector('#setting_reportheader_img').src == ''?null:document.querySelector('#setting_reportheader_img').src,
-				footer_img_src      	: document.querySelector('#setting_reportfooter_img').src == ''?null:document.querySelector('#setting_reportfooter_img').src,
+                header_img_src      	: AppDocument.querySelector('#setting_reportheader_img').src == ''?null:AppDocument.querySelector('#setting_reportheader_img').src,
+				footer_img_src      	: AppDocument.querySelector('#setting_reportfooter_img').src == ''?null:AppDocument.querySelector('#setting_reportfooter_img').src,
 
-                header_txt1         	: document.querySelector('#setting_input_reportheader1').innerHTML,
-                header_txt2         	: document.querySelector('#setting_input_reportheader2').innerHTML,
-                header_txt3         	: document.querySelector('#setting_input_reportheader3').innerHTML,
+                header_txt1         	: AppDocument.querySelector('#setting_input_reportheader1').innerHTML,
+                header_txt2         	: AppDocument.querySelector('#setting_input_reportheader2').innerHTML,
+                header_txt3         	: AppDocument.querySelector('#setting_input_reportheader3').innerHTML,
                 //button is active set left, center or right true/false
-                header_align            : get_align(document.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'), 
-                                                    document.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'), 
-                                                    document.querySelector('#setting_icon_text_header_aright').classList.contains('setting_button_active')),
-                footer_txt1         	: document.querySelector('#setting_input_reportfooter1').innerHTML,
-                footer_txt2         	: document.querySelector('#setting_input_reportfooter2').innerHTML,
-                footer_txt3    	   		: document.querySelector('#setting_input_reportfooter3').innerHTML,
+                header_align            : get_align(AppDocument.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'), 
+                                                    AppDocument.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'), 
+                                                    AppDocument.querySelector('#setting_icon_text_header_aright').classList.contains('setting_button_active')),
+                footer_txt1         	: AppDocument.querySelector('#setting_input_reportfooter1').innerHTML,
+                footer_txt2         	: AppDocument.querySelector('#setting_input_reportfooter2').innerHTML,
+                footer_txt3    	   		: AppDocument.querySelector('#setting_input_reportfooter3').innerHTML,
                 //button is active set left, center or right true/false
-                footer_align            : get_align(document.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
-                                                    document.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
-                                                    document.querySelector('#setting_icon_text_footer_aright').classList.contains('setting_button_active')),
+                footer_align            : get_align(AppDocument.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
+                                                    AppDocument.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
+                                                    AppDocument.querySelector('#setting_icon_text_footer_aright').classList.contains('setting_button_active')),
                 
-                method              	: document.querySelector('#setting_select_method').value,
-                asr                 	: document.querySelector('#setting_select_asr').value,
-                highlat             	: document.querySelector('#setting_select_highlatitude').value,
-                format              	: document.querySelector('#setting_select_timeformat').value,
-                hijri_adj           	: Number(document.querySelector('#setting_select_hijri_adjustment').value),
-                iqamat_fajr         	: document.querySelector('#setting_select_report_iqamat_title_fajr').value,
-                iqamat_dhuhr        	: document.querySelector('#setting_select_report_iqamat_title_dhuhr').value,
-                iqamat_asr          	: document.querySelector('#setting_select_report_iqamat_title_asr').value,
-                iqamat_maghrib      	: document.querySelector('#setting_select_report_iqamat_title_maghrib').value,
-                iqamat_isha         	: document.querySelector('#setting_select_report_iqamat_title_isha').value,
-                show_imsak          	: Number(document.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')),
-                show_sunset         	: Number(document.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')),
-                show_midnight       	: Number(document.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')),
-                show_fast_start_end 	: Number(document.querySelector('#setting_select_report_show_fast_start_end').value),
+                method              	: AppDocument.querySelector('#setting_select_method').value,
+                asr                 	: AppDocument.querySelector('#setting_select_asr').value,
+                highlat             	: AppDocument.querySelector('#setting_select_highlatitude').value,
+                format              	: AppDocument.querySelector('#setting_select_timeformat').value,
+                hijri_adj           	: Number(AppDocument.querySelector('#setting_select_hijri_adjustment').value),
+                iqamat_fajr         	: AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').value,
+                iqamat_dhuhr        	: AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').value,
+                iqamat_asr          	: AppDocument.querySelector('#setting_select_report_iqamat_title_asr').value,
+                iqamat_maghrib      	: AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib').value,
+                iqamat_isha         	: AppDocument.querySelector('#setting_select_report_iqamat_title_isha').value,
+                show_imsak          	: Number(AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')),
+                show_sunset         	: Number(AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')),
+                show_midnight       	: Number(AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')),
+                show_fast_start_end 	: Number(AppDocument.querySelector('#setting_select_report_show_fast_start_end').value),
                 
                 timetable_class			: 'timetable_class',
                 timetable_month         : 'timetable_month_class', //class to add for month
@@ -184,61 +205,70 @@ const getReportSettings = () => {
                 ui_navigation_left      : 'toolbar_btn_left',
                 ui_navigation_right     : 'toolbar_btn_right'};
 };
-// update timetable
-const update_timetable_report = async (timetable_type = 0, item_id = null, settings) => {
-    return await new Promise((resolve) => {
-        APP_GLOBAL.timetable_type = timetable_type;
-        import('PrayTimes').then(({prayTimes}) => {
-            switch (timetable_type){
-                //create timetable month or day or year if they are visible instead
-                case 0:{
-                    //update user settings to current select option 
-                    set_settings_select();
-                    const select_user_settings = document.querySelector('#setting_select_user_setting');
-                    const current_user_settings =[];
-                    for (const setting of select_user_settings.options){
-                        current_user_settings.push(
-                        {
-                        'description' : setting.getAttribute('description'),
-                        'regional_language_locale' : setting.getAttribute('regional_language_locale'),
-                        'regional_timezone' : setting.getAttribute('regional_timezone'),
-                        'regional_number_system' : setting.getAttribute('regional_number_system'),
-                        'regional_calendar_hijri_type' : setting.getAttribute('regional_calendar_hijri_type'),
-                        'gps_lat_text' : parseFloat(setting.getAttribute('gps_lat_text')),
-                        'gps_long_text' : parseFloat(setting.getAttribute('gps_long_text')),
-                        'prayer_method' : setting.getAttribute('prayer_method'),
-                        'prayer_asr_method' : setting.getAttribute('prayer_asr_method'),
-                        'prayer_high_latitude_adjustment' : setting.getAttribute('prayer_high_latitude_adjustment'),
-                        'prayer_time_format' : setting.getAttribute('prayer_time_format'),
-                        'prayer_hijri_date_adjustment' : setting.getAttribute('prayer_hijri_date_adjustment')
-                        });
-                    }
-                    document.querySelector('#paper').innerHTML = app_report.displayDay(prayTimes, settings, item_id, current_user_settings);
-                    common.create_qr('timetable_qr_code', common.getHostname());
-                    resolve();
-                    break;
-                }
-                //1=create timetable month
-                case 1:{
-                    document.querySelector('#paper').innerHTML = app_report.displayMonth(prayTimes, settings, item_id);
-                    common.create_qr('timetable_qr_code', common.getHostname());
-                    resolve();
-                    break;
-                }
-                //2=create timetable year
-                case 2:{
-                    document.querySelector('#paper').innerHTML = app_report.displayYear(prayTimes, settings, item_id);
-                    common.create_qr('timetable_qr_code', common.getHostname());
-                    resolve();
-                    break;
-                }
-                default:{
-                    break;
-                }
+/**
+ * Timetable update
+ * @param {number} timetable_type 
+ * @param {string|null} item_id 
+ * @param {object} settings 
+ * @returns {void}
+ */
+const update_timetable_report = (timetable_type = 0, item_id = null, settings) => {
+    APP_GLOBAL.timetable_type = timetable_type;
+    switch (timetable_type){
+        //create timetable month or day or year if they are visible instead
+        case 0:{
+            //update user settings to current select option 
+            set_settings_select();
+            const select_user_settings = AppDocument.querySelector('#setting_select_user_setting');
+            const current_user_settings =[];
+            for (const setting of select_user_settings.options){
+                current_user_settings.push(
+                {
+                'description' : setting.getAttribute('description'),
+                'regional_language_locale' : setting.getAttribute('regional_language_locale'),
+                'regional_timezone' : setting.getAttribute('regional_timezone'),
+                'regional_number_system' : setting.getAttribute('regional_number_system'),
+                'regional_calendar_hijri_type' : setting.getAttribute('regional_calendar_hijri_type'),
+                'gps_lat_text' : parseFloat(setting.getAttribute('gps_lat_text')),
+                'gps_long_text' : parseFloat(setting.getAttribute('gps_long_text')),
+                'prayer_method' : setting.getAttribute('prayer_method'),
+                'prayer_asr_method' : setting.getAttribute('prayer_asr_method'),
+                'prayer_high_latitude_adjustment' : setting.getAttribute('prayer_high_latitude_adjustment'),
+                'prayer_time_format' : setting.getAttribute('prayer_time_format'),
+                'prayer_hijri_date_adjustment' : setting.getAttribute('prayer_hijri_date_adjustment')
+                });
             }
-        });
-    });
+            AppDocument.querySelector('#paper').innerHTML = app_report.displayDay(prayTimes, settings, item_id, current_user_settings);
+            common.create_qr('timetable_qr_code', common.getHostname());
+            break;
+        }
+        //1=create timetable month
+        case 1:{
+            AppDocument.querySelector('#paper').innerHTML = app_report.displayMonth(prayTimes, settings, item_id);
+            common.create_qr('timetable_qr_code', common.getHostname());
+            break;
+        }
+        //2=create timetable year
+        case 2:{
+            AppDocument.querySelector('#paper').innerHTML = app_report.displayYear(prayTimes, settings, item_id);
+            common.create_qr('timetable_qr_code', common.getHostname());
+            break;
+        }
+        default:{
+            break;
+        }
+    }
 };
+/**
+ * Get report url
+ * @param {number} id 
+ * @param {number} sid 
+ * @param {string} papersize 
+ * @param {string} item 
+ * @param {string} format 
+ * @param {boolean} profile_display 
+ * @returns {string}
+ */
 const get_report_url = (id, sid, papersize, item, format, profile_display=true) => {
     const report_module = `module=${APP_GLOBAL.app_report_timetable}`;
     let module_parameters = `&id=${id}&sid=${sid}`;
@@ -262,129 +292,162 @@ const get_report_url = (id, sid, papersize, item, format, profile_display=true) 
     //url query parameters are decoded in report module and in report service
     return common.getHostname() + `/reports?reportid=${encodedurl}`;
 };
-/*----------------------- */
-/* THEME                  */
-/*----------------------- */
+
+/**
+ * Update all timetables and theme thumbnails
+ * @returns {Promise.<void>}
+ */
 const update_all_theme_thumbnails = async () => {
-    await update_timetable_report(0, null, getReportSettings()).then(() => {
-        update_theme_thumbnail('day');
-    });
-    await update_timetable_report(1, null, getReportSettings()).then(() => {
-        update_theme_thumbnail('month');
-    });
-    await update_timetable_report(2, null, getReportSettings()).then(() => {
-        update_theme_thumbnail('year');
-    });
+    update_timetable_report(0, null, getReportSettings());
+    update_theme_thumbnail('day');
+    update_timetable_report(1, null, getReportSettings());
+    update_theme_thumbnail('month');
+    update_timetable_report(2, null, getReportSettings());
+    update_theme_thumbnail('year');
 };
-const update_theme_thumbnail = (theme_type) => {
-    const thumbnail = document.querySelectorAll(`#slides_${theme_type} .slide .slider_active_${theme_type}`)[0];
+/**
+ * Update theme thumbnail
+ * @param {string} theme_type 
+ * @returns {void}
+ */
+const update_theme_thumbnail = theme_type => {
+    const thumbnail = AppDocument.querySelectorAll(`#slides_${theme_type} .slide .slider_active_${theme_type}`)[0];
     //copy paper div with current papersize class to a new div with paper class
-    thumbnail.innerHTML =  `<div class='paper ${document.querySelector('#paper').className}'>
-                    ${document.querySelector('#paper').innerHTML}
+    thumbnail.innerHTML =  `<div class='paper ${AppDocument.querySelector('#paper').className}'>
+                    ${AppDocument.querySelector('#paper').innerHTML}
                     </div>` ;
     const new_theme_id = thumbnail.getAttribute('data-theme_id');
-    const old_theme = thumbnail.querySelectorAll('.timetable_class')[0].className.split(' ').filter(themeclass=>themeclass.startsWith(`theme_${theme_type}`))[0];
+    const old_theme = thumbnail.querySelectorAll('.timetable_class')[0].className.split(' ').filter((/**@type{string}*/themeclass)=>themeclass.startsWith(`theme_${theme_type}`))[0];
     thumbnail.querySelectorAll('.timetable_class')[0].classList.remove(old_theme);
     thumbnail.querySelectorAll('.timetable_class')[0].classList.add('theme_'  + theme_type + '_' + new_theme_id);
 };
-
-const get_theme_id = (type) => {
-    const select_user_setting = document.querySelector('#setting_select_user_setting');
-    if (document.querySelectorAll('.slider_active_' + type)[0])
-        return document.querySelectorAll('.slider_active_' + type)[0].getAttribute('data-theme_id');
+/**
+ * Get theme id
+ * @param {string} type 
+ * @returns {string}
+ */
+const get_theme_id = type => {
+    const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
+    if (AppDocument.querySelectorAll('.slider_active_' + type)[0])
+        return AppDocument.querySelectorAll('.slider_active_' + type)[0].getAttribute('data-theme_id');
     else
         return select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_' + type + '_id');
 };
+/**
+ * Set theme id
+ * @param {string} type 
+ * @param {string} theme_id 
+ * @returns {void}
+ */
 const set_theme_id = (type, theme_id) => {
-    const slides = document.querySelectorAll(`#setting_themes_${type}_slider .slide div`);
+    const slides = AppDocument.querySelectorAll(`#setting_themes_${type}_slider .slide div`);
     let i=0;
     for (const slide of slides) {
         if (slide.getAttribute('data-theme_id') == theme_id) {
             //remove active class from current theme
-            document.querySelectorAll('.slider_active_' + type)[0].classList.remove('slider_active_' + type);
+            AppDocument.querySelectorAll('.slider_active_' + type)[0].classList.remove('slider_active_' + type);
             //set active class on found theme
             slide.classList.add('slider_active_' + type);
             //update preview image to correct theme
-            document.querySelector('#slides_' + type).style.left = (-96 * (i)).toString() + 'px';
+            AppDocument.querySelector('#slides_' + type).style.left = (-96 * (i)).toString() + 'px';
             set_theme_title(type);
-            return null;
+            break;
         }
         i++;
     }
-    return null;
 };
-const set_theme_title = (type) => {
-    document.querySelector(`#slider_theme_${type}_id`).innerHTML =
-        document.querySelector(`#theme_${type}_${get_theme_id(type)}`).getAttribute('data-theme_id');
-    return null;
+/**
+ * Set theme title
+ * @param {string} type 
+ * @returns {void}
+ */
+const set_theme_title = type => {
+    AppDocument.querySelector(`#slider_theme_${type}_id`).innerHTML =
+        AppDocument.querySelector(`#theme_${type}_${get_theme_id(type)}`).getAttribute('data-theme_id');
 };
+/**
+ * Load themes
+ * @returns {void}
+ */
 const load_themes = () => {
-    document.querySelector('#slides_day .slide div').classList.add('slider_active_day');
+    AppDocument.querySelector('#slides_day .slide div').classList.add('slider_active_day');
     set_theme_title('day');
-    document.querySelector('#slides_month .slide div').classList.add('slider_active_month');
+    AppDocument.querySelector('#slides_month .slide div').classList.add('slider_active_month');
     set_theme_title('month');
-    document.querySelector('#slides_year .slide div').classList.add('slider_active_year');
+    AppDocument.querySelector('#slides_year .slide div').classList.add('slider_active_year');
     set_theme_title('year');
 };
-const theme_nav = async (dir, type) => {
-    let theme_index;
+/**
+ * 
+ * @param {number} nav 
+ * @param {string} type 
+ * @returns {Promise.<void>}
+ */
+const theme_nav = async (nav, type) => {
+    let theme_index = 0;
     //get current index
-    document.querySelectorAll(`#slides_${type} .slide_${type} > div`).forEach((e, index) => {
+    AppDocument.querySelectorAll(`#slides_${type} .slide_${type} > div`).forEach((/**@type{HTMLElement}*/e, /**@type{number}*/index) => {
         if (e.classList.contains(`slider_active_${type}`))
             theme_index = index;
     });
     //set next index
-    if (dir == 1)
-        if ((theme_index + 1) == document.querySelectorAll(`#slides_${type} .slide_${type}`).length)
+    if (nav == 1)
+        if ((theme_index + 1) == AppDocument.querySelectorAll(`#slides_${type} .slide_${type}`).length)
             theme_index = 0;
         else
             theme_index++;
     else 
-        if (dir == -1)
+        if (nav == -1)
             if (theme_index == 0)
-                theme_index = document.querySelectorAll(`#slides_${type} .slide_${type}`).length -1;
+                theme_index = AppDocument.querySelectorAll(`#slides_${type} .slide_${type}`).length -1;
             else
                 theme_index--;
     //remove old active theme class
-    document.querySelectorAll(`.slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
+    AppDocument.querySelectorAll(`.slider_active_${type}`)[0].classList.remove(`slider_active_${type}`);
     //add new active theme class
-    document.querySelectorAll(`#slides_${type} .slide`)[theme_index].children[0].classList.add(`slider_active_${type}`);
+    AppDocument.querySelectorAll(`#slides_${type} .slide`)[theme_index].children[0].classList.add(`slider_active_${type}`);
     //set theme title
     set_theme_title(type);
     update_all_theme_thumbnails();
 };
 
-/*----------------------- */
-/* UI                     */
-/*----------------------- */
-const common_translate_ui_app = async (lang_code) => {
+/**
+ * Common translation ui
+ * @param {string} lang_code 
+ */
+const common_translate_ui_app = async lang_code => {
     await common.common_translate_ui(lang_code)
     .then(()=>{
         //translate locale in this app
-        const select_locale = document.querySelector('#setting_select_locale');
-        const select_second_locale = document.querySelector('#setting_select_report_locale_second'); 
+        const select_locale = AppDocument.querySelector('#setting_select_locale');
+        const select_second_locale = AppDocument.querySelector('#setting_select_report_locale_second'); 
         const current_locale = select_locale.value;
         const current_second_locale = select_second_locale.value;
-        select_locale.innerHTML = document.querySelector('#common_user_locale_select').innerHTML;
+        select_locale.innerHTML = AppDocument.querySelector('#common_user_locale_select').innerHTML;
         select_locale.value = current_locale;
-        select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + document.querySelector('#common_user_locale_select').innerHTML;
+        select_second_locale.innerHTML = select_second_locale.options[0].outerHTML + AppDocument.querySelector('#common_user_locale_select').innerHTML;
         select_second_locale.value = current_second_locale;   
     })
-    .catch((error)=>{throw error;});
+    .catch((/**@type{Error}*/error)=>{throw error;});
 };
+/**
+ * Setting translate
+ * @param {boolean} first 
+ * @returns {Promise.<void>}
+ */
 const settings_translate = async (first=true) => {
     let locale;
     if (first ==true){
-        locale = document.querySelector('#setting_select_locale').value;
+        locale = AppDocument.querySelector('#setting_select_locale').value;
         common.COMMON_GLOBAL.user_locale = locale;
     }
     else
-        locale = document.querySelector('#setting_select_report_locale_second').value;
+        locale = AppDocument.querySelector('#setting_select_report_locale_second').value;
     if (locale != 0){
         //fetch any message with first language always
         //show translation using first or second language
         await common.FFB('DB_API', `/app_object?data_lang_code=${locale}&object_name=REPORT`, 'GET', 'APP_DATA', null)
-        .then(result=>{
+        .then((/**@type{string}*/result)=>{
             for (const app_object_item of JSON.parse(result)){
                 if (first==true)
                     app_report.REPORT_GLOBAL.first_language[app_object_item.object_item_name.toLowerCase()] = app_object_item.text;
@@ -393,7 +456,7 @@ const settings_translate = async (first=true) => {
             }
             //if translating first language and second language is not used
             if (first == true &&
-                document.querySelector('#setting_select_report_locale_second').value ==0){
+                AppDocument.querySelector('#setting_select_report_locale_second').value ==0){
                 app_report.REPORT_GLOBAL.second_language.timetable_title= '';
                 app_report.REPORT_GLOBAL.second_language.coltitle_day= '';
                 app_report.REPORT_GLOBAL.second_language.coltitle_weekday= '';
@@ -419,8 +482,14 @@ const settings_translate = async (first=true) => {
         })
         .catch(()=>null);
     }
-	return null;
 };
+/**
+ * Get horizontal alignment
+ * @param {boolean} al 
+ * @param {boolean} ac 
+ * @param {boolean} ar 
+ * @returns {string|null }
+ */
 const get_align = (al,ac,ar) => {
 	if (al==true)
 		return 'left';
@@ -430,6 +499,10 @@ const get_align = (al,ac,ar) => {
 		return 'right';
 	return null;
 };
+/**
+ * Show current time for users timezone
+ * @returns {void}
+ */
 const showcurrenttime = () => {
     const options = {
         timeZone: common.COMMON_GLOBAL.user_timezone,
@@ -442,14 +515,17 @@ const showcurrenttime = () => {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    document.querySelector('#setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);
-    return null;
+    /**@ts-ignore */
+    AppDocument.querySelector('#setting_current_date_time_display').innerHTML = new Date().toLocaleTimeString(common.COMMON_GLOBAL.user_locale, options);
 };
-
+/**
+ * Show timetable time
+ * @returns {void}
+ */
 const showreporttime = () => {
 
     const options = {
-        timeZone: document.querySelector('#setting_select_report_timezone')[document.querySelector('#setting_select_report_timezone').selectedIndex].value,
+        timeZone: AppDocument.querySelector('#setting_select_report_timezone')[AppDocument.querySelector('#setting_select_report_timezone').selectedIndex].value,
         weekday: 'long',
         year: 'numeric',
         month: 'long',
@@ -459,14 +535,15 @@ const showreporttime = () => {
         second: '2-digit',
         timeZoneName: 'long'
     };
-    document.querySelector('#setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(document.querySelector('#setting_select_locale').value, options);
+    /**@ts-ignore */
+    AppDocument.querySelector('#setting_report_date_time_display').innerHTML = new Date().toLocaleTimeString(AppDocument.querySelector('#setting_select_locale').value, options);
     //If day report created with time, display time there also
-    if (document.querySelector('#timetable_day_time')) {
-        document.querySelector('#timetable_day_time').innerHTML = document.querySelector('#setting_report_date_time_display').innerHTML;
+    if (AppDocument.querySelector('#timetable_day_time')) {
+        AppDocument.querySelector('#timetable_day_time').innerHTML = AppDocument.querySelector('#setting_report_date_time_display').innerHTML;
     }
-    if (document.querySelectorAll('.timetable_day_current_time').length > 0) {
-        const user_current_time = document.querySelectorAll('.timetable_day_current_time');
-        const select_user_settings = document.querySelector('#setting_select_user_setting');
+    if (AppDocument.querySelectorAll('.timetable_day_current_time').length > 0) {
+        const user_current_time = AppDocument.querySelectorAll('.timetable_day_current_time');
+        const select_user_settings = AppDocument.querySelector('#setting_select_user_setting');
         let user_locale;
         let user_options;
         //loop user settings
@@ -485,14 +562,19 @@ const showreporttime = () => {
 
             user_locale = setting.getAttribute('regional_language_locale');
             //set user setting time, select index and order should be the same as div timetable_day_current_time indexes
+            /**@ts-ignore */
             user_current_time[setting.index].innerHTML = new Date().toLocaleTimeString(user_locale, user_options);
         }
     }
-    return null;
 };
+/**
+ * Toolbar button
+ * @param {number} choice 
+ * @returns {Promise.<void>}
+ */
 const toolbar_button = async (choice) => {
-    const paper = document.querySelector('#paper');
-    const settings = document.querySelector('#settings');
+    const paper = AppDocument.querySelector('#paper');
+    const settings = AppDocument.querySelector('#settings');
 
     switch (choice) {
         //print
@@ -501,8 +583,8 @@ const toolbar_button = async (choice) => {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                document.querySelector('#common_profile_btn_top').style.visibility='visible';
-                printTable();
+                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
+                printTimetable();
                 break;
             }
         //day
@@ -511,7 +593,7 @@ const toolbar_button = async (choice) => {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                document.querySelector('#common_profile_btn_top').style.visibility='visible';
+                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
                 update_timetable_report(0, null, getReportSettings());
                 break;
             }
@@ -521,7 +603,7 @@ const toolbar_button = async (choice) => {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                document.querySelector('#common_profile_btn_top').style.visibility='visible';
+                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
                 update_timetable_report(1, null, getReportSettings());
                 break;
             }
@@ -531,7 +613,7 @@ const toolbar_button = async (choice) => {
                 if (common.mobile())
                     paper.style.display = 'block';
                 settings.style.visibility = 'hidden';
-                document.querySelector('#common_profile_btn_top').style.visibility='visible';
+                AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
                 update_timetable_report(2, null, getReportSettings());
                 break;
             }
@@ -541,9 +623,9 @@ const toolbar_button = async (choice) => {
                 //Hide paper on mobile device when showing settings, scrollbug in background
                 if (common.mobile())
                     paper.style.display = 'none';
-                document.querySelector('#common_profile_btn_top').style.visibility='hidden';
+                AppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
                 settings.style.visibility = 'visible';
-                if (document.querySelector('#tab_nav_3').classList.contains('tab_nav_selected'))
+                if (AppDocument.querySelector('#tab_nav_3').classList.contains('tab_nav_selected'))
                     update_all_theme_thumbnails();
                 break;
             }
@@ -551,7 +633,7 @@ const toolbar_button = async (choice) => {
         case 6:
             {
                 settings.style.visibility = 'hidden';
-                document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
                 profile_show_app(null,null);
                 break;
             }
@@ -559,26 +641,29 @@ const toolbar_button = async (choice) => {
         case 7:
             {
                 settings.style.visibility = 'hidden';
-                document.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
+                AppDocument.querySelector('#common_user_menu_dropdown').style.visibility = 'hidden';
                 common.profile_top(1, null, show_profile_function);
                 break;
             }
     }
 };
 
-
+/**
+ * Open navigation tab
+ * @param {number} tab_selected 
+ */
 const openTab = async (tab_selected) => {
     //hide all tab content
-    document.querySelectorAll('.tab_content').forEach(tab_content=>tab_content.style.display = 'none');
+    AppDocument.querySelectorAll('.tab_content').forEach((/**@type{HTMLElement}*/tab_content)=>tab_content.style.display = 'none');
     //remove mark for all tabs
-    document.querySelectorAll('.tab_nav').forEach(tab=>tab.classList.remove('tab_nav_selected'));
+    AppDocument.querySelectorAll('.tab_nav').forEach((/**@type{HTMLElement}*/tab)=>tab.classList.remove('tab_nav_selected'));
     //show active tab content
-    document.querySelector('#tab' + tab_selected).style.display = 'block';
+    AppDocument.querySelector('#tab' + tab_selected).style.display = 'block';
     //mark active tab
-    document.querySelector('#tab_nav_' + tab_selected).classList.add('tab_nav_selected');
+    AppDocument.querySelector('#tab_nav_' + tab_selected).classList.add('tab_nav_selected');
     
     if (tab_selected==2){
-        document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
+        AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).outerHTML = `<div id='${APP_GLOBAL.gps_module_leaflet_container}'></div>`;
         //init map thirdparty module
         init_map().then(()=>{
             update_ui(4);
@@ -590,102 +675,118 @@ const openTab = async (tab_selected) => {
         update_all_theme_thumbnails();
     }
     if (tab_selected==5){
-        document.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
+        AppDocument.querySelector('#setting_icon_text_theme_day').dispatchEvent(new Event('click'));
     }
 };
-
-
+/**
+ * Get alignment for button
+ * @param {string} report_align_where 
+ * @returns {string}
+ */
 const align_button_value = (report_align_where) => {
 
-    if (document.querySelector('#setting_icon_text_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
+    if (AppDocument.querySelector('#setting_icon_text_' + report_align_where + '_aleft').classList.contains('setting_button_active'))
         return 'left';
-    if (document.querySelector('#setting_icon_text_' + report_align_where + '_acenter').classList.contains('setting_button_active'))
+    if (AppDocument.querySelector('#setting_icon_text_' + report_align_where + '_acenter').classList.contains('setting_button_active'))
         return 'center';
-    if (document.querySelector('#setting_icon_text_' + report_align_where + '_aright').classList.contains('setting_button_active'))
+    if (AppDocument.querySelector('#setting_icon_text_' + report_align_where + '_aright').classList.contains('setting_button_active'))
         return 'right';
     return '';
 };
-
+/**
+ * Dialogue loading
+ * @param {number} visible 
+ * @returns {void}
+ */
 const dialogue_loading = (visible) => {
     if (visible==1){
-        document.querySelector('#dialogue_loading_content').classList.add('css_spinner');
-        document.querySelector('#dialogue_loading').style.visibility='visible';
+        AppDocument.querySelector('#dialogue_loading_content').classList.add('css_spinner');
+        AppDocument.querySelector('#dialogue_loading').style.visibility='visible';
     }
     else{
-        document.querySelector('#dialogue_loading_content').classList.remove('css_spinner');
-        document.querySelector('#dialogue_loading').style.visibility='hidden';
+        AppDocument.querySelector('#dialogue_loading_content').classList.remove('css_spinner');
+        AppDocument.querySelector('#dialogue_loading').style.visibility='hidden';
     }
 };
-
-const zoom_paper = (zoomvalue = '') => {
+/**
+ * Zoom paper
+ * @param {number|null} zoomvalue 
+ * @returns {void}
+ */
+const zoom_paper = (zoomvalue = null) => {
     let old;
     let old_scale;
-    const div = document.querySelector('#paper');
+    const div = AppDocument.querySelector('#paper');
     //called with null as argument at init() then used for zooming
     //even if css set, this property is not set at startup
-    if (zoomvalue == '') {
+    if (zoomvalue == null) {
         if (common.mobile())
             div.style.transform = 'scale(0.5)';
         else
             div.style.transform = 'scale(0.7)';
     } else {
-        old = document.querySelector('#paper').style.transform;
+        old = AppDocument.querySelector('#paper').style.transform;
         old_scale = parseFloat(old.substr(old.indexOf('(') + 1, old.indexOf(')') - 1));
         div.style.transform = 'scale(' + (old_scale + (zoomvalue / 10)) + ')';
     }
-    return null;
 };
+/**
+ * Select get selectindex
+ * @param {string} select 
+ * @param {number} id 
+ * @returns {number|null}
+ */
 const select_get_selectindex = (select, id) => {
     if (id == 0)
         return 0;
     else {
-        const select_options = document.querySelector('#' + select).options;
+        const select_options = AppDocument.querySelector('#' + select).options;
         for (const select of select_options) {
-            if (select.getAttribute('id') == id)
+            if (parseInt(select.getAttribute('id')) == id)
                 return select.index;
         }
     }
     return null;
 };
-
+/**
+ * Show dialogue
+ * @param {*} dialogue 
+ * @returns {void}
+ */
 const show_dialogue = (dialogue) => {
-    switch (dialogue) {
-        case 'SCAN':
-            {
-                if (common.mobile())
-                    return null;
-                else{
-                    document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'visible';
+    if (dialogue == 'SCAN' && common.mobile()==false){
+        AppDocument.querySelector('#dialogue_scan_open_mobile').style.visibility = 'visible';
                     common.create_qr('scan_open_mobile_qrcode', common.getHostname());
-                }
-                break;
-            }
     }
-    return null;
 };
-
+/**
+ * Update ui
+ * @param {number} option 
+ * @param {string|null} item_id 
+ * @returns {Promise.<void>}
+ */
 const update_ui = async (option, item_id=null) => {
     const settings = {
-        paper                   : document.querySelector('#paper'),
-        timezone_report         : document.querySelector('#setting_select_report_timezone'),
-        country                 : document.querySelector('#common_module_leaflet_select_country'),
-        city                    : document.querySelector('#common_module_leaflet_select_city'),
-        select_place            : document.querySelector('#setting_select_popular_place'),
-        gps_lat_input           : document.querySelector('#setting_input_lat'),
-        gps_long_input          : document.querySelector('#setting_input_long'),
-        paper_size              : document.querySelector('#setting_select_report_papersize').value,
-        reportheader_input      : document.querySelector('#setting_input_reportheader_img'),
-        reportfooter_input      : document.querySelector('#setting_input_reportfooter_img'),
-        header_preview_img_item : document.querySelector('#setting_reportheader_img'),
-        footer_preview_img_item : document.querySelector('#setting_reportfooter_img'),
+        paper                   : AppDocument.querySelector('#paper'),
+        timezone_report         : AppDocument.querySelector('#setting_select_report_timezone'),
+        country                 : AppDocument.querySelector('#common_module_leaflet_select_country'),
+        city                    : AppDocument.querySelector('#common_module_leaflet_select_city'),
+        select_place            : AppDocument.querySelector('#setting_select_popular_place'),
+        gps_lat_input           : AppDocument.querySelector('#setting_input_lat'),
+        gps_long_input          : AppDocument.querySelector('#setting_input_long'),
+        paper_size              : AppDocument.querySelector('#setting_select_report_papersize').value,
+        reportheader_input      : AppDocument.querySelector('#setting_input_reportheader_img'),
+        reportfooter_input      : AppDocument.querySelector('#setting_input_reportfooter_img'),
+        header_preview_img_item : AppDocument.querySelector('#setting_reportheader_img'),
+        footer_preview_img_item : AppDocument.querySelector('#setting_reportfooter_img'),
         button_active_class     : 'setting_button_active',
-        reportheader_aleft      : document.querySelector('#setting_icon_text_header_aleft'),
-        reportheader_acenter    : document.querySelector('#setting_icon_text_header_acenter'),
-        reportheader_aright     : document.querySelector('#setting_icon_text_header_aright'),
-        reportfooter_aleft      : document.querySelector('#setting_icon_text_footer_aleft'),
-        reportfooter_acenter    : document.querySelector('#setting_icon_text_footer_acenter'),
-        reportfooter_aright     : document.querySelector('#setting_icon_text_footer_aright'),
-        select_user_setting     : document.querySelector('#setting_select_user_setting')
+        reportheader_aleft      : AppDocument.querySelector('#setting_icon_text_header_aleft'),
+        reportheader_acenter    : AppDocument.querySelector('#setting_icon_text_header_acenter'),
+        reportheader_aright     : AppDocument.querySelector('#setting_icon_text_header_aright'),
+        reportfooter_aleft      : AppDocument.querySelector('#setting_icon_text_footer_aleft'),
+        reportfooter_acenter    : AppDocument.querySelector('#setting_icon_text_footer_acenter'),
+        reportfooter_aright     : AppDocument.querySelector('#setting_icon_text_footer_aright'),
+        select_user_setting     : AppDocument.querySelector('#setting_select_user_setting')
     };
 
     switch (option) {
@@ -693,6 +794,7 @@ const update_ui = async (option, item_id=null) => {
         case 2:
             {
                 //Update report date and time for current locale, report timezone format
+                /**@ts-ignore */
                 clearInterval(showreporttime);
                 setInterval(showreporttime, 1000);
                 break;
@@ -703,7 +805,7 @@ const update_ui = async (option, item_id=null) => {
                 map_update_app( settings.gps_long_input.innerHTML,
                                 settings.gps_lat_input.innerHTML,
                                 common.COMMON_GLOBAL.module_leaflet_zoom,
-                                document.querySelector('#setting_input_place').innerHTML,
+                                AppDocument.querySelector('#setting_input_place').innerHTML,
                                 null,
                                 common.COMMON_GLOBAL.module_leaflet_marker_div_gps,
                                 common.COMMON_GLOBAL.module_leaflet_jumpto);
@@ -733,17 +835,17 @@ const update_ui = async (option, item_id=null) => {
                 settings.gps_lat_input.innerHTML = latitude_selected;
 
                 //Use city + country from list
-                document.querySelector('#setting_input_place').innerHTML =
+                AppDocument.querySelector('#setting_input_place').innerHTML =
                     settings.city.options[settings.city.selectedIndex].text + ', ' +
                     settings.country.options[settings.country.selectedIndex].text;
                 //display empty popular place select
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
+                if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
                     map_update_app(settings.gps_long_input.innerHTML,
                                     settings.gps_lat_input.innerHTML,
                                     common.COMMON_GLOBAL.module_leaflet_zoom_city,
-                                    document.querySelector('#setting_input_place').innerHTML,
+                                    AppDocument.querySelector('#setting_input_place').innerHTML,
                                     null,
                                     common.COMMON_GLOBAL.module_leaflet_marker_div_city,
                                     common.COMMON_GLOBAL.module_leaflet_flyto).then((timezone_selected) => {
@@ -751,9 +853,9 @@ const update_ui = async (option, item_id=null) => {
                                     });
                 }
                 //update country and city in settings
-                const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
-                option.setAttribute('gps_country_id', document.querySelector('#common_module_leaflet_select_country')[document.querySelector('#common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
-                option.setAttribute('gps_city_id', document.querySelector('#common_module_leaflet_select_city')[document.querySelector('#common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
+                const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
+                option.setAttribute('gps_country_id', AppDocument.querySelector('#common_module_leaflet_select_country')[AppDocument.querySelector('#common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
+                option.setAttribute('gps_city_id', AppDocument.querySelector('#common_module_leaflet_select_city')[AppDocument.querySelector('#common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
                 
                 break;
             }
@@ -766,7 +868,7 @@ const update_ui = async (option, item_id=null) => {
                 const timezone_selected = settings.select_place[settings.select_place.selectedIndex].getAttribute('timezone');
                 settings.gps_long_input.innerHTML = longitude_selected;
                 settings.gps_lat_input.innerHTML = latitude_selected;
-                if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
+                if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                     //Update map
                     map_update_app( settings.gps_long_input.innerHTML,
                                     settings.gps_lat_input.innerHTML,
@@ -785,29 +887,29 @@ const update_ui = async (option, item_id=null) => {
                     common.SearchAndSetSelectedIndex('', settings.city,0);
                 }
                 //empty country and city in settings
-                const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
+                const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
                 option.setAttribute('gps_country_id', '');
                 option.setAttribute('gps_city_id', '');
                 
                 settings.timezone_report.value = timezone_selected;
                 const title = settings.select_place.options[settings.select_place.selectedIndex].text;
-                document.querySelector('#setting_input_place').innerHTML = title;
+                AppDocument.querySelector('#setting_input_place').innerHTML = title;
                 break;
             }
         //GPS, updating place
         case 8:
             {
-                common.map_update_popup(document.querySelector('#setting_input_place').innerHTML);
+                common.map_update_popup(AppDocument.querySelector('#setting_input_place').innerHTML);
                 break;
             }
         //GPS, position
         case 9:
             {
                 common.SearchAndSetSelectedIndex('', settings.select_place,0);
-                common.get_place_from_gps(settings.gps_long_input.innerHTML, settings.gps_lat_input.innerHTML).then((gps_place) => {
+                common.get_place_from_gps(settings.gps_long_input.innerHTML, settings.gps_lat_input.innerHTML).then((/**@type{string}*/gps_place) => {
                     //Update map
-                    document.querySelector('#setting_input_place').innerHTML = gps_place;
-                    if (document.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
+                    AppDocument.querySelector('#setting_input_place').innerHTML = gps_place;
+                    if (AppDocument.querySelector(`#${APP_GLOBAL.gps_module_leaflet_container}`).classList.contains('leaflet-container')){
                         map_update_app( settings.gps_long_input.innerHTML,
                                         settings.gps_lat_input.innerHTML,
                                         '', //do not change zoom 
@@ -876,90 +978,96 @@ const update_ui = async (option, item_id=null) => {
         case 15:
             {
                 //check if clicking on button that is already active then deactivate so no alignment
-                if (document.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
-                    document.querySelector('#' + item_id).classList.remove(settings.button_active_class);
+                if (AppDocument.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
+                    AppDocument.querySelector('#' + item_id).classList.remove(settings.button_active_class);
                 }
                 else{	
                     settings.reportheader_aleft.classList.remove(settings.button_active_class);
                     settings.reportheader_acenter.classList.remove(settings.button_active_class);
                     settings.reportheader_aright.classList.remove(settings.button_active_class);
-                    document.querySelector('#' + item_id).classList.add(settings.button_active_class);
+                    AppDocument.querySelector('#' + item_id).classList.add(settings.button_active_class);
                 }
-                const header_align = get_align(document.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'),
-                                             document.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'),
-                                             document.querySelector('#setting_icon_text_header_aright').classList.contains('setting_button_active'));
-                document.querySelector('#setting_input_reportheader1').style.textAlign= header_align;
-                document.querySelector('#setting_input_reportheader2').style.textAlign= header_align;
-                document.querySelector('#setting_input_reportheader3').style.textAlign= header_align;
+                const header_align = get_align(AppDocument.querySelector('#setting_icon_text_header_aleft').classList.contains('setting_button_active'),
+                                             AppDocument.querySelector('#setting_icon_text_header_acenter').classList.contains('setting_button_active'),
+                                             AppDocument.querySelector('#setting_icon_text_header_aright').classList.contains('setting_button_active'));
+                AppDocument.querySelector('#setting_input_reportheader1').style.textAlign= header_align;
+                AppDocument.querySelector('#setting_input_reportheader2').style.textAlign= header_align;
+                AppDocument.querySelector('#setting_input_reportheader3').style.textAlign= header_align;
                 break;
             }
         //16=Texts, Report footer align
         case 16:
             {
                 //check if clicking on button that is already active then deactivate so no alignment
-                if (document.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
-                    document.querySelector('#' + item_id).classList.remove(settings.button_active_class);
+                if (AppDocument.querySelector('#' + item_id).classList.contains(settings.button_active_class)){
+                    AppDocument.querySelector('#' + item_id).classList.remove(settings.button_active_class);
                 }
                 else{
                     settings.reportfooter_aleft.classList.remove(settings.button_active_class);
                     settings.reportfooter_acenter.classList.remove(settings.button_active_class);
                     settings.reportfooter_aright.classList.remove(settings.button_active_class);
-                    document.querySelector('#' + item_id).classList.add(settings.button_active_class);
+                    AppDocument.querySelector('#' + item_id).classList.add(settings.button_active_class);
                 }
-                const footer_align = get_align(document.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
-                                                 document.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
-                                                 document.querySelector('#setting_icon_text_footer_aright').classList.contains('setting_button_active'));
-                document.querySelector('#setting_input_reportfooter1').style.textAlign= footer_align;
-                document.querySelector('#setting_input_reportfooter2').style.textAlign= footer_align;
-                document.querySelector('#setting_input_reportfooter3').style.textAlign= footer_align;
+                const footer_align = get_align(AppDocument.querySelector('#setting_icon_text_footer_aleft').classList.contains('setting_button_active'),
+                                                 AppDocument.querySelector('#setting_icon_text_footer_acenter').classList.contains('setting_button_active'),
+                                                 AppDocument.querySelector('#setting_icon_text_footer_aright').classList.contains('setting_button_active'));
+                AppDocument.querySelector('#setting_input_reportfooter1').style.textAlign= footer_align;
+                AppDocument.querySelector('#setting_input_reportfooter2').style.textAlign= footer_align;
+                AppDocument.querySelector('#setting_input_reportfooter3').style.textAlign= footer_align;
                 break;
             }
         //Prayer, method
         case 17:
             {
-                const method = document.querySelector('#setting_select_method').value;
+                const method = AppDocument.querySelector('#setting_select_method').value;
                 let suffix;
 
-                document.querySelector('#setting_method_param_fajr').innerHTML = '';
-                document.querySelector('#setting_method_param_isha').innerHTML = '';
+                AppDocument.querySelector('#setting_method_param_fajr').innerHTML = '';
+                AppDocument.querySelector('#setting_method_param_isha').innerHTML = '';
                 if (typeof app_report.REPORT_GLOBAL.module_praytimes_methods[method].params.fajr == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                document.querySelector('#setting_method_param_fajr').innerHTML = 'Fajr:' + app_report.REPORT_GLOBAL.module_praytimes_methods[method].params.fajr + suffix;
+                AppDocument.querySelector('#setting_method_param_fajr').innerHTML = 'Fajr:' + app_report.REPORT_GLOBAL.module_praytimes_methods[method].params.fajr + suffix;
                 if (typeof app_report.REPORT_GLOBAL.module_praytimes_methods[method].params.isha == 'string')
                     suffix = '';
                 else
                     suffix = '°';
-                document.querySelector('#setting_method_param_isha').innerHTML = 'Isha:' + app_report.REPORT_GLOBAL.module_praytimes_methods[method].params.isha + suffix;
+                AppDocument.querySelector('#setting_method_param_isha').innerHTML = 'Isha:' + app_report.REPORT_GLOBAL.module_praytimes_methods[method].params.isha + suffix;
                 break;
             }
     }
 };
-/*----------------------- */
-/* USER                   */
-/*----------------------- */
-//function sent as parameter, set the argument passed and convert result to integer with unary plus syntax
-//and ES6 arrow function and without function keyword
-const show_profile_function = profile_id => profile_show_app(+profile_id);
+/**
+ * Show profile function
+ * function sent as parameter, set the argument passed and convert result to integer with unary plus syntax
+ * and ES6 arrow function and without function keyword 
+ * @param {string} profile_id 
+ * @returns {Promise.<void>}
+ */
+const show_profile_function = async profile_id => profile_show_app(+profile_id);
 
+/**
+ * User login
+ * @returns {Promise.<void>}
+ */
 const user_login_app = async () => {
     await common.user_login()
-    .then((result)=>{
+    .then((/**@type{{user_id: number,username: string,bio: string, avatar: string}}*/result)=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
         .then(()=>{
-            document.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-            common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
+            AppDocument.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+            common.set_avatar(result.avatar, AppDocument.querySelector('#user_setting_avatar_img')); 
 
             //Show user tab
-            document.querySelector('#tab_nav_7').style.display = 'inline-block';
+            AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
             //Hide settings
-            document.querySelector('#settings').style.visibility = 'hidden';
+            AppDocument.querySelector('#settings').style.visibility = 'hidden';
             //Hide profile
-            document.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
+            AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'hidden';
             
-            document.querySelector('#paper').innerHTML='';
+            AppDocument.querySelector('#paper').innerHTML='';
             dialogue_loading(1);
             user_settings_get().then(() => {
                 user_settings_load().then(() => {
@@ -976,9 +1084,15 @@ const user_login_app = async () => {
     })
     .catch(()=>null);
 };
+/**
+ * User verify check input
+ * @param {HTMLElement} item 
+ * @param {string} nextField 
+ * @returns {Promise.<void>}
+ */
 const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField)
-    .then(result=>{
+    .then((/**@type{{verification_type:number}}*/result)=>{
         if (result!=null){
             //login if LOGIN  or SIGNUP were verified successfully
             if (result.verification_type==1 ||
@@ -989,40 +1103,53 @@ const user_verify_check_input_app = async (item, nextField) => {
     }) 
     .catch(()=>null);
 };
+/**
+ * User function
+ * @param {string} function_name 
+ * @returns {Promise.<void>}
+ */
 const user_function_app = async (function_name) => {
     await common.user_function(function_name)
     .then(()=>profile_update_stat_app())
     .catch(()=>null);
 };
+/**
+ * Profile close
+ * @returns {void}
+ */
 const profile_close_app = () => {
     common.profile_close();
     profile_clear_app;
 };
+/**
+ * Profile clear
+ * @returns {void}
+ */
 const profile_clear_app = () => {
 
-    document.querySelector('#common_profile_public').style.display = 'none';
-    document.querySelector('#common_profile_private').style.display = 'none';
+    AppDocument.querySelector('#common_profile_public').style.display = 'none';
+    AppDocument.querySelector('#common_profile_private').style.display = 'none';
     
-    document.querySelector('#profile_info_user_setting_likes_count').innerHTML='';
-    document.querySelector('#profile_info_user_setting_liked_count').innerHTML='';
-    document.querySelector('#profile_select_user_settings').innerHTML='';
+    AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML='';
+    AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML='';
+    AppDocument.querySelector('#profile_select_user_settings').innerHTML='';
 
-    document.querySelector('#profile_user_settings_info_likes_count').innerHTML='';
-    document.querySelector('#profile_user_settings_info_views_count').innerHTML='';
+    AppDocument.querySelector('#profile_user_settings_info_likes_count').innerHTML='';
+    AppDocument.querySelector('#profile_user_settings_info_views_count').innerHTML='';
 };
+/**
+ * User logoff
+ * @returns {void}
+ */
 const user_logoff_app = () => {
-    const select = document.querySelector('#setting_select_user_setting');
-    let option;
+    const select = AppDocument.querySelector('#setting_select_user_setting');
     common.user_logoff().then(() => {
-        document.querySelector('#tab_nav_7').innerHTML = '';
-        document.querySelector('#user_settings').style.display = 'none';
+        AppDocument.querySelector('#tab_nav_7').innerHTML = '';
+        AppDocument.querySelector('#user_settings').style.display = 'none';
         
         profile_clear_app();
         //empty user settings
-        select.innerHTML = '';
-        //add one empty option
-        option = document.createElement('option');
-        select.appendChild(option);
+        select.innerHTML = '<option></option>';
         //set default settings
         set_default_settings().then(() => {
             settings_translate(true).then(() => {
@@ -1034,18 +1161,29 @@ const user_logoff_app = () => {
         });
     });    
 };
+/**
+ * Provider signin
+ * @param {*} provider_id 
+ * @returns {Promise.<void>}
+ */
 const ProviderSignIn_app = async (provider_id) => {
     common.ProviderSignIn(provider_id)
-    .then(result=>{
+    .then((/**@type{{   user_account_id: number,
+                        username: string,
+                        bio: string,
+                        avatar: string,
+                        first_name: string,
+                        last_name: string,
+                        userCreated:string}}*/result)=>{
         //create intitial user setting if not exist, send initial=true
         user_settings_function('ADD_LOGIN', true)
         .then(()=>{
-            document.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
-            common.set_avatar(result.avatar, document.querySelector('#user_setting_avatar_img')); 
+            AppDocument.querySelector('#tab_nav_7').innerHTML = '<img id=\'user_setting_avatar_img\' >';
+            common.set_avatar(result.avatar, AppDocument.querySelector('#user_setting_avatar_img')); 
 
             //Show user tab
-            document.querySelector('#tab_nav_7').style.display = 'inline-block';
-            document.querySelector('#paper').innerHTML='';
+            AppDocument.querySelector('#tab_nav_7').style.display = 'inline-block';
+            AppDocument.querySelector('#paper').innerHTML='';
             dialogue_loading(1);
             user_settings_get().then(() => {
                 user_settings_load().then(() => {
@@ -1061,24 +1199,34 @@ const ProviderSignIn_app = async (provider_id) => {
         });   
     });
 };
+/**
+ * Profile update stat
+ * @returns {Promise.<void>}
+ */
 const profile_update_stat_app = async () => {
     const result = await common.profile_update_stat();
     profile_user_setting_stat(result.id);
 };
+/**
+ * Profile show
+ * @param {number|null} user_account_id_other 
+ * @param {string|null} username 
+ * @returns {Promise.<void>}
+ */
 const profile_show_app = async (user_account_id_other = null, username = null) => {
-    document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
-    document.querySelector('#common_profile_top').style.display = 'none';
-    document.querySelector('#profile_main_stat_row2').style.display = 'none';
-    document.querySelector('#profile_user_settings_row').style.display = 'none';
+    AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+    AppDocument.querySelector('#common_profile_top').style.display = 'none';
+    AppDocument.querySelector('#profile_main_stat_row2').style.display = 'none';
+    AppDocument.querySelector('#profile_user_settings_row').style.display = 'none';
     
     profile_clear_app();
 
     if (user_account_id_other == null && common.COMMON_GLOBAL.user_account_id == '' && username == null) {
-        document.querySelector('#common_profile_info').style.display = 'none';
+        AppDocument.querySelector('#common_profile_info').style.display = 'none';
     }
     else
         await common.profile_show(user_account_id_other, username)
-        .then((result)=>{
+        .then((/**@type{{profile_id:number, private:number}}*/result)=>{
             if (result.profile_id != null){
                 if (result.private==1 && parseInt(common.COMMON_GLOBAL.user_account_id) !== result.profile_id) {
                     //private
@@ -1086,39 +1234,46 @@ const profile_show_app = async (user_account_id_other = null, username = null) =
                 } else {
                     //public
                     profile_show_user_setting();
-                    document.querySelector('#profile_main_stat_row2').style.display = 'block';
+                    AppDocument.querySelector('#profile_main_stat_row2').style.display = 'block';
                     profile_user_setting_stat(result.profile_id);
                 }    
             }
         });
 };
+/**
+ * 
+ * @param {number} detailchoice 
+ * @param {string} rest_url_app 
+ * @param {boolean} fetch_detail 
+ * @param {function} click_function 
+ * @returns {void}
+ */
 const profile_detail_app = (detailchoice, rest_url_app, fetch_detail, click_function) => {
     if (parseInt(common.COMMON_GLOBAL.user_account_id) || 0 !== 0) {
         if (detailchoice == 0){
             //user settings
-            document.querySelector('#profile_user_settings_row').style.display = 'block';
+            AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
         }
         else{
             //common 1 -4
             //app
             //7 Like user setting
             //8 Liked user setting
-            document.querySelector('#profile_user_settings_row').style.display = 'none';
+            AppDocument.querySelector('#profile_user_settings_row').style.display = 'none';
         }
         common.profile_detail(detailchoice, rest_url_app, fetch_detail, click_function);
     } 
     else
         common.show_common_dialogue('LOGIN');
-                
 };
-
-/*----------------------- */
-/* USER SETTINGS          */
-/*----------------------- */
+/**
+ * User settings get
+ * @returns {Promise.<void>}
+ */
 const user_settings_get = async () => {
-    const select = document.querySelector('#setting_select_user_setting');
+    const select = AppDocument.querySelector('#setting_select_user_setting');
     await common.FFB('DB_API', `/user_account_app_data_post/all?user_account_id=${common.COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_DATA', null)
-    .then(result=>{
+    .then((/**@type{string}*/result)=>{
         select.innerHTML = '';
         //fill select
         let option_html = '';
@@ -1181,16 +1336,21 @@ const user_settings_get = async () => {
         }
         select.innerHTML += option_html;
         //show user setting select
-        document.querySelector('#user_settings').style.display = 'block';
+        AppDocument.querySelector('#user_settings').style.display = 'block';
     })
     .catch(()=>null);
 };
+/**
+ * User setting show link
+ * @param {HTMLElement} item 
+ * @returns {void}
+ */
 const user_setting_link = (item) => {
-    const paper_size_select = document.querySelector('#setting_select_report_papersize');
-    const select_user_setting = document.querySelector('#setting_select_user_setting');
+    const paper_size_select = AppDocument.querySelector('#setting_select_report_papersize');
+    const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
     const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-    document.querySelector('#common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
+    AppDocument.querySelector('#common_window_info_content').className = paper_size_select.options[paper_size_select.selectedIndex].value;
     switch (item.id){
         case 'user_day_html':
         case 'user_month_html':
@@ -1216,45 +1376,49 @@ const user_setting_link = (item) => {
         }
     }
 };
+/**
+ * User settings load
+ * @returns {Promise.<void>}
+ */
 const user_settings_load = async () => {
 
-    const select_user_setting = document.querySelector('#setting_select_user_setting');
+    const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
     //Regional
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_language_locale'),
-        document.querySelector('#setting_select_locale'), 1);
+        AppDocument.querySelector('#setting_select_locale'), 1);
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_timezone'),
-        document.querySelector('#setting_select_report_timezone'), 1);
+        AppDocument.querySelector('#setting_select_report_timezone'), 1);
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_number_system'),
-        document.querySelector('#setting_select_report_numbersystem'), 1);
+        AppDocument.querySelector('#setting_select_report_numbersystem'), 1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_layout_direction'),
-        document.querySelector('#setting_select_report_direction'), 1);
+        AppDocument.querySelector('#setting_select_report_direction'), 1);
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_second_language_locale'),
-        document.querySelector('#setting_select_report_locale_second'),1);
+        AppDocument.querySelector('#setting_select_report_locale_second'),1);
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_column_title'),
-        document.querySelector('#setting_select_report_coltitle'),1);
+        AppDocument.querySelector('#setting_select_report_coltitle'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_arabic_script'),
-        document.querySelector('#setting_select_report_arabic_script'),1);
+        AppDocument.querySelector('#setting_select_report_arabic_script'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_type'),
-        document.querySelector('#setting_select_calendartype'),1);
+        AppDocument.querySelector('#setting_select_calendartype'),1);
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('regional_calendar_hijri_type'),
-        document.querySelector('#setting_select_calendar_hijri_type'),1);
+        AppDocument.querySelector('#setting_select_calendar_hijri_type'),1);
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id'),
-        document.querySelector('#setting_select_popular_place'),0);
+        AppDocument.querySelector('#setting_select_popular_place'),0);
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_popular_place_id')||null !=null) {
         //set GPS for chosen popular place
         update_ui(7);
     }
-    document.querySelector('#setting_input_place').innerHTML =
+    AppDocument.querySelector('#setting_input_place').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('description');
-    document.querySelector('#setting_input_lat').innerHTML =
+    AppDocument.querySelector('#setting_input_lat').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_lat_text');
-    document.querySelector('#setting_input_long').innerHTML =
+    AppDocument.querySelector('#setting_input_long').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_long_text');    
     //Design
     set_theme_id('day', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_day_id'));
@@ -1262,294 +1426,300 @@ const user_settings_load = async () => {
     set_theme_id('year', select_user_setting[select_user_setting.selectedIndex].getAttribute('design_theme_year_id'));
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_paper_size'),
-        document.querySelector('#setting_select_report_papersize'),1);
+        AppDocument.querySelector('#setting_select_report_papersize'),1);
     
-    document.querySelector('#paper').className=document.querySelector('#setting_select_report_papersize').value;
+    AppDocument.querySelector('#paper').className=AppDocument.querySelector('#setting_select_report_papersize').value;
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_row_highlight'),
-        document.querySelector('#setting_select_report_highlight_row'),1);
+        AppDocument.querySelector('#setting_select_report_highlight_row'),1);
 
     
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_weekday_checked')))
-        document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_calendartype_checked')))
-        document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_notes_checked')))
-        document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
         
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_gps_checked')))
-        document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('design_column_timezone_checked')))
-        document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
     //Image
     //dont set null value, it will corrupt IMG tag
-    document.querySelector('#setting_input_reportheader_img').value = '';
+    AppDocument.querySelector('#setting_input_reportheader_img').value = '';
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('image_header_image_img') == null ||
         select_user_setting[select_user_setting.selectedIndex].getAttribute('image_header_image_img') == '') {
-        common.recreate_img(document.querySelector('#setting_reportheader_img'));
+        common.recreate_img(AppDocument.querySelector('#setting_reportheader_img'));
     } else {
-        document.querySelector('#setting_reportheader_img').src =
+        AppDocument.querySelector('#setting_reportheader_img').src =
             select_user_setting[select_user_setting.selectedIndex].getAttribute('image_header_image_img');
     }
 
-    document.querySelector('#setting_input_reportfooter_img').value = '';
+    AppDocument.querySelector('#setting_input_reportfooter_img').value = '';
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('image_footer_image_img') == null ||
         select_user_setting[select_user_setting.selectedIndex].getAttribute('image_footer_image_img') == '') {
-        document.querySelector('#setting_reportfooter_img').src = '';
-        common.recreate_img(document.querySelector('#setting_reportfooter_img'));
+        AppDocument.querySelector('#setting_reportfooter_img').src = '';
+        common.recreate_img(AppDocument.querySelector('#setting_reportfooter_img'));
     } else {
-        document.querySelector('#setting_reportfooter_img').src =
+        AppDocument.querySelector('#setting_reportfooter_img').src =
             select_user_setting[select_user_setting.selectedIndex].getAttribute('image_footer_image_img');
     }
     //Text
-    document.querySelector('#setting_input_reportheader1').innerHTML =
+    AppDocument.querySelector('#setting_input_reportheader1').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_1_text');
-    document.querySelector('#setting_input_reportheader2').innerHTML =
+    AppDocument.querySelector('#setting_input_reportheader2').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_2_text');
-    document.querySelector('#setting_input_reportheader3').innerHTML =
+    AppDocument.querySelector('#setting_input_reportheader3').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_3_text');
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align') == '') {
-        document.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
-        document.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
-        document.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
+        AppDocument.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
+        AppDocument.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
+        AppDocument.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
     } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
         //remove active class if it is active
-        document.querySelector('#setting_icon_text_header_a' +
+        AppDocument.querySelector('#setting_icon_text_header_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align')).classList.remove('setting_button_active');
         update_ui(15, 'setting_icon_text_header_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_header_align'));
     }
-    document.querySelector('#setting_input_reportfooter1').innerHTML =
+    AppDocument.querySelector('#setting_input_reportfooter1').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_1_text');
-    document.querySelector('#setting_input_reportfooter2').innerHTML =
+    AppDocument.querySelector('#setting_input_reportfooter2').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_2_text');
-    document.querySelector('#setting_input_reportfooter3').innerHTML =
+    AppDocument.querySelector('#setting_input_reportfooter3').innerHTML =
         select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_3_text');
     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align') == '') {
-        document.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
-        document.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
-        document.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
+        AppDocument.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
+        AppDocument.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
+        AppDocument.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
     } else { //update with 'left', 'center' or 'right' adding to bject name and add active class to this object
         //remove active class if it is active
-        document.querySelector('#setting_icon_text_footer_a' +
+        AppDocument.querySelector('#setting_icon_text_footer_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align')).classList.remove('setting_button_active');
         update_ui(16, 'setting_icon_text_footer_a' +
             select_user_setting[select_user_setting.selectedIndex].getAttribute('text_footer_align'));
     }
     //Prayer
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_method'),
-        document.querySelector('#setting_select_method'),1);
+        AppDocument.querySelector('#setting_select_method'),1);
     //show method parameters used
     update_ui(17);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_asr_method'),
-        document.querySelector('#setting_select_asr'),1);
+        AppDocument.querySelector('#setting_select_asr'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_high_latitude_adjustment'),
-        document.querySelector('#setting_select_highlatitude'),1);
+        AppDocument.querySelector('#setting_select_highlatitude'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_time_format'),
-        document.querySelector('#setting_select_timeformat'),1);
+        AppDocument.querySelector('#setting_select_timeformat'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_hijri_date_adjustment'),
-        document.querySelector('#setting_select_hijri_adjustment'),1);
+        AppDocument.querySelector('#setting_select_hijri_adjustment'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_fajr_iqamat'),
-        document.querySelector('#setting_select_report_iqamat_title_fajr'),1);
+        AppDocument.querySelector('#setting_select_report_iqamat_title_fajr'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_fajr_iqamat'),
-        document.querySelector('#setting_select_report_iqamat_title_dhuhr'),1);
+        AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_asr_iqamat'),
-        document.querySelector('#setting_select_report_iqamat_title_asr'),1);
+        AppDocument.querySelector('#setting_select_report_iqamat_title_asr'),1);
     
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_maghrib_iqamat'),
-        document.querySelector('#setting_select_report_iqamat_title_maghrib'),1);
+        AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib'),1);
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_isha_iqamat'),
-        document.querySelector('#setting_select_report_iqamat_title_isha'),1);
+        AppDocument.querySelector('#setting_select_report_iqamat_title_isha'),1);
 
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_imsak_checked')))
-        document.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_sunset_checked')))
-        document.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
     if (Number(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_midnight_checked')))
-        document.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
 
     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('prayer_column_fast_start_end'),
-        document.querySelector('#setting_select_report_show_fast_start_end'),1);
+        AppDocument.querySelector('#setting_select_report_show_fast_start_end'),1);
 
-    return null;
 };
-
+/**
+ * User settings function
+ * @param {string} function_name 
+ * @param {boolean} initial_user_setting 
+ * @returns {Promise.<void>}
+ */
 const user_settings_function = async (function_name, initial_user_setting) => {
-    const description = document.querySelector('#setting_input_place').innerHTML;
+    const description = AppDocument.querySelector('#setting_input_place').innerHTML;
     
-    const select_setting_popular_place = document.querySelector('#setting_select_popular_place');
+    const select_setting_popular_place = AppDocument.querySelector('#setting_select_popular_place');
     if (common.input_control(null,{
                                     check_valid_list:[
-                                                [document.querySelector('#setting_input_place'),null],
-                                                [document.querySelector('#setting_input_lat'),null],
-                                                [document.querySelector('#setting_input_long'),null],
-                                                [document.querySelector('#setting_input_reportheader1'),null],
-                                                [document.querySelector('#setting_input_reportheader2'),null],
-                                                [document.querySelector('#setting_input_reportheader3'),null],
-                                                [document.querySelector('#setting_input_reportfooter1'),null],
-                                                [document.querySelector('#setting_input_reportfooter2'),null],
-                                                [document.querySelector('#setting_input_reportfooter3'),null],
-                                                [document.querySelector('#setting_input_long'),null]
-                                                ]})==false)
-        return;
-    let country_id, city_id;
-    if (document.querySelector('#common_module_leaflet_select_country')){
-        const select_setting_country = document.querySelector('#common_module_leaflet_select_country');
-        const select_setting_city = document.querySelector('#common_module_leaflet_select_city');
-        country_id = select_setting_country[select_setting_country.selectedIndex].getAttribute('id');
-        city_id = select_setting_city[select_setting_city.selectedIndex].getAttribute('id');
-    }
-    else{
-        //choose user settings first if exists or else null
-        const select_user_setting = document.querySelector('#setting_select_user_setting');
-        if (select_user_setting[select_user_setting.selectedIndex] && select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'))
-            country_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id');
-        else  
-            country_id =  null;
-        if (select_user_setting[select_user_setting.selectedIndex] && select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id'))
-            city_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id');
-        else
-            city_id = null;
-    }
-
+                                                [AppDocument.querySelector('#setting_input_place'),null],
+                                                [AppDocument.querySelector('#setting_input_lat'),null],
+                                                [AppDocument.querySelector('#setting_input_long'),null],
+                                                [AppDocument.querySelector('#setting_input_reportheader1'),null],
+                                                [AppDocument.querySelector('#setting_input_reportheader2'),null],
+                                                [AppDocument.querySelector('#setting_input_reportheader3'),null],
+                                                [AppDocument.querySelector('#setting_input_reportfooter1'),null],
+                                                [AppDocument.querySelector('#setting_input_reportfooter2'),null],
+                                                [AppDocument.querySelector('#setting_input_reportfooter3'),null],
+                                                [AppDocument.querySelector('#setting_input_long'),null]
+                                                ]})==true){
+        let country_id, city_id;
+        if (AppDocument.querySelector('#common_module_leaflet_select_country')){
+            const select_setting_country = AppDocument.querySelector('#common_module_leaflet_select_country');
+            const select_setting_city = AppDocument.querySelector('#common_module_leaflet_select_city');
+            country_id = select_setting_country[select_setting_country.selectedIndex].getAttribute('id');
+            city_id = select_setting_city[select_setting_city.selectedIndex].getAttribute('id');
+        }
+        else{
+            //choose user settings first if exists or else null
+            const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
+            if (select_user_setting[select_user_setting.selectedIndex] && select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'))
+                country_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id');
+            else  
+                country_id =  null;
+            if (select_user_setting[select_user_setting.selectedIndex] && select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id'))
+                city_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id');
+            else
+                city_id = null;
+        }
+        //store 0/1 for checked value for checkboxes
+        const json_settings =
+            {   description: description,
+                regional_language_locale: AppDocument.querySelector('#setting_select_locale').value,
+                regional_timezone: AppDocument.querySelector('#setting_select_report_timezone').value,
+                regional_number_system: AppDocument.querySelector('#setting_select_report_numbersystem').value,
+                regional_layout_direction: AppDocument.querySelector('#setting_select_report_direction').value,
+                regional_second_language_locale: AppDocument.querySelector('#setting_select_report_locale_second').value,
+                regional_column_title: AppDocument.querySelector('#setting_select_report_coltitle').value,
+                regional_arabic_script: AppDocument.querySelector('#setting_select_report_arabic_script').value,
+                regional_calendar_type: AppDocument.querySelector('#setting_select_calendartype').value,
+                regional_calendar_hijri_type: AppDocument.querySelector('#setting_select_calendar_hijri_type').value,
     
-    //store 0/1 for checked value for checkboxes
-    const json_settings =
-        {   description: description,
-            regional_language_locale: document.querySelector('#setting_select_locale').value,
-            regional_timezone: document.querySelector('#setting_select_report_timezone').value,
-            regional_number_system: document.querySelector('#setting_select_report_numbersystem').value,
-            regional_layout_direction: document.querySelector('#setting_select_report_direction').value,
-            regional_second_language_locale: document.querySelector('#setting_select_report_locale_second').value,
-            regional_column_title: document.querySelector('#setting_select_report_coltitle').value,
-            regional_arabic_script: document.querySelector('#setting_select_report_arabic_script').value,
-            regional_calendar_type: document.querySelector('#setting_select_calendartype').value,
-            regional_calendar_hijri_type: document.querySelector('#setting_select_calendar_hijri_type').value,
-
-            gps_country_id: country_id,
-            gps_city_id: city_id,
-            gps_popular_place_id: select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')||null,
-            gps_lat_text: document.querySelector('#setting_input_lat').innerHTML,
-            gps_long_text: document.querySelector('#setting_input_long').innerHTML,
-
-            design_theme_day_id: get_theme_id('day'),
-            design_theme_month_id: get_theme_id('month'),
-            design_theme_year_id: get_theme_id('year'),
-            design_paper_size: document.querySelector('#setting_select_report_papersize').value,
-            design_row_highlight: document.querySelector('#setting_select_report_highlight_row').value,
-            design_column_weekday_checked: Number(document.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')),
-            design_column_calendartype_checked: Number(document.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')),
-            design_column_notes_checked: Number(document.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')),
-            design_column_gps_checked: Number(document.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')),
-            design_column_timezone_checked: Number(document.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')),
-
-            image_header_image_img: document.querySelector('#setting_reportheader_img').src,
-            image_footer_image_img: document.querySelector('#setting_reportfooter_img').src,
-
-            text_header_1_text: document.querySelector('#setting_input_reportheader1').innerHTML,
-            text_header_2_text: document.querySelector('#setting_input_reportheader2').innerHTML,
-            text_header_3_text: document.querySelector('#setting_input_reportheader3').innerHTML,
-            text_header_align: align_button_value('header'),
-            text_footer_1_text: document.querySelector('#setting_input_reportfooter1').innerHTML,
-            text_footer_2_text: document.querySelector('#setting_input_reportfooter2').innerHTML,
-            text_footer_3_text: document.querySelector('#setting_input_reportfooter3').innerHTML,
-            text_footer_align: align_button_value('footer'),
-
-            prayer_method: document.querySelector('#setting_select_method').value,
-            prayer_asr_method: document.querySelector('#setting_select_asr').value,
-            prayer_high_latitude_adjustment: document.querySelector('#setting_select_highlatitude').value,
-            prayer_time_format: document.querySelector('#setting_select_timeformat').value,
-            prayer_hijri_date_adjustment: document.querySelector('#setting_select_hijri_adjustment').value,
-            prayer_fajr_iqamat: document.querySelector('#setting_select_report_iqamat_title_fajr').value,
-            prayer_dhuhr_iqamat: document.querySelector('#setting_select_report_iqamat_title_dhuhr').value,
-            prayer_asr_iqamat: document.querySelector('#setting_select_report_iqamat_title_asr').value,
-            prayer_maghrib_iqamat: document.querySelector('#setting_select_report_iqamat_title_maghrib').value,
-            prayer_isha_iqamat: document.querySelector('#setting_select_report_iqamat_title_isha').value,
-            prayer_column_imsak_checked: Number(document.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')),
-            prayer_column_sunset_checked: Number(document.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')),
-            prayer_column_midnight_checked: Number(document.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')),
-            prayer_column_fast_start_end: document.querySelector('#setting_select_report_show_fast_start_end').value
-         };
-    const json_data = { description:        description,
-                        json_data:          json_settings,
-                        user_account_id:    common.COMMON_GLOBAL.user_account_id
-                    };
-    let method;
-    let path;
-    switch (function_name){
-        case 'ADD_LOGIN':
-        case 'ADD':{
-            if (function_name=='ADD')
-                document.querySelector('#setting_btn_user_add').classList.add('css_spinner');
-            method = 'POST';
-            path = `/user_account_app_data_post?initial=${initial_user_setting==true?1:0}`;
-            break;
-        }
-        case 'SAVE':{
-            document.querySelector('#setting_btn_user_save').classList.add('css_spinner');
-            method = 'PUT';
-            const select_user_setting = document.querySelector('#setting_select_user_setting');
-            const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
-            path = `/user_account_app_data_post?PUT_ID=${user_setting_id}`;
-            break;
-        }
-        default:{
-            break;
-        }
-    }
-    await common.FFB('DB_API', path, method, 'APP_ACCESS', json_data)
-    .then(result=>{
+                gps_country_id: country_id,
+                gps_city_id: city_id,
+                gps_popular_place_id: select_setting_popular_place[select_setting_popular_place.selectedIndex].getAttribute('id')||null,
+                gps_lat_text: AppDocument.querySelector('#setting_input_lat').innerHTML,
+                gps_long_text: AppDocument.querySelector('#setting_input_long').innerHTML,
+    
+                design_theme_day_id: get_theme_id('day'),
+                design_theme_month_id: get_theme_id('month'),
+                design_theme_year_id: get_theme_id('year'),
+                design_paper_size: AppDocument.querySelector('#setting_select_report_papersize').value,
+                design_row_highlight: AppDocument.querySelector('#setting_select_report_highlight_row').value,
+                design_column_weekday_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')),
+                design_column_calendartype_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')),
+                design_column_notes_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')),
+                design_column_gps_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')),
+                design_column_timezone_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')),
+    
+                image_header_image_img: AppDocument.querySelector('#setting_reportheader_img').src,
+                image_footer_image_img: AppDocument.querySelector('#setting_reportfooter_img').src,
+    
+                text_header_1_text: AppDocument.querySelector('#setting_input_reportheader1').innerHTML,
+                text_header_2_text: AppDocument.querySelector('#setting_input_reportheader2').innerHTML,
+                text_header_3_text: AppDocument.querySelector('#setting_input_reportheader3').innerHTML,
+                text_header_align: align_button_value('header'),
+                text_footer_1_text: AppDocument.querySelector('#setting_input_reportfooter1').innerHTML,
+                text_footer_2_text: AppDocument.querySelector('#setting_input_reportfooter2').innerHTML,
+                text_footer_3_text: AppDocument.querySelector('#setting_input_reportfooter3').innerHTML,
+                text_footer_align: align_button_value('footer'),
+    
+                prayer_method: AppDocument.querySelector('#setting_select_method').value,
+                prayer_asr_method: AppDocument.querySelector('#setting_select_asr').value,
+                prayer_high_latitude_adjustment: AppDocument.querySelector('#setting_select_highlatitude').value,
+                prayer_time_format: AppDocument.querySelector('#setting_select_timeformat').value,
+                prayer_hijri_date_adjustment: AppDocument.querySelector('#setting_select_hijri_adjustment').value,
+                prayer_fajr_iqamat: AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').value,
+                prayer_dhuhr_iqamat: AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').value,
+                prayer_asr_iqamat: AppDocument.querySelector('#setting_select_report_iqamat_title_asr').value,
+                prayer_maghrib_iqamat: AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib').value,
+                prayer_isha_iqamat: AppDocument.querySelector('#setting_select_report_iqamat_title_isha').value,
+                prayer_column_imsak_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')),
+                prayer_column_sunset_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')),
+                prayer_column_midnight_checked: Number(AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')),
+                prayer_column_fast_start_end: AppDocument.querySelector('#setting_select_report_show_fast_start_end').value
+                };
+        const json_data = { description:        description,
+                            json_data:          json_settings,
+                            user_account_id:    common.COMMON_GLOBAL.user_account_id
+                        };
+        let method;
+        let path;
         switch (function_name){
+            case 'ADD_LOGIN':
             case 'ADD':{
-                //update user settings select with saved data
-                //save current settings to new option with 
-                //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
-                const select = document.querySelector('#setting_select_user_setting');
-                select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
-                select.selectedIndex = select.options[select.options.length - 1].index;
-                select.options[select.options.length - 1].value = select.selectedIndex;
-                set_settings_select();
-                document.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
+                if (function_name=='ADD')
+                    AppDocument.querySelector('#setting_btn_user_add').classList.add('css_spinner');
+                method = 'POST';
+                path = `/user_account_app_data_post?initial=${initial_user_setting==true?1:0}`;
                 break;
             }
             case 'SAVE':{
-                //update user settings select with saved data
-                set_settings_select();
-                document.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
+                AppDocument.querySelector('#setting_btn_user_save').classList.add('css_spinner');
+                method = 'PUT';
+                const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
+                const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
+                path = `/user_account_app_data_post?PUT_ID=${user_setting_id}`;
                 break;
             }
             default:{
                 break;
             }
         }
-    })
-    .catch((err)=>{
-        if (function_name=='ADD')
-            document.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
-        if (function_name=='SAVE')
-            document.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
-        throw err;
-    });
+        await common.FFB('DB_API', path, method, 'APP_ACCESS', json_data)
+        .then((/**@type{string}*/result)=>{
+            switch (function_name){
+                case 'ADD':{
+                    //update user settings select with saved data
+                    //save current settings to new option with 
+                    //returned user_setting_id + common.COMMON_GLOBAL.user_account_id (then call set_settings_select)
+                    const select = AppDocument.querySelector('#setting_select_user_setting');
+                    select.innerHTML += `<option id=${JSON.parse(result).id} user_account_id=${common.COMMON_GLOBAL.user_account_id} >${description}</option>`;
+                    select.selectedIndex = select.options[select.options.length - 1].index;
+                    select.options[select.options.length - 1].value = select.selectedIndex;
+                    set_settings_select();
+                    AppDocument.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
+                    break;
+                }
+                case 'SAVE':{
+                    //update user settings select with saved data
+                    set_settings_select();
+                    AppDocument.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
+                    break;
+                }
+                default:{
+                    break;
+                }
+            }
+        })
+        .catch((/**@type{Error}*/err)=>{
+            if (function_name=='ADD')
+                AppDocument.querySelector('#setting_btn_user_add').classList.remove('css_spinner');
+            if (function_name=='SAVE')
+                AppDocument.querySelector('#setting_btn_user_save').classList.remove('css_spinner');
+            throw err;
+        });
+    }
 };
-
+/**
+ * User settings delete
+ * @param {number|null} choice 
+ * @returns {void}
+ */
 const user_settings_delete = (choice=null) => {
-    const select_user_setting = document.querySelector('#setting_select_user_setting');
+    const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
     const user_setting_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('id');
     const function_delete_user_setting = () => { user_settings_delete(1); };
     
@@ -1559,63 +1729,64 @@ const user_settings_delete = (choice=null) => {
             break;
         }
         case 1:{
-            document.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
+            AppDocument.querySelector('#setting_btn_user_delete').classList.add('css_spinner');
             common.FFB('DB_API', `/user_account_app_data_post?DELETE_ID=${user_setting_id}`, 'DELETE', 'APP_ACCESS', null)
             .then(()=>{
-                const select = document.querySelector('#setting_select_user_setting');
+                const select = AppDocument.querySelector('#setting_select_user_setting');
                 //delete current option
                 select.remove(select.selectedIndex);
                 if (select_user_setting.length == 0) {
                     user_settings_function('ADD', false)
-                    .then(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
+                    .then(()=>AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
                 }
                 else{
                     //load next available
                     user_settings_load()
                     .then(()=>settings_translate(true))
                     .then(()=>settings_translate(false))
-                    .then(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
+                    .then(()=>AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
                 }
                 
             })
-            .catch(()=>document.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
+            .catch(()=>AppDocument.querySelector('#setting_btn_user_delete').classList.remove('css_spinner'));
         }
     }
-    return null;
 };
-
+/**
+ * Set default settings
+ * @returns {Promise.<void>}
+ */
 const set_default_settings = async () => {
     const current_number_system = Intl.NumberFormat().resolvedOptions().numberingSystem;
 
     //Regional
     //set default language
-    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_locale, document.querySelector('#setting_select_locale'),1);
+    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_locale, AppDocument.querySelector('#setting_select_locale'),1);
     //default timezone current timezone
-    document.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
+    AppDocument.querySelector('#setting_timezone_current').innerHTML = common.COMMON_GLOBAL.user_timezone;
     //default report timezone current timezone, 
     //will be changed user timezone to place timezone if no GPS can be set and default place will be used
-    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_timezone, document.querySelector('#setting_select_report_timezone'),1);
+    common.SearchAndSetSelectedIndex(common.COMMON_GLOBAL.user_timezone, AppDocument.querySelector('#setting_select_report_timezone'),1);
     //set default numberformat numbersystem
-    common.SearchAndSetSelectedIndex(current_number_system, document.querySelector('#setting_select_report_numbersystem'),1);
+    common.SearchAndSetSelectedIndex(current_number_system, AppDocument.querySelector('#setting_select_report_numbersystem'),1);
     //set default for others in Regional
 
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_direction, document.querySelector('#setting_select_report_direction'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_locale_second, document.querySelector('#setting_select_report_locale_second'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_coltitle, document.querySelector('#setting_select_report_coltitle'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_arabic_script, document.querySelector('#setting_select_report_arabic_script'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_calendartype, document.querySelector('#setting_select_calendartype'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_calendar_hijri_type, document.querySelector('#setting_select_calendar_hijri_type'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_direction, AppDocument.querySelector('#setting_select_report_direction'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_locale_second, AppDocument.querySelector('#setting_select_report_locale_second'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_coltitle, AppDocument.querySelector('#setting_select_report_coltitle'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_arabic_script, AppDocument.querySelector('#setting_select_report_arabic_script'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_calendartype, AppDocument.querySelector('#setting_select_calendartype'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.regional_default_calendar_hijri_type, AppDocument.querySelector('#setting_select_calendar_hijri_type'),1);
     
     //set according to users GPS/IP settings
     if (common.COMMON_GLOBAL.client_latitude && common.COMMON_GLOBAL.client_longitude) {
-        document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-        document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-        document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
-        const {getTimezone} = await import('regional');
-        document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+        AppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+        AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+        AppDocument.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
+        AppDocument.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
     } else {
         //Set Makkah as default
-        const select_place = document.querySelector('#setting_select_popular_place');
+        const select_place = AppDocument.querySelector('#setting_select_popular_place');
         select_place.selectedIndex = select_get_selectindex(select_place.id, APP_GLOBAL.gps_default_place_id);
         //update with default geodata in variables since geolocation is disabled
         common.COMMON_GLOBAL.client_longitude = select_place[select_place.selectedIndex].getAttribute('longitude');
@@ -1629,186 +1800,186 @@ const set_default_settings = async () => {
     set_theme_id('month', APP_GLOBAL.design_default_theme_month);
     set_theme_id('year', APP_GLOBAL.design_default_theme_year);
 
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.design_default_papersize, document.querySelector('#setting_select_report_papersize'),1);
-    document.querySelector('#paper').className=document.querySelector('#setting_select_report_papersize').value;
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.design_default_highlight_row, document.querySelector('#setting_select_report_highlight_row'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.design_default_papersize, AppDocument.querySelector('#setting_select_report_papersize'),1);
+    AppDocument.querySelector('#paper').className=AppDocument.querySelector('#setting_select_report_papersize').value;
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.design_default_highlight_row, AppDocument.querySelector('#setting_select_report_highlight_row'),1);
     
     if (APP_GLOBAL.design_default_show_weekday)
-        document.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.remove('checked');
     if (APP_GLOBAL.design_default_show_calendartype)
-        document.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.remove('checked');
     if (APP_GLOBAL.design_default_show_notes)
-        document.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.remove('checked');
     if (APP_GLOBAL.design_default_show_gps)
-        document.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.remove('checked');
     if (APP_GLOBAL.design_default_show_timezone)
-        document.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.remove('checked');
 
     //Image
-    document.querySelector('#setting_input_reportheader_img').value = '';
+    AppDocument.querySelector('#setting_input_reportheader_img').value = '';
     if (APP_GLOBAL.image_default_report_header_src == null || APP_GLOBAL.image_default_report_header_src == '')
-        common.recreate_img(document.querySelector('#setting_reportheader_img'));
+        common.recreate_img(AppDocument.querySelector('#setting_reportheader_img'));
     else {
-        document.querySelector('#setting_reportheader_img').src = await common.convert_image(   APP_GLOBAL.image_default_report_header_src, 
+        AppDocument.querySelector('#setting_reportheader_img').src = await common.convert_image(   APP_GLOBAL.image_default_report_header_src, 
                                                                                                 APP_GLOBAL.image_header_footer_width, 
                                                                                                 APP_GLOBAL.image_header_footer_height);
     }
-    document.querySelector('#setting_input_reportfooter_img').value = '';
+    AppDocument.querySelector('#setting_input_reportfooter_img').value = '';
     if (APP_GLOBAL.image_default_report_footer_src == null || APP_GLOBAL.image_default_report_footer_src == '')
-        common.recreate_img(document.querySelector('#setting_reportfooter_img'));
+        common.recreate_img(AppDocument.querySelector('#setting_reportfooter_img'));
     else {
-        document.querySelector('#setting_reportfooter_img').src = await common.convert_image(   APP_GLOBAL.image_default_report_footer_src, 
+        AppDocument.querySelector('#setting_reportfooter_img').src = await common.convert_image(   APP_GLOBAL.image_default_report_footer_src, 
                                                                                                 APP_GLOBAL.image_header_footer_width, 
                                                                                                 APP_GLOBAL.image_header_footer_height);
     }
     //Text
-    document.querySelector('#setting_input_reportheader1').innerHTML = APP_GLOBAL.text_default_reporttitle1;
-    document.querySelector('#setting_input_reportheader2').innerHTML = APP_GLOBAL.text_default_reporttitle2;
-    document.querySelector('#setting_input_reportheader3').innerHTML = APP_GLOBAL.text_default_reporttitle3;
+    AppDocument.querySelector('#setting_input_reportheader1').innerHTML = APP_GLOBAL.text_default_reporttitle1;
+    AppDocument.querySelector('#setting_input_reportheader2').innerHTML = APP_GLOBAL.text_default_reporttitle2;
+    AppDocument.querySelector('#setting_input_reportheader3').innerHTML = APP_GLOBAL.text_default_reporttitle3;
     
-    document.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
-    document.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
-    document.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
+    AppDocument.querySelector('#setting_icon_text_header_aleft').classList.remove('setting_button_active');
+    AppDocument.querySelector('#setting_icon_text_header_acenter').classList.remove('setting_button_active');
+    AppDocument.querySelector('#setting_icon_text_header_aright').classList.remove('setting_button_active');
     
-    document.querySelector('#setting_input_reportfooter1').innerHTML = APP_GLOBAL.text_default_reportfooter1;
-    document.querySelector('#setting_input_reportfooter2').innerHTML = APP_GLOBAL.text_default_reportfooter2;
-    document.querySelector('#setting_input_reportfooter3').innerHTML = APP_GLOBAL.text_default_reportfooter3;
+    AppDocument.querySelector('#setting_input_reportfooter1').innerHTML = APP_GLOBAL.text_default_reportfooter1;
+    AppDocument.querySelector('#setting_input_reportfooter2').innerHTML = APP_GLOBAL.text_default_reportfooter2;
+    AppDocument.querySelector('#setting_input_reportfooter3').innerHTML = APP_GLOBAL.text_default_reportfooter3;
     
-    document.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
-    document.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
-    document.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
+    AppDocument.querySelector('#setting_icon_text_footer_aleft').classList.remove('setting_button_active');
+    AppDocument.querySelector('#setting_icon_text_footer_acenter').classList.remove('setting_button_active');
+    AppDocument.querySelector('#setting_icon_text_footer_aright').classList.remove('setting_button_active');
 
     //Prayer
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_method, document.querySelector('#setting_select_method'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_method, AppDocument.querySelector('#setting_select_method'),1);
     //show method parameters used
     update_ui(17);
 
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_asr, document.querySelector('#setting_select_asr'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_highlatitude, document.querySelector('#setting_select_highlatitude'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_timeformat, document.querySelector('#setting_select_timeformat'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_hijri_adjustment, document.querySelector('#setting_select_hijri_adjustment'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_asr, AppDocument.querySelector('#setting_select_asr'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_highlatitude, AppDocument.querySelector('#setting_select_highlatitude'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_timeformat, AppDocument.querySelector('#setting_select_timeformat'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_hijri_adjustment, AppDocument.querySelector('#setting_select_hijri_adjustment'),1);
     
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_fajr, document.querySelector('#setting_select_report_iqamat_title_fajr'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_dhuhr, document.querySelector('#setting_select_report_iqamat_title_dhuhr'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_asr, document.querySelector('#setting_select_report_iqamat_title_asr'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_maghrib, document.querySelector('#setting_select_report_iqamat_title_maghrib'),1);
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_isha, document.querySelector('#setting_select_report_iqamat_title_isha'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_fajr, AppDocument.querySelector('#setting_select_report_iqamat_title_fajr'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_dhuhr, AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_asr, AppDocument.querySelector('#setting_select_report_iqamat_title_asr'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_maghrib, AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_iqamat_title_isha, AppDocument.querySelector('#setting_select_report_iqamat_title_isha'),1);
 
     if (APP_GLOBAL.prayer_default_show_imsak)
-        document.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.remove('checked');
     if (APP_GLOBAL.prayer_default_show_sunset)
-        document.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.remove('checked');
     if (APP_GLOBAL.prayer_default_show_midnight)
-        document.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.add('checked');
     else
-        document.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
+        AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.remove('checked');
         
-    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_show_fast_start_end, document.querySelector('#setting_select_report_show_fast_start_end'),1);
+    common.SearchAndSetSelectedIndex(APP_GLOBAL.prayer_default_show_fast_start_end, AppDocument.querySelector('#setting_select_report_show_fast_start_end'),1);
     //update select
     set_settings_select();
     //Hide user tab
-    document.querySelector('#tab_nav_7').style.display = 'none';
+    AppDocument.querySelector('#tab_nav_7').style.display = 'none';
     //open regional tab in settings
     openTab('1');
 };
 
 const set_settings_select = () => {
-    const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
-    option.text = document.querySelector('#setting_input_place').innerHTML;
+    const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
+    option.text = AppDocument.querySelector('#setting_input_place').innerHTML;
     
-    option.setAttribute('description', document.querySelector('#setting_input_place').innerHTML);
-    option.setAttribute('regional_language_locale', document.querySelector('#setting_select_locale').value);
-    option.setAttribute('regional_timezone', document.querySelector('#setting_select_report_timezone').value);
-    option.setAttribute('regional_number_system', document.querySelector('#setting_select_report_numbersystem').value);
-    option.setAttribute('regional_layout_direction', document.querySelector('#setting_select_report_direction').value);
-    option.setAttribute('regional_second_language_locale', document.querySelector('#setting_select_report_locale_second').value);
-    option.setAttribute('regional_column_title', document.querySelector('#setting_select_report_coltitle').value);
-    option.setAttribute('regional_arabic_script', document.querySelector('#setting_select_report_arabic_script').value);
-    option.setAttribute('regional_calendar_type', document.querySelector('#setting_select_calendartype').value);
-    option.setAttribute('regional_calendar_hijri_type', document.querySelector('#setting_select_calendar_hijri_type').value);
+    option.setAttribute('description', AppDocument.querySelector('#setting_input_place').innerHTML);
+    option.setAttribute('regional_language_locale', AppDocument.querySelector('#setting_select_locale').value);
+    option.setAttribute('regional_timezone', AppDocument.querySelector('#setting_select_report_timezone').value);
+    option.setAttribute('regional_number_system', AppDocument.querySelector('#setting_select_report_numbersystem').value);
+    option.setAttribute('regional_layout_direction', AppDocument.querySelector('#setting_select_report_direction').value);
+    option.setAttribute('regional_second_language_locale', AppDocument.querySelector('#setting_select_report_locale_second').value);
+    option.setAttribute('regional_column_title', AppDocument.querySelector('#setting_select_report_coltitle').value);
+    option.setAttribute('regional_arabic_script', AppDocument.querySelector('#setting_select_report_arabic_script').value);
+    option.setAttribute('regional_calendar_type', AppDocument.querySelector('#setting_select_calendartype').value);
+    option.setAttribute('regional_calendar_hijri_type', AppDocument.querySelector('#setting_select_calendar_hijri_type').value);
 
-    if (document.querySelector('#common_module_leaflet_select_country'))
-        option.setAttribute('gps_country_id', document.querySelector('#common_module_leaflet_select_country')[document.querySelector('#common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
+    if (AppDocument.querySelector('#common_module_leaflet_select_country'))
+        option.setAttribute('gps_country_id', AppDocument.querySelector('#common_module_leaflet_select_country')[AppDocument.querySelector('#common_module_leaflet_select_country').selectedIndex].getAttribute('id'));
     else
         option.setAttribute('gps_country_id','');
-    if (document.querySelector('#common_module_leaflet_select_city'))
-        option.setAttribute('gps_city_id', document.querySelector('#common_module_leaflet_select_city')[document.querySelector('#common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
+    if (AppDocument.querySelector('#common_module_leaflet_select_city'))
+        option.setAttribute('gps_city_id', AppDocument.querySelector('#common_module_leaflet_select_city')[AppDocument.querySelector('#common_module_leaflet_select_city').selectedIndex].getAttribute('id'));
     else
         option.setAttribute('gps_city_id','');
 
-    option.setAttribute('gps_popular_place_id', document.querySelector('#setting_select_popular_place')[document.querySelector('#setting_select_popular_place').selectedIndex].getAttribute('id'));
-    option.setAttribute('gps_lat_text', document.querySelector('#setting_input_lat').innerHTML);
-    option.setAttribute('gps_long_text', document.querySelector('#setting_input_long').innerHTML);
+    option.setAttribute('gps_popular_place_id', AppDocument.querySelector('#setting_select_popular_place')[AppDocument.querySelector('#setting_select_popular_place').selectedIndex].getAttribute('id'));
+    option.setAttribute('gps_lat_text', AppDocument.querySelector('#setting_input_lat').innerHTML);
+    option.setAttribute('gps_long_text', AppDocument.querySelector('#setting_input_long').innerHTML);
 
     option.setAttribute('design_theme_day_id', get_theme_id('day'));
     option.setAttribute('design_theme_month_id', get_theme_id('month'));
     option.setAttribute('design_theme_year_id', get_theme_id('year'));
-    option.setAttribute('design_paper_size', document.querySelector('#setting_select_report_papersize').value);
-    option.setAttribute('design_row_highlight', document.querySelector('#setting_select_report_highlight_row').value);
-    option.setAttribute('design_column_weekday_checked', Number(document.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')));
-    option.setAttribute('design_column_calendartype_checked', Number(document.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')));
-    option.setAttribute('design_column_notes_checked', Number(document.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')));
-    option.setAttribute('design_column_gps_checked', Number(document.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')));
-    option.setAttribute('design_column_timezone_checked', Number(document.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')));
+    option.setAttribute('design_paper_size', AppDocument.querySelector('#setting_select_report_papersize').value);
+    option.setAttribute('design_row_highlight', AppDocument.querySelector('#setting_select_report_highlight_row').value);
+    option.setAttribute('design_column_weekday_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_weekday').classList.contains('checked')));
+    option.setAttribute('design_column_calendartype_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_calendartype').classList.contains('checked')));
+    option.setAttribute('design_column_notes_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_notes').classList.contains('checked')));
+    option.setAttribute('design_column_gps_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_gps').classList.contains('checked')));
+    option.setAttribute('design_column_timezone_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_timezone').classList.contains('checked')));
 
-    option.setAttribute('image_header_image_img', document.querySelector('#setting_reportheader_img').src);
-    option.setAttribute('image_footer_image_img', document.querySelector('#setting_reportfooter_img').src);
+    option.setAttribute('image_header_image_img', AppDocument.querySelector('#setting_reportheader_img').src);
+    option.setAttribute('image_footer_image_img', AppDocument.querySelector('#setting_reportfooter_img').src);
 
     //fix null value that returns the word "null" without quotes
-    option.setAttribute('text_header_1_text', document.querySelector('#setting_input_reportheader1').innerHTML);
-    option.setAttribute('text_header_2_text', document.querySelector('#setting_input_reportheader2').innerHTML);
-    option.setAttribute('text_header_3_text', document.querySelector('#setting_input_reportheader3').innerHTML);
+    option.setAttribute('text_header_1_text', AppDocument.querySelector('#setting_input_reportheader1').innerHTML);
+    option.setAttribute('text_header_2_text', AppDocument.querySelector('#setting_input_reportheader2').innerHTML);
+    option.setAttribute('text_header_3_text', AppDocument.querySelector('#setting_input_reportheader3').innerHTML);
     option.setAttribute('text_header_align', align_button_value('header'));
-    option.setAttribute('text_footer_1_text', document.querySelector('#setting_input_reportfooter1').innerHTML);
-    option.setAttribute('text_footer_2_text', document.querySelector('#setting_input_reportfooter2').innerHTML);
-    option.setAttribute('text_footer_3_text', document.querySelector('#setting_input_reportfooter3').innerHTML);
+    option.setAttribute('text_footer_1_text', AppDocument.querySelector('#setting_input_reportfooter1').innerHTML);
+    option.setAttribute('text_footer_2_text', AppDocument.querySelector('#setting_input_reportfooter2').innerHTML);
+    option.setAttribute('text_footer_3_text', AppDocument.querySelector('#setting_input_reportfooter3').innerHTML);
     option.setAttribute('text_footer_align', align_button_value('footer'));
 
-    option.setAttribute('prayer_method', document.querySelector('#setting_select_method').value);
-    option.setAttribute('prayer_asr_method', document.querySelector('#setting_select_asr').value);
-    option.setAttribute('prayer_high_latitude_adjustment', document.querySelector('#setting_select_highlatitude').value);
-    option.setAttribute('prayer_time_format', document.querySelector('#setting_select_timeformat').value);
-    option.setAttribute('prayer_hijri_date_adjustment', document.querySelector('#setting_select_hijri_adjustment').value);
-    option.setAttribute('prayer_fajr_iqamat', document.querySelector('#setting_select_report_iqamat_title_fajr').value);
-    option.setAttribute('prayer_dhuhr_iqamat', document.querySelector('#setting_select_report_iqamat_title_dhuhr').value);
-    option.setAttribute('prayer_asr_iqamat', document.querySelector('#setting_select_report_iqamat_title_asr').value);
-    option.setAttribute('prayer_maghrib_iqamat', document.querySelector('#setting_select_report_iqamat_title_maghrib').value);
-    option.setAttribute('prayer_isha_iqamat', document.querySelector('#setting_select_report_iqamat_title_isha').value);
-    option.setAttribute('prayer_column_imsak_checked', Number(document.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')));
-    option.setAttribute('prayer_column_sunset_checked', Number(document.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')));
-    option.setAttribute('prayer_column_midnight_checked', Number(document.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')));
-    option.setAttribute('prayer_column_fast_start_end', document.querySelector('#setting_select_report_show_fast_start_end').value);
+    option.setAttribute('prayer_method', AppDocument.querySelector('#setting_select_method').value);
+    option.setAttribute('prayer_asr_method', AppDocument.querySelector('#setting_select_asr').value);
+    option.setAttribute('prayer_high_latitude_adjustment', AppDocument.querySelector('#setting_select_highlatitude').value);
+    option.setAttribute('prayer_time_format', AppDocument.querySelector('#setting_select_timeformat').value);
+    option.setAttribute('prayer_hijri_date_adjustment', AppDocument.querySelector('#setting_select_hijri_adjustment').value);
+    option.setAttribute('prayer_fajr_iqamat', AppDocument.querySelector('#setting_select_report_iqamat_title_fajr').value);
+    option.setAttribute('prayer_dhuhr_iqamat', AppDocument.querySelector('#setting_select_report_iqamat_title_dhuhr').value);
+    option.setAttribute('prayer_asr_iqamat', AppDocument.querySelector('#setting_select_report_iqamat_title_asr').value);
+    option.setAttribute('prayer_maghrib_iqamat', AppDocument.querySelector('#setting_select_report_iqamat_title_maghrib').value);
+    option.setAttribute('prayer_isha_iqamat', AppDocument.querySelector('#setting_select_report_iqamat_title_isha').value);
+    option.setAttribute('prayer_column_imsak_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_imsak').classList.contains('checked')));
+    option.setAttribute('prayer_column_sunset_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_sunset').classList.contains('checked')));
+    option.setAttribute('prayer_column_midnight_checked', Number(AppDocument.querySelector('#setting_checkbox_report_show_midnight').classList.contains('checked')));
+    option.setAttribute('prayer_column_fast_start_end', AppDocument.querySelector('#setting_select_report_show_fast_start_end').value);
 };
 
 const profile_user_setting_stat = (id) => {
     common.FFB('DB_API', `/user_account_app_data_post/profile?id=${id}`, 'GET', 'APP_DATA', null)
     .then(result=>{
-        document.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
-        document.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
+        AppDocument.querySelector('#profile_info_user_setting_likes_count').innerHTML = JSON.parse(result)[0].count_user_post_likes;
+        AppDocument.querySelector('#profile_info_user_setting_liked_count').innerHTML = JSON.parse(result)[0].count_user_post_liked;
     })
     .catch(()=>null);
 };
 
 const profile_user_setting_link = (item) => {
-    const select_user_setting = document.querySelector('#profile_select_user_settings');
+    const select_user_setting = AppDocument.querySelector('#profile_select_user_settings');
     const user_account_id = select_user_setting[select_user_setting.selectedIndex].getAttribute('user_account_id');
     const sid = select_user_setting[select_user_setting.selectedIndex].getAttribute('sid');
     const paper_size = select_user_setting[select_user_setting.selectedIndex].getAttribute('paper_size');
-    document.querySelector('#common_window_info_content').className = paper_size;
+    AppDocument.querySelector('#common_window_info_content').className = paper_size;
     switch (item.id){
         case 'profile_user_settings_day':
         case 'profile_user_settings_month':
@@ -1830,19 +2001,19 @@ const profile_user_setting_link = (item) => {
 };
 const profile_show_user_setting_detail = (liked, count_likes, count_views) => {
     
-    document.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
-    document.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
+    AppDocument.querySelector('#profile_user_settings_like').children[0].style.display = `${liked == 1?'none':'block'}`;
+    AppDocument.querySelector('#profile_user_settings_like').children[1].style.display = `${liked == 1?'block':'none'}`;
 
-    document.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
-    document.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
+    AppDocument.querySelector('#profile_user_settings_info_likes_count').innerHTML = count_likes;
+    AppDocument.querySelector('#profile_user_settings_info_views_count').innerHTML = count_views;
 };
 const profile_show_user_setting = () => {
-    document.querySelector('#profile_user_settings_row').style.display = 'block';
+    AppDocument.querySelector('#profile_user_settings_row').style.display = 'block';
 
-    common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${document.querySelector('#common_profile_id').innerHTML}` + 
+    common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${AppDocument.querySelector('#common_profile_id').innerHTML}` + 
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
     .then(result=>{
-        const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
+        const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         profile_select_user_settings.innerHTML='';
         let html = '';
         let i = 0;
@@ -1867,11 +2038,11 @@ const profile_show_user_setting = () => {
     .catch(()=>null);
 };
 const profile_user_setting_update_stat = () => {
-    const profile_id = document.querySelector('#common_profile_id').innerHTML;
+    const profile_id = AppDocument.querySelector('#common_profile_id').innerHTML;
     common.FFB('DB_API', `/user_account_app_data_post/profile/all?id=${profile_id}` +
                       '&id_current_user=' + common.COMMON_GLOBAL.user_account_id, 'GET', 'APP_DATA', null)
     .then(result=>{
-        const profile_select_user_settings = document.querySelector('#profile_select_user_settings');
+        const profile_select_user_settings = AppDocument.querySelector('#profile_select_user_settings');
         for (const profile_setting of JSON.parse(result)) {
             if (profile_select_user_settings.options[profile_select_user_settings.selectedIndex].getAttribute('sid')==profile_setting.id){
                 profile_select_user_settings.options[profile_select_user_settings.selectedIndex].setAttribute('user_account_id', profile_setting.user_account_id);
@@ -1894,7 +2065,7 @@ const user_settings_like = (user_account_app_data_post_id) => {
     if (common.COMMON_GLOBAL.user_account_id == '')
         common.show_common_dialogue('LOGIN');
     else {
-        if (document.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
+        if (AppDocument.querySelector('#profile_user_settings_like').children[0].style.display == 'block')
             method = 'POST';
         else
             method = 'DELETE';
@@ -1909,7 +2080,7 @@ const user_settings_like = (user_account_app_data_post_id) => {
 const app_event_click = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('click',(event) => {
+        AppDocument.querySelector('#app').addEventListener('click',(event) => {
             app_event_click(event);
         }, true);
     }
@@ -1953,7 +2124,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'info_close':{
-                    document.querySelector('#dialogue_info').style.visibility = 'hidden';
+                    AppDocument.querySelector('#dialogue_info').style.visibility = 'hidden';
                     break;
                 }
                 //toolbar top
@@ -1975,18 +2146,18 @@ const app_event_click = event => {
                 }
                 case 'toolbar_btn_search':{
                 
-                    const input_row = document.querySelector('#common_profile_search_input');
-                    const searchlist = document.querySelector('#common_profile_search_list_wrap');
+                    const input_row = AppDocument.querySelector('#common_profile_search_input');
+                    const searchlist = AppDocument.querySelector('#common_profile_search_list_wrap');
                     input_row.style.visibility=input_row.style.visibility=='visible'?'hidden':'visible';
                     //show list if list input is visible and is not empty
                     searchlist.style.display=(input_row.style.visibility=='visible' && input_row.innerHTML !='')?'flex':'none';
                     
-                    document.querySelector('#common_profile_search_input').focus();
+                    AppDocument.querySelector('#common_profile_search_input').focus();
                     break;
                 }
                 //toolbar bottom
                 case 'toolbar_btn_about':{
-                    document.querySelector('#dialogue_info').style.visibility = 'visible';
+                    AppDocument.querySelector('#dialogue_info').style.visibility = 'visible';
                     break;
                 }
                 case 'toolbar_btn_print':{
@@ -2040,7 +2211,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'scan_open_mobile_close':{
-                    document.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
+                    AppDocument.querySelector('#dialogue_scan_open_mobile').style.visibility = 'hidden';
                     break;
                 }
                 //setting design
@@ -2070,7 +2241,7 @@ const app_event_click = event => {
                 }            
                 //settings image
                 case 'setting_icon_image_header_img':{
-                    document.querySelector('#setting_input_reportheader_img').click();
+                    AppDocument.querySelector('#setting_input_reportheader_img').click();
                     break;
                 }
                 case 'setting_icon_image_header_clear':{
@@ -2078,7 +2249,7 @@ const app_event_click = event => {
                     break;
                 }
                 case 'setting_icon_image_footer_img':{
-                    document.querySelector('#setting_input_reportfooter_img').click();
+                    AppDocument.querySelector('#setting_input_reportfooter_img').click();
                     break;
                 }
                 case 'setting_icon_image_footer_clear':{
@@ -2089,15 +2260,15 @@ const app_event_click = event => {
                 case 'setting_icon_text_theme_day':
                 case 'setting_icon_text_theme_month':
                 case 'setting_icon_text_theme_year':{
-                    document.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
-                    document.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
-                    document.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
+                    AppDocument.querySelector('#setting_icon_text_theme_day').classList.remove('common_dialogue_button');
+                    AppDocument.querySelector('#setting_icon_text_theme_month').classList.remove('common_dialogue_button');
+                    AppDocument.querySelector('#setting_icon_text_theme_year').classList.remove('common_dialogue_button');
                     const  theme_type = event_target_id.substring(24);
                     //mark active icon
-                    document.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
-                    document.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
+                    AppDocument.querySelector('#' + event_target_id).classList.add('common_dialogue_button');
+                    AppDocument.querySelector('#setting_paper_preview_text').className =  'setting_paper_preview' + ' ' +
                                                                                         `theme_${theme_type}_${get_theme_id(theme_type)} ` + 
-                                                                                        document.querySelector('#setting_select_report_arabic_script').value;
+                                                                                        AppDocument.querySelector('#setting_select_report_arabic_script').value;
                     break;
                 }
                 case 'setting_icon_text_header_aleft':
@@ -2131,29 +2302,29 @@ const app_event_click = event => {
                 case 'user_month_pdf':
                 case 'user_year_html':
                 case 'user_year_pdf':{
-                    user_setting_link(document.querySelector('#' + event_target_id));
+                    user_setting_link(AppDocument.querySelector('#' + event_target_id));
                     break;
                 }
                 //profile
                 case 'profile_main_btn_user_settings':{
-                    document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
-                    document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(0, '/user_account_app_data_post/profile/detail', false);
                     break;
                 }
                 case 'profile_main_btn_user_setting_likes':
                 case 'profile_main_btn_user_setting_likes_heart':
                 case 'profile_main_btn_user_setting_likes_user_setting':{
-                    document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
-                    document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(6, '/user_account_app_data_post/profile/detail', true, show_profile_function);
                     break;
                 }
                 case 'profile_main_btn_user_setting_liked':
                 case 'profile_main_btn_user_setting_liked_heart':
                 case 'profile_main_btn_user_setting_liked_user_setting':{
-                    document.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
-                    document.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
+                    AppDocument.querySelectorAll('.common_profile_btn_selected').forEach(btn=>btn.classList.remove('common_profile_btn_selected'));
+                    AppDocument.querySelector(`#${event_target_id}`).classList.add('common_profile_btn_selected');
                     profile_detail_app(7, '/user_account_app_data_post/profile/detail', true, show_profile_function);
                     break;
                 }
@@ -2247,21 +2418,19 @@ const app_event_click = event => {
                 }    
                 //module leaflet
                 case 'common_module_leaflet_control_my_location_id':{
-                    document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-                    document.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
-                    document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
-                    document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+                    AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;
+                    AppDocument.querySelector('#setting_input_place').innerHTML = common.COMMON_GLOBAL.client_place;
+                    AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+                    AppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
                     //remove country and city in settings
-                    const option = document.querySelector('#setting_select_user_setting').options[document.querySelector('#setting_select_user_setting').selectedIndex];
+                    const option = AppDocument.querySelector('#setting_select_user_setting').options[AppDocument.querySelector('#setting_select_user_setting').selectedIndex];
                     option.setAttribute('gps_country_id', '');
                     option.setAttribute('gps_city_id', '');
-                    import('regional').then(({getTimezone})=>{
-                        //update timezone
-                        document.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
-                        //set qibbla
-                        map_show_qibbla();
-                        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
-                    });
+                    //update timezone
+                    AppDocument.querySelector('#setting_select_report_timezone').value = getTimezone(common.COMMON_GLOBAL.client_latitude, common.COMMON_GLOBAL.client_longitude);
+                    //set qibbla
+                    map_show_qibbla();
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(AppDocument.querySelector('#setting_select_report_timezone').value);
                     break;
                 }       
             }
@@ -2271,7 +2440,7 @@ const app_event_click = event => {
 const app_event_change = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('change',(event) => {
+        AppDocument.querySelector('#app').addEventListener('change',(event) => {
             app_event_change(event);
         }, true);
     }
@@ -2331,9 +2500,9 @@ const app_event_change = event => {
                 }
                 //common
                 case 'common_app_select_theme':{
-                    document.body.className = 'app_theme' + 
-                                                document.querySelector('#common_app_select_theme').value + ' ' + 
-                                                document.querySelector('#common_user_arabic_script_select').value;
+                    AppDocument.body.className = 'app_theme' + 
+                                                AppDocument.querySelector('#common_app_select_theme').value + ' ' + 
+                                                AppDocument.querySelector('#common_user_arabic_script_select').value;
                     break;
                 }
                 case 'common_user_locale_select':{
@@ -2341,11 +2510,11 @@ const app_event_change = event => {
                     break;
                 }
                 case 'common_user_timezone_select':{
-                    document.querySelector('#setting_timezone_current').innerHTML = event.target.value;
+                    AppDocument.querySelector('#setting_timezone_current').innerHTML = event.target.value;
                     break;
                 }
                 case 'common_user_arabic_script_select':{
-                    document.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
+                    AppDocument.querySelector('#common_app_select_theme').dispatchEvent(new Event('change'));
                     break;
                 }
                 //module leaflet
@@ -2354,19 +2523,17 @@ const app_event_change = event => {
                     break;
                 }
                 case 'common_module_leaflet_select_city':{
-                    const select_country = document.querySelector('#common_module_leaflet_select_country');
-                    const select_city = document.querySelector('#common_module_leaflet_select_city');
-                    const select_setting = document.querySelector('#setting_select_user_setting');
+                    const select_country = AppDocument.querySelector('#common_module_leaflet_select_country');
+                    const select_city = AppDocument.querySelector('#common_module_leaflet_select_city');
+                    const select_setting = AppDocument.querySelector('#setting_select_user_setting');
                     const option = select_setting.options[select_setting.selectedIndex];
                     option.setAttribute('gps_country_id', select_country[select_country.selectedIndex].getAttribute('id'));
                     option.setAttribute('gps_city_id', select_city[select_city.selectedIndex].getAttribute('id'));
                     //popular place not on map is read when saving
                     update_ui(6);
-                    import('regional').then(({getTimezone})=>{
-                        const timezone = getTimezone(   document.querySelector('#setting_input_lat').innerHTML,
-                                                        document.querySelector('#setting_input_long').innerHTML);
-                        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                    });
+                    const timezone = getTimezone(   AppDocument.querySelector('#setting_input_lat').innerHTML,
+                                                    AppDocument.querySelector('#setting_input_long').innerHTML);
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                     break;
                 }
                 case 'common_module_leaflet_select_mapstyle':{
@@ -2380,7 +2547,7 @@ const app_event_change = event => {
 const app_event_keyup = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('change',(event) => {
+        AppDocument.querySelector('#app').addEventListener('change',(event) => {
             app_event_keyup(event);
         }, true);
     }
@@ -2462,19 +2629,19 @@ const init_map = async () => {
     return await new Promise((resolve) => {
         common.map_init(APP_GLOBAL.gps_module_leaflet_container,
                         common.COMMON_GLOBAL.module_leaflet_style, 
-                        document.querySelector('#setting_input_long').innerHTML, 
-                        document.querySelector('#setting_input_lat').innerHTML,
+                        AppDocument.querySelector('#setting_input_long').innerHTML, 
+                        AppDocument.querySelector('#setting_input_lat').innerHTML,
                         false,
                         map_show_search_on_map_app).then(() => {
             //GPS
-            const select_user_setting = document.querySelector('#setting_select_user_setting');
+            const select_user_setting = AppDocument.querySelector('#setting_select_user_setting');
             common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id'),
-                                             document.querySelector('#common_module_leaflet_select_country'),0);
+                                             AppDocument.querySelector('#common_module_leaflet_select_country'),0);
             if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_country_id')||null !=null) {
                 //fill cities for chosen country
                 update_ui(5).then(() => {
                     common.SearchAndSetSelectedIndex(select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id'),
-                                                     document.querySelector('#common_module_leaflet_select_city'),0);
+                                                     AppDocument.querySelector('#common_module_leaflet_select_city'),0);
                     if (select_user_setting[select_user_setting.selectedIndex].getAttribute('gps_city_id')||null !=null) {
                         //set GPS for chosen city
                         update_ui(6);
@@ -2483,14 +2650,12 @@ const init_map = async () => {
             }        
             common.map_setevent('dblclick', (e) => {
                 if (e.originalEvent.target.id == APP_GLOBAL.gps_module_leaflet_container){
-                    document.querySelector('#setting_input_lat').innerHTML = e.latlng.lat;
-                    document.querySelector('#setting_input_long').innerHTML = e.latlng.lng;
+                    AppDocument.querySelector('#setting_input_lat').innerHTML = e.latlng.lat;
+                    AppDocument.querySelector('#setting_input_long').innerHTML = e.latlng.lng;
                     //Update GPS position
                     update_ui(9);
-                    import('regional').then(({getTimezone})=>{
-                        const timezone = getTimezone(   e.latlng.lat, e.latlng.lng);
-                        app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
-                    });
+                    const timezone = getTimezone(   e.latlng.lat, e.latlng.lng);
+                    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(timezone);
                 }   
             });
             resolve();
@@ -2505,8 +2670,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_lat,
-                    document.querySelector('#setting_input_long').innerHTML,
-                    document.querySelector('#setting_input_lat').innerHTML,
+                    AppDocument.querySelector('#setting_input_long').innerHTML,
+                    AppDocument.querySelector('#setting_input_lat').innerHTML,
                     APP_GLOBAL.gps_module_leaflet_qibbla_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_opacity);
@@ -2515,8 +2680,8 @@ const map_show_qibbla = () => {
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_text_size,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_long,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_lat,
-                    document.querySelector('#setting_input_long').innerHTML,
-                    document.querySelector('#setting_input_lat').innerHTML,
+                    AppDocument.querySelector('#setting_input_long').innerHTML,
+                    AppDocument.querySelector('#setting_input_lat').innerHTML,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_color,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_width,
                     APP_GLOBAL.gps_module_leaflet_qibbla_old_opacity);
@@ -2534,14 +2699,13 @@ const map_update_app = async (longitude, latitude, zoom, text1, text2, marker_id
 const map_show_search_on_map_app = async (data) =>{
     common.map_show_search_on_map(data);
     map_show_qibbla();
-    common.SearchAndSetSelectedIndex('', document.querySelector('#setting_select_popular_place'),0);
-    document.querySelector('#setting_input_place').innerHTML =  data.city + ', ' + data.country;
-    document.querySelector('#setting_input_long').innerHTML = data.longitude;
-    document.querySelector('#setting_input_lat').innerHTML = data.latitude;
-    const {getTimezone} = await import('regional');
-    document.querySelector('#setting_select_report_timezone').value = getTimezone(  document.querySelector('#setting_input_lat').innerHTML, 
-                                                                                    document.querySelector('#setting_input_long').innerHTML);
-    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(document.querySelector('#setting_select_report_timezone').value);
+    common.SearchAndSetSelectedIndex('', AppDocument.querySelector('#setting_select_popular_place'),0);
+    AppDocument.querySelector('#setting_input_place').innerHTML =  data.city + ', ' + data.country;
+    AppDocument.querySelector('#setting_input_long').innerHTML = data.longitude;
+    AppDocument.querySelector('#setting_input_lat').innerHTML = data.latitude;
+    AppDocument.querySelector('#setting_select_report_timezone').value = getTimezone(  AppDocument.querySelector('#setting_input_lat').innerHTML, 
+                                                                                    AppDocument.querySelector('#setting_input_long').innerHTML);
+    app_report.REPORT_GLOBAL.session_currentDate = common.getTimezoneDate(AppDocument.querySelector('#setting_select_report_timezone').value);
 };
 /*----------------------- */
 /* EXCEPTION              */
@@ -2563,9 +2727,11 @@ const mount_app_app = async framework => {
     .then(()=> {
         //set timers
         //set current date and time for current locale and timezone
+        /**@ts-ignore */
         clearInterval(showcurrenttime);
         setInterval(showcurrenttime, 1000);
         //set report date and time for current locale, report timezone
+        /**@ts-ignore */
         clearInterval(showreporttime);
         setInterval(showreporttime, 1000);
         //show dialogue about using mobile and scan QR code after 5 seconds
@@ -2579,7 +2745,7 @@ const mount_app_app = async framework => {
                         const user = window.location.pathname.substring(1);
                         if (user !='') {
                             //show profile for user entered in url
-                            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                            AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                             profile_show_app(null, user);
                         }
                     };
@@ -2626,7 +2792,7 @@ const init_app = (parameters) => {
         if (parameter.parameter_name=='REGIONAL_DEFAULT_CALENDAR_HIJRI_TYPE')
             APP_GLOBAL.regional_default_calendar_hijri_type = parameter.parameter_value;
         if (parameter.parameter_name=='GPS_DEFAULT_PLACE_ID')
-            APP_GLOBAL.gps_default_place_id = parameter.parameter_value;
+            APP_GLOBAL.gps_default_place_id = parseInt(parameter.parameter_value);
         if (parameter.parameter_name=='GPS_MODULE_LEAFLET_CONTAINER')
             APP_GLOBAL.gps_module_leaflet_container = parameter.parameter_value;
         if (parameter.parameter_name=='GPS_MODULE_LEAFLET_QIBBLA_TITLE')
@@ -2759,32 +2925,32 @@ const init_app = (parameters) => {
         APP_GLOBAL.timetable_type = '';
 
     //set initial default language from clients settings
-    common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), document.querySelector('#setting_select_locale'),1);
-    document.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
+    common.SearchAndSetSelectedIndex(navigator.language.toLowerCase(), AppDocument.querySelector('#setting_select_locale'),1);
+    AppDocument.querySelector('#about_logo').style.backgroundImage=`url(${common.COMMON_GLOBAL.app_logo})`;
     
     
     //set about info
-    document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
+    AppDocument.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
     if (common.COMMON_GLOBAL.app_link_url==null)
-        document.querySelector('#app_link').style.display = 'none';
+        AppDocument.querySelector('#app_link').style.display = 'none';
     else
-        document.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
-    document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
-    document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
-    document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
-    document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
+        AppDocument.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
+    AppDocument.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
+    AppDocument.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
+    AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
+    AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
     //set default geolocation
-    document.querySelector('#setting_select_popular_place').selectedIndex = 0;
-    document.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
-    document.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
+    AppDocument.querySelector('#setting_select_popular_place').selectedIndex = 0;
+    AppDocument.querySelector('#setting_input_lat').innerHTML = common.COMMON_GLOBAL.client_latitude;
+    AppDocument.querySelector('#setting_input_long').innerHTML = common.COMMON_GLOBAL.client_longitude;
     //load themes in Design tab
     load_themes();
     //set papersize
     zoom_paper();
     //user interface font depending selected arabic script in user preference, not in settings
     //dispatch event in common after events har defined above
-    document.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
+    AppDocument.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
     
     app_report.set_prayer_method().then(() => {
         mount_app_app();
