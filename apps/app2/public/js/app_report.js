@@ -1,4 +1,6 @@
+/**@ts-ignore */
 const common = await import('common');
+
 /*----------------------- */
 /* GLOBALS APP & REPORT   */
 /*----------------------- */
