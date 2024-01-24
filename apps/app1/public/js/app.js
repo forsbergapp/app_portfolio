@@ -1,4 +1,31 @@
+/**@ts-ignore */
 const common = await import('common');
+
+/**@type{{body:{className:string, classList:{add:function}},
+ *        querySelector:function,
+ *        querySelectorAll:function}} */
+const AppDocument = document;
+
+/**
+ * @typedef {object}        AppEvent
+ * @property {string}       code
+ * @property {function}     preventDefault
+ * @property {function}     stopPropagation
+ * @property {{ id:                 string,
+ *              innerHTML:          string,
+ *              value:              string,
+ *              parentNode:         {nextElementSibling:{querySelector:function}},
+ *              nextElementSibling: {dispatchEvent:function},
+ *              focus:              function,
+ *              blur:               function,
+ *              getAttribute:       function,
+ *              setAttribute:       function,
+ *              dispatchEvent:      function,
+ *              classList:          {contains:function}
+ *              className:          string
+ *            }}  target
+ */
+
 
 const APP_GLOBAL = {
     'img_diagram_img':'/common/documents/app_portfolio.webp',
@@ -7,27 +34,41 @@ const APP_GLOBAL = {
     'img_datamodel_img_small':'/common/documents/data_model_small.webp'
 };
 Object.seal(APP_GLOBAL);
+/**
+ * Show or hide dialouge
+ * @returns {void}
+ */
 const show_hide_apps_dialogue = () => {
-    if (document.querySelector('#dialogue_start_content').style.visibility=='visible' ||
-        document.querySelector('#dialogue_start_content').style.visibility==''){
-        document.querySelector('#dialogue_start_content').style.visibility='hidden';
-        document.querySelector('#dialogue_info_content').style.visibility='hidden';
-        document.querySelector('#common_profile_btn_top').style.visibility='hidden';
+    if (AppDocument.querySelector('#dialogue_start_content').style.visibility=='visible' ||
+        AppDocument.querySelector('#dialogue_start_content').style.visibility==''){
+        AppDocument.querySelector('#dialogue_start_content').style.visibility='hidden';
+        AppDocument.querySelector('#dialogue_info_content').style.visibility='hidden';
+        AppDocument.querySelector('#common_profile_btn_top').style.visibility='hidden';
     }
     else{
-        document.querySelector('#dialogue_start_content').style.visibility='visible';
-        document.querySelector('#dialogue_info_content').style.visibility='visible';
-        document.querySelector('#common_profile_btn_top').style.visibility='visible';
+        AppDocument.querySelector('#dialogue_start_content').style.visibility='visible';
+        AppDocument.querySelector('#dialogue_info_content').style.visibility='visible';
+        AppDocument.querySelector('#common_profile_btn_top').style.visibility='visible';
     }
 };
-
+/**
+ * App event click
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
 const app_event_click = event => {
-    const events = event => {
+    if (event==null){
+        //javascript framework
+        AppDocument.querySelector('#app').addEventListener('click', (/**@type{AppEvent}*/event) => {
+            app_event_click(event);
+        }, true);
+    }
+    else{
         const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
             if (event.target.className == 'app_logo')
-                window.open(event.target.parentNode.parentNode.querySelector('.app_url').innerHTML);
+                window.open(common.element_row(event.target).querySelector('.app_url').innerHTML);
             else{
                 switch (event_target_id){
                     case 'common_toolbar_framework_js':{
@@ -43,13 +84,13 @@ const app_event_click = event => {
                         break;
                     }
                     case 'app_menu_apps':{
-                        document.querySelector('#app_menu_content_apps' ).style.display ='block';
-                        document.querySelector('#app_menu_content_info' ).style.display ='none';
+                        AppDocument.querySelector('#app_menu_content_apps' ).style.display ='block';
+                        AppDocument.querySelector('#app_menu_content_info' ).style.display ='none';
                         break;
                     }
                     case 'app_menu_info':{
-                        document.querySelector('#app_menu_content_apps' ).style.display ='none';
-                        document.querySelector('#app_menu_content_info' ).style.display ='block';
+                        AppDocument.querySelector('#app_menu_content_apps' ).style.display ='none';
+                        AppDocument.querySelector('#app_menu_content_info' ).style.display ='block';
                         break;
                     }
                     case 'theme_background':{
@@ -59,8 +100,8 @@ const app_event_click = event => {
                     //start page
                     case 'start_message':{
                         event.preventDefault();
-                        document.querySelector('#dialogue_info_content' ).style.visibility ='visible';
-                        document.querySelector('#dialogue_start_content' ).style.visibility ='hidden';
+                        AppDocument.querySelector('#dialogue_info_content' ).style.visibility ='visible';
+                        AppDocument.querySelector('#dialogue_start_content' ).style.visibility ='hidden';
                         break;
                     }
                     //second page
@@ -76,8 +117,8 @@ const app_event_click = event => {
                     }
                     case 'info_message':{
                         event.preventDefault();
-                        document.querySelector('#dialogue_info_content' ).style.visibility ='hidden';
-                        document.querySelector('#dialogue_start_content' ).style.visibility ='visible';
+                        AppDocument.querySelector('#dialogue_info_content' ).style.visibility ='hidden';
+                        AppDocument.querySelector('#dialogue_start_content' ).style.visibility ='visible';
                         break;
                     }
                     case 'app_email':{
@@ -111,14 +152,14 @@ const app_event_click = event => {
                     }
                     //user menu
                     case 'common_user_menu_username':{
-                        document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+                        AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
                         common.profile_show(null,null);
-                        document.querySelector('#common_user_menu_dropdown').style='none';
+                        AppDocument.querySelector('#common_user_menu_dropdown').style='none';
                         break;
                     }
                     case 'common_user_menu_dropdown_log_out':{
                         common.user_logoff();
-                        document.querySelector('#common_user_menu_dropdown').style='none';
+                        AppDocument.querySelector('#common_user_menu_dropdown').style='none';
                         break;
                     }
                     //user preferences
@@ -197,19 +238,20 @@ const app_event_click = event => {
             }
         });
     };
+};
+/**
+ * App event change
+ * @param {AppEvent} event 
+ * @returns {void>}
+ */
+const app_event_change = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('click',(event) => {
-            events(event);
-        });
+        AppDocument.querySelector('#app').addEventListener('change', (/**@type{AppEvent}*/event) => {
+            app_event_change(event);
+        }, true);
     }
     else{
-        //other framework
-        events(event);
-    }
-};
-const app_event_change = event => {
-    const events = event => {
         const event_target_id = common.element_id(event.target);
         common.common_event('change',event)
         .then(()=>{
@@ -225,19 +267,20 @@ const app_event_change = event => {
             }
         });
     };
+};
+/**
+ * App event keyup
+ * @param {AppEvent} event
+ * @returns {void} 
+ */
+const app_event_keyup = event => {
     if (event==null){
         //javascript framework
-        document.querySelector('#app').addEventListener('change',(event) => {
-            events(event);
-        }, true);
+        AppDocument.querySelector('#app').addEventListener('keyup', (/**@type{AppEvent}*/event) => {
+            app_event_keyup(event);
+        });
     }
     else{
-        //other framework
-        events(event);
-    }
-};
-const app_event_keyup = event => {
-    const events = event => {
         const event_target_id = common.element_id(event.target);
         common.common_event('keyup',event)
         .then(()=>{
@@ -287,103 +330,110 @@ const app_event_keyup = event => {
             }
         });
     };
-    if (event==null){
-        //javascript framework
-        document.querySelector('#app').addEventListener('keyup',(event) => {
-            events(event);
-        });
-    }
-    else{
-        //other framework
-        events(event);
-    }
 };
-const app_theme_update = toggle_theme => {
+/**
+ * App theme update
+ * @param {boolean} toggle_theme 
+ * @returns {void}
+ */
+const app_theme_update = (toggle_theme=false) => {
     let theme = '';
-    if(document.querySelector('#app_theme_checkbox').classList.contains('checked')){
+    if(AppDocument.querySelector('#app_theme_checkbox').classList.contains('checked')){
         theme = 'app_theme_sun';
         if (toggle_theme){
-            document.querySelector('#app_theme_checkbox').classList.remove('checked');
+            AppDocument.querySelector('#app_theme_checkbox').classList.remove('checked');
             theme = 'app_theme_moon';
         }
     }
     else{
         theme = 'app_theme_moon';
         if (toggle_theme){
-            document.querySelector('#app_theme_checkbox').classList.add('checked');
+            AppDocument.querySelector('#app_theme_checkbox').classList.add('checked');
             theme = 'app_theme_sun';
         }
     }
-    document.body.className = document.querySelector('#common_user_arabic_script_select').value;
-    document.body.classList.add(theme);
-    return null;
+    AppDocument.body.className = AppDocument.querySelector('#common_user_arabic_script_select').value;
+    AppDocument.body.classList.add(theme);
 };
-
+/**
+ * Get apps
+ * @returns {void}
+ */
 const get_apps = () => {
     
-    document.querySelector('#apps').innerHTML = '';
-    document.querySelector('#app_menu_content_apps_list').innerHTML = '';
-    document.querySelector('#apps').classList.add('common_icon', 'css_spinner');
-    document.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
+    AppDocument.querySelector('#apps').innerHTML = '';
+    AppDocument.querySelector('#app_menu_content_apps_list').innerHTML = '';
+    AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
+    AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
     common.FFB ('APP', `/apps?id=${common.COMMON_GLOBAL.common_app_id}`, 'GET', 'APP_DATA', null)
-    .then(result=>{
+    .then((/**@type{string}*/result)=>{
         let html_apps ='';
         let html_menu_apps_list ='';
         let apps_count=0;
         for (const app of JSON.parse(result)) {
             apps_count++;
-            html_apps +=`<div class='app_link_row'>
-                        <div class='app_link_col'>
-                            <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                        </div>
-                        <div class='app_link_col'>
-                            <img class='app_logo' src='${app.LOGO}' />
-                        </div>
-                        <div class='app_link_col'>
-                            <div class='app_name'>${app.NAME}</div>
-                        </div>
-                    </div>`;
-            html_menu_apps_list +=`<div class='app_link_row'>
-                        <div class='app_link_col'>
-                            <div class='app_id'>${app.APP_ID}</div>
-                        </div>
-                        <div class='app_link_col'>
-                            <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
-                        </div>
-                        <div class='app_link_col'>
-                            <img class='app_logo' src='${app.LOGO}' />
-                        </div>
-                        <div class='app_link_col'>
-                            <div class='app_name'>${app.NAME}</div>
-                            <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
-                            <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
-                        </div>
-                    </div>`;
+            html_apps +=`<div class='app_link_row common_row'>
+                            <div class='app_link_col'>
+                                <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
+                            </div>
+                            <div class='app_link_col'>
+                                <img class='app_logo' src='${app.LOGO}' />
+                            </div>
+                            <div class='app_link_col'>
+                                <div class='app_name'>${app.NAME}</div>
+                            </div>
+                        </div>`;
+            html_menu_apps_list +=`<div class='app_link_row common_row'>
+                                        <div class='app_link_col'>
+                                            <div class='app_id'>${app.APP_ID}</div>
+                                        </div>
+                                        <div class='app_link_col'>
+                                            <div class='app_url'>${app.PROTOCOL}${app.SUBDOMAIN}.${app.HOST}:${app.PORT}</div>
+                                        </div>
+                                        <div class='app_link_col'>
+                                            <img class='app_logo' src='${app.LOGO}' />
+                                        </div>
+                                        <div class='app_link_col'>
+                                            <div class='app_name'>${app.NAME}</div>
+                                            <div class='app_category'>${app.APP_CATEGORY==null?'':app.APP_CATEGORY}</div>
+                                            <div class='app_description'>${app.APP_DESCRIPTION==null?'':app.APP_DESCRIPTION}</div>
+                                        </div>
+                                    </div>`;
         }
         //if odd add extra empty column
         if (apps_count & 1)
-            html_apps +=`<div class='app_link_row'>
+            html_apps +=`<div class='app_link_row common_row'>
                             <div class='app_link_col'></div>
                             <div class='app_link_col'></div>
                             <div class='app_link_col'></div>
                         </div>`;
-        document.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
-        document.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
-        document.querySelector('#apps').innerHTML = html_apps;
-        document.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
+        AppDocument.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
+        AppDocument.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
+        AppDocument.querySelector('#apps').innerHTML = html_apps;
+        AppDocument.querySelector('#app_menu_content_apps_list').innerHTML = html_menu_apps_list;
     })
     .catch(()=>{
-        document.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
-        document.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
+        AppDocument.querySelector('#apps').classList.remove('common_icon', 'css_spinner');
+        AppDocument.querySelector('#app_menu_content_apps_list').classList.remove('common_icon', 'css_spinner');
     });
 };
-
+/**
+ * App exception function
+ * @param {Error} error 
+ * @returns {void}
+ */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
+/**
+ * 
+ * @param {AppEvent['target']} item 
+ * @param {string} nextField 
+ * @returns {Promise.<void>}
+ */
 const user_verify_check_input_app = async (item, nextField) => {
     await common.user_verify_check_input(item, nextField)
-    .then(result=>{
+    .then((/**@type{{verification_type:number}}}*/result)=>{
         if (result!=null){
             //login if LOGIN  or SIGNUP were verified successfully
             if (result.verification_type==1 ||
@@ -394,7 +444,10 @@ const user_verify_check_input_app = async (item, nextField) => {
     }) 
     .catch(()=>null);
 };
-
+/**
+ * User delete
+ * @returns {Promise.<void>}
+ */
 const user_delete_app = async () => {
     
     const function_delete_user_account = () => { 
@@ -406,7 +459,12 @@ const user_delete_app = async () => {
     .then(()=>null)
     .catch(()=>null);
 };
-const mount_app_app = async framework => {
+/**
+ * Mounts app
+ * @param {string|null} framework 
+ * @returns {Promise.<void>}
+ */
+const mount_app_app = async (framework=null) => {
     await common.mount_app(framework,
         {   Click: app_event_click,
             Change: app_event_change,
@@ -415,7 +473,7 @@ const mount_app_app = async framework => {
             Focus: null,
             Input:null})
     .then(()=> {
-        document.querySelector('#dialogue_start_content').style.visibility = 'visible';
+        AppDocument.querySelector('#dialogue_start_content').style.visibility = 'visible';
         if (common.COMMON_GLOBAL.user_locale != navigator.language.toLowerCase())
             common.common_translate_ui(common.COMMON_GLOBAL.user_locale).then(()=>get_apps());
         else
@@ -424,17 +482,22 @@ const mount_app_app = async framework => {
         const user = window.location.pathname.substring(1);
         if (user !='') {
             //show profile for user entered in url
-            document.querySelector('#common_dialogue_profile').style.visibility = 'visible';
+            AppDocument.querySelector('#common_dialogue_profile').style.visibility = 'visible';
             common.profile_show(null, user);
         }
         //use transition from now and not when starting app
-        document.querySelectorAll('.dialogue_flip').forEach(dialogue =>{
+        AppDocument.querySelectorAll('.dialogue_flip').forEach((/**@type{HTMLElement}*/dialogue) =>{
             dialogue.style.transition = 'all 1s';
         });
         //show app themes from now to avoid startup css render issues
-        document.querySelector('#app_themes').style.display = 'block';
+        AppDocument.querySelector('#app_themes').style.display = 'block';
     });
 };
+/**
+ * Init app
+ * @param {*} parameters 
+ * @returns {Promise.<void>}
+ */
 const init_app = async (parameters) => {
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='MODULE_EASY.QRCODE_WIDTH')
@@ -450,31 +513,33 @@ const init_app = async (parameters) => {
     }
     
     //info
-    document.querySelector('#info_diagram_img').src=APP_GLOBAL.img_diagram_img_small;
-    document.querySelector('#info_datamodel_img').src=APP_GLOBAL.img_datamodel_img_small;
+    AppDocument.querySelector('#info_diagram_img').src=APP_GLOBAL.img_diagram_img_small;
+    AppDocument.querySelector('#info_datamodel_img').src=APP_GLOBAL.img_datamodel_img_small;
     
-    document.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
-    document.querySelector('#app_email').innerHTML=common.COMMON_GLOBAL.app_email;
-    
+    AppDocument.querySelector('#app_copyright').innerHTML = common.COMMON_GLOBAL.app_copyright;
+    AppDocument.querySelector('#app_email').innerHTML=common.COMMON_GLOBAL.app_email;
     
     if (common.COMMON_GLOBAL.app_link_url==null)
-        document.querySelector('#app_link').style.display = 'none';
+        AppDocument.querySelector('#app_link').style.display = 'none';
     else
-        document.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
-    document.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
-    document.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
-    document.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
-    document.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
+        AppDocument.querySelector('#app_link').innerHTML = common.COMMON_GLOBAL.app_link_title;
+    AppDocument.querySelector('#info_link1').innerHTML = common.COMMON_GLOBAL.info_link_policy_name;
+    AppDocument.querySelector('#info_link2').innerHTML = common.COMMON_GLOBAL.info_link_disclaimer_name;
+    AppDocument.querySelector('#info_link3').innerHTML = common.COMMON_GLOBAL.info_link_terms_name;
+    AppDocument.querySelector('#info_link4').innerHTML = common.COMMON_GLOBAL.info_link_about_name;
 
     common.zoom_info('');
     common.move_info(null,null);
 
     mount_app_app();
 };
-
+/**
+ * Init common
+ * @param {*} parameters 
+ */
 const init = (parameters) => {
-    document.querySelector('#apps').classList.add('common_icon', 'css_spinner');
-    document.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
+    AppDocument.querySelector('#apps').classList.add('common_icon', 'css_spinner');
+    AppDocument.querySelector('#app_menu_content_apps_list').classList.add('common_icon', 'css_spinner');
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app(parameters);
