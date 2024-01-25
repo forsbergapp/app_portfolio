@@ -1,5 +1,3 @@
-/**@ts-ignore */
-const common = await import('common');
 /** 
  * @typedef {object} 	type_settings_report
  * @property {string}	locale
@@ -55,8 +53,7 @@ const common = await import('common');
  *												- YEAR:	month with less info
  * @property {string}	ui_navigation_left
  * @property {string}	ui_navigation_right
- */
-/**
+ * 
  * @typedef {object}	type_column_titles
  * @property {string}	day
  * @property {string}	weekday
@@ -77,8 +74,7 @@ const common = await import('common');
  * @property {string}	isha_iqamat
  * @property {string}	midnight
  * @property {string}	notes
- */
-/**
+ * 
  * Times
  * @typedef	{{[index: string]:number}}	type_times
  * @property{number}	day
@@ -88,8 +84,7 @@ const common = await import('common');
  * @property{number}	maghrib
  * @property{number}	isha
  * @property{number}	midnight
- */
-/**
+ * 
  * @typedef {object}	type_day_user_account_app_data_posts
  * @property {string}	description
  * @property {string}	regional_language_locale
@@ -104,10 +99,15 @@ const common = await import('common');
  * @property {string}	prayer_time_format
  * @property {string}	prayer_hijri_date_adjustment
  */
+
 /**@type{{body:{className:string},
  *        querySelector:function,
  *        querySelectorAll:function}} */
  const AppDocument = document;
+
+/**@ts-ignore */
+const common = await import('common');
+
 /**@type{{	app_copyright:string,
  * 			session_currentDate:Date,
  * 			session_currentHijriDate:[number, number, number],

@@ -1,16 +1,7 @@
-/**@ts-ignore */
-const common = await import('common');
-/**@ts-ignore */
-const app_report = await import('app_report');
-/**@ts-ignore */
-const {prayTimes} = await import('PrayTimes');
-/**@ts-ignore */
-const {getTimezone} = await import('regional');
-
 /**@type{{body:{className:string},
  *        querySelector:function,
  *        querySelectorAll:function}} */
-const AppDocument = document;
+ const AppDocument = document;
 
 /**
  * @typedef {object}        AppEvent
@@ -33,6 +24,16 @@ const AppDocument = document;
  *              latlng:{lat:string, 
  *                      lng:string}}} AppEventLeaflet
  */
+ 
+/**@ts-ignore */
+const common = await import('common');
+/**@ts-ignore */
+const app_report = await import('app_report');
+/**@ts-ignore */
+const {prayTimes} = await import('PrayTimes');
+/**@ts-ignore */
+const {getTimezone} = await import('regional');
+
 const APP_GLOBAL = {
     app_default_startup_page:0,
     app_report_timetable:'',
@@ -2117,7 +2118,6 @@ const user_settings_like = user_account_app_data_post_id => {
  */
 const app_event_click = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
             app_event_click(event);
         }, true);
@@ -2467,7 +2467,6 @@ const app_event_click = event => {
  */
 const app_event_change = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('change',(/**@type{AppEvent}*/event) => {
             app_event_change(event);
         }, true);
@@ -2579,7 +2578,6 @@ const app_event_change = event => {
  */
 const app_event_keyup = event => {
     if (event==null){
-        //javascript framework
         AppDocument.querySelector('#app').addEventListener('keyup',(/**@type{AppEvent}*/event) => {
             app_event_keyup(event);
         }, true);
@@ -2812,7 +2810,7 @@ const mount_app_app = async (framework=null) => {
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
  * @returns {void}
  */
-const init_app = (parameters) => {
+const init_app = parameters => {
     for (const parameter of parameters.app) {
         if (parameter.parameter_name=='APP_DEFAULT_STARTUP_PAGE')
             APP_GLOBAL.app_default_startup_page = parseInt(parameter.parameter_value);
@@ -3011,8 +3009,9 @@ const init_app = (parameters) => {
  * @param {{app:{   parameter_name:string, 
  *                  parameter_value:string}[],
  *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
  */
-const init = (parameters) => {
+const init = parameters => {
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
         init_app(parameters);   

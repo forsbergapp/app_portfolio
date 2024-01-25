@@ -1,14 +1,53 @@
+/**@type{{body:{className:string, classList:{add:function}},
+ *        querySelector:function}} */
+ const AppDocument = document;
+
+ /**
+ * @typedef {object}        AppEvent
+ * @property {string}       code
+ * @property {function}     preventDefault
+ * @property {function}     stopPropagation
+ * @property {{ id:                 string,
+  *              innerHTML:          string,
+  *              value:              string,
+  *              parentNode:         {nextElementSibling:{querySelector:function}},
+  *              nextElementSibling: {dispatchEvent:function},
+  *              focus:              function,
+  *              blur:               function,
+  *              getAttribute:       function,
+  *              setAttribute:       function,
+  *              dispatchEvent:      function,
+  *              classList:          {contains:function}
+  *              className:          string
+  *            }}  target
+  */
+/**@ts-ignore */
 const common = await import('common');
+
 const APP_GLOBAL = {
     'module_leaflet_map_container':''
 };
 Object.seal(APP_GLOBAL);
+/**
+ * App exception function
+ * @param {*} error 
+ * @returns {void}
+ */
 const app_exception = (error) => {
     common.show_message('EXCEPTION', null, null, null, error);
 };
-
+/**
+ * App event click
+ * @param {AppEvent} event 
+ * @returns {void}
+ */
 const app_event_click = event =>{
-    const events = event => {
+    if (event==null){
+        AppDocument.querySelector('#app').addEventListener('click',(/**@type{AppEvent}*/event) => {
+            app_event_click(event);
+        });
+    }
+    else{
         const event_target_id = common.element_id(event.target);
         common.common_event('click',event)
         .then(()=>{
@@ -27,54 +66,22 @@ const app_event_click = event =>{
                 }
             }
         });
-    };
-    if (event==null){
-        //javascript framework
-        document.querySelector('#app').addEventListener('click',(event) => {
-            events(event);
-        });
-    }
-    else{
-        //other framework
-        events(event);
     }
         
 };
-const app_event_change = event =>{
-    if (event==null){
-        document.querySelector('#app').addEventListener('change',(event) => {
-            common.common_event('change', event);    
-        });
-    }
-    else
-        common.common_event('change', event);
-};
-const app_event_keydown = event =>{
-    if (event==null){
-        document.querySelector('#app').addEventListener('keydown',(event) => {
-            common.common_event('keydown', event);    
-        });
-    }
-    else
-        common.common_event('keydown', event);
-};
-const app_event_keyup = event =>{
-    if (event==null){
-        document.querySelector('#app').addEventListener('keyup',(event) => {
-            common.common_event('keyup', event);    
-        });
-    }
-    else
-        common.common_event('keyup', event);
-};
-const init_map = async (framework)=>{
-    document.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
+/**
+ * Mount app
+ * @param {string|null} framework 
+ * @returns {Promise.<void>}
+ */
+const init_map = async (framework=null)=>{
+    AppDocument.querySelector('#mapid').outerHTML = '<div id="mapid"></div>';
     
     await common.mount_app(framework,
                     {   Click: app_event_click,
-                        Change: app_event_change,
-                        KeyDown: app_event_keydown,
-                        KeyUp: app_event_keyup,
+                        Change: null,
+                        KeyDown: null,
+                        KeyUp: null,
                         Focus: null,
                         Input:null})
     .then(()=>  common.map_init(APP_GLOBAL.module_leaflet_map_container,
@@ -92,18 +99,28 @@ const init_map = async (framework)=>{
                                     common.COMMON_GLOBAL.module_leaflet_jumpto)
     );
 };
-const init_app = async () =>{
+/**
+ * Init app
+ * @returns {void}
+ */
+const init_app = () =>{
     APP_GLOBAL.module_leaflet_map_container      ='mapid';
     init_map();
 };
-const init = (parameters) => {
-    document.querySelector('#loading').classList.add('css_spinner');
+/**
+ * Init common
+ * @param {{app:{   parameter_name:string, 
+ *                  parameter_value:string}[],
+ *          app_service:{system_admin_only:number, first_time:number}}} parameters 
+ * @returns {void}
+ */
+const init = parameters => {
+    AppDocument.querySelector('#loading').classList.add('css_spinner');
     common.COMMON_GLOBAL.exception_app_function = app_exception;
     common.init_common(parameters).then(()=>{
-        init_app().then(()=>{
-            document.querySelector('#loading').classList.remove('css_spinner');
-        });
+        init_app();
+        AppDocument.querySelector('#loading').classList.remove('css_spinner');
     })
-    .catch(()=>document.querySelector('#loading').classList.remove('css_spinner'));
+    .catch(()=>AppDocument.querySelector('#loading').classList.remove('css_spinner'));
 };
 export{init};
