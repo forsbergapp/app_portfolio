@@ -878,6 +878,7 @@ const getMaintenance = (app_id) => {
     //maintenance can be used from all app_id
     const parameters = {   
         app_id: app_id,
+        common_app_id: getNumberValue(ConfigGet('SERVER', 'APP_COMMON_APP_ID')),
         rest_resource_bff: ConfigGet('SERVER', 'REST_RESOURCE_BFF')
     };
     /** @type {[string, string][]} */
