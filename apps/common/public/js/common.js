@@ -86,13 +86,13 @@ const COMMON_GLOBAL = {
     image_file_allowed_type5:'',
     image_file_mime_type:'',
     image_file_max_size:'',
-    image_avatar_width:'',
-    image_avatar_height:'',
+    image_avatar_width:0,
+    image_avatar_height:0,
     user_locale:'',
     user_timezone:'',
     user_direction:'',
     user_arabic_script:'',
-    user_preference_save:'',
+    user_preference_save:false,
     module_leaflet_flyto:0,
     module_leaflet_jumpto:0,
     module_leaflet_popup_offset:0,
@@ -363,7 +363,7 @@ const common_translate_ui = async (lang_code) => {
 /**
  * Format JSON date with user timezone
  * @param {string} db_date 
- * @param {boolean} short 
+ * @param {boolean|null} short 
  * @returns {string|null}
  */
 const format_json_date = (db_date, short) => {
@@ -486,7 +486,7 @@ const convert_image = async (image_url, image_width, image_height) => {
 };
 /**
  * Set avatar
- * @param {string} avatar 
+ * @param {string|null} avatar 
  * @param {HTMLImageElement} item 
  */
 const set_avatar = (avatar, item) => {
@@ -557,7 +557,7 @@ const getHostname = () =>{
 };
 /**
  * Input control
- * @param {HTMLElement} dialogue 
+ * @param {HTMLElement|null} dialogue 
  * @param {*} elements 
  * @returns {boolean}
  */
@@ -2005,6 +2005,7 @@ const user_login = async (system_admin=false) => {
 /**
  * User logoff
  * @param {*} system_admin 
+ * @returns {Promise.<void>}
  */
 const user_logoff = async (system_admin) => {
     if (system_admin){
@@ -2043,6 +2044,10 @@ const user_logoff = async (system_admin) => {
         user_preferences_update_select();
     }
 };
+/**
+ * User edit
+ * @returns {Promise.<void>}
+ */
 const user_edit = async () => {
     //get user from REST API
     FFB('DB_API', `/user_account?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
@@ -2098,6 +2103,10 @@ const user_edit = async () => {
     })
     .catch(()=>null);
 };
+/**
+ * User update
+ * @returns {Promise.<null>}
+ */
 const user_update = async () => {
     return new Promise(resolve=>{
         const username = AppDocument.querySelector('#common_user_edit_input_username').innerHTML;
@@ -2171,6 +2180,10 @@ const user_update = async () => {
         .finally(()=>resolve(null));
     });
 };
+/**
+ * User signup
+ * @returns {void}
+ */
 const user_signup = () => {
     const email = AppDocument.querySelector('#common_user_start_signup_email').innerHTML;
     if (input_control(AppDocument.querySelector('#common_dialogue_user_start_content'),
@@ -2180,40 +2193,46 @@ const user_signup = () => {
                             password_confirm: AppDocument.querySelector('#common_user_start_signup_password_confirm'),
                             password_confirm_reminder: AppDocument.querySelector('#common_user_start_signup_password_reminder'),
                             email: AppDocument.querySelector('#common_user_start_signup_email')
-                            })==false)
-            return null;
-
-    const json_data = { username:           AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
-                        password:           AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
-                        password_reminder:  AppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML,
-                        email:              email,
-                        active:             0,
-                        ...get_uservariables()
-                     };
+                            })==true){
+        const json_data = { username:           AppDocument.querySelector('#common_user_start_signup_username').innerHTML,
+                            password:           AppDocument.querySelector('#common_user_start_signup_password').innerHTML,
+                            password_reminder:  AppDocument.querySelector('#common_user_start_signup_password_reminder').innerHTML,
+                            email:              email,
+                            active:             0,
+                            ...get_uservariables()
+                            };
+        
+        AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
     
-    AppDocument.querySelector('#common_user_start_signup_button').classList.add('css_spinner');
-
-    FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
-    .then(result=>{
-        AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
-        const signup = JSON.parse(result);
-        COMMON_GLOBAL.rest_at = signup.accessToken;
-        COMMON_GLOBAL.user_account_id = signup.id;
-        show_common_dialogue('VERIFY', 'SIGNUP', email, null);
-    })
-    .catch(()=>AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
+        FFB('DB_API', '/user_account/signup?', 'POST', 'APP_SIGNUP', json_data)
+        .then(result=>{
+            AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner');
+            const signup = JSON.parse(result);
+            COMMON_GLOBAL.rest_at = signup.accessToken;
+            COMMON_GLOBAL.user_account_id = signup.id;
+            show_common_dialogue('VERIFY', 'SIGNUP', email, null);
+        })
+        .catch(()=>AppDocument.querySelector('#common_user_start_signup_button').classList.remove('css_spinner'));
+    }
 };
+/**
+ * User verify check input
+ * @param {HTMLElement} item 
+ * @param {string} nextField 
+ * @returns {Promise.<{ actived: number, 
+ *                      verification_type : number}|null>}
+ */
 const user_verify_check_input = async (item, nextField) => {
     return new Promise((resolve, reject)=>{
         let json_data;
         const verification_type = parseInt(AppDocument.querySelector('#common_user_verification_type').innerHTML);
         //only accept 0-9
         if (item.innerHTML.length==1 && ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'].indexOf(item.innerHTML) > -1)
-            if (nextField == '' || (AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML != '' &
-                    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML != '' &
-                    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML != '' &
-                    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML != '' &
-                    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML != '' &
+            if (nextField == '' || (AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML != '' &&
+                    AppDocument.querySelector('#common_user_verify_verification_char2').innerHTML != '' &&
+                    AppDocument.querySelector('#common_user_verify_verification_char3').innerHTML != '' &&
+                    AppDocument.querySelector('#common_user_verify_verification_char4').innerHTML != '' &&
+                    AppDocument.querySelector('#common_user_verify_verification_char5').innerHTML != '' &&
                     AppDocument.querySelector('#common_user_verify_verification_char6').innerHTML != '')) {
                 //last field, validate entered code
                 const verification_code = parseInt(AppDocument.querySelector('#common_user_verify_verification_char1').innerHTML +
@@ -2300,6 +2319,12 @@ const user_verify_check_input = async (item, nextField) => {
     });
     
 };
+/**
+ * User delete
+ * @param {number|null} choice 
+ * @param {function} function_delete_event 
+ * @returns {Promise.<null>}
+ */
 const user_delete = async (choice=null, function_delete_event ) => {
     return new Promise((resolve, reject)=>{
         const password = AppDocument.querySelector('#common_user_edit_input_password').innerHTML;
@@ -2338,6 +2363,11 @@ const user_delete = async (choice=null, function_delete_event ) => {
         }
     });
 };
+/**
+ * User function
+ * @param {string} function_name 
+ * @returns {Promise.<null>}
+ */
 const user_function = function_name => {
     return new Promise((resolve, reject)=>{
         const user_id_profile = AppDocument.querySelector('#common_profile_id').innerHTML;
@@ -2373,6 +2403,13 @@ const user_function = function_name => {
         }
     });
 };
+/**
+ * User account app delete
+ * @param {number|null} choice 
+ * @param {number} user_account_id 
+ * @param {number} app_id 
+ * @param {function} function_delete_event 
+ */
 const user_account_app_delete = (choice=null, user_account_id, app_id, function_delete_event) => {
     switch (choice){
         case null:{
@@ -2393,30 +2430,36 @@ const user_account_app_delete = (choice=null, user_account_id, app_id, function_
             break;
     }
 };
+/**
+ * User forgot
+ * @returns {Promise.<void>}
+ */
 const user_forgot = async () => {
     const email = AppDocument.querySelector('#common_user_start_forgot_email').innerHTML;
     const json_data = { email: email,
                         ...get_uservariables()
                     };
-
     if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                     {
                     email: AppDocument.querySelector('#common_user_start_forgot_email')
-                    })==false)
-        return null;
-        
-    AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
-    FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
-    .then(result=>{
-        AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
-        const forgot = JSON.parse(result);
-        if (forgot.sent == 1){
-            COMMON_GLOBAL.user_account_id = forgot.id;
-            show_common_dialogue('VERIFY', 'FORGOT', email, null);
-        }
-    })
-    .catch(()=>AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
+                    })==true){
+        AppDocument.querySelector('#common_user_start_forgot_button').classList.add('css_spinner');
+        FFB('DB_API', '/user_account/forgot?', 'PUT', 'APP_DATA', json_data)
+        .then(result=>{
+            AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner');
+            const forgot = JSON.parse(result);
+            if (forgot.sent == 1){
+                COMMON_GLOBAL.user_account_id = forgot.id;
+                show_common_dialogue('VERIFY', 'FORGOT', email, null);
+            }
+        })
+        .catch(()=>AppDocument.querySelector('#common_user_start_forgot_button').classList.remove('css_spinner'));
+    }
 };
+/**
+ * Update password
+ * @returns {void}
+ */
 const updatePassword = () => {
     const password_new = AppDocument.querySelector('#common_user_password_new').innerHTML;
     const user_password_new_auth = AppDocument.querySelector('#common_user_password_new_auth').innerHTML;
@@ -2424,25 +2467,26 @@ const updatePassword = () => {
                         auth:           user_password_new_auth,
                         ...get_uservariables()
                      };
-
-
     if (input_control(AppDocument.querySelector('#common_dialogue_user_edit_content'),
                      {
                      password: AppDocument.querySelector('#common_user_password_new'),
                      password_confirm: AppDocument.querySelector('#common_user_password_new_confirm'),
                      
-                     })==false)
-         return null;
-
-    AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
-    FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
-    .then(()=>{
-        AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
-        dialogue_password_new_clear();
-        show_common_dialogue('LOGIN');
-    })
-    .catch(()=>AppDocument.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
+                     })==true){
+        AppDocument.querySelector('#common_user_password_new_icon').classList.add('css_spinner');
+        FFB('DB_API', `/user_account/password?PUT_ID=${COMMON_GLOBAL.user_account_id}`, 'PUT', 'APP_ACCESS', json_data)
+        .then(()=>{
+            AppDocument.querySelector('#common_user_password_new_icon').classList.remove('css_spinner');
+            dialogue_password_new_clear();
+            show_common_dialogue('LOGIN');
+        })
+        .catch(()=>AppDocument.querySelector('#common_user_password_new_icon').classList.remoev('css_spinner'));
+    }    
 };
+/**
+ * User preference save
+ * @returns {Promise.<void>}
+ */
 const user_preference_save = async () => {
     if (COMMON_GLOBAL.user_preference_save==true && COMMON_GLOBAL.user_account_id != ''){
         const json_data =
@@ -2455,6 +2499,10 @@ const user_preference_save = async () => {
         await FFB('DB_API', `/user_account_app?PATCH_ID=${COMMON_GLOBAL.user_account_id}`, 'PATCH', 'APP_ACCESS', json_data);
     }
 };
+/**
+ * User preference get
+ * @returns {Promise.<null>}
+ */
 const user_preference_get = async () => {
     return new Promise((resolve,reject)=>{
         FFB('DB_API', `/user_account_app?user_account_id=${COMMON_GLOBAL.user_account_id}`, 'GET', 'APP_ACCESS', null)
@@ -2487,6 +2535,11 @@ const user_preference_get = async () => {
         .catch(err=>reject(err));
     });
 };
+/**
+ * User prefernce set default globals
+ * @param {*} preference 
+ * @returns {void}
+ */
 const user_preferences_set_default_globals = (preference) => {
     switch (preference){
         case 'LOCALE':{
@@ -2507,6 +2560,10 @@ const user_preferences_set_default_globals = (preference) => {
         }
     }
 };
+/**
+ * User preferences update select
+ * @returns {void}
+ */
 const user_preferences_update_select = () => {
     set_user_account_app_settings();
     //don't save changes now, just execute other code
@@ -2518,9 +2575,17 @@ const user_preferences_update_select = () => {
 	AppDocument.querySelector('#common_user_arabic_script_select').dispatchEvent(new Event('change'));
     COMMON_GLOBAL.user_preference_save = true;
 };
-/*----------------------- */
-/* USER PROVIDER          */
-/*----------------------- */
+/**
+ * Proivder signin
+ * @param {number} provider_id 
+ * @returns {Promise.<{ user_account_id: number,
+ *                      username: string,
+ *                      bio: string,
+ *                      avatar: string,
+ *                      first_name: string,
+ *                      last_name: string,
+ *                      userCreated: string}>}
+ */
 const ProviderSignIn = (provider_id) => {
     return new Promise((resolve, reject)=>{
         //add REST API to get user provider data
@@ -2566,14 +2631,17 @@ const ProviderSignIn = (provider_id) => {
                     AppDocument.querySelector('#common_user_menu_dropdown_logged_in').style.display = 'inline-block'; //block app2?
                     AppDocument.querySelector('#common_user_menu_dropdown_logged_out').style.display = 'none';
                     AppDocument.querySelector('#common_user_start_login_button').classList.remove('css_spinner');
-                    dialogue_user_start_clear();
-                    resolve({   user_account_id: user_login.id,
-                                username: user_login.username,
-                                bio: user_login.bio,
-                                avatar: profile_image,
-                                first_name: provider_data.profile_first_name,
-                                last_name: provider_data.profile_last_name,
-                                userCreated: JSON.parse(result).userCreated});
+                    dialogue_close('common_dialogue_user_start').then(() => {
+                        dialogue_user_start_clear();
+                        resolve({   user_account_id: user_login.id,
+                                    username: user_login.username,
+                                    bio: user_login.bio,
+                                    avatar: profile_image,
+                                    first_name: provider_data.profile_first_name,
+                                    last_name: provider_data.profile_last_name,
+                                    userCreated: JSON.parse(result).userCreated});
+                    })
+                    
                 });
             })
             .catch(err=>{
@@ -2583,9 +2651,12 @@ const ProviderSignIn = (provider_id) => {
         });
     });
 };
-/*----------------------- */
-/* MODULE EASY.QRCODE     */
-/*----------------------- */
+/**
+ * Create QR code
+ * @param {string} div 
+ * @param {string} url 
+ * @returns {void}
+ */
 const create_qr = (div, url) => {
     new QRCode(AppDocument.querySelector('#' + div), {
         text: url,
@@ -2596,9 +2667,16 @@ const create_qr = (div, url) => {
         drawer: 'svg'
     });
 };
-/*----------------------- */
-/* MODULE LEAFLET         */
-/*----------------------- */
+/**
+ * Map init
+ * @param {string} containervalue 
+ * @param {string} stylevalue 
+ * @param {string} longitude 
+ * @param {string} latitude 
+ * @param {boolean} doubleclick_event 
+ * @param {function} search_event_function 
+ * @returns 
+ */
 const map_init = async (containervalue, stylevalue, longitude, latitude, doubleclick_event, search_event_function) => {
     return await new Promise((resolve)=>{
         if (checkconnected()) {
